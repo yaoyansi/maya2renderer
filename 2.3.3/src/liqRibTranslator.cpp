@@ -2413,29 +2413,29 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 	if( m_errorMode ) RiErrorHandler( liqRibTranslatorErrorHandler );
 #endif
 	// Setup helper variables for alfred
-	MString alfredCleanUpCommand;
-	if( remoteRender ) 
-		alfredCleanUpCommand = MString( "RemoteCmd" );
-	else 
-		alfredCleanUpCommand = MString( "Cmd" );
+// 	MString alfredCleanUpCommand;// not used. [9/15/2010 yys]
+// 	if( remoteRender ) 
+// 		alfredCleanUpCommand = MString( "RemoteCmd" );
+// 	else 
+// 		alfredCleanUpCommand = MString( "Cmd" );
 
-	MString alfredRemoteTagsAndServices;
-	if( remoteRender || useNetRman ) 
-	{
-		alfredRemoteTagsAndServices  = MString( "-service { " );
-		alfredRemoteTagsAndServices += m_alfredServices.asChar();
-		alfredRemoteTagsAndServices += MString( " } -tags { " );
-		alfredRemoteTagsAndServices += m_alfredTags.asChar();
-		alfredRemoteTagsAndServices += MString( " } " );
-	}
+// 	MString alfredRemoteTagsAndServices;// not used. [9/15/2010 yys]
+// 	if( remoteRender || useNetRman ) 
+// 	{
+// 		alfredRemoteTagsAndServices  = MString( "-service { " );
+// 		alfredRemoteTagsAndServices += m_alfredServices.asChar();
+// 		alfredRemoteTagsAndServices += MString( " } -tags { " );
+// 		alfredRemoteTagsAndServices += m_alfredTags.asChar();
+// 		alfredRemoteTagsAndServices += MString( " } " );
+// 	}
 	// A seperate one for cleanup as it doesn't need a tag!
-	MString alfredCleanupRemoteTagsAndServices;
-	if( remoteRender || useNetRman ) 
-	{
-		alfredCleanupRemoteTagsAndServices  = MString( "-service { " );
-		alfredCleanupRemoteTagsAndServices += m_alfredServices.asChar();
-		alfredCleanupRemoteTagsAndServices += MString( " } " );
-	}
+// 	MString alfredCleanupRemoteTagsAndServices;// not used. [9/15/2010 yys]
+// 	if( remoteRender || useNetRman ) 
+// 	{
+// 		alfredCleanupRemoteTagsAndServices  = MString( "-service { " );
+// 		alfredCleanupRemoteTagsAndServices += m_alfredServices.asChar();
+// 		alfredCleanupRemoteTagsAndServices += MString( " } " );
+// 	}
 
 	// exception handling block, this tracks liquid for any possible errors and tries to catch them
 	// to avoid crashing
