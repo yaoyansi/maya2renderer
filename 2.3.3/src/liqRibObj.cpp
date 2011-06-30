@@ -82,7 +82,7 @@ liqRibObj::liqRibObj( const MDagPath &path, ObjectType objType )
   data()
 {
   LIQDEBUGPRINTF( "-> creating dag node handle rep\n");
-
+  MString pathName(path.fullPathName()); //debug
   MStatus status;
   MObject obj( path.node() );
   MObject skip;
@@ -404,7 +404,10 @@ AnimType liqRibObj::compareBody( const liqRibObjPtr o ) const
  */
 void liqRibObj::writeObject() const
 {
-  data->write();
+	if( data ==NULL)
+		return;
+
+	data->write();
 }
 
 /** Return the granularity (number of components) the object is made of.

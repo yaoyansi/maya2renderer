@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "quadricProcedural", "quadricProcedural.vcproj", "{B9652F87-0BB5-4FB0-85AC-862CA178DB01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		prman_plugins|Win32 = prman_plugins|Win32
+		rfm_plugins|Win32 = rfm_plugins|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9652F87-0BB5-4FB0-85AC-862CA178DB01}.prman_plugins|Win32.ActiveCfg = prman_plugins|Win32
+		{B9652F87-0BB5-4FB0-85AC-862CA178DB01}.prman_plugins|Win32.Build.0 = prman_plugins|Win32
+		{B9652F87-0BB5-4FB0-85AC-862CA178DB01}.rfm_plugins|Win32.ActiveCfg = rfm_plugins|Win32
+		{B9652F87-0BB5-4FB0-85AC-862CA178DB01}.rfm_plugins|Win32.Build.0 = rfm_plugins|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

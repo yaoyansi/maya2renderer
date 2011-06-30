@@ -22,13 +22,15 @@ void doPolyGen(int nSides)
 }/* doPolyGen() */
 int main()
 {
+
 	void doPolyGen(int nSides);
 	char buffer[256];
-	double detail;
+	float detail;
 	int nSides;
 	while(fgets(buffer,256,stdin))
 	{
 		sscanf(buffer,"%f %d",&detail,&nSides);
+		printf("[buffer=%s]\n[detail=%f]\n[sides=%d]\n",buffer, detail, nSides);
 		doPolyGen(nSides);
 		fprintf(stdout,"%c", '\377');
 		fflush(stdout);
