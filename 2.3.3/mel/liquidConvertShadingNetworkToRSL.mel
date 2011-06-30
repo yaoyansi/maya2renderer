@@ -697,17 +697,17 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
   trace  ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
   system ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
 
-  string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
-
-  string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
-
-  if ( $SLShaderNode == "" ) {
-    string $shader = `liquidNewShaderNode ( $shaderFileName + "." + $shaderExt )`;
-    liquidAssignShaderNode_old( $assingToNode, $shader );
-  } else {
-    setAttr -type "string" ($SLShaderNode+".rmanShaderLong")  ($shaderFileName+"."+$shaderExt);
-    liquidShaderNodes_initParams( $SLShaderNode );
-  }
+//   string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
+// 
+//   string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
+// 
+//   if ( $SLShaderNode == "" ) {
+//     string $shader = `liquidNewShaderNode ( $shaderFileName + "." + $shaderExt )`;
+//     liquidAssignShaderNode_old( $assingToNode, $shader );
+//   } else {
+//     setAttr -type "string" ($SLShaderNode+".rmanShaderLong")  ($shaderFileName+"."+$shaderExt);
+//     liquidShaderNodes_initParams( $SLShaderNode );
+//   }
 }
 
 //--------------------------------------------------------------------

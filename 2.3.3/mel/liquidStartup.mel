@@ -506,7 +506,7 @@ global proc liquidCreateMenus()
                   -ann "Tries to convert selected hypershade shaders / networks to Sl, compile them and attach them";
         menuItem  -label "Convert MtoR to Liquid" -command liquidConvertMtor
                   -ann "Tries to convert any reference to MtoR/RAT in the scene into matching liquid assignments BASED ON CURRENT PALETTE";
-        //menuItem -label "Shader Manager" -ann "Shader Source Manager" -command "liquidSLManager";
+        menuItem -label "Shader Manager" -ann "Shader Source Manager" -command "liquidSLManager";
         menuItem -label "SL Search/Replace..." -ann "SL search/replace utility" -command "liquidSLEditor";
       setParent -menu ..;
       menuItem -label "External RIB" -subMenu true -tearOff true;

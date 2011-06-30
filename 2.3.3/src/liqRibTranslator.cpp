@@ -5991,6 +5991,7 @@ MStatus liqRibTranslator::objectBlock()
 				MObject rmShaderNodeObj;
 				rmShaderNodeObj = rmShaderNodeArray[0].node();
 				MFnDependencyNode shaderDepNode( rmShaderNodeObj );
+				//std::cout <<"path="<<path.fullPathName()<<", shaderDepNode.typeName()="<<shaderDepNode.typeName()<<std::endl;
 				// philippe : we must check the node type to avoid checking in regular maya shaders
 				if( shaderDepNode.typeName() == "liquidSurface" || shaderDepNode.typeName() == "oldBlindDataBase" ) 
 				{ //cout <<"setting shader"<<endl;
@@ -6684,7 +6685,7 @@ MStatus liqRibTranslator::objectBlock()
 					//}
 				}
 			} 
-			else 
+			else //if( hasSurfaceShader && !m_ignoreSurfaces )
 			{
 				RtColor rColor,rOpacity;
 				if( m_shaderDebug ) 
@@ -6743,13 +6744,15 @@ MStatus liqRibTranslator::objectBlock()
 					if( m_shaderDebug ) {
 						RiSurface( "constant", RI_NULL );
 						LIQDEBUGPRINTF("add more constant parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorBlinn.sl as an example.(?)");
-					}else if( shader.apiType() == MFn::kLambert ){ 
-						RiSurface( "matte", RI_NULL );
-						LIQDEBUGPRINTF("add more lambert parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorLambert.sl as an example.");
-					}else if( shader.apiType() == MFn::kPhong ) {
-						RiSurface( "plastic", RI_NULL );
-						LIQDEBUGPRINTF("add more phong parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorPhong.sl as an example.");
-					}else if( path.hasFn( MFn::kPfxHair ) ) 
+					}
+// 					else if( shader.apiType() == MFn::kLambert ){ 
+// 						RiSurface( "matte", RI_NULL );
+// 						LIQDEBUGPRINTF("add more lambert parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorLambert.sl as an example.");
+// 					}else if( shader.apiType() == MFn::kPhong ) {
+// 						RiSurface( "plastic", RI_NULL );
+// 						LIQDEBUGPRINTF("add more phong parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorPhong.sl as an example.");
+// 					}
+					else if( path.hasFn( MFn::kPfxHair ) ) 
 					{
 						// get some of the hair system parameters
 						RtFloat translucence = 0, specularPower = 0;
@@ -6791,15 +6794,18 @@ MStatus liqRibTranslator::objectBlock()
 							"color specularcolor", &specularColor,
 							RI_NULL );
 					} 
-					else if( path.hasFn( MFn::kPfxToon ) ) 
+					else if( path.hasFn( MFn::kPfxToon ) ) {
 						RiSurface( "liquidpfxtoon", RI_NULL );
-					else if( path.hasFn( MFn::kPfxGeometry ) )
+					}else if( path.hasFn( MFn::kPfxGeometry ) ){
 						RiSurface( "liquidpfx", RI_NULL );
-					else 
-						RiSurface( "plastic", RI_NULL );
+					}else {
+						//RiSurface( "plastic", RI_NULL );
+						MFnDependencyNode shaderFn(shader);
+						RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );
+					}
 				}
-			}
-		} 
+			}//if( hasSurfaceShader && !m_ignoreSurfaces )else
+		} //if( writeShaders ) 
 		else if( liqglo_currentJob.deepShadows ) 
 		{
 			// if the current job is a deep shadow,
