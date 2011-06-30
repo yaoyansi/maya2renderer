@@ -196,6 +196,8 @@ global proc liquidCleanup()
       }
     }
     liquidFluidUpdateList;
+
+	setCurrentRenderer("mayaSoftware");//set renderer to default;
   }
 }
 
