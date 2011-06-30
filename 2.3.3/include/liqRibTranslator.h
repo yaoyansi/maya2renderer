@@ -63,7 +63,7 @@ public:
 	static MSyntax syntax();
 
 	MStatus doIt(const MArgList& args );
-
+	MStatus doItNew(const MArgList& args, const MString& originalLayer );
 	friend class liqJobList;
 
 private: // Methods
@@ -319,6 +319,7 @@ private :
 	bool m_ignoreSurfaces;
 	bool m_ignoreDisplacements;
 	bool m_ignoreVolumes;
+	bool m_useNewTranslator;
 	bool m_outputShadowPass;
 	bool m_outputHeroPass;
 	bool m_deferredGen;

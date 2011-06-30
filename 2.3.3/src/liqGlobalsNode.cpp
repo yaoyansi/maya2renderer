@@ -145,6 +145,7 @@ MObject liqGlobalsNode::aOutputShadersInShadows;
 MObject liqGlobalsNode::aOutputShadersInDeepShadows;
 MObject liqGlobalsNode::aOutputLightsInDeepShadows;
 
+MObject liqGlobalsNode::aUseNewTranslator;
 MObject liqGlobalsNode::aOutputShadowPass;
 MObject liqGlobalsNode::aOutputHeroPass;
 MObject liqGlobalsNode::aOutputComments;
@@ -591,6 +592,7 @@ MStatus liqGlobalsNode::initialize()
 	CREATE_BOOL( nAttr,  aOutputShadersInDeepShadows, "outputShadersInDeepShadows",   "osids",  false );
 	CREATE_BOOL( nAttr,  aOutputLightsInDeepShadows,  "outputLightsInDeepShadows",    "olids",  false );
 
+	CREATE_BOOL( nAttr,  aUseNewTranslator,           "useNewTranslator",             "unt",    false );
 	CREATE_BOOL( nAttr,  aOutputShadowPass,           "outputShadowPass",             "osp",    false );
 	CREATE_BOOL( nAttr,  aOutputHeroPass,             "outputHeroPass",               "ohp",    true  );
 	CREATE_BOOL( nAttr,  aOutputComments,             "outputComments",               "oc",     false );

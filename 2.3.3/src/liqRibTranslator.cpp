@@ -448,6 +448,7 @@ liqRibTranslator::liqRibTranslator()
 	m_rgain = 1.0;
 	m_rgamma = 1.0;
 	m_outputHeroPass = true;
+	m_useNewTranslator = true;
 	m_outputShadowPass = false;
 	m_illuminateByDefault = false;
 	m_liquidSetLightLinking = false;
@@ -1849,6 +1850,7 @@ void liqRibTranslator::liquidReadGlobals()
 	liquidGetPlugValue( rGlobalNode, "ignoreDisplacements", m_ignoreDisplacements, gStatus );
 	liquidGetPlugValue( rGlobalNode, "ignoreVolumes", m_ignoreVolumes, gStatus );
 
+	liquidGetPlugValue( rGlobalNode, "useNewTranslator", m_useNewTranslator, gStatus );
 	liquidGetPlugValue( rGlobalNode, "outputShadowPass", m_outputShadowPass, gStatus );
 	liquidGetPlugValue( rGlobalNode, "outputHeroPass", m_outputHeroPass, gStatus );
 
@@ -2306,8 +2308,7 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 MStatus liqRibTranslator::doIt( const MArgList& args )
 {
 	MStatus status;
-	MString lastRibName;
-	bool hashTableInited = false;
+
 
 	// check if we need to switch to a specific render layer
 	// we do that here because we need to switch to the chosen layer first
@@ -2348,6 +2349,15 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 	status = liquidDoArgs( args );
 	if( !status ) 
 		return MS::kFailure;
+
+	if(m_useNewTranslator){
+		liquidMessage("doItNew()", messageInfo);
+		return doItNew(args, originalLayer);
+	}
+	liquidMessage("doIt()", messageInfo);
+
+	MString lastRibName;
+	bool hashTableInited = false;
 
 	if( !liquidBin && !m_deferredGen ) 
 		liquidMessage( "Creating RIB <Press ESC To Cancel> ...", messageInfo );
@@ -2456,9 +2466,9 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 			useRenderScript = false;
 
 		liqRenderScript jobScript;
-		liqRenderScript::Job preJobInstance;
-		preJobInstance.title = "liquid pre-job";
-		preJobInstance.isInstance = true;
+// 		liqRenderScript::Job preJobInstance;
+// 		preJobInstance.title = "liquid pre-job";
+// 		preJobInstance.isInstance = true;
 
 		if( useRenderScript ) 
 		{
@@ -2805,7 +2815,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						}
 
 						m_alfShadowRibGen = true;
-					}
+					}//if( liqglo_currentJob.isShadow && !liqglo_currentJob.shadowArchiveRibDone && !fullShadowRib ) 
 
 #ifndef RENDER_PIPE
 					liquidMessage( "Beginning RIB output to '" + string( liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
@@ -2886,7 +2896,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 					liqglo_ribFP = NULL;
 					if( m_showProgress ) 
 						printProgress( 3, frameNumbers.size(), frameIndex );
-				}
+				}//for (; iter != jobList.end(); ++iter ) 
 
 				/*
 				if( hashTableInited && htable ) {
@@ -2894,7 +2904,8 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 				freeShaders();
 				htable = NULL;
 				}*/
-			}
+			}//if( !m_deferredGen ) 
+
 			// set the rib file for the 'view last rib' menu command
 			// NOTE: this may be overridden later on in certain code paths
 			if( !m_deferredGen ) 
@@ -3216,8 +3227,12 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 
 		if( useRenderScript ) 
 		{
-			if( m_preJobCommand != MString( "" ) ) 
+			if( m_preJobCommand != MString( "" ) ) {
+				liqRenderScript::Job preJobInstance;
+				preJobInstance.title = "liquid pre-job";
+				preJobInstance.isInstance = true;
 				jobScript.addLeafDependency( preJobInstance );
+			}
 			// clean up the alfred file in the future
 			if( !m_justRib ) 
 			{
@@ -3378,8 +3393,8 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 							MGlobal::executeCommand( displayCmd );
 						}
 					}
-				}
-			}
+				}//if( !exitstat ) 
+			}//if( useRenderScript ) else
 		} // if( launchRender )
 
 		// return to the frame we were at before we ran the animation
@@ -7007,7 +7022,7 @@ MStatus liqRibTranslator::objectBlock()
 						RiMotionEnd();
 					} 
 					else {
-						ribNode->object( 0 )->writeNextObjectGrain();
+						ribNode->object( 0 )->writeNextObjectGrain();//_writeObject(true, ribNode);
 					}
 				}
 			} 

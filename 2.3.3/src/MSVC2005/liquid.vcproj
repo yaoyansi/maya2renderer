@@ -2966,6 +2966,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqRibTranslatorNew.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\liqRiCommands.cpp"
 				>
 			</File>
