@@ -954,10 +954,21 @@ global proc liquidAddGlobals()
 
 }
 
+global proc int liquidGlobalsAvailable()
+{
+	liqlog("liquidGlobalsAvailable()");
+
+	if(  0==size(`getAttr "liquidGlobals.renderCommand"`) )
+		return 0;
+
+	return 1;
+}
+
 global proc liquidCheckGlobals()
 {
 	liqlog("liquidCheckGlobals()");
-  if ( !liquidGlobalsExists() ) liquidCreateGlobals();
+  if (  !liquidGlobalsExists() || !liquidGlobalsAvailable() )
+	  liquidCreateGlobals();
 }
 
 /* Preset systems --------------------------------------------------------------------------------- */

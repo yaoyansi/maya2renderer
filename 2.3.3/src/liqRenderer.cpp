@@ -57,7 +57,7 @@ liqRenderer::~liqRenderer()
 {
 }
 
-void liqRenderer::setRenderer()
+MStatus liqRenderer::setRenderer()
 {
   MStatus status;
   MFnDependencyNode globalsNode( initGlobals() );
@@ -188,9 +188,10 @@ void liqRenderer::setRenderer()
   liquidGetPlugValue( globalsNode, "dshDisplayName", dshDisplayName, status );
   liquidGetPlugValue( globalsNode, "dshImageMode", dshImageMode, status );
 
-  if ( renderCommand == "" ) 
+  if ( renderCommand == "" ) {
     MGlobal::displayError( "Liquid : The render command is not defined !!\n" );
-  else 
+	return MS::kInvalidParameter;
+  }else 
   {
     int lastSlash = renderCommand.rindex( '/' );
     MString tmp, envvar, homeDir;
@@ -227,8 +228,9 @@ void liqRenderer::setRenderer()
       envvar = "AIRHOME";
     }
     renderHome = getenv( envvar.asChar() );
-    if ( renderHome == "" ) 
+	if ( renderHome == "" ) {
       MGlobal::displayError( "Liquid : The " + envvar + " environment variable is not defined !!\n" );
+	}
   }
   /* cout <<"\nrenderName : "<<renderName<<endl;
   cout <<"  renderCommand   : "<<renderCommand<<endl;
@@ -266,6 +268,7 @@ void liqRenderer::setRenderer()
   cout <<"  requires_MAKESHADOW  : "<<requires_MAKESHADOW<<endl;
   cout <<"  dshDisplayName : "<<dshDisplayName<<endl;
   cout <<"  dshImageMode   : "<<dshImageMode<<endl; */
+  return MS::kSuccess;
 }
 
 MObject liqRenderer::initGlobals()

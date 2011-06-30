@@ -2343,7 +2343,9 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 		liqglo_layer = originalLayer;
 	}
 
-	liquidRenderer.setRenderer();
+	if( MS::kSuccess!=liquidRenderer.setRenderer() ){
+		return MS::kFailure;
+	}
 	m_renderCommand = liquidRenderer.renderCommand;
 
 	status = liquidDoArgs( args );

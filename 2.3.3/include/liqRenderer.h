@@ -41,7 +41,7 @@ public:
   liqRenderer();
   virtual ~liqRenderer();
 
-  void    setRenderer();
+  MStatus setRenderer();
   MObject initGlobals();
 
   // renderer and related utilities
