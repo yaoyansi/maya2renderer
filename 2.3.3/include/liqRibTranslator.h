@@ -451,6 +451,8 @@ private :
 	void scanExpressions( liqShader & currentShader );
 	void scanExpressions( liqRibLightData *light );
 	void processExpression( liqTokenPointer *token, liqRibLightData *light = NULL );
+
+	void _writeObject(bool reference, const liqRibNodePtr& ribNode);
 };
 
 #endif

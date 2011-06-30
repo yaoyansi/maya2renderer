@@ -165,6 +165,7 @@ MString      liqglo_archivePath;
 MString      liqglo_proceduralPath;
 
 // Kept global for liqRibNode.cpp
+MStringArray liqglo_preGenerateArchive;
 MStringArray liqglo_preReadArchive;
 MStringArray liqglo_preRibBox;
 MStringArray liqglo_preReadArchiveShadow;
@@ -2701,6 +2702,30 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						MString geoSet( liqglo_currentJob.shadowObjectSet );
 						baseShadowName = generateShadowArchiveName( renderAllFrames, refFrame, geoSet );
 						baseShadowName = liquidGetRelativePath( liqglo_relativeFileNames, baseShadowName, liqglo_ribDir );
+					}
+
+					{//export geometry objects to rib files.
+						MMatrix matrix;
+						MDagPath path;
+						MObject transform;
+						MFnDagNode dagFn;
+
+						for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
+						{
+							LIQ_CHECK_CANCEL_REQUEST;
+
+							liqRibNodePtr ribNode( rniter->second );
+							path = ribNode->path();
+							transform = path.transform();
+							
+							if( ( !ribNode ) || ( ribNode->object(0)->type == MRT_Light ) ) 
+								continue;
+							if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
+								continue;
+
+							_writeObject(false, ribNode);
+
+						}
 					}
 
 					LIQDEBUGPRINTF( "-> setting RiOptions\n" );
@@ -6975,17 +7000,21 @@ MStatus liqRibTranslator::objectBlock()
 						else
 							RiMotionBeginV( liqglo_motionSamples, liqglo_sampleTimes );
 
-						for ( unsigned msampleOn( 0 ); msampleOn < liqglo_motionSamples; msampleOn++ ) 
-							ribNode->object( msampleOn )->writeNextObjectGrain();
+						for ( unsigned msampleOn( 0 ); msampleOn < liqglo_motionSamples; msampleOn++ ){ 
+							ribNode->object( msampleOn )->writeNextObjectGrain();//_writeObject(true, ribNode);
+						}
 
 						RiMotionEnd();
 					} 
-					else 
+					else {
 						ribNode->object( 0 )->writeNextObjectGrain();
+					}
 				}
 			} 
-			else 
-				ribNode->object( 0 )->writeObject();
+			else {
+				//ribNode->object( 0 )->writeObject();
+				_writeObject(true, ribNode);
+			}
 
 			// Alf: postShapeMel
 			prePostPlug = fnTransform.findPlug( "liqPostShapeMel" );
@@ -7513,4 +7542,19 @@ MString liqRibTranslator::getHiderOptions( MString rendername, MString hidername
 		// no known options
 	}
 	return options;
+}
+
+void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode)
+{
+	MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +".rib" );
+
+	if(reference)
+	{
+		RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
+	}else{
+		liquidMessage("output geometry rib: "+ string(geometryRibFile.asChar()) , messageInfo);
+		RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
+		ribNode->object( 0 )->writeObject();
+		RiEnd();
+	}
 }

@@ -75,6 +75,7 @@ extern "C" {
 
 extern int debugMode;
 
+extern MStringArray liqglo_preGenerateArchive;
 extern MStringArray liqglo_preReadArchive;
 extern MStringArray liqglo_preRibBox;
 extern MStringArray liqglo_preReadArchiveShadow;
@@ -528,6 +529,25 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
         }
         rib.box = (ribBoxValue == "")? "-" : parseString(ribBoxValue);
       }
+
+	  if( rib.generator == "" ) 
+	  {
+		  MString archiveValue;
+		  if( liquidGetPlugValue( nodePeeker, "liqRIBGenerator", archiveValue, status ) == MS::kSuccess ) 
+		  {
+			  if( archiveValue.substring(0,2) == "*H*" ) 
+			  {
+				  MString parseThis = archiveValue.substring(3, archiveValue.length() - 1 );
+				  liqglo_preGenerateArchive.append( parseString( parseThis ) );
+			  } 
+			  else if( archiveValue.substring(0,3) == "*SH*" ) 
+			  {
+				  MString parseThis = archiveValue.substring(3, archiveValue.length() - 1 );
+				  liqglo_preGenerateArchive.append( parseString( parseThis ) );
+			  }
+		  }
+		  rib.generator = (archiveValue == "")? "-" : parseString(archiveValue);
+	  }
 
       if( rib.readArchive == "" ) 
       {
