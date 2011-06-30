@@ -5591,7 +5591,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 			if( liqglo_currentJob.isShadow == true )
 				RiScreenWindow( -frameWidth, frameWidth, -frameHeight, frameHeight );
 			else
-				RiScreenWindow( -1.0, 1.0, -1.0, 1.0 );
+				RiScreenWindow( -frameWidth, frameWidth, -frameHeight, frameHeight );
 		} 
 		else 
 		{
