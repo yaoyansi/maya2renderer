@@ -3289,7 +3289,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 					//=============
 					cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
 					MString timeout( tmp.str().c_str() );
-					MString displayCmd = "liquidRenderView -c " + renderCamera + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
+					MString displayCmd = "liquidRenderView "+( (renderCamera=="")?"":("-c "+renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
 					if( m_renderViewCrop ) 
 						displayCmd = displayCmd + " -doRegion";
 					displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
@@ -3372,7 +3372,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 							//=============
 							cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
 							MString timeout( tmp.str().c_str() );
-							MString displayCmd = "liquidRenderView -c " + renderCamera + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
+							MString displayCmd = "liquidRenderView "+( (renderCamera=="")?"":("-c "+renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
 							if( m_renderViewCrop ) 
 								displayCmd = displayCmd + " -doRegion";
 							displayCmd = displayCmd + ";liquidSaveRenderViewImage();";

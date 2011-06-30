@@ -180,7 +180,12 @@ global proc liqRVExposure( float $val )
     string $editor = `liqGetRVPanel`;
     string $caption = `renderWindowEditor -q -caption $editor`;
 
-    if ( `filetest -r $last` ) liquidRenderView -camera $cam -renderFromFile 1 -bucketFile $last -quantize 0 $exposure 0 255 -timeout 10;
+	if ( `filetest -r $last` ) {
+		if( size($cam)==0 )
+			liquidRenderView              -renderFromFile 1 -bucketFile $last -quantize 0 $exposure 0 255 -timeout 10;
+		else
+			liquidRenderView -camera $cam -renderFromFile 1 -bucketFile $last -quantize 0 $exposure 0 255 -timeout 10;
+	}
 
     $caption = "Exposure : " + $newExp + " f-stop";
     renderWindowEditor -e -caption $caption $editor;
