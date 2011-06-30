@@ -213,6 +213,7 @@ private:
 	const	char							*outName;
 	FILE									*outFile;
 	int										outputCompressed;
+	int										outputBinary;
 	int										outputIsPipe;
 	map<string,CVariable *>					*declaredVariables;			// Declared variables
 	RtLightHandle							numLightSources;
@@ -228,10 +229,15 @@ private:
 											// Comments				:
 											// Date last edited		:	6/8/2006
 	void									vout(const char *mes,va_list args) {
-												const int	l	=	vsprintf(scratch,mes,args);
+												if(	outputBinary == FALSE){//ascii
+													const int	l	=	vsprintf(scratch,mes,args);
 
-												if (outputCompressed)	gzwrite(outFile,scratch,l);
-												else					fwrite(scratch,1,l,outFile);
+													if (outputCompressed)	gzwrite(outFile,scratch,l);
+													else					fwrite(scratch,1,l,outFile);
+
+												}else{
+													vfprintf(outFile, mes, args);
+												}
 											}
 
 											///////////////////////////////////////////////////////////////////////
@@ -245,11 +251,70 @@ private:
 												va_list	args;
 
 												va_start(args,mes);
+												
+												printf("binary=%d, format=%s\n",outputBinary, mes );
+												if(	outputBinary == FALSE){//ascii
+													const int l	=	vsprintf(scratch,mes,args);
 
-												const int l	=	vsprintf(scratch,mes,args);
+													if (outputCompressed)	gzwrite(outFile,scratch,l);
+													else					fwrite(scratch,1,l,outFile);
 
-												if (outputCompressed)	gzwrite(outFile,scratch,l);
-												else					fwrite(scratch,1,l,outFile);
+												}else{
+													//vfprintf(outFile, mes, args);
+													int   vInt   = 0;
+													float vFloat = 0.0f;
+													double vDouble = 0.0;
+													char  vChar  = '\0';
+													char *vStr   = NULL;
+
+													const size_t LEN = strlen(mes);
+													for( size_t j=0; j<LEN; ++j )
+													{
+														if( mes[j]=='%' )
+														{
+															// %d %f %c %s
+															char type = mes[j+1];
+															switch(type)
+															{
+															case 'd': case 'i': 
+																vInt = va_arg( args, int );
+																//printf(">%d\n", vInt);
+																fwrite(&vInt, sizeof(int), 1, outFile);
+																j++;
+																continue;
+																break;
+															case 'f': case 'e': case 'E': case 'g': case 'G':
+																vDouble = va_arg( args, double );
+																//printf(">%f\n", vDouble);
+																fwrite(&vDouble, sizeof(double), 1, outFile);
+																j++;
+																continue;
+																break;
+															case 'c': 
+																vChar = va_arg( args, char );
+																//printf(">%c\n", vChar);
+																fwrite(&vChar, sizeof(char), 1, outFile);
+																j++;
+																continue;
+																break;
+															case 's': 
+																vStr = va_arg( args, char* );
+																//printf(">%s\n", vStr);
+																fwrite(vStr, sizeof(char)*strlen(vStr), 1, outFile);
+																j++;
+																continue;
+																break;
+															case 'o': case 'u': case 'x': case 'X':
+																printf(" %c not implemented.\n", type);
+															default:
+																;
+															}
+															// %*
+														}//if( mes[j]=='%' )
+														fwrite( mes+j , 1, 1, outFile);			
+													}//for
+												}
+
 
 												va_end(args);
 											}

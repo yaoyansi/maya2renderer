@@ -1007,6 +1007,7 @@ RiOptionV (char *name, RtInt n, RtToken tokens[], RtPointer params[]) {
 	// This section allows us to parse RibOut options before RiBegin, to match the standard
 	if (renderMan == NULL) {
 		extern int preferCompressedRibOut;
+		extern int preferBinaryRibOut;
 
 		// Check the rib format options
 		if (strcmp(name,RI_RIB) == 0) {
@@ -1017,6 +1018,16 @@ RiOptionV (char *name, RtInt n, RtToken tokens[], RtPointer params[]) {
 						preferCompressedRibOut	=	TRUE;
 					} else if (strcmp(val,"none") == 0) {
 						preferCompressedRibOut	=	FALSE;
+					} else {
+						error(CODE_BADTOKEN,"Unknown compression type \"%s\"\n",val);
+					}
+				}
+				else if(strcmp(tokens[i],"format") == 0){
+					char	*val	=	((char **) params[i])[0];
+					if (strcmp(val,"binary") == 0) {
+						preferBinaryRibOut = TRUE;
+					} else if (strcmp(val,"ascii") == 0) {
+						preferBinaryRibOut = FALSE;
 					} else {
 						error(CODE_BADTOKEN,"Unknown compression type \"%s\"\n",val);
 					}

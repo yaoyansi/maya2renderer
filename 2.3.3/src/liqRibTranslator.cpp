@@ -2350,10 +2350,10 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 	if( !status ) 
 		return MS::kFailure;
 
-	if(m_useNewTranslator){
-		liquidMessage("doItNew()", messageInfo);
-		return doItNew(args, originalLayer);
-	}
+// 	if(m_useNewTranslator){
+// 		liquidMessage("doItNew()", messageInfo);
+// 		return doItNew(args, originalLayer);
+// 	}
 	liquidMessage("doIt()", messageInfo);
 
 	MString lastRibName;
@@ -2743,24 +2743,10 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 					// Rib client file creation options MUST be set before RiBegin
 #if defined(PRMAN) || defined(DELIGHT)
 					/* THERE IS A RIBLIB BUG WHICH PREVENTS THIS WORKING */
-					LIQDEBUGPRINTF( "-> setting binary option\n" );
-					if( liqglo_doBinary ) 
-					{
-						RtString format[ 1 ] = { "binary" };
-						RiOption( "rib", "format", ( RtPointer )format, RI_NULL );
-					}
+					_RiOption_format_compress(liqglo_doBinary, liqglo_doCompression);
 
-					LIQDEBUGPRINTF( "-> setting compression option\n" );
-					if( liqglo_doCompression ) 
-					{
-						RtString comp[ 1 ] = { "gzip" };
-						RiOption( "rib", "compression", ( RtPointer )comp, RI_NULL );
-					}
 #endif // PRMAN || DELIGHT
-#ifdef PRMAN
-					RtString style = "indented";
-					RiOption( "rib", "string asciistyle", &style, RI_NULL );
-#endif
+
 					// world RiReadArchives and Rib Boxes ************************************************
 					//
 					if( liqglo_currentJob.isShadow && !liqglo_currentJob.shadowArchiveRibDone && !fullShadowRib ) 
@@ -7576,9 +7562,50 @@ void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode
 	{
 		RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
 	}else{
+
+		_RiOption_format_compress(liqglo_doBinary, liqglo_doCompression);
+
 		liquidMessage("output geometry rib: "+ string(geometryRibFile.asChar()) , messageInfo);
 		RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
 		ribNode->object( 0 )->writeObject();
 		RiEnd();
+	}
+}
+
+void liqRibTranslator::_RiOption_format_compress(bool bBinary, bool bCompress)
+{
+// 	LIQDEBUGPRINTF( "-> setting binary option\n" );
+// 	RtString binary[1] = {"binary"};
+// 	RtString ascii[1] = {"ascii"};
+// 	RiOption( "rib", "format", ( RtPointer )(bBinary?binary[0]:ascii[0]),        RI_NULL );
+// 
+// 	LIQDEBUGPRINTF( "-> setting compression option\n" );
+// 	RtString gzip[1] = {"gzip"};
+// 	RtString none[1] = {"none"};
+// 	RiOption( "rib", "compression", ( RtPointer )(bCompress?gzip[0]:none[0]), RI_NULL );
+	LIQDEBUGPRINTF( "-> setting binary option\n" );
+	if( liqglo_doBinary ) 
+	{
+		RtString format[ 1 ] = { "binary" };
+		RiOption( "rib", "format", ( RtPointer )format, RI_NULL );
+	}else{
+		RtString format[ 1 ] = { "ascii" };
+		RiOption( "rib", "format", ( RtPointer )format, RI_NULL );
+
+#ifdef PRMAN
+		RtString style = "indented";
+		RiOption( "rib", "string asciistyle", &style, RI_NULL );
+		std::cout <<"[liquid DEBUG] RiOption( rib, string asciistyle, &style, RI_NULL );"<<std::endl;
+#endif
+	}
+
+	LIQDEBUGPRINTF( "-> setting compression option\n" );
+	if( liqglo_doCompression ) 
+	{
+		RtString comp[ 1 ] = { "gzip" };
+		RiOption( "rib", "compression", ( RtPointer )comp, RI_NULL );
+	}else{
+		RtString comp[ 1 ] = { "none" };
+		RiOption( "rib", "compression", ( RtPointer )comp, RI_NULL );
 	}
 }

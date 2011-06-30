@@ -44,6 +44,7 @@ const	int	ribOutScratchSize	=	1000;
 
 // Options for rib
 int	preferCompressedRibOut		=	FALSE;
+int	preferBinaryRibOut			=	FALSE;
 
 //extern int useAdvancedVisibilityAttributes;
 //int	useAdvancedVisibilityAttributes		=	FALSE;
@@ -100,6 +101,7 @@ CRibOut::CRibOut(const char *n) : CRiInterface() {
 	if (*outName == '|') {
 		outFile				=	popen(outName+1,"w");
 		outputCompressed	=	FALSE;
+		outputBinary		=	FALSE;
 		outputIsPipe		=	TRUE;
 	} else {
 
@@ -111,14 +113,29 @@ CRibOut::CRibOut(const char *n) : CRiInterface() {
 				(preferCompressedRibOut == TRUE) ) {
 			outFile				=	(FILE *) gzopen(outName,"wb");
 			outputCompressed	=	TRUE;
+			outputBinary		=	FALSE;
 		} else {
-			outFile				=	fopen(outName,"w");
+			if(preferBinaryRibOut==TRUE){
+				outFile			=	fopen(outName,"wb");
+			}else{
+				outFile			=	fopen(outName,"w");
+			}
+			outputBinary		=	preferBinaryRibOut;
 			outputCompressed	=	FALSE;
 		}
 #else
-		outFile				=	fopen(outName,"w");
+		if(preferBinaryRibOut==TRUE){
+			outFile			=	fopen(outName,"wb");
+		}else{
+			outFile			=	fopen(outName,"w");
+		}
+		outputBinary		=	preferBinaryRibOut;
 		outputCompressed	=	FALSE;
 #endif
+		if(outFile==NULL){
+			printf("[liquid]ERROR: open file fail: %s\n", outName);
+		}
+		printf("[liquid Debug] file=%s, mode=%d\n", outName, preferBinaryRibOut);
 
 		outputIsPipe		=	FALSE;
 	}
@@ -146,6 +163,7 @@ CRibOut::CRibOut(FILE *o) : CRiInterface() {
 	outName				=	NULL;
 	outFile				=	o;
 	outputCompressed	=	FALSE;
+	outputBinary		=	FALSE;
 	outputIsPipe		=	FALSE;
 	declaredVariables	=	new map<string,CVariable *>;
 	numLightSources		=	1;
@@ -465,7 +483,7 @@ void		CRibOut::RiOptionV(char *name,int n,char *tokens[],void *params[]) {
 				} else {
 					error(CODE_BADTOKEN,"Unknown compression type \"%s\"\n",val);
 				}
-			  optionCheckString("format") 
+			optionCheckString("format") 
         optionEndCheck
 		}
 	} else if ( strcmp(name,"user") == 0 ) {

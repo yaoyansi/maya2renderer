@@ -454,6 +454,7 @@ private :
 	void processExpression( liqTokenPointer *token, liqRibLightData *light = NULL );
 
 	void _writeObject(bool reference, const liqRibNodePtr& ribNode);
+	void _RiOption_format_compress(bool bBinary, bool bCompress);
 };
 
 #endif
