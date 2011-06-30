@@ -231,6 +231,10 @@ EXTERN(RtToken)		RI_SPECULARHITMODE;
 EXTERN(RtToken)		RI_TRANSMISSIONHITMODE;
 EXTERN(RtToken)		RI_CAMERAHITMODE;
 
+//side attributes
+EXTERN(RtToken)		RI_SIDE;
+EXTERN(RtToken)		RI_DOUBLESHADED;
+EXTERN(RtToken)		RI_BACKFACETOLERANCE;
 ////////////////////////////////////////////////////////////////////////
 //
 //	Non-Standard options

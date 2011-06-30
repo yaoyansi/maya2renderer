@@ -291,6 +291,10 @@ RtToken		RI_SPECULARHITMODE	    =	"specularhitmode";
 RtToken		RI_TRANSMISSIONHITMODE	=	"transmissionhitmode";
 RtToken		RI_CAMERAHITMODE	      =	"camerahitmode";
 
+//side attributes
+RtToken		RI_SIDE					= "sides";
+RtToken		RI_DOUBLESHADED			= "doubleshaded";
+RtToken		RI_BACKFACETOLERANCE	= "backfacetolerance";
 
 ////////////////////////////////////////////////////////////////////////
 //

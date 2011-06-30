@@ -852,6 +852,13 @@ void		CRibOut::RiAttributeV(char *name,int n,char *tokens[],void *params[]) {
       attributeCheckString(RI_SS_REFERENCECAMERA)
 			attributeEndCheck
 		}
+	}else if (strcmp(name,RI_SIDE) == 0) {
+		for (i=0;i<n;i++) {
+			if (FALSE) {
+				attributeCheckInt(RI_DOUBLESHADED,0)
+				attributeCheckFloat(RI_BACKFACETOLERANCE,0)
+				attributeEndCheck
+		}
 	}
 }
 
