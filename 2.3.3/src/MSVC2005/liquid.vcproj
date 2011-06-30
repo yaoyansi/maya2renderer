@@ -3685,6 +3685,10 @@
 			Name="xx"
 			>
 			<File
+				RelativePath="..\..\mel\xxliquidmayaBatchRenderProcedure.mel"
+				>
+			</File>
+			<File
 				RelativePath="..\..\mel\xxliquidutility.mel"
 				>
 			</File>

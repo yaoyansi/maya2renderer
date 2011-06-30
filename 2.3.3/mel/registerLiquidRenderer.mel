@@ -195,11 +195,15 @@ global proc registerLiquidRenderer()
                   "-renderProcedure                       \"liquidmayaRender\" "          +
                   "-commandRenderProcedure                \"liquidmayaCmdlineRender\" "   +
                   "-batchRenderProcedure                  \"liquidmayaBatchRender\" "     +
+				  "-batchRenderOptionsProcedure           \"liquidmayaBatchRenderOptions\" "      +
+                  //"-batchRenderOptionsStringProcedure     \"liquidmayaBatchRenderOptionsString\" "+//if not setted, it will be rendered in mayasoftware mode.
                   "-renderRegionProcedure                 \"liquidmayaRenderRegion\" "    +
                   "-logoImageName                         \"" + $icon + "\" "             +
                   "-logoCallbackProcedure                 \"liquidRenderLogoCallback\" "  +
                   "liquid;"
       );
+
+
     } else {
       eval (
         "renderer  -rendererUIName                      \"Liquid\" "                          +
@@ -221,6 +225,10 @@ global proc registerLiquidRenderer()
       renderer -edit -addGlobalsNode "liquidGlobals" liquid;
   }
 
+  // can't override maya original mayaBatchRenderProcedure(). Strange!
+  // so, we run LIQUID_ROOT\mel\replace_mayaBatchRenderProcedure.bat manully 
+  // to replace MAYA_ROOT\scripts\other\mayaBatchRenderProcedure.mel
+  //replaceMayaBatchRenderProcedure(1);
   updateRendererUI();
 }
 
@@ -240,8 +248,22 @@ global proc unregisterLiquidRenderer()
 	liqlog("unregisterLiquidRenderer(...)");
 
   if ( `renderer -q -ex liquid` ) renderer -unregisterRenderer liquid;
+  
+  //replaceMayaBatchRenderProcedure(0);
   updateRendererUI();
 }
 
+// global proc replaceMayaBatchRenderProcedure(int $replace)
+// {	
+// 	liqlog("replaceMayaBatchRenderProcedure("+$replace+")");
+// 
+// 	if($replace){
+// 		//replace maya original mayaBatchRenderProcedure() function.
+// 		eval("source xxliquidmayaBatchRenderProcedure.mel;");
+// 	}else{
+// 		//use maya original mayaBatchRenderProcedure() function.
+// 		eval("source mayaBatchRenderProcedure.mel;");
+// 	}
+// }
 
 

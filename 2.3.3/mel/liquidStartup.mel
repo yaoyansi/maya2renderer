@@ -627,8 +627,9 @@ global proc liquidmayaCmdlineRender( string $options )
 
 global proc liquidmayaBatchRender( string $options )
 {
-	liqlog("liquidmayaBatchRender(...)");
-  if( ! `pluginInfo -q -l "liquid"` ) loadPlugin "liquid";
+	liqlog("liquidmayaBatchRender("+$options+")");
+  //if( ! `pluginInfo -q -l "liquid"` ) loadPlugin "liquid";
+  if( ! `pluginInfo -q -l "liquid_2008x32d"` ) loadPlugin "liquid_2008x32d";
   string $cmd = ( "liquid -GL " + $options );
   eval $cmd;
 }
@@ -792,5 +793,52 @@ global proc liquidStartup()
 
   eval "liquidAETemplateOverwrite";
   evalDeferred -lp "liquidAETemplateOverwrite";
+}
+
+global proc liquidmayaBatchRenderOptions()
+{
+	liqlog("liquidmayaBatchRenderOptions(...)");
+	global string $gBatchRenderWindow = "batchRenderWnd";
+	//$gBatchRenderWindow contains the window frame and 3 buttons:
+	//[Batch render and close] [Batch render] [Close]
+	//so, we should add special UI items for our custom renderer
+
+	if (! `window -q -exists $gBatchRenderWindow`) {
+		source "batchRenderWindow";
+		createBatchRenderOptionsLayout();
+	}
+
+	//switch to $gBatchRenderWindow
+ 	setParent batchRenderOptionsTabs;
+		setUITemplate -pushTemplate DefaultTemplate;
+ 			columnLayout liquidBatchOptionsTab;
+				text -label "you can add your options here.:)";
+				checkBox -label "test checkbox";
+
+			//add a tab for your renderer
+ 			tabLayout -edit
+ 				-tabsVisible false
+   				-tabLabel liquidBatchOptionsTab "liquidBatchOptions"
+   				batchRenderOptionsTabs;
+			// select the tab for your renderer
+			tabLayout -edit -selectTab liquidBatchOptionsTab batchRenderOptionsTabs;
+	 	setUITemplate -popTemplate;
+	setParent ..;
+
+	// Change window title
+	window -edit -title ("Liquid Batch Render Option") $gBatchRenderWindow;
+
+	// set the "BatchRender" button command, or the "BatchRender" button has no action.
+	button -edit -command "BatchRender" batchRenderButton;
+
+
+	showWindow $gBatchRenderWindow;
+}
+
+//NOTE: create a xml in Maya_Root\bin\rendererDesc\, e.g. elvishrayRenderer.xml.
+global proc string liquidmayaBatchRenderOptionsString()
+{
+	liqlog("elvishrayBatchRenderOptionsString()");
+	return " -r liquid ";
 }
 

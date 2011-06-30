@@ -1,0 +1,202 @@
+// Copyright (C) 1997-2006 Autodesk, Inc., and/or its licensors.
+// All rights reserved.
+//
+// The coded instructions, statements, computer programs, and/or related
+// material (collectively the "Data") in these files contain unpublished
+// information proprietary to Autodesk, Inc. ("Autodesk") and/or its licensors,
+// which is protected by U.S. and Canadian federal copyright law and by
+// international treaties.
+//
+// The Data is provided for use exclusively by You. You have the right to use,
+// modify, and incorporate this Data into other products for purposes authorized 
+// by the Autodesk software license agreement, without fee.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. AUTODESK
+// DOES NOT MAKE AND HEREBY DISCLAIMS ANY EXPRESS OR IMPLIED WARRANTIES
+// INCLUDING, BUT NOT LIMITED TO, THE WARRANTIES OF NON-INFRINGEMENT,
+// MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, OR ARISING FROM A COURSE 
+// OF DEALING, USAGE, OR TRADE PRACTICE. IN NO EVENT WILL AUTODESK AND/OR ITS
+// LICENSORS BE LIABLE FOR ANY LOST REVENUES, DATA, OR PROFITS, OR SPECIAL,
+// DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES, EVEN IF AUTODESK AND/OR ITS
+// LICENSORS HAS BEEN ADVISED OF THE POSSIBILITY OR PROBABILITY OF SUCH DAMAGES.
+
+//
+//	General Batch render interface.
+//
+//  Loop over renderable layers, 
+//	and call the renderer associated with the layer.
+//  This procedure is used for interactive batch and command line rendering,
+//	for maya software renderer, hardware renderer, mental ray for maya
+//	renderer, vector renderer.
+//
+global int $XX_LIQUID_DEBUG = 1;
+proc liqPrint(string $prefix, string $log)
+{
+	global int $XX_LIQUID_DEBUG;
+	if($XX_LIQUID_DEBUG){
+		print("[liq "+$prefix+"]"+$log+"\n");
+	}	
+}
+proc liqDebug( string $log ){	liqPrint("DEBUG", $log); }
+proc liqWarn( string $log ) {	liqPrint("WARN",$log);	 }
+proc liqError( string $log ){	liqPrint("ERROR",$log);  }
+
+
+global proc mayaBatchRenderProcedure(
+	int $isInteractiveBatch,	// interactive batch or command line rendering
+	string $sceneName,			// the original scene name before export
+	string $layer,				// render specific layer
+	string $renderer,			// use specific renderer is not empty string. 
+	string $option				// optional arg to the render command 
+	)
+{
+	liqDebug("mayaBatchRenderProcedure("+$isInteractiveBatch+","+$sceneName+","+$layer+","+$renderer+","+$option+")");
+	// get list of render layers
+	string $renderLayers[];	clear($renderLayers);
+	$renderLayers = `listConnections renderLayerManager.renderLayerId`;
+	
+	// switch to defaultRenderLayer
+	editRenderLayerGlobals -currentRenderLayer $renderLayers[0];
+		
+	// execute pre mel script
+	string $melScript = `getAttr defaultRenderGlobals.preMel`;
+	if( $melScript != "" ) eval $melScript;
+	
+	// render specific layer
+	if( $layer != "" )
+	{
+		for($renderLayer in $renderLayers)
+		{
+			if( $renderLayer == $layer )
+			{
+				clear($renderLayers);
+				$renderLayers[0] = $layer;
+				
+				break;
+			}
+		}
+		
+		if( size($renderLayers)!=1 )
+		{
+			// could not find the layer
+			string $msg = (uiRes("m_mayaBatchRenderProcedure.kNoLayer"));
+			error(`format -stringArg $layer $msg`);
+			return;
+		}
+	}
+
+	int $numLayers = size($renderLayers);
+	
+	$renderLayers = sortLayers($renderLayers);
+			
+	
+	// render all the layers
+	for($i=0; $i<$numLayers; $i++)
+	{
+		
+		// render this layer if it is renderable.
+		// check renderable flag before switching to the layer
+		if( `getAttr ($renderLayers[$i] + ".renderable")` )
+		{
+		
+			// switch render layer!
+			editRenderLayerGlobals -currentRenderLayer $renderLayers[$i];
+			
+			// Interactive batch rendering case
+			// If the image file name is not specified,
+			// the scene name is used internally.
+			// However, the scene name contains the process ID,
+			// so use the original scene name which was passed down in $imageName
+			// set the imageFilePrefix for interactive batch rendering
+			if( $isInteractiveBatch )
+			{
+				string $imageName = `getAttr defaultRenderGlobals.imageFilePrefix`;
+				string $oldImageName = "";
+
+				if( $imageName == "" )
+				{
+					$imageName = $sceneName;
+				}
+
+				// there may be several occurences of %s, make sure to
+				// substitutes them all 
+				while ($oldImageName != $imageName)
+				{
+					$oldImageName = $imageName;
+					$imageName = substitute("<Scene>",  $imageName, $sceneName);
+					$imageName = substitute("%s",  $imageName, $sceneName);
+					$imageName = substitute("%/s", $imageName, ($sceneName+"/"));
+					$imageName = substitute("%-s", $imageName, ("-"+$sceneName));
+					$imageName = substitute("%_s", $imageName, ("_"+$sceneName));
+					$imageName = substitute("%\\.s", $imageName, ("."+$sceneName));
+				}
+				setAttr defaultRenderGlobals.imageFilePrefix -type "string" $imageName;
+			}
+			
+			string $currentRenderer = $renderer;
+			
+			// execute pre render layer mel script
+			$melScript = `getAttr defaultRenderGlobals.preRenderLayerMel`;
+			if( $melScript != "" ) eval $melScript;
+			
+			// if renderer is not overriden by the command line arg, use current renderer.
+			if( size($renderer) == 0 )
+				$currentRenderer = currentRenderer();
+			
+			// dynamics runup
+			dynRunupForBatchRender();
+			
+			string $cmd = "";
+
+			if( $isInteractiveBatch )
+			{
+				liqDebug("$currentRenderer="+$currentRenderer);
+				if($currentRenderer=="liquid"){
+					$cmd += "liquidmayaBatchRender";
+					liqWarn("make sure -batchRenderProcedure=liquidmayaBatchRender .");
+				}else{	
+					$cmd += `renderer -q -batchRenderProcedure ($currentRenderer)`;
+				}
+
+				if ($cmd == "") {
+					string $msg = (uiRes("m_mayaBatchRenderProcedure.kNoBatchRender"));
+					warning (`format -stringArg $currentRenderer $msg`);
+				}
+			}
+			else 
+			{
+				$cmd += `renderer -q -commandRenderProcedure ($currentRenderer)`;
+				if ($cmd == "") {
+					string $msg = (uiRes("m_mayaBatchRenderProcedure.kNoCmdLine"));
+					warning (`format -stringArg $currentRenderer $msg`);
+				}
+			}
+			
+			if( $cmd!="" )
+			{
+				$cmd += "(\" -layer " + $renderLayers[$i] + " " + $option + " \")";	
+			}
+			eval($cmd);
+			
+			// execute post render layer mel script
+			$melScript = `getAttr defaultRenderGlobals.postRenderLayerMel`;
+			if( $melScript != "" ) eval $melScript;
+			
+		}
+	}
+
+	// switch to the base layer, and check is we want to combine
+	// images in a sequence of layered PSD files.
+	editRenderLayerGlobals -currentRenderLayer $renderLayers[0];
+	int $format = `getAttr defaultRenderGlobals.imageFormat`;
+	if ($format == 36)						// Layered PSD
+	{
+		if( $isInteractiveBatch && $sceneName!="" )
+			renderLayerPostProcess -sceneName $sceneName;
+		else
+			renderLayerPostProcess ;
+	}
+
+	// execute post mel script
+	$melScript = `getAttr defaultRenderGlobals.postMel`;
+	if( $melScript != "" ) eval $melScript;
+}
