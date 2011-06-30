@@ -217,6 +217,9 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
       menuItem -label "Opacity"               -command liquidCreateOpacityAttribute;
       menuItem -label "Matte"                 -command liquidCreateMatteAttribute;
       menuItem -label "Camera Hit-Mode"       -command liquidCreateCameraHitModeAttribute;
+      menuItem -label "Strategy"						-command liquidCreateStrategyAttribute;
+      menuItem -label "VolumeIntersectionStrategy"      -command liquidCreateVolumeIntersectionStrategyAttribute;
+      menuItem -label "VolumeIntersectionPriority"      -command liquidCreateVolumeIntersectionPriorityAttribute;
       menuItem -label "Raster-Oriented Dicing" -command "liquidCreateRasterOrientedDicingAttribute( 1 )";
       menuItem -label "Double Shaded" -command "liquidCreateDoubleShadedAttribute( 0 )";
       menuItem -label "Custom Shading Group" -command liquidCreateCustomSGAttribute;

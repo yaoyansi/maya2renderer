@@ -257,6 +257,12 @@ class liqRibNode {
       float constantwidth;
     } curve;
 
+	struct strategy{
+		MString strategy_;
+		MString volumeIntersectionStrategy;
+		float   volumeIntersectionPriority;
+	} strategy;
+
     bool    instanceInheritPPColor;
     bool    invisible;
     bool    ignoreShapes;

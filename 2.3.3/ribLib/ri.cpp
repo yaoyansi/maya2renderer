@@ -286,6 +286,9 @@ RtToken		RI_BACKFACING			=	"backfacing";
 
 // Shade attributes
 RtToken		RI_SHADE			          =	"shade";
+RtToken     RI_STRATEGY				= "strategy";
+RtToken		RI_VOLUMEINTERSECTIONSTRAGETY = "volumeintersectionstrategy";
+RtToken		RI_VOLUMEINTERSECTIONPRIORITY = "volumeintersectionpriority";
 RtToken		RI_DIFFUSEHITMODE	      =	"diffusehitmode";
 RtToken		RI_SPECULARHITMODE	    =	"specularhitmode";
 RtToken		RI_TRANSMISSIONHITMODE	=	"transmissionhitmode";

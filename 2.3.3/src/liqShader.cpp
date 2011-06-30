@@ -261,7 +261,12 @@ liqShader::liqShader( MObject shaderObj )
 						if( arraySize == 0 ) 
 						{
 							skipToken = true;
-							printf("[liqShader] warning undefined string array size, not yet implemented...\n");
+							//printf("[liqShader] warning undefined string array size, not yet implemented...\n");
+							MString stringPlugValue;
+							stringPlug.getValue( stringPlugValue );
+							tokenPointerArray.rbegin()->set( paramName.asChar(), rString );
+							tokenPointerArray.rbegin()->setTokenString(0, stringPlugValue.asChar());
+							tokenPointerArray.push_back( liqTokenPointer() );						
 						}
 						else if( arraySize > 0 ) 
 						{
@@ -285,6 +290,7 @@ liqShader::liqShader( MObject shaderObj )
 										printf("[liqShader] error while building param %d : %s \n", kk, stringPlug.name().asChar() );
 									}
 								}
+								tokenPointerArray.push_back( liqTokenPointer() );
 							}
 							else
 							{
@@ -306,6 +312,8 @@ liqShader::liqShader( MObject shaderObj )
 								LIQDEBUGPRINTF("[liqShader::liqShader] parsed string for param %s = %s \n", paramName.asChar(), stringVal.asChar() );
 								tokenPointerArray.rbegin()->set( paramName.asChar(), rString );
 								tokenPointerArray.rbegin()->setTokenString( 0, stringVal.asChar() );
+							
+								//tokenPointerArray.push_back( liqTokenPointer() );							
 							}
 						}
 					}
@@ -323,7 +331,11 @@ liqShader::liqShader( MObject shaderObj )
 						if( arraySize == 0 )
 						{
 							skipToken = true;
-							printf("[liqShader] warning undefined float array size, not yet implemented ....\n");
+							//printf("[liqShader] warning undefined float array size, not yet implemented ....\n");
+							float floatValue;
+							floatPlug.getValue(floatValue);
+							tokenPointerArray.rbegin()->set( paramName.asChar(), rFloat );
+							tokenPointerArray.rbegin()->setTokenFloat(0, floatValue);
 						}
 						else if( arraySize > 0 )
 						{
@@ -353,6 +365,7 @@ liqShader::liqShader( MObject shaderObj )
 							tokenPointerArray.rbegin()->set( paramName.asChar(), rFloat );
 							tokenPointerArray.rbegin()->setTokenFloat( 0, floatPlugVal );
 						}
+						tokenPointerArray.push_back( liqTokenPointer() );
 					}
 					else
 					{
@@ -382,10 +395,12 @@ liqShader::liqShader( MObject shaderObj )
 					{
 						parameterType = rNormal;
 					}
+
 					if( arraySize==0 )
 					{
-						printf("[liqShader] warning undefined float[3] array size, not yet implemented ....\n");
+						//printf("[liqShader] warning undefined float[3] array size, not yet implemented ....\n");
 						skipToken = true;
+						liqShaderParseVectorAttr(shaderNode, paramName.asChar(), parameterType);
 					}
 					else if ( arraySize > 0 )
 					{
@@ -611,7 +626,7 @@ MStatus liqShader::liqShaderParseVectorAttr ( const MFnDependencyNode& shaderNod
 		triplePlug.child( 1 ).getValue( y );
 		triplePlug.child( 2 ).getValue( z );
 		tokenPointerArray.rbegin()->setTokenFloat( 0, x, y, z );
-		//tokenPointerArray.push_back( liqTokenPointer() );
+		tokenPointerArray.push_back( liqTokenPointer() );
 	}
   return status;
 }
@@ -639,7 +654,7 @@ MStatus liqShader::liqShaderParseVectorArrayAttr ( const MFnDependencyNode& shad
         tokenPointerArray.rbegin()->setTokenFloat( kk, x, y, z );
       }
     }
-    //tokenPointerArray.push_back( liqTokenPointer() );
+    tokenPointerArray.push_back( liqTokenPointer() );
   }
 
   return status;

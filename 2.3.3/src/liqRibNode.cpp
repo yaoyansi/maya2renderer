@@ -165,6 +165,10 @@ liqRibNode::liqRibNode( liqRibNodePtr instanceOfNode,
   delightSSS.refraction = 0.0;
   delightSSS.scale = 1.0;
 
+  strategy.strategy_ = "grids";
+  strategy.volumeIntersectionStrategy = "exclusive";
+  strategy.volumeIntersectionPriority = 0.0f;
+
   invisible                 = false;
   ignoreShapes              = false;
 }
@@ -426,6 +430,35 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
 
       liquidGetPlugValue( nodePeeker, "liqDelightSSRefraction", delightSSS.refraction, status );
       liquidGetPlugValue( nodePeeker, "liqDelightSSScale", delightSSS.scale, status );
+
+      // strategy ----------------------------------------------------------
+	  int tmp0=0;
+	  liquidGetPlugValue( nodePeeker, "liqStrategy", tmp0, status );
+	  //cout << "tmp0="<<tmp0<<endl;
+	  if(MStatus::kSuccess==status)
+	  {
+		  if(0==tmp0){
+			  strategy.strategy_ = "grids";
+		  }else if(1==tmp0){
+			  strategy.strategy_ = "vpvolumes";
+		  }
+	  }
+
+	  int tmp1=0;
+	  liquidGetPlugValue( nodePeeker, "liqVolumeIntersectionStrategy", tmp1, status );
+	  //cout << "tmp1="<<tmp1<<endl;
+	  if(MStatus::kSuccess==status)
+	  {
+		  if(0==tmp1){
+			  strategy.volumeIntersectionStrategy = "exclusive";
+		  }else if(1==tmp1){
+			  strategy.volumeIntersectionStrategy = "additive";
+		  }
+	  }
+
+	  liquidGetPlugValue( nodePeeker, "liqVolumeIntersectionPriority", strategy.volumeIntersectionPriority, status );
+      //cout << DagPath.fullPathName()<<endl
+	  //	 << "liqStrategy="<<strategy.strategy_<<", vis="<<strategy.volumeIntersectionStrategy<<", vip="<<strategy.volumeIntersectionPriority<<endl;
 
       // RIB group ---------------------------------------------------------
 

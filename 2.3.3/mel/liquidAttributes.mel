@@ -15,6 +15,9 @@ global proc liquidCreateShadingAttributes()
   liquidCreateOpacityAttribute();
   liquidCreateCameraHitModeAttribute();
   liquidCreateMatteAttribute();
+  liquidCreateStrategyAttribute(); 
+  liquidCreateVolumeIntersectionStrategyAttribute(); 
+  liquidCreateVolumeIntersectionPriorityAttribute();
   liquidCreateCustomSGAttribute();
 }
 
@@ -24,7 +27,9 @@ global proc liquidDeleteShadingAttributes()
   string $nodes[] = liquidGetSelection( "-tr" );
   string $attr[] = {  "liqShadingRate", "liqDoubleShaded",
                       "liqDiceRasterOrient", "liqColor", "liqOpacity",
-                      "liqMatte", "liqHitModeCamera", "liquidCustomShadingGroup"
+                      "liqMatte", "liqHitModeCamera", "liquidCustomShadingGroup",
+					  "liqStrategy","liqVolumeIntersectionStrategy",
+					  "liqVolumeIntersectionPriority"
                     };
   string $currentNode;
 
@@ -1296,6 +1301,40 @@ global proc liquidCreateHitModeTransmissionAttribute()
   }
 }
 
+global proc liquidCreateStrategyAttribute()
+{
+  string $nodes[] = liquidGetSelection( "-tr" );
+  string $currentNode;
+  for ( $currentNode in $nodes ) {
+    if ( !`attributeQuery -node $currentNode -ex "liqStrategy"` ) {
+      addAttr -ln "liqStrategy" -at enum -enumName "grids=0:vpvolumes=1" -k true $currentNode;
+      setAttr ($currentNode+".liqStrategy") 0;
+    }
+  }
+}
+
+global proc liquidCreateVolumeIntersectionStrategyAttribute()
+{
+  string $nodes[] = liquidGetSelection( "-tr" );
+  string $currentNode;
+  for ( $currentNode in $nodes ) {
+    if ( !`attributeQuery -node $currentNode -ex "liqVolumeIntersectionStrategy"` ) {
+      addAttr -ln "liqVolumeIntersectionStrategy" -at enum -enumName "exclusive=0:additive=1" -k true $currentNode;
+      setAttr ($currentNode+".liqVolumeIntersectionStrategy") 0;
+    }
+  }
+}
+
+global proc liquidCreateVolumeIntersectionPriorityAttribute()
+{
+  string $nodes[] = liquidGetSelection( "-tr" );
+  string $currentNode;
+  for ( $currentNode in $nodes ) {
+    if ( !`attributeQuery -node $currentNode -ex "liqVolumeIntersectionPriority"` ) {
+      addAttr -ln "liqVolumeIntersectionPriority" -at double -dv 0.0 -k true $currentNode;
+    }
+  }
+}
 
 global proc liquidCreateIgnoreShapesAttribute()
 {

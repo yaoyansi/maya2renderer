@@ -259,7 +259,10 @@ global proc AEliquidInstanceFlags( string $node )
       editorTemplate -label "Color" -addDynamicControl "liqColor";
       editorTemplate -label "Opacity" -addDynamicControl "liqOpacity";
       editorTemplate -label "Camera Hit-Mode" -addDynamicControl "liqHitModeCamera";
-      editorTemplate -label "Alpha Matte" -addDynamicControl "liqMatte";
+      editorTemplate -label "Strategy" -addDynamicControl "liqStrategy";
+      editorTemplate -label "VolumeIntersectionStrategy" -addDynamicControl "liqVolumeIntersectionStrategy";
+      editorTemplate -label "VolumeIntersectionPriority" -addDynamicControl "liqVolumeIntersectionPriority"; 
+	  editorTemplate -label "Alpha Matte" -addDynamicControl "liqMatte";
       editorTemplate -ccu ("liquidSGMessageNew "+$node+" \"Custom Shading Group\"") ("liquidSGMessageReplace "+$node ) "liquidCustomShadingGroup";
 
     editorTemplate -endLayout;

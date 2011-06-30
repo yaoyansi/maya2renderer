@@ -833,6 +833,9 @@ void		CRibOut::RiAttributeV(char *name,int n,char *tokens[],void *params[]) {
 	} else if (strcmp(name,RI_SHADE) == 0) {
 		for (i=0;i<n;i++) {
 			if (FALSE) {
+				attributeCheckString(RI_STRATEGY)
+				attributeCheckString(RI_VOLUMEINTERSECTIONSTRAGETY)
+				attributeCheckFloat(RI_VOLUMEINTERSECTIONPRIORITY, 1)
 			attributeCheckString(RI_DIFFUSEHITMODE)
 			attributeCheckString(RI_SPECULARHITMODE)
       attributeCheckString(RI_TRANSMISSIONHITMODE)

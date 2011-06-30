@@ -6402,6 +6402,25 @@ MStatus liqRibTranslator::objectBlock()
         }
 		  }
 
+		  //strategy
+		  {
+			  if(ribNode->strategy.strategy_!="grids"){
+				  RtString strategy = const_cast<char*>(ribNode->strategy.strategy_.asChar());
+				  RiAttribute("shade",(RtToken)"string strategy", &strategy, RI_NULL);
+			  }
+
+			  if(ribNode->strategy.volumeIntersectionStrategy!="exclusive"){
+				  RtString volumeIntersectionStrategy = const_cast<char*>(ribNode->strategy.volumeIntersectionStrategy.asChar());
+				  RiAttribute("shade",(RtToken)"string volumeintersectionstrategy", &volumeIntersectionStrategy, RI_NULL);
+			  }
+
+			  if(ribNode->strategy.volumeIntersectionPriority >0.0001){
+				  RtFloat volumeIntersectionPriority = ribNode->strategy.volumeIntersectionPriority;
+				  RiAttribute("shade",(RtToken)"float volumeintersectionpriority", &volumeIntersectionPriority, RI_NULL);
+			  }
+		  }
+
+
       if( ribNode->motion.deformationBlur || ribNode->motion.transformationBlur && ribNode->motion.factor != 1.0f ) 
         RiGeometricApproximation( "motionfactor", ribNode->motion.factor );
       
