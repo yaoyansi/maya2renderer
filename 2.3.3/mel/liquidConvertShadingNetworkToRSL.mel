@@ -697,6 +697,7 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
   trace  ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
   system ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
 
+// omitted by yaoyansi [2010-09-26]
 //   string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
 // 
 //   string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
