@@ -45,8 +45,8 @@ const	int	ribOutScratchSize	=	1000;
 // Options for rib
 int	preferCompressedRibOut		=	FALSE;
 
-extern int useAdvancedVisibilityAttributes;
-int	useAdvancedVisibilityAttributes		=	FALSE;
+//extern int useAdvancedVisibilityAttributes;
+//int	useAdvancedVisibilityAttributes		=	FALSE;
 
 
 static	char	*getFilter(float (*function)(float,float,float,float)) {
@@ -792,21 +792,21 @@ void		CRibOut::RiAttributeV(char *name,int n,char *tokens[],void *params[]) {
 			attributeEndCheck
 		}
 	} else if (strcmp(name,RI_VISIBILITY) == 0) {
-		if ( useAdvancedVisibilityAttributes ) 
-    {
-      for (i=0;i<n;i++) {
-			  if (FALSE) {
-  			attributeCheckInt(RI_NEWTRANSMISSION,1)
-			  attributeCheckInt(RI_CAMERA,1)
-			  attributeCheckInt(RI_TRACE,1)
-			  attributeCheckInt(RI_PHOTON,1)
-        attributeCheckInt(RI_SPECULAR,1)
-        attributeCheckInt(RI_DIFFUSE,1)
-        attributeCheckString(RI_SUBSURFACE)
-			  attributeEndCheck
-      }
+		if ( true/*useAdvancedVisibilityAttributes*/ ) 
+		{
+			for (i=0;i<n;i++) {
+				if (FALSE) {
+					attributeCheckInt(RI_NEWTRANSMISSION,1)
+					attributeCheckInt(RI_CAMERA,1)
+					attributeCheckInt(RI_TRACE,1)
+					attributeCheckInt(RI_PHOTON,1)
+					attributeCheckInt(RI_SPECULAR,1)
+					attributeCheckInt(RI_DIFFUSE,1)
+					attributeCheckString(RI_SUBSURFACE)
+					attributeEndCheck
+			}
 		}
-    else
+	else
     {
       for (i=0;i<n;i++) {
         if (FALSE) {

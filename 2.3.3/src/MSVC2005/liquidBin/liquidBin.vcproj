@@ -2341,6 +2341,187 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Prman2008Debug|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="2"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="../../../ribLib/,$(MAYA_LOCATION)/include,../../../include"
+				PreprocessorDefinitions="GENERIC_RIBLIB;WIN32;_WIN32;_WINDOWS;NDEBUG;_CONSOLE;uint=unsigned int;ulong=unsigned long;_BOOL;REQUIRE_IOSTREAM"
+				StringPooling="true"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				DefaultCharIsUnsigned="false"
+				TreatWChar_tAsBuiltInType="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				IgnoreImportLibrary="false"
+				LinkLibraryDependencies="false"
+				UseLibraryDependencyInputs="false"
+				UseUnicodeResponseFiles="true"
+				AdditionalDependencies="libprman.lib glu32.lib opengl32.lib netapi32.lib ws2_32.lib zdll.lib OpenMayaFX.lib Foundation.lib OpenMaya.lib OpenMayaRender.lib OpenMayaUI.lib OpenMayaAnim.lib"
+				OutputFile="../../../bin/prman/win32/liquid.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(MAYA_LOCATION)/lib&quot;;&quot;$(RMANTREE)/lib&quot;"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="false"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Prman2008Debug|x64"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="2"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				TargetEnvironment="3"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="$(RMANTREE_X64)/include,$(MAYA_LOCATION_X64)/include,../../../include"
+				PreprocessorDefinitions="PRMAN;WIN32;_WIN32;_WINDOWS;NDEBUG;_CONSOLE;uint=unsigned int;ulong=unsigned long;_BOOL;REQUIRE_IOSTREAM"
+				StringPooling="true"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				DefaultCharIsUnsigned="false"
+				TreatWChar_tAsBuiltInType="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				IgnoreImportLibrary="false"
+				LinkLibraryDependencies="false"
+				UseLibraryDependencyInputs="false"
+				UseUnicodeResponseFiles="true"
+				AdditionalDependencies="glu32.lib opengl32.lib netapi32.lib ws2_32.lib libprman.lib zdll.lib OpenMayaFX.lib Foundation.lib OpenMaya.lib OpenMayaRender.lib OpenMayaUI.lib OpenMayaAnim.lib"
+				OutputFile="../../../bin/prman/win64/liquid.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(RMANTREE_X64)/lib;$(MAYA_LOCATION_X64)/lib"
+				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="false"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -2569,6 +2750,22 @@
 						DebugInformationFormat="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\liqExpression.cpp"
@@ -2767,6 +2964,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="PrmanDebug2008|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -3121,6 +3334,30 @@
 						DebugInformationFormat="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UseUnicodeResponseFiles="false"
+						DisableLanguageExtensions="false"
+						TreatWChar_tAsBuiltInType="true"
+						Detect64BitPortabilityProblems="false"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UseUnicodeResponseFiles="false"
+						DisableLanguageExtensions="false"
+						TreatWChar_tAsBuiltInType="true"
+						Detect64BitPortabilityProblems="false"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\liqRenderer.cpp"
@@ -3339,6 +3576,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="PrmanDebug2008|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -3583,6 +3836,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="PrmanDebug2008|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						DebugInformationFormat="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Prman2008Debug|x64"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
