@@ -1062,11 +1062,11 @@ void liqRibLightData::write()
           if ( liqglo_doShadows && usingShadow ) 
           {
             MString	px = rayTraced ? "raytrace" : autoShadowName( pPX );
-            MString	nx = autoShadowName( pNX );
-            MString	py = autoShadowName( pPY );
-            MString	ny = autoShadowName( pNY );
-            MString	pz = autoShadowName( pPZ );
-            MString	nz = autoShadowName( pNZ );
+            MString	nx = rayTraced ? "raytrace" : autoShadowName( pNX );
+            MString	py = rayTraced ? "raytrace" : autoShadowName( pPY );
+            MString	ny = rayTraced ? "raytrace" : autoShadowName( pNY );
+            MString	pz = rayTraced ? "raytrace" : autoShadowName( pPZ );
+            MString	nz = rayTraced ? "raytrace" : autoShadowName( pNZ );
             RtString sfpx = const_cast<char*>( px.asChar() );
             RtString sfnx = const_cast<char*>( nx.asChar() );
             RtString sfpy = const_cast<char*>( py.asChar() );
