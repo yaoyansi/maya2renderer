@@ -1,0 +1,1061 @@
+//
+//
+// The contents of this file are subject to the Mozilla Public License Version 1.1 (the
+// "License"); you may not use this file except in compliance with the License. You may
+// obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+// Software distributed under the License is distributed on an "AS IS" basis, WITHOUT
+// WARRANTY OF ANY KIND, either express or implied. See the License for the specific
+// language governing rights and limitations under the License.
+//
+// The Original Code is the Liquid Rendering Toolkit.
+//
+// The Initial Developer of the Original Code is Colin Doncaster. Portions created by
+// Colin Doncaster are Copyright (C) 2002. All Rights Reserved.
+//
+// Contributor(s): Philippe Leprince.
+//
+//
+// The RenderMan (R) Interface Procedures and Protocol are:
+// Copyright 1988, 1989, Pixar
+// All Rights Reserved
+//
+//
+// RenderMan (R) is a registered trademark of Pixar
+//
+//  Creation Date:    July 8, 2003
+//
+//  Procedure Name:
+//      liquidLifWidgets
+//
+//  $Revision: 1.9 $
+//
+
+
+proc lifGradientAttr_connect( string $node, string $valueAttr, string $positionAttr, string $interpAttr )
+{
+  int $isColor     = ( `getAttr -type ($node+"."+$valueAttr+"[0]")` == "float3" )? 1:0 ;
+  int $arraySize   =   `getAttr -size ($node+"."+$valueAttr)`;
+  int $multiInterp = ( `getAttr -size ($node+"."+$interpAttr)` )? 1:0;
+
+  string $gradAttr = ($valueAttr+"Lif");
+
+  for ( $i=0; $i<$arraySize; $i++ ) {
+
+    //trace ("  lifGradientAttr_connect "+$node+" "+$valueAttr+"["+$i+"]");
+
+    if ( $isColor ) connectAttr -f ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Color")   ($node+"."+$valueAttr+"["+$i+"]");
+    else connectAttr -f ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_FloatValue")   ($node+"."+$valueAttr+"["+$i+"]");
+
+    if ( objExists( ($node+"."+$positionAttr) ) ) {
+      setAttr -lock off ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Position");
+      connectAttr -f ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Position") ($node+"."+$positionAttr+"["+$i+"]");
+    } else setAttr -lock on ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Position");
+
+    if ( objExists( ($node+"."+$interpAttr) ) ) {
+      setAttr -lock off ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Interp");
+      if ( objExists( ($node+"."+$interpAttr+"["+$i+"]") ) ) {
+        connectAttr -f ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Interp")   ($node+"."+$interpAttr+"["+$i+"]");
+      } else {
+        if ( $i>0 ) continue;
+        connectAttr -f ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Interp")   ($node+"."+$interpAttr);
+      }
+    } else setAttr -lock on ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Interp");
+  }
+}
+
+
+proc lifGradientAttr_init( string $node, string $valueAttr, string $positionAttr, string $interpAttr )
+{
+  //trace("    + lifGradientAttr_init( node:"+$node+", valueAttr:"+$valueAttr+", positionAttr:"+$positionAttr+", interpAttr:"+$interpAttr+" )");
+
+  int $isColor     = ( `getAttr -type ($node+"."+$valueAttr+"[0]")` == "float3" )? 1:0 ;
+  int $arraySize   =   `getAttr -size ($node+"."+$valueAttr)`;
+  int $multiInterp = ( `getAttr -size ($node+"."+$interpAttr)` )? 1:0;
+
+  string $gradAttr = ($valueAttr+"Lif");
+
+  for ( $i=0; $i<$arraySize; $i++ ) {
+
+    //trace ("  lifGradientAttr_init "+$node+" "+$valueAttr+"["+$i+"]");
+
+    float $pos    = ( objExists( ($node+"."+$positionAttr+"["+$i+"]") ) )? (`getAttr ($node+"."+$positionAttr+"["+$i+"]")`) : ($i*(1/($arraySize-1)));
+    float $interp = 3;
+    if ( $interpAttr != "" ) {
+      if ( objExists( ($node+"."+$interpAttr+"["+$i+"]") ) )   $interp = `getAttr ($node+"."+$interpAttr+"["+$i+"]")`;
+      else $interp = `getAttr ($node+"."+$interpAttr)`;
+    }
+
+    setAttr ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Position") $pos;
+    if ( $isColor ) {
+      float $col[]  = `getAttr ($node+"."+$valueAttr+"["+$i+"]")`;
+      setAttr ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_ColorR")   $col[0];
+      setAttr ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_ColorG")   $col[1];
+      setAttr ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_ColorB")   $col[2];
+    } else {
+      float $val  = `getAttr ($node+"."+$valueAttr+"["+$i+"]")`;
+      setAttr ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_FloatValue")  $val;
+    }
+    setAttr ($node+"."+$gradAttr+"["+$i+"]."+$gradAttr+"_Interp")   $interp;
+
+  }
+}
+
+proc string lifGradientAttr_create( string $node, string $valueAttr, string $positionAttr, string $interpAttr )
+{
+  //trace (" + lifGradientAttr_create( node:"+$node+", valueAttr:"+$valueAttr+", positionAttr:"+$positionAttr+", interpAttr:"+$interpAttr+" )");
+  int $isColor = ( `getAttr -type ($node+"."+$valueAttr+"[0]")` == "float3" )? 1:0;
+
+  string $gradAttr = ($valueAttr+"Lif");
+
+  if ( !`objExists ($node+"."+$gradAttr)` ) {
+    //trace ("lifGradientAttr_create "+$node+" "+$valueAttr+"  >  "+$gradAttr);
+    addAttr -hidden true -ln $gradAttr -attributeType compound -numberOfChildren 3 -multi $node;
+      addAttr -hidden true -ln ($gradAttr+"_Position") -attributeType "float" -parent $gradAttr $node;
+      if ( $isColor ) {
+        addAttr -hidden true -ln ($gradAttr+"_Color") -usedAsColor -attributeType float3 -parent $gradAttr $node;
+          addAttr -hidden true -ln ($gradAttr+"_ColorR") -attributeType "float" -parent ($gradAttr+"_Color") $node;
+          addAttr -hidden true -ln ($gradAttr+"_ColorG") -attributeType "float" -parent ($gradAttr+"_Color") $node;
+          addAttr -hidden true -ln ($gradAttr+"_ColorB") -attributeType "float" -parent ($gradAttr+"_Color") $node;
+      } else {
+        addAttr -hidden true -ln ($gradAttr+"_FloatValue") -attributeType "float" -parent $gradAttr $node;
+      }
+      addAttr -hidden true -ln ($gradAttr+"_Interp") -attributeType "enum" -en "none:linear:smooth:spline" -parent $gradAttr $node;
+
+    lifGradientAttr_init( $node, $valueAttr, $positionAttr, $interpAttr );
+    lifGradientAttr_connect( $node, $valueAttr, $positionAttr, $interpAttr );
+  }
+  return $gradAttr;
+}
+
+global proc lifGradient_unifyInterpolation( string $ctl )
+{
+  global string $gAECurrentTab;
+  string $node = $gAECurrentTab;
+
+  string $currentParent = `setParent -q`;
+  string $optionMenuCtl = `setParent $ctl`;
+  int $selected = `optionMenu -q -sl ($optionMenuCtl+"|optionMenu")` - 1;
+
+  string $attr = substitute("Si$", $ctl, "");
+  $attr = substitute("[A-Za-z0-9_]+__", $attr, "");
+  string $nodeAttr = ($node+"."+$attr);
+  int $size = `getAttr -s $nodeAttr`;
+  for ( $i=0; $i<$size; $i++ ) {
+    setAttr ($nodeAttr+"["+$i+"]."+$attr+"_Interp") $selected;
+  }
+  setParent $currentParent;
+}
+
+
+global proc lifGradient_connect( string $nodeAttr )
+{
+  global string $gLiquid_currentAEShader;
+  //trace $gLiquid_currentAEShader;
+  string $buffer[];
+  tokenize($nodeAttr, ".", $buffer);
+  string $attr = $buffer[1];
+
+  string $rampName = ( $gLiquid_currentAEShader + "__" + $attr + "Ramp" );
+
+  gradientControl -e -at $nodeAttr $rampName;
+
+}
+
+
+global proc lifGradient_create( string $nodeAttr, int $bound, int $indent, int $staticEntries, int $staticPositions, int $adaptiveScaling )
+{
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAEShader;
+  //trace $gLiquid_currentAEShader;
+  string $buffer[];
+  tokenize($nodeAttr, ".", $buffer);
+  string $attr = $buffer[1];
+
+  setParent $gLiquid_currentAEParent;
+
+  string $rampName = ( $gLiquid_currentAEShader + "__" + $attr + "Ramp" );
+  string $scName   = ( $gLiquid_currentAEShader + "__" + $attr + "Scc" );
+  string $spName   = ( $gLiquid_currentAEShader + "__" + $attr + "Sp" );
+  string $siName   = ( $gLiquid_currentAEShader + "__" + $attr + "Si" );
+
+  string $colEntryName =  ($nodeAttr + "[0]." + $attr + "_ColorR");
+  int $isColor = `objExists ($colEntryName)`;
+
+  setUITemplate -pst attributeEditorTemplate;
+  string $col = `columnLayout -columnAttach "both" 5 -rowSpacing 2 -columnWidth 420`;
+
+  // ramp block
+  string $rampForm = `formLayout -p $col ($rampName + "Form")`;
+    string $spc	= `attrFieldSliderGrp -l "Selected Position"
+                                      -p $rampForm
+                                      -ann "Selected Position"
+                                      -h 30 -w 206 -cw4 123 81 1 1 $spName`;
+    string $scc;
+    if( $isColor ){
+      $scc= `attrColorSliderGrp -l "Selected Color"
+                                -p $rampForm
+                                -ann "Selected Color" -sb 0
+                                -h 26 -w 206 -cw4 123 81 1 1 $scName`;
+    } else {
+      $scc	= `attrFieldSliderGrp -l "Selected Value"
+                                  -p $rampForm
+                                  -ann "Selected Value"
+                                  -h 30 -w 206 -cw4 123 56 1 24 $scName`;
+    }
+
+    string $interp = `attrEnumOptionMenuGrp -l "Interpolation"
+                                            -p $rampForm
+                                            -ann "Interpolation method"
+                                            -w 206
+                                            -cw2 123 81 $siName`;
+    string $boundStyle = "etchedIn";
+    if( $bound ){
+      $boundStyle = "in";
+    }
+    string $lmax;
+    if ( $adaptiveScaling ) {
+      $lmax = `text -p $rampForm -label "1.0" ($rampName+"LX")`;
+    }
+    string $rframe = `frameLayout -p $rampForm -bs $boundStyle -lv 0 -cll 0 -mw 6 ($rampForm + "fr")`;
+    string $widgetName = `gradientControl -p    $rframe
+                                          -at   $nodeAttr
+                                          -snc  $staticEntries
+                                          -sp   $staticPositions
+                                          $rampName`;
+    if ( $adaptiveScaling ) {
+      gradientControl -e -as $adaptiveScaling -ror $adaptiveScaling -ulc $lmax $widgetName;
+    }
+
+    setParent ..;
+    formLayout
+      -edit
+        -attachForm $spc "left"  0
+        -attachForm $spc "right" 206
+        -attachForm $spc "top" 0
+        -attachNone $spc "bottom"
+
+        -attachForm $scc "left" 0
+        -attachForm $scc "right" 206
+        -attachControl $scc "top" 0 $spc
+        -attachNone $scc "bottom"
+
+        -attachForm $interp "left" 0
+        -attachNone $interp "right"
+        -attachControl $interp "top" 0 $scc
+        -attachNone $interp "bottom"
+
+        -attachControl $rframe "left" 2 $spc
+        -attachNone $rframe "right"
+        -attachForm $rframe "top" 0
+        -attachNone $rframe "bottom"
+        $rampForm;
+
+    if ( $adaptiveScaling ) {
+      formLayout
+        -edit
+          -attachControl $lmax "left" 2 $rframe
+          -attachNone $lmax "right"
+          -attachForm $lmax "top" 0
+          -attachNone $lmax "bottom"
+          $rampForm;
+    }
+  setParent ..;
+
+  // input
+  if(objExists ($nodeAttr +"Input")){
+    string $inLabel;
+    string $labelAttr = interToUI($attr);
+    if( $indent || size( $labelAttr ) < 9 ){
+      $inLabel =  ($labelAttr + " Input");
+    } else {
+      $inLabel = "Input";
+    }
+    if( $indent ){
+      attrEnumOptionMenuGrp -l $inLabel
+        -p $col
+        -ann "input variable for function"
+        -cw2 204 155
+        -at ($nodeAttr + "Input") ($rampName + "Input");
+    } else {
+      attrEnumOptionMenuGrp -l $inLabel
+        -p $col
+        -ann "input variable for function"
+        -cw2 123 500
+        -at ($nodeAttr + "Input") ($rampName + "Input");
+    }
+
+  }
+
+  // inputBias
+  if(  objExists ($nodeAttr +"InputBias") ){
+    attrFieldSliderGrp -l "Input Bias" -cw4 123 81 130	25
+        -p $col
+        -at ($nodeAttr +"InputBias") ($rampName + "InputBias");
+  }
+
+  // inputScale
+  if(  objExists ($nodeAttr +"InputScale") ){
+    attrFieldSliderGrp -l "Input Scale" -cw4 123 81 130 25
+        -p $col
+        -at ($nodeAttr +"InputScale") ($rampName + "InputScale");
+  }
+  // tell the port about the controls
+  gradientControl -e -scc $scc $widgetName;
+  gradientControl -e -spc $spc $widgetName;
+  gradientControl -e -sic $interp $widgetName;
+  setUITemplate -ppt;
+
+  // add command to unify interpolation
+  string $optionMenuCtl = ($interp+"|optionMenu");
+  if ( `optionMenu -q -ex $optionMenuCtl` ) optionMenu -e -cc ("lifGradient_unifyInterpolation "+$siName) $optionMenuCtl;
+
+  setParent $gLiquid_currentAEParent;
+}
+
+
+
+
+
+
+
+global proc liquidAE_LifGrp2( string $label )
+{
+  global string	$gAEFocusNode;
+  global string $gLiquid_currentAEShader;
+  //trace $gLiquid_currentAEShader;
+
+  global string $gLiquid_currentAEParent;
+
+  setUITemplate -pst attributeEditorTemplate;
+
+  int $state = ( gmatch( $label, "*+") )? 0:1;
+
+  $label = substring($label, 1, size( $label ) - 1 );
+  string $grp = substituteAllString($label, "-", "");
+         $grp = ( $gLiquid_currentAEShader + "_" + substituteAllString($grp, " ", "" ) + "_LifGrp");
+
+    switch( $label ) {
+      case "end":
+        $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+        $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+        // maybe add a test here to check we are still in the cache layout
+        setParent $gLiquid_currentAEParent;
+        break;
+      default:
+        if ( !`frameLayout -q -ex $grp` ) {
+          $gLiquid_currentAEParent = `frameLayout -l $label -p $gLiquid_currentAEParent $grp`;
+          $gLiquid_currentAEParent = `columnLayout -p $gLiquid_currentAEParent ($grp+"Col")`;
+        }
+        break;
+    }
+
+  setUITemplate -ppt;
+}
+
+
+
+
+
+/**
+ *  modified lif procedures to create the attribute editor widgets.
+ */
+
+global proc liquidAE_LifFloat_slider2( string $paramName, int $index, string $label, string $range[], string $description, int $channelBox )
+{
+  //trace ("       - liquidAE_LifFloat_slider "+$paramName+" "+$index+" "+$label+" "+$range[0]+" "+$range[1]+" "+$description);
+
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAEShader;
+
+  string $theParam    = ( $index < 0 )? $paramName : ( $paramName + "[" + $index + "]" );
+  string $theParamCtl = ( $index < 0 )? ( $gLiquid_currentAEShader + "_" + $paramName + "_0" ) : ( $gLiquid_currentAEShader + "_" + $paramName + "_" + $index );
+
+  float $min    = $range[0];
+  float $max    = $range[1];
+  float $slmin  = $range[0];
+  float $slmax  = $range[1];
+
+  if ( $min == $max ) {
+    $min    = -100000000;
+    $max    =  100000000;
+    float $val = ( $index < 0 )? `getAttr ($gLiquid_currentAENode+"."+$paramName)` : `getAttr ($gLiquid_currentAENode+"."+$paramName+"["+$index+"]")`;
+    $slmin  =  ( $val > 0 )? 0 : $val * 2;
+    $slmax  =  ( $val > 0 )? $val * 2 : 0;
+  }
+
+
+  if ( !`control -q -ex ($theParamCtl+"_LIF")` ) {
+
+    setUITemplate -pst attributeEditorTemplate;
+
+    string $theLabel    = ( $index < 0 )? $label : ( $label + "[" + $index + "]" );
+
+    attrFieldSliderGrp  -parent $gLiquid_currentAEParent
+                        -label  $theLabel
+                        -ann    $description
+                        -fieldMinValue  $min      -fieldMaxValue  $max
+                        -minValue $slmin            -maxValue  $slmax
+                        -sliderMinValue $slmin    -sliderMaxValue $slmax
+                        -at ( $gLiquid_currentAENode + "." + $theParam )
+                        -hideMapButton true
+                        ($theParamCtl+"_LIF");
+
+    setUITemplate -ppt;
+
+  } else {
+
+    attrFieldSliderGrp  -e
+                        -at ( $gLiquid_currentAENode + "." + $theParam )
+                        -fieldMinValue  $min      -fieldMaxValue  $max
+                        -minValue $slmin            -maxValue  $slmax
+                        -sliderMinValue $slmin    -sliderMaxValue $slmax
+                        ($theParamCtl+"_LIF");
+
+  }
+
+}
+
+global proc liquidAE_LifFloat_selector2( string $paramName, int $index, string $label, string $range[], string  $description, int $channelBox )
+{
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
+  //trace $gLiquid_currentAEShader;
+
+  string $theParamCtl = ($gLiquid_currentAEShader+"_"+$paramName+"_LIF");
+
+  if ( !`control -q -ex $theParamCtl` ) {
+
+    setUITemplate -pst attributeEditorTemplate;
+    string $menu = `optionMenuGrp -parent $gLiquid_currentAEParent -label $label $theParamCtl`;
+
+    int $numSize = size( $range );
+    for ( $k = 0; $k < $numSize; $k = $k + 2 ) {
+      if ( $range[ $k+1 ] == "" ) warning ("missing index on selector : "+$range[ $k ]);
+      int $data = $range[ $k+1 ];
+      menuItem -l $range[ $k ] -data $data;
+    }
+    optionMenuGrp -e -ann $description $theParamCtl;
+
+    setUITemplate -ppt;
+
+  }
+
+  connectControl -index 2 $theParamCtl ($gLiquid_currentAENode+"."+$paramName);
+
+}
+
+global proc liquidAE_LifFloat_bool2( string $paramName, int $index, string $label, string $range[], string  $description, int $channelBox )
+{
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
+
+  string $theParamCtl = ($gLiquid_currentAEShader+"_"+$paramName+"_LIF");
+
+  if ( !`control -q -ex $theParamCtl` ) {
+
+    setUITemplate -pst attributeEditorTemplate;
+    checkBoxGrp -parent $gLiquid_currentAEParent -label $label -ann $description $theParamCtl;
+    setUITemplate -ppt;
+
+  }
+
+  connectControl -index 2 $theParamCtl ($gLiquid_currentAENode+"."+$paramName);
+
+}
+
+global proc liquidAE_LifFloat_spline2( string $paramName, string $label, string $subtype, string $description, int $channelBox )
+{
+  //trace ("liquidAE_LifFloat_spline2( paramname:"+$paramName+", label:"+$label+", subtype:"+$subtype+", desc:"+$description+", chanbox:"+$channelBox+" )");
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
+
+  // find which attributes are going to be connected to the widget
+  string $attributes[] = stringToStringArray( $subtype, " ");
+  string $valueAttr    = $attributes[1];
+  string $positionAttr = $attributes[2];
+  string $interpAttr   = $attributes[3];
+
+  string $compound    = lifGradientAttr_create( $gLiquid_currentAENode, $valueAttr, $positionAttr, $interpAttr );
+  string $lifCtlName  = ( $gLiquid_currentAEShader + "__" + $compound + "Ramp" );
+
+  if ( !`gradientControl -q -ex $lifCtlName` ) {
+    // create the control
+    int $staticPositions = 1 - min( 1.0, float(size( $positionAttr )) );
+    lifGradient_create( ($gLiquid_currentAENode+"."+$compound), 0, 0, 1, $staticPositions, 0 );
+  } else {
+    // connect the control
+    lifGradient_connect( ($gLiquid_currentAENode+"."+$compound) );
+  }
+
+}
+
+global proc liquidAE_LifFloat2( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
+{
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
+
+  // error checking : if the param does not exist, we might have a bad lif
+  if ( ! objExists( ($gLiquid_currentAENode+"."+$paramName) ) ) {
+    warning ("[liquid] liquidAE_LifFloat2 : "+$gLiquid_currentAENode+"."+$paramName+" does not exist ! Your Lif file might be obsolete...");
+    return;
+  }
+
+  setParent $gLiquid_currentAEParent;
+
+  string $shortSubType[] = stringToStringArray( $subtype, " ");
+
+  switch( $shortSubType[0] ) {
+
+
+    case "slider":
+      if ( $arraySize ) {
+
+        int $skip = `control -q -ex ($gLiquid_currentAEShader+"_"+$paramName+"_0_LIF")`;
+        if ( !$skip ) {
+          $gLiquid_currentAEParent = `frameLayout -p $gLiquid_currentAEParent -label ($paramName+"["+$arraySize+"]") -borderVisible false -labelIndent 10 -font "smallPlainLabelFont"`;
+          $gLiquid_currentAEParent = `columnLayout -p $gLiquid_currentAEParent`;
+        }
+
+        int $j;
+        for ( $j=0; $j<$arraySize; $j++ ) {
+          liquidAE_LifFloat_slider2( $paramName, $j, $label, $range, $description, $channelBox );
+        }
+
+        if ( !$skip ) {
+          $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+          $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+          setParent $gLiquid_currentAEParent;
+          //setParent ..;
+          //setParent ..;
+        }
+
+      } else liquidAE_LifFloat_slider2( $paramName, -1, $label, $range, $description, $channelBox );
+
+      break;
+
+    case "selector":
+      if ( $arraySize ) {
+
+      } else liquidAE_LifFloat_selector2( $paramName, -1, $label, $range, $description, $channelBox );
+      break;
+
+
+    case "bool":
+      if ( $arraySize ) {
+
+      } else liquidAE_LifFloat_bool2( $paramName, -1, $label, $range, $description, $channelBox );
+      break;
+
+    case "floatspline":
+    if ( $arraySize ) {
+      liquidAE_LifFloat_spline2( $paramName, $label, $subtype, $description, $channelBox );
+    }
+    break;
+
+    default:
+      if ( $arraySize > 0 ) {
+
+        int $skip = `control -q -ex ($gLiquid_currentAEShader+"_"+$paramName+"_0_LIF")`;
+        if ( !$skip ) {
+          $gLiquid_currentAEParent = `frameLayout -p $gLiquid_currentAEParent -label ($paramName+"["+$arraySize+"]") -borderVisible false -labelIndent 10 -font "smallPlainLabelFont"`;
+          $gLiquid_currentAEParent = `columnLayout -p $gLiquid_currentAEParent` ;
+        }
+
+        int $j;
+        for ( $j=0; $j<$arraySize; $j++ ) {
+          liquidAE_LifFloat_slider2( $paramName, $j, $label, $range, $description, $channelBox );
+        }
+
+        if ( !$skip ) {
+          $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+          $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+          setParent $gLiquid_currentAEParent;
+          //setParent ..;
+          //setParent ..;
+        }
+
+      } else {
+        liquidAE_LifFloat_slider2( $paramName, -1, $label, $range, $description, $channelBox );
+      }
+      break;
+  }
+
+  setAttr -k $channelBox ($gLiquid_currentAENode+"."+$paramName);
+
+  setParent $gLiquid_currentAEParent;
+
+  //print "Done\n";
+}
+
+
+
+/**
+ *  this proc will update the menuItem's label and command
+ *  depending on the override state of the attribute.
+ */
+global proc liquidAE_LifStringOverrideEnabler( string $nodeDotAttr, string $ctl )
+{
+  int    $enable        = (`editRenderLayerGlobals -q -crl` == "defaultRenderLayer")? 0 : 1;
+  string $nodeOverrides = (" "+stringArrayToString( editRenderLayerAdjustment( "-q" ,$nodeDotAttr), " ")+" ");
+  string $remove        = (gmatch( $nodeOverrides, ("* "+$nodeDotAttr+" *")))? "-remove":"";
+  string $label         = ($remove == "")? "Create Layer Override":"Remove Layer Override";
+  int    $state         = ($remove == "")? 1:0;
+  string $ctlShort      = match("[A-Za-z0-9_]+$", $ctl);
+
+  //trace (" >> checking "+$nodeDotAttr+" ( "+$ctlShort+" ) :: isRenderLayer : "+$enable+"  overriden : "+(($remove == "")? "no":"yes"));
+
+  if ( `menuItem -q -ex ($ctlShort+"PopupMenuOVR")` ) {
+    menuItem -e -l $label
+                -c (  "editRenderLayerAdjustment "+$remove+" "+$nodeDotAttr+";"+
+                      "liquidAE_LifStringOverrideDisplay "+$state+" "+$ctlShort+";")
+                -en $enable
+                ($ctlShort+"PopupMenuOVR");
+  } else warning ("cannot find "+$ctlShort+"PopupMenuOVR");
+}
+
+
+/**
+ *  this proc will create a popupmenu if none can be found.
+ *  it will then create/append a menu item to manage the overrides.
+ *  the popupmenu has a postcommand to refresh the state/cmd of the menu item.
+ */
+global proc liquidAE_LifStringOverride( string $nodeDotAttr, string $ctl )
+{
+  string $parentMenu;
+
+  if ( !`menuItem -q -ex ($ctl+"PopupMenuOVR")` ) {
+    // get the popup menu
+    string $menus[] = `control -q -pma $ctl`;
+    if ( size( $menus ) ) {
+      for ( $m in $menus ) {
+        if ( `popupMenu -q -b $m` == 3 ) $parentMenu = $m;
+      }
+    } else {
+      string $attr = match("[A-Za-z0-9_]+$", $nodeDotAttr);
+      $parentMenu = `popupMenu -parent $ctl -button 3 -postMenuCommand ("liquidAE_LifStringOverrideEnabler ($gLiquid_currentAENode+\"."+$attr+"\") "+$ctl) ($ctl+"PopupMenu")`;
+    }
+    string $t = `menuItem -parent $parentMenu ($ctl+"PopupMenuOVR")`;
+  }
+}
+
+global proc liquidAE_LifStringOverrideDisplay( int $override, string $ctl )
+{
+  // remember the original parent
+  if ( !objExists( $ctl ) ) return ;
+
+  string $originalParent = `setParent -q`;
+
+  // compute the font and the full path to the control
+  string $font = ( $override )? "boldLabelFont":"plainLabelFont";
+  string $ctlLabel = ( `setParent $ctl` + "|label" );
+
+  // do it.
+  if ( `text -q -ex $ctlLabel` ) {
+    text -e -fn $font $ctlLabel;
+  }
+
+  // reset the parent
+  setParent $originalParent;
+}
+
+global proc liquidAE_LifStringOverrideDisplayAll()
+{
+  // global maintained by maya containing the name
+  // of the main attribute editor window.
+  global string $gAttributeEditorWindowName;
+
+  // liquid globals containing the current node and shader in the AE
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
+
+  if ( !objExists( $gLiquid_currentAENode ) ) return;
+
+  // is the attribute editor visible ?
+  if ( (  `window -exists $gAttributeEditorWindowName`
+      &&  `window -q -vis $gAttributeEditorWindowName`)
+      || (`isAttributeEditorVisible`))
+  {
+    // are we dealing with a liquid node ?
+    string $nodetype = nodeType($gLiquid_currentAENode);
+    if ( gmatch( $nodetype, "*liquid*") ) {
+
+      // remember the original parent
+      string $originalParent = `setParent -q`;
+
+      // default layer or render layer ?
+      int $isRenderLayer = (`editRenderLayerGlobals -q -crl` == "defaultRenderLayer")? 0 : 1;
+
+      // get the list of overriden params
+      string $nodeOverrides = (" "+stringArrayToString( editRenderLayerAdjustment( "-q" ,$gLiquid_currentAENode), " ")+" " );
+
+      // get the list of string attributes on the node
+      string $userAttr[] = `listAttr -ud $gLiquid_currentAENode`;
+
+      string $versionString = `about -v`;
+      float $version = catchQuiet( match("[0-9]+\\.[0-9]+", $versionString ) );
+      string $a;
+      for ( $a in $userAttr ) {
+
+        if ( !objExists( ($gLiquid_currentAENode+"."+$a) ) ) continue;
+
+        // early exit if we have a message or string attr.
+        if ( $version >= 8.0 && `attributeQuery -node $gLiquid_currentAENode -message $a` ) continue;
+        if ( `getAttr -type ($gLiquid_currentAENode+"."+$a)` != "string" ) continue;
+
+        string $ctlName = ( $gLiquid_currentAEShader + "_" + match("[A-Za-z0-9_]+$", $a) + "_0_LIF" );
+        int $overrideState = ( $isRenderLayer && gmatch( $nodeOverrides, ("* "+$gLiquid_currentAENode+"."+$a+" *")) )? 1:0;
+        liquidAE_LifStringOverrideDisplay( $overrideState, $ctlName );
+
+      }
+
+      setParent $originalParent;
+    }
+  }
+}
+
+global proc liquidAE_LifString2( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
+{
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
+
+  setParent $gLiquid_currentAEParent;
+
+  setUITemplate -pst attributeEditorTemplate;
+
+  if ( ! objExists( ($gLiquid_currentAENode+"."+$paramName) ) ) {
+    warning ("[liquid] liquidAE_LifString2 : "+$gLiquid_currentAENode+"."+$paramName+" does not exist ! Your Lif file might be obsolete...");
+    return;
+  }
+
+  int $j;
+  int $size = ( $arraySize > 0 )? $arraySize:1;
+  int $skip = (`control -q -ex (( $gLiquid_currentAEShader + "_" + $paramName + "_0_LIF" ))`) || ( $subtype == "selector" );
+
+  if ( $arraySize && !$skip ) {
+    $gLiquid_currentAEParent = `frameLayout -p $gLiquid_currentAEParent -label ($paramName+"["+$arraySize+"]") -borderVisible false -labelIndent 10 -font "smallPlainLabelFont"`;
+    $gLiquid_currentAEParent = `columnLayout -p $gLiquid_currentAEParent`;
+  }
+
+  for ( $j=0; $j<$size; $j++ ) {
+
+    string $attr          = ($arraySize)? ($paramName+"["+$j+"]"):$paramName;
+    string $theLabel      = ($arraySize)? ($label+"["+$j+"]"):$label;
+    string $currentValue  = `getAttr ( $gLiquid_currentAENode + "." + $attr )`;
+    string $ctlName       = ( $gLiquid_currentAEShader + "_" + $paramName + "_" + $j + "_LIF" );
+
+
+      switch( $subtype ) {
+
+        case "texture":
+          string $myFileCommand = ( "liquidChangeTextFileAttr " + $gLiquid_currentAENode + " " + $attr + " " + $ctlName );
+          if ( !`control -q -ex $ctlName` ) {
+            string $form          = `formLayout -p $gLiquid_currentAEParent`;
+            string $fullCtlPath   = `textFieldGrp -p $form -label $theLabel $ctlName`;
+            liquidAddTextureViewerMenu( $fullCtlPath, ($gLiquid_currentAENode+"."+$attr) );
+            string $button = `iconTextButton -p $form -style "iconOnly" -w 29 -h 19 -mw 0 -mh 0 -i (liquidGetHome()+"/icons/lif_tex.xpm") ($ctlName+"_BUT")`;
+            setParent ..;
+
+            if (`about -mac`) {
+              formLayout  -e
+                          -af $ctlName  top     0
+                          -af $ctlName  left    0
+                          -af $ctlName  right   31
+                          -af $button   top     2
+                          -af $button   right   5
+                          $form;
+            } else {
+              formLayout  -e
+                          -af $ctlName  top     0
+                          -af $ctlName  left    0
+                          -af $button   top     2
+                          -ac $button   left    0 $ctlName
+                          $form;
+            }
+          }
+          iconTextButton -e -c $myFileCommand ($ctlName+"_BUT");
+          textFieldGrp -e -ann $description $ctlName;
+          liquidAE_LifStringOverride( ($gLiquid_currentAENode+"."+$attr), $ctlName );
+          connectControl -index 2 $ctlName ($gLiquid_currentAENode+"."+$attr);
+
+          break;
+
+        case "shadow":
+          string $myFileCommand = ( "liquidChangeTextFileAttr " + $gLiquid_currentAENode + " " + $attr + " " + $ctlName );
+          if ( !`control -q -ex $ctlName` ) {
+            string $form = `formLayout -p $gLiquid_currentAEParent`;
+            textFieldGrp -p $form -label $theLabel $ctlName;
+            liquidAddTextureViewerMenu( $ctlName, ($gLiquid_currentAENode+"."+$attr) );
+            string $button = `iconTextButton -p $form -style "iconOnly" -w 29 -h 19 -mw 0 -mh 0 -i (liquidGetHome()+"/icons/lif_shd.xpm") -c $myFileCommand ($ctlName+"_BUT")`;
+            setParent ..;
+
+            if (`about -mac`) {
+              formLayout  -e
+                          -af $ctlName  top     0
+                          -af $ctlName  left    0
+                          -af $ctlName  right   31
+                          -af $button   top     2
+                          -af $button   right   5
+                          $form;
+            } else {
+              formLayout  -e
+                          -af $ctlName  top     0
+                          -af $ctlName  left    0
+                          -af $button   top     2
+                          -ac $button   left    0 $ctlName
+                          $form;
+            }
+
+          }
+          iconTextButton -e -c $myFileCommand ($ctlName+"_BUT");
+          textFieldGrp -e -ann $description $ctlName;
+          liquidAE_LifStringOverride( ($gLiquid_currentAENode+"."+$attr), $ctlName );
+          connectControl -index 2 $ctlName ($gLiquid_currentAENode+"."+$attr);
+          break;
+
+        case "coordsys":
+          string $myFileCommand = ( "liquidLifCoordSysBrowser " + $gLiquid_currentAENode + " " + $attr + " " + $ctlName );
+          if ( !`control -q -ex $ctlName` ) {
+            string $form          = `formLayout -p $gLiquid_currentAEParent`;
+            textFieldGrp -p $form -label $theLabel $ctlName;
+            string $button = `iconTextButton -p $form -style "iconOnly" -w 29 -h 19 -mw 0 -mh 0 -i (liquidGetHome()+"/icons/lif_cs.xpm") -c $myFileCommand ($ctlName+"_BUT")`;
+            setParent ..;
+
+            if (`about -mac`) {
+              formLayout  -e
+                          -af $ctlName  top     0
+                          -af $ctlName  left    0
+                          -af $ctlName  right   31
+                          -af $button   top     2
+                          -af $button   right   5
+                          $form;
+            } else {
+              formLayout  -e
+                          -af $ctlName  top     0
+                          -af $ctlName  left    0
+                          -af $button   top     2
+                          -ac $button   left    0 $ctlName
+                          $form;
+            }
+          }
+          iconTextButton -e -c $myFileCommand ($ctlName+"_BUT");
+          textFieldGrp  -e -ann $description $ctlName;
+          liquidAE_LifStringOverride( ($gLiquid_currentAENode+"."+$attr), $ctlName );
+          connectControl -index 2 $ctlName ($gLiquid_currentAENode+"."+$attr);
+          break;
+
+        case "selector":
+          if ( !`control -q -ex $ctlName` ) {
+            string $menu = `optionMenuGrp -p $gLiquid_currentAEParent -label $label $ctlName`;
+            int $numSize = size( $range );
+            for ( $k = 0; $k < $numSize; $k = $k + 2 ) {
+              menuItem -l $range[ $k ];
+            }
+            optionMenuGrp -e -v (`getAttr ($gLiquid_currentAENode+"."+$attr)`) $ctlName;
+          }
+          string $myCommand = ("setAttr -type \"string\" \""+$gLiquid_currentAENode+"."+$attr+"\" (`optionMenuGrp -q -v "+$ctlName+"`);");
+          optionMenuGrp -e -cc $myCommand -ann $description $ctlName;
+          liquidAE_LifStringOverride( ($gLiquid_currentAENode+"."+$attr), $ctlName );
+          break;
+
+        default:
+          if (  !`control -q -ex $ctlName` ) textFieldGrp -p $gLiquid_currentAEParent -label $theLabel $ctlName;
+          textFieldGrp -e -ann $description$ctlName;
+          liquidAE_LifStringOverride( ($gLiquid_currentAENode+"."+$attr), $ctlName );
+          connectControl -index 2 $ctlName ($gLiquid_currentAENode+"."+$attr);
+          break;
+      }
+  }
+  if ( $arraySize && !$skip ) {
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    setParent $gLiquid_currentAEParent;
+    //setParent ..;setParent ..;
+  }
+
+  setParent $gLiquid_currentAEParent;
+
+  setUITemplate -ppt;
+}
+
+
+
+
+
+global proc liquidAE_LifColor_spline2( string $selectedObj, string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
+{
+  global string $gLiquid_currentAEShader;
+
+  // find which attributes are going to be connected to the widget
+  string $attributes[] = stringToStringArray( $subtype, " ");
+  string $colorAttr    = $attributes[1];
+  string $positionAttr = $attributes[2];
+  string $interpAttr   = $attributes[3];
+
+  setUITemplate -pst attributeEditorTemplate;
+
+  if ( ! objExists( ($selectedObj+"."+$paramName) ) ) error("["+$selectedObj+"."+$paramName+"!]");
+
+  string $compound    = lifGradientAttr_create( $selectedObj, $colorAttr, $positionAttr, $interpAttr );
+  string $shader = getAttr ($selectedObj+".rmanShader");
+  string $lifCtlName  = ( $gLiquid_currentAEShader + "__" + $compound + "Ramp" );
+
+  if ( !`gradientControl -q -ex $lifCtlName` ) {
+    // create the control
+    int $staticPositions = 1 - min( 1.0, float(size( $positionAttr )) );
+    lifGradient_create( ($selectedObj+"."+$compound), 0, 0, 1, $staticPositions, 0 );
+  } else {
+    // connect the control
+    lifGradient_connect( ($selectedObj+"."+$compound) );
+  }
+
+  setUITemplate -ppt;
+}
+
+global proc liquidAE_LifColor2( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
+{
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
+
+  setParent $gLiquid_currentAEParent;
+
+  if ( gmatch( $subtype, "colorspline*") && $arraySize > 0 ) {
+    liquidAE_LifColor_spline2( $gLiquid_currentAENode, $paramName, $arraySize, $subtype, $label, $range, $description, $channelBox );
+    return;
+  }
+
+  setUITemplate -pst attributeEditorTemplate;
+
+  if ( ! objExists( ($gLiquid_currentAENode+"."+$paramName) ) ) {
+    warning ("[liquid] liquidAE_LifColor2 : "+$gLiquid_currentAENode+"."+$paramName+" does not exist ! Your Lif file might be obsolete...");
+    return;
+  }
+
+  int $i;
+  int $nValues = ($arraySize)? $arraySize : 1;
+  int $skip    = `control -q -ex ( ( $arraySize )? ($gLiquid_currentAEShader+"_"+$paramName + "_0_LIF" ) : ($gLiquid_currentAEShader+"_"+$paramName+"_LIF" ) )`;
+
+  if ( $arraySize && !$skip ) {
+    $gLiquid_currentAEParent = `frameLayout -p $gLiquid_currentAEParent
+                                            -label ($paramName+"["+$arraySize+"]")
+                                            -borderVisible false
+                                            -labelIndent 10
+                                            -font "smallPlainLabelFont"`;
+    $gLiquid_currentAEParent = `columnLayout -p $gLiquid_currentAEParent`;
+  }
+
+  setAttr -k $channelBox ($gLiquid_currentAENode+"."+$paramName);
+
+  for ( $i=0; $i<$nValues; $i++ ) {
+
+    string $pname     = ( $arraySize )? ( $paramName + "[" + $i + "]") : $paramName;
+    string $pnameCtl  = ( $arraySize )? ( $gLiquid_currentAEShader + "_" + $paramName + "_" + $i + "_LIF" ) : ( $gLiquid_currentAEShader + "_" + $paramName + "_LIF" );
+    string $plabel    = ( $arraySize )? ( $label + "[" + $i + "]") : $label;
+
+    string $attr      = ( $gLiquid_currentAENode + "." + $pname );
+
+    if ( !`control -q -ex $pnameCtl` ) attrColorSliderGrp -p $gLiquid_currentAEParent
+                                                          -label $plabel
+                                                          -at $attr
+                                                          -sb false
+                                                          $pnameCtl;
+    else attrColorSliderGrp -e -at $attr $pnameCtl;
+
+    string $subPname = ( $arraySize )? ($pname+"."+$paramName) : ($pname);
+    setAttr -k $channelBox ($gLiquid_currentAENode+"."+$pname);
+    setAttr -k $channelBox ($gLiquid_currentAENode+"."+$subPname+"a");
+    setAttr -k $channelBox ($gLiquid_currentAENode+"."+$subPname+"b");
+    setAttr -k $channelBox ($gLiquid_currentAENode+"."+$subPname+"c");
+
+  }
+
+  if ( $arraySize && !$skip ) {
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    setParent $gLiquid_currentAEParent;
+    //setParent ..;setParent ..;
+  }
+
+  setParent $gLiquid_currentAEParent;
+
+  setUITemplate -ppt;
+}
+
+
+
+
+global proc liquidAE_LifVector2( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
+{
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
+
+
+  if ( ! objExists( ($gLiquid_currentAENode+"."+$paramName) ) ) {
+    warning ("[liquid] liquidAE_LifVector2 : "+$gLiquid_currentAENode+"."+$paramName+" does not exist ! Your Lif file might be obsolete...");
+    return;
+  }
+
+  setParent $gLiquid_currentAEParent;
+  setUITemplate -pst attributeEditorTemplate;
+
+  int $i;
+  int $nValues = ($arraySize)? $arraySize : 1;
+  int $skip    = `control -q -ex ( ( $arraySize )? ( $gLiquid_currentAEShader + "_" + $paramName + "_0_LIF" ) : ( $gLiquid_currentAEShader + "_" + $paramName+"_LIF" ) )`;
+
+  if ( $arraySize && !$skip ) {
+
+    $gLiquid_currentAEParent = `frameLayout -p $gLiquid_currentAEParent
+                                            -label ( $paramName + "[" + $arraySize + "]" )
+                                            -borderVisible false
+                                            -labelIndent 10
+                                            -font "smallPlainLabelFont"`;
+    $gLiquid_currentAEParent = `columnLayout -p $gLiquid_currentAEParent`;
+
+  }
+
+  setAttr -k $channelBox ($gLiquid_currentAENode+"."+$paramName);
+
+  for ( $i=0; $i<$nValues; $i++ ) {
+
+    string $pname     = ( $arraySize )? ( $gLiquid_currentAENode + "." + $paramName + "[" + $i + "]" ) : ( $gLiquid_currentAENode + "." + $paramName );
+    string $pnameCtl  = ( $arraySize )? ( $gLiquid_currentAEShader + "_" + $paramName + "_" + $i + "_LIF" ) : ( $gLiquid_currentAEShader + "_" + $paramName + "_LIF" );
+    string $plabel    = ( $arraySize )? ( $label + "[" + $i + "]" ) : $label;
+
+    if ( !`control -q -ex $pnameCtl` ) {
+      attrFieldGrp  -p $gLiquid_currentAEParent
+                    -label $plabel
+                    -cc ( "liquidParamAU " + $gLiquid_currentAENode )
+                    -attribute $pname
+                    $pnameCtl;
+    } else attrFieldGrp -e -attribute $pname -ann $description $pnameCtl;
+
+    string $subPname = ( $arraySize )? ($pname+"."+$paramName) : ($pname);
+    setAttr -k $channelBox $pname;
+    setAttr -k $channelBox ($subPname+"a");
+    setAttr -k $channelBox ($subPname+"b");
+    setAttr -k $channelBox ($subPname+"c");
+
+  }
+
+
+  if ( $arraySize && !$skip ) {
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    setParent $gLiquid_currentAEParent;
+  }
+
+  setUITemplate -ppt;
+
+  setParent $gLiquid_currentAEParent;
+
+}
+
+

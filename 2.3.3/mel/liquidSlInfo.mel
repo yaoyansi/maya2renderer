@@ -1,0 +1,467 @@
+//
+//
+// The contents of this file are subject to the Mozilla Public License Version 1.1 (the
+// "License"); you may not use this file except in compliance with the License. You may
+// obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+// Software distributed under the License is distributed on an "AS IS" basis, WITHOUT
+// WARRANTY OF ANY KIND, either express or implied. See the License for the specific
+// language governing rights and limitations under the License.
+//
+// The Original Code is the Liquid Rendering Toolkit.
+//
+// The Initial Developer of the Original Code is Colin Doncaster. Portions created by
+// Colin Doncaster are Copyright (C) 2002. All Rights Reserved.
+//
+// Contributor(s): Berj Bannayan.
+//
+//
+// The RenderMan (R) Interface Procedures and Protocol are:
+// Copyright 1988, 1989, Pixar
+// All Rights Reserved
+//
+//
+// RenderMan (R) is a registered trademark of Pixar
+//
+//  Creation Date:    July 8, 2003
+//
+//  Procedure Names:
+//      liquidSlSetShader
+//      liquidSlShaderType
+//      liquidSlNumParams
+//      liquidSlParamName
+//      liquidSlParamType
+//      liquidSlParamArraySize
+//      liquidSlParamDefault
+//      liquidSlDefaultToString
+//      liquidSlDefaultToStringArray
+//      liquidSlDefaultToFloat
+//      liquidSlDefaultToFloatArray
+//      liquidSlDefaultToVector
+//      liquidSlDefaultToVectorArray
+//      liquidSlDefaultToMatrix
+//      liquidSlDefaultToMatrixArray
+//      liquidSlInfo
+//
+//  Description:
+//      Procedures for querying information from RenderMan
+//      shaders compiled for various renderers.  See the
+//      liquidSlInfo procedure for example usage.
+//
+//
+
+
+global proc liquidSlSetShader( string $shaderFile )
+{
+    global string $gLiquidSlShaderFile;
+    global string $gLiquidSLifFile[];
+
+    if ( $shaderFile == $gLiquidSlShaderFile ) {
+      //trace ("     - shader already parsed >> EXIT");
+      return;
+    }else {
+      $gLiquidSlShaderFile = $shaderFile;
+      clear $gLiquidSLifFile;
+    }
+
+    string $ext = `substitute "^.*\\." $shaderFile ""`;
+    switch ( $ext )
+    {
+      case "slo":
+        // prman shader
+        liquidSlParseSlo( $shaderFile );
+        break;
+      case "sdl":
+        // 3delight shader
+        liquidSlParseSdl( $shaderFile );
+        break;
+      case "slx":
+        // aqsis shader
+        liquidSlParseSlx( $shaderFile );
+        break;
+      case "sdr":
+        // pixie shader
+        liquidSlParseSdr( $shaderFile );
+        break;
+      case "slb":
+        // air shader
+        liquidSlParseSlb( $shaderFile );
+        break;
+      default:
+        error( "unknown shader extension: " + $ext );
+    }
+
+    liquidSlParseLif( $shaderFile );
+}
+
+
+global proc liquidSlSetShaderNode( string $node )
+{
+    global string $gLiquidSlShaderFile;
+    global string $gLiquidSLifFile[];
+
+    global string $gLiquidSlShaderFile;
+    global string $gLiquidSlShaderName;
+    global string $gLiquidSlShaderType;
+    global int    $gLiquidSlNumParams;
+    global string $gLiquidSlParamNames[];
+    global int    $gLiquidSlParamIsOutput[];
+    global string $gLiquidSlParamTypes[];
+    global string $gLiquidSlParamDefaults[];
+    global int    $gLiquidSlParamArraySizes[];
+
+    global string $gLiquidSLifFile[];
+    global int    $gLiquidSlParamGuiOrder[];
+    global string $gLiquidSlParamGuiLabel[];
+    global string $gLiquidSlParamGuiDescription[];
+    global string $gLiquidSlParamGuiType[];
+    global string $gLiquidSlParamGuiRange[];
+    global string $gLiquidSlLifShaderDescription;
+    global int    $gLiquidSlLifGuiSize;
+
+    $gLiquidSlShaderFile      = `getAttr ($node+".rmanShaderLong")`;
+    $gLiquidSlShaderName      =  basenameEx( $gLiquidSlShaderFile );
+    $gLiquidSlShaderType      =  tolower( substitute( "liquid", nodeType( $node ), "" ) );
+    $gLiquidSlParamNames      = `getAttr ($node+".rmanParams")`;
+    $gLiquidSlNumParams       =  size( $gLiquidSlParamNames );
+    $gLiquidSlParamTypes      = `getAttr ($node+".rmanTypes")`;
+    $gLiquidSlParamDefaults   = `getAttr ($node+".rmanDefaults")`;
+    $gLiquidSlParamArraySizes = `getAttr ($node+".rmanArraySizes")`;
+}
+
+global proc liquidSlInfoReset()
+{
+  global string $gLiquidSlShaderFile;
+  global string $gLiquidSlShaderName;
+  global string $gLiquidSlShaderType;
+  global int    $gLiquidSlNumParams;
+  global string $gLiquidSlParamNames[];
+  global int    $gLiquidSlParamIsOutput[];
+  global string $gLiquidSlParamTypes[];
+  global string $gLiquidSlParamDefaults[];
+  global int    $gLiquidSlParamArraySizes[];
+
+  global string $gLiquidSLifFile[];
+  global int    $gLiquidSlParamGuiOrder[];
+  global string $gLiquidSlParamGuiLabel[];
+  global string $gLiquidSlParamGuiDescription[];
+  global string $gLiquidSlParamGuiType[];
+  global string $gLiquidSlParamGuiRange[];
+  global string $gLiquidSlLifShaderDescription;
+  global int    $gLiquidSlLifGuiSize;
+  global int    $gLiquidSlLifExists;
+
+  clear $gLiquidSLifFile;
+  clear $gLiquidSlParamGuiOrder;
+  clear $gLiquidSlParamGuiLabel;
+  clear $gLiquidSlParamGuiDescription;
+  clear $gLiquidSlParamGuiType;
+  clear $gLiquidSlParamGuiRange;
+  clear $gLiquidSlParamIsOutput;
+
+  $gLiquidSlShaderName = "";
+  $gLiquidSlShaderFile = "";
+  $gLiquidSlLifExists = 0;
+  $gLiquidSlLifGuiSize = 0;
+  $gLiquidSlLifShaderDescription = "";
+}
+
+
+global proc string liquidSlShaderName()
+{
+    global string $gLiquidSlShaderName;
+    if ( $gLiquidSlShaderName == "" )
+        error( "no shader set" );
+    return $gLiquidSlShaderName;
+}
+
+global proc string liquidSlShaderType()
+{
+    global string $gLiquidSlShaderType;
+    if ( $gLiquidSlShaderType == "" )
+        error( "no shader set" );
+    return $gLiquidSlShaderType;
+}
+
+global proc int liquidSlNumParams()
+{
+    global int $gLiquidSlNumParams;
+    if ( $gLiquidSlNumParams == -1 )
+        error( "no shader set" );
+    return $gLiquidSlNumParams;
+}
+
+global proc string liquidSlParamName( int $index )
+{
+    global int $gLiquidSlNumParams;
+
+    if ( $gLiquidSlNumParams == -1 )
+        error( "no shader set" );
+
+    if ( $index < 0 ||
+         $index >= $gLiquidSlNumParams )
+        error( "liquidSlParamName( "+$index+" ): parameter index out of range" );
+
+    global string $gLiquidSlParamNames[];
+    return $gLiquidSlParamNames[$index];
+}
+
+global proc int liquidSlParamIsOutput( int $index )
+{
+  global int $gLiquidSlNumParams;
+
+  if ( $gLiquidSlNumParams == -1 )
+        error( "no shader set" );
+
+  if ( $index < 0 ||
+         $index >= $gLiquidSlNumParams )
+        error( "liquidSlParamName( "+$index+" ): parameter index out of range" );
+
+  global int    $gLiquidSlParamIsOutput[];
+  return $gLiquidSlParamIsOutput[$index];
+}
+
+global proc  string liquidSlParamDetail( int $index )
+{
+    global int $gLiquidSlNumParams;
+
+    if ( $gLiquidSlNumParams == -1 )
+        error( "no shader set" );
+
+    if ( $index < 0 ||
+         $index >= $gLiquidSlNumParams )
+        error( "liquidSlParamType: parameter index out of range" );
+
+    global string $gLiquidSlParamDetails[];
+    return $gLiquidSlParamDetails[$index];
+}
+
+global proc  string liquidSlParamType( int $index )
+{
+    global int $gLiquidSlNumParams;
+
+    if ( $gLiquidSlNumParams == -1 )
+        error( "no shader set" );
+
+    if ( $index < 0 ||
+         $index >= $gLiquidSlNumParams )
+        error( "liquidSlParamType: parameter index out of range" );
+
+    global string $gLiquidSlParamTypes[];
+    return $gLiquidSlParamTypes[$index];
+}
+
+global proc int liquidSlParamArraySize( int $index )
+{
+    global int $gLiquidSlNumParams;
+
+    if ( $gLiquidSlNumParams == -1 )
+        error( "no shader set" );
+
+    if ( $index < 0 ||
+         $index >= $gLiquidSlNumParams )
+        error( "liquidSlParamArraySize: parameter index out of range" );
+
+    global int $gLiquidSlParamArraySizes[];
+    return $gLiquidSlParamArraySizes[$index];
+}
+
+global proc string liquidSlParamDefault( int $index )
+{
+    global int $gLiquidSlNumParams;
+
+    if ( $gLiquidSlNumParams == -1 )
+        error( "no shader set" );
+
+    if ( $index < 0 ||
+         $index >= $gLiquidSlNumParams )
+        error( "liquidSlParamDefault: parameter index out of range" );
+
+    global string $gLiquidSlParamDefaults[];
+    return $gLiquidSlParamDefaults[$index];
+}
+
+global proc string liquidSlParamDefaultRaw( int $index )
+{
+    global int $gLiquidSlNumParams;
+
+    if ( $gLiquidSlNumParams == -1 )
+        error( "no shader set" );
+
+    if ( $index < 0 ||
+         $index >= $gLiquidSlNumParams )
+        error( "liquidSlParamDefault: parameter index out of range" );
+
+    global string $gLiquidSlParamDefaults[];
+    string $result = $gLiquidSlParamDefaults[$index];
+    while( size( match("\"*, \"*", $result ) ) ) $result = substitute("\"*, \"*", $result, ":" );
+    while( size( match("[<>{},\"]+", $result ) ) ) $result = substitute("[<>{},\"]+", $result, "" );
+    return $result;
+}
+
+
+
+//
+// Procedures for converting the string default returned
+// by liquidSlParamDefault() into a native mel type
+//
+
+global proc string liquidSlDefaultToString( string $default )
+{
+    // this gets rid of surrounding quotes
+    string $val = eval( "string $foo_S = " + $default );
+    return $val;
+}
+
+global proc string[] liquidSlDefaultToStringArray( string $default )
+{
+    string $val[] = eval( "string $foo_Sarray[] = " + $default );
+    return $val;
+}
+
+global proc float liquidSlDefaultToFloat( string $default )
+{
+    float $val = $default;
+    return $val;
+}
+
+global proc float[] liquidSlDefaultToFloatArray( string $default )
+{
+    float $val[] = eval( "float $foo_Farray[] = " + $default );
+    return $val;
+}
+
+global proc vector liquidSlDefaultToVector( string $default )
+{
+    vector $val = $default;
+    return $val;
+}
+
+global proc vector[] liquidSlDefaultToVectorArray( string $default )
+{
+  vector $val[] = eval("vector $foo_Varray[] =" + $default );
+  return $val;
+}
+
+global proc matrix liquidSlDefaultToMatrix( string $default )
+{
+    // Hack since the assign-eval trick
+    // doesn't work for matrices
+    global matrix $_tmpMatrix[4][4];
+    eval( "global matrix $_tmpMatrix[4][4];" +
+          "$_tmpMatrix = " + $default );
+    return $_tmpMatrix;
+}
+
+global proc float[] liquidSlDefaultToMatrixArray( string $default )
+{
+    // There is no matrix-array mel type, so
+    // we just return a single float array with
+    // 16 floats for each matrix in the array.
+    //
+    // Not yet implemented.
+    //
+    float $val[]; clear($val);
+    return $val;
+}
+
+global proc string[] liquidSlAllParamNames()
+{
+  global string $gLiquidSlParamNames[];
+  return $gLiquidSlParamNames;
+}
+
+global proc string[] liquidSlAllParamTypes()
+{
+  global string $gLiquidSlParamTypes[];
+  return $gLiquidSlParamTypes;
+}
+
+global proc string[] liquidSlAllParamDetails()
+{
+  global string $gLiquidSlParamDetails[];
+  return $gLiquidSlParamDetails;
+}
+
+global proc int[] liquidSlAllParamArraySizes()
+{
+  global int $gLiquidSlParamArraySizes[];
+  return $gLiquidSlParamArraySizes;
+}
+global proc string[] liquidSlAllParamDefaultsRaw()
+{
+  global string $gLiquidSlParamDefaults[];
+  string $result[];
+  int $i;
+  for ( $i=0; $i<size( $gLiquidSlParamDefaults ); $i++ ) {
+    $result[$i] = $gLiquidSlParamDefaults[$i];
+    while( size( match("\"*, \"*", $result[$i] ) ) ) $result[$i] = substitute("\"*, \"*", $result[$i], ":" );
+    while( size( match("[<>{},\"]+", $result[$i] ) ) ) $result[$i] = substitute("[<>{},\"]+", $result[$i], "" );
+  }
+  return $result;
+}
+
+
+//
+// Procedure to print information about a shader
+// and its parameters.  Useful as an example of
+// how to use the other procedures in this file.
+//
+
+global proc liquidSlInfo( string $shaderFile )
+{
+    liquidSlSetShader( $shaderFile );
+    string $shaderType = liquidSlShaderType();
+    print( "shaderType = " + $shaderType + "\n" );
+
+    int $numParams = liquidSlNumParams();
+    print( "numParams = " + $numParams + "\n" );
+
+    int $i = 0;
+    for ( ; $i < $numParams; $i++ )
+    {
+        string $paramName = liquidSlParamName( $i );
+        string $paramType = liquidSlParamType( $i );
+        string $paramDefault = liquidSlParamDefault( $i );
+        int $paramArraySize = liquidSlParamArraySize( $i );
+
+        // Print this parameters info
+        print( $i + ": " + $paramType + " " + $paramName );
+        if ( $paramArraySize > 0 )
+            print( "[" + $paramArraySize + "]" );
+        print( " = " + $paramDefault + "\n" );
+
+
+        // The following doesn't do anything, it just
+        // demonstrates how to convert the $paramDefault
+        // string into a usable mel data type.
+        // Note that shader parameters of types color,
+        // point, vector, and normal are all represented
+        // as mel vectors.
+
+        if ( $paramArraySize == 0 )
+        {
+            switch ( $paramType )
+            {
+            case "string":
+                string $s = liquidSlDefaultToString( $paramDefault );
+                break;
+            case "float":
+                float $f = liquidSlDefaultToFloat( $paramDefault );
+                break;
+            case "color":
+            case "point":
+            case "vector":
+            case "normal":
+                vector $v = liquidSlDefaultToVector( $paramDefault );
+                break;
+            case "matrix":
+                matrix $m[4][4] = liquidSlDefaultToMatrix( $paramDefault );
+                break;
+            }
+        }
+
+        // Likewise for array defaults
+    }
+}
+

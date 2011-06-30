@@ -1,0 +1,107 @@
+#!/bin/bash
+#
+LIQUIDVERSION=liquid-`tr -d "\"\"" < liquid.version`-${LIQRMAN}
+echo "Collecting files for liquid-${LIQUIDVERSION}..."
+cd ..
+tar --exclude=.* --exclude=*.o -cf ${LIQUIDVERSION}.tar *.txt bin/OSX/liquid_${LIQRMAN}.lib mel/*.mel mel/*.png scripts/*.py renderers/*.lg shaders/src/*.sl shaders/src/*.h test/
+cd src
+mkdir ${LIQUIDVERSION}
+cd ${LIQUIDVERSION}
+tar -xf ../../${LIQUIDVERSION}.tar
+
+echo Creating bash \& csh shell sources...
+# Create bash environment script
+BASH=.${LIQUIDVERSION}_bash
+echo export LIQUIDHOME=/Applications/Graphics/${LIQUIDVERSION} >> ${BASH}
+echo export MAYA_PLUG_IN_PATH="$"{MAYA_PLUG_IN_PATH}:"$"{LIQUIDHOME}/bin/OSX/${LIQRMAN} >> ${BASH}
+echo export MAYA_SCRIPT_PATH="$"MAYA_SCRIPT_PATH:"$"{LIQUIDHOME}/mel >> ${BASH}
+chmod 644 ${BASH}
+
+# Create csh environment script
+CSH=.${LIQUIDVERSION}_csh
+echo setenv LIQUIDHOME=/Applications/Graphics/${LIQUIDVERSION} >> ${CSH}
+echo setenv MAYA_PLUG_IN_PATH="$"{MAYA_PLUG_IN_PATH}:"$"{LIQUIDHOME}/bin/OSX/${LIQRMAN} >> ${CSH}
+echo setenv MAYA_SCRIPT_PATH="$"MAYA_SCRIPT_PATH:"$"{LIQUIDHOME}/mel >> ${CSH}
+chmod 644 ${CSH}
+
+# Create installer script
+echo Creating installer script...
+echo "#!/bin/bash" >> install
+echo "if ! [ -d /Applications/Graphics/${LIQUIDVERSION} ]" >> install
+echo "then" >> install
+echo "  mkdir -p /Applications/Graphics/${LIQUIDVERSION}" >> install
+echo "fi" >> install
+echo "cp -R --reply=yes "*" /Applications/Graphics/${LIQUIDVERSION}" >> install
+echo "cp ${BASH} --reply=yes /Applications/Graphics/${LIQUIDVERSION}" >> install
+echo "cp ${CSH} --reply=yes /Applications/Graphics/${LIQUIDVERSION}" >> install
+echo "pushd /Applications/Graphics/${LIQUIDVERSION}/shaders >/dev/null" >> install
+echo "for ff in src/*.sl; do \`aqsl \$ff >/dev/null 2>&1 &\`; done" >> install
+echo "for ff in src/*.sl; do \`shader \$ff >/dev/null 2>&1 &\`; done" >> install
+echo "for ff in src/*.sl; do \`sdrc \$ff >/dev/null 2>&1 &\`; done;" >> install
+echo "for ff in src/*.sl; do \`shaderdl \$ff >/dev/null 2>&1 &\`; done" >> install
+echo "popd >/dev/null" >> install
+echo "rm -f /Applications/Graphics/${LIQUIDVERSION}/install" >> install
+chmod 755 install
+
+# For the moment, disable install script and environment files
+rm ${CSH}
+rm ${BASH}
+rm install
+
+echo Creating install instructions...
+echo "Please put this folder at /Applications/Graphics/" >> INSTALL.txt
+echo "so that you have a folder at /Applications/Graphics/${LIQUIDVERSION}" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "You will need to edit your Maya.env file to include /Applications/Graphics/${LIQUIDVERSION}/bin/OSX/ in MAYA_PLUG_IN_PATH" >> INSTALL.txt
+echo "You will also need to edit your Maya.env file to include LIQUIDHOME=/Applications/Graphics/${LIQUIDVERSION}/bin/OSX/" >> INSTALL.txt
+echo "If you don't have a Maya.env file, then simply create one using a text editor at ~/Library/Preferences/Alias/maya/6.0/Maya.env" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "If you use Pixie, add these lines also to your Maya.env file" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "   PATH=\$PATH/Applications/Graphics/Pixie/bin" >> INSTALL.txt
+echo "   PIXIEHOME=/Applications/Graphics/Pixie" >> INSTALL.txt
+echo "   DISPLAY=:0.0" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "If you use 3Delight, add these lines also to your Maya.env file" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "PATH = \$PATH:$DELIGHT/bin/:" >> INSTALL.txt
+echo "DELIGHT = /Applications/Graphics/3Delight-3.0.0/" >> INSTALL.txt
+echo "DL_SHADERS_PATH = .:\$DELIGHT/shaders" >> INSTALL.txt
+echo "DL_DISPLAYS_PATH = .:\$DELIGHT/displays" >> INSTALL.txt
+echo "DL_TEXTURES_PATH = ." >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "For 3Delight, you must also add these two keys to your environment.plist file" >> INSTALL.txt
+echo "If you do not have this file, then simply create it with a text editor at ~/.MacOSX/environment.plist (note the . in the directory name)" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "<key>DYLD_LIBRARY_PATH</key>" >> INSTALL.txt
+echo "<string>/Applications/Graphics/3Delight-3.0.0/lib/</string>" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "The full file should look like (plus any additions you've made)" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" >> INSTALL.txt
+echo "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> INSTALL.txt
+echo "<plist version="1.0">" >> INSTALL.txt
+echo "<dict>" >> INSTALL.txt
+echo "    <key>DYLD_LIBRARY_PATH</key>" >> INSTALL.txt
+echo "    <string>/Applications/Graphics/3Delight-3.0.0/lib/</string>" >> INSTALL.txt
+echo "</dict>" >> INSTALL.txt
+echo "</plist>" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "You will also probably want to compile the shaders in /Applications/Graphics/${LIQUIDVERSION}/shaders/src/ and place" >> INSTALL.txt
+echo "them in /Applications/Graphics/${LIQUIDVERSION}/shaders/" >> INSTALL.txt
+echo "" >> INSTALL.txt
+echo "A future release should ease this installation procedure" >> INSTALL.txt
+# End temp hack
+
+cd ..
+rm ../${LIQUIDVERSION}.tar
+
+echo Creating final archive...
+tar -cjf ../${LIQUIDVERSION}-osx.tar.bz2 ${LIQUIDVERSION}/
+rm -r ${LIQUIDVERSION}/
+
+if [ -f ../${LIQUIDVERSION}-osx.tar.bz2 ]; then
+  echo
+  echo Successfully created archive ${LIQUIDVERSION}.tar.bz2.
+  echo
+fi

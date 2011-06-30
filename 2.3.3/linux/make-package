@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+LIQUIDVERSION=liquid-`tr -d "\"\"" < liquid.version`-${LIQRMAN}
+echo Collecting files...
+cd ..
+tar --exclude=.* --exclude=*.o -cf ${LIQUIDVERSION}.tar *.txt bin/linux/release/${LIQRMAN}/ mel/*.mel mel/*.png scripts/*.py renderers/*.lg shaders/src/*.sl shaders/src/*.h test/
+cd src
+mkdir ${LIQUIDVERSION}
+cd ${LIQUIDVERSION}
+tar -xf ../../${LIQUIDVERSION}.tar
+
+echo Creating bash \& csh shell sources...
+# Create bash environment script
+BASH=.${LIQUIDVERSION}_bash
+echo export LIQUIDHOME=/usr/local/${LIQUIDVERSION} >> ${BASH}
+echo export MAYA_PLUG_IN_PATH="$"{MAYA_PLUG_IN_PATH}:"$"{LIQUIDHOME}/bin/linux/release/${LIQRMAN} >> ${BASH}
+echo export MAYA_SCRIPT_PATH="$"MAYA_SCRIPT_PATH:"$"{LIQUIDHOME}/mel >> ${BASH}
+chmod 644 ${BASH}
+
+# Create csh environment script
+CSH=.${LIQUIDVERSION}_csh
+echo setenv LIQUIDHOME=/usr/local/${LIQUIDVERSION} >> ${CSH}
+echo setenv MAYA_PLUG_IN_PATH="$"{MAYA_PLUG_IN_PATH}:"$"{LIQUIDHOME}/bin/linux/release/${LIQRMAN} >> ${CSH}
+echo setenv MAYA_SCRIPT_PATH="$"MAYA_SCRIPT_PATH:"$"{LIQUIDHOME}/mel >> ${CSH}
+chmod 644 ${CSH}
+
+# Create installer script
+echo Creating installer script...
+echo "#!/bin/bash" >> install
+echo "if ! [ -d /usr/local/${LIQUIDVERSION} ]" >> install
+echo "then" >> install
+echo "  mkdir /usr/local/${LIQUIDVERSION}" >> install
+echo "fi" >> install
+echo "cp -R --reply=yes "*" /usr/local/${LIQUIDVERSION}" >> install
+echo "cp ${BASH} --reply=yes /usr/local/${LIQUIDVERSION}" >> install
+echo "cp ${CSH} --reply=yes /usr/local/${LIQUIDVERSION}" >> install
+echo "pushd /usr/local/${LIQUIDVERSION}/shaders >/dev/null" >> install
+echo "for ff in src/*.sl; do \`aqsl \$ff >/dev/null 2>&1 &\`; done" >> install
+echo "for ff in src/*.sl; do \`shader \$ff >/dev/null 2>&1 &\`; done" >> install
+echo "for ff in src/*.sl; do \`sdrc \$ff >/dev/null 2>&1 &\`; done;" >> install
+echo "for ff in src/*.sl; do \`shaderdl \$ff >/dev/null 2>&1 &\`; done" >> install
+echo "popd >/dev/null" >> install
+echo "rm -f /usr/local/${LIQUIDVERSION}/install" >> install
+chmod 755 install
+
+cd ..
+rm ../${LIQUIDVERSION}.tar
+
+echo Creating final archive...
+tar -cjf ${LIQUIDVERSION}.tar.bz2 ${LIQUIDVERSION}/
+rm -r ${LIQUIDVERSION}/
+
+if [ -f ${LIQUIDVERSION}.tar.bz2 ]; then
+  echo
+  echo Successfully created archive ${LIQUIDVERSION}.tar.bz2.
+  echo
+fi

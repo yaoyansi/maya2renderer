@@ -1,0 +1,1068 @@
+/**
+ *
+ * The contents of this file are subject to the Mozilla Public License Version 1.1 (the
+ * "License"); you may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http: *www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis, WITHOUT
+ * WARRANTY OF ANY KIND, either express or implied. See the License for the specific
+ * language governing rights and limitations under the License.
+ *
+ * The Original Code is the Liquid Rendering Toolkit.
+ *
+ * The Initial Developer of the Original Code is Colin Doncaster. Portions created by
+ * Colin Doncaster are Copyright (C) 2002. All Rights Reserved.
+ *
+ * Contributor(s): Philippe Leprince.
+ *
+ *
+ * The RenderMan (R) Interface Procedures and Protocol are:
+ * Copyright 1988, 1989, Pixar
+ * All Rights Reserved
+ *
+ *
+ * RenderMan (R) is a registered trademark of Pixar
+ *
+ *  Creation Date:  June 20, 2000
+ *
+ *
+ *  Description:
+ *      Liquids Shader Nodes procedures.
+ *
+ */
+
+
+global string $gLiquidAELastShader;
+global string $gLiquidAELastNode;
+
+
+/**
+ *  Stores extra data about the shader that will be needed at RIB export time.
+ *  Also stores a sequence of lif commands to create/reconnect widgets
+ */
+proc rmanParams_create( string $node, int $reReadShaderParams )
+{
+  if ( $reReadShaderParams ) {
+    string $shaderPath = `getAttr ($node+".rmanShaderLong")`;
+    liquidSlInfoReset(); // force reload
+    liquidSlSetShader( $shaderPath );
+  }
+
+  global string $gLifCmdList[];
+
+  setAttr -type "string" ( $node + ".rmanShader" ) (liquidSlShaderName());
+
+  // store the param names
+  //
+  string $cmd = ( "setAttr -type stringArray " + $node + ".rmanParams " + liquidSlNumParams() + " " );
+  for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
+      $cmd += ( "\"" + liquidSlParamName($i) + "\" " );
+  }
+  //trace $cmd;
+  eval $cmd;
+
+  // store the param details
+  //
+  string $cmd = ( "setAttr -type stringArray " + $node + ".rmanDetails " + liquidSlNumParams() + " " );
+  for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
+      $cmd += ( liquidSlParamDetail($i) + " " );
+  }
+  //trace $cmd;
+  eval $cmd;
+
+  // store the param types
+  //
+  string $cmd = ( "setAttr -type stringArray " + $node + ".rmanTypes " + liquidSlNumParams() + " " );
+  for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
+      $cmd += ( "\"" + liquidSlParamType($i) + "\" " );
+  }
+  //trace $cmd;
+  eval $cmd;
+
+  // store the defaults
+  //
+  string $cmd = ( "setAttr -type stringArray " + $node + ".rmanDefaults " + liquidSlNumParams() + " " );
+  for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
+      if ( liquidSlParamType($i) == "string" ) $cmd += ( "\"" + liquidSlParamDefaultRaw($i) + "\" " );
+      else $cmd += ( "\"" + liquidSlParamDefaultRaw($i) + "\" " );
+  }
+  //trace $cmd;
+  eval $cmd;
+
+  // store the array sizes
+  //
+  string $cmd = ( "setAttr -type Int32Array " + $node + ".rmanArraySizes " + liquidSlNumParams() + " " );
+  for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
+      $cmd += ( liquidSlParamArraySize($i) + " " );
+  }
+  //trace $cmd;
+  eval $cmd;
+
+  // store the lif command sequence
+  //
+  int $guiSize = ( liquidLifGuiSize() )? liquidLifGuiSize() : liquidSlNumParams();
+  if ( !objExists( ($node + ".rmanLifCmds") ) ) addAttr -dt "stringArray" -ln rmanLifCmds $node;
+  string $cmd = ( "setAttr -type stringArray " + $node + ".rmanLifCmds " + $guiSize + " " );
+  for ( $i = 0; $i < $guiSize; $i++ ) {
+      $cmd += ( "\"" + encodeString($gLifCmdList[$i]) + "\" " );
+  }
+  //trace $cmd;
+  eval $cmd;
+
+}
+
+global proc removeObsoleteParams( string $node )
+{
+  // delete obsolete params
+  //
+  global string $gLiquidSlParamNames[];
+  string $allUserDefinedAttr[] = `listAttr -ud -hd $node`;
+  string $obsoleteAttr[] = stringArrayRemove( $gLiquidSlParamNames, $allUserDefinedAttr );
+
+  // remove obsolete attributes - that is the ones
+  // that do not exist anymore.
+  for ( $at in $obsoleteAttr ) {
+
+    string $fullattr = ($node+"."+$at);
+
+    // if we have a well-known attr, skip it.
+    if (  $at == "rmanParams"     ||
+          $at == "rmanDetails"    ||
+          $at == "rmanTypes"      ||
+          $at == "rmanDefaults"   ||
+          $at == "rmanArraySizes" ||
+          $at == "rmanLifCmds" ||
+          gmatch( $at, "liquid*ShaderNode")  ||
+          gmatch( $at, "*Lif") ) continue;
+
+    if ( objExists( $fullattr ) ) {
+      string $connections[] = `listConnections -plugs true $fullattr`;
+      for ( $c in $connections ) {
+        //trace ("  disconnectAttr "+$c+" "+$fullattr);
+        catch(`disconnectAttr $c $fullattr`);
+      }
+      string $parentAttr[] = `attributeQuery -n $node -listParent $at`;
+      if ( !size($parentAttr) ) deleteAttr $fullattr;
+    }
+
+  }
+
+  // remove attributes whose type or size has changed
+}
+
+
+/**
+ *  Here we check for false-positives : parameters with the same name
+ *  but a different type or array size.
+ *  This can be done only once the shader has been set.
+ */
+proc checkParamsDefinition( string $node )
+{
+  int $numOfArgs = liquidSlNumParams();
+
+  for ( $i = 0; $i < $numOfArgs ; $i++ ) {
+
+    string $argName      = liquidSlParamName($i);
+    string $argType      = liquidSlParamType($i);
+    int    $argArrayLen  = liquidSlParamArraySize($i);
+
+    if ( objExists( ($node + "." + $argName ) ) ) {
+
+      string $mayaType;
+      switch( $argType ) {
+        case "float":
+          $mayaType = "double";
+          break;
+        case "string":
+          $mayaType = "string";
+          break;
+        case "color":
+          $mayaType = "float3";
+          break;
+        case "point":
+        case "normal":
+        case "vector":
+          $mayaType = "double3";
+          break;
+        default:
+          break;
+      }
+
+      int $deleteAttr = 0;
+      string $attrType = `getAttr -type ($node + "." + $argName )`;
+      int $attrSize    = `getAttr -size ($node + "." + $argName )`;
+
+      $attrSize = ( $attrSize = 1 )?  0 : $attrSize;
+
+      if ( $argArrayLen != $attrSize ) {
+        //trace ("size : we must delete "+$node + "." + $argName + " ( "+$argArrayLen+" != "+$attrSize+" )");
+        $deleteAttr = 1;
+      }
+
+      if ( $mayaType != $attrType ) {
+        //trace ("type : we must delete "+$node + "." + $argName + " ( "+$mayaType+" != "+$attrType+" )");
+        $deleteAttr = 1;
+      }
+
+      if ( $deleteAttr == 1 ) {
+        //trace ("   >> deleted : "+$node + "." + $argName );
+        catch(`deleteAttr ($node + "." + $argName )`);
+      }
+
+    }
+
+  }
+}
+
+/**
+ *  Initialize shader parameters on shading node
+ *  This proc will create all the shader attributes on the shader node.
+ *  It will force re-parsing the shader, even if it has already been parsed
+ *  In the end it will store parsed data for later reuse (rib gen)
+ */
+global proc liquidShaderNodes_initParams( string $nodeAttr )
+{
+  //trace ("liquidShaderNodes_initParams "+$nodeAttr+"\n");
+  $node = basenameEx( $nodeAttr );
+  string $shaderPath = `getAttr ($node+".rmanShaderLong")`;
+
+
+  // shader does not exist / not readable
+  if ( !`filetest -s $shaderPath` ) {
+    warning ("[liquid] "+$shaderPath+" does not exist or is not readable");
+  }
+
+  // invalid path
+  if ( !liquidGlobalsExists() ) eval("liquidCreateGlobals();select "+$node+";");
+  string $extension = `getAttr "liquidGlobals.shaderExt"`;
+  if ( ( match("[a-zA-Z]+$", $shaderPath ) != $extension ) && ( "" != $extension ) ) {
+    warning ("[liquid] Shaders must end with "+$extension+" ");
+    return;
+  }
+
+  // read shader params
+  liquidSlInfoReset();
+  liquidSlSetShader( $shaderPath );
+
+  // check the type
+  string $shadertype = liquidSlShaderType();
+  string $nodeType = nodeType( $node );
+  $nodeType = tolower( $nodeType );
+  if ( !gmatch( $nodeType, ("*"+$shadertype+"*") ) ) {
+    string $short = basenameEx($shaderPath);
+    string $typ = substitute("liquid", $nodeType, "" );
+    warning ("[liquid] "+$short+" is not a "+$typ+"shader !");
+    return;
+  }
+
+  // here we check for false-positives : parameters with the same name
+  // but a different type or array size.
+  // This can be done only once the shader has been set.
+  checkParamsDefinition( $node );
+
+  // create shader params
+  liquidAttachShaderParams( $node, $shaderPath );
+
+  // save the params description in a string array attribute
+  rmanParams_create( $node, 0 );
+
+  // delete obsolete params
+  //
+  global string $gLiquidSlParamNames[];
+  string $allUserDefinedAttr[] = `listAttr -ud -hd $node`;
+  string $obsoleteAttr[] = stringArrayRemove( $gLiquidSlParamNames, $allUserDefinedAttr );
+
+  for ( $at in $obsoleteAttr ) {
+
+    string $fullattr = ($node+"."+$at);
+
+    // if we have a well-known attr, skip it.
+    if (  $at == "rmanParams"     ||
+          $at == "rmanDetails"    ||
+          $at == "rmanTypes"      ||
+          $at == "rmanDefaults"   ||
+          $at == "rmanArraySizes" ||
+          $at == "rmanLifCmds" ||
+          gmatch( $at, "liquid*ShaderNode")  ||
+          gmatch( $at, "*Lif") ) continue;
+
+    if ( objExists( $fullattr ) ) {
+      string $connections[] = `listConnections -plugs true $fullattr`;
+      for ( $c in $connections ) {
+        //trace ("  disconnectAttr "+$c+" "+$fullattr);
+        catch(`disconnectAttr $c $fullattr`);
+      }
+      string $parentAttr[] = `attributeQuery -n $node -listParent $at`;
+      if ( !size($parentAttr) ) deleteAttr $fullattr;
+    }
+
+  }
+
+  //trace "[init] > done.";
+}
+
+/**
+ *  Preview function for the shader node
+ */
+global proc liquidShaderNodePreview( string $node )
+{
+
+  if ( !liquidGlobalsExists() ) eval("liquidCreateGlobals();select "+$node+";");
+
+  string $nodetype = nodeType($node);
+  if ( $nodetype == "liquidLight" || $nodetype == "liquidVolume" ) {
+    warning "[liquid] Preview is not yet supported for Liquid Light and Volume Shader.";
+    return;
+  }
+
+  string $previewDir  = liquidFluidGetPreviewDir();
+  string $shader      = getAttr ($node+".rmanShader");
+  string $image       = ($previewDir+"/"+$node+"_"+$shader+".tif");
+
+  // if a a previous .done file exists remove it.
+  if ( `filetest -r ($image+"_"+$shader+".done")` ) sysFile -del ($image+"_"+$shader+".done");
+
+  string $args = ( "liquidPreviewShader -shader " + $node );
+  int $previewType  = `getAttr liquidGlobals.previewType`;
+
+  int $primitive;
+  if ( objExists( ($node+".previewPrimitive") ) ) {
+    $primitive = `getAttr ($node+".previewPrimitive")`;
+    if ( $primitive == "(globals)" ) {
+      $primitive = `getAttr liquidGlobals.previewPrimitive`;
+    }
+  } else {
+    $primitive = `getAttr liquidGlobals.previewPrimitive`;
+  }
+
+  if( $primitive == 1 ) {
+    $args += " -cube";
+  } else if( $primitive == 2 ) {
+    $args += " -cylinder";
+  } else if( $primitive == 3 ) {
+    $args += " -torus";
+  } else if( $primitive == 4 ) {
+    $args += " -plane";
+  } else if( $primitive == 5 ) {
+    $args += " -teapot";
+  } else if( $primitive == 6 ) {
+    $args += " -custom";
+    string $customRibFile = `getAttr ($node+".previewCustomPrimitive")`;
+    $args += ( " \""+$customRibFile+"\"");
+  }
+
+  if ( $nodetype == "liquidSurface" ) {
+    string $customBg = `getAttr ($node+".previewCustomBackplane")`;
+    if ( $customBg != "" && !gmatch( $customBg, "*/") ) {
+      $args += (" -cbk \"" + $customBg + "\"");
+    }
+  }
+
+  string $driver = ($previewType)? `getAttr liquidGlobals.previewDisplayDriver`:"tiff";
+  if( $driver != "" ) {
+    $args += " -dd " + $driver;
+  }
+
+  $args += (" -dn \""+$image+"\"");
+
+  int $type = ($previewType)? `getAttr liquidGlobals.previewConnectionType`:0;
+  if( $type  == 1 ) {
+    $args += " -pipe";
+  }
+
+  int $size = ($previewType)? `getAttr liquidGlobals.previewSize`:128;
+  $args += " -ds " + $size;
+
+  int $sshn = `getAttr liquidGlobals.shortShaderNames`;
+  if( $sshn != 0 ) {
+    $args = $args + ( " -sshn " + $sshn );
+  }
+
+  string $previewCommand = `getAttr liquidGlobals.previewRenderer`;
+  if( $previewCommand != "" ) {
+    $args = $args + ( " -renderer " + $previewCommand );
+  }
+
+  float $objectSize = (objExists( ($node+".previewObjectSize") ))? (`getAttr ($node+".previewObjectSize")`):1.0;
+  if( $objectSize != 1.0 ) {
+    $args = $args + ( " -objectSize " + $objectSize );
+  }
+
+  int $pixelSamples = (objExists( ($node+".previewPixelSamples") ))? (`getAttr ($node+".previewPixelSamples")`):3;
+  if( $pixelSamples != 3 ) {
+    $args = $args + ( " -pixelSamples " + $pixelSamples );
+  }
+
+  float $shadingRate = (objExists( ($node+".previewShadingRate") ))? (`getAttr ($node+".previewShadingRate")`):1.0;
+  if( $shadingRate != 1.0 ) {
+    $args = $args + ( " -shadingRate " + $shadingRate );
+  }
+
+  // Moritz: me thinks that attribute is only used for a custom backplane -- commented out.
+  //int $backPlane = (objExists( ($node+".previewBackplane") ))? (`getAttr ($node+".previewBackplane")`):1;
+  //if( $backPlane != 1 ) {
+  //  $args = $args + ( " -noBackPlane" );
+  //}
+
+  float $intensityScale = (objExists( ($node+".previewIntensity") ))? (`getAttr ($node+".previewIntensity")`):1.0;
+  $args = $args + ( " -previewIntensity " + $intensityScale );
+
+  // run the command.
+  eval( $args );
+
+  // this will tell the node to reload the preview in the swatch
+  setAttr ($node+".refreshPreview") true;
+}
+
+/**
+ *  Make a bigger swatch ( 128x128 )
+ */
+global proc liquidPreviewSwatchNew ( string $nodeName, string $msg )
+{
+  global int $gTextColumnWidthIndex;
+
+  string $node[];
+  tokenize($msg, ".", $node);
+
+  string $label = nodeType($node[0]);
+  if ( gmatch( $label, "*Surface*") )           $label = "Surface";
+  else if ( gmatch( $label, "*Displacement*") ) $label = "Displacement";
+  else if ( gmatch( $label, "*Volume*") )       $label = "Volume";
+  else if ( gmatch( $label, "*Light*") )        $label = "Light";
+
+  formLayout swatchDisplayForm;
+    text -l $label swatchLabel;
+
+    swatchDisplayPort -wh 128 128 -sn $node[0] swatchDisplay;
+    button -w 70 -h 64 -l "Preview"  liquidAEswatchRefresh;
+    button -w 70 -h 28 -l "Reload"   liquidAEShaderReload;
+    button -w 70 -h 28 -l "Edit LIF" liquidAEEditLif;
+
+    setParent ..;
+  formLayout -e
+    -af  swatchLabel           top     0
+    -af  swatchLabel           bottom  0
+    -an  swatchLabel           left
+    -aof swatchLabel           right   (-$gTextColumnWidthIndex)
+
+    -ac  swatchDisplay         left    5   swatchLabel
+    -af  swatchDisplay         top     0
+    -an  swatchDisplay         right
+
+    -af  liquidAEswatchRefresh top     -2
+    -ac  liquidAEswatchRefresh left    5   swatchDisplay
+
+    -af  liquidAEShaderReload  top     102
+    -ac  liquidAEShaderReload  left    5   swatchDisplay
+
+    -af  liquidAEEditLif       top     76
+    -ac  liquidAEEditLif       left    5   swatchDisplay
+
+    swatchDisplayForm;
+
+  liquidPreviewSwatchReplace $nodeName $msg;
+}
+
+/**
+ *  Keep a bigger swatch
+ */
+global proc liquidPreviewSwatchReplace ( string $nodeName, string $msg )
+{
+  string $node[];
+  tokenize($msg, ".", $node);
+
+  string $label = nodeType($node[0]);
+  if ( gmatch( $label, "*Surface*") )           $label = "surface";
+  else if ( gmatch( $label, "*Displacement*") ) $label = "displacement";
+  else if ( gmatch( $label, "*Volume*") )       $label = "volume";
+  else if ( gmatch( $label, "*Light*") )        $label = "light";
+
+  text -e -l $label swatchLabel;
+  swatchDisplayPort -edit -sn $node[0] -wh 128 128 swatchDisplay;
+  button -e -c ("liquidShaderNodePreview "+$node[0])            liquidAEswatchRefresh;
+  button -e -c ("liquidShaderNodes_reloadAndRefresh "+$node[0]) liquidAEShaderReload;
+  button -e -c ("liquidFluidEditLifFile \""+$node[0]+"\";")     liquidAEEditLif;
+
+}
+
+// AE procs
+
+/**
+ *  Return the name of a shader's cached layout.
+ *  it uses the full path of the shader.
+ *  "/tmp/test/version1/shaders/test.slo" will become "liquidSurface_tmp_test_version1_shaders_test_slo"
+ */
+global proc string liquidAE_getShaderLayoutName( string $nodeType, string $rmanShaderLong )
+{
+  string $name = `substitute $rmanShaderLong "s/[\/\\. -]*/_/g"`;
+  return ( $nodeType + basenameEx( $name ) );
+}
+
+/**
+ *  Returns the name of the cache layout.
+ *  if need be the layout will be created here.
+ */
+global proc string liquidAE_setCacheLayout( string $parent, string $shaderType, string $rmanShaderLong )
+{
+  global string $gLiquid_currentAEShader;
+
+  // create the base form layout if needed
+  string $cacheLayout = ( $shaderType + "CachedLayouts" );
+  if ( !`layout -q -ex $cacheLayout` ) formLayout $cacheLayout;
+
+  // set the parent to the base layout
+  setParent $cacheLayout;
+
+  // make the base layout invisible
+  formLayout -e -vis 0 $cacheLayout;
+
+  // make all layouts inside the formlayout non-managed
+  string $cachedLayouts[] = `layout -q -ca $cacheLayout`;
+  string $cl;
+  for ( $cl in $cachedLayouts ) {
+    layout -e -vis 0 -m 0 $cl;
+  }
+
+  // create the shader layout if needed
+  string $shaderLayout = liquidAE_getShaderLayoutName( $shaderType, $rmanShaderLong );
+  if ( !`layout -q -ex $shaderLayout` ) columnLayout -adj true -vis 0 -m 0 $shaderLayout;
+  else {
+    columnLayout -e -vis 0 -m 0 $shaderLayout;
+  }
+
+  // remove oldest layout is we are beyond the limit set in the globals
+  int $maxCachedLayouts = `getAttr liquidGlobals.shadersMaxCachedAELayouts`;
+  string $allLayouts[] = `layout -q -ca $cacheLayout`;
+
+  // note : we add 1 to $maxCachedLayouts because each layout cache contains an empty layout
+  // for the case when the rmanShaderLong field is empty.
+  if ( size( $allLayouts ) > $maxCachedLayouts+1 ) {
+    if ( $allLayouts[0] != $shaderType ) {
+      deleteUI $allLayouts[0];
+    } else if ( $allLayouts[1] != "" ) {
+      deleteUI $allLayouts[1];
+    }
+  }
+
+  // set the parent
+  setParent $shaderLayout;
+
+  $gLiquid_currentAEShader = $shaderLayout;
+
+  return $shaderLayout;
+}
+
+/**
+ *  Here we restore the visibility of the layout containing the shader's parameters.
+ *  step:
+ *      - get the name of the layout
+ *      - make sure the layout is resized to fit all children
+ *      - attach it to the base cache layout
+ *      - make it visible
+ */
+global proc liquidAE_showCachedLayout( string $shaderType, string $rmanShaderLong )
+{
+  string $baseLayout = ( $shaderType + "CachedLayouts" );
+  string $shaderLayout = liquidAE_getShaderLayoutName( $shaderType, $rmanShaderLong );
+
+
+  // resize the layout
+  string $children[] = `layout -q -ca $shaderLayout`;
+  string $child;
+  int $height = 1;
+  for ( $child in $children ) {
+    $height += `layout -q -h $child`;
+  }
+  layout -e -h $height $shaderLayout;
+
+  // attach it to the $baseLayout
+  formLayout -e
+             -af $shaderLayout top    0
+             -af $shaderLayout left   0
+             -af $shaderLayout right  0
+             -af $shaderLayout bottom 0
+             $baseLayout;
+
+  // update the labels of
+  // overriden string parameters
+  liquidAE_LifStringOverrideDisplayAll();
+
+  // set the layout state to managed and visible
+  formLayout -e -vis 1 $baseLayout;
+  layout -e -vis 1 -m 1 $shaderLayout;
+}
+
+/**
+ *  This proc is basically empty.
+ *  We don't use the Attribute Editor's layout cache, we build and manage our own layout cache.
+ *  note: $msg contains the node.rmanShaderLong
+ */
+global proc liquidShaderNodesParamsNew ( string $msg )
+{
+  liquidShaderNodesParamsReplace( $msg );
+}
+
+/**
+ *  display the shader parameters
+ *  note: $msg contains the node.rmanShaderLong
+ */
+global proc liquidShaderNodesParamsReplace ( string $msg )
+{
+  float $st = `timerX`;
+
+  string $theNode        = basenameEx( $msg );
+  string $nodeType       = nodeType( $theNode );
+  string $longShaderName = getAttr( $msg );
+
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAEShader;
+  global string $gLiquid_currentAENode;
+
+  $gLiquid_currentAENode = $theNode;
+  if ( $gLiquid_currentAENode == "" ) error ("[liquid] liquidShaderNodesParamsReplace : undefined current AE node !");
+
+  // find the layout for the current shader
+  $gLiquid_currentAEShader = liquidAE_getShaderLayoutName( $nodeType, $longShaderName );
+
+  // store the current parent to restore it later
+  string $topParent = `setParent -q`;
+
+  // get our cache layout name
+  $gLiquid_currentAEParent = liquidAE_setCacheLayout( $topParent, $nodeType, $longShaderName );
+
+  setParent $gLiquid_currentAEParent;
+
+  if ( objExists( ($theNode+".rmanLifCmds") ) ) {
+
+    string $cmds[] = `getAttr ($theNode+".rmanLifCmds")`;
+    string $c;
+    for ( $c in $cmds ) {
+      if ( $c != "" ) eval $c;
+    }
+
+  } else {
+    string $shaderLong = `getAttr ($theNode+".rmanShaderLong")`;
+    if ( $shaderLong != "" ) {
+      // eventually re-parse the lif and generate the commands
+      error( "[liquid]" + $msg + "-> no rmanLifCmds attr" );
+    }
+  }
+
+  // restore le layout's visibility
+  liquidAE_showCachedLayout( $nodeType, $longShaderName );
+
+  setParent $topParent;
+
+  string $time = `timerX -st $st`;
+  //trace ("   replace DONE !  ( "+$time+" sec. )");
+
+}
+
+/**
+ * This proc will update the shader parameters and then delete the corresponding cached layout to rebuild it.
+ */
+global proc liquidShaderNodes_reloadAndRefresh( string $node )
+{
+  liquidShaderNodes_initParams( $node );
+  string $nodeType = nodeType( $node );
+  string $longShaderName = `getAttr ($node+".rmanShaderLong")`;
+  string $cachedLayout = liquidAE_getShaderLayoutName( $nodeType, $longShaderName );
+  if ( `layout -q -ex $cachedLayout` && size(`layout -q -ca $cachedLayout`) ) deleteUI $cachedLayout;
+  liquidShaderNodesParamsReplace( ($node+".rmanShaderLong") );
+}
+
+
+/**
+ *  Creates the shader selection field
+ */
+global proc liquidShaderPickerNew( string $nodeName, string $msg )
+{
+  if ( !liquidGlobalsExists() ) liquidCreateGlobals();
+
+  string $node[] = stringToStringArray( $msg, ".");
+  $ctlName = ( "liquidShader_" + $node[1] );
+
+  string $shaderDir  = getAttr("liquidGlobals.fluidShaderBrowserDefaultPath");
+  if ( !gmatch( $shaderDir, "/*") ) $shaderDir = (`workspace -q -rd` + $shaderDir);
+
+  string $myFileCommand = ( "{\n"
+                            + "string $v = `getAttr "+$msg+"`+\"\";"
+                            + "liquidChangeTextFileAttrPlus " + $node[0] + " " + $node[1] + " " + $ctlName + " \"" + $shaderDir + "\" (\"*.\"+" + "`getAttr(\"liquidGlobals.shaderExt\")`" + ");"
+                            + "if ( `getAttr "+$msg+"`+\"\" != $v ) evalDeferred(\"liquidShaderNodes_initParams " + $node[0] + "\");"
+                            + "}");
+  string $form          = `formLayout`;
+
+  setUITemplate -pst attributeEditorTemplate;
+  string $fullCtlPath   = `textFieldGrp -label "Shader" $ctlName`;
+  connectControl -index 2 $fullCtlPath $msg;
+  string $button = `iconTextButton -style "iconOnly" -w 29 -h 19 -mw 0 -mh 0 -i (liquidGetHome()+"/icons/lif_shd.xpm") -c $myFileCommand ($ctlName+"_button")`;
+  setParent ..;
+
+  if (`about -mac`) {
+    formLayout  -e
+                -af $ctlName  top     0
+                -af $ctlName  left    0
+                -af $ctlName  right   31
+                -af $button   top     2
+                -af $button   right   5
+                $form;
+  } else {
+    formLayout  -e
+                -af $ctlName  top     0
+                -af $ctlName  left    0
+                -af $button   top     2
+                -ac $button   left    0   $ctlName
+                $form;
+  }
+
+  setUITemplate -ppt;
+}
+
+/**
+ *  Reconnects the shader selection field to the currently selected shader
+ */
+global proc liquidShaderPickerReplace( string $nodeName, string $msg )
+{
+  if ( !liquidGlobalsExists() ) liquidCreateGlobals();
+
+  string $node[] = stringToStringArray( $msg, ".");
+  $ctlName = ( "liquidShader_" + $node[1] );
+
+  string $shaderDir  = getAttr("liquidGlobals.fluidShaderBrowserDefaultPath");
+  if ( !gmatch( $shaderDir, "/*") ) $shaderDir = (`workspace -q -rd` + $shaderDir);
+
+  string $myFileCommand = (   "{\n"
+                            + "string $v = `getAttr "+$msg+"`+\"\";"
+                            + "liquidChangeTextFileAttrPlus " + $node[0] + " " + $node[1] + " " + $ctlName + " \"" + $shaderDir + "\" (\"*.\"+" + "`getAttr(\"liquidGlobals.shaderExt\")`" + ");"
+                            + "if ( `getAttr "+$msg+"`+\"\" != $v ) evalDeferred(\"liquidShaderNodes_initParams " + $node[0] + "\");"
+                            + "}");
+
+  //trace $myFileCommand;
+  connectControl -index 2 $ctlName $msg;
+  iconTextButton -e -c $myFileCommand ($ctlName+"_button");
+}
+
+/**
+ *  The command that will be run after selecting a shader
+ *  it store the shader path and creates the shader parameters on the node.
+ */
+global proc liquidShaderNode_loadCMD( string $nodeDotAttr, string $longShaderName )
+{
+  setAttr -type "string" $nodeDotAttr $longShaderName;
+  evalDeferred("liquidShaderNodes_initParams "+basenameEx($nodeDotAttr));
+}
+
+/**
+ *  Build the custom primitive menu in the attribute editor.
+ */
+proc liquidShaderNodesCustomPrimitiveBuildCustomMenu( string $parent, string $nodeDotAttr )
+{
+  //trace ($parent+"  "+$nodeDotAttr);
+  string $attr = fileExtension($nodeDotAttr);
+  string $ribPath;
+  string $files[];
+
+  switch( $attr ) {
+    case "previewCustomPrimitive":
+      //trace "prim";
+      // get the list of available rib files in $LIQUIDHOME/previewRibFiles
+      $ribPath = ( liquidGetHome() + "/previewRibFiles/" );
+      $files = `getFileList -fld $ribPath -fs "*.rib"`;
+      break;
+    case "previewCustomBackplane":
+      //trace "back";
+      // get the list of available rib files in $LIQUIDHOME/previewRibFiles/backgrounds
+      $ribPath = liquidGetHome() + "/previewRibFiles/backgrounds/";
+      $files = `getFileList -fld $ribPath -fs "*.rib"`;
+      break;
+    case "previewCustomLights":
+      //trace "light";
+      // get the list of available rib files in $LIQUIDHOME/previewRibFiles/lights
+      $ribPath = liquidGetHome() + "/previewRibFiles/lights/";
+      $files = `getFileList -fld $ribPath -fs "*.rib"`;
+      break;
+    default:
+      break;
+  }
+  //trace ("+ got "+size( $files )+" files" );
+
+  // remove previous menu items
+  string $items[] = `optionMenuGrp -q -ill ($parent)`;
+  //trace ("+ got "+size( $items )+" items" );
+  for ( $it in $items ) deleteUI $it;
+
+  // build the menu
+  string $oldParent = `setParent -q`;
+  string $fullParentPath = `setParent $parent`;
+
+  string $currentCustomPrimitive = basenameEx(`getAttr $nodeDotAttr`);
+  int $currentCustomPrimitiveIsListed = 0;
+
+  // the list of rib files is stored in optionVars
+  if ( `optionVar -ex ("liquid"+$attr)` ) optionVar -clearArray ("liquid"+$attr);
+
+  menuItem -p ($fullParentPath+"|OptionMenu") -l "none";
+  for ( $f in $files ) {
+    string $label = basenameEx( $f );
+    if ( $label == $currentCustomPrimitive ) $currentCustomPrimitiveIsListed = 1;
+    menuItem -p ($fullParentPath+"|OptionMenu") -l $label;
+    optionVar -sva ("liquid"+$attr) ($ribPath+$f);
+  }
+  setParent $oldParent;
+
+  // set the menu to the attribute's current value
+  if ( $currentCustomPrimitiveIsListed ) optionMenuGrp -e -v $currentCustomPrimitive $parent;
+  else setAttr -type "string" $nodeDotAttr "";
+}
+
+global proc liquidShaderNodesCustomPrimitiveNew( string $label, string $nodeDotAttr )
+{
+  string $nodeType = nodeType( $nodeDotAttr );
+  string $tokenized[] = stringToStringArray( $nodeDotAttr, ".");
+  string $cltName = ($nodeType+"_"+$tokenized[1]);
+
+  if ( !`optionMenuGrp -q -ex $cltName` ) {
+
+    setUITemplate -pst attributeEditorTemplate;
+    optionMenuGrp -l $label $cltName;
+    setUITemplate -ppt;
+
+  }
+
+  liquidShaderNodesCustomPrimitiveReplace( $label, $nodeDotAttr );
+}
+
+global proc liquidShaderNodesCustomPrimitiveReplace( string $label, string $nodeDotAttr )
+{
+  string $nodeType = nodeType( $nodeDotAttr );
+  string $tokenized[] = stringToStringArray( $nodeDotAttr, ".");
+  string $cltName = ($nodeType+"_"+$tokenized[1]);
+
+  if ( `optionMenuGrp -q -ex $cltName` ) {
+    string $node[];
+    tokenize $nodeDotAttr "." $node;
+    string $cmd = ( "{"+
+                    "   string $files[] = `optionVar -q liquid"+$tokenized[1]+"`;"+
+                    "   int $sel = `optionMenuGrp -q -sl "+$cltName+"`;"+
+                    "   trace (\">>>> \"+$sel);"+
+                    "   if ( $sel > 1 ) setAttr -type \"string\" "+$nodeDotAttr+" $files[$sel-2];"+
+                    "   else setAttr -type \"string\" "+$nodeDotAttr+" \"\";"+
+                    "}");
+    optionMenuGrp -e -cc $cmd $cltName;
+
+    liquidShaderNodesCustomPrimitiveBuildCustomMenu( $cltName, $nodeDotAttr );
+  }
+  //trace ("liquidShaderNodesCustomPrimitiveReplace( "+ $nodeDotAttr +" )");
+}
+
+/**
+ * Proc to attach a ribbox node to selected objects
+ */
+global proc liquidAssignRibboxToSelected( string $node )
+{
+  string $selected[] = `ls -transforms -sl`;
+  for ( $sel in $selected ) {
+    if ( !`attributeQuery -node $sel -ex "liqRIBBox"` ) {
+      addAttr -ln "liqRIBBox" -dt "string" $sel;
+    }
+    connectAttr -f ($node+".ribbox") ($sel+".liqRIBBox");
+  }
+}
+
+global proc liquidSelectAssignedToRibbox( string $node )
+{
+  select (`listConnections ($node+".ribbox")`);
+}
+
+
+/**
+ *  proc to attach a liquidLight node to selected objects
+ */
+global proc liquidAssignLightShaderToSelected( string $node )
+{
+  string $selected[] = `ls -l -lights -dag -sl`;
+
+  if ( !objExists( ($node+".liqAssignedObjects") ) )
+    addAttr -ln liqAssignedObjects -at message $node;
+
+  for ( $sel in $selected ) {
+
+    if ( !objExists( ($sel+".liquidLightShaderNode") ) ) {
+      addAttr -ln liquidLightShaderNode -at message $sel;
+    }
+
+    if ( !isConnected( ($node+".liqAssignedObjects"), ($sel+".liquidLightShaderNode" ) ) )
+      connectAttr -f ($node+".liqAssignedObjects") ($sel+".liquidLightShaderNode");
+  }
+}
+
+global proc liquidSelectAssignedToLightShader( string $node )
+{
+  select (`listConnections ($node+".liqAssignedObjects")`);
+}
+
+global proc liquidAssignSurfaceShaderToSelected( string $node )
+{
+  // assign the shader to geometry
+  if ( size(`ls -geometry -dag -sl`) ) hyperShade -assign $node;
+
+  // special case for nodes not supported by the hypershade
+  string $selected[] = `ls  -type "stroke" // stroke = pfx
+							-type "pfxToon"
+                            -type "pfxHair"
+                            -type "locator"
+                            -type "nurbsCurve"
+                            -dag -sl`;
+  //trace (stringArrayToString( $selected, ", "));
+
+  if ( !objExists( ($node+".liqAssignedObjects") ) )
+    addAttr -ln liqAssignedObjects -at message $node;
+
+    for ( $sel in $selected ) {
+      if ( !objExists( ($sel+".liquidSurfaceShaderNode") ) )
+        addAttr -ln liquidSurfaceShaderNode -at message $sel;
+      if ( !isConnected( ($node+".liqAssignedObjects"), ($sel+".liquidSurfaceShaderNode" ) ) )
+        connectAttr -f ($node+".liqAssignedObjects") ($sel+".liquidSurfaceShaderNode");
+  }
+}
+
+global proc liquidAssignDisplacementShaderToSelected( string $node )
+{
+  // assign the shader to geometry
+  if ( size(`ls -geometry -dag -sl`) ) hyperShade -assign $node;
+
+  // special case for nodes not supported by the hypershade
+  string $selected[] = `ls  -type "stroke" // stroke = pfx
+							-type "pfxToon"
+                            -type "pfxHair"
+                            -type "locator"
+                            -type "nurbsCurve"
+                            -dag -sl`;
+  //trace (stringArrayToString( $selected, ", "));
+
+  if ( !objExists( ($node+".liqAssignedObjects") ) )
+      addAttr -ln liqAssignedObjects -at message $node;
+
+  for ( $sel in $selected ) {
+    if ( !objExists( ($sel+".liquidDispShaderNode") ) )
+      addAttr -ln liquidSurfaceShaderNode -at message $sel;
+    if ( !isConnected( ($node+".liqAssignedObjects"), ($sel+".liquidDispShaderNode" ) ) )
+      connectAttr -f ($node+".liqAssignedObjects") ($sel+".liquidDispShaderNode");
+  }
+}
+
+global proc liquidAssignVolumeShaderToSelected( string $node )
+{
+  // assign the shader to geometry
+  if ( size(`ls -geometry -dag -sl`) ) hyperShade -assign $node;
+
+  // special case for nodes not supported by the hypershade
+  string $selected[] = `ls  -type "stroke" // stroke = pfx
+							-type "pfxToon"
+                            -type "pfxHair"
+                            -type "locator"
+                            -type "nurbsCurve"
+                            -dag -sl`;
+  //trace (stringArrayToString( $selected, ", "));
+
+  if ( !objExists( ($node+".liqAssignedObjects") ) )
+      addAttr -ln liqAssignedObjects -at message $node;
+
+  for ( $sel in $selected ) {
+    if ( !objExists( ($sel+".liquidVolumeShaderNode") ) )
+      addAttr -ln liquidVolumeShaderNode -at message $sel;
+    if ( !isConnected( ($node+".liqAssignedObjects"), ($sel+".liquidVolumeShaderNode" ) ) )
+      connectAttr -f ($node+".liqAssignedObjects") ($sel+".liquidVolumeShaderNode");
+  }
+}
+
+/**
+ *  proc to select the objects assigned to a material or shading group
+ */
+
+global proc liquidSelectShaderAssignedTo( string $obj )
+{
+  //trace $obj;
+  string $selectionList[];
+  string $objList[];
+  if ( $obj == "" ) $objList = `ls -sl -type liquidSurface -type liquidDisplacement -type liquidVolume -type shadingEngine`;
+  else $objList = stringToStringArray( $obj, " ");
+  select -clear;
+  for ( $o in $objList ) {
+
+    string $shadingGroups[];
+    if ( nodeType($o) == "shadingEngine" ) $shadingGroups[0] = $o;
+    else $shadingGroups = `listConnections -d true -s false -type shadingEngine $o`;
+
+    for ( $sg in $shadingGroups ) {
+      string $connections[] = `listConnections -d false -s true -plugs true $sg`;
+      for ( $c in $connections ) {
+        if ( gmatch( $c, "*.instObjGroups") ) {
+          string $transform[] = `listRelatives -p -pa (basenameEx($c))`;
+          $selectionList[size( $selectionList )] = $transform[0];
+        }
+      }
+    }
+
+    if ( objExists( ($o+".liqAssignedObjects") ) ) {
+      string $connected[] = `listConnections -d true -s false ($o+".liqAssignedObjects")`;
+      for ( $cc in $connected ) {
+        $selectionList[size( $selectionList )] = $cc;
+      }
+    }
+
+  }
+  select $selectionList;
+}
+
+
+/**
+ *  assign shaders in the hypershade
+ */
+global proc liquidAssignShaderToSelected( string $node )
+{
+  string $nodetype = nodeType($node);
+  if ( $nodetype == "liquidLight" ) liquidAssignLightShaderToSelected( $node );
+  else if ( $nodetype == "liquidSurface" ) liquidAssignSurfaceShaderToSelected( $node );
+  else if ( $nodetype == "liquidDisplacement" ) liquidAssignDisplacementShaderToSelected( $node );
+  else if ( $nodetype == "liquidVolume" ) liquidAssignVolumeShaderToSelected( $node );
+}
+
+/**
+ *  update all nodes for the AE optimization.
+ */
+global proc liquidShaderUpdater( int $force )
+{
+//  //trace ("liquidShaderUpdater( "+$force+" )");
+//  string $shaderNodes[] = `ls -type liquidSurface -type liquidDisplacement -type liquidVolume -type liquidLight`;
+//  if ( !size( $shaderNodes ) ) {
+//    //trace "nothing";
+//    return;
+//  }
+//  for ( $node in $shaderNodes ) {
+//    string $longShaderName = `getAttr ($node+".rmanShaderLong")`;
+//    if ( $longShaderName == "" ) continue;
+//    if ( !`filetest -r $longShaderName` ) error("[liquid] liquidShaderUpdater : could not find shader \""+$longShaderName+"\"");
+//    int $numParams = size( `getAttr ($node+".rmanParams")` );
+//    if ( $force ||
+//        size( `getAttr ($node+".rmanDetails")` ) != $numParams ||
+//        size( `getAttr ($node+".rmanTypes")` ) != $numParams ||
+//        size( `getAttr ($node+".rmanDefaults")` ) != $numParams ||
+//        size( `getAttr ($node+".rmanArraySizes")` ) != $numParams
+//       ) {
+//      trace ("liquidShaderUpdater : updating liquid shader "+$node);
+//      rmanParams_create( $node, 1 );
+//    }
+//  }
+}
+
+
+{
+  string $jobs[] = `scriptJob -lj`;
+  string $j;
+  for ( $j in $jobs ) {
+    if ( gmatch( $j, "*liquidShaderUpdater*") ) scriptJob -kill (int(match("[0-9]+", $j))) -force;
+  }
+  scriptJob -event "SceneOpened" "evalDeferred(\"liquidShaderUpdater 1\")" -protected;
+}
+

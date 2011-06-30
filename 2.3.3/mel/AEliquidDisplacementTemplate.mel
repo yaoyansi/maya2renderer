@@ -1,0 +1,47 @@
+
+global proc AEliquidDisplacementTemplate( string $nodeName )
+{
+  layout -e -vis false "AEcontrolFormLayout";
+
+  editorTemplate -callCustom ("liquidPreviewSwatchNew "+$nodeName) ("liquidPreviewSwatchReplace "+$nodeName) "message";
+
+  editorTemplate -beginScrollLayout;
+
+    editorTemplate -ccu ("liquidShaderPickerNew "+$nodeName) ("liquidShaderPickerReplace "+$nodeName) "rmanShaderLong";
+
+    editorTemplate -beginLayout "Preview";
+      editorTemplate -addControl "previewPrimitive";
+      editorTemplate -ccu "liquidShaderNodesCustomPrimitiveNew \"Custom Primitive\" "
+                          "liquidShaderNodesCustomPrimitiveReplace \"Custom Primitive\" "
+                          "previewCustomPrimitive";
+      editorTemplate -addControl "previewObjectSize";
+      editorTemplate -addControl "previewPixelSamples";
+      editorTemplate -addControl "previewShadingRate";
+      editorTemplate -addControl "previewBackplane";
+    editorTemplate -endLayout;
+
+    editorTemplate -beginLayout "RIB";
+      editorTemplate -addControl "displacementBound";
+      editorTemplate -label "Disp. Bound Space" -addControl "displacementBoundSpace";
+      editorTemplate -addControl "shaderSpace";
+      editorTemplate -addControl "outputInShadow";
+    editorTemplate -endLayout;
+
+    editorTemplate -beginLayout "Parameters" -collapse 0;
+
+      editorTemplate -ccu "liquidShaderNodesParamsNew" "liquidShaderNodesParamsReplace" "rmanShaderLong";
+
+    editorTemplate -endLayout;
+
+    editorTemplate -suppress rmanShader;
+    editorTemplate -suppress rmanShaderLong;
+    editorTemplate -suppress rmanShaderLif;
+    editorTemplate -suppress rmanParams;
+
+    editorTemplate -addExtraControls;
+
+  editorTemplate -endScrollLayout;
+
+  layout -e -vis true "AEcontrolFormLayout";
+}
+

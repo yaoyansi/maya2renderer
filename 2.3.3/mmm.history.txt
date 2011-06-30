@@ -1,0 +1,21 @@
+---------------------------
+2.0.30, danb, 05.09.06
+changes: 
+    - fixed bug where default ribgen frame was 1, not current frame
+---------------------------
+2.0.29, colind, 30.08.06
+changes: 
+    - bugfix
+---------------------------
+2.0.28, colind, 28.08.06
+changes: 
+    - added the ability to render shadows from cameras without the need of lights
+---------------------------
+2.0.27, danb, 28.08.06
+changes: 
+    - added -t/--timerange parameter which takes jobEngine compatible timerange string
+---------------------------
+2.0.26, carstenk, 16.08.06
+changes: 
+    - integration with mmm
+    
