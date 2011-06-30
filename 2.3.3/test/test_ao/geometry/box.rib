@@ -1,0 +1,6 @@
+          Polygon "P" [ 0 0 0  0 0 1  0 1 1  0 1 0 ]   # left side
+          Polygon "P" [ 1 1 0  1 1 1  1 0 1  1 0 0 ]   # right side
+          Polygon "P" [ 0 1 0  1 1 0  1 0 0  0 0 0 ]   # front side
+          Polygon "P" [ 0 0 1  1 0 1  1 1 1  0 1 1 ]   # back side
+          Polygon "P" [ 0 1 1  1 1 1  1 1 0  0 1 0 ]   # top
+          Polygon "P" [ 0 0 0  1 0 0  1 0 1  0 0 1 ]   # bottom
