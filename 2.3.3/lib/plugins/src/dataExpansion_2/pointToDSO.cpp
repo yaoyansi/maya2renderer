@@ -11,6 +11,7 @@
 #include <RifPlugin.h>
 #include <ri.h>
 
+#include <bruteNN.hpp>
 #include <dpoint.hpp>
 #include <nnBase.hpp>
 //#include <static_chan.hpp>
@@ -24,60 +25,69 @@ using namespace std;
 
 
 
-//  void setNearestDistances(int nverts,const RtPoint *P_Rib,double *nearestDistances){
-//  
-//  	double detail = 1000000;
-//  	double offset = 1000;
-//  
-//  	Point *P = (Point*)malloc(nverts*sizeof(Point));
-//  
-//  	for(int n = 0 ; n < nverts ; n++){
-//  		unsigned int P_treeX = (P_Rib[n][0]+offset)*detail;
-//  		unsigned int P_treeY = (P_Rib[n][1]+offset)*detail;
-//  		unsigned int P_treeZ = (P_Rib[n][2]+offset)*detail;
-//  
-//  		Point treeP(P_treeX,P_treeY,P_treeZ);
-//  
-//  		P[n][0] = treeP[0];
-//  		P[n][1] = treeP[1];
-//  		P[n][2] = treeP[2];
-//  	}
-//  
-//  	vector<const Point*> ans ;
-//  	nnBase<Point> *NN;
-//  
-//  	int size = nverts;
-//  
-//  	ans.resize(1);
-//  	NN = new sfcnn_ip<Point>(P,size);
-//  
-//  	for(int n = 0 ; n < nverts ; n++){
-//  
-//  		Point queryP(P[n][0],P[n][1],P[n][2]);
-//  
-//  		NN->ksearch(&queryP,3,ans);
-//  		Point tmp1 = *(ans[1]);
-//  		Point tmp2 = *(ans[2]);
-//  
-//  		double nX1 = double(tmp1[0]);
-//  		double nY1 = double(tmp1[1]);
-//  		double nZ1 = double(tmp1[2]);
-//  
-//  		double nX2 = double(tmp2[0]);
-//  		double nY2 = double(tmp2[1]);
-//  		double nZ2 = double(tmp2[2]);
-//  
-//  		double dist1 = sqrt(pow(double(P[n][0])-nX1,2)+pow(double(P[n][1])-nY1,2)+pow(double(P[n][2])-nZ1,2));
-//  		double dist2 = sqrt(pow(double(P[n][0])-nX2,2)+pow(double(P[n][1])-nY2,2)+pow(double(P[n][2])-nZ2,2));
-//  
-//  		nearestDistances[n] = ((dist1 + dist2)/2) / detail;
-//  
-//  	}
-//  
+void setNearestDistances(int nverts,const RtPoint *P_Rib,double *nearestDistances){
+  
+  	double detail = 1000000;
+  	double offset = 1000;
+  
+  	Point *P = (Point*)malloc(nverts*sizeof(Point));
+  
+  	for(int n = 0 ; n < nverts ; n++){
+  		unsigned int P_treeX = (P_Rib[n][0]+offset)*detail;
+  		unsigned int P_treeY = (P_Rib[n][1]+offset)*detail;
+  		unsigned int P_treeZ = (P_Rib[n][2]+offset)*detail;
+  
+  		Point treeP(P_treeX,P_treeY,P_treeZ);
+  
+  		P[n][0] = treeP[0];
+  		P[n][1] = treeP[1];
+  		P[n][2] = treeP[2];
+  	}
+  
+  	vector<const Point*> ans ;
+    std::vector<long unsigned int> bf_ans;
+
+  	int size = nverts;
+  
+  	ans.resize(1);
+  	//nnBase<Point> *NN = new sfcnn_ip<Point>(P,size);
+	bruteNN<Point> NN(P,size);
+
+  	for(int n = 0 ; n < nverts ; n++){
+  
+  		Point queryP(P[n][0],P[n][1],P[n][2]);
+  
+  		NN.ksearch( queryP,3,bf_ans);
+//   		Point tmp1 = *(ans[1]);
+//   		Point tmp2 = *(ans[2]);
+  
+		vector<long unsigned int> PointIndex;//exclude P[n] itself from bf_ans.
+		for(int i=0; i<bf_ans.size(); ++i){
+			if(n!=bf_ans[i])
+				PointIndex.push_back(bf_ans[i]);
+		}
+		
+		long unsigned int index0=PointIndex[0];
+  		double nX1 = double(P[index0][0]);
+  		double nY1 = double(P[index0][1]);
+  		double nZ1 = double(P[index0][2]);
+  		
+		long unsigned int index1=PointIndex[1];
+  		double nX2 = double(P[index1][0]);
+  		double nY2 = double(P[index1][1]);
+  		double nZ2 = double(P[index1][2]);
+  
+  		double dist1 = sqrt(pow(double(P[n][0])-nX1,2)+pow(double(P[n][1])-nY1,2)+pow(double(P[n][2])-nZ1,2));
+  		double dist2 = sqrt(pow(double(P[n][0])-nX2,2)+pow(double(P[n][1])-nY2,2)+pow(double(P[n][2])-nZ2,2));
+  
+  		nearestDistances[n] = ((dist1 + dist2)/2) / detail;
+  
+  	}
+  
 //  	delete NN;
-//  
-//  	free(P);
-//  }
+  
+  	free(P);
+  }
 
 class My_RifPlugin : public RifPlugin
 {
@@ -132,23 +142,19 @@ RtVoid freestrings(RtString *twostrings) {
 
 		double *nearestDistances = (double*)malloc(sizeof(double)*nverts);
 
-		//setNearestDistances(nverts,P,nearestDistances);
+		setNearestDistances(nverts,P,nearestDistances);
 
 		int numOfDots = 30;
-		constantwidth[0] = 0.202f;
+		constantwidth[0] = 0.02f;
 
 
 		for(int n = 0; n < nverts; n++){
 
-			float multiPointRadius = /*nearestDistances[n]*/0.2f * 4;
+			float multiPointRadius = nearestDistances[n] * 1.0;
 
  			float px = P[n][0];
  			float py = P[n][1];
  			float pz = P[n][2]; 
-// 			float px = 0.0;
-// 			float py = 0.0;
-// 			float pz = 0.0;
-
 
 			float r = CS[n][0];
 			float g = CS[n][1];
