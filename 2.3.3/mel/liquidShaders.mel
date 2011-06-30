@@ -602,7 +602,7 @@ global proc string liquidDuplicateShaderNode( string $nodename )
 
 global proc string getSLShaderNodeFor( string $nodeName )
 {
-	liqlog("getSLShaderNodeFor(...)");
+	liqlog("getSLShaderNodeFor("+$nodeName+")");
   string $classification[] = getClassification( nodeType( $nodeName ) );
   string $liquidType = match("/[surfacediplmntvou]+", $classification[0]);
   $liquidType = capitalizeString( match("[a-z]+", $liquidType ) );

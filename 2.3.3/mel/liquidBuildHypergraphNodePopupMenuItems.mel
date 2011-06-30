@@ -61,8 +61,8 @@ global proc buildHypergraphNodePopupMenuItems(
 	menuItem
 		-label $nodeName
 		-command
-			("hyperGraph -e -attributeEditor single -useFeedbackList "
-				+ $hypershade);
+		("hyperGraph -e -attributeEditor single -useFeedbackList "
+		+ $hypershade);
 
 	menuItem -divider true;
 	menuItem -divider true;
@@ -73,7 +73,7 @@ global proc buildHypergraphNodePopupMenuItems(
 		menuItem
 			-label "Fit to Group Bounding Box"
 			-command ("source AEplace3dTextureTemplate.mel; " +
-					  "PSfitPlacementToGroup " + $node);
+			"PSfitPlacementToGroup " + $node);
 
 		string $selection[] = `ls -sl`;
 
@@ -82,9 +82,9 @@ global proc buildHypergraphNodePopupMenuItems(
 			string $leadSelectionItem = $selection[0];
 			menuItem
 				-label
-					("Parent Placement to Selection ("
-						+ $leadSelectionItem
-						+ ")")
+				("Parent Placement to Selection ("
+				+ $leadSelectionItem
+				+ ")")
 				-command ("parent " + $node + " " + $leadSelectionItem);
 		}
 		else
@@ -101,10 +101,10 @@ global proc buildHypergraphNodePopupMenuItems(
 
 		string $shadingGroupArray[] =
 			`listConnections
-				-source false
-				-destination true
-				-type "shadingEngine"
-				$node`;
+			-source false
+			-destination true
+			-type "shadingEngine"
+			$node`;
 		int $isOceanShader = nodeType( $node ) == "oceanShader";
 		int $groupSize = size($shadingGroupArray);
 		if( $groupSize == 2 && $isOceanShader){
@@ -134,13 +134,13 @@ global proc buildHypergraphNodePopupMenuItems(
 					-label "Assign Material To Selection"
 					-command ("assignOceanShader " + $node);
 			}
-      else if ( isClassified($node, "liq*Swatch" ) )
-      {
-        menuItem
+			else if ( isClassified($node, "liq*Swatch" ) )
+			{
+				menuItem
 					-radialPosition "N"
 					-label "Assign Shader To Selection"
 					-command ("liquidAssignShaderToSelected " + $node);
-      }
+			}
 			else
 			{
 				menuItem
@@ -148,31 +148,31 @@ global proc buildHypergraphNodePopupMenuItems(
 					-label "Assign Material To Selection"
 					-command ("hyperShade -assign " + $node);
 			}
-      if ( nodeType($node) == "liquidLight" )
-      {
-        menuItem
-				-radialPosition "E"
-				-label "Select Lights With Light Shader"
-				-command ("liquidSelectAssignedToLightShader " + $node);
-      }
-      else
-      {
-			menuItem
-				-radialPosition "E"
-				-label "Select Objects With Material"
-				//-command ("hyperShade -objects " + $node);
-        // philippe: this is a workaround as maya selects the shapes connected to the shading group
-        // and as such yields confusing results on instanced geometry.
-        // we select the transforms instead.
-				-command ("liquidSelectShaderAssignedTo " + $node);
-      }
+			if ( nodeType($node) == "liquidLight" )
+			{
+				menuItem
+					-radialPosition "E"
+					-label "Select Lights With Light Shader"
+					-command ("liquidSelectAssignedToLightShader " + $node);
+			}
+			else
+			{
+				menuItem
+					-radialPosition "E"
+					-label "Select Objects With Material"
+					//-command ("hyperShade -objects " + $node);
+					// philippe: this is a workaround as maya selects the shapes connected to the shading group
+					// and as such yields confusing results on instanced geometry.
+					// we select the transforms instead.
+					-command ("liquidSelectShaderAssignedTo " + $node);
+			}
 
 			menuItem
 				-label "Frame Objects With Material"
 				-command
-					("hyperShade -objects "
-						+ $node
-						+ ";fitAllPanels -selected");
+				("hyperShade -objects "
+				+ $node
+				+ ";fitAllPanels -selected");
 			menuItem -divider true;
 		}
 		else
@@ -196,9 +196,9 @@ global proc buildHypergraphNodePopupMenuItems(
 				menuItem
 					-label ("Frame Objects in " + $shadingGroupArray[$i])
 					-command
-						("hyperShade -objects "
-							+ $shadingGroupArray[$i]
-							+ ";fitAllPanels -selected");
+					("hyperShade -objects "
+					+ $shadingGroupArray[$i]
+				+ ";fitAllPanels -selected");
 			}
 			menuItem -divider true;
 		}
@@ -211,7 +211,7 @@ global proc buildHypergraphNodePopupMenuItems(
 	// we need a separate block here,
 	// which should come before "light"
 	else if (isClassified($node, "rendernode/mentalray/light") &&
-			!isClassified($node, "rendernode/mentalray/lightmap") )
+		!isClassified($node, "rendernode/mentalray/lightmap") )
 	{
 		// We can support "Select Objects Illuminated by Light" and
 		// "Frame Objects Illuminated by Light"
@@ -219,10 +219,10 @@ global proc buildHypergraphNodePopupMenuItems(
 
 		string $lightArray[] =
 			`listConnections
-				-source false
-				-destination true
-				-type "light"
-				$node`;
+			-source false
+			-destination true
+			-type "light"
+			$node`;
 		int $groupSize = size($lightArray);
 		int $i;
 
@@ -251,7 +251,7 @@ global proc buildHypergraphNodePopupMenuItems(
 				-label "Assign Texture's Material to Selection"
 				-radialPosition "N"
 				-command
-					("hypergraphAssignTextureToSelection  " + $node);
+				("hypergraphAssignTextureToSelection  " + $node);
 		}
 	}
 	// Other mental ray shaders
@@ -266,13 +266,13 @@ global proc buildHypergraphNodePopupMenuItems(
 			-label "Assign Texture's Material to Selection"
 			-radialPosition "N"
 			-command
-				("hypergraphAssignTextureToSelection  " + $node);
+			("hypergraphAssignTextureToSelection  " + $node);
 
 		menuItem
 			-label "Test Texture"
 			-command ("select -replace " +
-				`hyperGraph -query -feedbackNode $hypershade` +
-				";TestTexture;")
+			`hyperGraph -query -feedbackNode $hypershade` +
+			";TestTexture;")
 			-radialPosition "W"
 			-annotation (getRunTimeCommandAnnotation ("TestTexture"))
 			;
@@ -281,7 +281,7 @@ global proc buildHypergraphNodePopupMenuItems(
 			menuItem
 				-label "Convert To Layered Texture"
 				-command
-					("hypergraphConvertPsdToLTNetwork  " + $node)
+				("hypergraphConvertPsdToLTNetwork  " + $node)
 				-radialPosition "SW"
 				-annotation ("Convert To Layered Texture: Converts Psd file texture to layered texture network")
 				;
@@ -289,7 +289,7 @@ global proc buildHypergraphNodePopupMenuItems(
 			menuItem
 				-label "Convert To File Texture"
 				-command
-					("hypergraphConvertPsdToFile  " + $node)
+				("hypergraphConvertPsdToFile  " + $node)
 				-radialPosition "NW"
 				-annotation ("Convert To File Texture: Converts Psd file texture to file  texture")
 				;
@@ -298,19 +298,19 @@ global proc buildHypergraphNodePopupMenuItems(
 		menuItem
 			-label "Render Texture Range"
 			-command ("select -replace " +
-				`hyperGraph -query -feedbackNode $hypershade` +
-				";RenderTextureRange;")
+			`hyperGraph -query -feedbackNode $hypershade` +
+			";RenderTextureRange;")
 			-radialPosition "E"
 			-annotation (getRunTimeCommandAnnotation ("RenderTextureRange"))
 			;
 
 		if( ((nodeType ($node)) == "psdFileTex" ) ||((nodeType ($node)) == "file" )) {
-		menuItem
-			-label "Edit Texture"
-			-command ("hyperShadeEditTexture " + $node)
-			-radialPosition "SE"
-			-annotation (getRunTimeCommandAnnotation ("EditTexture"))
-			;
+			menuItem
+				-label "Edit Texture"
+				-command ("hyperShadeEditTexture " + $node)
+				-radialPosition "SE"
+				-annotation (getRunTimeCommandAnnotation ("EditTexture"))
+				;
 		}
 
 		if ($nodeType == "file")
@@ -318,13 +318,13 @@ global proc buildHypergraphNodePopupMenuItems(
 			menuItem
 				-label "Reload Image File"
 				-command
-					("string $name=`getAttr "
-						+ $node
-						+ ".fileTextureName`;"
-						+ "setAttr "
-						+ $node
-						+ ".fileTextureName "
-						+ "-type \"string\" $name;");
+				("string $name=`getAttr "
+				+ $node
+				+ ".fileTextureName`;"
+				+ "setAttr "
+				+ $node
+				+ ".fileTextureName "
+				+ "-type \"string\" $name;");
 			menuItem -divider true;
 		}
 	}
@@ -334,73 +334,73 @@ global proc buildHypergraphNodePopupMenuItems(
 		// if it does not, convertSolidTx will fail
 		//
 
-    if ( $nodeType == "liquidRibBox" ) {
-      menuItem
-        -label "Assign RIB Box to Selection"
-        -radialPosition "N"
-        -command
-        ("liquidAssignRibboxToSelected " + $node);
-      menuItem
-        -label "Select Assigned Objects"
-        -radialPosition "E"
-        -command
-        ("liquidSelectAssignedToRibbox " + $node);
+		if ( $nodeType == "liquidRibBox" ) {
+			menuItem
+				-label "Assign RIB Box to Selection"
+				-radialPosition "N"
+				-command
+				("liquidAssignRibboxToSelected " + $node);
+			menuItem
+				-label "Select Assigned Objects"
+				-radialPosition "E"
+				-command
+				("liquidSelectAssignedToRibbox " + $node);
 
-    } else {
-      // a utility node will always be connected to defaultRenderUtilityList
-      // so we want to make sure it has more than 1 connection
-      string $connections[] = `listConnections -s 0 -d 1 $node`;
-      if (`size ($connections)` > 1){
+		} else {
+			// a utility node will always be connected to defaultRenderUtilityList
+			// so we want to make sure it has more than 1 connection
+			string $connections[] = `listConnections -s 0 -d 1 $node`;
+			if (`size ($connections)` > 1){
 
-        menuItem
-          -label "Assign Texture's Material to Selection"
-          -radialPosition "N"
-          -command
-          ("hypergraphAssignTextureToSelection  " + $node);
+				menuItem
+					-label "Assign Texture's Material to Selection"
+					-radialPosition "N"
+					-command
+					("hypergraphAssignTextureToSelection  " + $node);
 
-        menuItem
-          -label "Test Texture"
-          -command ("select -replace " +
-          `hyperGraph -query -feedbackNode $hypershade` +
-          ";TestTexture;")
-          -radialPosition "W"
-          -annotation (getRunTimeCommandAnnotation ("TestTexture"))
-          ;
+				menuItem
+					-label "Test Texture"
+					-command ("select -replace " +
+					`hyperGraph -query -feedbackNode $hypershade` +
+					";TestTexture;")
+					-radialPosition "W"
+					-annotation (getRunTimeCommandAnnotation ("TestTexture"))
+					;
 
-        menuItem
-          -label "Render Texture Range"
-          -command ("select -replace " +
-          `hyperGraph -query -feedbackNode $hypershade` +
-          ";RenderTextureRange;")
-          -radialPosition "E"
-          -annotation (getRunTimeCommandAnnotation ("RenderTextureRange"))
-          ;
-      }
-    }
+				menuItem
+					-label "Render Texture Range"
+					-command ("select -replace " +
+					`hyperGraph -query -feedbackNode $hypershade` +
+					";RenderTextureRange;")
+					-radialPosition "E"
+					-annotation (getRunTimeCommandAnnotation ("RenderTextureRange"))
+					;
+			}
+		}
 	}
 	else if (isClassified($node, "light"))
-    {
-        menuItem
-            -label "Make Links with Selected Objects"
-            -command ("lightlink -make -light "+$node+" -useActiveObjects");
+	{
+		menuItem
+			-label "Make Links with Selected Objects"
+			-command ("lightlink -make -light "+$node+" -useActiveObjects");
 
-        menuItem
-            -label "Break Links with Selected Objects"
-            -command ("lightlink -break -light "+$node+" -useActiveObjects");
-
-        menuItem -divider true;
-
-        menuItem
-            -label "Select Objects Illuminated by Light"
-			-radialPosition "E"
-            -command ("selectObjectsIlluminatedBy "+$node);
-
-        menuItem
-            -label "Frame Objects Illuminated by Light"
-            -command ("selectObjectsIlluminatedBy "+$node+"; fitAllPanels -selected");
+		menuItem
+			-label "Break Links with Selected Objects"
+			-command ("lightlink -break -light "+$node+" -useActiveObjects");
 
 		menuItem -divider true;
-    }
+
+		menuItem
+			-label "Select Objects Illuminated by Light"
+			-radialPosition "E"
+			-command ("selectObjectsIlluminatedBy "+$node);
+
+		menuItem
+			-label "Frame Objects Illuminated by Light"
+			-command ("selectObjectsIlluminatedBy "+$node+"; fitAllPanels -selected");
+
+		menuItem -divider true;
+	}
 	else if ($nodeType == "textureBakeSet" || $nodeType == "vertexBakeSet" )
 	{
 		menuItem
@@ -414,7 +414,7 @@ global proc buildHypergraphNodePopupMenuItems(
 		menuItem
 			-label "Frame Objects In Bake Set"
 			-command
-				("select " + $node + " ;fitAllPanels -selected");
+			("select " + $node + " ;fitAllPanels -selected");
 
 		menuItem -divider true;
 	}
@@ -455,9 +455,9 @@ global proc buildHypergraphNodePopupMenuItems(
 	menuItem
 		-label "Select Output Nodes"
 		-command
-			("select -noExpand `listHistory -future true "
-				+ $node
-				+ "`")
+		("select -noExpand `listHistory -future true "
+		+ $node
+		+ "`")
 		-annotation "Select all nodes output from this node";
 
 	menuItem -divider true;
@@ -465,5 +465,5 @@ global proc buildHypergraphNodePopupMenuItems(
 	menuItem
 		-label "Rename"
 		-command
-			("hyperGraph -e -rename -useFeedbackList " + $hypershade);
+		("hyperGraph -e -rename -useFeedbackList " + $hypershade);
 }

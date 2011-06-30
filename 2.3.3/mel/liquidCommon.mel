@@ -33,6 +33,7 @@
 source xxliquidutility.mel;
 
 global string $defTextViewerName = "notepad.exe";
+global string $gLiquidVersion = "2.3.5";
 
 global proc string liquidGetUserHomeDir() {
     liqlog("liquidGetUserHomeDir()");

@@ -691,12 +691,11 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
   // Compile the shader with the current renderer's shader compiler
   string $shaderComp = `getAttr "liquidGlobals.shaderComp"`;
   string $shaderdirpath = $shaderdir;
-  if ( !gmatch( $shaderdir, "/*") || !gmatch( $shaderdir, "?:*") )
+  if ( !gmatch( $shaderdir, "/*") && !gmatch( $shaderdir, "?:*") )
     $shaderdirpath = ( workspace( "-q", "-rd" ) + $shaderdir );
-  trace ( "cd " + $shaderdirpath );
-  trace ( $shaderComp + " " + $startingNode  + ".sl" );
-  system ( "cd " + $shaderdirpath  );
-  system ( $shaderComp + " " + $startingNode + ".sl"  );
+  string $outSLO = $shaderFileName+".slo";
+  trace  ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
+  system ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
 
   string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
 
@@ -749,4 +748,18 @@ global proc liquidConvertShadingNetworkToRSL ()
     {
         convertShadingNetworkToRSL $node $node;
     }
+}
+
+global proc addChannel(string $type, string $rslName, string $mayaName, string $mayaNode)
+{
+	string $plug = ($mayaNode+"."+$mayaName);
+	string $plg[] = `listConnections -s 1 -d 0 $plug`;//where the connection come from?
+	
+	if( size($plg)>0 ){
+	  print(`nodeType  $plg[0]`+"\n");
+	  print("connected.\n");
+	}else{
+	  print(`getAttr -type $plug`);
+	}
+
 }

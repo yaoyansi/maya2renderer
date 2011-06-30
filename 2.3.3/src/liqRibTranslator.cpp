@@ -6740,13 +6740,16 @@ MStatus liqRibTranslator::objectBlock()
 					// here we check for regular shader nodes first
 					// and assign default shader to shader-less nodes.
 					//
-					if( m_shaderDebug ) 
+					if( m_shaderDebug ) {
 						RiSurface( "constant", RI_NULL );
-					else if( shader.apiType() == MFn::kLambert ) 
+						LIQDEBUGPRINTF("add more constant parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorBlinn.sl as an example.(?)");
+					}else if( shader.apiType() == MFn::kLambert ){ 
 						RiSurface( "matte", RI_NULL );
-					else if( shader.apiType() == MFn::kPhong ) 
+						LIQDEBUGPRINTF("add more lambert parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorLambert.sl as an example.");
+					}else if( shader.apiType() == MFn::kPhong ) {
 						RiSurface( "plastic", RI_NULL );
-					else if( path.hasFn( MFn::kPfxHair ) ) 
+						LIQDEBUGPRINTF("add more phong parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorPhong.sl as an example.");
+					}else if( path.hasFn( MFn::kPfxHair ) ) 
 					{
 						// get some of the hair system parameters
 						RtFloat translucence = 0, specularPower = 0;
