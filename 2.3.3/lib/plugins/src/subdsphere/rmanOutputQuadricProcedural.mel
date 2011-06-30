@@ -1,0 +1,42 @@
+global proc rmanOutputQuadricProcedural()
+{
+    // Find out which object this script is associated with
+    string $object = `rman ctxGetObject`;
+    if( `nodeType $object` != "quadricShape" ) {
+	warning("rmanOutputQuadricProcedural can only operate on nodes of type quadricShape\n");
+	return;
+    }
+
+    // These are the attributes from the quadricShape node that our
+    // quadric procedural plugin will interpret.
+    int $shapetype = `getAttr ($object+".shapeType")`;
+    float $radius1 = `getAttr ($object+".radius1")`;
+    float $radius2 = `getAttr ($object+".radius2")`;
+    float $height = `getAttr ($object+".height")`;
+    float $startAngle = `getAttr ($object+".startAngle")`;
+    float $sweepAngle = `getAttr ($object+".sweepAngle")`;
+
+    // Assemble the values of the attributes into an arg list, 
+    // to pass to the procedural
+    string $args = ($shapetype + " " + $radius1 + " " + $radius2 + " " + $height + " " + $startAngle + " " + $sweepAngle);
+
+
+    // The RiProcedural needs to be supplied a bounding box, and since
+    // the quadricShape node takes care of updating its bounding box,
+    // we'll use that.  Note the RiProcedural needs its bounding box
+    // to be expressed in centimeters.
+    string $curUnit = `currentUnit -q -linear`;
+    currentUnit -linear "cm";  // temporarily change to centimeters
+    float $bbSize[3] = `getAttr ($object + ".boundingBoxSize")`;
+    float $bbMin[3], $bboxMax[3];
+    $bbMin[0] = -$bbSize[0]/2;
+    $bbMin[1] = -$bbSize[1]/2;
+    $bbMin[2] = -$bbSize[2]/2;
+    $bbMax[0] = $bbSize[0]/2;
+    $bbMax[1] = $bbSize[1]/2;
+    $bbMax[2] = $bbSize[2]/2;
+    currentUnit -linear $curUnit;
+
+    // Issue the RiProcedural call, passing the bounding box and arg list
+    RiProcedural "DynamicLoad" "quadricProcedural.dll" $bbMin[0] $bbMax[0] $bbMin[1] $bbMax[1] $bbMin[2] $bbMax[2] $args;
+}

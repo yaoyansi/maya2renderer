@@ -3,7 +3,34 @@
 #include <string.h>
 #include "ri.h"
 
-#pragma comment(lib, "E:/dev/tools/pixar/renderman/13.5/lib/prman.lib")
+#if defined(USE_LIQUID_RIB)
+#	pragma comment(lib, "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/bin/win32lib/RILIB_d.lib")
+const char *token="use liquid rib";
+#elif defined(USE_AQSIS_RIB)
+ #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_core.lib")
+// #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_math.lib")
+ #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_ri2rib.lib")
+// #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_ribparse.lib")
+// #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_riutil.lib")
+// #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_shadervm.lib")
+// #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_slcomp.lib")
+// #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_slxargs.lib")
+// #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_tex.lib")
+// #	pragma comment(lib, "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/prebuild/lib/aqsis_util.lib")
+
+
+const char *token="use aqsis rib";
+#else
+#	pragma comment(lib, "E:/dev/tools/pixar/renderman/13.5/lib/prman.lib")
+const char *token="use prman rib";
+#endif
+
+#ifdef USE_LIQUID_RIB
+
+#else
+
+#endif
+
 
 #ifdef _WIN32
 #define export __declspec(dllexport)
@@ -36,6 +63,7 @@ struct quadricsData {
 
 export RtPointer ConvertParameters(RtString paramstr) 
 {
+	printf("\n+++%s\n", token);
     struct quadricsData* data;
     char* parameters;
     char* token, *tokenstate;

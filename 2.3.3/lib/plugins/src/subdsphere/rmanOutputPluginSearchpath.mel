@@ -1,0 +1,23 @@
+global proc rmanOutputProceduralSearchpath()
+{
+    // This proc sets up a searchpath for procedural plugins.
+
+    // On windows its necessary to load a different version of the procedural
+    // plugin depending on whether it'll be running internally in RfM or 
+    // in the standalone prman renderer.  We can find out if this script is
+    // being called during ribgen or internal rendering, and
+    // refer to a different procedural path based on that.  
+    string $subdir = "";
+    if( `about -nt` ) {
+	if( `eval("rman ctxIsRib")` ) {
+	    $subdir = "prman_plugins";
+	} else {
+	    $subdir = "rfm_plugins";
+	}
+    }
+
+    // Change this path to correspond to the location where you put your compiled plugin.
+    // Note on windows the path needs to be in UNC format.
+    string $pluginpath = "//C/Program Files/Pixar/RenderMan-Studio-1.0-Maya8.0/devkit/";
+    RiOption "searchpath" "string procedural" ($pluginpath+$subdir);
+}

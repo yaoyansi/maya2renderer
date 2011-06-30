@@ -80,7 +80,7 @@ proc createFloatPrimvarArray(string $shapeNode, string $varName, int $num) {
 }
 
 global proc makeVertexPrimVar(string $shapeNode, string $name, string $type){
-	liqlog("makeVertexPrimVar(...)");
+	liqlog("makeVertexPrimVar("+$shapeNode+","+$name+","+$type+")");
   string $prefix = "";
   int $isVec = 0;
 

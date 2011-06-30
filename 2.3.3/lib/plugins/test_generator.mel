@@ -25,12 +25,12 @@ global proc test_subdsphere(string $transformNode)
 }
 
 //eval("source test_generator.mel"); test_quadricProcedural("pCone1");
-global proc test_quadricProcedural(string $transformNode)
+global proc test_quadricProcedural(string $transformNode, string $renderer)
 {
    print("test_quadricProcedural("+$transformNode+")\n");
 
     //
-    string $args = ("0 1.0 0.0 0.0 0.0 360.0");
+    string $args = ("0 0.1 0.0 0.0 0.0 360.0");
 
     //
     string $curUnit = `currentUnit -q -linear`;
@@ -46,7 +46,7 @@ global proc test_quadricProcedural(string $transformNode)
     currentUnit -linear $curUnit;
 
    //
-   RIProcedural "DynamicLoad"  "quadricProcedural" 
+   RIProcedural "DynamicLoad"  ("quadricProcedural_"+$renderer) 
    $bbMin[0] $bbMax[0] 
    $bbMin[1] $bbMax[1] 
    $bbMin[2] $bbMax[2]

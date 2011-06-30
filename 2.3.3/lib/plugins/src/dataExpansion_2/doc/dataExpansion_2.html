@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Hosuk's personal website</title>
+<link rel="stylesheet" type="text/css" href="dataExpansion_2_files/style.css">
+<style type="text/css">
+<!--
+.style2 {color: #339900}
+-->
+</style>
+</head><body>
+
+<div id="contents">
+<span id="title">Data Expansion 2</span><br>
+ <br>
+<div id="pageDescription"> This page shows distribution method for
+second particles from the seed particle and implementation using
+RiFilter and Procedural Primitive DSO in Renderman.
+</div>
+
+
+<p><strong>Adaptive Multipoint   Radius</strong></p>
+<p>The simplest version of Data Expansion we know is Maya Multipoint
+type particle. A simulation can be done with few numbers of particles
+(seed particle) that have multi points (second particle), so they look
+like many particles even though the second particles just follow seed
+particle, so usually it has a side effect where second particles look
+like groups.</p>
+<p align="center">
+<iframe src="dataExpansion_2_files/multiPoint_sideEffect_qt_icon.htm" marginheight="0" marginwidth="0" width="400" align="top" frameborder="0" height="320" scrolling="no"></iframe>
+<br>
+uniform multipoints radius side effect</p>
+
+<p>I tried to fix this problem using an adaptive radius of multipoint.
+My idea is to use the distance between the current particle and the
+nearest neighbor particle as a radius of multipoint radius.</p>
+<p align="center"><img src="dataExpansion_2_files/radiusIdea.jpg" width="640" height="485"><br>
+  <strong>B</strong> is the nearest neighbor particle of <strong>A</strong>, and <strong>r</strong>is the radius of A's multipoints radius.</p>
+<p align="center">
+<iframe src="dataExpansion_2_files/adaptiveRadius_qt_icon.htm" marginheight="0" marginwidth="0" width="400" align="top" frameborder="0" height="320" scrolling="no"></iframe>
+<br>
+adaptive multipoints radius test</p>
+
+<p>To do this, I had to find the nearest neighbor particle of every
+particle. This is a very expansive process because I have to compare
+the distance of every particle and find the minimum value. If the
+number of particle is 100,000, comparing has to be done 10,000,000,000
+times (100,000 * 100,000).</p>
+<p>I tried this method in Maya using particle expression and  <a href="http://www.hosok2.com/project/dataExpansion_2/findNearestID.txt" target="_blank">Mel script</a>
+and found it is impossible because once I increased the number of
+particle up to 10,000, I couldn’t see the result. Not only the process
+is expensive but also using Mel script in particle expression makes it
+much slow. (I was waiting about 10 minutes and gave up...)</p>
+<p>So, I did some research and found if I can make a special  data structure, which is <a href="http://en.wikipedia.org/wiki/Kd-tree" target="_blank">kd-tree</a>,
+nearest neighbor searching can be much faster. Also, Nearest Neighbor
+Searching is a well-known computer science issue, so there are some
+useful libraries.<br>
+  <br>
+Thread-safe Approximate  Nearest Neighbor: <a href="http://compgeom.com/%7Estann/html/" target="_blank">http://compgeom.com/~stann/html/</a></p>
+<p>This solution is even faster then regular nearest neighbor searching
+using kd-tree because this is Approximate Nearest Neighbor Searching.
+According to their explanation, it could be 10~100 times faster then
+the accurate nearest neighbor searching. I tested it with 100,000
+particles and took less then 5 seconds. It gives me not just the
+nearest neighbor but the list of neighbors, so I can easily go to the
+second nearest neighbor and the others. I think I can use this solution
+for slicing through camera direction.</p>
+<p>&nbsp;</p>
+<p><strong>Improved  Dots.so – Procedural Primitive DSO</strong></p>
+<p>I have written a very simple Procedural Primitive DSO for my <a href="http://www.hosok2.com/project/cloud/cloud.htm">cloud project</a> which just creates 10 points in given position. I have added  little more features.</p>
+<p>The major change is the distribution of the points. The previous
+version just used random position of x, y, z, so its over all shape was
+like a cube.</p>
+<p align="center"><img src="dataExpansion_2_files/randomCube.jpg" width="299" height="299"></p>
+<p>However, I needed sphere-like shape. I have also used  in_sphere() random function for my <a href="http://www.hosok2.com/project/helper/helper.htm">Python Helper Program project</a>, At that time,  I used <a href="http://pal.ece.iisc.ernet.in/%7Edhani/frohne/rv11reference.htm" target="_blank">Ivan Frohne’s python Random Number module</a>, but for this project I had to  do it in C. I tried to find some C library and found some C++ library instead  of C.</p>
+<p>So, I tried to make it myself. It’s not so simple to get uniformly
+distributed random positions in and on a sphere. There are two methods
+that I tried and didn’t want to use for on_sphere().</p>
+<p><img src="dataExpansion_2_files/badOnSphere.jpg" width="640" height="362"></p>
+<p><a href="http://www.hosok2.com/project/dataExpansion_2/methodA.txt" target="_blank">Method A</a> is made by random numbers based on x, y, z value  and normalize them, and we can still see the cube edges. <a href="http://www.hosok2.com/project/dataExpansion_2/methodB.txt" target="_blank">Method B</a> has a artifact where more particles are near both  poles.</p>
+<p>I did some research and found better method here.<br>
+    <br>
+  <a href="http://mathworld.wolfram.com/SpherePointPicking.html">http://mathworld.wolfram.com/SpherePointPicking.html</a><br>
+  </p>
+<p align="center"><img src="dataExpansion_2_files/onSphere.jpg" width="320" height="240"><br>
+  And this is the <a href="http://www.hosok2.com/project/dataExpansion_2/onSphereRandom.txt" target="_blank">onSphereRandom()</a> C code</p>
+<p>For inSphereRandom() I used onSphereRandom() and converted it to
+Spherical Coordination System. Spherical Coordination System is another
+way to describe a position in 3D space which uses two angles and one
+distance from origin.</p>
+<p align="center"><img src="dataExpansion_2_files/SphericalCoordinates_1201.gif" width="301" height="291"><br>
+Source : <a href="http://mathworld.wolfram.com/SphericalCoordinates.html">http://mathworld.wolfram.com/SphericalCoordinates.html</a></p>
+<p>First I converted the original x, y, z values to Spherical
+Coordination System (r, t, p) and put some random value into r
+(distance from origin) and then converted r, t, p to x, y, z again and
+got another artifact where more points are near the center.</p>
+<p align="center"><img src="dataExpansion_2_files/CircularDistribution_1000.gif" width="534" height="255"><br>
+Source : <a href="http://mathworld.wolfram.com/DiskPointPicking.html">http://mathworld.wolfram.com/DiskPointPicking.html</a></p>
+<p>It can be fixed simply using sqrt(random()) for r instead of  using just random().</p>
+<p align="center"><img src="dataExpansion_2_files/inSphere.jpg" width="320" height="240"><br>
+  This is the <a href="http://www.hosok2.com/project/dataExpansion_2/inSphereRandom.txt" target="_blank">inSphereRandom()</a> C code.</p>
+<p>And the new version of <a href="http://www.hosok2.com/project/dataExpansion_2/dots.cpp.txt" target="_blank">dots procedural primitive DSO</a>.</p>
+<p>&nbsp;</p>
+<p><strong>Ri Filter Plug-in</strong></p>
+<p>The next step is converting the seed particles to the DSO. I used Ri
+Filter Plug-in to replace RiPoints procedure, which is particle in
+Maya, to RiDynamicLoad procedure, which is DSO call, in render time.</p>
+<p>Ri Filter is an official way to do this kind of filtering. The
+reason Pixar provides this method is because many studios and
+individuals used to do this rib filtering by their own solutions, which
+the doc calls home-grown solutions. However, often time it was easy to
+spend more time for filtering rib then actual rendering. Using RiFilter
+eliminates the disk I/O time and also save the disk space, because
+everything is done in render time. RMS also now provides GUI for
+RiFilter.</p>
+<p align="center"><img src="dataExpansion_2_files/renderGlobalRifilter.jpg" width="403" height="254"></p>
+<p>However, the example C++ code in the Doc was not so simple to me. It
+took pretty much time to understand how it works. As well as, the
+example code does more then just “Hello World”.</p>
+<p>This is the <a href="http://www.hosok2.com/project/dataExpansion_2/HelloWorldRiFilter.cpp.txt" target="_blank">“Hello World”</a> RiFilter that I made.  It simply replaces RiCone to RiSphere and parses some parameters.</p>
+<p>There are two header files for RiFilter. One is RiFilter.h and the
+other one is RiPlugin.h. RiPlugin.h provides the contact point to the
+renderer and use RiFilter.h as a dispatch table. RiFilter.h has almost
+all Ri procedure that ri.h has, so user can re-define Ri procedure
+using RiFilter.h.</p>
+<p>There are two kinds of Ri procedure forms. One  is RiXxxx() and the other one is RiXxxxV().</p>
+<p>For example, to make </p>
+<p>Surface “plastic” “Ks” [0.6] “Kd” [0.2]</p>
+<p>We could use</p>
+<blockquote>
+  <p>RtFloat spec[1] = {0.6};<br>
+    RtFloat diff[1] = {0.2};<br>
+    RiSurface(“plastic”,”Ks”,spec,”Kd”,diff,RI_NULL);</p>
+</blockquote>
+<p>However, since Ri procedure can have various number of parameters
+including primitive variables, ri.h provides the other form of
+RiSurface call.</p>
+<blockquote>
+  <p>RtFloat spec[1] = {0.6};<br>
+    RtFloat diff[1] = {0.2};<br>
+    RtToken keys[] = {“Ks”,”Kd”};<br>
+    RtPointer vals[2];<br>
+    vals[0] = (RtPointer)spec;<br>
+    vals[1] = (RtPointer)diff;<br>
+    RiSurfaceV(“plastic”,2,keys,vals);</p>
+</blockquote>
+<p>This form can be more flexible when rib procedure has to get parameters  dynamically in runtime.</p>
+<p>RiFilter.h’s procedure form is the second form, so for this project
+I could parse additional custom primitive variables such as particle id
+for random seed or the adaptive multipoint radius that I made in Maya.</p>
+<blockquote>
+  <p>Points “P” [0 0 0 1 1 1] “constantwidth” [0.1]<span class="style2"> “id” [0 1]  “multipointsRadius” [1 2]</span> # &lt;- green parts are the primitive variables that I want to export from Maya.</p>
+
+</blockquote>
+<p>RMS provides a way to parse a custom attribute to a rib. If
+attribute name in Maya is rmanFxxx, xxx variable goes to the rib as a
+Float. Of course, we can do it for vector or integer using
+rmanVmyvector or rmanImyint.</p>
+<p>One of the tricky parts was that I’m converting RiPoints to DSO call
+that makes again RiPoints. RiFilter works to readArchive and all
+procedurals, which means the RiPoints made by DSO is also filtered
+again. This is a kind of infinite loop. I spent so much time to find
+this problem and finally fixed it by comparing the number of parameters
+of RiPoints call, so if the RiPoints is from the original rib, it
+becomes RiReadDynamic, and if it is from DSO, it just makes points and
+terminates the process.</p>
+<p><a href="http://www.hosok2.com/project/dataExpansion_2/pointToDSO.cpp.txt" target="_blank">PointToDSO ri-filter code</a></p>
+<p><br>  
+  <strong>Expanded particle</strong><br>
+  Simulation with 300,000 particles and rendering with 9,000,000 particles<br>
+  Render Time per frame : 13 min.<br>
+  Memory usage: Average 1.2G<br><br>
+  <iframe src="dataExpansion_2_files/after_qt_icon.htm" marginheight="0" marginwidth="0" width="640" align="top" frameborder="0" height="500" scrolling="no"></iframe>
+  <br>
+</p>
+<p align="center">
+<iframe src="dataExpansion_2_files/before_qt_icon.htm" marginheight="0" marginwidth="0" width="400" align="top" frameborder="0" height="320" scrolling="no"></iframe>
+<br>
+The seed particle - 300,000 points</p>
+<p>I didn’t use the slice technique at this time because I still have
+long way to go for final solution. First of all, I have to solve the
+shadow problem where each slice has to cast and receive a shadow each
+other. Also a single frame has to be able to produce various numbers of
+images dynamically. </p>
+</div>
+
+
+<div id="menuPane">
+<iframe src="dataExpansion_2_files/menu.htm" marginheight="0" marginwidth="0" width="200" align="top" frameborder="0" height="3300" scrolling="no"></iframe>
+</div>
+
+
+</body></html>

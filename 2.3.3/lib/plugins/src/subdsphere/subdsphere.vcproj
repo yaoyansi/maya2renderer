@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="quadricProcedural"
+	Name="subdsphere"
 	ProjectGUID="{B9652F87-0BB5-4FB0-85AC-862CA178DB01}"
 	RootNamespace="quadricProcedural"
 	Keyword="MakeFileProj"
@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\dev\autodesk\maya\myplugin\project\liquid_\2.3.3\ribLib"
+				AdditionalIncludeDirectories="E:\dev\tools\pixar\renderman\13.5\include"
 				PreprocessorDefinitions="_DEBUG;_WIN32;"
 				RuntimeLibrary="1"
 				DebugInformationFormat="4"
@@ -55,8 +55,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Iphlpapi.lib Ws2_32.lib"
-				OutputFile="$(OutDir)\..\..\..\$(ProjectName)_prman.dll"
+				AdditionalDependencies="E:\dev\tools\pixar\renderman\13.5\lib\libprmansdk.lib Iphlpapi.lib Ws2_32.lib"
+				OutputFile="$(OutDir)\..\..\..\$(ProjectName).dll"
 				IgnoreDefaultLibraryNames="LIBCMT.lib"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
@@ -150,10 +150,10 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="liquid_plugins|Win32"
+			Name="prman_exe|Win32"
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -173,9 +173,9 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\dev\autodesk\maya\myplugin\project\liquid_\2.3.3\ribLib"
-				PreprocessorDefinitions="_DEBUG;_WIN32;USE_LIQUID_RIB"
-				RuntimeLibrary="3"
+				AdditionalIncludeDirectories="E:\dev\tools\pixar\renderman\13.5\include"
+				PreprocessorDefinitions="_DEBUG;_WIN32;_RUN_PROGRAM_"
+				RuntimeLibrary="1"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -189,8 +189,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Iphlpapi.lib Ws2_32.lib"
-				OutputFile="$(OutDir)\..\..\..\$(ProjectName)_liquid.dll"
+				AdditionalDependencies="E:\dev\tools\pixar\renderman\13.5\lib\libprmansdk.lib Iphlpapi.lib Ws2_32.lib"
+				OutputFile="$(OutDir)\..\..\..\$(ProjectName).exe"
 				IgnoreDefaultLibraryNames="LIBCMT.lib"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
@@ -221,7 +221,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="aqsis_plugins|Win32"
+			Name="prman_dll|Win32"
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
@@ -244,9 +244,9 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\dev\autodesk\maya\myplugin\project\liquid_\2.3.3\ribLib"
-				PreprocessorDefinitions="_DEBUG;_WIN32;USE_AQSIS_RIB"
-				RuntimeLibrary="3"
+				AdditionalIncludeDirectories="E:\dev\tools\pixar\renderman\13.5\include"
+				PreprocessorDefinitions="_DEBUG;_WIN32;"
+				RuntimeLibrary="1"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -261,7 +261,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Iphlpapi.lib Ws2_32.lib"
-				OutputFile="$(OutDir)\..\..\..\$(ProjectName)_aqsis.dll"
+				OutputFile="$(OutDir)\..\..\..\$(ProjectName).dll"
 				IgnoreDefaultLibraryNames="LIBCMT.lib"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
@@ -301,40 +301,8 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\quadricProcedural.cpp"
+				RelativePath=".\subdsphere.cpp"
 				>
-				<FileConfiguration
-					Name="prman_plugins|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="$(RMANTREE)\include"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="rfm_plugins|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="$(RMANTREE)\include"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="liquid_plugins|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="$(RMANTREE)\include"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="aqsis_plugins|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="$(RMANTREE)\include"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>
