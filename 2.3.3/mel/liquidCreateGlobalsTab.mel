@@ -36,10 +36,11 @@
 
 // We rely on this (for rendererTabName,addRendererTabsToGlobalsWindow), source it
 source "unifiedRenderGlobalsWindow.mel";
-
+source xxliquidutility.mel;
 
 global proc string liquidGetCurrentRenderLayerName()
 {	
+	liqlog("liquidGetCurrentRenderLayerName()");
 	/*string	$layerNames[]	= `listConnections renderLayerManager`;
 	int		$currentLayerId = `getAttr renderLayerManager.currentRenderLayer`;
 	
@@ -66,6 +67,7 @@ global proc string liquidGetCurrentRenderLayerName()
 
 global proc liquidSwitchGlobalsRenderLayer()
 {
+	liqlog("liquidSwitchGlobalsRenderLayer()");
   string $prefix = `liquidGetCurrentRenderLayerName`;
   string $unifiedRendererTabName = rendererTabName("liquid","Liquid");
   string $ourUberLayout = ($prefix+"liquidUberLayout");
@@ -94,6 +96,7 @@ global proc liquidSwitchGlobalsRenderLayer()
 
 global proc liquidCreateMayaGlobalsTabContent( string $prefix )
 {
+	liqlog("liquidCreateMayaGlobalsTabContent(...)");
   string $theTabLayout = ( $prefix + "liquidUnifiedRenderGlobalsMainTabLayout" );
   if ( `tabLayout -q -ex $theTabLayout` ) {
 
@@ -112,6 +115,7 @@ global proc liquidCreateMayaGlobalsTabContent( string $prefix )
 
 global proc liquidCreateMayaGlobalsTab( string $prefix, string $name )
 {
+	liqlog("liquidCreateMayaGlobalsTab(...)");
   // sanity check : we need valid globals
   if ( !liquidGlobalsExists() ) liquidCreateGlobals();
 
@@ -129,6 +133,7 @@ global proc liquidCreateMayaGlobalsTab( string $prefix, string $name )
 
 global proc liquidCreateGlobalsTab()
 {
+	liqlog("liquidCreateGlobalsTab(...)");
    string $currentParent = `setParent -q`;
    
   // make sure the maya globals are correctly initialized.
@@ -240,6 +245,7 @@ global proc liquidCreateGlobalsTab()
 
 global proc liquidUpdateMayaGlobals()
 {
+	liqlog("liquidUpdateMayaGlobals(...)");
   if ( `layout -q -ex liquidCommonTab` ) layout -e -m false -vis false liquidCommonTab;
  
   string $prefix = `liquidGetCurrentRenderLayerName`;

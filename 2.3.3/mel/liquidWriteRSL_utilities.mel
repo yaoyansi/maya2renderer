@@ -3,15 +3,18 @@
 //                  Rob Pieke (C.O.R.E. Digital Pictures)
 //
 //--------------------------------------------------------------------
+source xxliquidutility.mel;
 
 global proc string[] validConnections_condition ()
 {
+	liqlog("validConnections_condition(...)");
     return { "firstTerm", "secondTerm", "operation", "colorIfTrue",
              "colorIfFalse", "outColor" };
 }
 
 global proc writeRSL_condition ( string $node )
 {
+	liqlog("writeRSL_condition(...)");
     beginRSL $node;
 
     addRSLVariable "float" "firstTerm" "firstTerm" $node;
@@ -95,6 +98,7 @@ global proc writeRSL_condition ( string $node )
 
 global proc string[] validConnections_multiplyDivide ()
 {
+	liqlog("validConnections_multiplyDivide(...)");
     return { "operation", "input1", "input2", "output" };
 }
 
@@ -102,6 +106,7 @@ global proc writeRSL_multiplyDivide (
     string $node
 )
 {
+	liqlog("writeRSL_multiplyDivide(...)");
     beginRSL $node;
 
     addRSLVariable "float" "operation" "operation" $node;
@@ -137,6 +142,7 @@ global proc writeRSL_multiplyDivide (
 
 global proc string[] validConnections_place2dTexture ()
 {
+	liqlog("validConnections_place2dTexture(...)");
     return { "repeatUV", "outUV" };
 }
 
@@ -144,6 +150,7 @@ global proc writeRSL_place2dTexture (
     string $node
 )
 {
+	liqlog("writeRSL_place2dTexture(...)");
     beginRSL $node;
 
     addRSLVariable "float2" "repeatUV" "repeatUV" $node;
@@ -160,6 +167,7 @@ global proc writeRSL_place2dTexture (
 
 global proc string[] validConnections_reverse ()
 {
+	liqlog("validConnections_reverse(...)");
     return { "input", "inputX", "inputY", "inputZ", "output",
              "outputX", "outputY", "outputZ" };
 }
@@ -168,6 +176,7 @@ global proc writeRSL_reverse (
     string $node
 )
 {
+	liqlog("writeRSL_reverse(...)");
     beginRSL( $node );
 
     if( convertibleConnection( $node + ".input" ) )
@@ -223,6 +232,7 @@ global proc writeRSL_reverse (
 
 global proc string[] validConnections_samplerInfo ()
 {
+	liqlog("validConnections_samplerInfo(...)");
     return { "pointCamera", "pointObj", "pointWorld", "normalCamera",
              "uvCoord", "rayDirection", "tangentUCamera",
              "tangentVCamera", "pixelCenter", "facingRatio" };
@@ -232,6 +242,7 @@ global proc writeRSL_samplerInfo (
     string $node
 )
 {
+	liqlog("writeRSL_samplerInfo(...)");
     beginRSL $node;
 
     addToRSL "extern point P;";
@@ -328,6 +339,7 @@ global proc writeRSL_samplerInfo (
 
 global proc string[] validConnections_blendColors ()
 {
+	liqlog("validConnections_blendColors(...)");
     return { "blender", "color1", "color2", "output" };
 }
 
@@ -335,6 +347,7 @@ global proc writeRSL_blendColors (
     string $node
 )
 {
+	liqlog("writeRSL_blendColors(...)");
     beginRSL $node;
 
     addRSLVariable "float" "blender" "blender" $node;
@@ -351,6 +364,7 @@ global proc writeRSL_blendColors (
 
 global proc string[] validConnections_gammaCorrect ()
 {
+	liqlog("validConnections_gammaCorrect(...)");
     return { "value", "gamma", "outValue" };
 }
 
@@ -358,6 +372,7 @@ global proc writeRSL_gammaCorrect (
     string $node
 )
 {
+	liqlog("writeRSL_gammaCorrect(...)");
     beginRSL $node;
 
     addRSLVariable "vector" "value" "value" $node;
@@ -377,6 +392,7 @@ global proc writeRSL_gammaCorrect (
 
 global proc string[] validConnections_hsvToRgb ()
 {
+	liqlog("validConnections_hsvToRgb(...)");
     return { "inHsv", "outRgb" };
 }
 
@@ -384,6 +400,7 @@ global proc writeRSL_hsvToRgb (
     string $node
 )
 {
+	liqlog("writeRSL_hsvToRgb(...)");
     beginRSL( $node );
 
     addRSLVariable "vector" "inHsv" "inHsv" $node;
@@ -455,6 +472,7 @@ global proc writeRSL_hsvToRgb (
 
 global proc string[] validConnections_luminance ()
 {
+	liqlog("validConnections_luminance(...)");
     return { "value", "valueR", "valueG", "valueB", "outValue" };
 }
 
@@ -462,6 +480,7 @@ global proc writeRSL_luminance (
     string $node
 )
 {
+	liqlog("writeRSL_luminance(...)");
     beginRSL( $node );
 
     if( convertibleConnection( $node + ".value" ) )
@@ -502,6 +521,7 @@ global proc writeRSL_luminance (
 
 global proc string[] validConnections_rgbToHsv ()
 {
+	liqlog("validConnections_rgbToHsv(...)");
     return { "inRgb", "outHsv" };
 }
 
@@ -509,6 +529,7 @@ global proc writeRSL_rgbToHsv (
     string $node
 )
 {
+	liqlog("writeRSL_rgbToHsv(...)");
     beginRSL( $node );
 
     addRSLVariable "vector" "inRgb" "inRgb" $node;
@@ -576,6 +597,7 @@ global proc writeRSL_rgbToHsv (
 
 global proc string[] validConnections_clamp ()
 {
+	liqlog("validConnections_clamp(...)");
     return { "input", "inputR", "inputG", "inputB", "min", "minR", "minG",
              "minB", "max", "maxR", "maxG", "maxB", "output", "outputR",
              "outputG", "outputB" };
@@ -585,6 +607,7 @@ global proc writeRSL_clamp (
     string $node
 )
 {
+	liqlog("writeRSL_clamp(...)");
     beginRSL( $node );
 
     addRSLVariable "vector" "input" "input" $node;

@@ -34,10 +34,12 @@
 //
 //  Returns:
 //
+source xxliquidutility.mel;
 
 // create the liquid menu interface
 global proc liquidReadArchive ()
 {
+	liqlog("liquidReadArchive()");
   string $nodes[] = `ls -dag -sl`;
   string $currentNode;
   for ( $currentNode in $nodes ) {
@@ -47,6 +49,7 @@ global proc liquidReadArchive ()
 
 global proc liquidDeleteReadArchive ()
 {
+	liqlog("liquidDeleteReadArchive()");
   string $nodes[] = `ls -dag -sl`;
   string $currentNode;
   for ( $currentNode in $nodes ) {

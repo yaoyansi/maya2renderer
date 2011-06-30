@@ -1,5 +1,8 @@
+ source xxliquidutility.mel;
+
                   global proc string[] getMultiListerSelection()
                   {
+                    liqlog("getMultiListerSelection()");
                     string $targets[];
                     
                     // Get the MultiLister panel.  There _should_ be only one

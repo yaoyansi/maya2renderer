@@ -34,9 +34,11 @@
 //
 //  Returns:
 //
+source xxliquidutility.mel;
 
 global proc liquidAssignNugget( string $node, string $nugget )
 {	
+	liqlog("liquidAssignNugget(...)");
 	if ( !`attributeQuery -node $node -ex "liquidNugget"`) {
 		addAttr -ln "liquidNugget" -at message $node;
 	}
@@ -49,6 +51,7 @@ global proc liquidAssignNugget( string $node, string $nugget )
 
 global proc liquidRemoveNugget( string $node )
 {
+	liqlog("liquidRemoveNugget(...)");
 	if ( `attributeQuery -node $node -ex "liquidNugget"`) {
 		deleteAttr ( $node + ".liquidNugget" );
 	}
@@ -56,6 +59,7 @@ global proc liquidRemoveNugget( string $node )
 
 global proc liquidRemoveNuggetSelected()
 {
+	liqlog("liquidRemoveNuggetSelected(...)");
 	string $selected[] = `ls -sl`;
 	string $current;
 	for ( $current in $selected )
@@ -67,6 +71,7 @@ global proc liquidRemoveNuggetSelected()
 /* assign a nugget to selected objects, the first object you pick should be the nugget! */
 global proc liquidAssignNuggetSelected()
 {
+	liqlog("liquidAssignNuggetSelected(...)");
 	string $selected[] = `ls -sl`;
 	string $nugget = $selected[0];
 	string $nuggetType = `nodeType $nugget`;

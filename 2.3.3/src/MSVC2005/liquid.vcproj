@@ -2651,7 +2651,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="image.lib OpenMayaFX.lib Foundation.lib OpenMaya.lib OpenMayaRender.lib OpenMayaUI.lib OpenMayaAnim.lib glu32.lib opengl32.lib netapi32.lib ws2_32.lib rilib_d.lib"
 				OutputFile="../../bin/prman/win32/liquid_2008x32d.mll"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2008)/lib&quot;;../../bin/win32lib"
 				GenerateDebugInformation="true"
@@ -3304,7 +3304,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\mel\AEliquidPaintEffects.mel"
+				>
+			</File>
+			<File
 				RelativePath="..\..\mel\AEliquidRibBoxTemplate.mel"
+				>
+			</File>
+			<File
+				RelativePath="..\..\mel\AEliquidRibRequestTemplate.mel"
 				>
 			</File>
 			<File
@@ -3424,6 +3432,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\mel\liquidNugget.mel"
+				>
+			</File>
+			<File
+				RelativePath="..\..\mel\liquidPaintEffects.mel"
+				>
+			</File>
+			<File
 				RelativePath="..\..\mel\liquidParamDialogWindow.mel"
 				>
 			</File>
@@ -3529,6 +3545,10 @@
 			</File>
 			<File
 				RelativePath="..\..\mel\liquidWriteRSL_utilities.mel"
+				>
+			</File>
+			<File
+				RelativePath="..\..\mel\mmm.liquidMenu.mel"
 				>
 			</File>
 			<File
@@ -3656,6 +3676,14 @@
 		<Filter
 			Name="rilib"
 			>
+		</Filter>
+		<Filter
+			Name="xx"
+			>
+			<File
+				RelativePath="..\..\mel\xxliquidutility.mel"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

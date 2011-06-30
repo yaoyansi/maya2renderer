@@ -33,8 +33,11 @@
 //	Read a SL compiled shader  and return its type and fill an array with args
 //  	Return 0 if something is wrong
 //
+source xxliquidutility.mel;
+
 global proc int liquidParseEndStrForVal( string $endStr, int $argType, string $vals[] )
 {
+	liqlog("liquidParseEndStrForVal(...)");
     if( $argType == 1  ) // single float
     {
     string $tmpStr2 = `match "\\-*[0-9]*\\.*[0-9]+$" $endStr`; // Search for <float> at end of line
@@ -128,6 +131,7 @@ global proc int liquidParseEndStrForVal( string $endStr, int $argType, string $v
 
 global proc int liquidCheckDefaultVals( string $argName, int $argType, int $argArraySize, int $nbFound, string $defaultValues[], int $numDefaultValues )
 {
+	liqlog("liquidCheckDefaultVals(...)");
     // Check if we got all default we needed for previous arg ( if any )
     int $shouldHaveFound = 0;
     if( $argType == 1 || $argType == 6 ) $shouldHaveFound = 1;
@@ -163,6 +167,7 @@ global proc int liquidCheckDefaultVals( string $argName, int $argType, int $argA
 
 global proc int liquidParseSlShader ( string $shaderNode, string $fileName )
 {
+	liqlog("liquidParseSlShader(...)");
     global string $liqShaderTypes[];
     global string $liqShaderArgTypes[];
     global string $liqRenderers[];

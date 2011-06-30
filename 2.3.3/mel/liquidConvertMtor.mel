@@ -33,9 +33,11 @@
 //	matching liquid assignments
 //	BASED ON CURRENT PALETTE
 //
+source xxliquidutility.mel;
 
 global proc liquidCopyShaderValues( string $slimApp, string $shaderNode )
 {
+  liqlog("liquidCopyShaderValues(...)");
   if ( !objExists( $shaderNode ) ) return;
   
   string $params[] = stringToStringArray( `slimcmd $slimApp GetProperties`, " ");
@@ -85,7 +87,9 @@ global proc liquidCopyShaderValues( string $slimApp, string $shaderNode )
 }
 
 
-global proc liquidConvertMtor () {
+global proc liquidConvertMtor () 
+{
+  liqlog("liquidConvertMtor(...)");
   string $yesno;
   $yesno = `confirmDialog -title "Confirm" -message ( "Your about to convert MTOR assignments to Liquid assignments, this takes some time - continue?" )
               -button "Yes" -button "No" -defaultButton "Yes"
@@ -164,6 +168,7 @@ global proc liquidConvertMtor () {
 
 global proc liquidAssignSlimShader( string $shapes[], string $shaderName, string $label )
 {
+	liqlog("liquidAssignSlimShader(...)");
   string $shape, $dataNode = "";
   
   if ( !gmatch( $shaderName, "/*") ) $shaderName = `workspace -q -rootDirectory` + $shaderName + ".slo";
@@ -217,7 +222,9 @@ global proc liquidAssignSlimShader( string $shapes[], string $shaderName, string
 //
 // deprecated piece of code...
 //
-global proc liquidConvertMtorGlimpse () {
+global proc liquidConvertMtorGlimpse () 
+{
+	liqlog("liquidConvertMtorGlimpse()");
 // GLIMPSE
   int $numApps = `mtor palette length`;
   for( $i = 0; $i < $numApps; $i++ ) {

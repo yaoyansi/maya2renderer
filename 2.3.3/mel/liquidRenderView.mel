@@ -36,12 +36,14 @@
 
 proc liqRVSetRenderCamera( string $editor )
 {
+	liqlog("liqRVSetRenderCamera(...)");
   string $renderCamera = `getAttr liquidGlobals.renderCamera`;
   renderWindowEditor -e -currentCamera $renderCamera $editor;
 }
 
 proc liqRVSetUpShortCuts()
 {
+	liqlog("liqRVSetUpShortCuts()");
   nameCommand -default true -ann "exposure +0.25 f-stop" -c "liqRVExposure 0.25"  liqExposureUpCmd;
   nameCommand -default true -ann "exposure -0.25 f-stop" -c "liqRVExposure -0.25" liqExposureDownCmd;
   nameCommand -default true -ann "exposure reset"        -c "liqRVExposure 0"     liqExposureResetCmd;
@@ -69,6 +71,7 @@ proc liqRVSetUpShortCuts()
 
 global proc string liqGetRVPanel()
 {
+	liqlog("liqGetRVPanel()");
   string $thePanel;
   string $renderPanels[] = `getPanel -scriptType "renderWindowPanel"`;
   if ( !size( $renderPanels ) ) {
@@ -80,6 +83,7 @@ global proc string liqGetRVPanel()
 
 global proc liqShowRV()
 {
+	liqlog("liqShowRV()");
   string $editor = `liqGetRVPanel`;
 
 
@@ -121,6 +125,7 @@ global proc liqShowRV()
 
 global proc liqRVDisplayChannels( int $num )
 {
+	liqlog("liqRVDisplayChannels(...)");
   string $editor = liqGetRVPanel();
   string $upd = ";refreshRenderViewIcons(\""+$editor+"\")";
   switch( $num ) {
@@ -152,6 +157,7 @@ global proc liqRVDisplayChannels( int $num )
  */
 global proc liqRVExposure( float $val )
 {
+	liqlog("liqRVExposure(...)");
   global int $gLiqLastRenderIsRenderRegion;
   if ( $gLiqLastRenderIsRenderRegion ) {
     warning "Liquid cannot change the exposure of render regions. make a full render first.";
@@ -189,6 +195,7 @@ global proc liqRVExposure( float $val )
 
 global proc int liqRVGetAutoSaveState()
 {
+	liqlog("liqRVGetAutoSaveState()");
   if ( !`optionVar -ex liquidRenderViewAutoSave` ) {
     optionVar -intValue liquidRenderViewAutoSave 1;
   }
@@ -197,12 +204,14 @@ global proc int liqRVGetAutoSaveState()
 
 global proc liqRVToggleAutoSaveState()
 {
+	liqlog("liqRVToggleAutoSaveState()");
   optionVar -iv liquidRenderViewAutoSave (1-`liqRVGetAutoSaveState`);
 }
 
 
 global proc liqRenderViewMenu( string $editor)
 {
+	liqlog("liqRenderViewMenu()");
   if ( !`menu -q -ex ($editor + "LiquidRVMenu")` ) {
 
     menu  -label              "Liquid"
@@ -255,6 +264,7 @@ global proc liqRenderViewMenu( string $editor)
 
 global proc string liquidmayaRender(int $resolution0, int $resolution1, int $doShadows, int $doGlowPass, string $camera, string $option)
 {
+	liqlog("liquidmayaRender()");
   global int $gLiqLastRenderIsRenderRegion;
   if ( !`liquidGlobalsExists` ) {
     string $sel[] = `ls -sl`;
@@ -280,6 +290,7 @@ global proc string liquidmayaRender(int $resolution0, int $resolution1, int $doS
 
 global proc liquidmayaRenderRegion( string $editor )
 {
+	liqlog("liquidmayaRenderRegion(...)");
   global int $gLiqLastRenderIsRenderRegion;
   liquidCropPreview();
   $gLiqLastRenderIsRenderRegion = 1;
@@ -287,6 +298,7 @@ global proc liquidmayaRenderRegion( string $editor )
 
 global proc liquidSaveRenderViewImage()
 {
+	liqlog("liquidSaveRenderViewImage()");
   if ( liqRVGetAutoSaveState() == 0 ) return;
   string $editor = `liqGetRVPanel`;
 

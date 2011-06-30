@@ -1,5 +1,9 @@
+source xxliquidutility.mel;
+
 global proc mmm.liquidMenu(string $parent)
 {
+	liqlog("mmm.liquidMenu(...)");
+
     liquidInitCFD;
     liquidStartup();
 }

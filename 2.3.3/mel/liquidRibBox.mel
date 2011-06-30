@@ -34,10 +34,12 @@
 //
 //  Returns:
 //
+source xxliquidutility.mel;
 
 // create the liquid menu interface
 global proc liquidAddRibBox ()
 {
+	liqlog("liquidAddRibBox()");
   // Was ls -dag -sl
   // should be at least ls -dag -tr -sl to not add stuff to the shapes
   // in my opinion should be just ls -tr -sl. Stephane
@@ -52,6 +54,7 @@ global proc liquidAddRibBox ()
 
 global proc liquidDeleteRibBox ()
 {
+	liqlog("liquidDeleteRibBox()");
   // Do we really want to delete the 
   // atributes recursively ?
   string $nodes[] = `ls -dag -sl`;

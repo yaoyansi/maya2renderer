@@ -44,7 +44,7 @@
 //          global int    $gLiquidSlParamArraySizes[];
 //
 //
-
+source xxliquidutility.mel;
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -53,6 +53,7 @@
 
 proc liquidSl_setShaderName( string $token )
 {
+	liqlog("liquidSl_setShaderName(...)");
   global string $gLiquidSlShaderName;
 
   if ( $token == "" ) {
@@ -65,6 +66,7 @@ proc liquidSl_setShaderName( string $token )
 
 proc string liquidSl_getShaderType( int $fid )
 {
+	liqlog("liquidSl_getShaderType(...)");
     string $type = "";
 
     // The first word on the first non-empty
@@ -91,6 +93,7 @@ proc string liquidSl_getShaderType( int $fid )
 
 proc string liquidSl_getParamName( string $line )
 {
+	liqlog("liquidSl_getParamName(...)");
     string $strip = `substitute "^[^\"]*\"" $line ""`;
     if ( $strip == $line ) return "";
 
@@ -102,6 +105,7 @@ proc string liquidSl_getParamName( string $line )
 
 proc string liquidSl_getParamDetail( string $line )
 {
+	liqlog("liquidSl_getParamDetail(...)");
     string $prefix = "\"[^\"]* *";
     string $suffix = " *[floatpinvecorlsgmx]+";
 
@@ -113,6 +117,7 @@ proc string liquidSl_getParamDetail( string $line )
 
 proc int liquidSl_isOutputParam( string $line )
 {
+	liqlog("liquidSl_isOutputParam(...)");
   if ( gmatch( $line, "*output parameter*") ) return 1;
 
   return 0;
@@ -120,6 +125,7 @@ proc int liquidSl_isOutputParam( string $line )
 
 proc string liquidSl_getParamType( string $line )
 {
+	liqlog("liquidSl_getParamType(...)");
     string $prefix = "\"[^\"]*[uniformvaryg]+ *";
 
     if      ( `match ($prefix+"string") $line` != "" ) return "string";
@@ -135,6 +141,7 @@ proc string liquidSl_getParamType( string $line )
 
 proc int liquidSl_getParamArraySize( string $line )
 {
+	liqlog("liquidSl_getParamArraySize(...)");
     string $strip = `substitute "^.*[a-z]\\[" $line ""`;
     if ( $strip == $line ) return 0;
 
@@ -147,6 +154,7 @@ proc int liquidSl_getParamArraySize( string $line )
 
 proc string liquidSl_getParamDefaultF( int $fid )
 {
+	liqlog("liquidSl_getParamDefaultF(...)");
     string $default = "0.0";
     string $line = strip( `fgetline $fid` );
 
@@ -160,6 +168,7 @@ proc string liquidSl_getParamDefaultF( int $fid )
 
 proc string liquidSl_getParamDefaultS( int $fid )
 {
+	liqlog("liquidSl_getParamDefaultS(...)");
     string $default = "";
     string $line = strip( `fgetline $fid` );
 
@@ -174,6 +183,7 @@ proc string liquidSl_getParamDefaultS( int $fid )
 
 proc string liquidSl_getParamDefaultM( int $fid )
 {
+	liqlog("liquidSl_getParamDefaultM(...)");
     // Matrices don't seem to be supported
     // by aqsltell, so this should never
     // get called.  But if/when it does, this
@@ -212,6 +222,7 @@ proc string liquidSl_getParamDefaultM( int $fid )
 
 proc string liquidSl_getParamDefaultV( int $fid )
 {
+	liqlog("liquidSl_getParamDefaultV(...)");
     string $default = "<<0, 0, 0>>";
     string $line = `fgetline $fid`;
 
@@ -230,6 +241,7 @@ proc string liquidSl_getParamDefaultV( int $fid )
 
 proc string liquidSl_getParamDefault( int $fid, string $paramType )
 {
+	liqlog("liquidSl_getParamDefault(...)");
     string $default = "";
 
     switch ( $paramType )
@@ -265,6 +277,7 @@ proc string liquidSl_getParamDefault( int $fid, string $paramType )
 
 global proc liquidSlParseSdr( string $sdrFile )
 {
+	liqlog("liquidSlParseSdr(...)");
     if ( ! `filetest -r $sdrFile` )
     {
         error( "shader does not exist: " + $sdrFile );

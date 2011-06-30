@@ -34,10 +34,12 @@
 //
 //  Returns:
 //
+source xxliquidutility.mel;
 
 // create the liquid menu interface
 global proc liquidAddPrefAttribute()
 {
+	liqlog("liquidAddPrefAttribute(...)");
   // TODO: The eventual deletion should happen in liquidAttachPrefAttribute in
   // the C++ plug-in, in not here!!!
   liquidDeletePrefAttribute;
@@ -54,6 +56,7 @@ global proc liquidAddPrefAttribute()
 
 global proc liquidDeletePrefAttribute()
 {
+	liqlog("liquidDeletePrefAttribute()");
   string $nodes[] = `ls -dag -sl -type nurbsSurface -type mesh`;
   string $currentNode;
   for ( $currentNode in $nodes ) {
@@ -65,6 +68,7 @@ global proc liquidDeletePrefAttribute()
 
 global proc liquidAddNrefAttribute()
 {
+	liqlog("liquidAddNrefAttribute()");
   // TODO: The eventual deletion should happen in liquidAttachPrefAttribute in
   // the C++ plug-in, in not here!!!
   liquidDeleteNrefAttribute;
@@ -81,6 +85,7 @@ global proc liquidAddNrefAttribute()
 
 global proc liquidDeleteNrefAttribute()
 {
+	liqlog("liquidDeleteNrefAttribute()");
   string $nodes[] = `ls -dag -sl -type nurbsSurface -type nurbsCurve -type mesh`;
   string $currentNode;
   for ( $currentNode in $nodes ) {

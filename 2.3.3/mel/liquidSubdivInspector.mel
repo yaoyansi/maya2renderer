@@ -41,12 +41,13 @@
 //	- creases and corners hardness are keyable
 //	- UI window remains active in component mode also
 //	- menu item for adding creases, corners, holes, stitches
-
+source xxliquidutility.mel;
 
 global string $liq_inspectorWin = "liqSubdivInspectorWin";
 global int $liq_inspInCompMode;
 
 global proc liquidSubdivInspector( ) {
+	liqlog("liquidSubdivInspector(...)");
 global string $liq_inspectorWin;
 
   if ( `window -exists $liq_inspectorWin` ) {
@@ -64,6 +65,7 @@ global string $liq_inspectorWin;
 }
 
 proc dispSelectedName( string $curSelection) {
+	liqlog("dispSelectedName(...)");
 
   setParent liq_sbd_insp_main;
 
@@ -99,6 +101,7 @@ proc dispSelectedName( string $curSelection) {
 }
 
 global proc liq_sbd_insp_dispAttributes( string $shape ) {
+	liqlog("liq_sbd_insp_dispAttributes(...)");
 
   //string $liqNodes[] = `listConnections -s false -sh 1 -type liqSubdivNode $shape`;
   //string $liq_sbd_Node = $liqNodes[0];
@@ -166,6 +169,7 @@ global proc liq_sbd_insp_dispAttributes( string $shape ) {
 }
 
 global proc liq_sbd_insp_dispExtraTags( string $shape ) {
+	liqlog("liq_sbd_insp_dispExtraTags(...)");
   string $inSetNodes[] = `listConnections -s false -type objectSet $shape`;
   string $inSetNode;
   string $attr, $str, $onCommand, $offCommand;
@@ -307,6 +311,7 @@ global proc liq_sbd_insp_dispExtraTags( string $shape ) {
 
 
 proc string liq_sbd_insp_selected_mesh( string $selection ) {
+	liqlog("liq_sbd_insp_selected_mesh(...)");
   string  $ret = "";
 
   if ( size( $selection ) ) {
@@ -323,6 +328,7 @@ proc string liq_sbd_insp_selected_mesh( string $selection ) {
 
 
 global proc liquidUpdateSubdivInspector() {
+	liqlog("liquidUpdateSubdivInspector(...)");
 global string $liq_inspectorWin;
 global int $liq_inspInCompMode;
 

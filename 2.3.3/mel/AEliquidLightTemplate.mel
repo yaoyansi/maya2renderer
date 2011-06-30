@@ -33,11 +33,12 @@
 //
 //  Returns:
 //
-
+source xxliquidutility.mel;
 
 
 proc setupShadowCamera( string $cameraShape )
 {
+	liqlog("setupShadowCamera(...)");
   // set attributes
   setAttr ( $cameraShape + ".horizontalFilmAperture" ) 1.0;
   setAttr ( $cameraShape + ".verticalFilmAperture" ) 1.0;
@@ -65,6 +66,7 @@ proc setupShadowCamera( string $cameraShape )
  */
 global proc string addShadowCamera( string $nodeDotAttr )
 {
+	liqlog("addShadowCamera(...)");
   string $sel[] = `ls -sl`;
 
   // create new camera
@@ -86,6 +88,7 @@ global proc string addShadowCamera( string $nodeDotAttr )
 
 global proc connectShadowCamera( string $shadowCameraShape, string $nodeDotAttr )
 {
+	liqlog("connectShadowCamera(...)");
   connectAttr ( $shadowCameraShape + ".message" ) $nodeDotAttr;
 }
 
@@ -94,6 +97,7 @@ global proc connectShadowCamera( string $shadowCameraShape, string $nodeDotAttr 
  */
 global proc connectExistingShadowCamera( string $nodeDotAttr, string $flag, string $source )
 {
+	liqlog("connectExistingShadowCamera(...)");
   //trace ($nodeDotAttr+" + "+$flag+" + "+$source+"\n");
   if ( !objExists( $source ) ) return;
 
@@ -122,23 +126,27 @@ global proc connectExistingShadowCamera( string $nodeDotAttr, string $flag, stri
 
 global proc disconnecShadowCamera( string $nodeDotAttr )
 {
+	liqlog("disconnecShadowCamera(...) nothing yet");
   // nothing yet
   //trace ("disconnecShadowCamera "+$nodeDotAttr);
 }
 
 global proc deleteShadowCamera( string $nodeDotAttr )
 {
+	liqlog("deleteShadowCamera(...) nothing yet");
   // nothing yet
 }
 
 global proc ignoreShadowCamera( string $nodeDotAttr )
 {
+	liqlog("ignoreShadowCamera(...) nothing yet");
   // nothing yet
   //trace ("ignoreShadowCamera "+$nodeDotAttr);
 }
 
 global proc unIgnoreShadowCamera( string $nodeDotAttr )
 {
+	liqlog("unIgnoreShadowCamera(...) nothing yet");
   // nothing yet
   //trace ("unIgnoreShadowCamera "+$nodeDotAttr);
 }
@@ -147,6 +155,7 @@ global proc unIgnoreShadowCamera( string $nodeDotAttr )
 
 global proc shadowCameraReplace( string $nodeDotAttr )
 {
+	liqlog("shadowCameraReplace(...)");
   global string $gLiquidShadowCameraParentLayout;
 
   int    $i = 0;
@@ -261,6 +270,7 @@ global proc shadowCameraReplace( string $nodeDotAttr )
 
 global proc shadowCameraNew( string $nodeDotAttr )
 {
+	liqlog("shadowCameraNew(...)");
   setUITemplate -pst attributeEditorTemplate;
 
   global string $gLiquidShadowCameraParentLayout;
@@ -277,11 +287,13 @@ global proc shadowCameraNew( string $nodeDotAttr )
 
 global proc mainShadowStatusNew( string $nodeDotAttr )
 {
+	liqlog("mainShadowStatusNew(...)");
   mainShadowStatusReplace( $nodeDotAttr );
 }
 
 global proc mainShadowStatusReplace( string $nodeDotAttr )
 {
+	liqlog("mainShadowStatusReplace(...)");
   int $state = 1 - `getAttr $nodeDotAttr`;
 
   string $node = basenameEx( $nodeDotAttr );

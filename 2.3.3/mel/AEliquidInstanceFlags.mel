@@ -1,3 +1,5 @@
+source xxliquidutility.mel;
+
 proc AEliquidCreateMenu()
 {
   global string $gAERootLayoutName;
@@ -19,6 +21,7 @@ proc AEliquidCreateMenu()
 
 global proc liquidLargeFieldUpdater()
 {
+	liqlog("liquidLargeFieldUpdater()");
   //early exit
   string $globalsExists = objExists( "liquidGlobals" );
 
@@ -51,6 +54,8 @@ global proc liquidLargeFieldUpdater()
 
 global proc liquidFieldUpdateMenu( string $msg )
 {
+	
+	liqlog("liquidFieldUpdateMenu(...)");
   string $attr[] = stringToStringArray( $msg, ".");
   int $en = (`editRenderLayerGlobals -q -crl` == "defaultRenderLayer")? 0 : 1;
 
@@ -64,6 +69,7 @@ global proc liquidFieldUpdateMenu( string $msg )
 
 global proc liquidLargeFieldReplace( string $nodeName, string $label, string $msg )
 {
+	liqlog("liquidLargeFieldReplace(...)");
   string $attr[] = stringToStringArray( $msg, ".");
   string $layout = ("liquidLargeFieldLayout"+$attr[1]);
 
@@ -85,6 +91,7 @@ global proc liquidLargeFieldReplace( string $nodeName, string $label, string $ms
 
 global proc liquidLargeFieldNew( string $nodeName, string $label, string $msg )
 {
+	liqlog("liquidLargeFieldNew(...)");
   string $attr[] = stringToStringArray( $msg, ".");
   setUITemplate -pst attributeEditorTemplate;
   string $layout = `rowLayout -nc 2 -adj 2 ("liquidLargeFieldLayout"+$attr[1])`;
@@ -101,6 +108,7 @@ global proc liquidLargeFieldNew( string $nodeName, string $label, string $msg )
 
 global proc liquidSmallFieldReplace( string $nodeName, string $label, string $msg )
 {
+	liqlog("liquidSmallFieldReplace(...)");
   string $attr[] = stringToStringArray( $msg, ".");
   string $ctl = ("liquidSmallFieldCtl"+$attr[1]);
 
@@ -115,6 +123,7 @@ global proc liquidSmallFieldReplace( string $nodeName, string $label, string $ms
 
 global proc liquidSmallFieldNew( string $nodeName, string $label, string $msg )
 {
+	liqlog("liquidSmallFieldNew(...)");
   string $attr[] = stringToStringArray( $msg, ".");
   setUITemplate -pst attributeEditorTemplate;
   textFieldGrp -label $label -adj 2 ("liquidSmallFieldCtl"+$attr[1]);
@@ -128,6 +137,7 @@ global proc liquidSmallFieldNew( string $nodeName, string $label, string $msg )
 // for shading group connections
 global proc liquidSGCreateMenuItems( string $parent, string $name, string $msg )
 {
+	liqlog("liquidSGCreateMenuItems(...)");
 	string $sg[] = `ls -type shadingEngine`;
 	
 	menuItem -label "Create New Shading Group" 
@@ -144,6 +154,7 @@ global proc liquidSGCreateMenuItems( string $parent, string $name, string $msg )
 }
 global proc liquidSGCreateMenuItemsNew( string $msg )
 {
+	liqlog("liquidSGCreateMenuItemsNew(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	string $con[] = `listConnections -p 1 $msg`;
 	string $ctl = ( "liquidSGMessageGrp" + $parts[1] );
@@ -159,6 +170,7 @@ global proc liquidSGCreateMenuItemsNew( string $msg )
 }
 global proc liquidSGCreateMenuItemsConnect( string $item, string $msg )
 {
+	liqlog("liquidSGCreateMenuItemsConnect(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	string $con[] = `listConnections -p 1 $msg`;
 	string $ctl = ( "liquidSGMessageGrp" + $parts[1] );
@@ -173,6 +185,7 @@ global proc liquidSGCreateMenuItemsConnect( string $item, string $msg )
 
 global proc liquidSGSelect( string $msg )
 {
+	liqlog("liquidSGSelect(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	string $SG = `textFieldButtonGrp -q -tx ( "liquidSGMessageGrp" + $parts[1] )`;
 	string $shader[] = `listConnections ( $SG + ".surfaceShader" )`;
@@ -188,6 +201,7 @@ global proc liquidSGSelect( string $msg )
 
 global proc liquidSGMessageNew( string $nodeName, string $label, string $msg )
 {
+	liqlog("liquidSGMessageNew(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	setUITemplate -pst attributeEditorTemplate;
 	columnLayout;
@@ -208,6 +222,7 @@ global proc liquidSGMessageNew( string $nodeName, string $label, string $msg )
 
 global proc liquidSGMessageReplace( string $nodeName, string $msg )
 {
+	liqlog("liquidSGMessageReplace(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	string $ctl = ( "liquidSGMessageGrp" + $parts[1] );
 	
@@ -248,7 +263,8 @@ global proc AEliquidInstanceFlags( string $node )
       editorTemplate -label "Diffuse Rays" -addDynamicControl "liqVisibilityDiffuse";
       editorTemplate -label "Specular Rays" -addDynamicControl "liqVisibilitySpecular";
       editorTemplate -label "Transmission Rays" -addDynamicControl "liqVisibilityNewTransmission";
-
+      editorTemplate -label "Photon" -addDynamicControl "liqVisibilityPhoton";
+      editorTemplate -label "Midpoint" -addDynamicControl "liqVisibilityMidpoint";
     editorTemplate -endLayout;
 
     editorTemplate -beginLayout "Shading" -collapse true;
@@ -362,6 +378,38 @@ global proc AEliquidInstanceFlags( string $node )
       editorTemplate -endLayout;
     editorTemplate -endLayout;
 
+    editorTemplate -beginLayout "Trim Curve" -collapse true;
+      editorTemplate -label "sense" -addDynamicControl "liqTrimCurveSense";
+    editorTemplate -endLayout;
+
+    editorTemplate -beginLayout "Stitch" -collapse true;
+      editorTemplate -label "enable" -addDynamicControl "liqStitchEnable";
+      editorTemplate -label "traceenable" -addDynamicControl "liqStitchTraceEnable";
+      editorTemplate -label "newgroup" -addDynamicControl "liqStitchNewGroup";
+    editorTemplate -endLayout;
+
+    editorTemplate -beginLayout "Stochastic" -collapse true;
+      editorTemplate -label "sigma"        -addDynamicControl "liqStochasticSigma";
+      editorTemplate -label "pointfalloff" -addDynamicControl "liqStochasticPointFallOff";
+    editorTemplate -endLayout;
+
+    editorTemplate -beginLayout "Dice" -collapse true;
+      editorTemplate -label "binary"  -addDynamicControl "liqDiceBinary";
+      editorTemplate -label "hair"    -addDynamicControl "liqDiceHair";
+	  //editorTemplate -label "rasterorient (use shading:Raster-Oriented Dicing)";
+      //editorTemplate -label "rasterorient"    -addDynamicControl "liqDiceRasterOrient";
+      editorTemplate -label "strategy"			-addDynamicControl "liqDiceStrategy";
+      editorTemplate -label "referencecamera"   -addDynamicControl "liqDiceReferenceCamera";
+    editorTemplate -endLayout;
+  
+	editorTemplate -beginLayout "Derivatives" -collapse true;
+      editorTemplate -label "centered"    -addDynamicControl "liqDerivativesCentered";
+      editorTemplate -label "extrapolate" -addDynamicControl "liqDerivativesExtrapolate";
+    editorTemplate -endLayout;
+
+	editorTemplate -beginLayout "Procedural" -collapse true;
+      editorTemplate -label "attribute"    -addDynamicControl "liqProceduralAttribute";
+    editorTemplate -endLayout;
+
   editorTemplate -endLayout;
 }
-

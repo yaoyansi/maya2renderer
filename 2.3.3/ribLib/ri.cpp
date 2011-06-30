@@ -234,6 +234,9 @@ RtToken		RI_MINSPLITS			=	"minsplits";
 RtToken		RI_BOUNDEXPAND			=	"boundexpand";
 RtToken		RI_BINARY				=	"binary";
 RtToken		RI_RASTERORIENT			=	"rasterorient";
+RtToken		RI_HAIR					=	"hair";
+RtToken		RI_DICE_STRATEGY		=	"strategy";
+RtToken		RI_REF_CAMERA			=	"referencecamera";
 
 // Displacementbound attributes
 RtToken		RI_SPHERE				=	"sphere";
@@ -241,6 +244,7 @@ RtToken		RI_COORDINATESYSYTEM	=	"coordinatesystem";
 
 // Visibility attributes
 RtToken		RI_PHOTON				  =	"photon";
+RtToken		RI_MIDPOINT				  =	"midpoint";
 RtToken		RI_ENVIRONMENT		=	"environment";
 RtToken		RI_TRACE				  =	"trace";
 RtToken		RI_TRANSMISSION		=	"transmission";
@@ -299,6 +303,29 @@ RtToken		RI_SIDE					= "sides";
 RtToken		RI_DOUBLESHADED			= "doubleshaded";
 RtToken		RI_BACKFACETOLERANCE	= "backfacetolerance";
 
+//trim curve attributes
+RtToken		RI_TRIMCURVE			= "trimcurve";
+RtToken		RI_SENSE				= "sense";
+
+//stitch attribute
+RtToken		RI_STITCH				= "stitch";
+RtToken		RI_ENABLE				= "enable";
+RtToken		RI_TRACEENABLE			= "traceenable";
+RtToken		RI_NEWGROUP				= "newgroup";
+
+//stochasti attribute
+RtToken		RI_STOCHASTIC			= "stochastic";
+RtToken		RI_SIGMA				= "sigma";
+RtToken		RI_POINTFALLOFF			= "pointfalloff";
+
+//derivatives attribute
+RtToken		RI_DERIVATIVES			= "derivatives";
+RtToken		RI_CENTERED				= "centered";
+RtToken		RI_EXTRAPOLATE			= "extrapolate";
+
+//procedural attribute
+RtToken		RI_ATTR_PROCEDURAL		= "procedural";
+RtToken		RI_ATTRIBUTE			= "attribute";
 ////////////////////////////////////////////////////////////////////////
 //
 //	Non-Standard options
@@ -338,8 +365,9 @@ RtToken		RI_PROGRESS				=	"progress";
 RtToken		RI_HANDLE				=	"handle";
 RtToken		RI_FILEMODE				=	"filemode";
 RtToken		RI_MAXERROR				=	"maxerror";
-RtToken		RI_MINSAMPLEDISTANCE	=	"minsampledistance";
-RtToken		RI_MAXSAMPLEDISTANCE	=	"maxsampledistance";
+//RtToken		RI_MINSAMPLEDISTANCE	=	"minsampledistance";
+//RtToken		RI_MAXSAMPLEDISTANCE	=	"maxsampledistance";
+RtToken		RI_MAXPIXELDIST			=	"maxpixeldist";
 
 // Hider options
 RtToken		RI_JITTER				=	"jitter";

@@ -123,7 +123,7 @@ liqRibNode::liqRibNode( liqRibNodePtr instanceOfNode,
   visibility.diffuse        = false;
   visibility.specular       = false;
   visibility.newtransmission = false;
-  visibility.midpoint       = true;
+  visibility.midpoint       = false;//true;
   visibility.photon         = false;
 
   hitmode.diffuse           = hitmode::DIFFUSE_HITMODE_PRIMITIVE;
@@ -168,6 +168,25 @@ liqRibNode::liqRibNode( liqRibNodePtr instanceOfNode,
   strategy.strategy_ = "grids";
   strategy.volumeIntersectionStrategy = "exclusive";
   strategy.volumeIntersectionPriority = 0.0f;
+
+  trimcurve.sense = trimcurve::INSIDE;
+
+  stitch.enable      = true;
+  stitch.traceenable = false;
+  stitch.newgroup    = false;
+
+  stochastic.sigma			= 0;
+  stochastic.pointfalloff	= 0;
+
+  dice.binary = false;
+  dice.hair   = false;
+  dice.strategy			= dice::PLANAR_PROJECTION;
+  dice.referencecamera	= dice::WORLD_CAMERA;
+
+  derivatives.centered    = true;
+  derivatives.extrapolate = true;
+
+  procedural.attribute	  = "";
 
   invisible                 = false;
   ignoreShapes              = false;
@@ -343,6 +362,9 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
       if( visibility.photon == false ) 
         liquidGetPlugValue( nodePeeker, "liqVisibilityPhoton", visibility.photon, status );
       
+	  if( visibility.midpoint == false ) 
+		  liquidGetPlugValue( nodePeeker, "liqVisibilityMidpoint", visibility.midpoint, status );
+
       // philippe : new shading hit-mode attributes in prman 12.5
 
       if( hitmode.camera == hitmode::CAMERA_HITMODE_SHADER ) 
@@ -459,6 +481,31 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
 	  liquidGetPlugValue( nodePeeker, "liqVolumeIntersectionPriority", strategy.volumeIntersectionPriority, status );
       //cout << DagPath.fullPathName()<<endl
 	  //	 << "liqStrategy="<<strategy.strategy_<<", vis="<<strategy.volumeIntersectionStrategy<<", vip="<<strategy.volumeIntersectionPriority<<endl;
+
+	  // trim curve --------------------------------------------------------
+	  liquidGetPlugValue( nodePeeker, "liqTrimCurveSense", (int&)trimcurve.sense, status );
+
+	  // stitch    ---------------------------------------------------------
+	  liquidGetPlugValue( nodePeeker, "liqStitchEnable", (int&)stitch.enable, status );
+	  liquidGetPlugValue( nodePeeker, "liqStitchTraceEnable", (int&)stitch.traceenable, status );
+	  liquidGetPlugValue( nodePeeker, "liqStitchNewGroup", (int&)stitch.newgroup, status );
+
+	  // stochastic    ---------------------------------------------------------
+	  liquidGetPlugValue( nodePeeker, "liqStochasticSigma",  stochastic.sigma, status );
+	  liquidGetPlugValue( nodePeeker, "liqStochasticPointFallOff",  stochastic.pointfalloff, status );
+
+	  // dice    ---------------------------------------------------------
+	  liquidGetPlugValue( nodePeeker, "liqDiceBinary",  (int&)dice.binary, status );
+	  liquidGetPlugValue( nodePeeker, "liqDiceHair",	(int&)dice.hair, status );
+	  liquidGetPlugValue( nodePeeker, "liqDiceStrategy",		(int&)dice.strategy, status );
+	  liquidGetPlugValue( nodePeeker, "liqDiceReferenceCamera",	(int&)dice.referencecamera, status );
+
+	  // derivatives -------------------------------------------------------
+	  liquidGetPlugValue( nodePeeker, "liqDerivativesCentered",     (int&)derivatives.centered, status );
+	  liquidGetPlugValue( nodePeeker, "liqDerivativesExtrapolate",	(int&)derivatives.extrapolate, status );
+
+	  // procedural -------------------------------------------------------
+	  liquidGetPlugValue( nodePeeker, "liqProceduralAttribute",     procedural.attribute, status );
 
       // RIB group ---------------------------------------------------------
 

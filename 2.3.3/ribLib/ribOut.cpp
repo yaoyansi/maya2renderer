@@ -738,6 +738,22 @@ void		CRibOut::RiTransformEnd(void) {
 		}																									\
 	}
 
+//attributeCheckFloat_2, don't output "Attribute"
+#define	attributeCheckFloat_2(__name,__num)																	\
+	} else if (strcmp(tokens[i],__name) == 0) {																\
+		float	*val	=	(float *) params[i];															\
+		int		k;																							\
+		out(" \"float %s\" [%g",tokens[i],val[0]);															\
+		for (k=1;k<__num;k++) {																				\
+			out(" %g",val[k]);																				\
+		}																									\
+		out("]");
+
+//attributeCheckString_2, don't output "Attribute"
+#define	attributeCheckString_2(__name)																		\
+	} else if (strcmp(tokens[i],__name) == 0) {																\
+		char	*val	=	((char **) params[i])[0];														\
+		out(" \"string %s\" \"%s\"",tokens[i],val);
 
 
 void		CRibOut::RiAttributeV(char *name,int n,char *tokens[],void *params[]) {
@@ -753,15 +769,20 @@ void		CRibOut::RiAttributeV(char *name,int n,char *tokens[],void *params[]) {
 			attributeCheckFloat(RI_BOUNDEXPAND,1)
 			attributeCheckInt(RI_BINARY,1)
 			attributeCheckInt(RI_RASTERORIENT,1)
+			attributeCheckInt(RI_HAIR,1);
+			attributeCheckString(RI_DICE_STRATEGY);
+			attributeCheckString(RI_REF_CAMERA);	
 			attributeEndCheck
 		}
 	} else if (strcmp(name,RI_DISPLACEMENTBOUND) == 0) {
+		out("Attribute \"%s\" ", name);
 		for (i=0;i<n;i++) {
 			if (FALSE) {
-			attributeCheckFloat(RI_SPHERE,1)
-			attributeCheckString(RI_COORDINATESYSYTEM)
+			attributeCheckFloat_2(RI_SPHERE,1)
+			attributeCheckString_2(RI_COORDINATESYSYTEM)
 			attributeEndCheck
 		}
+		out("\n");
 	} else if (strcmp(name,RI_TRACE) == 0) {
 		for (i=0;i<n;i++) {
 			if (FALSE) {
@@ -778,6 +799,7 @@ void		CRibOut::RiAttributeV(char *name,int n,char *tokens[],void *params[]) {
 			attributeCheckString(RI_HANDLE)
 			attributeCheckString(RI_FILEMODE)
 			attributeCheckFloat(RI_MAXERROR,1)
+			attributeCheckFloat(RI_MAXPIXELDIST,1)
 			attributeEndCheck
 		}
 	} else if (strcmp(name,RI_PHOTON) == 0) {
@@ -800,23 +822,25 @@ void		CRibOut::RiAttributeV(char *name,int n,char *tokens[],void *params[]) {
 					attributeCheckInt(RI_CAMERA,1)
 					attributeCheckInt(RI_TRACE,1)
 					attributeCheckInt(RI_PHOTON,1)
+					attributeCheckInt(RI_MIDPOINT,1)
 					attributeCheckInt(RI_SPECULAR,1)
 					attributeCheckInt(RI_DIFFUSE,1)
 					attributeCheckString(RI_SUBSURFACE)
 					attributeEndCheck
 			}
 		}
-	else
-    {
-      for (i=0;i<n;i++) {
-        if (FALSE) {
-			  attributeCheckString(RI_TRANSMISSION)
-			  attributeCheckInt(RI_CAMERA,1)
-			  attributeCheckInt(RI_TRACE,1)
-			  attributeCheckInt(RI_PHOTON,1)
-			  attributeEndCheck
-      }
-    }
+	    else
+        {
+		  for (i=0;i<n;i++) {
+			if (FALSE) {
+				  attributeCheckString(RI_TRANSMISSION)
+				  attributeCheckInt(RI_CAMERA,1)
+				  attributeCheckInt(RI_TRACE,1)
+				  attributeCheckInt(RI_PHOTON,1)
+				  attributeCheckInt(RI_MIDPOINT,1)
+				  attributeEndCheck
+		  }
+        }
 	} else if (strcmp(name,RI_IDENTIFIER) == 0) {
 		for (i=0;i<n;i++) {
 			if (FALSE) {
@@ -862,7 +886,42 @@ void		CRibOut::RiAttributeV(char *name,int n,char *tokens[],void *params[]) {
 				attributeCheckFloat(RI_BACKFACETOLERANCE,0)
 				attributeEndCheck
 		}
+	}else if(strcmp(name,RI_TRIMCURVE) == 0){
+		for (i=0;i<n;i++) {
+			if (FALSE) {
+				attributeCheckString(RI_SENSE)
+				attributeEndCheck
+		}
+	}else if( strcmp(name,RI_STITCH) == 0 ){
+		for (i=0;i<n;i++) {
+			if (FALSE) {
+				attributeCheckInt(RI_ENABLE, 1)
+				attributeCheckInt(RI_TRACEENABLE, 1)
+				attributeCheckInt(RI_NEWGROUP, 1)
+				attributeEndCheck
+		}
+	}else if( strcmp(name,RI_STOCHASTIC) == 0 ){
+		for (i=0;i<n;i++) {
+			if (FALSE) {
+				attributeCheckInt(RI_SIGMA, 1)
+				attributeCheckInt(RI_POINTFALLOFF, 1)
+				attributeEndCheck
+		}
+	}else if( strcmp(name,RI_DERIVATIVES) == 0 ){
+		for (i=0;i<n;i++) {
+			if (FALSE) {
+				attributeCheckInt(RI_CENTERED, 1)
+				attributeCheckInt(RI_EXTRAPOLATE, 1)
+				attributeEndCheck
+		}
+	}else if( strcmp(name,RI_ATTR_PROCEDURAL) == 0 ){
+		for (i=0;i<n;i++) {
+			if (FALSE) {
+				attributeCheckString(RI_ATTRIBUTE)
+				attributeEndCheck
+		}
 	}
+
 }
 
 
@@ -1702,10 +1761,11 @@ void		CRibOut::declareDefaultVariables() {
 	declareVariable(RI_ILLUMINATEFRONT,		"int");
 
 	declareVariable(RI_TRANSMISSION,		"string");
-  declareVariable(RI_NEWTRANSMISSION,		"int");
+    declareVariable(RI_NEWTRANSMISSION,		"int");
 	declareVariable(RI_CAMERA,				"int");
 	declareVariable(RI_TRACE,				"int");
 	declareVariable(RI_PHOTON,				"int");
+	declareVariable(RI_MIDPOINT,			"int");
 
 	declareVariable(RI_NAME,				"string");
 

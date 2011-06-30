@@ -31,7 +31,7 @@
 //  Description:
 //  creates a pretty window for editing the rman shader parameters
 //
-
+source xxliquidutility.mel;
 
 
 
@@ -42,6 +42,7 @@
 
 global proc liquidAddTextureViewerMenu( string $textFieldGrp, string $nodeDotAttr )
 {
+	liqlog("liquidAddTextureViewerMenu(...)");
   string $viewer = `getAttr liquidGlobals.viewTexture`;
   if ( $viewer != "" ) {
     string $attr = match("[A-Za-z0-9_]+$", $nodeDotAttr);
@@ -57,6 +58,7 @@ global proc liquidAddTextureViewerMenu( string $textFieldGrp, string $nodeDotAtt
 
 global proc liquidChangeTextAttr ( string $selectedObj, string $argName, string $fieldName )
 {
+	liqlog("liquidChangeTextAttr(...)");
   string $fieldValue = `textFieldGrp -q -text $fieldName`;
   setAttr ( $selectedObj + "." + $argName ) -type "string" $fieldValue;
   liquidParamAU $selectedObj;
@@ -68,6 +70,7 @@ global proc liquidChangeTextAttr ( string $selectedObj, string $argName, string 
  */
 global proc liquidChangeTextFileAttr ( string $selectedObj, string $argName, string $fieldName )
 {
+	liqlog("liquidChangeTextFileAttr(...)");
   string $currentAttrValue = `getAttr ($selectedObj+"."+$argName)`;
   string $defaultPath = (`getAttr liquidGlobals.textureDirectory`);
 
@@ -81,6 +84,7 @@ global proc liquidChangeTextFileAttr ( string $selectedObj, string $argName, str
 
 global proc liquidChangeTextFileAttrPlus ( string $selectedObj, string $argName, string $fieldName, string $defaultPath, string $fileSpec )
 {
+	liqlog("liquidChangeTextFileAttrPlus(...)");
   string $currentAttrValue = `getAttr ($selectedObj+"."+$argName)`;
 
   string $MapDir = ($currentAttrValue == "" || liquidGetModifiersState() == "Shift" )? $defaultPath : (dirname($currentAttrValue));
@@ -108,7 +112,7 @@ global proc liquidChangeTextFileAttrPlus ( string $selectedObj, string $argName,
 
 global proc int liquidChangeTextFileAttrPlusCB ( string $selectedObj, string $argName, string $fieldName, string $filename, string $fileType )
 {
-
+	liqlog("liquidChangeTextFileAttrPlusCB(...)");
   if ( $filename != "" ) {
 
 	string $currentDir = `workspace -q -dir`;
@@ -133,6 +137,7 @@ global proc int liquidChangeTextFileAttrPlusCB ( string $selectedObj, string $ar
 
 global proc liquidLifCoordSysBrowserFilter()
 {
+	liqlog("liquidLifCoordSysBrowserFilter()");
   string $list[] = `ls -type liquidCoordSys`;
   string $filter = `textField -q -tx liquidLifCoordSysBrowserTF`;
   if ( !size( $filter ) ) $filter = "*";
@@ -145,6 +150,7 @@ global proc liquidLifCoordSysBrowserFilter()
 
 global proc liquidLifCoordSysBrowser( string $selectedObj, string $argName, string $fieldName )
 {
+	liqlog("liquidLifCoordSysBrowser(...)");
   string $coordSys[] = `ls -type liquidCoordSys`;
 
   // use curly braces in cmd to avoid alloacting stuff in global space
@@ -192,6 +198,7 @@ global proc liquidLifCoordSysBrowser( string $selectedObj, string $argName, stri
 
 global proc liquidParamAU( string $selectedObj )
 {
+	liqlog("liquidParamAU(...)");
   if ( `optionVar -ex liquidAE_autoRefresh` && `optionVar -q liquidAE_autoRefresh` ) {
     trace ("+ liquidParamAU "+$selectedObj);
     liquidShaderNodePreview $selectedObj;
@@ -201,6 +208,7 @@ global proc liquidParamAU( string $selectedObj )
 
 global proc liquidFluidBuildLifFile( string $longShaderName )
 {
+	liqlog("liquidFluidBuildLifFile(...)");
   string $longLifName = substitute( "\\..+$", $longShaderName, ".lif" );
   string $shortShaderName = basenameEx( $longShaderName );
 
@@ -238,6 +246,7 @@ global proc liquidFluidBuildLifFile( string $longShaderName )
 
 global proc liquidFluidEditLifFile( string $selectedObj )
 {
+	liqlog("liquidFluidEditLifFile(...)");
   string $longShaderName = `getAttr ( $selectedObj + ".rmanShaderLong" )`;
   string $longLifName = substitute( "\\..+$", $longShaderName, ".lif" );
   string $shortShaderName = basenameEx( $longShaderName );

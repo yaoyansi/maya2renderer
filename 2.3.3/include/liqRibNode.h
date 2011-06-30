@@ -263,6 +263,47 @@ class liqRibNode {
 		float   volumeIntersectionPriority;
 	} strategy;
 
+	struct trimcurve{
+		enum{
+			INSIDE  = 0,
+			OUTSIDE = 1
+		} sense;
+	} trimcurve;
+
+	struct stitch{
+		bool enable;
+		bool traceenable;
+		bool newgroup;
+	} stitch;
+
+	struct stochastic{
+		int sigma;
+		int pointfalloff;
+	} stochastic;
+
+	struct dice{
+		bool binary;
+		bool hair;
+		//bool rasterorient;// see shading.diceRasterOrient
+		enum {
+			PLANAR_PROJECTION    = 0,
+			SPHERICAL_PROJECTION = 1
+		} strategy;
+		enum {
+			WORLD_CAMERA = 0,
+			FRAME_CAMERA = 1
+		} referencecamera;
+	} dice;
+
+	struct derivatives{
+		bool centered;
+		bool extrapolate;
+	} derivatives;
+
+	struct procedural{
+		MString attribute;
+	} procedural;
+
     bool    instanceInheritPPColor;
     bool    invisible;
     bool    ignoreShapes;

@@ -3,9 +3,12 @@
 //                  Rob Pieke (C.O.R.E. Digital Pictures)
 //
 //--------------------------------------------------------------------
+source xxliquidutility.mel;
 
 global proc string[] validConnections_blinn ()
 {
+	
+	liqlog("validConnections_blinn(...)");
     return { "color", "transparency", "ambientColor", "incandescence",
              "diffuse", "eccentricity", "specularRollOff",
              "specularColor", "reflectivity", "reflectedColor",
@@ -14,6 +17,7 @@ global proc string[] validConnections_blinn ()
 
 global proc writeRSL_blinn ( string $node )
 {
+	liqlog("writeRSL_blinn(...)");
     beginRSL $node;
 
     addRSLVariable "vector" "inColor" "color" $node;
@@ -70,6 +74,7 @@ global proc writeRSL_blinn ( string $node )
 
 global proc string[] validConnections_layeredShader ()
 {
+	liqlog("validConnections_layeredShader(...)");
     return { "inputs", "outColor" };
 }
 
@@ -77,6 +82,7 @@ global proc writeRSL_layeredShader (
     string $node
 )
 {
+	liqlog("writeRSL_layeredShader(...)");
     beginRSL $node;
 
     addRSLVariable "vector" "outColor" "outColor" $node;
@@ -130,6 +136,7 @@ global proc writeRSL_layeredShader (
 
 global proc string[] validConnections_lambert ()
 {
+	liqlog("validConnections_lambert(...)");
     return { "color", "transparency", "ambientColor", "incandescence",
              "diffuse", "outColor", "outTransparency" };
 }
@@ -138,6 +145,7 @@ global proc writeRSL_lambert (
     string $node
 )
 {
+	liqlog("writeRSL_lambert(...)");
     beginRSL $node;
 
     addRSLVariable "vector" "inColor" "color" $node;
@@ -165,6 +173,7 @@ global proc writeRSL_lambert (
 
 global proc string[] validConnections_phong ()
 {
+	liqlog("validConnections_phong(...)");
     return { "color", "transparency", "ambientColor", "incandescence",
              "diffuse", "cosinePower", "specularColor",
              "reflectivity", "reflectedColor", "outColor",
@@ -175,6 +184,7 @@ global proc writeRSL_phong (
     string $node
 )
 {
+	liqlog("writeRSL_phong(...)");
     beginRSL $node;
 
     addRSLVariable "vector" "inColor" "color" $node;

@@ -6193,6 +6193,12 @@ MStatus liqRibTranslator::objectBlock()
         if( rt_useRayTracing && ribNode->visibility.camera ) 
           RiAttribute( "visibility", (RtToken) "int camera", &on, RI_NULL );
 
+		if( rt_useRayTracing && ribNode->visibility.photon ) 
+			RiAttribute( "visibility", (RtToken) "int photon", &on, RI_NULL );
+
+		if( rt_useRayTracing && ribNode->visibility.midpoint ) 
+			RiAttribute( "visibility", (RtToken) "int midpoint", &on, RI_NULL );
+
         if( rt_useRayTracing && ribNode->hitmode.diffuse != liqRibNode::hitmode::DIFFUSE_HITMODE_PRIMITIVE ) 
         {
           switch( ribNode->hitmode.diffuse ) 
@@ -6420,6 +6426,119 @@ MStatus liqRibTranslator::objectBlock()
 			  }
 		  }
 
+		  //trim curve 
+		  {
+			  RtString sense = "inside";
+
+			  switch(ribNode->trimcurve.sense){
+				case liqRibNode::trimcurve::INSIDE:  
+					{
+						sense  = "inside";
+						//RiAttribute("trimcurve",(RtToken)"string sense", &sense, RI_NULL);//default value, need not to write.
+					}break;
+				case liqRibNode::trimcurve::OUTSIDE:
+					{
+						sense  = "outside";
+						RiAttribute("trimcurve",(RtToken)"string sense", &sense, RI_NULL);	
+					}break;
+				default:
+					assert(0);
+			  }
+
+		  }//trim curve 
+
+		  //stitch
+		  {
+			  if( ribNode->stitch.enable != true ){
+				  RtInt enable = (ribNode->stitch.enable)? 1: 0;
+				  RiAttribute("stitch",(RtToken)"int enable", &enable, RI_NULL);	
+			  }
+			  if( ribNode->stitch.traceenable != false ){
+				  RtInt traceenable = (ribNode->stitch.traceenable)? 1: 0;
+				  RiAttribute("stitch",(RtToken)"int traceenable", &traceenable, RI_NULL);	
+			  }
+			  if( ribNode->stitch.newgroup != false ){
+				  RtInt newgroup = (ribNode->stitch.newgroup)? 1: 0;
+				  RiAttribute("stitch",(RtToken)"int newgroup", &newgroup, RI_NULL);	
+			  }	
+		  }//stitch
+
+		  //stochastic
+		  {
+			  if( ribNode->stochastic.sigma != 0 ){
+				  RtInt sigma = ribNode->stochastic.sigma;
+				  RiAttribute("stochastic",(RtToken)"int sigma", &sigma, RI_NULL);	
+			  }
+			  if( ribNode->stochastic.pointfalloff != 0 ){
+				  RtInt pointfalloff = ribNode->stochastic.pointfalloff;
+				  RiAttribute("stochastic",(RtToken)"int pointfalloff", &pointfalloff, RI_NULL);	
+			  }
+		  }//stochastic
+
+		  //dice
+		  {
+			  if( ribNode->dice.binary != 0 ){
+				  RtInt binary = ribNode->dice.binary;
+				  RiAttribute("dice",(RtToken)"int binary", &binary, RI_NULL);
+			  }
+			  if( ribNode->dice.hair != 0 ){
+				  RtInt hair = ribNode->dice.hair;
+				  RiAttribute("dice",(RtToken)"int hair", &hair, RI_NULL);
+			  }
+			  //strategy
+			  RtString strategy = "planarprojection";
+			  switch(ribNode->dice.strategy){
+				  case liqRibNode::dice::PLANAR_PROJECTION:
+					{
+						strategy = "planarprojection";
+						//RiAttribute("dice",(RtToken)"string strategy", &strategy, RI_NULL); //default value
+					}break;
+				  case liqRibNode::dice::SPHERICAL_PROJECTION:
+					{
+						strategy = "sphericalprojection";
+						RiAttribute("dice",(RtToken)"string strategy", &strategy, RI_NULL);
+					}break;
+				  default:
+					  assert(0);
+			  }
+			  //referencecamera
+			  RtString referencecamera = "worldcamera";
+			  switch(ribNode->dice.referencecamera){
+				  case liqRibNode::dice::WORLD_CAMERA:
+					  {
+						  referencecamera = "worldcamera";
+						  //RiAttribute("dice",(RtToken)"string referencecamera", &referencecamera, RI_NULL); //default value
+					  }break;
+				  case liqRibNode::dice::FRAME_CAMERA:
+					  {
+						  referencecamera = "framecamera";
+						  RiAttribute("dice",(RtToken)"string referencecamera", &referencecamera, RI_NULL);
+					  }break;
+				  default:
+					  assert(0);
+			  }
+
+		  }//dice
+
+		  //derivatives
+		  {
+			  if( ribNode->derivatives.centered != 1 ){
+				  RtInt centered = ribNode->derivatives.centered;
+				  RiAttribute("derivatives",(RtToken)"int centered", &centered, RI_NULL);
+			  }
+			  if( ribNode->derivatives.extrapolate != 1 ){
+				  RtInt extrapolate = ribNode->derivatives.extrapolate;
+				  RiAttribute("derivatives",(RtToken)"int extrapolate", &extrapolate, RI_NULL);
+			  }
+		  }//derivatives
+
+		  //procedural
+		  {
+			  if( ribNode->procedural.attribute.length()>0 ){
+				  RtString attribute = const_cast<char*>(ribNode->procedural.attribute.asChar());
+				  RiAttribute("procedural",(RtToken)"string attribute", &attribute, RI_NULL);
+			  }
+		  }//procedural
 
       if( ribNode->motion.deformationBlur || ribNode->motion.transformationBlur && ribNode->motion.factor != 1.0f ) 
         RiGeometricApproximation( "motionfactor", ribNode->motion.factor );

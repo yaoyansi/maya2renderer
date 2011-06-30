@@ -36,12 +36,12 @@
 //
 //  Note : from now on, the attributes are hidden to speed up loading of large shaders (100+ parameters)
 //
-
+source xxliquidutility.mel;
 
 
 global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFileName )
 {
-  //trace ("liquidAttachShaderParams( "+$currentNodeName+", "+$shaderFileName+" )\n");
+  //liqlog("liquidAttachShaderParams( "+$currentNodeName+", "+$shaderFileName+" )");
 
   // parse the shader
   // don't force a reload
@@ -234,6 +234,8 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 
 global proc liquidAttachParams ( string $currentNodeName )
 {
+  liqlog("liquidAttachParams("+$currentNodeName+")");
+
   int $i;
   string $shaderFileName = `getAttr ( $currentNodeName + ".rmanShaderLong" )`;
 

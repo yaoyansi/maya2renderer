@@ -34,10 +34,11 @@
 //
 //  Returns:
 //
-
+source xxliquidutility.mel;
 
 global proc liquidShutdown()
 {
+	liqlog("liquidShutdown()");
     if ( `menu -exists liquidMainWindowMenu` ) deleteUI liquidMainWindowMenu;
     unregisterLiquidRenderer();
 }

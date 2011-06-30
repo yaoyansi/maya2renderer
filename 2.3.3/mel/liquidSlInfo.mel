@@ -49,10 +49,11 @@
 //      liquidSlInfo procedure for example usage.
 //
 //
-
+source xxliquidutility.mel;
 
 global proc liquidSlSetShader( string $shaderFile )
 {
+	liqlog("liquidSlSetShader(...)");
     global string $gLiquidSlShaderFile;
     global string $gLiquidSLifFile[];
 
@@ -97,6 +98,7 @@ global proc liquidSlSetShader( string $shaderFile )
 
 global proc liquidSlSetShaderNode( string $node )
 {
+	liqlog("liquidSlSetShaderNode(...)");
     global string $gLiquidSlShaderFile;
     global string $gLiquidSLifFile[];
 
@@ -131,6 +133,7 @@ global proc liquidSlSetShaderNode( string $node )
 
 global proc liquidSlInfoReset()
 {
+	liqlog("liquidSlInfoReset(...)");
   global string $gLiquidSlShaderFile;
   global string $gLiquidSlShaderName;
   global string $gLiquidSlShaderType;
@@ -169,6 +172,7 @@ global proc liquidSlInfoReset()
 
 global proc string liquidSlShaderName()
 {
+	liqlog("liquidSlShaderName(...)");
     global string $gLiquidSlShaderName;
     if ( $gLiquidSlShaderName == "" )
         error( "no shader set" );
@@ -177,6 +181,7 @@ global proc string liquidSlShaderName()
 
 global proc string liquidSlShaderType()
 {
+	liqlog("liquidSlShaderType(...)");
     global string $gLiquidSlShaderType;
     if ( $gLiquidSlShaderType == "" )
         error( "no shader set" );
@@ -185,6 +190,7 @@ global proc string liquidSlShaderType()
 
 global proc int liquidSlNumParams()
 {
+	liqlog("liquidSlNumParams(...)");
     global int $gLiquidSlNumParams;
     if ( $gLiquidSlNumParams == -1 )
         error( "no shader set" );
@@ -193,6 +199,7 @@ global proc int liquidSlNumParams()
 
 global proc string liquidSlParamName( int $index )
 {
+	liqlog("liquidSlParamName(...)");
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
@@ -208,6 +215,7 @@ global proc string liquidSlParamName( int $index )
 
 global proc int liquidSlParamIsOutput( int $index )
 {
+	liqlog("liquidSlParamIsOutput(...)");
   global int $gLiquidSlNumParams;
 
   if ( $gLiquidSlNumParams == -1 )
@@ -223,6 +231,7 @@ global proc int liquidSlParamIsOutput( int $index )
 
 global proc  string liquidSlParamDetail( int $index )
 {
+	liqlog("liquidSlParamDetail(...)");
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
@@ -238,6 +247,7 @@ global proc  string liquidSlParamDetail( int $index )
 
 global proc  string liquidSlParamType( int $index )
 {
+	liqlog("liquidSlParamType(...)");
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
@@ -253,6 +263,7 @@ global proc  string liquidSlParamType( int $index )
 
 global proc int liquidSlParamArraySize( int $index )
 {
+	liqlog("liquidSlParamArraySize(...)");
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
@@ -268,6 +279,7 @@ global proc int liquidSlParamArraySize( int $index )
 
 global proc string liquidSlParamDefault( int $index )
 {
+	liqlog("liquidSlParamDefault(...)");
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
@@ -283,6 +295,7 @@ global proc string liquidSlParamDefault( int $index )
 
 global proc string liquidSlParamDefaultRaw( int $index )
 {
+	liqlog("liquidSlParamDefaultRaw(...)");
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
@@ -308,6 +321,7 @@ global proc string liquidSlParamDefaultRaw( int $index )
 
 global proc string liquidSlDefaultToString( string $default )
 {
+	liqlog("liquidSlDefaultToString(...)");
     // this gets rid of surrounding quotes
     string $val = eval( "string $foo_S = " + $default );
     return $val;
@@ -315,36 +329,42 @@ global proc string liquidSlDefaultToString( string $default )
 
 global proc string[] liquidSlDefaultToStringArray( string $default )
 {
+	liqlog("liquidSlDefaultToStringArray(...)");
     string $val[] = eval( "string $foo_Sarray[] = " + $default );
     return $val;
 }
 
 global proc float liquidSlDefaultToFloat( string $default )
 {
+	liqlog("liquidSlDefaultToFloat(...)");
     float $val = $default;
     return $val;
 }
 
 global proc float[] liquidSlDefaultToFloatArray( string $default )
 {
+	liqlog("liquidSlDefaultToFloatArray(...)");
     float $val[] = eval( "float $foo_Farray[] = " + $default );
     return $val;
 }
 
 global proc vector liquidSlDefaultToVector( string $default )
 {
+	liqlog("liquidSlDefaultToVector(...)");
     vector $val = $default;
     return $val;
 }
 
 global proc vector[] liquidSlDefaultToVectorArray( string $default )
 {
+	liqlog("liquidSlDefaultToVectorArray(...)");
   vector $val[] = eval("vector $foo_Varray[] =" + $default );
   return $val;
 }
 
 global proc matrix liquidSlDefaultToMatrix( string $default )
 {
+	liqlog("liquidSlDefaultToMatrix(...)");
     // Hack since the assign-eval trick
     // doesn't work for matrices
     global matrix $_tmpMatrix[4][4];
@@ -355,6 +375,7 @@ global proc matrix liquidSlDefaultToMatrix( string $default )
 
 global proc float[] liquidSlDefaultToMatrixArray( string $default )
 {
+	liqlog("liquidSlDefaultToMatrixArray(...)");
     // There is no matrix-array mel type, so
     // we just return a single float array with
     // 16 floats for each matrix in the array.
@@ -367,29 +388,34 @@ global proc float[] liquidSlDefaultToMatrixArray( string $default )
 
 global proc string[] liquidSlAllParamNames()
 {
+	liqlog("liquidSlAllParamNames(...)");
   global string $gLiquidSlParamNames[];
   return $gLiquidSlParamNames;
 }
 
 global proc string[] liquidSlAllParamTypes()
 {
+	liqlog("liquidSlAllParamTypes(...)");
   global string $gLiquidSlParamTypes[];
   return $gLiquidSlParamTypes;
 }
 
 global proc string[] liquidSlAllParamDetails()
 {
+	liqlog("liquidSlAllParamDetails(...)");
   global string $gLiquidSlParamDetails[];
   return $gLiquidSlParamDetails;
 }
 
 global proc int[] liquidSlAllParamArraySizes()
 {
+	liqlog("liquidSlAllParamArraySizes(...)");
   global int $gLiquidSlParamArraySizes[];
   return $gLiquidSlParamArraySizes;
 }
 global proc string[] liquidSlAllParamDefaultsRaw()
 {
+	liqlog("liquidSlAllParamDefaultsRaw(...)");
   global string $gLiquidSlParamDefaults[];
   string $result[];
   int $i;
@@ -410,6 +436,7 @@ global proc string[] liquidSlAllParamDefaultsRaw()
 
 global proc liquidSlInfo( string $shaderFile )
 {
+	liqlog("liquidSlInfo(...)");
     liquidSlSetShader( $shaderFile );
     string $shaderType = liquidSlShaderType();
     print( "shaderType = " + $shaderType + "\n" );

@@ -30,9 +30,13 @@
 //
 //  Description:
 //
+source xxliquidutility.mel;
+
 global string $defTextViewerName = "notepad.exe";
 
 global proc string liquidGetUserHomeDir() {
+    liqlog("liquidGetUserHomeDir()");
+
 	string $homeVarName = ( `about -os` == "nt" )? "USERPROFILE" : "HOME" ;
 	string $homeGetEnv =  `getenv $homeVarName`;
 	string $homeDirectory = $homeGetEnv + "/.liquid";
@@ -41,6 +45,8 @@ global proc string liquidGetUserHomeDir() {
 }
 
 global proc int liquidCreateUserHomeDir() {
+    liqlog("liquidCreateUserHomeDir()");
+
 	string $liquidDirectory = liquidGetUserHomeDir();
 	int $ret = true;
 	if  ( !`filetest -d $liquidDirectory` ) {
@@ -55,6 +61,8 @@ global proc int liquidCreateUserHomeDir() {
 }
 
 global proc string liquidGetUserMayaHomeDir() {
+    liqlog("liquidGetUserMayaHomeDir()");
+
   string $homeVarName = ( `about -os` == "nt" )? "USERPROFILE" : "HOME" ;
   string $homeGetEnv =  `getenv $homeVarName`;
   string $homeDirectory = $homeGetEnv;
@@ -65,6 +73,7 @@ global proc string liquidGetUserMayaHomeDir() {
 
 
 global proc formAttachButtons( string $form, string $buttons[], string $valign, int $dist ) {
+    liqlog("formAttachButtons("+$form+","+size($buttons)+","+$valign+","+$dist+")");
 
 	int $i, $num = size( $buttons );
 	int $wi = 100 / $num; // assume number of divisions = 100
@@ -104,7 +113,8 @@ global proc formAttachButtons( string $form, string $buttons[], string $valign, 
  *  \todo more error checking
  */
 global proc string liquidGetTransform( string $shape )
-{
+{  
+  liqlog("liquidGetTransform("+$shape+")");
   if ( !objExists( $shape ) ) error ("liquidGetTransform : \""+$shape+"\" does not exists !");
   if ( nodeType( $shape ) == "transform" ) return $shape;
 
@@ -121,6 +131,8 @@ global proc string liquidGetTransform( string $shape )
  */
 global proc string liquidGetModifiersState()
 {
+	liqlog("liquidGetModifiersState()");
+
 	int $mods = `getModifiers`;
 	string $result = "";
 	if (($mods / 1) % 2) $result += ("Shift");
@@ -133,6 +145,7 @@ global proc string liquidGetModifiersState()
 
 global proc string liquidGetVersion()
 {
+  liqlog("liquidGetVersion()");
   global string $gLiquidVersion;
   if ( $gLiquidVersion == "" ) {
     $gLiquidVersion = match("[0-9\\.]+", string( pluginInfo( "-q", "-v", "liquid" ) ) );

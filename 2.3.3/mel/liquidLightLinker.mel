@@ -6,7 +6,7 @@
 //		Build: 2.0.0																			//
 //																								//
 //----------------------------------------------------------------------------------------------//
-
+source xxliquidutility.mel;
 
 //--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=
 //---------------------------------------------------------------------------------
@@ -21,7 +21,7 @@
 
 global proc string LLL_lightCentricUI()
 {
-
+	liqlog("LLL_lightCentricUI()");
 	string $liquidGlobals[] = `ls -type liquidGlobals`;
 	if ( !size( $liquidGlobals ) )
 		createNode "liquidGlobals" -n "liquidGlobals";
@@ -63,7 +63,7 @@ global proc string LLL_lightCentricUI()
 
 global proc LLL_menuCase( string $value )
 {
-
+	liqlog("LLL_menuCase(...)");
 	switch ($value) {
 	    case "Liquid Set Editing":
 	        LLL_setsUI;
@@ -81,6 +81,7 @@ global proc LLL_menuCase( string $value )
 
 global proc LLL_link( string $lightShape, string $set )
 {
+	liqlog("LLL_link(...)");
     if (!`objExists($set+".liqLinkedLights")`)
         addAttr -h true -ln liqLinkedLights -multi -indexMatters false $set;
     string $connections[] = `connectionInfo -dfs ($lightShape+".message")`;
@@ -98,7 +99,7 @@ global proc LLL_link( string $lightShape, string $set )
 
 global proc LLL_unlink( string $lightShape, string $set )
 {
-
+	liqlog("LLL_unlink(...)");
     if (`objExists($set+".liqLinkedLights")`) {
         string $connections[] = `connectionInfo -dfs ($lightShape+".message")`;
         for ($cnct in $connections)
@@ -120,7 +121,7 @@ global proc LLL_unlink( string $lightShape, string $set )
 
 global proc LLL_inclusiveUI()
 {
-
+	liqlog("LLL_inclusiveUI()");
 
 	string $liquidGlobals[] = `ls -type liquidGlobals`;
 	if ( !size( $liquidGlobals ) )
@@ -189,7 +190,7 @@ global proc LLL_inclusiveUI()
 
 global proc int LLL_setsFilterScript( string $name )
 {
-
+	liqlog("LLL_setsFilterScript(...)");
 	int $return = `objExists($name+".liqLinkedLights")`;
 	return ($return);
 
@@ -201,7 +202,7 @@ global proc int LLL_setsFilterScript( string $name )
 
 global proc LLL_lc_lights_addCallback( string $lightsSelConnection, string $setsSelConnection )
 {
-
+	liqlog("LLL_lc_lights_addCallback(...)");
 	//Display Common Links
 	string $rightSelection[], $leftSelectionShapes[];
 	string $leftSelection[] = `selectionConnection -q -obj $lightsSelConnection`;
@@ -234,7 +235,7 @@ global proc LLL_lc_lights_addCallback( string $lightsSelConnection, string $sets
 
 global proc LLL_lc_sets_addCallback( string $lightsSelConnection, string $setsSelConnection )
 {
-
+	liqlog("LLL_lc_sets_addCallback(...)");
 	string $leftSelectionShapes[], $leftSelectionLinked[];
 	string $leftSelection[] = `selectionConnection -q -obj $lightsSelConnection`;
 	string $rightSelection[] = `selectionConnection -q -obj $setsSelConnection`;
@@ -278,7 +279,7 @@ global proc LLL_lc_sets_addCallback( string $lightsSelConnection, string $setsSe
 
 global proc string[] LLL_lc_getLinkedSets( string $lightShape )
 {
-
+	liqlog("LLL_lc_getLinkedSets(...)");
     string $connections[] = `connectionInfo -dfs ($lightShape+".message")`;
     string $linkedSets[] = {};
     for ($cnct in $connections) {
@@ -304,7 +305,7 @@ global proc string[] LLL_lc_getLinkedSets( string $lightShape )
 
 global proc LLL_exclusiveUI()
 {
-
+	liqlog("LLL_exclusiveUI()");
 	string $liquidGlobals[] = `ls -type liquidGlobals`;
 	if ( !size( $liquidGlobals ) )
 		createNode "liquidGlobals" -n "liquidGlobals";
@@ -371,7 +372,7 @@ global proc LLL_exclusiveUI()
 
 global proc LLL_sc_lights_addCallback( string $lightsSelConnection, string $setsSelConnection )
 {
-
+	liqlog("LLL_sc_lights_addCallback(...)");
 	//Display Common Links
 	string $rightSelection[], $leftSelectionShapes[];
 	string $leftSelection[] = `selectionConnection -q -obj $lightsSelConnection`;
@@ -404,7 +405,7 @@ global proc LLL_sc_lights_addCallback( string $lightsSelConnection, string $sets
 
 global proc LLL_sc_sets_addCallback( string $lightsSelConnection, string $setsSelConnection )
 {
-
+	liqlog("LLL_sc_sets_addCallback(...)");
 	string $leftSelectionShapes[], $leftSelectionLinked[];
 	string $leftSelection[] = `selectionConnection -q -obj $lightsSelConnection`;
 	string $rightSelection[] = `selectionConnection -q -obj $setsSelConnection`;
@@ -451,7 +452,7 @@ global proc LLL_sc_sets_addCallback( string $lightsSelConnection, string $setsSe
 
 global proc string[] LLL_sc_getLinkedSets( string $lightShape )
 {
-
+	liqlog("LLL_sc_getLinkedSets(...)");
     string $connections[] = `connectionInfo -dfs ($lightShape+".message")`;
     string $linkedSets[] = {};
     for ($cnct in $connections) {
@@ -478,7 +479,7 @@ global proc string[] LLL_sc_getLinkedSets( string $lightShape )
 
 global proc LLL_setsUI()
 {
-
+	liqlog("LLL_setsUI()");
 	string $liquidGlobals[] = `ls -type liquidGlobals`;
 	if ( !size( $liquidGlobals ) )
 		createNode "liquidGlobals" -n "liquidGlobals";
@@ -540,6 +541,7 @@ global proc LLL_setsUI()
 
 global proc LLL_SM_assign( string $set, string $member )
 {
+	liqlog("LLL_SM_assign(...)");
 	if(`nodeType $member` != "objectSet")
     	sets -edit -forceElement $set $member;
 	else {
@@ -555,6 +557,7 @@ global proc LLL_SM_assign( string $set, string $member )
 
 global proc LLL_SM_unassign( string $set, string $member )
 {
+	liqlog("LLL_SM_unassign(...)");
     sets -e -remove $set $member;
 }
 
@@ -564,7 +567,7 @@ global proc LLL_SM_unassign( string $set, string $member )
 
 global proc LLL_SM_sets_addCallback( string $setsSelConnection, string $membersSelConnection )
 {
-
+	liqlog("LLL_SM_sets_addCallback(...)");
 	//Display Common Links
 	string $rightSelection[];
 	string $leftSelection[] = `selectionConnection -q -obj $setsSelConnection`;
@@ -588,7 +591,7 @@ global proc LLL_SM_sets_addCallback( string $setsSelConnection, string $membersS
 
 global proc LLL_SM_members_addCallback( string $setsSelConnection, string $membersSelConnection )
 {
-
+	liqlog("LLL_SM_members_addCallback(...)");
 	string $leftSelectionMembers[], $commonMembers[];
 	string $leftSelection[] = `selectionConnection -q -obj $setsSelConnection`;
 	string $rightSelection[] = `selectionConnection -q -obj $membersSelConnection`;

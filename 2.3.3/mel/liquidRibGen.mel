@@ -34,9 +34,11 @@
 //
 //  Returns:
 //
+source xxliquidutility.mel;
 
 global proc liquidRibGenParameterEditor()
 {
+	liqlog("liquidRibGenParameterEditor()");
   string $selectedNode[] = `ls -dag -s -sl`;
   if ( size($selectedNode) > 0 ) {
     string $liquidShaderNode = `getAttr ( $selectedNode[0] + ".liquidRibGen" )`;
@@ -48,6 +50,7 @@ global proc liquidRibGenParameterEditor()
 
 global proc liquidRibGenDelete()
 {
+	liqlog("liquidRibGenDelete()");
   string $selectedNode[] = `ls -dag -s -sl`;
   if ( size($selectedNode) > 0 ) {
     string $currentNode;
@@ -64,6 +67,7 @@ global proc liquidRibGenDelete()
 
 global proc string liquidNewRibGen( string $filename )
 {
+	liqlog("liquidNewRibGen()");
   int $i;
 
 
@@ -102,7 +106,7 @@ global proc string liquidNewRibGen( string $filename )
 
 global proc int liquidAssignRibGen( string $node, string $ribGenNode )
 {
-
+	liqlog("liquidAssignRibGen(...)");
   if ( `attributeQuery -node $node -ex "liquidRibGen"`) {
     deleteAttr ( $node + ".liquidRibGen" );
   }
@@ -114,6 +118,7 @@ global proc int liquidAssignRibGen( string $node, string $ribGenNode )
 
 global proc liquidAssignRibGenCMD()
 {
+	liqlog("liquidAssignRibGenCMD()");
   string $selectedNode[] = `ls -dag -s -sl`;
   if ( size($selectedNode) > 0 ) {
     string $path = `fileDialog -dm "*.so"`;

@@ -33,9 +33,11 @@
 //
 //  Returns:
 //
+source xxliquidutility.mel;
 
 global proc liquidDebugPrint(string $debugMsg)
 {
+	//liqlog("liquidDebugPrint("+$debugMsg+")");
 /*global int $g_ilrDebugEnabled;
   if ($g_ilrDebugEnabled) */
     print("// LIQUID DEBUG: " + $debugMsg + "\n");
@@ -45,6 +47,7 @@ global proc liquidDebugPrint(string $debugMsg)
 // add to postworld mel
 global proc liquidGeneratePlace2dTexture()
 {
+	liqlog("liquidGeneratePlace2dTexture()");
 	string $list[] = `ls -type place2dTexture`;
 	for( $l in $list )
 	{
@@ -79,6 +82,7 @@ global proc liquidGeneratePlace2dTexture()
 // add to postworld mel
 global proc liquidGeneratePlace3dTexture( int $scoped )
 {
+	liqlog("liquidGeneratePlace3dTexture(...)");
 	string $list[] = `ls -type place3dTexture`;
 	for( $l in $list )
 	{
@@ -98,6 +102,7 @@ global proc liquidGeneratePlace3dTexture( int $scoped )
 
 global proc liquidViewLastRib()
 {
+	liqlog("liquidViewLastRib()");
   if ((!objExists("liquidGlobals") || !`attributeExists lastRibFile liquidGlobals` ) || (`getAttr liquidGlobals.lastRibFile` == "" )) {
     warning("liquidGlobals.lastRibFile is not set - no RIB has been generated during this session");
     return;
@@ -120,6 +125,7 @@ global proc liquidViewLastRib()
 
 global proc liquidViewLastRenderScript()
 {
+	liqlog("liquidViewLastRenderScript()");
   if ((!objExists("liquidGlobals") || !`attributeExists lastRenderScript liquidGlobals` ) || (`getAttr liquidGlobals.lastRenderScript` == "" )) {
     warning("liquidGlobals.lastRenderScript is not set - no render script has been generated during this session");
     return;
@@ -143,6 +149,7 @@ global proc liquidViewLastRenderScript()
 // This delete's any references to liquid in the scene.
 global proc liquidCleanup()
 {
+	liqlog("liquidCleanup()");
   string $yesno = `confirmDialog -title "Confirm"
               -message ( "Are you sure you want to remove all references\nto Liquid in this Maya scene?" )
               -button "Yes" -button "No" -defaultButton "No"
@@ -194,6 +201,7 @@ global proc liquidCleanup()
 
 global proc string liquidINIGet(string $component, string $var )
 {
+	liqlog("liquidINIGet(...)");
   string $returnValue;
   string $homeDirectory = `getenv "HOME"`;
   string $liquidDirectory = ( $homeDirectory + "/.liquid" );
@@ -215,10 +223,12 @@ global proc string liquidINIGet(string $component, string $var )
 }
 
 global proc string liquidAddCoordSystem() {
+	liqlog("liquidAddCoordSystem()");
   return `createNode liquidCoordSys -n liquidCoordSysShape`;
 }
 
 global proc string liquidAddClipPlane() {
+	liqlog("liquidAddClipPlane()");
   string $name = `createNode liquidCoordSys -n liquidClipPlaneShape`;
   setAttr ($name+".type") 5;
   return $name;
@@ -226,10 +236,12 @@ global proc string liquidAddClipPlane() {
 
 
 global proc liquidAddReflectionUI() {
+	liqlog("liquidAddReflectionUI()");
   liquidAddReflection();
 }
 
 global proc liquidAddReflection() {
+	liqlog("liquidAddReflection()");
 
   string $plane = `plane -s 2 -r 0 0 0`;
   string $shapes[] = `listRelatives -shapes $plane`;
@@ -247,10 +259,12 @@ global proc liquidAddReflection() {
 }
 
 global proc liquidAddEnvironmentUI() {
+	liqlog("liquidAddEnvironmentUI()");
   liquidAddEnvironment();
 }
 
 global proc liquidAddEnvironment() {
+	liqlog("liquidAddEnvironment()");
   string $name = `shadingNode -asUtility place3dTexture`;
   addAttr -ln liqEnvMapGen -at bool -dv true $name;
   addAttr -ln liqEnvironmentSet -dt "string" $name;
@@ -264,6 +278,7 @@ global proc liquidAddEnvironment() {
 // Substitutes ALL occurences of a regular expression in source
 global proc string liquidSubstituteAll( string $pattern, string $source, string $replace )
 {
+	liqlog("liquidSubstituteAll(...)");
   string $result, $oldResult;
   $result = $source;
   do {
@@ -276,6 +291,7 @@ global proc string liquidSubstituteAll( string $pattern, string $source, string 
 
 global proc string liquidToUI( string $source )
 {
+	liqlog("liquidToUI(...)");
   $result = $source;
   //global int $ncall;
   //global float $totalTime;
@@ -331,6 +347,7 @@ global proc string liquidToUI( string $source )
 
 global proc liquidCropWindowViewer()
 {
+	liqlog("liquidCropWindowViewer()");
   string $cameraShape = `getAttr liquidGlobals.renderCamera`;
   if( `size($cameraShape)` )
   {
@@ -414,6 +431,7 @@ global proc liquidCropWindowViewer()
 
 global proc liquidTextureViewer( string $file )
 {
+	liqlog("liquidTextureViewer(...)");
   $file = liquidVarSubstitute( $file );
   if ( gmatch( $file, "`*`") ) $file = eval($file);
 
@@ -455,6 +473,7 @@ global proc liquidTextureViewer( string $file )
 
 global proc string liquidVarSubstitute( string $str )
 {
+	liqlog("liquidVarSubstitute(...)");
   string $result = $str;
 
   string $pdir = `workspace -q -rd`;
@@ -494,6 +513,7 @@ global proc string liquidVarSubstitute( string $str )
 
 global proc string liquidAutoShadowName( string $lightShape )
 {
+	liqlog("liquidAutoShadowName(...)");
   string $shadowname = "";
   string $textdir = `getAttr liquidGlobals.textureDirectory`;
   $textdir = liquidVarSubstitute( $textdir );
@@ -541,6 +561,7 @@ global proc string liquidAutoShadowName( string $lightShape )
 
 global proc liquidViewShadowMap( string $node )
 {
+	liqlog("liquidViewShadowMap(...)");
   string $file = liquidAutoShadowName($node);
   string $test = (size( match("\?\?", $file) ))? (substitute("\?\?", $file, "PX")) : $file;
   if ( `filetest -r $test` ) liquidTextureViewer($file);

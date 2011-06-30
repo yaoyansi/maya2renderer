@@ -31,6 +31,7 @@
 //
 
 source clipMenuCommands.mel;
+source xxliquidutility.mel;
 
 //---------------------------------------------------------------------------
 // The procedure which builds the menu
@@ -39,6 +40,7 @@ global proc buildHypergraphNodePopupMenuItems(
 	string $hypershade,
 	string $node)
 {
+	liqlog("buildHypergraphNodePopupMenuItems("+$hypershade+","+$node+")");
 	//
 	// Description:
 	//	This procedure is called when the user RMB clicks on a node in a scene

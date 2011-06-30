@@ -1,0 +1,6 @@
+source xxUtility.mel;
+
+global proc liqlog(string $log)
+{
+	xxu_log2("liquid>", $log);
+}

@@ -6,8 +6,11 @@
  * $global can be provided by the liquidGetCommonGlobalValue() procedure.
  * \returns  a boolean (int) value
  */
+source xxliquidutility.mel;
+
 global proc int liquidmayaHasCommonGlobalValue( string $global )
 {
+	liqlog("liquidmayaHasCommonGlobalValue(...)");
   if ( !`liquidGlobalsExists` ) {
     string $sel[] = `ls -sl`;
     eval("liquidCreateGlobals();");
@@ -45,6 +48,7 @@ global proc int liquidmayaHasCommonGlobalValue( string $global )
  */
 global proc string liquidmayaGetCommonGlobalValue( string $global )
 {
+	liqlog("liquidmayaGetCommonGlobalValue(...)");
   string 	$value;
 
   if ( !`liquidGlobalsExists` ) {
@@ -107,6 +111,7 @@ global proc string liquidmayaGetCommonGlobalValue( string $global )
  */
 global proc liquidmayaSetCommonGlobalValue( string $global, string $value )
 {
+	liqlog("liquidmayaSetCommonGlobalValue(...)");
 
   int $intValue;
   float $floatValue;
@@ -168,6 +173,7 @@ global proc liquidmayaSetCommonGlobalValue( string $global, string $value )
  */
 global proc liquidRenderLogoCallback()
 {
+	liqlog("liquidRenderLogoCallback()");
   string $url = `getenv "LIQUIDHELP"`;
   if ( $url == "" ) $url = "http://liquidmaya.sourceforge.net/liquidwiki/";
   evalDeferred ("showHelp -absolute \""+$url+"\"" );
@@ -175,6 +181,7 @@ global proc liquidRenderLogoCallback()
 
 global proc registerLiquidRenderer()
 {
+	liqlog("registerLiquidRenderer()");
   //eval "source createMayaSoftwareCommonGlobalsTab.mel";
 
   if ( !`renderer -q -ex liquid` ) {
@@ -219,6 +226,7 @@ global proc registerLiquidRenderer()
 
 global proc liquidAddTabs()
 {
+	liqlog("liquidAddTabs()");
 
   renderer  -edit
             -addGlobalsTab        "Liquid"
@@ -229,6 +237,8 @@ global proc liquidAddTabs()
 
 global proc unregisterLiquidRenderer()
 {
+	liqlog("unregisterLiquidRenderer(...)");
+
   if ( `renderer -q -ex liquid` ) renderer -unregisterRenderer liquid;
   updateRendererUI();
 }

@@ -31,10 +31,11 @@
 //  Description:  startup sequence
 //
 //
-
+source xxliquidutility.mel;
 
 global proc string liquidGetHome()
 {
+	liqlog("liquidGetHome(...)");
   string $home = `getenv "LIQUIDHOME"`;
   if( !size( $home ) ) {
     warning("Environment variable LIQUIDHOME is not set - please set to the base Liquid directory (containing /mel, etc)");
@@ -52,6 +53,7 @@ global proc string liquidGetHome()
 
 global proc string liquidGetPluginName()
 {
+	liqlog("liquidGetPluginName(...)");
   string $plugs[] = `pluginInfo -q -listPlugins`;
   for ( $p in $plugs ) {
     if ( gmatch( $p, "liquid*") ) return $p;
@@ -62,6 +64,7 @@ global proc string liquidGetPluginName()
 
 global proc liquidLoadScripts()
 {
+	liqlog("liquidLoadScripts(...)");
   string $mel_files[] = {
     "AEdagNodeInclude.mel",
     "AEliquidFGGIOverrideFlags.mel",
@@ -138,6 +141,7 @@ global proc liquidLoadScripts()
 
 global proc liquidAETemplateOverwrite()
 {
+	liqlog("liquidAETemplateOverwrite(...)");
   //liquidDebugPrint("OVERWRITING DEFAULT AE TEMPLATES");
   // eval( "source \"" + liquidGetHome() + "/mel/AEdagNodeInclude.mel\"" );
   // eval( "source \"" + liquidGetHome() + "/mel/AEtransformTemplate.mel\"" );
@@ -146,6 +150,7 @@ global proc liquidAETemplateOverwrite()
 
 global proc liquidShowAbout()
 {
+	liqlog("liquidShowAbout(...)");
   if (`window -exists liquidAbout`) {
     deleteUI liquidAbout;
   }
@@ -191,15 +196,21 @@ global proc liquidShowAbout()
 
 global proc liquidMenuPostVisibilityAttributes( string $prefix )
 {
+	liqlog("liquidMenuPostVisibilityAttributes(...)");
   int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );
 
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemVisibilityTrace")` )          menuItem -e -en (1-$newStyle) ($prefix+"LiquidMenuItemVisibilityTrace");
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemVisibilityDiffuse")` )        menuItem -e -en $newStyle     ($prefix+"LiquidMenuItemVisibilityDiffuse");
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemVisibilitySpecular")` )       menuItem -e -en $newStyle     ($prefix+"LiquidMenuItemVisibilitySpecular");
+  if ( `menuItem -q -ex ($prefix+"LiquidMenuItemVisibilityPhoton")` )         menuItem -e -en $newStyle     ($prefix+"LiquidMenuItemVisibilityPhoton");
+  if ( `menuItem -q -ex ($prefix+"LiquidMenuItemVisibilityMidpoint")` )       menuItem -e -en $newStyle     ($prefix+"LiquidMenuItemVisibilityMidpoint");
+
+
 }
 
 global proc liquidMenuPostRaytracingAttributes( string $prefix )
 {
+	liqlog("liquidMenuPostRaytracingAttributes(...)");
   int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );
 
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemDiffuseHitMode")` )       menuItem -e -en $newStyle ($prefix+"LiquidMenuItemDiffuseHitMode");
@@ -207,8 +218,28 @@ global proc liquidMenuPostRaytracingAttributes( string $prefix )
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemTransmissionHitMode")` )  menuItem -e -en $newStyle ($prefix+"LiquidMenuItemTransmissionHitMode");
 }
 
+global proc liquidMenuPostTrimCurveAttribute( string $prefix )
+{
+	liqlog("liquidMenuPostTrimCurveAttribute(...)");
+  //int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );
+
+  if ( `menuItem -q -ex ($prefix+"LiquidMenuItemTrimCurveSense")` )  
+	  menuItem -e -en true ($prefix+"LiquidMenuItemTrimCurveSense");
+}
+
+global proc liquidMenuPostStitchAttribute( string $prefix )
+{
+	liqlog("liquidMenuPostStitchAttribute(...)");
+}
+
+global proc liquidMenuPostStochasticAttribute( string $prefix )
+{
+	liqlog("liquidMenuPostStochasticAttribute(...)");
+}
+
 global proc liquidCreateObjectsAttributesMenu( string $prefix )
 {
+	liqlog("liquidCreateObjectsAttributesMenu(...)");
   menuItem -label "Object Attributes" -subMenu true -tearOff true;
     menuItem -label "Create Shading Group" -command liquidCreateShadingAttributes -ann "Add Shading attributes to selected Transform node(s)";
     menuItem -label "Shading Add" -subMenu true -tearOff true;
@@ -233,6 +264,8 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
       menuItem -label "Diffuse Rays"      -command liquidCreateVisibilityDiffuse          ($prefix+"LiquidMenuItemVisibilityDiffuse");
       menuItem -label "Specular Rays"     -command liquidCreateVisibilitySpecular         ($prefix+"LiquidMenuItemVisibilitySpecular");
       menuItem -label "Transmission Rays" -command liquidCreateVisibilityTransmission     ($prefix+"LiquidMenuItemVisibilityTransmission");
+      menuItem -label "Photon"			  -command liquidCreateVisibilityPhoton           ($prefix+"LiquidMenuItemVisibilityPhoton");
+      menuItem -label "Midpoint"          -command liquidCreateVisibilityMidpoint         ($prefix+"LiquidMenuItemVisibilityMidpoint");
     setParent -menu ..;
     menuItem -label "Remove Visibility Group" -command liquidDeleteVisibilityAttributes -ann "Remove Visibility attributes from selected Transform node(s)";
     menuItem -d true;
@@ -304,11 +337,47 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
     menuItem -d true;
     menuItem -label "Add Liquid Ignore Shapes" -command liquidCreateIgnoreShapesAttribute -ann "Add Liquid Ignore Shapes control to selected node";
     menuItem -label "Delete Liquid Ignore Shapes" -command liquidDeleteIgnoreShapesAttribute -ann "Remove Liquid Ignore Shapes control to selected node";
+    menuItem -d true;
+    menuItem -label "Create TrimCurve Group"    -command liquidCreateTrimCurveAttribute -ann "Add Trim Curve to selected node";
+    menuItem -label "Trim Curve Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostTrimCurveAttribute "+$prefix);
+      menuItem -label "sense" -command liquidCreateTrimCurveSenseAttribute ($prefix+"LiquidMenuItemTrimCurveSense");
+    setParent -menu ..;
+	menuItem -label "Remove TrimCurve Group" -command liquidDeleteTrimCurveAttribute -ann "Remove Trim Curve control from selected node";
+    menuItem -d true;
+    menuItem -label "Create Stitch Group"    -command liquidCreateStitchAttribute -ann "Add Stitch to selected node";
+    menuItem -label "Stitch Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostStitchAttribute "+$prefix);
+      menuItem -label "sense"       -command liquidCreateStitchEnableAttribute      ($prefix+"LiquidMenuItemStitchEnable");
+      menuItem -label "traceenable" -command liquidCreateStitchTraceEnableAttribute ($prefix+"LiquidMenuItemStitchTraceEnable");
+      menuItem -label "newgroup"    -command liquidCreateStitchNewGroupAttribute    ($prefix+"LiquidMenuItemStitchNewGroup");
+	setParent -menu ..;
+	menuItem -label "Remove Stitch Group" -command liquidDeleteStitchAttribute -ann "Remove Stitch control from selected node";
+    menuItem -d true;
+    menuItem -label "Create Stochastic Group"    -command liquidCreateStochasticAttribute -ann "Add Stochastic to selected node";
+    menuItem -label "Stochastic Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostStochasticAttribute "+$prefix);
+      menuItem -label "sigma"        -command liquidCreateStochasticSigmaAttribute        ($prefix+"LiquidMenuItemStochasticSigma");
+      menuItem -label "pointfalloff" -command liquidCreateStochasticPointFallOffAttribute ($prefix+"LiquidMenuItemStochasticPointFallOff");
+	setParent -menu ..;
+	menuItem -label "Remove Stochastic Group" -command liquidDeleteStochasticAttribute -ann "Remove Stochastic control from selected node";
+    menuItem -d true;
+    menuItem -label "Create Dice Group"    -command liquidCreateDiceAttributes -ann "Add Dice to selected node";
+ //   menuItem -label "Stochastic Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostStochasticAttribute "+$prefix);
+ //     menuItem -label "sigma"        -command liquidCreateStochasticSigmaAttribute        ($prefix+"LiquidMenuItemStochasticSigma");
+ //     menuItem -label "pointfalloff" -command liquidCreateStochasticPointFallOffAttribute ($prefix+"LiquidMenuItemStochasticPointFallOff");
+//	setParent -menu ..;
+	menuItem -label "Remove Dice Group" -command liquidDeleteDiceAttributes -ann "Remove Dice control from selected node";
+    menuItem -d true;
+    menuItem -label "Create Derivatives Group" -command liquidCreateDerivativesAttributes -ann "Add Derivatives to selected node";
+	menuItem -label "Remove Derivatives Group" -command liquidDeleteDerivativesAttributes -ann "Remove Derivatives control from selected node";
+    menuItem -d true;
+    menuItem -label "Create Procedural Group" -command liquidCreateProceduralAttributes -ann "Add Procedural to selected node";
+	menuItem -label "Remove Procedural Group" -command liquidDeleteProceduralAttributes -ann "Remove Procedural control from selected node";
+
   setParent -menu ..;
 }
 
 global proc liquidCreateLightsAttributesMenu( string $prefix )
 {
+	liqlog("liquidCreateLightsAttributesMenu(...)");
   menuItem -label "Light Attributes" -subMenu true -tearOff true;
     menuItem -label "Create Area Light Attributes" -command liquidCreateAreaLightAttributes -ann "Add Area Light attributes to selected Light shape node(s)";
     menuItem -label "Remove Area Light Attributes" -command liquidDeleteAreaLightAttributes -ann "Remove Area Light attributes from selected Light shape node(s)";
@@ -340,6 +409,7 @@ global proc liquidCreateLightsAttributesMenu( string $prefix )
 
 global proc liquidCreateSetsAttributesMenu( string $prefix )
 {
+	liqlog("liquidCreateSetsAttributesMenu(...)");
   menuItem -label "Set Attributes" -subMenu true -tearOff true;
     menuItem -label "Add Trace Set Attribute" -command liquidCreateSetAttributes -ann "Add Set attributes to the selected Set node(s)";
     menuItem -label "Delete Trace Set Attribute" -command liquidDeleteSetAttributes -ann "Remove Set attributes from selected Set node(s)";
@@ -351,6 +421,7 @@ global proc liquidCreateSetsAttributesMenu( string $prefix )
  */
 global proc liquidCreateMenus()
 {
+	liqlog("liquidCreateMenus(...)");
   global string $gMainWindow;
 
   string $iconPath = (liquidGetHome()+"/icons/");
@@ -470,6 +541,7 @@ global proc liquidCreateMenus()
  */
 global proc liquidRemoveMenus()
 {
+	liqlog("liquidRemoveMenus(...)");
   deleteUI liquidMainWindowMenu;
 }
 
@@ -478,6 +550,7 @@ global proc liquidRemoveMenus()
  */
 global proc liquidRender()
 {
+	liqlog("liquidRender(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
   }
@@ -486,6 +559,7 @@ global proc liquidRender()
 
 global proc int[] liquidPreview_getRenderViewResolution()
 {
+	liqlog("liquidPreview_getRenderViewResolution(...)");
   float $xres = `getAttr liquidGlobals.xResolution`;
   float $yres = `getAttr liquidGlobals.yResolution`;
   int   $res, $width, $heigth;
@@ -531,6 +605,7 @@ global proc int[] liquidPreview_getRenderViewResolution()
 
 global proc float[] liquidPreview_getRenderViewCropWindow()
 {
+	liqlog("liquidPreview_getRenderViewCropWindow(...)");
   int $imageSize[] = liquidPreview_getRenderViewResolution();
   int $renderRegion[] = `liquidRenderView -rg`;
   float $x1, $x2, $y1, $y2;
@@ -545,12 +620,14 @@ global proc float[] liquidPreview_getRenderViewCropWindow()
 
 global proc liquidmayaCmdlineRender( string $options )
 {
+	liqlog("liquidmayaCmdlineRender(...)");
   string $cmd = ( "liquid -GL " + $options );
   eval $cmd;
 }
 
 global proc liquidmayaBatchRender( string $options )
 {
+	liqlog("liquidmayaBatchRender(...)");
   if( ! `pluginInfo -q -l "liquid"` ) loadPlugin "liquid";
   string $cmd = ( "liquid -GL " + $options );
   eval $cmd;
@@ -558,6 +635,7 @@ global proc liquidmayaBatchRender( string $options )
 
 global proc liquidPreview()
 {
+	liqlog("liquidPreview(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
   }
@@ -575,6 +653,7 @@ global proc liquidPreview()
 
 global proc liquidCropPreview()
 {
+	liqlog("liquidCropPreview(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
   }
@@ -586,6 +665,7 @@ global proc liquidCropPreview()
 
 global proc liquidRenderSelected()
 {
+	liqlog("liquidRenderSelected(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
   }
@@ -595,6 +675,7 @@ global proc liquidRenderSelected()
 
 global proc liquidPreviewSelected()
 {
+	liqlog("liquidPreviewSelected(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
   }
@@ -609,6 +690,7 @@ global proc liquidPreviewSelected()
  */
 global proc string liquidGetSceneName()
 {
+	liqlog("liquidGetSceneName(...)");
   string $fullName = `file -q -a`;
   string $choppedName[];
   tokenize $fullName "/" $choppedName;
@@ -623,6 +705,7 @@ global proc string liquidGetSceneName()
  */
 global proc liquidRegisterSlLib()
 {
+	liqlog("liquidRegisterSlLib(...)");
   global string $gLiquidSlLibFunctions[];
   clear $gLiquidSlLibFunctions;
 
@@ -653,6 +736,7 @@ global proc liquidRegisterSlLib()
  */
 global proc liquidCleanUp()
 {
+	liqlog("liquidCleanUp(...)");
   // nothing to do
 }
 
@@ -663,6 +747,7 @@ global proc liquidCleanUp()
  */
 global proc liquidCreateScriptNode()
 {
+	liqlog("liquidCreateScriptNode(...)");
   if ( !objExists( "liquidCleanUpNode" ) )  scriptNode  -scriptType     2
                                                         -beforeScript   "if ( `whatIs liquid` == \"Command\" ) liquidCreateScriptNode;"
                                                         -afterScript    "if ( `whatIs liquid` == \"Command\" ) liquidCleanUp;"
@@ -671,6 +756,7 @@ global proc liquidCreateScriptNode()
 
 global proc liquidCreateScriptJobs()
 {
+	liqlog("liquidCreateScriptJobs(...)");
   // setup a scriptJob to update some widgets
   // when the renderlayers change
   string $jobs[] = `scriptJob -lj`;
@@ -690,6 +776,7 @@ global proc liquidCreateScriptJobs()
  */
 global proc liquidStartup()
 {
+	liqlog("liquidStartup(...)");
   // BT: the module manager takes care of sourcing so we dont want to be sourcing this lot twice
   // MM: We need to add code that checks the environment to see if we are at RSP.
   // We can't just break Liquid for everyone but ourselves -- particularly not if we really have

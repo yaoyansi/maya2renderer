@@ -28,9 +28,11 @@
 //  Description:
 //  An interface for working with Renderable Curves with Liquid
 //
+source xxliquidutility.mel;
 
 global proc liquidAddPFXAttributes()
 {
+	liqlog("liquidAddPFXAttributes()");
 	string $list[] = `ls -dag -type "stroke" -sl`;
 	for( $s in $list )
 	{
@@ -62,6 +64,7 @@ global proc liquidAddPFXAttributes()
 
 global proc liquidRemovePFXAttributes()
 {
+	liqlog("liquidRemovePFXAttributes()");
 	string $list[] = `ls -dag -type "stroke" -sl`;
 	for( $s in $list )
 	{

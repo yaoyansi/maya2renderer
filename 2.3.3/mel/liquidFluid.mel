@@ -30,6 +30,7 @@
 //
 //  Description:
 //  fluid -> liquids shader editor
+source xxliquidutility.mel;
 
 global string $liquidFluidLastShaderDirectory = "";
 global string $liquidFluidShaderList[];
@@ -38,6 +39,7 @@ global string $liquidShaderSpec = "*";
 
 global proc string liquidFluidGetPreviewDir()
 {
+	liqlog("liquidFluidGetPreviewDir()");
   // retrieve the current project path
   string $projectPath = `workspace -q -rootDirectory`;
 
@@ -77,6 +79,7 @@ global proc string liquidFluidGetPreviewDir()
 // TO BE REVIEWED
 global proc liquidSLEditor()
 {
+	liqlog("liquidSLEditor()");
   if(`window -exists liquidSLEditorWindow`)
   {
     deleteUI liquidSLEditorWindow;
@@ -103,6 +106,7 @@ global proc liquidSLEditor()
 // TO BE REVIEWED
 global proc liquidSLReplace()
 {
+	liqlog("liquidSLReplace()");
   string $shaderlist[];
   if(`checkBoxGrp -q -v1 liquidSLSelectionCheck`)
   {
@@ -164,6 +168,7 @@ global proc liquidSLReplace()
 
 global proc liquidReloadFluidShader(string $shadername)
 {
+	liqlog("liquidReloadFluidShader(...)");
  string $shader_name = `getAttr ( $shadername + ".rmanShaderLong" ) `;
  liquidSlSetShader( $shader_name );
  string $type = liquidSlShaderType();
@@ -174,6 +179,7 @@ global proc liquidReloadFluidShader(string $shadername)
 
 global proc liquidChangeShader(string $shadername, string $new_shaderpath, string $nodeType)
 {
+	liqlog("liquidChangeShader(...)");
  if(`filetest -r $new_shaderpath`)
  {
    setAttr -type "string" ($shadername+".rmanShaderLong") $new_shaderpath;
@@ -188,6 +194,7 @@ global proc liquidChangeShader(string $shadername, string $new_shaderpath, strin
 }
 
 global proc string[] liquidGetMultiListerSelection() {
+	liqlog("liquidGetMultiListerSelection(...)");
  string $targets[];
 
  // Get the MultiLister panel.  There _should_ be only one
@@ -237,6 +244,7 @@ global proc string[] liquidGetMultiListerSelection() {
 
 global proc liquidFluidUpdateList()
 {
+	liqlog("liquidFluidUpdateList()");
  global string $liquidShaderSpec;
  if ( `textScrollList -exists liquidFluidShaderList` ) {
    textScrollList -e -ra liquidFluidShaderList;
@@ -261,6 +269,7 @@ global proc liquidFluidUpdateList()
 
 global proc liquidFluidReloadCMD ()
 {
+	liqlog("liquidFluidReloadCMD()");
 	 string $selectedNode[] = `textScrollList -q -si liquidFluidShaderList`;
 	 string $node;
 	 for ( $node in $selectedNode ) {
@@ -271,6 +280,7 @@ global proc liquidFluidReloadCMD ()
 
 global proc liquidFluidDuplicateCMD ()
 {
+	liqlog("liquidFluidDuplicateCMD()");
  string $currentlySelected[] = `ls -sl`;
  string $selectedNode[] = `textScrollList -q -si liquidFluidShaderList`;
  string $node;
@@ -283,6 +293,7 @@ global proc liquidFluidDuplicateCMD ()
 
 global proc liquidFluidLoadCMD ( string $widget )
 {
+	liqlog("liquidFluidLoadCMD(...)");
  global string $liquidCFD;
  string $currentlySelected[] = `ls -sl`;
  string $selectedFiles[] = `textScrollList -q -si $widget`;
@@ -299,6 +310,7 @@ global proc liquidFluidLoadCMD ( string $widget )
 
 global proc liquidFluidEditCMD ()
 {
+	liqlog("liquidFluidEditCMD()");
  string $selectedNode[] = `textScrollList -q -si liquidFluidShaderList`;
  if ( $selectedNode[0] == "" ) {
    print "Fluid -> No Shader Selected...\n";
@@ -312,6 +324,7 @@ global proc liquidFluidEditCMD ()
 
 global proc liquidFluidEditSelectedObjCMD( string $type )
 {
+	liqlog("liquidFluidEditSelectedObjCMD()");
  string $selectedNode[] = `ls -sl`;
 
  if ( !size( $selectedNode ) ) {
@@ -344,6 +357,7 @@ global proc liquidFluidEditSelectedObjCMD( string $type )
 
 global proc liquidFluidEditNodeCMD( string $nodes[] )
 {
+	liqlog("liquidFluidEditNodeCMD()");
  for ( $node in $nodes ) {
    if ( !objExists( $node ) ) {
      warning ("Fluid -> This node does not exist...");
@@ -357,6 +371,7 @@ global proc liquidFluidEditNodeCMD( string $nodes[] )
 
 global proc liquidFluidAssignCMD ()
 {
+	liqlog("liquidFluidAssignCMD()");
  string $selectedShader[] = `textScrollList -q -si liquidFluidShaderList`;
  if ( $selectedShader[0] == "" ) {
    print "Fluid -> No Shader Selected...\n";
@@ -367,6 +382,7 @@ global proc liquidFluidAssignCMD ()
 
 global proc liquidFluidAssign( string $shaderList[] )
 {
+	liqlog("liquidFluidAssign(...)");
   string $currentSelected;
   for ( $currentSelected in $shaderList ) {
     string $type = `liquidGetShaderNodeType $currentSelected`;
@@ -396,6 +412,7 @@ global proc liquidFluidAssign( string $shaderList[] )
 
 global proc liquidFluidUnAssignCMD ()
 {
+	liqlog("liquidFluidUnAssignCMD()");
  string $selectedShader[] = `textScrollList -q -si liquidFluidShaderList`;
  if ( $selectedShader[0] == "" ) {
    print "Fluid -> No Shader Selected...\n";
@@ -442,6 +459,7 @@ global proc liquidFluidUnAssign( string $selectedShader )
 
 global proc liquidFluidUnAssign( string $selectedShader )
 {
+	liqlog("liquidFluidUnAssign(...)");
  string $selectedNodes[] = `ls -dag -set -shapes -sl`;
  if ( size( $selectedNodes ) == 0 ) {
      $selectedNodes = `liquidGetMultiListerSelection`;
@@ -486,6 +504,7 @@ global proc liquidFluidUnAssign( string $selectedShader )
 
 global proc liquidFluidPickObjectsCMD()
 {
+	liqlog("liquidFluidPickObjectsCMD()");
  string $selectedNode[];
  $selectedNode = `textScrollList -q -si liquidFluidShaderList`;
  if ( $selectedNode[0] == "" ) {
@@ -497,6 +516,7 @@ global proc liquidFluidPickObjectsCMD()
 
 global proc liquidFluidPickObjects( string $selectedNode )
 {
+	liqlog("liquidFluidPickObjects(...)");
  select -clear;
 
  string $type = `liquidGetShaderNodeType $selectedNode`;
@@ -539,6 +559,7 @@ global proc liquidFluidPickObjects( string $selectedNode )
 
 global proc liquidFluidPickAssignedCMD()
 {
+	liqlog("liquidFluidPickAssignedCMD()");
  string $selectedNode[];
  $selectedNode = `ls -dag -sl`;
  if ( $selectedNode[0] == "" ) {
@@ -568,6 +589,7 @@ global proc liquidFluidPickAssignedCMD()
 
 global proc liquidFluidRemoveCMD ()
 {
+	liqlog("liquidFluidRemoveCMD()");
  string $selectedNode[] = `textScrollList -q -si liquidFluidShaderList`;
  if ( $selectedNode[0] == "" ) {
    print "Fluid -> No Shader Selected...\n";
@@ -645,6 +667,7 @@ global proc liquidFluidRemoveUnusedCMD ()
 
 global proc liquidFluidPreviewSelectedShader()
 {
+	liqlog("liquidFluidPreviewSelectedShader()");
  string $selectedNode[] = `textScrollList -q -si liquidFluidShaderList`;
  if ( $selectedNode[0] == "" ) {
    print "Fluid -> No Shader Selected...\n";
@@ -655,6 +678,7 @@ global proc liquidFluidPreviewSelectedShader()
 
 global proc liquidFluidReloadPreviewSwatch( string $shaderNode )
 {
+	liqlog("liquidFluidReloadPreviewSwatch(...)");
  string $realShader = `getAttr ($shaderNode+".rmanShader")`;
  string $previewDir = liquidFluidGetPreviewDir();
  string $imageCtl   = ( "shaderPreview" + $realShader + $shaderNode);
@@ -690,6 +714,7 @@ global proc liquidFluidReloadPreviewSwatch( string $shaderNode )
 
 global proc liquidFluidPreviewShader( string $shaderNode )
 {
+	liqlog("liquidFluidPreviewShader(...)");
  string $realShader = `getAttr ($shaderNode+".rmanShader")`;
  string $image;
 
@@ -779,6 +804,7 @@ global proc liquidFluidPreviewShader( string $shaderNode )
 
 global proc liquidSelectNodeCMD()
 {
+	liqlog("liquidSelectNodeCMD()");
  string $selectedNode[] = `textScrollList -q -si liquidFluidShaderList`;
  if ( $selectedNode[0] == "" ) {
    print "Fluid -> No Shader Selected...\n";
@@ -789,6 +815,7 @@ global proc liquidSelectNodeCMD()
 
 global proc liquidChangeShaderSpec( string $fieldName )
 {
+	liqlog("liquidChangeShaderSpec(...)");
  global string $liquidShaderSpec;
  $liquidShaderSpec = `textFieldGrp -q -tx $fieldName`;
  liquidFluidUpdateList;
@@ -796,12 +823,14 @@ global proc liquidChangeShaderSpec( string $fieldName )
 
 global proc liquidSelectShader( string $nameField )
 {
+	liqlog("liquidSelectShader(...)");
  string $selectedNode[] = `textScrollList -q -si liquidFluidShaderList`;
  textFieldGrp -e -tx $selectedNode[0] $nameField;
 }
 
 global proc liquidRenameShader( string $nameField )
 {
+	liqlog("liquidRenameShader(...)");
  string $selectedNode[] = `textScrollList -q -si liquidFluidShaderList`;
  string $newName = `textFieldGrp -q -tx $nameField`;
  rename $selectedNode[0] $newName;
@@ -816,6 +845,7 @@ global proc liquidRenameShader( string $nameField )
 
 global proc liquidShaderBrowserShaderMenu()
 {
+	liqlog("liquidShaderBrowserShaderMenu()");
  string $menu[] = `textScrollList -q -pma liquidFluidShaderList`;
  if ( !size( $menu ) ) return;
 
@@ -889,6 +919,7 @@ global proc liquidShaderBrowserContainerMenu()
 
 global proc liquidShaderBrowserContext()
 {
+	liqlog("liquidShaderBrowserContext()");
  string $selection[] = `textScrollList -q -si liquidFluidShaderList`;
  string $types[];
  for ( $s in $selection ) {
@@ -914,6 +945,7 @@ global proc liquidShaderBrowserContext()
 
 global proc string liquidShaderBrowser()
 {
+	liqlog("liquidShaderBrowser()");
  global string $liquidShaderSpec;
  $liquidShaderForm = `formLayout`;
    string $listSpec = `textFieldGrp -tx $liquidShaderSpec -l "Shader Spec"`;
@@ -949,6 +981,7 @@ global proc string liquidShaderBrowser()
 
 global proc liquidFluidBuildBookmarkMenu()
 {
+	liqlog("liquidFluidBuildBookmarkMenu()");
  if ( ! `menu -q -ex liquidFluidWindowBookmarkMenu` ) error ("liquidFluidBuildBookmarkMenu: the bookmark menu does not exist.");
 
  // delete menu items
@@ -975,6 +1008,7 @@ global proc liquidFluidBuildBookmarkMenu()
 
 global proc liquidFluidAddBookmark()
 {
+	liqlog("liquidFluidAddBookmark()");
  global string $liquidCFD;
  if ( $liquidCFD == "" ) warning ("nothing to Bookmark !");
 
@@ -997,6 +1031,7 @@ global proc liquidFluidAddBookmark()
 
 global proc liquidFluidClearBookmarks()
 {
+	liqlog("liquidFluidClearBookmarks()");
  string $result = `confirmDialog -title "Delete All Bookmarks ?" -message "Are you sure?"
                                  -button "Yes" -button "Cancel" -defaultButton "Cancel"
                                  -cancelButton "Cancel" -dismissString "Cancel"`;
@@ -1019,11 +1054,12 @@ global proc liquidFluidClearBookmarks()
 
 global proc liquidFluidSelectBookmark( int $i )
 {
-
+   liqlog("liquidFluidSelectBookmark(...)");
 }
 
 global proc liquidFluid ()
 {
+	liqlog("liquidFluid()");
  if ( !`liquidGlobalsExists` ) {
    liquidCreateGlobals;
  }

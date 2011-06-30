@@ -33,6 +33,7 @@
 //
 //  Returns:
 //
+source xxliquidutility.mel;
 
 global string $liquidShadersLastDirectory = "";
 
@@ -41,6 +42,7 @@ global string $liquidShadersLastDirectory = "";
  */
 global proc string[] liquidGetShaderList(string $type)
 {
+	liqlog("liquidGetShaderList(...)");
   string $out_shaderlist[];
   if($type == "all") {
     string $types[] = {"Surface","Light","Displacement","Volume","RibBox"};
@@ -58,6 +60,7 @@ global proc string[] liquidGetShaderList(string $type)
  */
 global proc string liquidGetShaderNodeType( string $node )
 {
+	liqlog("liquidGetShaderNodeType(...)");
   string $returnValue;
   string $nodeType, $typeId, $type;
 
@@ -90,6 +93,7 @@ global proc string liquidGetShaderNodeType( string $node )
  */
 global proc liquidAssignShaderNode_old( string $node, string $shaderNode )
 {
+	liqlog("liquidAssignShaderNode_old(...)");
   string $type = `liquidGetShaderNodeType $shaderNode`;
 
   if ( !`attributeQuery -node $node -ex ( "liquid" + $type + "ShaderNode" )`) {
@@ -120,6 +124,7 @@ global proc liquidAssignShaderNode_old( string $node, string $shaderNode )
 
 global proc int liquidIsShadingGroup( string $node ) 
 {
+	liqlog("liquidIsShadingGroup(...)");
 	if ( objExists($node) )
 		if (( nodeType($node) == "shadingEngine" ) || ( nodeType($node) == "materialFacade" ))
 			return true;
@@ -128,6 +133,7 @@ global proc int liquidIsShadingGroup( string $node )
 
 global proc string[] liquidShadersGetShapes( string $node )
 {
+	liqlog("liquidShadersGetShapes(...)");
 	string $shapes[];
 	if ( objectType( $node ) == "transform" )
 		$shapes = `listRelatives -pa -s $node`;
@@ -151,6 +157,7 @@ global proc string[] liquidShadersGetShapes( string $node )
 //
 global proc string[] liquidGetShadingGroup( string $node )
 {
+	liqlog("liquidGetShadingGroup(...)");
 	// if we've been passed a shading group then pass it right back again
 	if( liquidIsShadingGroup($node) )
 		return {$node};
@@ -212,6 +219,7 @@ global proc string[] liquidGetShadingGroup( string $node )
  */
 global proc liquidAssignShaderNode( string $node, string $shaderNode )
 {
+	liqlog("liquidAssignShaderNode(...)");
   float $version = liquidGetVersion();
   string $newNodeName;
 
@@ -277,6 +285,7 @@ global proc liquidAssignShaderNode( string $node, string $shaderNode )
  */
 proc string liquidNewRibboxNode_old( string $nodename )
 {
+	liqlog("liquidNewRibboxNode_old(...)");
   if($nodename == "")
   {
     $nodename = "ribbox";
@@ -322,6 +331,7 @@ proc string liquidNewRibboxNode_old( string $nodename )
  */
 global proc string liquidNewRibboxNode( string $nodename )
 {
+	liqlog("liquidNewRibboxNode(...)");
   string $newRibbox;
   float $version = liquidGetVersion();
   if ( $version < 1.8 ) $newRibbox = liquidNewRibboxNode_old( $nodename );
@@ -336,6 +346,7 @@ global proc string liquidNewRibboxNode( string $nodename )
  */
 proc string liquidNewShaderNode_old( string $filename )
 {
+	liqlog("liquidNewShaderNode_old(...)");
   // Get the shortest usable project path.
   int $i;
   string $returnValue = "";
@@ -425,6 +436,7 @@ proc string liquidNewShaderNode_old( string $filename )
  */
 global proc string liquidNewShaderNode( string $filename )
 {
+	liqlog("liquidNewShaderNode(...)");
   float $version = liquidGetVersion();
   string $newNodeName;
 
@@ -456,6 +468,7 @@ global proc string liquidNewShaderNode( string $filename )
  */
 proc string liquidDuplicateShaderNode_old( string $nodename )
 {
+	liqlog("liquidDuplicateShaderNode_old(...)");
   string $shaderFileName = `getAttr ( $nodename + ".rmanShaderLong" )`;
 
   string $nodeType = `liquidGetShaderNodeType $nodename`;
@@ -535,6 +548,7 @@ proc string liquidDuplicateShaderNode_old( string $nodename )
  */
 global proc string liquidDuplicateShaderNode( string $nodename )
 {
+	liqlog("liquidDuplicateShaderNode(...)");
   float $version = liquidGetVersion();
   string $newNodeName;
 
@@ -588,6 +602,7 @@ global proc string liquidDuplicateShaderNode( string $nodename )
 
 global proc string getSLShaderNodeFor( string $nodeName )
 {
+	liqlog("getSLShaderNodeFor(...)");
   string $classification[] = getClassification( nodeType( $nodeName ) );
   string $liquidType = match("/[surfacediplmntvou]+", $classification[0]);
   $liquidType = capitalizeString( match("[a-z]+", $liquidType ) );

@@ -172,6 +172,9 @@ EXTERN(RtToken)		RI_MINSPLITS;
 EXTERN(RtToken)		RI_BOUNDEXPAND;
 EXTERN(RtToken)		RI_BINARY;
 EXTERN(RtToken)		RI_RASTERORIENT;
+EXTERN(RtToken)		RI_HAIR;
+EXTERN(RtToken)		RI_DICE_STRATEGY;
+EXTERN(RtToken)		RI_REF_CAMERA;
 
 // Displacementbound attributes
 EXTERN(RtToken)		RI_SPHERE;
@@ -179,6 +182,7 @@ EXTERN(RtToken)		RI_COORDINATESYSYTEM;
 
 // Visibility attributes
 EXTERN(RtToken)		RI_PHOTON;
+EXTERN(RtToken)		RI_MIDPOINT;
 EXTERN(RtToken)		RI_SHADOW;
 EXTERN(RtToken)		RI_ENVIRONMENT;
 EXTERN(RtToken)		RI_TRACE;
@@ -238,6 +242,30 @@ EXTERN(RtToken)		RI_CAMERAHITMODE;
 EXTERN(RtToken)		RI_SIDE;
 EXTERN(RtToken)		RI_DOUBLESHADED;
 EXTERN(RtToken)		RI_BACKFACETOLERANCE;
+
+//trim curve attributes
+EXTERN(RtToken)		RI_TRIMCURVE;
+EXTERN(RtToken)		RI_SENSE;
+
+//stitch attribute
+EXTERN(RtToken)		RI_STITCH;
+EXTERN(RtToken)		RI_ENABLE;
+EXTERN(RtToken)		RI_TRACEENABLE;
+EXTERN(RtToken)		RI_NEWGROUP;
+
+//stochasti cattribute
+EXTERN(RtToken)		RI_STOCHASTIC;
+EXTERN(RtToken)		RI_SIGMA;
+EXTERN(RtToken)		RI_POINTFALLOFF;
+
+//derivatives attribute
+EXTERN(RtToken)		RI_DERIVATIVES;
+EXTERN(RtToken)		RI_CENTERED;
+EXTERN(RtToken)		RI_EXTRAPOLATE;
+
+//procedural attribute
+EXTERN(RtToken)		RI_ATTR_PROCEDURAL;
+EXTERN(RtToken)		RI_ATTRIBUTE;
 ////////////////////////////////////////////////////////////////////////
 //
 //	Non-Standard options
@@ -282,8 +310,9 @@ EXTERN(RtToken)		RI_PROGRESS;
 EXTERN(RtToken)		RI_HANDLE;
 EXTERN(RtToken)		RI_FILEMODE;
 EXTERN(RtToken)		RI_MAXERROR;
-EXTERN(RtToken)		RI_MINSAMPLEDISTANCE;
-EXTERN(RtToken)		RI_MAXSAMPLEDISTANCE;
+//EXTERN(RtToken)		RI_MINSAMPLEDISTANCE;
+//EXTERN(RtToken)		RI_MAXSAMPLEDISTANCE;
+EXTERN(RtToken)		RI_MAXPIXELDIST;
 
 // Hider options
 EXTERN(RtToken)		RI_JITTER;

@@ -23,7 +23,7 @@
 //
 // RenderMan (R) is a registered trademark of Pixar
 //
-
+source xxliquidutility.mel;
 // liquid's file browser interface
 
 global string $liquidCFD; // Liquid Current File Directory
@@ -32,6 +32,7 @@ global string $liquidFileMatch; // Current search criteria in fluid
 
 global proc string[] liquidGetFileList( string $dir, string $fileMatch )
 {
+	liqlog("liquidGetFileList()");
   string $returnValue[];
 
   string $dirList[] = `getFileList -fld ( $dir + "/" ) -fs $fileMatch`;
@@ -40,6 +41,7 @@ global proc string[] liquidGetFileList( string $dir, string $fileMatch )
 
 global proc string[] liquidGetDirList( string $dir )
 {
+	liqlog("liquidGetDirList("+$dir+")");
   string $returnValue[];
   string $dirList[] = `getFileList -fld ( $dir + "/" )`;
   string $currentToken;
@@ -56,6 +58,7 @@ global proc string[] liquidGetDirList( string $dir )
 
 global proc string liquidFileBrowserUpOneDir( string $dir )
 {
+	liqlog("liquidFileBrowserUpOneDir("+$dir+")");
   string $OS = `about -os`; // "nt", "mac", "irix" or "linux"
   string $returnValue;
   string $dirList[];
@@ -79,6 +82,7 @@ global proc string liquidFileBrowserUpOneDir( string $dir )
 
 global proc liquidUpdateDirList( string $widget )
 {
+	liqlog("liquidUpdateDirList(...)");
   global string $liquidCFD;
   if ( `textScrollList -exists $widget` ) {
     textScrollList -e -ra $widget;
@@ -93,6 +97,7 @@ global proc liquidUpdateDirList( string $widget )
 
 global proc liquidUpdateFileList( string $widget, string $liquidFileDescText )
 {
+	liqlog("liquidUpdateFileList(...)");
   global string $liquidCFD;
   global string $liquidFileMatch;
   if ( `textScrollList -exists $widget` ) {
@@ -110,6 +115,7 @@ global proc liquidUpdateFileList( string $widget, string $liquidFileDescText )
 
 proc lfbw_displayInfo( string $filePath )
 {
+	liqlog("lfbw_displayInfo(...)");
   string $shaderExt  = `getAttr liquidGlobals.shaderExt`;
 
   // info for shaders
@@ -123,6 +129,7 @@ proc lfbw_displayInfo( string $filePath )
 
 proc lfbw_displayPreview( string $filePath )
 {
+	liqlog("lfbw_displayPreview(...)");
   string $previewPath = ( dirname($filePath) + "/." + basenameEx($filePath) + ".tif" );
   if ( `filetest -r $previewPath` ) image -e -i $previewPath lfb_preview;
   else image -e -i (liquidGetHome()+"/icons/noPreview.iff") lfb_preview;
@@ -130,6 +137,7 @@ proc lfbw_displayPreview( string $filePath )
 
 proc lfbw_makeShaderPreview()
 {
+	liqlog("lfbw_makeShaderPreview(...)");
   string $shaderExt  = `getAttr liquidGlobals.shaderExt`;
   string $renderer   = `getAttr liquidGlobals.renderCommand`;
   string $shaderLong = `finder -q -filePath lfb_finder`;
@@ -171,6 +179,7 @@ proc lfbw_makeShaderPreview()
 
 global proc liquidFileBrowserWindow_makePreview()
 {
+	liqlog("liquidFileBrowserWindow_makePreview(...)");
   string $mask = `textFieldGrp -q -text lfb_fileMask`;
   string $shaderExt = `getAttr liquidGlobals.shaderExt`;
 
@@ -188,6 +197,7 @@ global proc liquidFileBrowserWindow_makePreview()
 
 global proc liquidFileBrowserBuildBookmarkMenu( string $parentMenu, string $finder, string $refreshCallback )
 {
+	liqlog("liquidFileBrowserBuildBookmarkMenu(...)");
   if ( ! `menu -q -ex $parentMenu` ) error ("liquidFileBrowserBuildBookmarkMenu: the bookmark menu "+$parentMenu+" does not exist.");
 
   // delete menu items
@@ -214,6 +224,7 @@ global proc liquidFileBrowserBuildBookmarkMenu( string $parentMenu, string $find
 
 global proc liquidFileBrowserAddBookmark( string $finder )
 {
+	liqlog("liquidFileBrowserAddBookmark(...)");
   $liquidCFD = `finder -q -fp $finder`;
 
   if ( $liquidCFD == "" ) warning ("nothing to Bookmark !");
@@ -237,6 +248,7 @@ global proc liquidFileBrowserAddBookmark( string $finder )
 
 global proc liquidFileBrowserClearBookmarks()
 {
+	liqlog("liquidFileBrowserClearBookmarks(...)");
   string $result = `confirmDialog -title "Delete All Bookmarks ?" -message "Are you sure?"
                                   -button "Yes" -button "Cancel" -defaultButton "Cancel"
                                   -cancelButton "Cancel" -dismissString "Cancel"`;
@@ -255,6 +267,7 @@ global proc liquidFileBrowserClearBookmarks()
 */
 global proc liquidFileBrowserWindow_updateList( string $filemask )
 {
+	liqlog("liquidFileBrowserWindow_updateList(...)");
   global string $gLiquidFileBrowserWindowDirectory;
 
   if ( !`window -q -ex liquidFileBrowserWindow` ) return;
@@ -291,6 +304,7 @@ global proc liquidFileBrowserWindow_updateList( string $filemask )
 */
 global proc liquidFileBrowserWindow_updateFinder( int $doLoad, string $filemask, string $callback )
 {
+	liqlog("liquidFileBrowserWindow_updateFinder(...)");
   global string $gLiquidFileBrowserWindowDirectory;
 
   string $fileInList[] = `textScrollList -q -si lfb_fileListC`;
@@ -342,6 +356,7 @@ global proc liquidFileBrowserWindow_updateFinder( int $doLoad, string $filemask,
 */
 global proc liquidFileBrowserWindow_load( string $filemask, string $callback )
 {
+	liqlog("liquidFileBrowserWindow_load(...)");
   // get the full file path
   string $finder = `finder -q -fp lfb_finder`;
 
@@ -363,6 +378,7 @@ global proc liquidFileBrowserWindow_load( string $filemask, string $callback )
 	this proc wraps the callback for NT / OSX
 */
 global proc liquidFileBrowserWindow_wrapCallback(string $callback, string $arg1, string $arg2){
+	liqlog("liquidFileBrowserWindow_wrapCallback(...)");
 	if ( $callback !=  "" ) eval ( $callback + " \"" + $arg1 + "\" \"" + $arg2 + "\"" );
 }
 
@@ -372,6 +388,7 @@ global proc liquidFileBrowserWindow_wrapCallback(string $callback, string $arg1,
 */
 global proc liquidFileBrowserWindow( string $path, string $filemask, string $callback )
 {
+	liqlog("liquidFileBrowserWindow(...)");
 	if (`about -nt` || `about -mac`) {
 		string $workspace = `workspace -q -fn`;
 		// note globals do NOT get set
@@ -483,6 +500,7 @@ global proc liquidFileBrowserWindow( string $path, string $filemask, string $cal
 
 global proc liquidFileBrowserDIRDCC( string $fileWidget, string $dirWidget, string $fileMatch, string $curdirWidget )
 {
+	liqlog("liquidFileBrowserDIRDCC(...)");
   global string $liquidCFD;
   string $selection[] = `textScrollList -q -si $dirWidget`;
   if ( $selection[0] == ".." ) {
@@ -497,6 +515,7 @@ global proc liquidFileBrowserDIRDCC( string $fileWidget, string $dirWidget, stri
 
 global proc liquidInitCFD()
 {
+	liqlog("liquidInitCFD(...)");
   global string $liquidCFD;
   string $homeDirectory = liquidGetHome();
   $liquidCFD = $homeDirectory + "/shaders";
@@ -508,6 +527,7 @@ global proc liquidInitCFD()
 
 global proc liquidFileSpecCC( string $fileWidget, string $dirWidget, string $fileMatch )
 {
+	liqlog("liquidFileSpecCC(...)");
   global string $liquidFileMatch;
   $liquidFileMatch = `textFieldGrp -q -tx $fileMatch`;
   liquidUpdateDirList $dirWidget;
@@ -516,6 +536,7 @@ global proc liquidFileSpecCC( string $fileWidget, string $dirWidget, string $fil
 
 global proc liquidCurDirCC( string $fileWidget, string $dirWidget, string $fileMatch, string $widget )
 {
+	liqlog("liquidCurDirCC(...)");
   global string $liquidCFD;
   $liquidCFD = `textFieldGrp -q -tx $widget`;
 
@@ -532,6 +553,7 @@ global proc liquidCurDirCC( string $fileWidget, string $dirWidget, string $fileM
 
 global proc string[] liquidFileBrowserIn( string $fileMatch, string $doubleClickCommand )
 {
+	liqlog("liquidFileBrowserIn(...)");
   global string $liquidCFD;
   global string $liquidFileMatch;
 

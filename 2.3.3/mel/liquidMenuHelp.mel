@@ -34,9 +34,11 @@
 //
 //  Returns:
 //
+source xxliquidutility.mel;
 
 global proc liquidMenuHelp()
 {
+	liqlog("liquidMenuHelp()");
     // Try to figure out where help pages could be
     string $helphome = `getenv "LIQUIDHELPHOME"`;
     string $helpUrl;

@@ -47,7 +47,7 @@
 //          global string $gLiquidSlParamGuiDescription[];
 //          global string $gLiquidSlParamGuiType[];
 //          global string $gLiquidSlParamGuiRange[];
-
+source xxliquidutility.mel;
 
 //
 // local procs
@@ -60,6 +60,7 @@
  */
 global proc string getNextLine()
 {
+	liqlog("getNextLine()");
   global string $gLiquidSLifFile[];
   global int $gLifLineNumber;
 
@@ -80,6 +81,7 @@ global proc string getNextLine()
  */
 proc int lineIsBlank( string $line )
 {
+	liqlog("lineIsBlank(...)");
   if ( $line == "" || gmatch( $line, "#*") ) return 1;
   return 0;
 }
@@ -90,6 +92,7 @@ proc int lineIsBlank( string $line )
  */
 proc int getParamIndex( string $line )
 {
+	liqlog("getParamIndex(...)");
   global int    $gLiquidSlNumParams;
   global string $gLiquidSlParamNames[];
   int $i = -1;
@@ -121,6 +124,7 @@ proc int getParamIndex( string $line )
  */
 global proc string[] getKeyData( string $line )
 {
+	liqlog("getKeyData(...)");
   //trace $line;
   string $tmp = $line;
   string $result[];
@@ -170,6 +174,7 @@ global proc string[] getKeyData( string $line )
  */
 proc string getRange( string $line )
 {
+	liqlog("getRange(...)");
   // get everything between square brackets
   string $tmp = match("\\[.+\\]", $line);
   $tmp = strip( substring( $tmp , 2 , size($tmp)-1 ) );
@@ -204,6 +209,7 @@ proc string getRange( string $line )
 
 proc int getBoolean( string $line )
 {
+	liqlog("getBoolean(...)");
   int $result = -1;
 
   if ( size( match("\"*[Tt]rue\"*", $line) ) ) return 1;
@@ -223,6 +229,7 @@ proc int getBoolean( string $line )
 
 global proc liquidSlReadLifFromDisk( string $shaderFile )
 {
+	liqlog("liquidSlReadLifFromDisk(...)");
   global string $gLiquidSLifFile[];
 
   float $st = `timerX`;
@@ -243,6 +250,7 @@ global proc liquidSlReadLifFromDisk( string $shaderFile )
 
 global proc liquidSlBuildLifCmdList()
 {
+	liqlog("liquidSlBuildLifCmdList(...)");
   float $st = `timerX`;
 
   global string $gLiquidSlShaderFile;
@@ -335,6 +343,7 @@ global proc liquidSlBuildLifCmdList()
  */
 global proc liquidSlParseLif( string $shaderFile )
 {
+	liqlog("liquidSlParseLif(...)");
   // init globals
   global string $gLiquidSLifFile[];
 
@@ -494,6 +503,7 @@ global proc liquidSlParseLif( string $shaderFile )
  */
 global proc int liquidLifIsAvailable()
 {
+	liqlog("liquidLifIsAvailable(...)");
   global int    $gLiquidSlLifExists;
   return $gLiquidSlLifExists;
 }
@@ -504,6 +514,7 @@ global proc int liquidLifIsAvailable()
  */
 global proc int liquidLifGuiSize()
 {
+	liqlog("liquidLifGuiSize(...)");
   global int    $gLiquidSlLifGuiSize;
   return $gLiquidSlLifGuiSize;
 }
@@ -516,6 +527,7 @@ global proc int liquidLifGuiSize()
  */
 global proc int liquidLifGetGuiOrder( int $i )
 {
+	liqlog("liquidLifGetGuiOrder(...)");
   global int $gLiquidSlParamGuiOrder[];
   return $gLiquidSlParamGuiOrder[ $i ];
 }
@@ -523,6 +535,7 @@ global proc int liquidLifGetGuiOrder( int $i )
 
 global proc string liquidLifShaderDescription()
 {
+	liqlog("liquidLifShaderDescription()");
   global string $gLiquidSlLifShaderDescription;
   string $desc = eval("string $foo_S = \""+$gLiquidSlLifShaderDescription+"\"");
   return $desc;
@@ -535,6 +548,7 @@ global proc string liquidLifShaderDescription()
  */
 global proc string liquidLifParamName( int $i )
 {
+	liqlog("liquidLifParamName(...)");
   if ( liquidLifIsAvailable() ) {
 
     int $guiOrder = liquidLifGetGuiOrder($i);
@@ -554,6 +568,7 @@ global proc string liquidLifParamName( int $i )
  */
 global proc int liquidLifParamIsOutput( int $i )
 {
+	liqlog("liquidLifParamIsOutput(...)");
   if ( liquidLifIsAvailable() ) {
 
     int $guiOrder = liquidLifGetGuiOrder($i);
@@ -574,6 +589,7 @@ global proc int liquidLifParamIsOutput( int $i )
  */
 global proc string liquidLifParamType( int $i )
 {
+	liqlog("liquidLifParamType(...)");
   if ( liquidLifIsAvailable() ) {
 
     int $guiOrder = liquidLifGetGuiOrder($i);
@@ -593,6 +609,7 @@ global proc string liquidLifParamType( int $i )
  */
 global proc string liquidLifParamLabel( int $i )
 {
+	liqlog("liquidLifParamLabel(...)");
   global string $gLiquidSlParamGuiLabel[];
 
   if ( liquidLifIsAvailable() ) {
@@ -614,6 +631,7 @@ global proc string liquidLifParamLabel( int $i )
  */
 global proc string liquidLifParamDescription( int $i )
 {
+	liqlog("liquidLifParamDescription(...)");
   global string $gLiquidSlParamGuiDescription[];
 
   if ( liquidLifIsAvailable() ) {
@@ -637,6 +655,7 @@ global proc string liquidLifParamDescription( int $i )
  */
 global proc string liquidLifParamGuiType( int $i )
 {
+	liqlog("liquidLifParamGuiType(...)");
   global string $gLiquidSlParamGuiType[];
 
   if ( liquidLifIsAvailable() ) {
@@ -658,6 +677,7 @@ global proc string liquidLifParamGuiType( int $i )
  */
 global proc string[] liquidLifParamGuiRange( int $i )
 {
+	liqlog("liquidLifParamGuiRange(...)");
   global string $gLiquidSlParamGuiRange[];
   string $range[] = { "0", "0" };
 
@@ -678,6 +698,7 @@ global proc string[] liquidLifParamGuiRange( int $i )
  */
 global proc int liquidLifParamArraySize( int $i )
 {
+	liqlog("liquidLifParamArraySize(...)");
   if ( liquidLifIsAvailable() ) {
 
     int $guiOrder = liquidLifGetGuiOrder($i);
@@ -692,6 +713,7 @@ global proc int liquidLifParamArraySize( int $i )
 
 global proc int liquidLifChannelBoxState( int $i )
 {
+	liqlog("liquidLifChannelBoxState(...)");
   int $result = 1;
 
   if ( liquidLifIsAvailable() ) {
@@ -716,6 +738,7 @@ global proc int liquidLifChannelBoxState( int $i )
  */
 proc string format( string $str, int $len )
 {
+	liqlog("format(...)");
   string $out;
   int $s = size( $str );
   if ( $s > $len ) return (substring( $str, 1, $len-3 )+"...");
@@ -734,6 +757,7 @@ proc string format( string $str, int $len )
  */
 global proc gdump()
 {
+	liqlog("gdump(...)");
   if ( `filetest -w "/tmp/gdump.txt"` ) sysFile -delete "/tmp/gdump.txt";
 
   global string $gLiquidSlShaderType;

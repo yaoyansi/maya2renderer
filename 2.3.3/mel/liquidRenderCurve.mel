@@ -31,6 +31,7 @@
 
 global proc liquidMakeRenderCurve()
 {
+	liqlog("liquidMakeRenderCurve()");
 	string $selected[] = `ls -dag -type "nurbsCurve" -sl`;
 	string $current;
 	for ( $current in $selected )
@@ -57,6 +58,7 @@ global proc liquidMakeRenderCurve()
 
 global proc liquidUnMakeRenderCurve()
 {
+	liqlog("liquidUnMakeRenderCurve()");
 	string $selected[] = `ls -dag -type "nurbsCurve" -sl`;
 	string $current;
 	for ( $current in $selected )
@@ -75,6 +77,7 @@ global proc liquidUnMakeRenderCurve()
 
 global proc liquidCreateCurveGroup()
 {
+	liqlog("liquidCreateCurveGroup()");
 	// have to do it different to support instances
 	string $selected[] = `ls -dag -type "transform" -sl`;
 	string $curves[];

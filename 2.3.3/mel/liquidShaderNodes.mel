@@ -30,7 +30,7 @@
  *      Liquids Shader Nodes procedures.
  *
  */
-
+source xxliquidutility.mel;
 
 global string $gLiquidAELastShader;
 global string $gLiquidAELastNode;
@@ -42,6 +42,7 @@ global string $gLiquidAELastNode;
  */
 proc rmanParams_create( string $node, int $reReadShaderParams )
 {
+	liqlog("rmanParams_create(...)");
   if ( $reReadShaderParams ) {
     string $shaderPath = `getAttr ($node+".rmanShaderLong")`;
     liquidSlInfoReset(); // force reload
@@ -113,6 +114,7 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
 
 global proc removeObsoleteParams( string $node )
 {
+	liqlog("removeObsoleteParams(...)");
   // delete obsolete params
   //
   global string $gLiquidSlParamNames[];
@@ -158,6 +160,7 @@ global proc removeObsoleteParams( string $node )
  */
 proc checkParamsDefinition( string $node )
 {
+	liqlog("checkParamsDefinition(...)");
   int $numOfArgs = liquidSlNumParams();
 
   for ( $i = 0; $i < $numOfArgs ; $i++ ) {
@@ -222,6 +225,7 @@ proc checkParamsDefinition( string $node )
  */
 global proc liquidShaderNodes_initParams( string $nodeAttr )
 {
+	liqlog("liquidShaderNodes_initParams(...)");
   //trace ("liquidShaderNodes_initParams "+$nodeAttr+"\n");
   $node = basenameEx( $nodeAttr );
   string $shaderPath = `getAttr ($node+".rmanShaderLong")`;
@@ -306,7 +310,7 @@ global proc liquidShaderNodes_initParams( string $nodeAttr )
  */
 global proc liquidShaderNodePreview( string $node )
 {
-
+	liqlog("liquidShaderNodePreview(...)");
   if ( !liquidGlobalsExists() ) eval("liquidCreateGlobals();select "+$node+";");
 
   string $nodetype = nodeType($node);
@@ -419,6 +423,7 @@ global proc liquidShaderNodePreview( string $node )
  */
 global proc liquidPreviewSwatchNew ( string $nodeName, string $msg )
 {
+	liqlog("liquidPreviewSwatchNew(...)");
   global int $gTextColumnWidthIndex;
 
   string $node[];
@@ -468,6 +473,7 @@ global proc liquidPreviewSwatchNew ( string $nodeName, string $msg )
  */
 global proc liquidPreviewSwatchReplace ( string $nodeName, string $msg )
 {
+	liqlog("liquidPreviewSwatchReplace(...)");
   string $node[];
   tokenize($msg, ".", $node);
 
@@ -494,6 +500,7 @@ global proc liquidPreviewSwatchReplace ( string $nodeName, string $msg )
  */
 global proc string liquidAE_getShaderLayoutName( string $nodeType, string $rmanShaderLong )
 {
+	liqlog("liquidAE_getShaderLayoutName(...)");
   string $name = `substitute $rmanShaderLong "s/[\/\\. -]*/_/g"`;
   return ( $nodeType + basenameEx( $name ) );
 }
@@ -504,6 +511,7 @@ global proc string liquidAE_getShaderLayoutName( string $nodeType, string $rmanS
  */
 global proc string liquidAE_setCacheLayout( string $parent, string $shaderType, string $rmanShaderLong )
 {
+	liqlog("liquidAE_setCacheLayout(...)");
   global string $gLiquid_currentAEShader;
 
   // create the base form layout if needed
@@ -562,6 +570,7 @@ global proc string liquidAE_setCacheLayout( string $parent, string $shaderType, 
  */
 global proc liquidAE_showCachedLayout( string $shaderType, string $rmanShaderLong )
 {
+	liqlog("liquidAE_showCachedLayout(...)");
   string $baseLayout = ( $shaderType + "CachedLayouts" );
   string $shaderLayout = liquidAE_getShaderLayoutName( $shaderType, $rmanShaderLong );
 
@@ -599,6 +608,7 @@ global proc liquidAE_showCachedLayout( string $shaderType, string $rmanShaderLon
  */
 global proc liquidShaderNodesParamsNew ( string $msg )
 {
+	liqlog("liquidShaderNodesParamsNew(...)");
   liquidShaderNodesParamsReplace( $msg );
 }
 
@@ -608,6 +618,7 @@ global proc liquidShaderNodesParamsNew ( string $msg )
  */
 global proc liquidShaderNodesParamsReplace ( string $msg )
 {
+	liqlog("liquidShaderNodesParamsReplace(...)");
   float $st = `timerX`;
 
   string $theNode        = basenameEx( $msg );
@@ -663,6 +674,7 @@ global proc liquidShaderNodesParamsReplace ( string $msg )
  */
 global proc liquidShaderNodes_reloadAndRefresh( string $node )
 {
+	liqlog("liquidShaderNodes_reloadAndRefresh(...)");
   liquidShaderNodes_initParams( $node );
   string $nodeType = nodeType( $node );
   string $longShaderName = `getAttr ($node+".rmanShaderLong")`;
@@ -677,6 +689,7 @@ global proc liquidShaderNodes_reloadAndRefresh( string $node )
  */
 global proc liquidShaderPickerNew( string $nodeName, string $msg )
 {
+	liqlog("liquidShaderPickerNew(...)");
   if ( !liquidGlobalsExists() ) liquidCreateGlobals();
 
   string $node[] = stringToStringArray( $msg, ".");
@@ -723,6 +736,7 @@ global proc liquidShaderPickerNew( string $nodeName, string $msg )
  */
 global proc liquidShaderPickerReplace( string $nodeName, string $msg )
 {
+	liqlog("liquidShaderPickerReplace(...)");
   if ( !liquidGlobalsExists() ) liquidCreateGlobals();
 
   string $node[] = stringToStringArray( $msg, ".");
@@ -748,6 +762,7 @@ global proc liquidShaderPickerReplace( string $nodeName, string $msg )
  */
 global proc liquidShaderNode_loadCMD( string $nodeDotAttr, string $longShaderName )
 {
+	liqlog("liquidShaderNode_loadCMD(...)");
   setAttr -type "string" $nodeDotAttr $longShaderName;
   evalDeferred("liquidShaderNodes_initParams "+basenameEx($nodeDotAttr));
 }
@@ -757,6 +772,7 @@ global proc liquidShaderNode_loadCMD( string $nodeDotAttr, string $longShaderNam
  */
 proc liquidShaderNodesCustomPrimitiveBuildCustomMenu( string $parent, string $nodeDotAttr )
 {
+	liqlog("liquidShaderNodesCustomPrimitiveBuildCustomMenu(...)");
   //trace ($parent+"  "+$nodeDotAttr);
   string $attr = fileExtension($nodeDotAttr);
   string $ribPath;
@@ -817,6 +833,7 @@ proc liquidShaderNodesCustomPrimitiveBuildCustomMenu( string $parent, string $no
 
 global proc liquidShaderNodesCustomPrimitiveNew( string $label, string $nodeDotAttr )
 {
+	liqlog("liquidShaderNodesCustomPrimitiveNew(...)");
   string $nodeType = nodeType( $nodeDotAttr );
   string $tokenized[] = stringToStringArray( $nodeDotAttr, ".");
   string $cltName = ($nodeType+"_"+$tokenized[1]);
@@ -834,6 +851,7 @@ global proc liquidShaderNodesCustomPrimitiveNew( string $label, string $nodeDotA
 
 global proc liquidShaderNodesCustomPrimitiveReplace( string $label, string $nodeDotAttr )
 {
+	liqlog("liquidShaderNodesCustomPrimitiveReplace(...)");
   string $nodeType = nodeType( $nodeDotAttr );
   string $tokenized[] = stringToStringArray( $nodeDotAttr, ".");
   string $cltName = ($nodeType+"_"+$tokenized[1]);
@@ -860,6 +878,7 @@ global proc liquidShaderNodesCustomPrimitiveReplace( string $label, string $node
  */
 global proc liquidAssignRibboxToSelected( string $node )
 {
+	liqlog("liquidAssignRibboxToSelected(...)");
   string $selected[] = `ls -transforms -sl`;
   for ( $sel in $selected ) {
     if ( !`attributeQuery -node $sel -ex "liqRIBBox"` ) {
@@ -871,6 +890,7 @@ global proc liquidAssignRibboxToSelected( string $node )
 
 global proc liquidSelectAssignedToRibbox( string $node )
 {
+	liqlog("liquidSelectAssignedToRibbox(...)");
   select (`listConnections ($node+".ribbox")`);
 }
 
@@ -880,6 +900,7 @@ global proc liquidSelectAssignedToRibbox( string $node )
  */
 global proc liquidAssignLightShaderToSelected( string $node )
 {
+	liqlog("liquidAssignLightShaderToSelected(...)");
   string $selected[] = `ls -l -lights -dag -sl`;
 
   if ( !objExists( ($node+".liqAssignedObjects") ) )
@@ -898,11 +919,13 @@ global proc liquidAssignLightShaderToSelected( string $node )
 
 global proc liquidSelectAssignedToLightShader( string $node )
 {
+	liqlog("liquidSelectAssignedToLightShader(...)");
   select (`listConnections ($node+".liqAssignedObjects")`);
 }
 
 global proc liquidAssignSurfaceShaderToSelected( string $node )
 {
+	liqlog("liquidAssignSurfaceShaderToSelected(...)");
   // assign the shader to geometry
   if ( size(`ls -geometry -dag -sl`) ) hyperShade -assign $node;
 
@@ -928,6 +951,7 @@ global proc liquidAssignSurfaceShaderToSelected( string $node )
 
 global proc liquidAssignDisplacementShaderToSelected( string $node )
 {
+	liqlog("liquidAssignDisplacementShaderToSelected(...)");
   // assign the shader to geometry
   if ( size(`ls -geometry -dag -sl`) ) hyperShade -assign $node;
 
@@ -953,6 +977,7 @@ global proc liquidAssignDisplacementShaderToSelected( string $node )
 
 global proc liquidAssignVolumeShaderToSelected( string $node )
 {
+	liqlog("liquidAssignVolumeShaderToSelected(...)");
   // assign the shader to geometry
   if ( size(`ls -geometry -dag -sl`) ) hyperShade -assign $node;
 
@@ -982,6 +1007,7 @@ global proc liquidAssignVolumeShaderToSelected( string $node )
 
 global proc liquidSelectShaderAssignedTo( string $obj )
 {
+	liqlog("liquidSelectShaderAssignedTo(...)");
   //trace $obj;
   string $selectionList[];
   string $objList[];
@@ -1021,6 +1047,7 @@ global proc liquidSelectShaderAssignedTo( string $obj )
  */
 global proc liquidAssignShaderToSelected( string $node )
 {
+	liqlog("liquidAssignShaderToSelected(...)");
   string $nodetype = nodeType($node);
   if ( $nodetype == "liquidLight" ) liquidAssignLightShaderToSelected( $node );
   else if ( $nodetype == "liquidSurface" ) liquidAssignSurfaceShaderToSelected( $node );
@@ -1033,6 +1060,7 @@ global proc liquidAssignShaderToSelected( string $node )
  */
 global proc liquidShaderUpdater( int $force )
 {
+	liqlog("liquidShaderUpdater(...)");
 //  //trace ("liquidShaderUpdater( "+$force+" )");
 //  string $shaderNodes[] = `ls -type liquidSurface -type liquidDisplacement -type liquidVolume -type liquidLight`;
 //  if ( !size( $shaderNodes ) ) {

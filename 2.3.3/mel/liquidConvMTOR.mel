@@ -28,9 +28,11 @@
 //	matching liquid assignments
 //	BASED ON CURRENT PALETTE
 //
+source xxliquidutility.mel;
 
 global proc liquidConvMTOR ( )
 { 
+	liqlog("liquidConvMTOR()");
  string $yesno;
  $yesno = `confirmDialog -title "Confirm" -message ( "Your about to convert MTOR assignments to Liquid assignments, this takes some time - continue?" )
 		          -button "Yes" -button "No" -defaultButton "Yes"

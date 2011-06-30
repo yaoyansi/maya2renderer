@@ -17,12 +17,14 @@
 //
 
 // THIS FILE APPEARS TO BE REDUNDANT - makes calls to slim commands
+source xxliquidutility.mel;
 
 global string $liqFluidScroll;
 global string $liqFluidFilterMenu;
 global string $liqFluidSaveSelection[];
 
 global proc string[] slimPick( string $id ) {
+	liqlog("slimPick(...)");
 	string $ret[];	
 		
 	if ( size( $id ) ) {
@@ -34,7 +36,7 @@ global proc string[] slimPick( string $id ) {
 
 
 proc slimDispApps( string $palette, string $type ) {
-	
+	liqlog("slimDispApps(...)");
 global string $liqFluidScroll;
 global string $liqFluidFilterMenu;
 global string $liqFluidSaveSelection[];
@@ -152,7 +154,7 @@ global string $liqFluidSaveSelection[];
 
 
 global proc switchFrameState ( string $palFrame ) { 
-
+liqlog("switchFrameState(...)");
 int $frameState = `frameLayout -q  -cl 	$palFrame`;	
    
    frameLayout -e -cl (( $frameState )? false : true ) $palFrame;	
@@ -161,7 +163,7 @@ int $frameState = `frameLayout -q  -cl 	$palFrame`;
 
 
 global proc slimImportShader ( string $palette ) { 
-
+liqlog("slimImportShader(...)");
 	string $fileName = `fileDialog -dm "*.slo;*.slim" `;
 	if ( $fileName != "" ) { 
 		slimcmd $palette CreateInstance -file $fileName; 
@@ -170,13 +172,13 @@ global proc slimImportShader ( string $palette ) {
 }
 
 global proc slimCheckReadOnly ( string $palette, string $roItem ) {
-	
+	liqlog("slimCheckReadOnly(...)");
 	slimcmd $palette SetAccessMode (( `menuItem -q -checkBox $roItem` )? "ro" : "rw" );
 	slimcmd $palette UpdateEditor;
 }
 
 global proc slimSetLabel ( string $palette, string $txtLabel ) {
-	
+	liqlog("slimSetLabel(...)");
 	slimcmd $palette SetLabel `textFieldButtonGrp -q -tx $txtLabel`; 
 	slimcmd $palette UpdateEditor; 
 	//mtor control dirty;
@@ -184,7 +186,7 @@ global proc slimSetLabel ( string $palette, string $txtLabel ) {
 }
 
 global proc slimSetLabelUI ( string $palette ) {
-		
+		liqlog("slimSetLabelUI(...)");
 	if (`window -exists slimSetLabelUI`)
 		deleteUI -window slimSetLabelUI;
 			
@@ -204,7 +206,7 @@ global proc slimSetLabelUI ( string $palette ) {
 }
 
 global proc slimRefreshPanel ( ) {
-
+liqlog("slimRefreshPanel()");
 global string $liqFluidScroll;
 global string $liqFluidFilterMenu;
 global string $liqFluidSaveSelection[];
@@ -310,6 +312,7 @@ global string $liqFluidSaveSelection[];
 }
 
 global proc liquidFluidOutliner() {
+	liqlog("liquidFluidOutliner()");
 global string $liqFluidScroll;
 global string $liqFluidFilterMenu;
 
@@ -406,7 +409,8 @@ global string $liqFluidFilterMenu;
 }
 
 global proc slimAlwaysToggleSelectProc( string $outliner, string $alwaysToggleSelectItem ) {
-	
+	liqlog("slimAlwaysToggleSelectProc(...)");
+
 	int $value = !`outlinerEditor -q -alwaysToggleSelect $outliner`;
 	
 	outlinerEditor -e -alwaysToggleSelect $value $outliner;

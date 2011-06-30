@@ -33,9 +33,11 @@
 //  Description:
 //	same as reloading, it updates the parameters on the nodes
 //
+source xxliquidutility.mel;
 
 global proc liquidReAttachParams ( string $currentNodeName, string $oldShader )
 {
+	liqlog("liquidReAttachParams(...)");
   int $i;
   string $shaderFileName = `getAttr ( $currentNodeName + ".rmanShaderLong" )`;
 

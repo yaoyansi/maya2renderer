@@ -92,7 +92,7 @@ private: // Data
   std::vector <RtFloat> v_floatargs;
 
   void checkExtraTags( MObject &mesh );
-  void addExtraTags( MObject &mesh, SBD_EXTRA_TAG extraTag );
+  //void addExtraTags( MObject &mesh, SBD_EXTRA_TAG extraTag );
   void addExtraTags( MObject &mesh, int extraTagValue, SBD_EXTRA_TAG extraTag );
 };
 

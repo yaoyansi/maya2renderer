@@ -29,11 +29,12 @@
 //
 //  Description:
 //      Liquids DelayedReadArchive Scripts.
-
+source xxliquidutility.mel;
 
 // create the liquid menu interface
 global proc liquidDelayedReadArchive ()
 {
+	liqlog("liquidDelayedReadArchive()");
   string $nodes[] = `ls -dag -s -sl`;
   string $currentNode;
   for ( $currentNode in $nodes ) {
@@ -67,6 +68,7 @@ global proc liquidDelayedReadArchive ()
 
 global proc liquidDeleteDelayedReadArchive ()
 {
+	liqlog("liquidDeleteDelayedReadArchive()");
   string $nodes[] = `ls -dag -s -sl`;
   string $currentNode;
   for ( $currentNode in $nodes ) {

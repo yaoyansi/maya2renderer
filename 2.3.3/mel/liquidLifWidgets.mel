@@ -30,10 +30,11 @@
 //
 //  $Revision: 1.9 $
 //
-
+source xxliquidutility.mel;
 
 proc lifGradientAttr_connect( string $node, string $valueAttr, string $positionAttr, string $interpAttr )
 {
+	liqlog("lifGradientAttr_connect(...)");
   int $isColor     = ( `getAttr -type ($node+"."+$valueAttr+"[0]")` == "float3" )? 1:0 ;
   int $arraySize   =   `getAttr -size ($node+"."+$valueAttr)`;
   int $multiInterp = ( `getAttr -size ($node+"."+$interpAttr)` )? 1:0;
@@ -67,6 +68,7 @@ proc lifGradientAttr_connect( string $node, string $valueAttr, string $positionA
 
 proc lifGradientAttr_init( string $node, string $valueAttr, string $positionAttr, string $interpAttr )
 {
+	liqlog("lifGradientAttr_init(...)");
   //trace("    + lifGradientAttr_init( node:"+$node+", valueAttr:"+$valueAttr+", positionAttr:"+$positionAttr+", interpAttr:"+$interpAttr+" )");
 
   int $isColor     = ( `getAttr -type ($node+"."+$valueAttr+"[0]")` == "float3" )? 1:0 ;
@@ -103,6 +105,7 @@ proc lifGradientAttr_init( string $node, string $valueAttr, string $positionAttr
 
 proc string lifGradientAttr_create( string $node, string $valueAttr, string $positionAttr, string $interpAttr )
 {
+	liqlog("lifGradientAttr_create(...)");
   //trace (" + lifGradientAttr_create( node:"+$node+", valueAttr:"+$valueAttr+", positionAttr:"+$positionAttr+", interpAttr:"+$interpAttr+" )");
   int $isColor = ( `getAttr -type ($node+"."+$valueAttr+"[0]")` == "float3" )? 1:0;
 
@@ -130,6 +133,7 @@ proc string lifGradientAttr_create( string $node, string $valueAttr, string $pos
 
 global proc lifGradient_unifyInterpolation( string $ctl )
 {
+	liqlog("lifGradient_unifyInterpolation(...)");
   global string $gAECurrentTab;
   string $node = $gAECurrentTab;
 
@@ -150,6 +154,7 @@ global proc lifGradient_unifyInterpolation( string $ctl )
 
 global proc lifGradient_connect( string $nodeAttr )
 {
+	liqlog("lifGradient_connect(...)");
   global string $gLiquid_currentAEShader;
   //trace $gLiquid_currentAEShader;
   string $buffer[];
@@ -165,6 +170,7 @@ global proc lifGradient_connect( string $nodeAttr )
 
 global proc lifGradient_create( string $nodeAttr, int $bound, int $indent, int $staticEntries, int $staticPositions, int $adaptiveScaling )
 {
+	liqlog("lifGradient_create(...)");
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAEShader;
   //trace $gLiquid_currentAEShader;
@@ -321,6 +327,7 @@ global proc lifGradient_create( string $nodeAttr, int $bound, int $indent, int $
 
 global proc liquidAE_LifGrp2( string $label )
 {
+	liqlog("liquidAE_LifGrp2(...)");
   global string	$gAEFocusNode;
   global string $gLiquid_currentAEShader;
   //trace $gLiquid_currentAEShader;
@@ -363,6 +370,7 @@ global proc liquidAE_LifGrp2( string $label )
 
 global proc liquidAE_LifFloat_slider2( string $paramName, int $index, string $label, string $range[], string $description, int $channelBox )
 {
+	liqlog("liquidAE_LifFloat_slider2(...)");
   //trace ("       - liquidAE_LifFloat_slider "+$paramName+" "+$index+" "+$label+" "+$range[0]+" "+$range[1]+" "+$description);
 
   global string $gLiquid_currentAENode;
@@ -419,6 +427,7 @@ global proc liquidAE_LifFloat_slider2( string $paramName, int $index, string $la
 
 global proc liquidAE_LifFloat_selector2( string $paramName, int $index, string $label, string $range[], string  $description, int $channelBox )
 {
+	liqlog("liquidAE_LifFloat_selector2(...)");
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAENode;
   global string $gLiquid_currentAEShader;
@@ -449,6 +458,7 @@ global proc liquidAE_LifFloat_selector2( string $paramName, int $index, string $
 
 global proc liquidAE_LifFloat_bool2( string $paramName, int $index, string $label, string $range[], string  $description, int $channelBox )
 {
+	liqlog("liquidAE_LifFloat_bool2(...)");
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAENode;
   global string $gLiquid_currentAEShader;
@@ -469,6 +479,7 @@ global proc liquidAE_LifFloat_bool2( string $paramName, int $index, string $labe
 
 global proc liquidAE_LifFloat_spline2( string $paramName, string $label, string $subtype, string $description, int $channelBox )
 {
+	liqlog("liquidAE_LifFloat_spline2(...)");
   //trace ("liquidAE_LifFloat_spline2( paramname:"+$paramName+", label:"+$label+", subtype:"+$subtype+", desc:"+$description+", chanbox:"+$channelBox+" )");
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAENode;
@@ -496,6 +507,7 @@ global proc liquidAE_LifFloat_spline2( string $paramName, string $label, string 
 
 global proc liquidAE_LifFloat2( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
 {
+	liqlog("liquidAE_LifFloat2(...)");
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAENode;
   global string $gLiquid_currentAEShader;
@@ -601,6 +613,7 @@ global proc liquidAE_LifFloat2( string $paramName, int $arraySize, string $subty
  */
 global proc liquidAE_LifStringOverrideEnabler( string $nodeDotAttr, string $ctl )
 {
+	liqlog("liquidAE_LifStringOverrideEnabler(...)");
   int    $enable        = (`editRenderLayerGlobals -q -crl` == "defaultRenderLayer")? 0 : 1;
   string $nodeOverrides = (" "+stringArrayToString( editRenderLayerAdjustment( "-q" ,$nodeDotAttr), " ")+" ");
   string $remove        = (gmatch( $nodeOverrides, ("* "+$nodeDotAttr+" *")))? "-remove":"";
@@ -627,6 +640,7 @@ global proc liquidAE_LifStringOverrideEnabler( string $nodeDotAttr, string $ctl 
  */
 global proc liquidAE_LifStringOverride( string $nodeDotAttr, string $ctl )
 {
+	liqlog("liquidAE_LifStringOverride(...)");
   string $parentMenu;
 
   if ( !`menuItem -q -ex ($ctl+"PopupMenuOVR")` ) {
@@ -646,6 +660,7 @@ global proc liquidAE_LifStringOverride( string $nodeDotAttr, string $ctl )
 
 global proc liquidAE_LifStringOverrideDisplay( int $override, string $ctl )
 {
+	liqlog("liquidAE_LifStringOverrideDisplay(...)");
   // remember the original parent
   if ( !objExists( $ctl ) ) return ;
 
@@ -666,6 +681,7 @@ global proc liquidAE_LifStringOverrideDisplay( int $override, string $ctl )
 
 global proc liquidAE_LifStringOverrideDisplayAll()
 {
+	liqlog("liquidAE_LifStringOverrideDisplayAll()");
   // global maintained by maya containing the name
   // of the main attribute editor window.
   global string $gAttributeEditorWindowName;
@@ -721,6 +737,7 @@ global proc liquidAE_LifStringOverrideDisplayAll()
 
 global proc liquidAE_LifString2( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
 {
+	liqlog("liquidAE_LifString2(...)");
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAENode;
   global string $gLiquid_currentAEShader;
@@ -890,6 +907,7 @@ global proc liquidAE_LifString2( string $paramName, int $arraySize, string $subt
 
 global proc liquidAE_LifColor_spline2( string $selectedObj, string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
 {
+	liqlog("liquidAE_LifColor_spline2(...)");
   global string $gLiquid_currentAEShader;
 
   // find which attributes are going to be connected to the widget
@@ -920,6 +938,7 @@ global proc liquidAE_LifColor_spline2( string $selectedObj, string $paramName, i
 
 global proc liquidAE_LifColor2( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
 {
+	liqlog("liquidAE_LifColor2(...)");
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAENode;
   global string $gLiquid_currentAEShader;
@@ -993,6 +1012,7 @@ global proc liquidAE_LifColor2( string $paramName, int $arraySize, string $subty
 
 global proc liquidAE_LifVector2( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
 {
+	liqlog("liquidAE_LifVector2(...)");
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAENode;
   global string $gLiquid_currentAEShader;

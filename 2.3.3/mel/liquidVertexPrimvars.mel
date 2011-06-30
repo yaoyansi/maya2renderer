@@ -1,5 +1,7 @@
+source xxliquidutility.mel;
 
 proc int getCurveVertexNum ( string $shapeNode ) {
+	liqlog("getCurveVertexNum(...)");
   int $ustyle = `getAttr ($shapeNode + ".form")`;
   int $nu;
 
@@ -17,6 +19,7 @@ proc int getCurveVertexNum ( string $shapeNode ) {
 }
 
 proc int getNURBSVertexNum ( string $shapeNode ) {
+	liqlog("getNURBSVertexNum(...)");
   int $ustyle = `getAttr ($shapeNode + ".formU")`;
   int $vstyle = `getAttr ($shapeNode + ".formV")`;
 
@@ -48,10 +51,12 @@ proc int getNURBSVertexNum ( string $shapeNode ) {
 }
 
 proc int getMeshVertexNum ( string $shapeNode ) {
+	liqlog("getMeshVertexNum(...)");
   return `getAttr -s ($shapeNode + ".vrts")`;
 }
 
 proc createVectorPrimvarArray(string $shapeNode, string $varName, int $num) {
+	liqlog("createVectorPrimvarArray(...)");
 
   addAttr -ln $varName -k true -m -at "double3" $shapeNode;
   addAttr -ln "x" -at "double" -k true -p $varName $shapeNode;
@@ -66,6 +71,7 @@ proc createVectorPrimvarArray(string $shapeNode, string $varName, int $num) {
 }
 
 proc createFloatPrimvarArray(string $shapeNode, string $varName, int $num) {
+	liqlog("createFloatPrimvarArray(...)");
   addAttr -ln $varName -k true -m -at "double" $shapeNode;
   int $i;
   for($i=0; $i<$num; $i++){
@@ -74,6 +80,7 @@ proc createFloatPrimvarArray(string $shapeNode, string $varName, int $num) {
 }
 
 global proc makeVertexPrimVar(string $shapeNode, string $name, string $type){
+	liqlog("makeVertexPrimVar(...)");
   string $prefix = "";
   int $isVec = 0;
 

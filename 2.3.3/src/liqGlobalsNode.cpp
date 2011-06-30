@@ -622,8 +622,8 @@ MStatus liqGlobalsNode::initialize()
 
 	CREATE_COLOR( nAttr,  aLimitsOThreshold,           "limitsOThreshold",             "lot",    0.996, 0.996, 0.996  );
 	CREATE_COLOR( nAttr,  aLimitsZThreshold,           "limitsZThreshold",             "lzt",    0.996, 0.996, 0.996  );
-	CREATE_INT(   nAttr,  aLimitsBucketXSize,          "limitsBucketXSize",            "lbsx",   16    );
-	CREATE_INT(   nAttr,  aLimitsBucketYSize,          "limitsBucketYSize",            "lbsy",   16    );
+	CREATE_INT(   nAttr,  aLimitsBucketXSize,          "limitsBucketXSize",            "lbsx",   256    );
+	CREATE_INT(   nAttr,  aLimitsBucketYSize,          "limitsBucketYSize",            "lbsy",   256    );
 	CREATE_INT(   nAttr,  aLimitsGridSize,             "limitsGridSize",               "lgs",    256   );
 	CREATE_LONG(  nAttr,  aLimitsTextureMemory,        "limitsTextureMemory",          "ltm",    65536 );
 	CREATE_INT(   nAttr,  aLimitsEyeSplits,            "limitsEyeSplits",              "les",    10    );

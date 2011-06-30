@@ -5,6 +5,7 @@
 //                  Rob Pieke (C.O.R.E. Digital Pictures)
 //
 //--------------------------------------------------------------------
+source xxliquidutility.mel;
 
 //source "liquidWriteRSL_materials.mel";
 //source "liquidWriteRSL_textures.mel";
@@ -20,6 +21,7 @@ eval("source \"" + `liquidGetHome` + "/mel/liquidWriteRSL_utilities.mel\"");
 
 proc int nodeIsConvertible ( string $node )
 {
+	liqlog("nodeIsConvertible("+$node+")");
     // Array of convertible types. Add to this as more types are
     // supported.
     //
@@ -77,6 +79,7 @@ proc int nodeIsConvertible ( string $node )
 
 proc int ensurePlugExists ( string $plug )
 {
+	liqlog("ensurePlugExists("+$plug+")");
     string $components[];
     tokenize $plug "." $components;
     string $node = $components[ 0 ];
@@ -104,6 +107,7 @@ proc int ensurePlugExists ( string $plug )
 
 global proc int convertibleConnection ( string $plug )
 {
+	liqlog("convertibleConnection("+$plug+")");
     // Check to see if the plug even exists!
     //
     if( `ensurePlugExists( $plug )` == false )
@@ -168,6 +172,7 @@ global proc int convertibleConnection ( string $plug )
 
 global proc addRSLVariable ( string $rslType, string $rslName, string $mayaName, string $mayaNode )
 {
+	liqlog("addRSLVariable("+$rslType+","+$rslName+","+$mayaName+","+$mayaNode+")");
     global string $rslShaderHeader;
     global string $rslShaderBody;
 
@@ -284,7 +289,8 @@ global proc addRSLVariable ( string $rslType, string $rslName, string $mayaName,
 //--------------------------------------------------------------------
 
 global proc addToRSL ( string $code )
-{
+{	
+	liqlog("addToRSL("+$code+")");
     global string $rslShaderBody;
     $rslShaderBody += ( " " + $code + "\n" );
 }
@@ -295,6 +301,7 @@ global proc addToRSL ( string $code )
 
 global proc endRSL ()
 {
+	liqlog("endRSL()");
     global string $rslShaderHeader;
     global string $rslShaderBody;
 
@@ -315,7 +322,8 @@ global proc endRSL ()
 //--------------------------------------------------------------------
 
 global proc beginRSL ( string $name )
-{
+{	
+	liqlog("beginRSL("+$name+")");
     global string $rslShaderHeader;
     global string $rslShaderBody;
 
@@ -332,6 +340,7 @@ global proc beginRSL ( string $name )
 
 proc int getUpstreamConvertibleNodes ( string $currentNode, string $nodes[], int $numConnections[] )
 {
+	liqlog("getUpstreamConvertibleNodes(...)");
     // If the current node has already been visited
     for( $node in $nodes )
     {
@@ -394,7 +403,8 @@ proc int getUpstreamConvertibleNodes ( string $currentNode, string $nodes[], int
 //--------------------------------------------------------------------
 
 proc addNodeInputVariable( string $plug, string $inputVars[] )
-{
+{	
+	liqlog("addNodeInputVariable("+$plug+","+size($inputVars)+")");
     string $inputPlugs[] = `listConnections -plugs true $plug`;
     string $varName;
     string $inputNode;
@@ -446,6 +456,7 @@ proc addNodeOutputVariable( string $node, string $validConnection,
                             string $plug, string $outputVars[],
                             string $shaderData[] )
 {
+	liqlog("addNodeOutputVariable(...)");
     string $type = `getAttr -type $plug`;
     string $varName = $node + "_" + $validConnection;
     int $outputIndex = size( $outputVars );
@@ -479,7 +490,8 @@ proc addNodeOutputVariable( string $node, string $validConnection,
 // output variables for the this node.
 //--------------------------------------------------------------------
 proc string getNodeVariables( string $node, string $validConnections[], string $shaderData[] )
-{
+{	
+	liqlog("getNodeVariables(...)");
     string $vars[];
     string $varString = "";
     string $inputVars[];
@@ -536,7 +548,8 @@ proc string getNodeVariables( string $node, string $validConnections[], string $
 //--------------------------------------------------------------------
 
 proc decrementDownstreamConnections( string $node, string $nodes[], int $numConnections[], string $validConnections[] )
-{
+{	
+	liqlog("decrementDownstreamConnections(...)");
     string $downstreamNodes[];
 
     // Get the list of down stream nodes along supported connections
@@ -577,6 +590,7 @@ proc decrementDownstreamConnections( string $node, string $nodes[], int $numConn
 //--------------------------------------------------------------------
 proc traverseGraphAndOutputNodeFunctions( string $nodes[], int $numConnections[], string $shaderData[] )
 {
+	liqlog("traverseGraphAndOutputNodeFunctions(...)");
     int $index = 0;
     int $numNodes = size( $nodes );
     for( ; $index < $numNodes; $index += 1 )
@@ -624,6 +638,7 @@ proc traverseGraphAndOutputNodeFunctions( string $nodes[], int $numConnections[]
 
 proc outputShaderMethod( string $shaderData[] )
 {
+	liqlog("outputShaderMethod(...)");
     global int $RSLfileId;
 
     fprint $RSLfileId ( "surface " + $shaderData[2] + "()\n{\n" );
@@ -639,6 +654,7 @@ proc outputShaderMethod( string $shaderData[] )
 
 proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 {
+	liqlog("convertShadingNetworkToRSL(...)");
     string $nodes[];
     int $numConnections[];
 
@@ -701,6 +717,7 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 
 global proc liquidConvertShadingNetworkToRSL ()
 {
+	liqlog("liquidConvertShadingNetworkToRSL()");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
   }

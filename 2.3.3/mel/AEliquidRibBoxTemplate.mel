@@ -1,11 +1,15 @@
+source xxliquidutility.mel;
+
 global proc liquidRibBoxEditorUpdateMenu( string $msg )
 {
+	liqlog("liquidRibBoxEditorUpdateMenu(...)");
   int $en = (`editRenderLayerGlobals -q -crl` == "defaultRenderLayer")? 0 : 1;
   menuItem -e -c ("editRenderLayerAdjustment "+$msg) -en $en liquidRibboxEditorOverrideMenuItem;
 }
 
 global proc liquidRibBoxEditorNew( string $nodeName, string $msg )
 {
+	liqlog("liquidRibBoxEditorNew(...)");
   setUITemplate -pst attributeEditorTemplate;
   scrollField -wordWrap false -font smallFixedWidthFont -h 250 liquidRibboxEditorCtl;
   popupMenu liquidRibboxEditorOverrideMenu;
@@ -17,6 +21,7 @@ global proc liquidRibBoxEditorNew( string $nodeName, string $msg )
 
 global proc liquidRibBoxEditorReplace( string $nodeName, string $msg )
 {
+	liqlog("liquidRibBoxEditorReplace(...)");
   scrollField -e
               -tx (`getAttr $msg`)
               -cc ("{string $s = `scrollField -q -tx liquidRibboxEditorCtl`;setAttr -type \"string\" "+$msg+" $s;}")

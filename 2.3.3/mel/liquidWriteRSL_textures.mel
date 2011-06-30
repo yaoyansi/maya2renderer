@@ -3,9 +3,11 @@
 //                  Rob Pieke (C.O.R.E. Digital Pictures)
 //
 //--------------------------------------------------------------------
+source xxliquidutility.mel;
 
 global proc string[] validConnections_checker ()
 {
+	liqlog("validConnections_checker(...)");
     return
     {
         "color1",
@@ -28,6 +30,7 @@ global proc string[] validConnections_checker ()
 
 global proc writeRSL_checker ( string $node )
 {
+	liqlog("writeRSL_checker(...)");
     beginRSL $node;
 
     if( convertibleConnection( $node + ".color1" ) )
@@ -115,6 +118,7 @@ global proc writeRSL_checker ( string $node )
 
 global proc string[] validConnections_cloth ()
 {
+	liqlog("validConnections_cloth(...)");
     return { "gapColor", "uColor", "vColor", "uWidth", "vWidth",
              "uvCoord", "outColor" };
 }
@@ -123,6 +127,7 @@ global proc writeRSL_cloth (
     string $node
 )
 {
+	liqlog("writeRSL_cloth(...)");
     beginRSL $node;
 
     addRSLVariable "vector" "gapColor" "gapColor" $node;
@@ -204,6 +209,7 @@ global proc writeRSL_cloth (
 
 global proc string[] validConnections_file ()
 {
+	liqlog("validConnections_file(...)");
     return { "uvCoord", "outColor", "outTransparency" };
 }
 
@@ -211,6 +217,7 @@ global proc writeRSL_file (
     string $node
 )
 {
+	liqlog("writeRSL_file(...)");
     beginRSL( $node );
 
     addRSLVariable "float2" "uvCoord" "uvCoord" $node;
@@ -238,6 +245,7 @@ global proc writeRSL_file (
 
 global proc string[] validConnections_fractal ()
 {
+	liqlog("validConnections_fractal(...)");
     return { "amplitude", "threshold", "ratio", "levelMax", "uvCoord",
              "outColor", "outColorR", "outColorG", "outColorB",
              "outAlpha" };
@@ -247,6 +255,7 @@ global proc writeRSL_fractal (
     string $node
 )
 {
+	liqlog("writeRSL_fractal(...)");
     beginRSL $node;
 
     addRSLVariable "float" "amplitude" "amplitude" $node;
@@ -306,6 +315,7 @@ global proc writeRSL_fractal (
 
 global proc string[] validConnections_snow ()
 {
+	liqlog("validConnections_snow(...)");
     return { "snowColor", "surfaceColor", "threshold", "depthDecay",
              "thickness", "outColor" };
 }
@@ -314,6 +324,7 @@ global proc writeRSL_snow (
     string $node
 )
 {
+	liqlog("writeRSL_snow(...)");
     beginRSL( $node );
 
     addRSLVariable "vector" "snowColor" "snowColor" $node;
@@ -338,6 +349,7 @@ global proc writeRSL_snow (
 
 global proc string[] validConnections_solidFractal ()
 {
+	liqlog("validConnections_solidFractal(...)");
     return { "amplitude", "threshold", "ratio", "depthMax",
              "outColor", "outColorR", "outColorG", "outColorB",
              "outAlpha" };
@@ -347,6 +359,7 @@ global proc writeRSL_solidFractal (
     string $node
 )
 {
+	liqlog("writeRSL_solidFractal(...)");
     beginRSL $node;
 
     addRSLVariable "float" "amplitude" "amplitude" $node;
@@ -403,6 +416,7 @@ global proc writeRSL_solidFractal (
 
 global proc string[] validConnections_grid ()
 {
+	liqlog("validConnections_grid(...)");
     return { "lineColor", "lineColorR", "lineColorG", "lineColorB",
              "fillerColor", "fillerColorR", "fillerColorG", "fillerColorB",
              "uWidth", "vWidth", "contrast", "uvCoord", "outColor",
@@ -413,6 +427,7 @@ global proc writeRSL_grid (
     string $node
 )
 {
+	liqlog("writeRSL_grid(...)");
     beginRSL( $node );
 
     addRSLVariable "vector" "lineColor" "lineColor" $node;
