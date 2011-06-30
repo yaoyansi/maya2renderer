@@ -6940,7 +6940,9 @@ MStatus liqRibTranslator::objectBlock()
 		}
 		if( ribNode->rib.hasBox() ) 
 			RiArchiveRecord( RI_COMMENT, " RIB Box:\n%s", ribNode->rib.box.asChar() );
-
+		if( ribNode->rib.hasGenerator() ){
+			MGlobal::executeCommand( ribNode->rib.generator, false, false );
+		}
 		if( ribNode->rib.hasReadArchive() ) 
 			RiArchiveRecord( RI_VERBATIM, " ReadArchive \"%s\" \n", ribNode->rib.readArchive.asChar() );
 		if( ribNode->rib.hasDelayedReadArchive() ) 

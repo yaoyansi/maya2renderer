@@ -1,0 +1,2 @@
+- add this directory to PATH, so prman can find these exe and dll files
+- add this directory to MAYA_SCRIPT_PATH, so maya can find mel scripts (e.g. test_generator.mel);

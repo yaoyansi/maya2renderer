@@ -1,0 +1,36 @@
+global proc test_generator(string $transformNode)
+{
+   print("test_generator("+$transformNode+")\n");
+
+    //
+    string $args = ("3 2.0 8.0 1.0 30.0 60.0");
+
+    //
+    string $curUnit = `currentUnit -q -linear`;
+    currentUnit -linear "cm";  // temporarily change to centimeters
+    float $bbSize[3] = `getAttr ($transformNode + ".boundingBoxSize")`;
+    float $bbMin[3], $bboxMax[3];
+    $bbMin[0] = -$bbSize[0]/2;
+    $bbMin[1] = -$bbSize[1]/2;
+    $bbMin[2] = -$bbSize[2]/2;
+    $bbMax[0] = $bbSize[0]/2;
+    $bbMax[1] = $bbSize[1]/2;
+    $bbMax[2] = $bbSize[2]/2;
+    currentUnit -linear $curUnit;
+
+   //
+   RIProcedural "DynamicLoad" "quadricProcedural.dll" 
+   $bbMin[0] $bbMax[0] $bbMin[1] 
+   $bbMax[1] $bbMin[2] $bbMax[2]
+   $args;
+
+}
+
+global proc test_polygon(string $transformNode)
+{
+   //print("test_generator("+$transformNode+")\n");
+
+   //
+   RIProcedural "RunProgram" "polygon" -5 5 -5 5 -5 5 "8";
+
+}

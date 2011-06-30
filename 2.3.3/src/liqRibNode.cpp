@@ -532,21 +532,21 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
 
 	  if( rib.generator == "" ) 
 	  {
-		  MString archiveValue;
-		  if( liquidGetPlugValue( nodePeeker, "liqRIBGenerator", archiveValue, status ) == MS::kSuccess ) 
+		  MString str;
+		  if( liquidGetPlugValue( nodePeeker, "liqRIBGenerator", str, status ) == MS::kSuccess ) 
 		  {
-			  if( archiveValue.substring(0,2) == "*H*" ) 
+			  if( str.substring(0,2) == "*H*" ) 
 			  {
-				  MString parseThis = archiveValue.substring(3, archiveValue.length() - 1 );
+				  MString parseThis = str.substring(3, str.length() - 1 );
 				  liqglo_preGenerateArchive.append( parseString( parseThis ) );
 			  } 
-			  else if( archiveValue.substring(0,3) == "*SH*" ) 
+			  else if( str.substring(0,3) == "*SH*" ) 
 			  {
-				  MString parseThis = archiveValue.substring(3, archiveValue.length() - 1 );
+				  MString parseThis = str.substring(3, str.length() - 1 );
 				  liqglo_preGenerateArchive.append( parseString( parseThis ) );
 			  }
 		  }
-		  rib.generator = (archiveValue == "")? "-" : parseString(archiveValue);
+		  rib.generator = (str == "")? "-" : parseString(str);
 	  }
 
       if( rib.readArchive == "" ) 

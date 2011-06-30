@@ -2611,7 +2611,7 @@ MStatus RIProcedural::doIt( const MArgList &args )
 
 	MString param;
 	MString call( "" );
-	if( type == "DynamicLoad" )
+	if( type == "DynamicLoad" || type == "RunProgram" )
 	{
 		status = argData.getCommandArgument( 8, param );
 		if( status != MS::kSuccess )
@@ -2621,7 +2621,7 @@ MStatus RIProcedural::doIt( const MArgList &args )
 		}
 		call = ( "Procedural \"" + type + "\" [\"" + fileName + "\" \"" + param + "\"] [" + bb + "]" );
 	}
-	else if( type == "DelayedReadArchive" || type == "RunProgram" )
+	else if( type == "DelayedReadArchive" )
 		call = ( "Procedural \"" + type + "\" [\"" + fileName + "\"] [" + bb + "]" );
 	else
 	{
