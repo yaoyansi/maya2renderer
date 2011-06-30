@@ -1208,7 +1208,7 @@ void liqRibLightData::write()
           handle = RiLightSourceV( shaderName, numTokens, tokenArray.get(), pointerArray.get() );
           */
           rmanLightShader.write( liqglo_shortShaderNames, 0 );
-          handle = (RtLightHandle)const_cast<char*>(rmanLightShader.shaderHandler.asChar());
+          handle = rmanLightShader.shaderHandler.asInt();
           
           break;
         }

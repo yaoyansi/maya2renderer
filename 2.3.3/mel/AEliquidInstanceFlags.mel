@@ -413,3 +413,4 @@ global proc AEliquidInstanceFlags( string $node )
 
   editorTemplate -endLayout;
 }
+

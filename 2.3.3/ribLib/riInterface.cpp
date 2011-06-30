@@ -2,7 +2,7 @@
 //
 //                             Pixie
 //
-// Copyright © 1999 - 2003, Okan Arikan
+// Copyright ?1999 - 2003, Okan Arikan
 //
 // Contact: okan@cs.berkeley.edu
 //
@@ -135,15 +135,15 @@ void		CRiInterface::RiOpacity(float * /*Cs*/) {
 void		CRiInterface::RiTextureCoordinates(float /*s1*/,float /*t1*/,float /*s2*/,float /*t2*/,float /*s3*/,float /*t3*/,float /*s4*/,float /*t4*/) {
 }
 
-void		*CRiInterface::RiLightSourceV(char * /*name*/,int /*n*/,char * /*tokens*/ [],void * /*params*/ []) {
-	return NULL;
+RtLightHandle CRiInterface::RiLightSourceV(char * /*name*/,int /*n*/,char * /*tokens*/ [],void * /*params*/ []) {
+	return INVALID_LIGHT_INDEX;
 }
 
-void		*CRiInterface::RiAreaLightSourceV(char * /*name*/,int /*n*/,char * /*tokens*/ [],void * /*params*/ []) {
-	return NULL;
+RtLightHandle CRiInterface::RiAreaLightSourceV(char * /*name*/,int /*n*/,char * /*tokens*/ [],void * /*params*/ []) {
+	return INVALID_LIGHT_INDEX;
 }
 
-void		CRiInterface::RiIlluminate(void * /*light*/,int /*onoff*/) {
+void		CRiInterface::RiIlluminate(RtLightHandle /*light*/,int /*onoff*/) {
 }
 
 void		CRiInterface::RiShaderV(char * /*name*/,void * /*handle*/, int /*n*/,char * /*tokens*/ [],void * /*params*/ []) {

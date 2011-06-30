@@ -2,7 +2,7 @@
 //
 //                             Pixie
 //
-// Copyright © 1999 - 2003, Okan Arikan
+// Copyright ?1999 - 2003, Okan Arikan
 //
 // Contact: okan@cs.berkeley.edu
 //
@@ -33,6 +33,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include "ri.h"
 
 ///////////////////////////////////////////////////////////////////////
 // Class				:	CRiInterface
@@ -81,10 +82,10 @@ public:
 	virtual	void		RiOpacity(float *Cs);
 	virtual	void		RiTextureCoordinates(float s1,float t1,float s2,float t2,float s3,float t3,float s4,float t4);
 
-	virtual	void		*RiLightSourceV(char *name,int n,char *tokens[],void *params[]);
-	virtual	void		*RiAreaLightSourceV(char *name,int n,char *tokens[],void *params[]);
+	virtual	RtLightHandle RiLightSourceV(char *name,int n,char *tokens[],void *params[]);
+	virtual	RtLightHandle RiAreaLightSourceV(char *name,int n,char *tokens[],void *params[]);
 
-	virtual	void		RiIlluminate(void *light,int onoff);
+	virtual	void		RiIlluminate(RtLightHandle light,int onoff);
 	virtual	void		RiShaderV(char *name, void *handle, int n, char *tokens[], void *parms[]);
 	virtual	void		RiSurfaceV(char *name,int n,char *tokens[],void *params[]);
 	virtual	void		RiAtmosphereV(char *name,int n,char *tokens[],void *params[]);

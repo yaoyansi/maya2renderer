@@ -360,7 +360,7 @@ RtLightHandle liqRibObj::lightHandle() const
 {
   LIQDEBUGPRINTF( "-> creating light node handle rep\n");
   //assert( type == MRT_Light );
-  RtLightHandle lHandle( NULL );
+  RtLightHandle lHandle( INVALID_LIGHT_INDEX );
   if( type == MRT_Light ) {
     liqRibLightData* light( ( liqRibLightData* )data.get() );
     lHandle = light->lightHandle();

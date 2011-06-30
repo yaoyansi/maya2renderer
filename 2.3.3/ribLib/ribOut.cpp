@@ -536,21 +536,21 @@ void		CRibOut::RiTextureCoordinates(float s1,float t1,float s2,float t2,float s3
 	out("TextureCoordinates [%g %g %g %g %g %g %g %g]\n",s1,t1,s2,t2,s3,t3,s4,t4);
 }
 
-void		*CRibOut::RiLightSourceV(char *name,int n,char *tokens[],void *params[]) {
+RtLightHandle CRibOut::RiLightSourceV(char *name,int n,char *tokens[],void *params[]) {
 	out("LightSource \"%s\" %d ",name,numLightSources);
 	writePL(n,tokens,params);
 
-	return (void *) numLightSources++;
+	return  numLightSources++;
 }
 
-void		*CRibOut::RiAreaLightSourceV(char *name,int n,char *tokens[],void *params[]) {
+RtLightHandle CRibOut::RiAreaLightSourceV(char *name,int n,char *tokens[],void *params[]) {
 	out("AreaLightSource \"%s\" %d ",name,numLightSources);
 	writePL(n,tokens,params);
 
-	return (void *) numLightSources++;
+	return  numLightSources++;
 }
 
-void		CRibOut::RiIlluminate(void *light,int onoff) {
+void		CRibOut::RiIlluminate(RtLightHandle light,int onoff) {
 	out("Illuminate %d %d\n",light,onoff);
 }
 

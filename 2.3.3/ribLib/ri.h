@@ -62,7 +62,7 @@ typedef RtVoid  (*RtErrorHandler)(RtInt code, RtInt severity, char *msg);
 typedef RtVoid  (*RtFunc)(const char *);
 
 typedef RtPointer RtObjectHandle;
-typedef RtPointer RtLightHandle;
+typedef unsigned int RtLightHandle;
 typedef RtPointer RtContextHandle;
 
 #define RI_FALSE    0
@@ -75,6 +75,7 @@ typedef RtPointer RtContextHandle;
 #endif
 #define RI_NULL NULL
 
+#define INVALID_LIGHT_INDEX 0
 
 EXTERN(RtToken)	 RI_FRAMEBUFFER, RI_FILE;
 EXTERN(RtToken)  RI_RGB, RI_RGBA, RI_RGBZ, RI_RGBAZ, RI_A, RI_Z, RI_AZ;

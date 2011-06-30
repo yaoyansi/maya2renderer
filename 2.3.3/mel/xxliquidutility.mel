@@ -1,6 +1,10 @@
-source xxUtility.mel;
+
+proc log2(string $prefix, string $log)
+{
+	print($prefix +">"+ $log +"\n");
+}
 
 global proc liqlog(string $log)
 {
-	xxu_log2("liquid>", $log);
+	log2("liquid", $log);
 }

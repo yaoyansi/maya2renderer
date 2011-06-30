@@ -35,9 +35,9 @@ source xxliquidutility.mel;
 
 global proc string liquidGetHome()
 {
-	liqlog("liquidGetHome(...)");
   string $home = `getenv "LIQUIDHOME"`;
   if( !size( $home ) ) {
+	liqlog("liquidGetHome(...)");
     warning("Environment variable LIQUIDHOME is not set - please set to the base Liquid directory (containing /mel, etc)");
     string $res = `promptDialog -ma "center" -m "The LIQUIDHOME environment variable is not currently set.\nThe Liquid plugin needs this to find various files.\n\nYou should set this environment variable before using Liquid,\nbut for the moment you can temporarily set it below:" -title "LIQUIDHOME" -text "/usr/local/liquid" -b "Set" -b "Cancel" -cb "Cancel" -ds "Cancel"`;
     if ($res == "Set") {

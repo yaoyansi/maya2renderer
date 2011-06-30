@@ -97,9 +97,10 @@ global proc connectShadowCamera( string $shadowCameraShape, string $nodeDotAttr 
  */
 global proc connectExistingShadowCamera( string $nodeDotAttr, string $flag, string $source )
 {
-	liqlog("connectExistingShadowCamera(...)");
   //trace ($nodeDotAttr+" + "+$flag+" + "+$source+"\n");
   if ( !objExists( $source ) ) return;
+
+  liqlog("connectExistingShadowCamera(...)");
 
   string $theCamera = "";
   string $nodetype  = nodeType( $source );

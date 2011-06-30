@@ -311,7 +311,7 @@ void liqRibMeshData::write()
   if ( numPoints > 1 ) 
   {
     LIQDEBUGPRINTF( "-> writing mesh\n" );
-    RtLightHandle handle = NULL;
+    RtLightHandle handle = INVALID_LIGHT_INDEX;
     if ( areaLight ) 
     { // What happens if we're inside a motion block????? This whole approach of Liquid is flawed...
       LIQDEBUGPRINTF( "-> mesh is area light\n" );

@@ -331,6 +331,8 @@ public:
     ss << "<?xml version=\"1.0\"?>" << std::endl;
     ss << "<renderscript>" << std::endl;
     ss << "  <title>" << title << "</title>" << std::endl;
+	if ( dirmaps.size() )
+		ss << "  <dirmaps>" << dirmaps << " </dirmaps>" << std::endl; 
     ss << "  <minservers>" << minServers << "</minservers>" << std::endl;
     ss << "  <maxservers>" << maxServers << "</maxservers>" << std::endl;
     

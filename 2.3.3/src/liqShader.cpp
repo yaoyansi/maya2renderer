@@ -360,6 +360,7 @@ liqShader::liqShader( MObject shaderObj )
 						}
 						else if( arraySize == -1 )
 						{
+							skipToken = true;//  [9/20/2010 yaoyansi]
 							float floatPlugVal;
 							floatPlug.getValue( floatPlugVal );
 							tokenPointerArray.rbegin()->set( paramName.asChar(), rFloat );
@@ -711,8 +712,8 @@ void liqShader::write(bool shortShaderNames, unsigned int indentLevel)
     case SHADER_TYPE_LIGHT :
     {  
       outputIndentation(indentLevel);
-	    char *handle = (char *)RiLightSourceV( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
-	    shaderHandler.set( (const char *)handle );
+		RtLightHandle ret = RiLightSourceV( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
+	    shaderHandler.set( ret );
 	  } break;
 	    
 	  case SHADER_TYPE_SURFACE :
