@@ -220,6 +220,18 @@ class liqRibNode {
       MString generator;
       MString readArchive;
       MString delayedReadArchive;
+	  bool hasBox(){
+		  return ( box!="" && box!="-" );
+	  }
+	  bool hasGenerator(){
+		  return ( generator!="" && generator!="-" );
+	  }
+	  bool hasReadArchive(){
+		  return ( readArchive!="" && readArchive!="-" );
+	  }
+	  bool hasDelayedReadArchive(){
+		  return ( delayedReadArchive!="" && delayedReadArchive!="-" );
+	  }
     } rib;
 
     struct shadowRib {

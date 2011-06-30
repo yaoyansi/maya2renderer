@@ -6936,12 +6936,12 @@ MStatus liqRibTranslator::objectBlock()
 			//		RiTransformEnd();
 			//}
 		}
-		if( ribNode->rib.box != "" && ribNode->rib.box != "-" ) 
+		if( ribNode->rib.hasBox() ) 
 			RiArchiveRecord( RI_COMMENT, " RIB Box:\n%s", ribNode->rib.box.asChar() );
 
-		if( ribNode->rib.readArchive != "" && ribNode->rib.readArchive != "-" ) 
+		if( ribNode->rib.hasReadArchive() ) 
 			RiArchiveRecord( RI_VERBATIM, " ReadArchive \"%s\" \n", ribNode->rib.readArchive.asChar() );
-		if( ribNode->rib.delayedReadArchive != "" && ribNode->rib.delayedReadArchive != "-" ) 
+		if( ribNode->rib.hasDelayedReadArchive() ) 
 		{
 			RiArchiveRecord( RI_VERBATIM, " Procedural \"DelayedReadArchive\" [ \"%s\" ] [ %f %f %f %f %f %f ] \n", ribNode->rib.delayedReadArchive.asChar(), ribNode->bound[0],ribNode->bound[3],ribNode->bound[1],ribNode->bound[4],ribNode->bound[2],ribNode->bound[5] );
 			// should be using the bounding box node - Alf
@@ -7556,6 +7556,11 @@ MString liqRibTranslator::getHiderOptions( MString rendername, MString hidername
 
 void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode)
 {
+	if( ribNode->rib.hasReadArchive()  || ribNode->rib.hasDelayedReadArchive() ){
+		//if ribNode is tagged as readArchive or delayedReadArchive, we do not output its geometry data.
+		return;
+	}
+
 	MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +".rib" );
 
 	if(reference)
@@ -7570,6 +7575,7 @@ void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode
 		ribNode->object( 0 )->writeObject();
 		RiEnd();
 	}
+	
 }
 
 void liqRibTranslator::_RiOption_format_compress(bool bBinary, bool bCompress)

@@ -350,11 +350,11 @@ void liqWriteArchive::writeObjectToRib(const MDagPath &objDagPath, bool writeTra
 		{
 			return;
 		}
-		if ( ribNode.rib.box != "" && ribNode.rib.box != "-" )
+		if ( ribNode.rib.hasBox() )
 		{
 			RiArchiveRecord( RI_COMMENT, "Additional RIB:\n%s", ribNode.rib.box.asChar() );
 		}
-		if ( ribNode.rib.readArchive != "" && ribNode.rib.readArchive != "-" )
+		if ( ribNode.rib.hasReadArchive() )
 		{
 			// the following test prevents a really nasty infinite loop !!
 			if ( ribNode.rib.readArchive != m_outputFilename )
@@ -362,7 +362,7 @@ void liqWriteArchive::writeObjectToRib(const MDagPath &objDagPath, bool writeTra
 				RiArchiveRecord( RI_COMMENT, "Read Archive Data: \nReadArchive \"%s\"", ribNode.rib.readArchive.asChar() );
 			}
 		}
-		if ( ribNode.rib.delayedReadArchive != "" && ribNode.rib.delayedReadArchive != "-" )
+		if ( ribNode.rib.hasDelayedReadArchive() )
 		{
 			// the following test prevents a really nasty infinite loop !!
 			if ( ribNode.rib.delayedReadArchive != m_outputFilename )
