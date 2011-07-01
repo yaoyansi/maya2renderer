@@ -91,7 +91,7 @@ MStatus liqRenderer::setRenderer()
         if ( status == MS::kSuccess ) {
           MString feature;
           bool enabled =  false;
-          feature = featurePlug.partialName( false, false, false, false, false, &status );
+          feature = featurePlug.partialName( false, false, false, false, false, false, &status );
           featurePlug.getValue( enabled );
           feature = feature.toLowerCase();
 
@@ -118,7 +118,7 @@ MStatus liqRenderer::setRenderer()
         if ( status == MS::kSuccess ) {
           MString filter;
           bool enabled =  false;
-          filter = filterPlug.partialName( false, false, false, false, false, &status );
+          filter = filterPlug.partialName( false, false, false, false, false, false, &status );
           filterPlug.getValue( enabled );
           filter = filter.toLowerCase();
 
@@ -149,7 +149,7 @@ MStatus liqRenderer::setRenderer()
         if ( status == MS::kSuccess ) {
           MString hider;
           bool enabled =  false;
-          hider = hiderPlug.partialName( false, false, false, false, false, &status );
+          hider = hiderPlug.partialName( false, false, false, false, false, false,&status );
           hiderPlug.getValue( enabled );
           hider = hider.toLowerCase();
 
@@ -175,7 +175,7 @@ MStatus liqRenderer::setRenderer()
         if ( status == MS::kSuccess ) {
           MString required;
           bool enabled =  false;
-          required = requiredPlug.partialName( false, false, false, false, false, &status );
+          required = requiredPlug.partialName( false, false, false, false, false, false, &status );
           requiredPlug.getValue( enabled );
           required = required.toLowerCase();
 
