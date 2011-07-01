@@ -2,6 +2,12 @@
 #ifndef _ER_CALL_
 #define _ER_CALL_
 
+#	include <core/include/eray_core.h>
+
+#define ei_end				-1
+#define on					1
+#define off					0
+
 class e_Connection;
 
 namespace elvishray

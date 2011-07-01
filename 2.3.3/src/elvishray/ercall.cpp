@@ -1,7 +1,8 @@
 #include "ercall.h"
 #include "../log/prerequest_std.h"
 
-#define _USE_ER_LIB_
+//#define _USE_ER_LIB_
+
 #ifdef _USE_ER_LIB_
 #	include <core/include/eray_core.h>
 // set $(ER_ROOT)=E:\dev\render\renderer\elvishrayrenderer\elvishrayrenderer
@@ -58,14 +59,34 @@ namespace elvishray
 
 
 	//	Options:
-	void my_ei_options( const char *name ){}
-	void my_ei_incremental_options( const char *name ){}
+	void my_ei_options( const char *name )
+	{
+		_s("ei_options(\""<<name<<"\")");
+		_e(ei_options( name ));
+	}
+	void my_ei_incremental_options( const char *name )
+	{
+		_s("ei_incremental_options(\""<<name<<"\")");
+		_e(ei_incremental_options( name ));
+	}
 
 	//	Sampling Quality:
-	void my_ei_contrast( float r, float g, float b, float a ){}
-	void my_ei_samples( int _min, int _max ){}
+	void my_ei_contrast( float r, float g, float b, float a )
+	{
+		_s("ei_contrast("<<r<<","<<g<<","<<b<<","<<a<<")");
+		_e(ei_contrast(r,g,b,a));
+	}
+	void my_ei_samples( int _min, int _max )
+	{
+		_s("ei_samples("<<_min<<","<<_max<<")");
+		_e(ei_samples(_min,_max));
+	}
 	void my_ei_bucket_size( int size ){}
-	void my_ei_filter( int filter, float size ){}
+	void my_ei_filter( int filter, float size )
+	{
+		_s("ei_filter("<<filter<<","<<size<<")");
+		_e(ei_filter(filter,size));
+	}
 
 	//	Tessellation Quality:
 	void my_ei_shading_rate( float rate )
@@ -78,11 +99,19 @@ namespace elvishray
 
 	//	Motion Blur:
 	void my_ei_shutter( float open, float close ){}
-	void my_ei_motion( int type ){}
+	void my_ei_motion( int type )
+	{
+		_s("ei_motion("<< type <<")");
+		_e(ei_motion(type));
+	}
 	void my_ei_motion_segments( int num ){}
 
 	//	Trace Depth:
-	void my_ei_trace_depth( int reflect, int refract, int sum ){}
+	void my_ei_trace_depth( int reflect, int refract, int sum )
+	{
+		_s("ei_trace_depth("<<reflect<<","<<refract<<","<<sum<<")");
+		_e(ei_trace_depth(reflect,refract,sum));
+	}
 
 	//	Shadow:
 	void my_ei_shadow( int type ){}
@@ -134,15 +163,31 @@ namespace elvishray
 	void my_ei_frame_buffer( const char *name, int datatype, int interpolation ){}
 
 	//	Miscellaneous:
-	void my_ei_face( int type ){}
+	void my_ei_face( int type )
+	{
+		_s("ei_face("<< type <<")");
+		_e(ei_face(type));
+	}
 	void my_ei_memory( int size ){}
-	void my_ei_ambient( float r, float g, float b ){}
+	void my_ei_ambient( float r, float g, float b )
+	{
+		_s("ei_shading_rate("<<r<<","<<g<<","<<b<<")");
+		_e(ei_shading_rate(r,g,b));
+	}
 
-	void my_ei_end_options(){}
+	void my_ei_end_options()
+	{
+		_s("ei_end_options()");
+		_e(ei_end_options());
+	}
 
 
 	//	Cameras:
-	void my_ei_camera( const char *name ){}
+	void my_ei_camera( const char *name )
+	{
+		_s("ei_camera(\""<< name <<"\")");
+		_e(ei_camera(name));
+	}
 	// void my_ei_incremental_camera( const char *name ){}
 
 	//	Output Statements:
@@ -150,21 +195,77 @@ namespace elvishray
 	void my_ei_imager( const char *shader_name, ... ){}
 
 	//	Other Camera Statements:
-	void my_ei_focal( float distance ){}
-	void my_ei_aperture( float aperture ){}
-	void my_ei_aspect( float aspect ){}
-	void my_ei_resolution( int x, int y ){}
-	void my_ei_offset( int x, int y ){}
-	void my_ei_window( float xmin, float xmax, float ymin, float ymax ){}
-	void my_ei_clip( float hither, float yon ){}
-	void my_ei_atmosphere( const char *shader_name, ... ){}
-	void my_ei_ambience( const char *shader_name, ... ){}
-	void my_ei_lens( const char *shader_name, ... ){}
-	void my_ei_frame( int frame, int field ){}
-	void my_ei_dof( int type ){}
-	void my_ei_dof( float fstop, float fplane ){}
+	void my_ei_focal( float distance )
+	{
+		_s("ei_focal("<< distance <<")");
+		_e(ei_focal(distance));
+	}
+	void my_ei_aperture( float aperture )
+	{
+		_s("ei_aperture("<< aperture <<")");
+		_e(ei_aperture(aperture));
+	}
+	void my_ei_aspect( float aspect )
+	{
+		_s("ei_aspect("<< aspect <<")");
+		_e(ei_aspect(aspect));
+	}
+	void my_ei_resolution( int x, int y )
+	{
+		_s("ei_resolution("<< x<<","<<y <<")");
+		_e(ei_resolution(x, y));
+	}
+	void my_ei_offset( int x, int y )
+	{
+		_s("ei_offset("<< x<<","<<y <<")");
+		_e(ei_offset(x, y));
+	}
+	void my_ei_window( float xmin, float xmax, float ymin, float ymax )
+	{
+		_s("ei_window("<< xmin<<","<<xmax<<","<<ymin<<","<<ymax<<")");
+		_e(ei_window(xmin, xmax, ymin, ymax ));
+	}
+	void my_ei_clip( float hither, float yon )
+	{
+		_s("ei_clip("<<hither<<","<<yon<<")");
+		_e(ei_clip(hither,yon));
+	}
+	void my_ei_atmosphere( const char *shader_name, ... )
+	{
+		_s("ei_atmosphere(\""<<shader_name<<"\",...)");
+		_e(ei_atmosphere(shader_name));
+	}
+	void my_ei_ambience( const char *shader_name, ... )
+	{
+		_s("ei_ambience(\""<<shader_name<<"\",...)");
+		_e(ei_ambience(shader_name));
+	}
+	void my_ei_lens( const char *shader_name, ... )
+	{
+		_s("ei_lens(\""<<shader_name<<"\",...)");
+		_e(ei_lens(shader_name));
+	}
+	void my_ei_frame( int frame, int field )
+	{
+		_s("ei_frame("<<frame<<","<<field<<")");
+		_e(ei_frame(frame,field));
+	}
+	void my_ei_dof( int type )
+	{
+		_s("ei_dof("<<type<<")");
+		_e(ei_dof(type));
+	}
+	void my_ei_dof( float fstop, float fplane )
+	{
+		_s("ei_dof("<<fstop<<","<<fplane<<")");
+		_e(ei_dof(fstop,fplane));
+	}
 
-	void my_ei_end_camera(){}
+	void my_ei_end_camera()
+	{
+		_s("ei_end_camera()");
+		_e(ei_end_camera());
+	}
 
 
 	//	Textures:
