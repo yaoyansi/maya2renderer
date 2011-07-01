@@ -344,7 +344,7 @@ void computeSurface(
 		i_matteOpacityMode, i_matteOpacity, i_transparency, o_outTransparency );
 
 	o_outColor = i_surfaceColor * (1 - o_outTransparency);
-	o_outColor = clamp(o_outColor, 0, 1e30);
+	o_outColor = clamp(o_outColor, color(0), color(1e30));
 }
 
 float raySpecularDepth()
