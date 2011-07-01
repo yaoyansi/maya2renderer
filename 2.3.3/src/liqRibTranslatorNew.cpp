@@ -3772,27 +3772,13 @@ MStatus liqRibTranslator::GeometryMotionBlur(
 
 			for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
 			{ 
-				MString geometryRibFile( 
-							liquidGetRelativePath( 
-								false, 
-								getLiquidRibName( ribNode__->name.asChar() ), 
-								liqglo.liqglo_ribDir 
-							) +"."+(int)liqglo.liqglo_lframe+".m"+(int)msampleOn+".rib" 
-						);
-				ribNode__->object( msampleOn )->writeObject(geometryRibFile, currentJob);
+				_writeObject(ribNode__, currentJob, true, msampleOn);
 			}
 			RiMotionEnd();
 		}else {
 			RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
 
-			MString geometryRibFile( 
-						liquidGetRelativePath( 
-							false, 
-							getLiquidRibName( ribNode__->name.asChar() ), 
-							liqglo.liqglo_ribDir 
-						) +"."+(int)liqglo.liqglo_lframe+".rib" 
-					);
-			ribNode__->object( 0 )->writeObject(geometryRibFile, currentJob);
+			_writeObject(ribNode__, currentJob, false, 0);
 		}
 	}
 	return MS::kSuccess;
@@ -4112,7 +4098,7 @@ void liqRibTranslator::oneObjectBlock(
 					//return;
 				}else{
 					//ribNode->object( 0 )->writeObject();
-					_writeObject(ribNode, currentJob);
+					_writeObject(ribNode, currentJob, false, 0);
 				}
 			}
 			// Alf: postShapeMel

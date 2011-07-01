@@ -471,7 +471,12 @@ public:
 
 //	void scanExpressions( liqRibLightData *light );
 
-	void _writeObject( const liqRibNodePtr& ribNode, const structJob &currentJob);
+	void _writeObject( 
+		const liqRibNodePtr& ribNode,
+		const structJob &currentJob,
+		const bool bGeometryMotionBlur,
+		const unsigned int msampleOn
+	);
 	void makeReflectionPass(
 		std::vector<structJob> &refList__, 
 		liqRenderScript::Job &reflectJob__,

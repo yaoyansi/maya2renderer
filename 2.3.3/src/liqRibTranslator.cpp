@@ -6948,7 +6948,7 @@ MStatus liqRibTranslator::objectBlock()
 					//return;
 				}else{
 					//ribNode->object( 0 )->writeObject();
-					_writeObject(ribNode, liqglo_currentJob);
+					_writeObject(ribNode, liqglo_currentJob, false, 0);
 				}
 
 			}
@@ -7476,17 +7476,32 @@ MString liqRibTranslator::getHiderOptions( MString rendername, MString hidername
 	return options;
 }
 
-void liqRibTranslator::_writeObject(const liqRibNodePtr& ribNode, const structJob &currentJob)
+void liqRibTranslator::_writeObject(
+	const liqRibNodePtr& ribNode, 
+	const structJob &currentJob,
+	const bool bGeometryMotionBlur,
+	const unsigned int msampleOn
+	)
 {
 // 	MString frame; 
 // 	frame.set(liqglo.liqglo_lframe);
 
+	MString MotionPostfix;
+	unsigned int sample;
+	if( bGeometryMotionBlur ){
+		MotionPostfix = ".m"+(int)msampleOn;
+		sample        = msampleOn;
+	}else{
+		MotionPostfix = "";
+		sample        = 0;
+	}
+    
 	MString geometryRibFile( 
 				liquidGetRelativePath( 
 					false, 
 					getLiquidRibName( ribNode->name.asChar() ), 
 					liqglo.liqglo_ribDir 
-				) +"."+(int)liqglo.liqglo_lframe+".rib" 
+				) +"."+(int)liqglo.liqglo_lframe+MotionPostfix+".rib" 
 			);
-	ribNode->object( 0 )->writeObject(geometryRibFile, currentJob);
+	ribNode->object( sample )->writeObject(geometryRibFile, currentJob);
 }
