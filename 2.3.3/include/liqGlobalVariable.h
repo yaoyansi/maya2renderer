@@ -104,6 +104,14 @@ struct liqGlobalVariable
 	MString m_defGenKey;
 	MString m_defGenService;
 	bool m_alfredExpand;
+	bool useNetRman;
+	MString m_alfredTags;
+	MString m_alfredServices;
+	MString m_preCommand;
+	bool m_deferredGen;
+	bool m_alfShadowRibGen;
+	bool fullShadowRib;
+	bool cleanRib;              // clean the rib files up
 #if 0
 #ifdef _WIN32
 	// Hmmmmmmmm what's this ?

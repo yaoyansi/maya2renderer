@@ -159,11 +159,10 @@ private: // Data
 	// alfred stuff
 	bool useRenderScript;
 	bool cleanRenderScript;
-	bool m_alfShadowRibGen;
+
 
 	MString renderJobName;
-	MString m_alfredTags;
-	MString m_alfredServices;
+
 	MString m_dirmaps;
 	MString m_userRenderScriptFileName;
 	MString m_renderScriptCommand;
@@ -173,9 +172,9 @@ private: // Data
 		XML    = 2 }
 	m_renderScriptFormat;
 
-	bool useNetRman;
-	bool fullShadowRib;
-	bool cleanRib;              // clean the rib files up
+
+
+
 
 	bool doDof;                 // do camera depth of field
 	bool doCameraMotion;        // Motion blur for moving cameras
@@ -345,7 +344,7 @@ private :
 	bool m_useNewTranslator;
 	bool m_outputShadowPass;
 	bool m_outputHeroPass;
-	bool m_deferredGen;
+
 	bool m_lazyCompute;
 	bool m_outputShadersInShadows;
 	bool m_outputShadersInDeepShadows;
@@ -363,7 +362,7 @@ private :
 
 	MString m_renderCommand;
 	MString m_ribgenCommand;
-	MString m_preCommand;
+
 
 	MString m_preJobCommand;
 	MString m_postJobCommand;
@@ -480,27 +479,21 @@ private :
 	void makeReflectionPass(
 		std::vector<structJob> &refList__, 
 		liqRenderScript::Job &reflectJob__,
-		const bool alf_textures__,
-		const bool alf_shadows__,
-		      bool &alf_refmaps__
+		bool &alf_textures__,
+		bool &alf_shadows__,
+		bool &alf_refmaps__
 	);
 	void makeShadowPass(
 		std::vector<structJob> &shadowList__, 
 		liqRenderScript::Job &shadowJob__,
-		const bool alf_textures__,
+		bool &alf_textures__,
 		bool &alf_shadows__,
-		const bool alf_refmaps__,
+		bool &alf_refmaps__,
 		const MString &framePreCommand__,
 		const MString &frameRenderCommand__,
 		const int currentBlock__
 		);
-	void makeTexturePass(
-		std::vector<structJob> &shadowList__, 
-		liqRenderScript::Job &shadowJob__,
-		      bool &alf_textures__,
-		const bool alf_shadows__,
-		const bool alf_refmaps__
-		);
+
 	void addDefferedJob(
 		liqRenderScript::Job &deferredJob__,
 		const int currentBlock__,
@@ -522,5 +515,7 @@ private:
 	liqRibTranslator(const liqRibTranslator&);
 	liqRibTranslator& operator=(const liqRibTranslator&);
 };
+
+
 
 #endif

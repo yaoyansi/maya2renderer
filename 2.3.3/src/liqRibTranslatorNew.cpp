@@ -154,7 +154,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 //	MString lastRibName;
 	//bool hashTableInited = false;
 
-	if( !liqglo.liquidBin && !m_deferredGen ) 
+	if( !liqglo.liquidBin && !liqglo.m_deferredGen ) 
 		liquidMessage( "Creating RIB <Press ESC To Cancel> ...", messageInfo );
 
 	// Remember the frame the scene was at so we can restore it later.
@@ -251,13 +251,13 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 		MString renderScriptName = generateRenderScriptName();
 		liqglo.tempDefname    = generateTempMayaSceneName();
 
-		if( m_deferredGen ) 
+		if( liqglo.m_deferredGen ) 
 		{
 			MString currentFileType = MFileIO::fileType();
 			MFileIO::exportAll( liqglo.tempDefname, currentFileType.asChar() );
 		}
 
-		if( !m_deferredGen && m_justRib ) 
+		if( !liqglo.m_deferredGen && m_justRib ) 
 			useRenderScript = false;
 
 		liqRenderScript jobScript;
@@ -272,12 +272,12 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 				renderJobName = liqglo.liqglo_sceneName;
 
 			jobScriptMgr.setCommonParameters(
-				renderJobName.asChar(), useNetRman, m_minCPU, m_maxCPU, m_dirmaps 
+				renderJobName.asChar(), liqglo.useNetRman, m_minCPU, m_maxCPU, m_dirmaps 
 			);
 			if( m_preJobCommand != MString( "" ) ) 
 			{
 				jobScriptMgr.addJob("liquid pre-job", 
-					m_preJobCommand.asChar(), liqglo.remoteRender && !useNetRman);
+					m_preJobCommand.asChar(), liqglo.remoteRender && !liqglo.useNetRman);
 			}
 		}
 		// build the frame array
@@ -300,7 +300,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 		for ( ; frameIndex < liqglo.frameNumbers.size(); frameIndex++ ) 
 		{
 			int currentBlock( 0 );
-			const MString framePreCommand(parseString( m_preCommand, false));
+			const MString framePreCommand(parseString( liqglo.m_preCommand, false));
 			const MString frameRibgenCommand(parseString( m_ribgenCommand, false ));
 			const MString frameRenderCommand( parseString( liqglo.liquidRenderer.renderCommand + " " + liqglo.liquidRenderer.renderCmdFlags, false ));
 			const MString framePreFrameCommand(parseString( m_preFrameCommand, false ));
@@ -315,7 +315,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 
 			if( useRenderScript ) 
 			{
-				if( m_deferredGen ) 
+				if( liqglo.m_deferredGen ) 
 				{
 					if( ( frameIndex % liqglo.m_deferredBlockSize ) == 0 ) 
 					{
@@ -331,7 +331,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 				}//if( m_deferredGen )
 				if( !m_justRib ) 
 				{
-					if( m_deferredGen ) 
+					if( liqglo.m_deferredGen ) 
 					{
 						stringstream ss;
 						ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
@@ -353,41 +353,23 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 
 				// write out make texture pass
 				LIQDEBUGPRINTF( "-> Generating job for MakeTexture pass\n");
-				if( txtList.size() ) 
-				{
-					liqRenderScript::Job textureJob;
-					makeTexturePass(txtList, textureJob, 
-						alf_textures, alf_shadows, alf_refmaps 
-						);
-					frameScriptJob.childJobs.push_back( textureJob );
-				}//if( txtList.size() )
+				frameScriptJobMgr.makeTexture(txtList, 
+					alf_textures, alf_shadows, alf_refmaps);
 
 				// write out shadows
 				if( liqglo.liqglo_doShadows ) 
 				{
 					LIQDEBUGPRINTF( "-> writing out shadow information to alfred file.\n" );
-					if( shadowList.size() ) 
-					{
-						liqRenderScript::Job shadowJob;
-						makeShadowPass(shadowList, shadowJob, 
-							alf_textures, alf_shadows, alf_refmaps, 
-							framePreCommand, frameRenderCommand, 
-							currentBlock
-							);
-						frameScriptJob.childJobs.push_back( shadowJob );
-					}//if( shadowList.size() )
+					frameScriptJobMgr.makeShadow(shadowList, 
+						alf_textures, alf_shadows, alf_refmaps, currentBlock);
+
 				}//if( liqglo__.liqglo_doShadows ) 
 				LIQDEBUGPRINTF( "-> finished writing out shadow information to render script file.\n" );
 
 				// write out make reflection pass
-				if( refList.size() ) 
-				{	
-					liqRenderScript::Job reflectJob;
-					makeReflectionPass(refList, reflectJob, 
-						alf_textures, alf_shadows, alf_refmaps
-						);
-					frameScriptJob.childJobs.push_back( reflectJob );
-				}
+				frameScriptJobMgr.makeReflection(refList,
+					alf_textures, alf_shadows, alf_refmaps
+				);
 
 				LIQDEBUGPRINTF( "-> initiating hero pass information.\n" );
 				structJob *frameJob = NULL;
@@ -407,9 +389,9 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 				LIQDEBUGPRINTF( "-> writing out pre frame command information to render script file.\n" );
 				if( framePreFrameCommand != MString("") ) 
 				{
-					liqRenderScript::Cmd cmd(framePreFrameCommand.asChar(), (liqglo.remoteRender && !useNetRman));
-					cmd.alfredServices = m_alfredServices.asChar();
-					cmd.alfredTags     = m_alfredTags.asChar();
+					liqRenderScript::Cmd cmd(framePreFrameCommand.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
+					cmd.alfredServices = liqglo.m_alfredServices.asChar();
+					cmd.alfredTags     = liqglo.m_alfredTags.asChar();
 					frameScriptJob.commands.push_back(cmd);
 				}
 
@@ -422,7 +404,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 						ribFileName = "\\\"%D(" + ribFileName + ")\\\"";      
 						LIQDEBUGPRINTF( "==> Set DirMaps : %s.\n", m_dirmaps.asChar() );
 					}
-					if( useNetRman ) 
+					if( liqglo.useNetRman ) 
 					{
 		#ifdef _WIN32
 						ss << framePreCommand.asChar() << " netrender %H -Progress \"" << ribFileName.asChar() << "\"";
@@ -438,19 +420,19 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 						ss << framePreCommand.asChar() << " " << frameRenderCommand.asChar() << " -Progress " << ribFileName.asChar();
 		#endif
 					}
-					liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !useNetRman));
+					liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !liqglo.useNetRman));
 					if( liqglo.m_alfredExpand ) 
 						cmd.alfredExpand = true;
 
-					cmd.alfredServices = m_alfredServices.asChar();
-					cmd.alfredTags     = m_alfredTags.asChar();
+					cmd.alfredServices = liqglo.m_alfredServices.asChar();
+					cmd.alfredTags     = liqglo.m_alfredTags.asChar();
 					frameScriptJob.commands.push_back(cmd);
 				}//if( m_outputHeroPass ) 
 				LIQDEBUGPRINTF( "-> finished writing out hero information to alfred file.\n" );
 				if( m_outputShadowPass ) 
 				{
 					stringstream ss;
-					if( useNetRman ) 
+					if( liqglo.useNetRman ) 
 					{
 		#ifdef _WIN32
 						ss << framePreCommand.asChar() << " netrender %H -Progress \"" << shadowPassJob->ribFileName.asChar() << "\"";
@@ -464,18 +446,18 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 						ss << framePreCommand.asChar() << " " << frameRenderCommand.asChar() << " " << shadowPassJob->ribFileName.asChar();
 		#endif
 					}
-					liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !useNetRman));
+					liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !liqglo.useNetRman));
 					if( liqglo.m_alfredExpand ) 
 						cmd.alfredExpand = true;
 
-					cmd.alfredServices = m_alfredServices.asChar();
-					cmd.alfredTags     = m_alfredTags.asChar();
+					cmd.alfredServices = liqglo.m_alfredServices.asChar();
+					cmd.alfredTags     = liqglo.m_alfredTags.asChar();
 					frameScriptJob.commands.push_back(cmd);
 				}//if( m_outputShadowPass )
 
-				if( cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
+				if( liqglo.cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
 				{
-					if( cleanRib ) 
+					if( liqglo.cleanRib ) 
 					{
 						stringstream ss;
 						if( m_outputHeroPass  ) 
@@ -494,7 +476,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 							ss << framePreCommand.asChar() << " " << RM_CMD << " " << shadowPassJob->ribFileName.asChar();
 		#endif
 						}
-						if( m_alfShadowRibGen ) 
+						if( liqglo.m_alfShadowRibGen ) 
 						{
 		#ifdef _WIN32
 							ss << framePreCommand.asChar() << " " << RM_CMD << " \"" << baseShadowName.asChar() << "\"";
@@ -506,7 +488,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 					}
 					if( framePostFrameCommand != MString("") ) 
 					{
-						liqRenderScript::Cmd cmd(framePostFrameCommand.asChar(), (liqglo.remoteRender && !useNetRman));
+						liqRenderScript::Cmd cmd(framePostFrameCommand.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
 						frameScriptJob.cleanupCommands.push_back(cmd);
 					}
 				}//if( cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
@@ -524,7 +506,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 			jobScript.addJob( frameScriptJob );
 
 
-			if( ( ribStatus != kRibOK ) && !m_deferredGen ) 
+			if( ( ribStatus != kRibOK ) && !liqglo.m_deferredGen ) 
 				break;
 
 		} // frame for-loop
@@ -541,7 +523,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 			// clean up the alfred file in the future
 			if( !m_justRib ) 
 			{
-				if( m_deferredGen ) 
+				if( liqglo.m_deferredGen ) 
 				{
 					stringstream ss;
 					ss << RM_CMD << " " << liqglo.tempDefname.asChar();
@@ -554,7 +536,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 					jobScript.cleanupCommands.push_back( liqRenderScript::Cmd( ss.str(), liqglo.remoteRender ) );
 				}
 				if( m_postJobCommand != MString("") ) 
-					jobScript.cleanupCommands.push_back( liqRenderScript::Cmd(m_postJobCommand.asChar(), (liqglo.remoteRender && !useNetRman) ) );
+					jobScript.cleanupCommands.push_back( liqRenderScript::Cmd(m_postJobCommand.asChar(), (liqglo.remoteRender && !liqglo.useNetRman) ) );
 			}
 			if( m_renderScriptFormat == ALFRED ) 
 				jobScript.writeALF( liquidGetRelativePath( liqglo.liqglo_relativeFileNames, renderScriptName, liqglo.liqglo_projectDir ).asChar() );
@@ -564,7 +546,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 		LIQDEBUGPRINTF( "-> ending escape handler.\n" );
 		m_escHandler.endComputation();
 
-		if( !m_deferredGen ) 
+		if( !liqglo.m_deferredGen ) 
 			liquidMessage( "Finished creating RIB", messageInfo );
 		LIQDEBUGPRINTF( "-> clearing job list.\n" );
 		jobList.clear();
@@ -726,7 +708,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 			}
 		}
 
-		return ( (ribStatus == kRibOK || m_deferredGen) ? MS::kSuccess : MS::kFailure);
+		return ( (ribStatus == kRibOK || liqglo.m_deferredGen) ? MS::kSuccess : MS::kFailure);
 
 	} 
 	catch ( MString errorMessage ) 
@@ -746,192 +728,9 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 		return MS::kFailure;
 	}
 }
+
 //
-void liqRibTranslator::makeReflectionPass(
-	std::vector<structJob> &refList__, 
-	liqRenderScript::Job &reflectJob__,
-	const bool alf_textures__,
-	const bool alf_shadows__,
-	bool &alf_refmaps__
-	)
-{
-	LIQDEBUGPRINTF( "-> Generating job for ReflectionMap pass\n" );
-	vector<structJob>::iterator iter = refList__.begin();
 
-	alf_refmaps__ = true;
-
-	stringstream ts;
-	ts << "Reflections." << liqglo.liqglo_lframe;
-	reflectJob__.title = ts.str();
-
-	while ( iter != refList__.end() ) 
-	{
-		liqRenderScript::Job reflectSubtask;
-		stringstream ts;
-		ts << reflectJob__.title << " " << iter->imageName.asChar();
-		reflectSubtask.title = ts.str();
-		if( m_deferredGen ) {
-
-		}
-		if( alf_textures__ ) 
-		{
-			stringstream ss;
-			ss << "Textures." << liqglo.liqglo_lframe;
-			liqRenderScript::Job instanceJob;
-			instanceJob.isInstance = true;
-			instanceJob.title = ss.str();
-			reflectJob__.childJobs.push_back( instanceJob );
-		}
-		if( alf_shadows__ ) 
-		{
-			stringstream ss;
-			ss << "Shadows." << liqglo.liqglo_lframe;
-			liqRenderScript::Job instanceJob;
-			instanceJob.isInstance = true;
-			instanceJob.title = ss.str();
-			reflectJob__.childJobs.push_back( instanceJob );
-		}
-
-		stringstream ss;
-		ss << iter->renderName.asChar() << " " << iter->ribFileName.asChar();
-		liqRenderScript::Cmd cmd( ss.str(), (liqglo.remoteRender && !useNetRman) );
-
-		if( liqglo.m_alfredExpand ) 
-			cmd.alfredExpand = true;
-
-		cmd.alfredServices = m_alfredServices.asChar();
-		cmd.alfredTags     = m_alfredTags.asChar();
-		reflectSubtask.commands.push_back( cmd );
-		reflectSubtask.chaserCommand = ( string( "sho \"" ) + liqglo.liqglo_textureDir.asChar() + " " + iter->imageName.asChar() + "\"" );
-		++iter;
-		reflectJob__.childJobs.push_back( reflectSubtask );
-	}
-
-}
-
-void liqRibTranslator::makeShadowPass(
-									  std::vector<structJob> &shadowList__, 
-									  liqRenderScript::Job &shadowJob__,
-									  const bool alf_textures__,
-									  bool &alf_shadows__,
-									  const bool alf_refmaps__,
-									  const MString &framePreCommand__,
-									  const MString &frameRenderCommand__,
-									  const int currentBlock__
-									  )
-{
-	vector< structJob >::iterator iter = shadowList__.begin();
-
-	alf_shadows__ = true;
-
-	stringstream ts;
-	ts << "Shadows." << liqglo.liqglo_lframe;
-	shadowJob__.title = ts.str();
-	while ( iter != shadowList__.end() ) 
-	{
-		alf_shadows__ = true;
-		liqRenderScript::Job shadowSubtask;
-		shadowSubtask.title = iter->name.asChar();
-		if( alf_textures__ ) 
-		{
-			stringstream ss;
-			ss << "Textures." << liqglo.liqglo_lframe;
-			liqRenderScript::Job instanceJob;
-			instanceJob.isInstance = true;
-			instanceJob.title = ss.str();
-			shadowSubtask.childJobs.push_back(instanceJob);
-		}
-		if( m_deferredGen ) 
-		{
-			stringstream ss;
-			ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock__;
-			liqRenderScript::Job instanceJob;
-			instanceJob.isInstance = true;
-			instanceJob.title = ss.str();
-			shadowSubtask.childJobs.push_back(instanceJob);
-		}
-		stringstream ss;
-		if( useNetRman ) 
-		{
-#ifdef _WIN32
-			ss << framePreCommand__.asChar() << " netrender %H -Progress \"" << iter->ribFileName.asChar() << "\"";
-#else
-			ss << framePreCommand__.asChar() << " netrender %H -Progress " << iter->ribFileName.asChar();
-#endif
-		} else {
-#ifdef _WIN32
-			ss << framePreCommand__.asChar() << " " << frameRenderCommand__.asChar() << " \"" << iter->ribFileName.asChar() << "\"";
-#else
-			ss << framePreCommand__.asChar() << " " << frameRenderCommand__.asChar() << " " << iter->ribFileName.asChar();
-#endif
-		}
-		liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !useNetRman));
-		if( liqglo.m_alfredExpand ) 
-			cmd.alfredExpand = true;
-
-		cmd.alfredServices = m_alfredServices.asChar();
-		cmd.alfredTags     = m_alfredTags.asChar();
-		shadowSubtask.commands.push_back(cmd);
-
-		if(cleanRib)  
-		{
-			stringstream ss;
-#ifdef _WIN32
-			ss << framePreCommand__.asChar() << " " << RM_CMD << " \"" << iter->ribFileName.asChar() << "\"";
-#else
-			ss << framePreCommand__.asChar() << " " << RM_CMD << " " << iter->ribFileName.asChar();
-#endif
-
-			shadowSubtask.cleanupCommands.push_back( liqRenderScript::Cmd( ss.str(), liqglo.remoteRender ) );
-		}
-		shadowSubtask.chaserCommand = ( string( "sho \"" ) + iter->imageName.asChar() + "\"" );
-		++iter;
-		if( !m_alfShadowRibGen && !fullShadowRib ) 
-			m_alfShadowRibGen = true;
-		shadowJob__.childJobs.push_back( shadowSubtask );
-	}
-}
-//
-void liqRibTranslator::makeTexturePass(
-									   std::vector<structJob> &txtList__, 
-									   liqRenderScript::Job &textureJob__,
-									   bool &alf_textures__,
-									   const bool alf_shadows__,
-									   const bool alf_refmaps__
-									   )
-{
-	vector<structJob>::iterator iter = txtList__.begin();
-
-	alf_textures__ = true;
-
-	stringstream ts;
-	ts << "Textures." << liqglo.liqglo_lframe;
-	textureJob__.title = ts.str();
-
-	while ( iter != txtList.end() ) 
-	{
-		liqRenderScript::Job textureSubtask;
-		stringstream ts;
-		ts << textureJob__.title << " " << iter->imageName.asChar();
-		textureSubtask.title = ts.str();
-		if( m_deferredGen ) {
-
-		}
-		stringstream ss;
-		ss << iter->renderName.asChar() << " " << iter->ribFileName.asChar();
-		liqRenderScript::Cmd cmd( ss.str(), ( liqglo.remoteRender && !useNetRman ) );
-
-		if( liqglo.m_alfredExpand ) 
-			cmd.alfredExpand = true;
-
-		cmd.alfredServices = m_alfredServices.asChar();
-		cmd.alfredTags     = m_alfredTags.asChar();
-		textureSubtask.commands.push_back( cmd );
-		textureSubtask.chaserCommand = ( string( "sho \"" ) + liqglo.liqglo_textureDir.asChar() + " " + iter->imageName.asChar() + "\"" );
-		++iter;
-		textureJob__.childJobs.push_back( textureSubtask );
-	}
-}
 //
 void liqRibTranslator::addDefferedJob(
 									  liqRenderScript::Job &deferredJob__,
@@ -1562,14 +1361,14 @@ TempControlBreak liqRibTranslator::processOneFrame(
 
 
 
-	m_alfShadowRibGen = false;
+	liqglo__.m_alfShadowRibGen = false;
 	liqglo__.liqglo_preReadArchive.clear();
 	liqglo__.liqglo_preRibBox.clear();
 	liqglo__.liqglo_preReadArchiveShadow.clear();
 	liqglo__.liqglo_preRibBoxShadow.clear();
 
 	// make sure all the global strings are parsed for this frame
-	const MString framePreCommand(parseString( m_preCommand, false));
+	const MString framePreCommand(parseString( liqglo.m_preCommand, false));
 	const MString frameRibgenCommand(parseString( m_ribgenCommand, false ));
 	const MString frameRenderCommand( parseString( liqglo__.liquidRenderer.renderCommand + " " + liqglo__.liquidRenderer.renderCmdFlags, false ));
 	const MString framePreFrameCommand(parseString( m_preFrameCommand, false ));
@@ -1583,7 +1382,7 @@ TempControlBreak liqRibTranslator::processOneFrame(
 		return TCB_Break;//break;
 	//***************************************************************
 
-	if( !m_deferredGen ) 
+	if( !liqglo.m_deferredGen ) 
 	{
 		if( m_showProgress ) 
 			printProgress( 2, liqglo.frameNumbers.size(), frameIndex );
@@ -1700,7 +1499,7 @@ TempControlBreak liqRibTranslator::processOneFrame(
 
 			// world RiReadArchives and Rib Boxes ************************************************
 			//
-			if( liqglo__.liqglo_currentJob.isShadow && !liqglo__.liqglo_currentJob.shadowArchiveRibDone && !fullShadowRib ) 
+			if( liqglo__.liqglo_currentJob.isShadow && !liqglo__.liqglo_currentJob.shadowArchiveRibDone && !liqglo.fullShadowRib ) 
 			{
 				//
 				//  create the read-archive shadow files
@@ -1751,7 +1550,7 @@ TempControlBreak liqRibTranslator::processOneFrame(
 					++iterCheck;
 				}
 
-				m_alfShadowRibGen = true;
+				liqglo__.m_alfShadowRibGen = true;
 			}//if( liqglo_currentJob.isShadow && !liqglo_currentJob.shadowArchiveRibDone && !fullShadowRib ) 
 
 #ifndef RENDER_PIPE
@@ -1782,7 +1581,7 @@ TempControlBreak liqRibTranslator::processOneFrame(
 			liquidMessage( "Beginning RI output directly to renderer", messageInfo );
 			RiBegin( RI_NULL );
 #endif
-			if( liqglo__.liqglo_currentJob.isShadow && !fullShadowRib ) 
+			if( liqglo__.liqglo_currentJob.isShadow && !liqglo.fullShadowRib ) 
 			{
 				// reference the correct shadow archive
 				//

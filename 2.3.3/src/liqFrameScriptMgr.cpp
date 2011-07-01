@@ -1,6 +1,9 @@
 
 #include <liqFrameScriptMgr.h>
+
+#include <sstream>
 #include <liqRenderScript.h>
+#include <liqGlobalVariable.h>
 
 tFrameScriptJobMgr::tFrameScriptJobMgr(liqRenderScript::Job& script)
 :m_frameScriptJob(script)
@@ -39,3 +42,247 @@ void tFrameScriptJobMgr::addInstanceJob(  const bool isInstance,
 // 	job.commands.push_back( liqRenderScript::Cmd( command, remote ) );
 // 	m_frameScriptJob.addJob( job );
 // }
+
+void tFrameScriptJobMgr::makeTexture(
+	std::vector<structJob>  &txtList___,
+	bool &alf_textures__,
+	bool &alf_shadows__,
+	bool &alf_refmaps__
+)
+{
+	if( txtList___.size() ) 
+	{
+		liqRenderScript::Job textureJob;
+		makeTexturePass(txtList___, textureJob, 
+			alf_textures__, alf_shadows__, alf_refmaps__ 
+			);
+		m_frameScriptJob.childJobs.push_back( textureJob );
+	}//if( txtList.size() )
+}
+//
+void tFrameScriptJobMgr::makeTexturePass(
+									   std::vector<structJob> &txtList__, 
+									   liqRenderScript::Job &textureJob__,
+									   bool &alf_textures__,
+									   bool &alf_shadows__,
+									   bool &alf_refmaps__
+									   )
+{
+	std::vector<structJob>::iterator iter = txtList__.begin();
+
+	alf_textures__ = true;
+
+	std::stringstream ts;
+	ts << "Textures." << liqglo.liqglo_lframe;
+	textureJob__.title = ts.str();
+
+	while ( iter != txtList__.end() ) 
+	{
+		liqRenderScript::Job textureSubtask;
+		std::stringstream ts;
+		ts << textureJob__.title << " " << iter->imageName.asChar();
+		textureSubtask.title = ts.str();
+// 		if( m_deferredGen ) {
+// 
+// 		}
+		std::stringstream ss;
+		ss << iter->renderName.asChar() << " " << iter->ribFileName.asChar();
+		liqRenderScript::Cmd cmd( ss.str(), ( liqglo.remoteRender && !liqglo.useNetRman ) );
+
+		if( liqglo.m_alfredExpand ) 
+			cmd.alfredExpand = true;
+
+		cmd.alfredServices = liqglo.m_alfredServices.asChar();
+		cmd.alfredTags     = liqglo.m_alfredTags.asChar();
+		textureSubtask.commands.push_back( cmd );
+		textureSubtask.chaserCommand = ( std::string( "sho \"" ) + liqglo.liqglo_textureDir.asChar() + " " + iter->imageName.asChar() + "\"" );
+		++iter;
+		textureJob__.childJobs.push_back( textureSubtask );
+	}
+}
+//
+void tFrameScriptJobMgr::makeShadow(
+				std::vector<structJob> &shadowList__,
+				bool &alf_textures__,
+				bool &alf_shadows__,
+				bool &alf_refmaps__,
+				const int currentBlock__
+				)
+{
+	const MString framePreCommand(parseString( liqglo.m_preCommand, false));
+	const MString frameRenderCommand( parseString( liqglo.liquidRenderer.renderCommand + " " + liqglo.liquidRenderer.renderCmdFlags, false ));
+
+	if( shadowList__.size() ) 
+	{
+		liqRenderScript::Job shadowJob;
+		makeShadowPass(shadowList__, shadowJob, 
+			alf_textures__, alf_shadows__, alf_refmaps__, 
+			framePreCommand, frameRenderCommand, 
+			currentBlock__
+			);
+		m_frameScriptJob.childJobs.push_back( shadowJob );
+	}//if( shadowList.size() )
+}
+//
+void tFrameScriptJobMgr::makeShadowPass(
+										std::vector<structJob> &shadowList__, 
+										liqRenderScript::Job &shadowJob__,
+										bool &alf_textures__,
+										bool &alf_shadows__,
+										bool &alf_refmaps__,
+										const MString &framePreCommand__,
+										const MString &frameRenderCommand__,
+										const int currentBlock__
+										)
+{
+	std::vector< structJob >::iterator iter = shadowList__.begin();
+
+	alf_shadows__ = true;
+
+	std::stringstream ts;
+	ts << "Shadows." << liqglo.liqglo_lframe;
+	shadowJob__.title = ts.str();
+	while ( iter != shadowList__.end() ) 
+	{
+		alf_shadows__ = true;
+		liqRenderScript::Job shadowSubtask;
+		shadowSubtask.title = iter->name.asChar();
+		if( alf_textures__ ) 
+		{
+			std::stringstream ss;
+			ss << "Textures." << liqglo.liqglo_lframe;
+			liqRenderScript::Job instanceJob;
+			instanceJob.isInstance = true;
+			instanceJob.title = ss.str();
+			shadowSubtask.childJobs.push_back(instanceJob);
+		}
+		if( liqglo.m_deferredGen ) 
+		{
+			std::stringstream ss;
+			ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock__;
+			liqRenderScript::Job instanceJob;
+			instanceJob.isInstance = true;
+			instanceJob.title = ss.str();
+			shadowSubtask.childJobs.push_back(instanceJob);
+		}
+		std::stringstream ss;
+		if( liqglo.useNetRman ) 
+		{
+#ifdef _WIN32
+			ss << framePreCommand__.asChar() << " netrender %H -Progress \"" << iter->ribFileName.asChar() << "\"";
+#else
+			ss << framePreCommand__.asChar() << " netrender %H -Progress " << iter->ribFileName.asChar();
+#endif
+		} else {
+#ifdef _WIN32
+			ss << framePreCommand__.asChar() << " " << frameRenderCommand__.asChar() << " \"" << iter->ribFileName.asChar() << "\"";
+#else
+			ss << framePreCommand__.asChar() << " " << frameRenderCommand__.asChar() << " " << iter->ribFileName.asChar();
+#endif
+		}
+		liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !liqglo.useNetRman));
+		if( liqglo.m_alfredExpand ) 
+			cmd.alfredExpand = true;
+
+		cmd.alfredServices = liqglo.m_alfredServices.asChar();
+		cmd.alfredTags     = liqglo.m_alfredTags.asChar();
+		shadowSubtask.commands.push_back(cmd);
+
+ 		if(liqglo.cleanRib)  
+ 		{
+ 			std::stringstream ss;
+ #ifdef _WIN32
+ 			ss << framePreCommand__.asChar() << " " << RM_CMD << " \"" << iter->ribFileName.asChar() << "\"";
+ #else
+ 			ss << framePreCommand__.asChar() << " " << RM_CMD << " " << iter->ribFileName.asChar();
+ #endif
+ 
+ 			shadowSubtask.cleanupCommands.push_back( liqRenderScript::Cmd( ss.str(), liqglo.remoteRender ) );
+ 		}
+		shadowSubtask.chaserCommand = ( std::string( "sho \"" ) + iter->imageName.asChar() + "\"" );
+		++iter;
+		if( !liqglo.m_alfShadowRibGen && !liqglo.fullShadowRib ) 
+			liqglo.m_alfShadowRibGen = true;
+		shadowJob__.childJobs.push_back( shadowSubtask );
+	}
+}
+//
+void tFrameScriptJobMgr::makeReflection(
+					std::vector<structJob> &refList__,
+					bool &alf_textures__,
+					bool &alf_shadows__,
+					bool &alf_refmaps__
+					)
+{
+	if( refList__.size() ) 
+	{	
+		liqRenderScript::Job reflectJob;
+		makeReflectionPass(refList__, reflectJob, 
+			alf_textures__, alf_shadows__, alf_refmaps__
+			);
+		m_frameScriptJob.childJobs.push_back( reflectJob );
+	}
+}
+//
+void tFrameScriptJobMgr::makeReflectionPass(
+	std::vector<structJob> &refList__, 
+	liqRenderScript::Job &reflectJob__,
+	bool &alf_textures__,
+	bool &alf_shadows__,
+	bool &alf_refmaps__
+	)
+{
+	LIQDEBUGPRINTF( "-> Generating job for ReflectionMap pass\n" );
+	std::vector<structJob>::iterator iter = refList__.begin();
+
+	alf_refmaps__ = true;
+
+	std::stringstream ts;
+	ts << "Reflections." << liqglo.liqglo_lframe;
+	reflectJob__.title = ts.str();
+
+	while ( iter != refList__.end() ) 
+	{
+		liqRenderScript::Job reflectSubtask;
+		std::stringstream ts;
+		ts << reflectJob__.title << " " << iter->imageName.asChar();
+		reflectSubtask.title = ts.str();
+		if( liqglo.m_deferredGen ) {
+
+		}
+		if( alf_textures__ ) 
+		{
+			std::stringstream ss;
+			ss << "Textures." << liqglo.liqglo_lframe;
+			liqRenderScript::Job instanceJob;
+			instanceJob.isInstance = true;
+			instanceJob.title = ss.str();
+			reflectJob__.childJobs.push_back( instanceJob );
+		}
+		if( alf_shadows__ ) 
+		{
+			std::stringstream ss;
+			ss << "Shadows." << liqglo.liqglo_lframe;
+			liqRenderScript::Job instanceJob;
+			instanceJob.isInstance = true;
+			instanceJob.title = ss.str();
+			reflectJob__.childJobs.push_back( instanceJob );
+		}
+
+		std::stringstream ss;
+		ss << iter->renderName.asChar() << " " << iter->ribFileName.asChar();
+		liqRenderScript::Cmd cmd( ss.str(), (liqglo.remoteRender && !liqglo.useNetRman) );
+
+		if( liqglo.m_alfredExpand ) 
+			cmd.alfredExpand = true;
+
+		cmd.alfredServices = liqglo.m_alfredServices.asChar();
+		cmd.alfredTags     = liqglo.m_alfredTags.asChar();
+		reflectSubtask.commands.push_back( cmd );
+		reflectSubtask.chaserCommand = ( std::string( "sho \"" ) + liqglo.liqglo_textureDir.asChar() + " " + iter->imageName.asChar() + "\"" );
+		++iter;
+		reflectJob__.childJobs.push_back( reflectSubtask );
+	}
+
+}
+

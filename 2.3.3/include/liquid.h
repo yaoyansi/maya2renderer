@@ -346,4 +346,11 @@ typedef enum {
 
 #include "liqlog.h"
 
+
+#ifdef _WIN32
+#  define RM_CMD "cmd.exe /c del"
+#else
+#  define RM_CMD "/bin/rm"
+#endif
+
 #endif
