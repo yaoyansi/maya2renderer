@@ -342,7 +342,7 @@ global proc lifGradient_create( string $nodeAttr, int $bound, int $indent, int $
 // Create the form layout for a group
 global proc string liquidAE_LifGrp( string $label, float $state )
 {
-	//liqlog("liquidAE_LifGrp(...)");
+	liqlog("liquidAE_LifGrp(...)");
     global string	$gLiquid_currentAEParent;
     global string	$gAEFocusNode;							// TODO : wtf is the difference between these both?
     global string	$gLiquid_currentAENode;     
@@ -384,7 +384,7 @@ global proc string liquidAE_LifGrp( string $label, float $state )
 
 global proc liquidAE_LifArrayAddItem(string $multiPlug)
 {
-	//liqlog("liquidAE_LifArrayAddItem(...)");
+	liqlog("liquidAE_LifArrayAddItem(...)");
 	// Find the next available index
 	int $na = 0;
 	
@@ -414,7 +414,7 @@ global proc liquidAE_LifArrayAddItem(string $multiPlug)
 
 global proc liquidAE_LifArrayRemoveItem(string $plug)
 {
-	//liqlog("liquidAE_LifArrayRemoveItem(...)");
+	liqlog("liquidAE_LifArrayRemoveItem(...)");
 	removeMultiInstance -break true $plug;
 }
 
@@ -422,7 +422,7 @@ global proc liquidAE_LifArrayRemoveItem(string $plug)
 // TODO : ordered arrays, with drag and drop reorder for layers
 global proc string liquidAE_LifArray(string $paramName, int $arraySize, string $arrayPlug, string $subtype, string $label, string $description, int $state)
 {
-	//liqlog("liquidAE_LifArray(...)");
+	liqlog("liquidAE_LifArray(...)");
     global string	$gLiquid_currentAEParent;
     global string	$gAEFocusNode;
     global string	$gLiquid_currentAENode;    
@@ -463,7 +463,7 @@ global proc string liquidAE_LifArray(string $paramName, int $arraySize, string $
 // Modified to accomodate selector for non int parameters
 global proc string liquidAE_Lif_selector( string $paramName, string $paramType, string $attr, string $label, string $range[], string  $description, int $state )
 {
-	//liqlog("liquidAE_Lif_selector(...)");
+	liqlog("liquidAE_Lif_selector(...)");
     global string $gLiquid_currentAEParent;
     global string $gLiquid_currentAENode;
     global string $gLiquid_currentAEShader;
@@ -566,7 +566,7 @@ global proc string liquidAE_Lif_selector( string $paramName, string $paramType, 
 
 global proc string liquidAE_LifFloat_field( string $paramName, string $attr, string $label, string $range[], string $description, int $state )
 {
-	//liqlog("liquidAE_LifFloat_field(...)");
+	liqlog("liquidAE_LifFloat_field(...)");
 	global string $gLiquid_currentAENode;
 	global string $gLiquid_currentAEParent;
 	global string $gLiquid_currentAEShader;
@@ -600,7 +600,7 @@ global proc string liquidAE_LifFloat_field( string $paramName, string $attr, str
 
 global proc string liquidAE_LifFloat_slider( string $paramName, string $attr, string $label, string $range[], string $description, int $state )
 {
-	//liqlog("liquidAE_LifFloat_slider(...)");
+	liqlog("liquidAE_LifFloat_slider(...)");
 	global string $gLiquid_currentAENode;
 	global string $gLiquid_currentAEParent;
 	global string $gLiquid_currentAEShader;
@@ -656,7 +656,7 @@ global proc string liquidAE_LifFloat_slider( string $paramName, string $attr, st
 
 global proc string liquidAE_LifFloat_bool( string $paramName, string $attr, string $label, string $range[], string $description, int $state )
 {
-	//liqlog("liquidAE_LifFloat_bool(...)");
+	liqlog("liquidAE_LifFloat_bool(...)");
 	global string $gLiquid_currentAEParent;
 	global string $gLiquid_currentAENode;
 	global string $gLiquid_currentAEShader;
@@ -692,7 +692,7 @@ global proc string liquidAE_LifFloat_bool( string $paramName, string $attr, stri
 
 global proc string liquidAE_LifFloat_spline( string $paramName, string $label, string $subtype, string $description, int $state )
 {
-	//liqlog("liquidAE_LifFloat_spline(...)");
+	liqlog("liquidAE_LifFloat_spline(...)");
 	global string $gLiquid_currentAEParent;
 	global string $gLiquid_currentAENode;
 	global string $gLiquid_currentAEShader;
@@ -729,7 +729,7 @@ global proc string liquidAE_LifFloat_spline( string $paramName, string $label, s
 // With support for (resizable) float arrays
 global proc liquidAE_LifFloat( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $state )
 {
-	//liqlog("liquidAE_LifFloat(...)");
+	liqlog("liquidAE_LifFloat(...)");
 	global string	$gLiquid_currentAEParent;
 	global string	$gLiquid_currentAENode;
 	global string	$gLiquid_currentAEShader;
@@ -992,102 +992,79 @@ global proc liquidAE_LifColor( string $paramName, int $arraySize, string $subtyp
 /********************************************************************
 	Vectors
 ********************************************************************/
-
-global proc liquidAE_LifVector( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $state )
+//replaced by liquidAE_LifVector2() in liquid trunk r718,
+//because the original liquidAE_LifVector() doesn't support 
+// normal/vector/point array very well.
+global proc liquidAE_LifVector( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
 {
-	liqlog("liquidAE_LifVector(...)");
+	liqlog("liquidAE_LifVector(\""+$paramName+"\", "+$arraySize+", \""+$subtype+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$channelBox+" )");
+
 	if( $arraySize == -1 )
 	{
 		$arraySize = 0;
 	}
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
 
-	global string $gLiquid_currentAEParent;
-	global string $gLiquid_currentAENode;
-	global string $gLiquid_currentAEShader;
 
-	trace ("[liquidAE_LifVector] on "+$gLiquid_currentAENode+" for "+$paramName+" ("+$subtype+"), size "+$arraySize+", label "+$label+", range ["+stringArrayToString($range, " ")+"], state "+$state+", desc "+$description);
+  if ( ! objExists( ($gLiquid_currentAENode+"."+$paramName) ) ) {
+    warning ("[liquid] liquidAE_LifVector2 : "+$gLiquid_currentAENode+"."+$paramName+" does not exist ! Your Lif file might be obsolete...");
+    return;
+  }
 
-	string $attr = $paramName;
-	string $plug = $gLiquid_currentAENode+"."+$attr;
-	if ( ! objExists( ($gLiquid_currentAENode+"."+$paramName) ) ) 
-	{
-		warning ("[iquidAE_LifVector] " + $gLiquid_currentAENode + "." + $paramName + " does not exist ! Your Lif file might be obsolete...");
-		return;
-	}
+  setParent $gLiquid_currentAEParent;
+  setUITemplate -pst attributeEditorTemplate;
 
-	int $isArray = ($arraySize > 0); // ??? was ($arraySize >= 0);
-	int $skip = 0;
-	if ($isArray) 
-	{
-		string $arrayParamName = ( $paramName + "[" + (($arraySize > 0) ? $arraySize : "") + "]" );
-		string $arrayCtl = controlName($gLiquid_currentAEShader, $arrayParamName);
-		if ( ! ($skip = `control -q -ex $arrayCtl`) ) 
-		{
-			$gLiquid_currentAEParent = `frameLayout -p $gLiquid_currentAEParent -label $arrayParamName
-											-borderVisible false -labelIndent 10 -font "smallPlainLabelFont" $arrayCtl`;
- 			$gLiquid_currentAEParent = `columnLayout -p $gLiquid_currentAEParent`;
-		}
-	}
+  int $i;
+  int $nValues = ($arraySize)? $arraySize : 1;
+  int $skip    = `control -q -ex ( ( $arraySize )? ( $gLiquid_currentAEShader + "_" + $paramName + "_0_LIF" ) : ( $gLiquid_currentAEShader + "_" + $paramName+"_LIF" ) )`;
 
-	string $shortSubType[] = stringToStringArray( $subtype, " ");
- 	string $stype = $shortSubType[0];
+  if ( $arraySize && !$skip ) {
 
-	int $keyable = liquidLifKeyable($state);
-	setAttr -k $keyable $plug;
-	setAttr -k $keyable ($plug+"a");
-	setAttr -k $keyable ($plug+"b");
- 	setAttr -k $keyable ($plug+"c");
-	
-	int $size = ( $arraySize > 0 ) ? $arraySize : 1;
-	for ( $i=0; $i < $size; $i++ ) 
-	{
-		string $arrayNotation	= ($isArray) ? ("["+$i+"]") : "";
-		string $cattr		= $attr + $arrayNotation;
-		string $cplug		= $plug + $arrayNotation;
-		string $clabel	= $label + $arrayNotation;
+    $gLiquid_currentAEParent = `frameLayout -p $gLiquid_currentAEParent
+                                            -label ( $paramName + "[" + $arraySize + "]" )
+                                            -borderVisible false
+                                            -labelIndent 10
+                                            -font "smallPlainLabelFont"`;
+    $gLiquid_currentAEParent = `columnLayout -p $gLiquid_currentAEParent`;
 
-		trace ("\t[liquidAE_LifVector] on attribute " + $cattr + " of label " + $clabel);
+  }
 
-		float $currentValue[]  = `getAttr $cplug`;
-		
-		trace ("\t[liquidAE_LifVector] $cplug = "+ $cplug + " value = " + $currentValue[0] + "," + $currentValue[1] + "," + $currentValue[2] );
-		
-		string $ctlName       = controlName( $gLiquid_currentAEShader, $cattr );
+  setAttr -k $channelBox ($gLiquid_currentAENode+"."+$paramName);
 
-		switch( $stype ) 
-		{
-			case "field":
-			default:
-				if ( !`control -q -ex $ctlName ` ) 
-				{
-      				attrFieldGrp	-p $gLiquid_currentAEParent
-                    				-label $clabel
-                    				-cc ( "liquidParamAU " + $gLiquid_currentAENode )
-                    				-attribute $cplug
-                    				$ctlName;
-    		} 
-    		else 
-    		{
-    		  attrFieldGrp	-e -attribute $cplug -ann $description $ctlName;
-    		}
-    		break;
-		}
-    setAttr -k $keyable $cplug;
-		setAttr -k $keyable ($cplug+"a");
-    setAttr -k $keyable ($cplug+"b");
-    setAttr -k $keyable ($cplug+"c");
-	}
+  for ( $i=0; $i<$nValues; $i++ ) {
 
-	if ( $isArray && !$skip ) 
-	{
-		$gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
-		$gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
-		setParent $gLiquid_currentAEParent;
-		//setParent ..;setParent ..;
-	}
+    string $pname     = ( $arraySize )? ( $gLiquid_currentAENode + "." + $paramName + "[" + $i + "]" ) : ( $gLiquid_currentAENode + "." + $paramName );
+    string $pnameCtl  = ( $arraySize )? ( $gLiquid_currentAEShader + "_" + $paramName + "_" + $i + "_LIF" ) : ( $gLiquid_currentAEShader + "_" + $paramName + "_LIF" );
+    string $plabel    = ( $arraySize )? ( $label + "[" + $i + "]" ) : $label;
 
-	setUITemplate -ppt;
-	setParent $gLiquid_currentAEParent;
+    if ( !`control -q -ex $pnameCtl` ) {
+      attrFieldGrp  -p $gLiquid_currentAEParent
+                    -label $plabel
+                    -cc ( "liquidParamAU " + $gLiquid_currentAENode )
+                    -attribute $pname
+                    $pnameCtl;
+    } else attrFieldGrp -e -attribute $pname -ann $description $pnameCtl;
+
+    string $subPname = ( $arraySize )? ($pname+"."+$paramName) : ($pname);
+    setAttr -k $channelBox $pname;
+    setAttr -k $channelBox ($subPname+"a");
+    setAttr -k $channelBox ($subPname+"b");
+    setAttr -k $channelBox ($subPname+"c");
+
+  }
+
+
+  if ( $arraySize && !$skip ) {
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    setParent $gLiquid_currentAEParent;
+  }
+
+  setUITemplate -ppt;
+
+  setParent $gLiquid_currentAEParent;
 
 }
 
@@ -1286,7 +1263,7 @@ global proc liquidAE_LifString( string $paramName, int $arraySize, string $subty
 
 global proc liquidAE_LifShader( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $state )
 {
-	//liqlog("liquidAE_LifShader(...)");
+	liqlog("liquidAE_LifShader(...)");
 	global string $gLiquid_currentAEParent;
 	global string $gLiquid_currentAENode;
 	global string $gLiquid_currentAEShader;
@@ -1366,7 +1343,7 @@ global proc liquidAE_LifShader( string $paramName, int $arraySize, string $subty
  */
 global proc liquidAE_LifStringOverrideEnabler( string $nodeDotAttr, string $ctl )
 {
-	//liqlog("liquidAE_LifStringOverrideEnabler(...)");
+	liqlog("liquidAE_LifStringOverrideEnabler(...)");
   int    $enable        = (`editRenderLayerGlobals -q -crl` == "defaultRenderLayer")? 0 : 1;
   string $nodeOverrides = (" "+stringArrayToString( editRenderLayerAdjustment( "-q" ,$nodeDotAttr), " ")+" ");
   string $remove        = (gmatch( $nodeOverrides, ("* "+$nodeDotAttr+" *")))? "-remove":"";
@@ -1393,7 +1370,7 @@ global proc liquidAE_LifStringOverrideEnabler( string $nodeDotAttr, string $ctl 
  */
 global proc liquidAE_LifStringOverride( string $nodeDotAttr, string $ctl )
 {
-	liqlog("liquidAE_LifStringOverride(...)");
+	liqlog("liquidAE_LifStringOverride("+$nodeDotAttr+","+$ctl+")");
   string $parentMenu;
 
   if ( !`menuItem -q -ex ($ctl+"PopupMenuOVR")` ) {

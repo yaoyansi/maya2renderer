@@ -17,6 +17,10 @@ global proc liqError(string $log)
 {
 	log2("ERROR", $log);
 }
+global proc liqWarn(string $log)
+{
+	log2("WARNNING", $log);
+}
 global proc liqTrace(string $log)
 {
 	trace($log);
