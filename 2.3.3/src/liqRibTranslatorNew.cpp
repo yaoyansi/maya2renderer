@@ -1943,3 +1943,48 @@ liqRibTranslator* liqRibTranslator::getInstancePtr()
 	assert(mInstance);
 	return mInstance;
 }
+//
+MStatus liqRibTranslator::ribPrologue__()
+{
+	return ribPrologue();
+}
+//
+MStatus liqRibTranslator::ribEpilogue__()
+{
+	return ribEpilogue();
+}
+//
+MStatus liqRibTranslator::framePrologue__( long scanTime)
+{
+	return framePrologue(scanTime);
+}
+//
+MStatus liqRibTranslator::worldPrologue__()
+{
+	return worldPrologue();
+}
+//
+MStatus liqRibTranslator::lightBlock__()
+{
+	return lightBlock();
+}
+//
+MStatus liqRibTranslator::coordSysBlock__()
+{
+	return coordSysBlock();
+}
+//
+MStatus liqRibTranslator::objectBlock__()
+{
+	return objectBlock();
+}
+//
+MStatus liqRibTranslator::worldEpilogue__()
+{
+	return worldEpilogue();
+}
+//
+MStatus liqRibTranslator::frameEpilogue__( long scanTime)
+{
+	return frameEpilogue(scanTime);
+}

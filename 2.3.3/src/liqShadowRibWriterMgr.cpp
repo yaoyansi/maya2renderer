@@ -47,16 +47,16 @@ TempControlBreak tShadowRibWriterMgr::write(
 		liquidMessage( "Beginning RI output directly to renderer", messageInfo );
 		RiBegin( RI_NULL );
 #endif
-		if( liqRibTranslator::getInstancePtr()->worldPrologue() != MS::kSuccess )
+		if( liqRibTranslator::getInstancePtr()->worldPrologue__() != MS::kSuccess )
 			return TCB_Break;//break;
 		if( currentJob___.isShadow && currentJob___.deepShadows && m_outputLightsInDeepShadows__ ) 
-			if( liqRibTranslator::getInstancePtr()->lightBlock() != MS::kSuccess ) 
+			if( liqRibTranslator::getInstancePtr()->lightBlock__() != MS::kSuccess ) 
 				return TCB_Break;//break;
-		if( liqRibTranslator::getInstancePtr()->coordSysBlock() != MS::kSuccess ) 
+		if( liqRibTranslator::getInstancePtr()->coordSysBlock__() != MS::kSuccess ) 
 			return TCB_Break;//break;
-		if( liqRibTranslator::getInstancePtr()->objectBlock() != MS::kSuccess ) 
+		if( liqRibTranslator::getInstancePtr()->objectBlock__() != MS::kSuccess ) 
 			return TCB_Break;//break;
-		if( liqRibTranslator::getInstancePtr()->worldEpilogue() != MS::kSuccess ) 
+		if( liqRibTranslator::getInstancePtr()->worldEpilogue__() != MS::kSuccess ) 
 			return TCB_Break;//break;
 		RiEnd();
 #ifdef RENDER_PIPE  
@@ -103,16 +103,16 @@ TempControlBreak tShadowRibWriterMgr::write(
 	// reference the correct shadow archive
 	//
 	/* cout <<"  * referencing shadow archive "<<baseShadowName.asChar()<<endl; */
-	if( liqRibTranslator::getInstancePtr()->ribPrologue() == MS::kSuccess ) 
+	if( liqRibTranslator::getInstancePtr()->ribPrologue__() == MS::kSuccess ) 
 	{
-		if( liqRibTranslator::getInstancePtr()->framePrologue( scanTime__ ) != MS::kSuccess ) 
+		if( liqRibTranslator::getInstancePtr()->framePrologue__( scanTime__ ) != MS::kSuccess ) 
 			return TCB_Break;//break;
 		//MString realShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, baseShadowName, liqglo_projectDir ) ) );
 		RiArchiveRecord( RI_COMMENT, "Read Archive Data:\n" );
 		RiReadArchive( const_cast< RtToken >( baseShadowName__.asChar() ), NULL, RI_NULL );
-		if( liqRibTranslator::getInstancePtr()->frameEpilogue( scanTime__ ) != MS::kSuccess ) 
+		if( liqRibTranslator::getInstancePtr()->frameEpilogue__( scanTime__ ) != MS::kSuccess ) 
 			return TCB_Break;//break;
-		liqRibTranslator::getInstancePtr()->ribEpilogue();
+		liqRibTranslator::getInstancePtr()->ribEpilogue__();
 	}
 	RiEnd();
 	//------------------------------------------------------------

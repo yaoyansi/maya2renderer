@@ -494,8 +494,19 @@ private :
 	void getCameraData( std::vector<structJob>::iterator &iter__ , const int sample__);
 	void getLightData( std::vector<structJob>::iterator &iter__ , const int sample__);
 
+
 	MTime originalTime;
 
+public:
+	MStatus ribPrologue__();
+ 	MStatus ribEpilogue__();
+ 	MStatus framePrologue__( long );
+	MStatus worldPrologue__();
+	MStatus lightBlock__();
+	MStatus coordSysBlock__();
+	MStatus objectBlock__();
+	MStatus worldEpilogue__();
+	MStatus frameEpilogue__( long );
 
 private:
 	liqRibTranslator(const liqRibTranslator&);
