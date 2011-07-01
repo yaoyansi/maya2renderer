@@ -113,6 +113,7 @@
 #include <liqLightMgr.h>
 #include <liqLocatorMgr.h>
 #include <liqShadowRibWriterMgr.h>
+#include <liqHeroRibWriterMgr.h>
 
 using namespace boost;
 using namespace std;
@@ -967,49 +968,16 @@ TempControlBreak liqRibTranslator::processOneFrame(
 			}//if( liqglo_currentJob.isShadow && !fullShadowRib ) 
 			else 
 			{
-#ifndef RENDER_PIPE
-				liquidMessage( "Beginning RIB output to '" + string( liqglo__.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
-				RiBegin( const_cast< RtToken >( liqglo__.liqglo_currentJob.ribFileName.asChar() ) );
-#else//RENDER_PIPE
-				liqglo__.liqglo_ribFP = fopen( liqglo__.liqglo_currentJob.ribFileName.asChar(), "w" );
-				if( liqglo__.liqglo_ribFP ) 
-				{
-					RtInt ribFD = fileno( liqglo__.liqglo_ribFP );
-					RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
-				} 
-				else
-				{
-					liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
-				}
-
-				liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-				RiBegin( RI_NULL );
-#endif//RENDER_PIPE
-				// full beauty/shadow rib generation
-				//
-				/* cout <<"  * build full rib"<<endl; */
-				if( ribPrologue() == MS::kSuccess ) 
-				{
-					if( framePrologue( scanTime ) != MS::kSuccess ) 
-						break;
-					if( worldPrologue() != MS::kSuccess ) 
-						break;
-					if( !liqglo__.liqglo_currentJob.isShadow || ( liqglo__.liqglo_currentJob.isShadow && liqglo__.liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows) ) 
-						if( lightBlock() != MS::kSuccess ) 
-							break;
-					if( coordSysBlock() != MS::kSuccess ) 
-						break;
-					if( objectBlock() != MS::kSuccess ) 
-						break;
-					if( worldEpilogue() != MS::kSuccess ) 
-						break;
-					if( frameEpilogue( scanTime ) != MS::kSuccess ) 
-						break;
-					ribEpilogue();
-					// output info when done with the rib - Alf
-					cout <<"Finished RIB generation "<<liqglo__.liqglo_currentJob.ribFileName.asChar()<<endl;
-				}
-				RiEnd();
+				tHeroRibWriterMgr heroRibWriterMgr;
+				TempControlBreak tcb = 
+					heroRibWriterMgr.write(
+					liqglo__, 
+					liqglo__.liqglo_currentJob, 
+					scanTime,
+					m_outputLightsInDeepShadows
+					//,jobList
+					);
+				PROCESS_TEMP_CONTROL_BREAK_CONTINUE(tcb)
 			}
 
 #ifdef RENDER_PIPE

@@ -3022,6 +3022,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqHeroRibWriterMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\liqJobList.cpp"
 				>
 			</File>
@@ -3292,6 +3296,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\liqGlobalVariable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\liqHeroRibWriterMgr.h"
 				>
 			</File>
 			<File
