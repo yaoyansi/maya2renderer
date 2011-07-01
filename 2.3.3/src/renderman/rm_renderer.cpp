@@ -939,4 +939,13 @@ namespace renderman
 		RiAtmosphereV ( const_cast<char *>(shader.getShaderFileName().c_str()), shaderParamCount,  tokenArray.get(), pointerArray.get() );
 
 	}
+
+	void Renderer::exportLightLinks(
+		const structJob &currentJob__,
+		const liqRibNodePtr mesh,
+		const liqRibNodePtr light,
+		const bool bIlluminateByDefault)
+	{
+		RiIlluminate( light->object(0)->lightHandle(), !bIlluminateByDefault );
+	}
 }//namespace

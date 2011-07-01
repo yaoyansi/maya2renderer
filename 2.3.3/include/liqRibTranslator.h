@@ -442,7 +442,7 @@ public:
 	MObject getShadowSetObject(const structJob &currentJob);
 	MStatus preTransformMel(const MObject &transform__);
 	MStatus postTransformMel(const MObject &transform__);
-	MStatus tRiIlluminate(const liqRibNodePtr ribNode__);
+	MStatus tRiIlluminate(const structJob &currentJob__, const liqRibNodePtr ribNode__);
 	MStatus MaxtrixMotionBlur(const liqRibNodePtr ribNode__, MDagPath &path__, const bool bMotionBlur);
 
 	MStatus preShapeMel(const MObject &transform__);

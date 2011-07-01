@@ -1239,7 +1239,7 @@ MStatus liqRibTranslator::postTransformMel(const MObject &transform__)
 	return MS::kSuccess;
 }
 //
-MStatus liqRibTranslator::tRiIlluminate(const liqRibNodePtr ribNode__)
+MStatus liqRibTranslator::tRiIlluminate(const structJob &currentJob__, const liqRibNodePtr ribNode__)
 {
 	// Moritz: only write out light linking if we're not in a shadow pass
 
@@ -1266,10 +1266,9 @@ MStatus liqRibTranslator::tRiIlluminate(const liqRibNodePtr ribNode__)
 				liqRibNodePtr  ln( htable->find( lightFnDag.fullPathName(), nodeDagPath, MRT_Light ) );
 				if( NULL != ln )
 				{
-					if( liqglo.m_illuminateByDefault )
-						RiIlluminate( ln->object(0)->lightHandle(), RI_FALSE );
-					else
-						RiIlluminate( ln->object(0)->lightHandle(), RI_TRUE );
+					liquid::RendererMgr::getInstancePtr()->
+						getRenderer()->exportLightLinks(
+						currentJob__, ribNode__, ln, liqglo.m_illuminateByDefault);
 				}
 			}
 		}
@@ -3070,7 +3069,7 @@ void liqRibTranslator::oneObjectBlock(
 		if( !  currentJob.isShadow 
 			|| (currentJob.deepShadows && m_outputLightsInDeepShadows && !m_ignoreLights) )
 		{
-			tRiIlluminate(ribNode);
+			tRiIlluminate(currentJob, ribNode);
 		}
 		bool bMotionBlur =
 			ribNode->motion.transformationBlur &&

@@ -81,6 +81,7 @@ public:
     RtObjectHandle handle() const;
     RtLightHandle  lightHandle() const;
     //char         **lightSources; // unused?
+	const liqRibDataPtr getDataPtr() const{ return data; }
 
 private:
 	std::vector< MMatrix > instanceMatrices; // Matrices for all instances of this object

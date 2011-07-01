@@ -438,11 +438,8 @@ namespace elvishray
 
 		_S( ei_end_instance() );
 		_s("//");
-		m_groupMgr->addLightLink(currentJob.name.asChar(), mesh->getName(), "pointLightShape2");//_S( ei_init_instance( mesh->getName() ) );
-		m_groupMgr->addLightLink(currentJob.name.asChar(), mesh->getName(), "spotLightShape8");//_S( ei_init_instance( mesh->getName() ) );
-		m_groupMgr->addLightLink(currentJob.name.asChar(), mesh->getName(), "pointLightShape9");//_S( ei_init_instance( mesh->getName() ) );
-	
 		//
+		m_groupMgr->addObjectInstance( currentJob.name.asChar(), mesh->getName() );//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
 
 	}
 	//
@@ -863,5 +860,26 @@ namespace elvishray
 	)
 	{
 		_s( "// shader_volume("<<shader.getName()<<","<<", ...)" );	
+	}
+
+	void Renderer::exportLightLinks(
+		const structJob &currentJob__,
+		const liqRibNodePtr mesh, 
+		const liqRibNodePtr light,
+		const bool bIlluminateByDefault)
+	{
+		const liqRibDataPtr meshdata = mesh->object(0)->getDataPtr();
+		const liqRibData *pmeshdata = meshdata.get();
+		const liqRibMeshData *ppmeshdata = dynamic_cast<const liqRibMeshData *>(pmeshdata);
+		assert(ppmeshdata);
+		
+		const liqRibDataPtr lightdata = light->object(0)->getDataPtr();
+		const liqRibData *plightdata = lightdata.get();
+		const liqRibMeshData *pplightdata = dynamic_cast<const liqRibMeshData *>(plightdata);
+		assert(pplightdata);
+		
+		m_groupMgr->addLightLink(currentJob__.name.asChar(), ppmeshdata->getName(), pplightdata->getName());//_S( ei_init_instance( mesh->getName() ) );
+
+
 	}
 }//namespace
