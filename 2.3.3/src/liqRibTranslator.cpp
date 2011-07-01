@@ -4489,12 +4489,29 @@ MStatus liqRibTranslator::scanSceneNodes( MObject &currentNode, MDagPath &path, 
 		}
 
 	}
+	liquidMessage2(messageInfo,"%s,\t\t\t\t %d%d%d %d%d%d %d%d%d %d%d\n"
+		,path.fullPathName().asChar() 
+		,currentNode.hasFn( MFn::kNurbsSurface )
+		,currentNode.hasFn( MFn::kMesh )
+		,currentNode.hasFn( MFn::kParticle )
+
+		,currentNode.hasFn( MFn::kLocator )
+		,currentNode.hasFn( MFn::kSubdiv )
+		,currentNode.hasFn( MFn::kPfxHair )
+
+		,currentNode.hasFn( MFn::kPfxToon )
+		,currentNode.hasFn( MFn::kImplicitSphere )
+		,currentNode.hasFn( MFn::kPluginShape )
+
+		,currentNode.hasFn( MFn::kPfxGeometry )
+		,currentNode.hasFn( MFn::kNurbsCurve ) );
+
 	if(  currentNode.hasFn( MFn::kNurbsSurface )
 		|| currentNode.hasFn( MFn::kMesh )
 		|| currentNode.hasFn( MFn::kParticle )
 		|| currentNode.hasFn( MFn::kLocator )
 		|| currentNode.hasFn( MFn::kSubdiv )
-		|| currentNode.hasFn( MFn::kPfxHair )
+		|| (currentNode.hasFn( MFn::kPfxHair ) && !currentNode.hasFn( MFn::kPfxGeometry )) //pfxHair has both of these two attributes, so we process pfxHair as MFn::kPfxGeometry
 		|| currentNode.hasFn( MFn::kPfxToon )
 		|| currentNode.hasFn( MFn::kImplicitSphere )
 		|| currentNode.hasFn( MFn::kPluginShape ) ) // include plugin shapes as placeholders
@@ -7067,6 +7084,7 @@ MStatus liqRibTranslator::objectBlock()
 
 		if( !ribNode->ignoreShapes ) 
 		{
+			liqRIBMsg("ribNode->object(0)->type= %d, path=%s",ribNode->object(0)->type, ribNode->path().fullPathName().asChar() );
 			// check to see if we are writing a curve to set the proper basis
 			if( ribNode->object(0)->type == MRT_NuCurve
 				|| ribNode->object(0)->type == MRT_PfxHair

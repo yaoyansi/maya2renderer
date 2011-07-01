@@ -188,6 +188,7 @@ liqRibObj::liqRibObj( const MDagPath &path, ObjectType objType )
       else if( obj.hasFn(MFn::kPfxGeometry) ) 
       {
 	      type = objType;
+		  liquidMessage2(messageInfo, "liqRibObj(MFn kPfxGeometry) type = %d\n", (int)objType);
         if( !ignoreShapes ) 
           data = liqRibDataPtr( new liqRibPfxData( obj, objType ) );
         else 
