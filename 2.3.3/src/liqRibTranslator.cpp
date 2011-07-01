@@ -204,6 +204,8 @@ int          liqglo_outPadding;
 // renderer properties
 liqRenderer liquidRenderer;
 
+MString		liqglo_rifParams;
+
 #if 0
 #ifdef _WIN32
 // Hmmmmmmmm what's this ?
@@ -769,6 +771,7 @@ MSyntax liqRibTranslator::syntax()
 	syntax.addFlag("shn",   "shotName",        MSyntax::kString);
 	syntax.addFlag("shv",   "shotVersion",     MSyntax::kString);
 	syntax.addFlag("lyr",   "layer",           MSyntax::kString);
+//	syntax.addFlag("lrp",   "currentLayerRifParameters",           MSyntax::kString);
 
 	return syntax;
 }
@@ -1982,6 +1985,9 @@ void liqRibTranslator::liquidReadGlobals()
 	liquidGetPlugValue( rGlobalNode, "renderScriptCommand", varVal, gStatus );
 	if( varVal != "" ) 
 		m_renderScriptCommand = parseString( varVal, false );
+
+	liquidGetPlugValue( rGlobalNode, "currentLayerRifParameters", liqglo_rifParams, gStatus );
+	
 }
 
 bool liqRibTranslator::verifyOutputDirectories()
@@ -3357,9 +3363,9 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						liquidMessage( "    + '" + string( liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
 
 #ifdef _WIN32
-						liqProcessLauncher::execute( liquidRenderer.renderCommand, " -rif pointToDSO.dll "+ liquidRenderer.renderCmdFlags + " \"" + liqglo_currentJob.ribFileName + "\"", "\"" + liqglo_projectDir + "\"", false );
+						liqProcessLauncher::execute( liquidRenderer.renderCommand, " "+liqglo_rifParams+" "+ liquidRenderer.renderCmdFlags + " \"" + liqglo_currentJob.ribFileName + "\"", "\"" + liqglo_projectDir + "\"", false );
 #else
-						liqProcessLauncher::execute( liquidRenderer.renderCommand, " -rif pointToDSO.dll "+ liquidRenderer.renderCmdFlags + " " + liqglo_currentJob.ribFileName, liqglo_projectDir, false );
+						liqProcessLauncher::execute( liquidRenderer.renderCommand, " "+liqglo_rifParams+" "+ liquidRenderer.renderCmdFlags + " " + liqglo_currentJob.ribFileName, liqglo_projectDir, false );
 #endif
 						/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
 						to display buckets in the renderview.

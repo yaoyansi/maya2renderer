@@ -96,6 +96,8 @@ public:
   // Deep Shadow Display
   MString dshDisplayName;
   MString dshImageMode;
+
+  MString rifParams;
 };
 
 

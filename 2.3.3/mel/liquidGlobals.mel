@@ -669,6 +669,8 @@ global proc liquidInitGlobalVals()
 
     ,"statistics",                  "long",       0
     ,"verbosity",                   "long",       1
+
+	,"rif",							"string",	  ""
   };
 
 
@@ -3273,4 +3275,38 @@ global proc liquidGlobalsFluidTab_buildIt( string $prefix )
 }
 
 
+global proc liquidGlobalsAdvanceTab( string $prefix )
+{
+	liqlog("liquidGlobalsAdvanceTab("+$prefix+")");
+  columnLayout -adj true ($prefix + "liquidGlobalsAdvanceSet" );
+}
 
+global proc liquidGlobalsAdvanceTab_buildIt( string $prefix )
+{
+	liqlog("liquidGlobalsAdvanceTab_buildIt("+$prefix+")");
+  setUITemplate -pushTemplate renderGlobalsTemplate;
+  setUITemplate -pushTemplate attributeEditorTemplate;
+
+  string $previousParent = `setParent -q`;
+
+  setParent ($prefix + "liquidGlobalsAdvanceSet" );
+  layout -e -vis false ($prefix + "liquidGlobalsAdvanceSet" );
+
+	 //
+     frameLayout -l "Rif" -cl false;
+     columnLayout -adj true;
+
+        liquidShowStringGlobal "currentLayerRifParameters" "Rif Parameters" $prefix;
+        separator;
+
+      setParent ..;
+    setParent ..;
+	//
+
+  layout -e -vis true ($prefix + "liquidGlobalsAdvanceSet" );
+
+  setParent $previousParent;
+
+  setUITemplate -ppt;
+  setUITemplate -ppt;
+}

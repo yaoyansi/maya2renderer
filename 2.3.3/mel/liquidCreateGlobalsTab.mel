@@ -115,7 +115,7 @@ global proc liquidCreateMayaGlobalsTabContent( string $prefix )
 
 global proc liquidCreateMayaGlobalsTab( string $prefix, string $name )
 {
-	liqlog("liquidCreateMayaGlobalsTab(...)");
+	liqlog("liquidCreateMayaGlobalsTab("+$prefix+","+$name+")");
   // sanity check : we need valid globals
   if ( !liquidGlobalsExists() ) liquidCreateGlobals();
 
@@ -133,7 +133,7 @@ global proc liquidCreateMayaGlobalsTab( string $prefix, string $name )
 
 global proc liquidCreateGlobalsTab()
 {
-	liqlog("liquidCreateGlobalsTab(...)");
+	liqlog("liquidCreateGlobalsTab()");
    string $currentParent = `setParent -q`;
    
   // make sure the maya globals are correctly initialized.
@@ -214,6 +214,7 @@ global proc liquidCreateGlobalsTab()
   liquidCreateMayaGlobalsTab( $prefix, "Job" );
   liquidCreateMayaGlobalsTab( $prefix, "Renderer" );
   liquidCreateMayaGlobalsTab( $prefix, "Fluid" );
+  liquidCreateMayaGlobalsTab( $prefix, "Advance" );
 
   // set up the tab so that it may resize and auto-build.
   if ( `layout -q -ex liquidTabLayout` ) tabLayout -e -cc $cmd -sc $cmd -dcc $cmd liquidTabLayout;

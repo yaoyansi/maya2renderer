@@ -365,6 +365,8 @@ class liqGlobalsNode : public MPxNode
     static MObject aDepthMaskDepthBias;
 
     static MObject aVerbosity;
+
+    static MObject aCurrentLayerRifParameters;
 };
 
 

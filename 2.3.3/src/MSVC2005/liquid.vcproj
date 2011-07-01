@@ -3348,10 +3348,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\mel\createLiquidGlobalsTab.mel"
-				>
-			</File>
-			<File
 				RelativePath="..\..\mel\getMultiListerSelection.mel"
 				>
 			</File>
