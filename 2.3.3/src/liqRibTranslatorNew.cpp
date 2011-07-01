@@ -111,6 +111,7 @@
 #include <liqJobScriptMgr.h>
 #include <liqFrameScriptMgr.h>
 #include <liqLightMgr.h>
+#include <liqLocatorMgr.h>
 
 using namespace boost;
 using namespace std;
@@ -1590,49 +1591,8 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 			lightMgr.scanScene(lframe, sample,htable, count, returnStatus);
 		}
 		{
-			MItDag dagCoordSysIterator( MItDag::kDepthFirst, MFn::kLocator, &returnStatus);
-
-			for (; !dagCoordSysIterator.isDone(); dagCoordSysIterator.next()) 
-			{
-				LIQ_CHECK_CANCEL_REQUEST;
-				MDagPath path;
-				MObject currentNode;
-				currentNode = dagCoordSysIterator.item();
-				MFnDagNode dagNode;
-				dagCoordSysIterator.getPath( path );
-				if(MS::kSuccess != returnStatus) 
-					continue;
-				if(!currentNode.hasFn(MFn::kDagNode)) 
-					continue;
-				returnStatus = dagNode.setObject( currentNode );
-				if(MS::kSuccess != returnStatus) 
-					continue;
-
-				// scanScene: if it's a coordinate system then insert it into the hash table
-				if( dagNode.typeName() == "liquidCoordSys" ) 
-				{
-					int coordType = 0;
-					MPlug typePlug = dagNode.findPlug( "type", &returnStatus );
-					if( MS::kSuccess == returnStatus ) 
-						typePlug.getValue( coordType );
-
-					if( ( sample > 0 ) && isObjectMotionBlur( path )) 
-					{
-						// philippe : should I store a motion-blurred clipping plane ?
-						if( coordType == 5 ) 
-							htable->insert(path, lframe, sample, MRT_ClipPlane,count++ );
-						else 
-							htable->insert(path, lframe, sample, MRT_Coord,count++ );
-					} 
-					else 
-					{
-						if( coordType == 5 ) 
-							htable->insert(path, lframe, 0, MRT_ClipPlane,count++ );
-						htable->insert(path, lframe, 0, MRT_Coord,count++ );
-					}
-					continue;
-				}
-			}
+			tLocatorMgr locatorMgr;
+			locatorMgr.scanScene(lframe, sample,htable, count, returnStatus);
 		}
 
 		if( !m_renderSelected )

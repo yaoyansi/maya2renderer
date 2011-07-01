@@ -3071,6 +3071,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqLocatorMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\liqlog.cpp"
 				>
 			</File>
@@ -3337,6 +3341,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\liqLightNodeBehavior.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\liqLocatorMgr.h"
 				>
 			</File>
 			<File
