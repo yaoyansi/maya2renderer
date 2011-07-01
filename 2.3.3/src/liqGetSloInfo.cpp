@@ -419,6 +419,8 @@ int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
   MPlug rmanShaderNamePlug = shaderNode.findPlug( "rmanShaderLong", &stat );
   rmanShaderNamePlug.getValue( shaderName );
 
+  shaderName = liquidSanitizePath(shaderName);//replace \ by /
+
   MString shaderExtension = shaderName.substring( shaderName.length() - 3, shaderName.length() - 1 );
   MString shaderFileName = shaderName.substring( 0, shaderName.length() - 5 );
 
