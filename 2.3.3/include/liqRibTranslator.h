@@ -95,7 +95,6 @@ private: // Methods
 	bool liquidInitGlobals();
 	void liquidReadGlobals();
 	bool verifyOutputDirectories();
-	MString getHiderOptions( MString rendername, MString hidername );
 
 	MStatus buildJobs();
 #ifdef Refactoring 
@@ -182,14 +181,8 @@ public:
 
 	bool        cleanShadows;                // UN-USED GLOBAL
 	bool        cleanTextures;               // UN-USED GLOBAL
-	liquidlong  pixelSamples;
-	float       shadingRate;
-	liquidlong  bucketSize[2];
-	liquidlong  gridSize;
-	liquidlong  textureMemory;
-	liquidlong  eyeSplits;
-	MVector    othreshold;
-	MVector    zthreshold;
+
+
 	// bool        renderAllCameras;   // Render all cameras, or only active ones     UN-USED GLOBAL
 	bool        ignoreFilmGate;
 	double      fov_ratio;
@@ -204,7 +197,7 @@ public:
 	static MString magic;
 
 	// Data used to construct output file names
-	MString       outFormat;
+
 	MString       outExt;
 //	MString       extension;
 	MString       imageName;
@@ -375,11 +368,6 @@ public:
 
 	MString m_shaderPath;
 
-	bool	  m_bakeNonRasterOrient;
-	bool	  m_bakeNoCullBackface;
-	bool	  m_bakeNoCullHidden;
-
-	MString m_preFrameRIB;
 
 
 
@@ -426,42 +414,18 @@ public:
 	std::vector<structChannel> m_channels;
 
 	// MStringArray  m_pixelFilterNames;
-	liquidlong    m_rFilter;
-	float         m_rFilterX, m_rFilterY;
 
-	bool          m_renderView;
+
 	bool          m_renderViewCrop;
 	bool          m_renderViewLocal;
 	liquidlong    m_renderViewPort;
 	liquidlong    m_renderViewTimeOut;
 
-	int           m_statistics;
-	MString       m_statisticsFile;
 
-	int           m_hiddenJitter;
-	// PRMAN 13 BEGIN
-	float         m_hiddenAperture[4];
-	float         m_hiddenShutterOpening[2];
-	// PRMAN 13 END
-	float         m_hiddenOcclusionBound;
-	bool          m_hiddenMpCache;
-	int           m_hiddenMpMemory;
-	MString       m_hiddenMpCacheDir;
-	bool          m_hiddenSampleMotion;
-	int           m_hiddenSubPixel;
-	bool          m_hiddenExtremeMotionDof;
-	int           m_hiddenMaxVPDepth;
-	// PRMAN 13 BEGIN
-	bool          m_hiddenSigma;
-	float         m_hiddenSigmaBlur;
-	// PRMAN 13 END
-	int           m_raytraceFalseColor;
-	int           m_photonEmit;
-	int           m_photonSampleSpectrum;
 
-	MString       m_depthMaskZFile;
-	bool          m_depthMaskReverseSign;
-	float         m_depthMaskDepthBias;
+
+
+
 
 	//vector<liqShader> m_shaders;
 

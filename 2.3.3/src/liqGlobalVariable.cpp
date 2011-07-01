@@ -250,3 +250,117 @@ MString getHiderOptions( MString rendername, MString hidername )
 	return options;
 }
 
+
+//
+void initLimitsParameters()
+{
+	liqglo.bucketSize[0] = 16;
+	liqglo.bucketSize[1] = 16;
+	liqglo.gridSize = 256;
+	liqglo.textureMemory = 2048;
+	liqglo.eyeSplits = 10;
+	liqglo.othreshold[0] = 0.996; liqglo.othreshold[1] = 0.996; liqglo.othreshold[2] = 0.996;
+	liqglo.zthreshold[0] = 0.996; liqglo.zthreshold[1] = 0.996; liqglo.zthreshold[2] = 0.996;
+}
+void getLimitsParameters(const MFnDependencyNode& rGlobalNode)
+{
+	MStatus gStatus;
+	MString varVal;
+	// RENDER OPTIONS:BEGIN
+	int var;
+	liquidGetPlugValue( rGlobalNode, "limitsBucketXSize", liqglo.bucketSize[0], gStatus );
+	liquidGetPlugValue( rGlobalNode, "limitsBucketYSize", liqglo.bucketSize[1], gStatus );
+	liquidGetPlugValue( rGlobalNode, "limitsGridSize", liqglo.gridSize, gStatus );
+	liquidGetPlugValue( rGlobalNode, "limitsTextureMemory", liqglo.textureMemory, gStatus );
+	liquidGetPlugValue( rGlobalNode, "limitsEyeSplits", liqglo.eyeSplits, gStatus );
+
+	liquidGetPlugValue( rGlobalNode, "limitsOThreshold", liqglo.othreshold, gStatus );
+	liquidGetPlugValue( rGlobalNode, "limitsZThreshold", liqglo.zthreshold, gStatus );
+}
+void getLimitsOptions()
+{
+	if( liqglo.bucketSize != 0 )    
+		RiOption( "limits", "bucketsize", ( RtPointer ) &liqglo.bucketSize, RI_NULL );
+	if( liqglo.gridSize != 0 )      
+		RiOption( "limits", "gridsize", ( RtPointer ) &liqglo.gridSize, RI_NULL );
+	if( liqglo.textureMemory != 0 ) 
+		RiOption( "limits", "texturememory", ( RtPointer) &liqglo.textureMemory, RI_NULL );
+	if( liqglo.liquidRenderer.supports_EYESPLITS ) 
+		RiOption( "limits", "eyesplits", ( RtPointer ) &liqglo.eyeSplits, RI_NULL );
+
+	if(liqglo.liquidRenderer.renderName == MString("PRMan") || liqglo.liquidRenderer.renderName == MString("3Delight") )
+	{
+		RtColor othresholdC = {liqglo.othreshold[0], liqglo.othreshold[1], liqglo.othreshold[2]};
+		RiOption( "limits", "othreshold", &othresholdC, RI_NULL );
+		RtColor zthresholdC = {liqglo.zthreshold[0], liqglo.zthreshold[1], liqglo.zthreshold[2]};
+		RiOption( "limits", "zthreshold", &zthresholdC, RI_NULL );
+	}
+}
+//
+//
+void initStatisticsParameters()
+{
+	liqglo.m_statistics        = 0;
+	liqglo.m_statisticsFile    = "";
+}
+void getStatisticsParameters(const MFnDependencyNode& rGlobalNode)
+{
+	MStatus gStatus;
+	MString varVal;
+	// RENDER OPTIONS:BEGIN
+	int var;
+	liquidGetPlugValue( rGlobalNode, "statistics", liqglo.m_statistics, gStatus );
+	liquidGetPlugValue( rGlobalNode, "statisticsFile", varVal, gStatus );
+	if( varVal != "" ) 
+		liqglo.m_statisticsFile = parseString( varVal, false );
+}
+void getStatisticsOptions()
+{
+		if( liqglo.m_statistics != 0 )  
+		{
+			if( liqglo.m_statistics < 4 ) 
+				RiOption( "statistics", "endofframe", ( RtPointer ) &liqglo.m_statistics, RI_NULL );
+			else 
+			{
+				//cout <<"xml stats "<<endl;
+				int stats = 1;
+				RiOption( "statistics", "int endofframe", ( RtPointer ) &stats, RI_NULL );
+				RiArchiveRecord( RI_VERBATIM, "Option \"statistics\" \"xmlfilename\" [\"%s\"]\n", const_cast< char* > ( liqglo.m_statisticsFile.asChar() ) );
+			}
+		}
+}
+//
+void initOtherParameters()
+{
+	liqglo.m_rFilterX = 1;
+	liqglo.m_rFilterY = 1;
+	liqglo.m_rFilter = pfBoxFilter;
+
+	liqglo.pixelSamples = 1;
+	liqglo.shadingRate = 1.0;
+	liqglo.m_renderView        = false;
+	liqglo.m_bakeNonRasterOrient    = false;
+	liqglo.m_bakeNoCullBackface    = false;
+	liqglo.m_bakeNoCullHidden    = false;
+	liqglo.outFormat = "it";
+
+	liqglo.m_preFrameRIB.clear();
+
+}
+void getOtherParameters(const MFnDependencyNode& rGlobalNode)
+{
+	MStatus gStatus;
+	MString varVal;
+	liquidGetPlugValue( rGlobalNode, "pixelSamples", liqglo.pixelSamples, gStatus );
+	liquidGetPlugValue( rGlobalNode, "shadingRate", liqglo.shadingRate, gStatus );
+
+	if ( liquidGetPlugValue( rGlobalNode, "imageDriver", varVal, gStatus )== MS::kSuccess )
+		liqglo.outFormat = parseString( varVal, false );
+	if ( liquidGetPlugValue( rGlobalNode, "bakeRasterOrient", liqglo.m_bakeNonRasterOrient, gStatus )== MS::kSuccess )
+		liqglo.m_bakeNonRasterOrient = !liqglo.m_bakeNonRasterOrient;
+	if ( liquidGetPlugValue( rGlobalNode, "bakeCullBackface", liqglo.m_bakeNoCullBackface, gStatus )== MS::kSuccess )
+		liqglo.m_bakeNoCullBackface = !liqglo.m_bakeNoCullBackface;
+	if ( liquidGetPlugValue( rGlobalNode, "bakeCullHidden", liqglo.m_bakeNoCullHidden, gStatus )== MS::kSuccess )
+		liqglo.m_bakeNoCullHidden = !liqglo.m_bakeNoCullHidden;
+}
+ 

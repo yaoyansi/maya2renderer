@@ -29,72 +29,17 @@
 
 #include <liqRibTranslator.h>
 
-#include <sys/types.h>
 
-#ifndef _WIN32
-#include <sys/time.h>
-#include <sys/stat.h>
-// Dynamic Object Headers
-#include <dlfcn.h>
-#endif
-
-#ifdef _WIN32
-#pragma warning(disable:4786)
-#endif
-
-#ifdef _WIN32
-#include <process.h>
-#include <io.h>
-#include <direct.h>
-#else
-#include <unistd.h>
-#include <stdlib.h>
-#include <pwd.h>
-#endif
-#include <time.h>
-#include <algorithm>
-#include <sstream>
-
-#include <boost/scoped_array.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/tokenizer.hpp>
-#include <boost/algorithm/string/case_conv.hpp>
+#include "./log/prerequest_std.h"
 
 // Renderman Headers
 //extern "C" {
 #include "ri_interface.h"
 //}
 
-#if defined(_WIN32)/* && !defined(DEFINED_LIQUIDVERSION)*/
-// unix build gets this from the Makefile
-extern const char *LIQUIDVERSION;
-#endif
-
 
 // Maya headers
-#include <maya/MAnimControl.h>
-#include <maya/MFileIO.h>
-#include <maya/MFnLight.h>
-#include <maya/MFnTransform.h>
-#include <maya/MGlobal.h>
-#include <maya/MItDag.h>
-#include <maya/MItInstancer.h>
-#include <maya/MItSelectionList.h>
-#include <maya/MPlug.h>
-#include <maya/MSelectionList.h>
-#include <maya/MSyntax.h>
-#include <maya/MDistance.h>
-#include <maya/MFnSet.h>
-#include <maya/MFnStringArrayData.h>
-#include <maya/MFnIntArrayData.h>
-#include <maya/MFnPfxGeometry.h>
-#include <maya/MDistance.h>
-#include <maya/MDagModifier.h>
-#include <maya/MPxNode.h>
-#include <maya/MRenderLineArray.h>
-#include <maya/MItDependencyNodes.h>
-#include <maya/MFnDependencyNode.h>
-#include <maya/MDagPathArray.h>
+#include "./log/prerequest_maya.h"
 
 // Liquid headers
 #include <liquid.h>
@@ -114,6 +59,10 @@ using namespace std;
 typedef int RtError;
 
 
+#if defined(_WIN32)/* && !defined(DEFINED_LIQUIDVERSION)*/
+// unix build gets this from the Makefile
+extern const char *LIQUIDVERSION;
+#endif
 
 //void liqRibTranslator::freeShaders( void )
 //{
@@ -263,9 +212,7 @@ liqRibTranslator::liqRibTranslator()
 #endif
 	}
 
-	m_rFilterX = 1;
-	m_rFilterY = 1;
-	m_rFilter = pfBoxFilter;
+
 
 	liqglo.liqglo_shortShaderNames = false;
 	liqglo.liqglo_relativeFileNames = false;
@@ -311,10 +258,11 @@ liqRibTranslator::liqRibTranslator()
 	m_justRib = false;
 	cleanShadows = 0;                 // render shadows
 	cleanTextures = 0;                // render shadows
-	pixelSamples = 1;
-	shadingRate = 1.0;
+	
+	initOtherParameters();
+
 	depth = 1;
-	outFormat = "it";
+
 	m_animation = false;
 	m_useFrameExt = true;  // Use frame extensions
 	outExt = "tif";
@@ -337,13 +285,9 @@ liqRibTranslator::liqRibTranslator()
 #endif
 	m_errorMode = 0;
 //	extension = ".rib";
-	bucketSize[0] = 16;
-	bucketSize[1] = 16;
-	gridSize = 256;
-	textureMemory = 2048;
-	eyeSplits = 10;
-	othreshold[0] = 0.996; othreshold[1] = 0.996; othreshold[2] = 0.996;
-	zthreshold[0] = 0.996; zthreshold[1] = 0.996; zthreshold[2] = 0.996;
+
+	initLimitsParameters();
+
 	liqglo.liqglo_shutterTime = 0.5;
 	liqglo.liqglo_shutterEfficiency = 1.0;
 	shutterConfig = OPEN_ON_FRAME;
@@ -417,14 +361,13 @@ liqRibTranslator::liqRibTranslator()
 	// Display Driver Defaults
 	m_displays.clear();
 
-	m_renderView        = false;
+
 	m_renderViewCrop    = false;
 	m_renderViewLocal   = true;
 	m_renderViewPort    = 6667;
 	m_renderViewTimeOut = 10;
 
-	m_statistics        = 0;
-	m_statisticsFile    = "";
+	initStatisticsParameters();
 
 	initHinderParameters();
 
@@ -433,11 +376,8 @@ liqRibTranslator::liqRibTranslator()
 	m_cropX2 = m_cropY2 = 1.0;
 	liqglo.liqglo_isShadowPass = false;
 
-	m_bakeNonRasterOrient    = false;
-	m_bakeNoCullBackface    = false;
-	m_bakeNoCullHidden    = false;
 
-	m_preFrameRIB.clear();
+
 	liqglo.m_preWorldRIB.clear();
 	liqglo.m_postWorldRIB.clear();
 	m_preGeomRIB.clear();
@@ -664,7 +604,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		else if((arg == "-tif") || (arg == "-tiff")) 
 		{
 			LIQCHECKSTATUS(status, "error in -tiff parameter");
-			outFormat = "tiff";
+			liqglo.outFormat = "tiff";
 		} 
 		else if((arg == "-dof") || (arg == "-dofOn")) 
 		{
@@ -825,7 +765,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		{
 			LIQCHECKSTATUS(status, "error in -samples parameter");  i++;
 			argValue = args.asString( i, &status );
-			pixelSamples = argValue.asInt();
+			liqglo.pixelSamples = argValue.asInt();
 			LIQCHECKSTATUS(status, "error in -samples parameter");
 		} 
 		else if((arg == "-rnm") || (arg == "-ribName")) 
@@ -951,51 +891,51 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		{
 			LIQCHECKSTATUS(status, "error in -shadingRate parameter");  i++;
 			argValue = args.asString( i, &status );
-			shadingRate = argValue.asDouble();
+			liqglo.shadingRate = argValue.asDouble();
 			LIQCHECKSTATUS(status, "error in -shadingRate parameter");
 		} 
 		else if((arg == "-bs") || (arg == "-bucketSize")) 
 		{
 			LIQCHECKSTATUS(status, "error in -bucketSize parameter");  i++;
 			argValue = args.asString( i, &status );
-			bucketSize[0] = argValue.asInt();
+			liqglo.bucketSize[0] = argValue.asInt();
 			LIQCHECKSTATUS(status, "error in -bucketSize parameter");  i++;
 			argValue = args.asString( i, &status );
-			bucketSize[1] = argValue.asInt();
+			liqglo.bucketSize[1] = argValue.asInt();
 			LIQCHECKSTATUS(status, "error in -bucketSize parameter");
 		} 
 		else if((arg == "-pf") || (arg == "-pixelFilter")) 
 		{
 			LIQCHECKSTATUS(status, "error in -pixelFilter parameter");  i++;
 			argValue = args.asString( i, &status );
-			m_rFilter = argValue.asInt();
+			liqglo.m_rFilter = argValue.asInt();
 			LIQCHECKSTATUS(status, "error in -pixelFilter parameter");  i++;
 			argValue = args.asString( i, &status );
-			m_rFilterX = argValue.asInt();
+			liqglo.m_rFilterX = argValue.asInt();
 			LIQCHECKSTATUS(status, "error in -pixelFilter parameter");  i++;
 			argValue = args.asString( i, &status );
-			m_rFilterY = argValue.asInt();
+			liqglo.m_rFilterY = argValue.asInt();
 			LIQCHECKSTATUS(status, "error in -pixelFilter parameter");
 		} 
 		else if((arg == "-gs") || (arg == "-gridSize")) 
 		{
 			LIQCHECKSTATUS(status, "error in -gridSize parameter");  i++;
 			argValue = args.asString( i, &status );
-			gridSize = argValue.asInt();
+			liqglo.gridSize = argValue.asInt();
 			LIQCHECKSTATUS(status, "error in -gridSize parameter");
 		} 
 		else if((arg == "-txm") || (arg == "-texmem")) 
 		{
 			LIQCHECKSTATUS(status, "error in -texmem parameter");  i++;
 			argValue = args.asString( i, &status );
-			textureMemory = argValue.asInt();
+			liqglo.textureMemory = argValue.asInt();
 			LIQCHECKSTATUS(status, "error in -texmem parameter");
 		} 
 		else if((arg == "-es") || (arg == "-eyeSplits")) 
 		{
 			LIQCHECKSTATUS(status, "error in -eyeSplits parameter");  i++;
 			argValue = args.asString( i, &status );
-			eyeSplits = argValue.asInt();
+			liqglo.eyeSplits = argValue.asInt();
 			LIQCHECKSTATUS(status, "error in -eyeSplits parameter");
 		} 
 		else if((arg == "-ar") || (arg == "-aspect")) 
@@ -1044,7 +984,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		else if((arg == "-rv") || (arg == "-renderView")) 
 		{
 			LIQCHECKSTATUS(status, "error in -renderView parameter");
-			m_renderView = true;
+			liqglo.m_renderView = true;
 		} 
 		else if((arg == "-rvl") || (arg == "-renderViewLocal")) 
 		{
@@ -1072,7 +1012,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 			argValue = args.asString( i, &status );
 			m_cropY2 = argValue.asDouble();
 			LIQCHECKSTATUS(status, "error in -cropWindow parameter 4");
-			if( m_renderView ) 
+			if( liqglo.m_renderView ) 
 				m_renderViewCrop = true;
 		} 
 		else if((arg == "-nsfs") || (arg == "-noSingleFrameShadows")) 
@@ -1425,7 +1365,7 @@ void liqRibTranslator::liquidReadGlobals()
 					theDisplay.filter = val;
 					//cout <<"  DD : filter["<<i<<"] "<<theDisplay.filter<<endl;
 					if(i==0) 
-						m_rFilter  = val;
+						liqglo.m_rFilter  = val;
 				}
 			}
 			gStatus.clear();
@@ -1510,8 +1450,8 @@ void liqRibTranslator::liquidReadGlobals()
 			}
 			if(i==0) 
 			{ // copy filter params from display 0
-				m_rFilterX = theDisplay.filterX;
-				m_rFilterY = theDisplay.filterY;
+				liqglo.m_rFilterX = theDisplay.filterX;
+				liqglo.m_rFilterY = theDisplay.filterY;
 				quantValue = theDisplay.bitDepth;
 			}
 			structDDParam xtraDDParams;
@@ -1680,16 +1620,9 @@ void liqRibTranslator::liquidReadGlobals()
 		liqglo.liqglo_motionSamples = LIQMAXMOTIONSAMPLES;
 	liquidGetPlugValue( rGlobalNode, "relativeMotion", liqglo.liqglo_relativeMotion, gStatus );
 	liquidGetPlugValue( rGlobalNode, "depthOfField", doDof, gStatus );
-	liquidGetPlugValue( rGlobalNode, "pixelSamples", pixelSamples, gStatus );
-	liquidGetPlugValue( rGlobalNode, "shadingRate", shadingRate, gStatus );
-	liquidGetPlugValue( rGlobalNode, "limitsBucketXSize", bucketSize[0], gStatus );
-	liquidGetPlugValue( rGlobalNode, "limitsBucketYSize", bucketSize[1], gStatus );
-	liquidGetPlugValue( rGlobalNode, "limitsGridSize", gridSize, gStatus );
-	liquidGetPlugValue( rGlobalNode, "limitsTextureMemory", textureMemory, gStatus );
-	liquidGetPlugValue( rGlobalNode, "limitsEyeSplits", eyeSplits, gStatus );
 
-	liquidGetPlugValue( rGlobalNode, "limitsOThreshold", othreshold, gStatus );
-	liquidGetPlugValue( rGlobalNode, "limitsZThreshold", zthreshold, gStatus );
+	getOtherParameters(rGlobalNode);	
+	getLimitsParameters(rGlobalNode);
 
 	liquidGetPlugValue( rGlobalNode, "cleanRib", liqglo.cleanRib, gStatus );
 	liquidGetPlugValue( rGlobalNode, "cleanRenderScript", cleanRenderScript, gStatus );
@@ -1701,20 +1634,11 @@ void liqRibTranslator::liquidReadGlobals()
 	liquidGetPlugValue( rGlobalNode, "renderViewLocal", m_renderViewLocal, gStatus );
 	liquidGetPlugValue( rGlobalNode, "renderViewPort", m_renderViewPort, gStatus );
 	liquidGetPlugValue( rGlobalNode, "renderViewTimeOut", m_renderViewTimeOut, gStatus );
-	liquidGetPlugValue( rGlobalNode, "statistics", m_statistics, gStatus );
-	liquidGetPlugValue( rGlobalNode, "statisticsFile", varVal, gStatus );
-	if( varVal != "" ) 
-		m_statisticsFile = parseString( varVal, false );
+
+	getStatisticsParameters(rGlobalNode);
 
 	// Philippe : OBSOLETE ?
-	if ( liquidGetPlugValue( rGlobalNode, "imageDriver", varVal, gStatus )== MS::kSuccess )
-		outFormat = parseString( varVal, false );
-	if ( liquidGetPlugValue( rGlobalNode, "bakeRasterOrient", m_bakeNonRasterOrient, gStatus )== MS::kSuccess )
-		m_bakeNonRasterOrient = !m_bakeNonRasterOrient;
-	if ( liquidGetPlugValue( rGlobalNode, "bakeCullBackface", m_bakeNoCullBackface, gStatus )== MS::kSuccess )
-		m_bakeNoCullBackface = !m_bakeNoCullBackface;
-	if ( liquidGetPlugValue( rGlobalNode, "bakeCullHidden", m_bakeNoCullHidden, gStatus )== MS::kSuccess )
-		m_bakeNoCullHidden = !m_bakeNoCullHidden;
+
 
 	// taking into account liquidRibRequest nodes and preposterous mel scripts - Alf
 	{
@@ -1727,7 +1651,7 @@ void liqRibTranslator::liquidReadGlobals()
 		// add rib request node values
 		request = parseLiquidRibRequest( requestArray, "preFrame" );
 		if( request != "" )
-			m_preFrameRIB = parseString( request );
+			liqglo.m_preFrameRIB = parseString( request );
 
 		liquidGetPlugValue( rGlobalNode, "preWorld", request, gStatus );
 		if( request != "" )
@@ -2301,7 +2225,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 		}
 		// build the frame array
 		//
-		if( m_renderView ) 
+		if( liqglo.m_renderView ) 
 		{
 			// if we are in renderView mode,
 			// just ignore the animation range
@@ -3058,7 +2982,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 #else
 				liqProcessLauncher::execute( m_renderScriptCommand, renderScriptName, liqglo.liqglo_projectDir, false );
 #endif
-				if( m_renderView ) 
+				if( liqglo.m_renderView ) 
 				{
 					MString local = (m_renderViewLocal)? "1":"0";
 					stringstream tmp;
@@ -3150,7 +3074,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 						/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
 						to display buckets in the renderview.
 						*/
-						if( m_renderView ) 
+						if( liqglo.m_renderView ) 
 						{
 							MString local = (m_renderViewLocal)? "1":"0";
 							stringstream tmp;
@@ -3967,34 +3891,11 @@ MStatus liqRibTranslator::ribPrologue()
 		RiArchiveRecord( RI_COMMENT, "    Time  : %s", theTime );
 		// set any rib options
 		//
-		if( m_statistics != 0 )  
-		{
-			if( m_statistics < 4 ) 
-				RiOption( "statistics", "endofframe", ( RtPointer ) &m_statistics, RI_NULL );
-			else 
-			{
-				//cout <<"xml stats "<<endl;
-				int stats = 1;
-				RiOption( "statistics", "int endofframe", ( RtPointer ) &stats, RI_NULL );
-				RiArchiveRecord( RI_VERBATIM, "Option \"statistics\" \"xmlfilename\" [\"%s\"]\n", const_cast< char* > ( m_statisticsFile.asChar() ) );
-			}
-		}
-		if( bucketSize != 0 )    
-			RiOption( "limits", "bucketsize", ( RtPointer ) &bucketSize, RI_NULL );
-		if( gridSize != 0 )      
-			RiOption( "limits", "gridsize", ( RtPointer ) &gridSize, RI_NULL );
-		if( textureMemory != 0 ) 
-			RiOption( "limits", "texturememory", ( RtPointer) &textureMemory, RI_NULL );
-		if( liqglo.liquidRenderer.supports_EYESPLITS ) 
-			RiOption( "limits", "eyesplits", ( RtPointer ) &eyeSplits, RI_NULL );
+		getStatisticsOptions();
 
-		if(liqglo.liquidRenderer.renderName == MString("PRMan") || liqglo.liquidRenderer.renderName == MString("3Delight") )
-		{
-			RtColor othresholdC = {othreshold[0], othreshold[1], othreshold[2]};
-			RiOption( "limits", "othreshold", &othresholdC, RI_NULL );
-			RtColor zthresholdC = {zthreshold[0], zthreshold[1], zthreshold[2]};
-			RiOption( "limits", "zthreshold", &zthresholdC, RI_NULL );
-		}
+		//limits options
+		getLimitsOptions();
+
 		// set search paths
 		//
 		if ( liqglo.m_dirmaps.length() )
@@ -4038,7 +3939,7 @@ MStatus liqRibTranslator::ribPrologue()
 		RiOption( "searchpath", "procedural", &list, RI_NULL );
 
 		// if rendering to the renderview, add a path to the liqmaya display driver
-		if( m_renderView ) 
+		if( liqglo.m_renderView ) 
 		{
 			MString home( getenv( "LIQUIDHOME" ) );
 			MString displaySearchPath;
@@ -4090,47 +3991,47 @@ MStatus liqRibTranslator::ribPrologue()
 			}
 			MString hiderOptions = getHiderOptions( liqglo.liquidRenderer.renderName, hiderName );
 			RiArchiveRecord( RI_VERBATIM, "Hider \"%s\" %s\n", hiderName, ( char* )hiderOptions.asChar() );
-			RiPixelSamples( pixelSamples, pixelSamples );
-			RiShadingRate( shadingRate );
-			if( m_rFilterX > 1 || m_rFilterY > 1 ) 
+			RiPixelSamples( liqglo.pixelSamples, liqglo.pixelSamples );
+			RiShadingRate( liqglo.shadingRate );
+			if( liqglo.m_rFilterX > 1 || liqglo.m_rFilterY > 1 ) 
 			{
-				switch (m_rFilter) 
+				switch (liqglo.m_rFilter) 
 				{
 				case pfBoxFilter:
-					RiPixelFilter( RiBoxFilter, m_rFilterX, m_rFilterY );
+					RiPixelFilter( RiBoxFilter, liqglo.m_rFilterX, liqglo.m_rFilterY );
 					break;
 				case pfTriangleFilter:
-					RiPixelFilter( RiTriangleFilter, m_rFilterX, m_rFilterY );
+					RiPixelFilter( RiTriangleFilter, liqglo.m_rFilterX, liqglo.m_rFilterY );
 					break;
 				case pfCatmullRomFilter:
-					RiPixelFilter( RiCatmullRomFilter, m_rFilterX, m_rFilterY );
+					RiPixelFilter( RiCatmullRomFilter, liqglo.m_rFilterX, liqglo.m_rFilterY );
 					break;
 				case pfGaussianFilter:
-					RiPixelFilter( RiGaussianFilter, m_rFilterX, m_rFilterY );
+					RiPixelFilter( RiGaussianFilter, liqglo.m_rFilterX, liqglo.m_rFilterY );
 					break;
 				case pfSincFilter:
-					RiPixelFilter( RiSincFilter, m_rFilterX, m_rFilterY );
+					RiPixelFilter( RiSincFilter, liqglo.m_rFilterX, liqglo.m_rFilterY );
 					break;
 #if defined ( DELIGHT ) || defined ( PRMAN ) || defined ( GENERIC_RIBLIB )
 				case pfBlackmanHarrisFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"blackman-harris\" %g %g\n", m_rFilterX, m_rFilterY);
+					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"blackman-harris\" %g %g\n", liqglo.m_rFilterX, liqglo.m_rFilterY);
 					break;
 				case pfMitchellFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"mitchell\" %g %g\n", m_rFilterX, m_rFilterY);
+					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"mitchell\" %g %g\n", liqglo.m_rFilterX, liqglo.m_rFilterY);
 					break;
 				case pfSepCatmullRomFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"separable-catmull-rom\" %g %g\n", m_rFilterX, m_rFilterY);
+					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"separable-catmull-rom\" %g %g\n", liqglo.m_rFilterX, liqglo.m_rFilterY);
 					break;
 				case pfBesselFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"bessel\" %g %g\n", m_rFilterX, m_rFilterY);
+					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"bessel\" %g %g\n", liqglo.m_rFilterX, liqglo.m_rFilterY);
 					break;
 #endif
 #if defined ( PRMAN ) || defined ( GENERIC_RIBLIB )
 				case pfLanczosFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"lanczos\" %g %g\n", m_rFilterX, m_rFilterY);
+					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"lanczos\" %g %g\n", liqglo.m_rFilterX, liqglo.m_rFilterY);
 					break;
 				case pfDiskFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"disk\" %g %g\n", m_rFilterX, m_rFilterY);
+					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"disk\" %g %g\n", liqglo.m_rFilterX, liqglo.m_rFilterY);
 					break;
 #endif
 				default:
@@ -4171,22 +4072,22 @@ MStatus liqRibTranslator::ribPrologue()
 		MFnDependencyNode globalsNode( liqglo.rGlobalObj );
 		MPlug prePostplug( globalsNode.findPlug( "preFrameBeginMel" ) );
 		MString melcommand( prePostplug.asString() );
-		if( m_preFrameRIB != "" || melcommand.length() )
+		if( liqglo.m_preFrameRIB != "" || melcommand.length() )
 		{
 			RiArchiveRecord(RI_COMMENT,  " Pre-FrameBegin RIB from liquid globals" );
 			MGlobal::executeCommand( melcommand );
-			RiArchiveRecord(RI_VERBATIM, ( char* )m_preFrameRIB.asChar() );
+			RiArchiveRecord(RI_VERBATIM, ( char* )liqglo.m_preFrameRIB.asChar() );
 			RiArchiveRecord(RI_VERBATIM, "\n");
 		}
-		if( m_bakeNonRasterOrient || m_bakeNoCullHidden || m_bakeNoCullBackface ) 
+		if( liqglo.m_bakeNonRasterOrient || liqglo.m_bakeNoCullHidden || liqglo.m_bakeNoCullBackface ) 
 		{
 			RiArchiveRecord( RI_COMMENT, "Bake Attributes" );
 			RtInt zero( 0 );
-			if( m_bakeNonRasterOrient )
+			if( liqglo.m_bakeNonRasterOrient )
 				RiAttribute( "dice","int rasterorient", &zero, RI_NULL );
-			if( m_bakeNoCullBackface )
+			if( liqglo.m_bakeNoCullBackface )
 				RiAttribute( "cull","int backfacing", &zero, RI_NULL );
-			if( m_bakeNoCullHidden )
+			if( liqglo.m_bakeNoCullHidden )
 				RiAttribute( "cull","int hidden", &zero, RI_NULL );
 		}
 	}
@@ -4745,7 +4646,7 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 					// We are writing RGB info
 					//
 					iter->imageMode = "rgb";
-					iter->format = outFormat;
+					iter->format = liqglo.outFormat;
 				}
 				boolPlug = fnCamera.findPlug( "mask" );
 				boolPlug.getValue( isOn );
@@ -4754,7 +4655,7 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 					// We are writing alpha channel info
 					//
 					iter->imageMode += "a";
-					iter->format = outFormat;
+					iter->format = liqglo.outFormat;
 				}
 				boolPlug = fnCamera.findPlug( "depth" );
 				boolPlug.getValue( isOn );
@@ -5029,7 +4930,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 			RiShadingInterpolation( "smooth" );
 			// Quantization
 			// overriden to floats when in rendering to Maya's renderView
-			if( !m_renderView && quantValue != 0 )
+			if( !liqglo.m_renderView && quantValue != 0 )
 			{
 				int whiteValue = (int) pow( 2.0, quantValue ) - 1;
 				RiQuantize( RI_RGBA, whiteValue, 0, whiteValue, 0.5 );
@@ -5281,7 +5182,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 
 				// This is the override for the primary DD
 				// when you render to maya's renderview.
-				if( m_displays_iterator == m_displays.begin() && m_renderView ) 
+				if( m_displays_iterator == m_displays.begin() && liqglo.m_renderView ) 
 				{
 					MString imageName( m_pixDir );
 					imageName += parseString( liqglo.liqglo_DDimageName[ 0 ], false );

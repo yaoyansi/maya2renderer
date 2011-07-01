@@ -447,4 +447,10 @@ namespace elvishray
 // 		}
 		_s("ei_end_instance();");
 	}
-}
+	//
+	MStatus Renderer::ribPrologue_options(const structJob& currentJob)
+	{
+
+		return MStatus::kSuccess;
+	}
+}//namespace

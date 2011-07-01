@@ -155,6 +155,31 @@ struct liqGlobalVariable
 	MString       m_depthMaskZFile;
 	bool          m_depthMaskReverseSign;
 	float         m_depthMaskDepthBias;
+	//limits options
+	liquidlong  bucketSize[2];
+	liquidlong  gridSize;
+	liquidlong  textureMemory;
+	liquidlong  eyeSplits;
+	MVector    othreshold;
+	MVector    zthreshold;
+	//statistics
+	int           m_statistics;
+	MString       m_statisticsFile;
+	//other
+	liquidlong  pixelSamples;
+	float       shadingRate;
+	liquidlong    m_rFilter;
+	float         m_rFilterX, m_rFilterY;
+
+	bool          m_renderView;
+	bool	  m_bakeNonRasterOrient;
+	bool	  m_bakeNoCullBackface;
+	bool	  m_bakeNoCullHidden;
+
+	MString       outFormat;
+
+
+	MString m_preFrameRIB;
 };
 
 extern struct liqGlobalVariable liqglo;
@@ -163,5 +188,17 @@ extern liquidVerbosityType liqglo_verbosity;
 void initHinderParameters();
 void getHinderParameters(const MFnDependencyNode& rGlobalNode);
 MString getHiderOptions( MString rendername, MString hidername );
+
+void initLimitsParameters();
+void getLimitsParameters(const MFnDependencyNode& rGlobalNode);
+void getLimitsOptions();
+
+void initStatisticsParameters();
+void getStatisticsParameters(const MFnDependencyNode& rGlobalNode);
+void getStatisticsOptions();
+
+void initOtherParameters();
+void getOtherParameters(const MFnDependencyNode& rGlobalNode);
+ 
 
 #endif//_liqGlobalVariable_H
