@@ -3027,6 +3027,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqFrameScriptMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\liqGetAttr.cpp"
 				>
 			</File>
@@ -3048,6 +3052,10 @@
 			</File>
 			<File
 				RelativePath="..\liqJobList.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\liqJobScriptMgr.cpp"
 				>
 			</File>
 			<File
@@ -3276,6 +3284,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\liqFrameScriptMgr.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\liqGetAttr.h"
 				>
 			</File>
@@ -3305,6 +3317,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\liqJobList.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\liqJobScriptMgr.h"
 				>
 			</File>
 			<File

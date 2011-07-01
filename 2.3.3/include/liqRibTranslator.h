@@ -154,13 +154,13 @@ private: // Data
 
 	liquidlong width, height, depth;
 
-	std::vector< int > frameNumbers;
+	//std::vector< int > frameNumbers; //moved to global
 
 	// alfred stuff
 	bool useRenderScript;
 	bool cleanRenderScript;
 	bool m_alfShadowRibGen;
-	bool m_alfredExpand;
+
 	MString renderJobName;
 	MString m_alfredTags;
 	MString m_alfredServices;
@@ -175,7 +175,6 @@ private: // Data
 
 	bool useNetRman;
 	bool fullShadowRib;
-	bool remoteRender;
 	bool cleanRib;              // clean the rib files up
 
 	bool doDof;                 // do camera depth of field
@@ -351,14 +350,13 @@ private :
 	bool m_outputShadersInShadows;
 	bool m_outputShadersInDeepShadows;
 	bool m_outputLightsInDeepShadows;
-	liquidlong m_deferredBlockSize;
+//	liquidlong m_deferredBlockSize; //moved to liqGlobal
 	bool m_outputComments;
 	bool m_shaderDebug;
 
 	long m_currentLiquidJobNumber;
 
-	MString m_defGenKey;
-	MString m_defGenService;
+
 
 	MString m_preFrameMel;
 	MString m_postFrameMel;

@@ -1,6 +1,8 @@
 #ifndef _liqGlobalVariable_H
 #define _liqGlobalVariable_H
 
+#include <vector>
+
 #include <maya/MString.h>
 #include <maya/MStringArray.h>
 
@@ -96,6 +98,12 @@ struct liqGlobalVariable
 
 	MString		liqglo_rifParams;
 
+	liquidlong m_deferredBlockSize;
+    std::vector<int> frameNumbers;
+	bool remoteRender;
+	MString m_defGenKey;
+	MString m_defGenService;
+	bool m_alfredExpand;
 #if 0
 #ifdef _WIN32
 	// Hmmmmmmmm what's this ?
