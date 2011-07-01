@@ -743,8 +743,7 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 		addAttr -hidden false -longName "shaderFullPath" -dt "string" $assingToNode;
 	setAttr ($assingToNode + ".shaderFullPath") -type "string" $outSLO;
 
-	// omitted by yaoyansi [2010-09-26]
-	//duran and mesh use this section(test needed), but xx will ommit this section.
+
 	string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
 
 	string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
