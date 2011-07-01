@@ -7081,12 +7081,7 @@ MStatus liqRibTranslator::worldPrologue()
 */
 MStatus liqRibTranslator::worldEpilogue()
 {
-	MStatus returnStatus = MS::kSuccess;
-	LIQDEBUGPRINTF( "-> Writing world epilogue.\n" );
-	// If this is a readArchive that we are exporting there's no world block
-	if( !liqglo.m_exportReadArchive ) 
-		RiWorldEnd();
-	return returnStatus;
+	return liquid::RendererMgr::getInstancePtr()->getRenderer()->worldEpilogue();
 }
 
 /**

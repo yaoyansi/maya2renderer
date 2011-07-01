@@ -1047,28 +1047,27 @@ void liqRibLightData::_write(const structJob &currentJob)
 					o_category = cat;
 					i_lightID = lightID;
 				}
-
-				RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-				handle = RiLightSource( 
-					"liquiddistant",
-					"intensity",              &i_intensity,
-					"lightcolor",             &i_lightcolor,
-					"string shadowname",      &i_shadowname,
-					"float shadowbias",       &i_shadowbias,
-					"float shadowblur",       &i_shadowblur,
-					"float shadowsamples",    &i_shadowsamples,
-					"float shadowfiltersize", &i_shadowfiltersize,
-					"color shadowcolor",      &i_shadowcolor,
-					"float lightID",          &i_lightID,
-					"string __category",      &o_category,
-
-					"float __shadowF",			&o_shadowF,
-					"color __shadowC",			&o_shadowC,
-					"color __unshadowed_Cl",	&o_unshadowed_Cl,
-					"float __nondiffuse",		&o_nondiffuse,
-					"float __nonspecular",		&o_nonspecular,
-					RI_NULL 
-				);
+				handle = liquid::RendererMgr::getInstancePtr()->
+					getRenderer()->exportDistantLight(
+					"distantlight", 
+					lightName.asChar(),  
+					i_intensity,
+					i_lightcolor,
+					i_shadowname,
+					i_shadowbias,
+					i_shadowblur,
+					i_shadowsamples,
+					i_shadowfiltersize,
+					i_shadowcolor,
+					i_lightID,
+					o_category,
+					o_shadowF,
+					o_shadowC,
+					o_unshadowed_Cl,
+					o_nondiffuse,
+					o_nonspecular,
+					transformationMatrix
+					);
 			}
           break;
         
@@ -1134,30 +1133,33 @@ void liqRibLightData::_write(const structJob &currentJob)
 					o_nondiffuse = nonDiffuse;  /* set to 1 to exclude from diffuse light */
 					o_nonspecular = nonSpecular; /* set to 1 to exclude from highlights */
 			  }
-			  RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-			  handle = RiLightSource( "liquidpoint",
-				  "intensity",                  &i_intensity,
-				  "lightcolor",                 &i_lightcolor,
-				  "float decay",                &i_decay,
-				  "string shadownamepx",        &i_shadownamepx,
-				  "string shadownamenx",        &i_shadownamenx,
-				  "string shadownamepy",        &i_shadownamepy,
-				  "string shadownameny",        &i_shadownameny,
-				  "string shadownamepz",        &i_shadownamepz,
-				  "string shadownamenz",        &i_shadownamenz,
-				  "float shadowbias",           &i_shadowbias,
-				  "float shadowblur",           &i_shadowblur,
-				  "float shadowsamples",        &i_shadowsamples,
-				  "float shadowfiltersize",     &i_shadowfiltersize,
-				  "color shadowcolor",          &i_shadowcolor,
-				  "float lightID",              &i_lightID,
-				  "string __category",          &o_category,
-				  "float __shadowF",			&o_shadowF,
-				  "color __shadowC",			&o_shadowC,
-				  "color __unshadowed_Cl",	    &o_unshadowed_Cl,
-				  "float __nondiffuse",         &o_nondiffuse,
-				  "float __nonspecular",        &o_nonspecular,
-				  RI_NULL );
+			  handle = liquid::RendererMgr::getInstancePtr()->
+				  getRenderer()->exportPointLight(
+				  "distantlight", 
+				  lightName.asChar(),  
+				  i_intensity,
+				  i_lightcolor,
+				  i_decay,
+				  i_shadownamepx,
+				  i_shadownamenx,
+				  i_shadownamepy,
+				  i_shadownameny,
+				  i_shadownamepz,
+				  i_shadownamenz,
+				  i_shadowbias,
+				  i_shadowblur,
+				  i_shadowsamples,
+				  i_shadowfiltersize,
+				  i_shadowcolor,
+				  i_lightID,
+				  o_category,
+				  o_shadowF,
+				  o_shadowC,
+				  o_unshadowed_Cl,
+				  o_nondiffuse,
+				  o_nonspecular,
+				  transformationMatrix
+				  );
 			}
           break;
         case MRLT_Spot:
@@ -1283,55 +1285,59 @@ void liqRibLightData::_write(const structJob &currentJob)
 						i_category = cat;
 						i_lightID = lightID;
 				  }
+				  handle = liquid::RendererMgr::getInstancePtr()->
+					  getRenderer()->exportSpotLight(
+					  "spotlight", 
+					  lightName.asChar(),
+					  i_intensity,
+					  i_lightcolor,
+					  i_coneangle,
+					  i_penumbraangle,
+					  i_dropoff,
+					  i_decay,
 
-				  RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-				  handle = RiLightSource( "liquidspot",
-					  "intensity",                    &i_intensity,
-					  "lightcolor",                   &i_lightcolor,
-					  "float coneangle",              &i_coneangle,
-					  "float penumbraangle",          &i_penumbraangle,
-					  "float dropoff",                &i_dropoff,
-					  "float decay",                  &i_decay,
+					  i_barndoors,
+					  i_leftbarndoor,
+					  i_rightbarndoor,
+					  i_topbarndoor,
+					  i_bottombarndoor,
 
-					  "float barndoors",              &i_barndoors,
-					  "float leftbarndoor",           &i_leftbarndoor,
-					  "float rightbarndoor",          &i_rightbarndoor,
-					  "float topbarndoor",            &i_topbarndoor,
-					  "float bottombarndoor",         &i_bottombarndoor,
+					  i_decayRegions,
+					  i_startDistance1,
+					  i_endDistance1,
+					  i_startDistance2,
+					  i_endDistance2,
+					  i_startDistance3,
+					  i_endDistance3,
+					  i_startDistanceIntensity1,
+					  i_endDistanceIntensity1,
+					  i_startDistanceIntensity2,
+					  i_endDistanceIntensity2,
+					  i_startDistanceIntensity3,
+					  i_endDistanceIntensity3,
 
-					  "float decayRegions",           &i_decayRegions,
-					  "float startDistance1",         &i_startDistance1,
-					  "float endDistance1",           &i_endDistance1,
-					  "float startDistance2",         &i_startDistance2,
-					  "float endDistance2",           &i_endDistance2,
-					  "float startDistance3",         &i_startDistance3,
-					  "float endDistance3",           &i_endDistance3,
-					  "float startDistanceIntensity1",&i_startDistanceIntensity1,
-					  "float endDistanceIntensity1",  &i_endDistanceIntensity1,
-					  "float startDistanceIntensity2",&i_startDistanceIntensity2,
-					  "float endDistanceIntensity2",  &i_endDistanceIntensity2,
-					  "float startDistanceIntensity3",&i_startDistanceIntensity3,
-					  "float endDistanceIntensity3",  &i_endDistanceIntensity3,
+					  i_shadowname,
+					  i_shadowbias,
+					  i_shadowblur,
+					  i_shadowsamples,
+					  i_shadowfiltersize,
+					  i_shadowcolor,
+					  i_shadowcolorsurf,
+					  i_shadowcolormix,
 
-					  "string shadowname",            &i_shadowname,
-					  "float shadowbias",             &i_shadowbias,
-					  "float shadowblur",             &i_shadowblur,
-					  "float shadowsamples",          &i_shadowsamples,
-					  "float shadowfiltersize",       &i_shadowfiltersize,
-					  "color shadowcolor",            &i_shadowcolor,
-					  "color shadowcolorSurf",        &i_shadowcolorsurf,
-					  "float shadowcolorMix",         &i_shadowcolormix,
+					  i_lightID,
+					  i_category,
 
-					  "float lightID",                &i_lightID,
-					  "string __category",            &i_category,
-					  
-					  "color __shadowC",              &o_shadowC,
-					  "float __shadowF",              &o_shadowF,
-					  "float __barn",				  &o_barn,
-					  "color __unshadowed_Cl",        &o_unshadowed_Cl,
-					  "float __nondiffuse",           &o_nondiffuse,
-					  "float __nonspecular",          &o_nonspecular,
-					  RI_NULL );
+					  o_shadowC,
+					  o_shadowF,
+					  o_barn,
+					  o_unshadowed_Cl,
+					  o_nondiffuse,
+					  o_nonspecular,
+					  transformationMatrix
+					  );
+
+				  
 			}
           break;
         case MRLT_Rman: 
@@ -1387,8 +1393,8 @@ void liqRibLightData::_write(const structJob &currentJob)
 		  i_coordsys = const_cast< char* >(MString(lightName+"CoordSys").asChar());
           RtString areacoordsys = i_coordsys;
 
-          MString areashader( getenv("LIQUIDHOME") );
-          areashader += "/lib/shaders/liquidarea";
+//           MString areashader( getenv("LIQUIDHOME") );
+//           areashader += "/lib/shaders/liquidarea";
 
           RtString rt_hitmode;
           switch( hitmode ) 
@@ -1422,29 +1428,33 @@ void liqRibLightData::_write(const structJob &currentJob)
 			  i_hitmode = rt_hitmode;
 			  i_category = cat;
 		  }
-		RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-          handle = RiLightSource( const_cast< char* >( areashader.asChar() ),
-									"float intensity",            &i_intensity,
-									"color lightcolor",           &i_lightcolor,
-									"float decay",                &i_decay,
-									"string coordsys",            &i_coordsys,
-									"float lightsamples",         &i_lightsamples,
-									"float doublesided",          &i_doublesided,
-									"string shadowname",          &i_shadowname,
-									"color shadowcolor",          &i_shadowcolor,
-									"string hitmode",             &i_hitmode,
-									"string lightmap",            &i_lightmap,
-									"float lightmapsaturation",   &i_lightmapsaturation,
-									"float lightID",              &i_lightID,
-									"string __category",          &i_category,
 
-									"float __nonspecular",  o_nonspecular,
-									"float __shadowF", o_shadowF, 
-									"color __shadowC", o_shadowC,
-									"color __unshadowed_Cl", o_unshadowed_Cl,
-									"float __arealightIntensity", o_arealightIntensity,
-									"color __arealightColor", o_arealightColor,
-                                  RI_NULL );
+		  handle = liquid::RendererMgr::getInstancePtr()->
+			  getRenderer()->exportAreaLight(
+			  "spotlight", 
+			  lightName.asChar(),
+			  i_intensity,
+			  i_lightcolor,
+			  i_decay,
+			  i_coordsys,
+			  i_lightsamples,
+			  i_doublesided,
+			  i_shadowname,
+			  i_shadowcolor,
+			  i_hitmode,
+			  i_lightmap,
+			  i_lightmapsaturation,
+			  i_lightID,
+			  i_category,
+
+			  o_nonspecular,
+			  o_shadowF, 
+			  o_shadowC,
+			  o_unshadowed_Cl,
+			  o_arealightIntensity,
+			  o_arealightColor,
+			  transformationMatrix
+			  );
           break;
         }
         case MRLT_Unknown: {
