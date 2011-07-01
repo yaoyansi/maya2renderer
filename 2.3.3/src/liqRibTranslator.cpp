@@ -106,7 +106,7 @@ extern const char *LIQUIDVERSION;
 #include <liqCustomNode.h>
 #include <liqShaderFactory.h>
 #include <liqExpression.h>
-
+#include "renderermgr.h"
 
 using namespace boost;
 using namespace std;
@@ -2186,13 +2186,26 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 	if( !status ) 
 		return MS::kFailure;
 
+	{//set renderer
+		MFnDependencyNode rGlobalNode( rGlobalObj );
+		MString renderer;
+		liquidGetPlugValue( rGlobalNode, "renderer", renderer, status );
+		liquid::RendererMgr::getInstancePtr()->setRenderer(renderer.asChar());
+	}
+
 	if(m_useNewTranslator){
 		liquidMessage("_doItNew()", messageInfo);
-		return _doItNew(args, originalLayer);// new doIt() process
+		status = _doItNew(args, originalLayer);// new doIt() process
 	}else{
 		liquidMessage("_doIt()", messageInfo);
-		return  _doIt(args, originalLayer);//original doIt() process
+		status = _doIt(args, originalLayer);//original doIt() process
 	}
+
+	{//
+		liquid::RendererMgr::getInstancePtr()->test();
+	}
+
+	return status;
 }
 //
 MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalLayer )

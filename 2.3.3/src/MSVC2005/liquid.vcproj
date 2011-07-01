@@ -4012,6 +4012,46 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="renderer"
+			>
+			<File
+				RelativePath="..\rendererinterface.h"
+				>
+			</File>
+			<File
+				RelativePath="..\renderermgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\renderermgr.h"
+				>
+			</File>
+			<Filter
+				Name="renderman"
+				>
+				<File
+					RelativePath="..\renderman\rm_renderer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\renderman\rm_renderer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="elvishray"
+				>
+				<File
+					RelativePath="..\elvishray\er_renderer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\er_renderer.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
