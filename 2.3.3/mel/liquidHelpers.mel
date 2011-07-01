@@ -47,6 +47,7 @@ global proc liquidDebugPrint(string $debugMsg)
 // add to postworld mel
 global proc liquidGeneratePlace2dTexture()
 {
+  liqPushIdent();
 	liqlog("liquidGeneratePlace2dTexture()");
 	string $list[] = `ls -type place2dTexture`;
 	for( $l in $list )
@@ -76,12 +77,14 @@ global proc liquidGeneratePlace2dTexture()
 			$a[9]+" "+$a[10]+" "+$a[11]+" "+$a[12]+" "+$a[13]+" "+$a[14]+" "+$a[15]+" "+$a[16]);
 		RIArchiveRecord "verbatim" "\n";
 	}
+  liqPopIdent();
 }
 
 // output Place3dTextures as coordinate systems in rib
 // add to postworld mel
 global proc liquidGeneratePlace3dTexture( int $scoped )
 {
+  liqPushIdent();
 	liqlog("liquidGeneratePlace3dTexture(...)");
 	string $list[] = `ls -type place3dTexture`;
 	for( $l in $list )
@@ -98,19 +101,22 @@ global proc liquidGeneratePlace3dTexture( int $scoped )
 		RITransformEnd;
 	}
 //	RIArchiveRecord "verbatim" "\n";
+  liqPopIdent();
 }
 
 global proc liquidViewLastRib()
 {
+  liqPushIdent();
 	liqlog("liquidViewLastRib()");
   if ((!objExists("liquidGlobals") || !`attributeExists lastRibFile liquidGlobals` ) || (`getAttr liquidGlobals.lastRibFile` == "" )) {
     warning("liquidGlobals.lastRibFile is not set - no RIB has been generated during this session");
+    liqPopIdent();
     return;
   }
 
   string $ribFileName = `getAttr liquidGlobals.lastRibFile`;
   if ( `file -q -exists $ribFileName` ) {
-    print("Viewing RIB file: " + $ribFileName + "\n");
+    liqlog("Viewing RIB file: " + $ribFileName + "\n");
     if (`about -win`) {
       system ( "start notepad " + $ribFileName );
     } else if(`about -mac`) {
@@ -121,19 +127,23 @@ global proc liquidViewLastRib()
   } else {
     warning("RIB file not found - " + $ribFileName);
   }
+
+  liqPopIdent();
 }
 
 global proc liquidViewLastRenderScript()
 {
+  liqPushIdent();
 	liqlog("liquidViewLastRenderScript()");
   if ((!objExists("liquidGlobals") || !`attributeExists lastRenderScript liquidGlobals` ) || (`getAttr liquidGlobals.lastRenderScript` == "" )) {
     warning("liquidGlobals.lastRenderScript is not set - no render script has been generated during this session");
-    return;
+    liqPopIdent(); 
+	return;
   }
 
   string $renderScriptName = `getAttr liquidGlobals.lastRenderScript`;
   if ( `file -q -exists $renderScriptName` ) {
-    print("Viewing render script: " + $renderScriptName + "\n");
+    liqlog("Viewing render script: " + $renderScriptName + "\n");
     if (`about -win`) {
       system ( "start notepad " + $renderScriptName );
     } else if(`about -mac`) {
@@ -144,11 +154,13 @@ global proc liquidViewLastRenderScript()
   } else {
     warning("render script file not found - " + $renderScriptName);
   }
+  liqPopIdent();
 }
 
 // This delete's any references to liquid in the scene.
 global proc liquidCleanup( int $showDialog )
 {
+  liqPushIdent();
 	liqlog("liquidCleanup()");
   string $yesno = "Yes";
   if( $showDialog )
@@ -203,10 +215,12 @@ global proc liquidCleanup( int $showDialog )
 
 	setCurrentRenderer("mayaSoftware");//set renderer to default;
   }
+  liqPopIdent();
 }
 
 global proc string liquidINIGet(string $component, string $var )
 {
+  liqPushIdent();
 	liqlog("liquidINIGet(...)");
   string $returnValue;
   string $homeDirectory = `getenv "HOME"`;
@@ -225,28 +239,41 @@ global proc string liquidINIGet(string $component, string $var )
       fclose $fileId;
     }
   }
+  liqPopIdent();
   return $returnValue;
 }
 
-global proc string liquidAddCoordSystem() {
+global proc string liquidAddCoordSystem() 
+{
+  liqPushIdent();
 	liqlog("liquidAddCoordSystem()");
-  return `createNode liquidCoordSys -n liquidCoordSysShape`;
+  string $name = `createNode liquidCoordSys -n liquidCoordSysShape`;
+  liqPopIdent();
+  return $name;
 }
 
-global proc string liquidAddClipPlane() {
+global proc string liquidAddClipPlane() 
+{
+  liqPushIdent();
 	liqlog("liquidAddClipPlane()");
   string $name = `createNode liquidCoordSys -n liquidClipPlaneShape`;
   setAttr ($name+".type") 5;
+  liqPopIdent();
   return $name;
 }
 
 
-global proc liquidAddReflectionUI() {
+global proc liquidAddReflectionUI() 
+{
+  liqPushIdent();
 	liqlog("liquidAddReflectionUI()");
   liquidAddReflection();
+  liqPopIdent();
 }
 
-global proc liquidAddReflection() {
+global proc liquidAddReflection() 
+{
+  liqPushIdent();
 	liqlog("liquidAddReflection()");
 
   string $plane = `plane -s 2 -r 0 0 0`;
@@ -262,14 +289,20 @@ global proc liquidAddReflection() {
   addAttr -ln liqReflectionEveryFrame -at bool -dv true $name;
 
   rename $plane "liqReflectionMapGen";
+  liqPopIdent();
 }
 
-global proc liquidAddEnvironmentUI() {
+global proc liquidAddEnvironmentUI() 
+{
+  liqPushIdent();
 	liqlog("liquidAddEnvironmentUI()");
   liquidAddEnvironment();
+  liqPopIdent();
 }
 
-global proc liquidAddEnvironment() {
+global proc liquidAddEnvironment() 
+{
+  liqPushIdent();
 	liqlog("liquidAddEnvironment()");
   string $name = `shadingNode -asUtility place3dTexture`;
   addAttr -ln liqEnvMapGen -at bool -dv true $name;
@@ -279,11 +312,13 @@ global proc liquidAddEnvironment() {
   addAttr -ln liqReflectionEveryFrame -at bool -dv true $name;
 
   rename $name "liqEnvironmentMapGen";
+  liqPopIdent();
 }
 
 // Substitutes ALL occurences of a regular expression in source
 global proc string liquidSubstituteAll( string $pattern, string $source, string $replace )
 {
+  liqPushIdent();
 	liqlog("liquidSubstituteAll(...)");
   string $result, $oldResult;
   $result = $source;
@@ -292,11 +327,13 @@ global proc string liquidSubstituteAll( string $pattern, string $source, string 
     $result = substitute( $pattern, $result, $replace );
   } while( ! ( $oldResult == $result ) );
 
+  liqPopIdent();
   return $result;
 }
 
 global proc string liquidToUI( string $source )
 {
+  liqPushIdent();
 	liqlog("liquidToUI(...)");
   $result = $source;
   //global int $ncall;
@@ -348,11 +385,13 @@ global proc string liquidToUI( string $source )
   //$totalTime += $stop;
   //string $avg = float($totalTime / $ncall);
   //print ($avg+" sec.\n");
+  liqPopIdent();
   return $result;
 }
 
 global proc liquidCropWindowViewer()
 {
+  liqPushIdent();
 	liqlog("liquidCropWindowViewer()");
   string $cameraShape = `getAttr liquidGlobals.renderCamera`;
   if( `size($cameraShape)` )
@@ -434,10 +473,12 @@ global proc liquidCropWindowViewer()
 	{
 		warning ("liquidCropWindowViewer: no camera specified in globals.");
 	} 
+  liqPopIdent();
 }
 
 global proc liquidTextureViewer( string $file )
 {
+  liqPushIdent();
 	liqlog("liquidTextureViewer(...)");
   $file = liquidVarSubstitute( $file );
   if ( gmatch( $file, "`*`") ) 
@@ -445,6 +486,7 @@ global proc liquidTextureViewer( string $file )
 
   if ( !`filetest -r $file` ) {
     warning ("liquidTextureViewer: could not open \""+$file+"\".");
+    liqPopIdent();
     return;
   }
 
@@ -462,6 +504,7 @@ global proc liquidTextureViewer( string $file )
   if ( $viewer == "" ) {
     warning ("liquidTextureViewer: using the default texture viewer.");
     $viewer = `getAttr liquidGlobals.viewTexture`;
+    liqPopIdent();
     return;
   }
 
@@ -478,10 +521,12 @@ global proc liquidTextureViewer( string $file )
     default:
       break;
   }
+  liqPopIdent();
 }
 
 global proc string liquidVarSubstitute( string $str )
 {
+  liqPushIdent();
 	liqlog("liquidVarSubstitute(...)");
   string $result = $str;
 
@@ -521,11 +566,13 @@ global proc string liquidVarSubstitute( string $str )
     $result = substitute($envvar, $result, $envvalue);
   }
 
+  liqPopIdent();
   return $result;
 }
 
 global proc string liquidAutoShadowName( string $lightShape )
 {
+  liqPushIdent();
 	liqlog("liquidAutoShadowName(...)");
   string $shadowname = "";
   string $textdir = `getAttr liquidGlobals.textureDirectory`;
@@ -575,11 +622,13 @@ global proc string liquidAutoShadowName( string $lightShape )
   $shadowname += $frame;
   $shadowname += ".tex";
 
+  liqPopIdent();
   return $shadowname;
 }
 
 global proc liquidViewShadowMap( string $node )
 {
+  liqPushIdent();
 	liqlog("liquidViewShadowMap(...)");
   string $file = liquidAutoShadowName($node);
   string $test = (size( match("\?\?", $file) ))? (substitute("\?\?", $file, "PX")) : $file;
@@ -587,6 +636,8 @@ global proc liquidViewShadowMap( string $node )
 	liquidTextureViewer($file);
   else 
 	warning("No shadow map on disk !\n           "+$file+"  ");
+
+  liqPopIdent();
 }
 
 

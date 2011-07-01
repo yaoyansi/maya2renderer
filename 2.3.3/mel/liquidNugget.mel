@@ -38,6 +38,7 @@ source xxliquidutility.mel;
 
 global proc liquidAssignNugget( string $node, string $nugget )
 {	
+  liqPushIdent();
 	liqlog("liquidAssignNugget(...)");
 	if ( !`attributeQuery -node $node -ex "liquidNugget"`) {
 		addAttr -ln "liquidNugget" -at message $node;
@@ -47,18 +48,23 @@ global proc liquidAssignNugget( string $node, string $nugget )
 	}
 
 	connectAttr -f ( $nugget + ".liquidNuggetConnections" ) ( $node + ".liquidNugget" );
+
+  liqPopIdent();
 }
 
 global proc liquidRemoveNugget( string $node )
 {
+  liqPushIdent();
 	liqlog("liquidRemoveNugget(...)");
 	if ( `attributeQuery -node $node -ex "liquidNugget"`) {
 		deleteAttr ( $node + ".liquidNugget" );
 	}
+  liqPopIdent();
 }
 
 global proc liquidRemoveNuggetSelected()
 {
+  liqPushIdent();
 	liqlog("liquidRemoveNuggetSelected(...)");
 	string $selected[] = `ls -sl`;
 	string $current;
@@ -66,11 +72,13 @@ global proc liquidRemoveNuggetSelected()
 	{
 		liquidRemoveNugget( $current );
 	}
+  liqPopIdent();
 }
 
 /* assign a nugget to selected objects, the first object you pick should be the nugget! */
 global proc liquidAssignNuggetSelected()
 {
+  liqPushIdent();
 	liqlog("liquidAssignNuggetSelected(...)");
 	string $selected[] = `ls -sl`;
 	string $nugget = $selected[0];
@@ -84,7 +92,8 @@ global proc liquidAssignNuggetSelected()
 		}
 	} else
 	{
-		print "Nugget needs to be a transform!\n";
+		liqlog( "Nugget needs to be a transform!\n");
 	}
 
+  liqPopIdent();
 }

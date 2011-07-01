@@ -39,6 +39,7 @@ source xxliquidutility.mel;
 // create the liquid menu interface
 global proc liquidAddRibBox ()
 {
+  liqPushIdent();
 	liqlog("liquidAddRibBox()");
   // Was ls -dag -sl
   // should be at least ls -dag -tr -sl to not add stuff to the shapes
@@ -50,10 +51,12 @@ global proc liquidAddRibBox ()
       addAttr -ln "liqRIBBox" -dt "string" $currentNode;
     }
   }
+  liqPopIdent();
 }
 
 global proc liquidDeleteRibBox ()
 {
+  liqPushIdent();
 	liqlog("liquidDeleteRibBox()");
   // Do we really want to delete the 
   // atributes recursively ?
@@ -64,6 +67,7 @@ global proc liquidDeleteRibBox ()
       deleteAttr ( $currentNode + ".liqRIBBox" );
     }
   }
+  liqPopIdent();
 }
 
 //// This is very bad! It overrides existing attached ribbox info!!!

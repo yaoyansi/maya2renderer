@@ -23,7 +23,9 @@ global string $liqFluidScroll;
 global string $liqFluidFilterMenu;
 global string $liqFluidSaveSelection[];
 
-global proc string[] slimPick( string $id ) {
+global proc string[] slimPick( string $id ) 
+{
+  liqPushIdent();
 	liqlog("slimPick(...)");
 	string $ret[];	
 		
@@ -31,11 +33,15 @@ global proc string[] slimPick( string $id ) {
 		mtor control pickobjects $id;
 		$ret = `selectedNodes`;
 	}
+  
+	liqPopIdent();
 	return $ret;
 }
 
 
-proc slimDispApps( string $palette, string $type ) {
+proc slimDispApps( string $palette, string $type ) 
+{
+	liqPushIdent();
 	liqlog("slimDispApps(...)");
 global string $liqFluidScroll;
 global string $liqFluidFilterMenu;
@@ -148,44 +154,57 @@ global string $liqFluidSaveSelection[];
 		}
 	}
   }	
-
+  liqPopIdent();
 }
 
 
 
-global proc switchFrameState ( string $palFrame ) { 
+global proc switchFrameState ( string $palFrame ) 
+{  
+	liqPushIdent();
 liqlog("switchFrameState(...)");
 int $frameState = `frameLayout -q  -cl 	$palFrame`;	
    
    frameLayout -e -cl (( $frameState )? false : true ) $palFrame;	
-
+  liqPopIdent();
 }
 
 
-global proc slimImportShader ( string $palette ) { 
-liqlog("slimImportShader(...)");
+global proc slimImportShader ( string $palette ) 
+{ 
+	liqPushIdent();
+	liqlog("slimImportShader(...)");
 	string $fileName = `fileDialog -dm "*.slo;*.slim" `;
 	if ( $fileName != "" ) { 
 		slimcmd $palette CreateInstance -file $fileName; 
 		slimRefreshPanel;
 	}	
+	liqPopIdent();
 }
 
-global proc slimCheckReadOnly ( string $palette, string $roItem ) {
+global proc slimCheckReadOnly ( string $palette, string $roItem ) 
+{
+	liqPushIdent();
 	liqlog("slimCheckReadOnly(...)");
 	slimcmd $palette SetAccessMode (( `menuItem -q -checkBox $roItem` )? "ro" : "rw" );
 	slimcmd $palette UpdateEditor;
+	liqPopIdent();
 }
 
-global proc slimSetLabel ( string $palette, string $txtLabel ) {
+global proc slimSetLabel ( string $palette, string $txtLabel ) 
+{
+	liqPushIdent();
 	liqlog("slimSetLabel(...)");
 	slimcmd $palette SetLabel `textFieldButtonGrp -q -tx $txtLabel`; 
 	slimcmd $palette UpdateEditor; 
 	//mtor control dirty;
 	slimRefreshPanel;
+	liqPopIdent();
 }
 
-global proc slimSetLabelUI ( string $palette ) {
+global proc slimSetLabelUI ( string $palette ) 
+{
+		liqPushIdent();
 		liqlog("slimSetLabelUI(...)");
 	if (`window -exists slimSetLabelUI`)
 		deleteUI -window slimSetLabelUI;
@@ -202,10 +221,12 @@ global proc slimSetLabelUI ( string $palette ) {
 	textFieldButtonGrp -e -bc ( "slimSetLabel " + $palette + " " + $txtLabel +"; deleteUI -window slimSetLabelUI" ) $txtLabel;	
 
 	showWindow slimSetLabelUI;
-
+	liqPopIdent();
 }
 
-global proc slimRefreshPanel ( ) {
+global proc slimRefreshPanel ( ) 
+{
+liqPushIdent();
 liqlog("slimRefreshPanel()");
 global string $liqFluidScroll;
 global string $liqFluidFilterMenu;
@@ -235,7 +256,7 @@ global string $liqFluidSaveSelection[];
 		tokenize( $palletes, $pallete_list );
 		
 		for ( $p in $pallete_list )
-{
+		{
 			
 			string 	$pal_label = `slimcmd $p GetLabel`;
 			string 	$pal_file = `slimcmd $p GetFilename`;
@@ -308,10 +329,13 @@ global string $liqFluidSaveSelection[];
 	
 	setParent ..;
 	setParent ..;
-   
+
+     liqPopIdent();
 }
 
-global proc liquidFluidOutliner() {
+global proc liquidFluidOutliner() 
+{
+  liqPushIdent();
 	liqlog("liquidFluidOutliner()");
 global string $liqFluidScroll;
 global string $liqFluidFilterMenu;
@@ -406,9 +430,12 @@ global string $liqFluidFilterMenu;
 	
 	showWindow $win;
 	
+  liqPopIdent();
 }
 
-global proc slimAlwaysToggleSelectProc( string $outliner, string $alwaysToggleSelectItem ) {
+global proc slimAlwaysToggleSelectProc( string $outliner, string $alwaysToggleSelectItem ) 
+{
+  liqPushIdent();
 	liqlog("slimAlwaysToggleSelectProc(...)");
 
 	int $value = !`outlinerEditor -q -alwaysToggleSelect $outliner`;
@@ -416,6 +443,7 @@ global proc slimAlwaysToggleSelectProc( string $outliner, string $alwaysToggleSe
 	outlinerEditor -e -alwaysToggleSelect $value $outliner;
 	
 	menuItem -e -checkBox $value $alwaysToggleSelectItem;	
+  liqPopIdent();
 }  
 
 //print "Initialized Fluid Outliner Interface...\n";

@@ -33,10 +33,13 @@
 //
 //  Returns:
 //
-
+source xxliquidutility.mel;
 
 global proc AEliquidCoordSysTemplate( string $nodeName )
 {
+  liqPushIdent();
+  //liqlog("AEliquidCoordSysTemplate("+$nodeName+")");
+
   editorTemplate -beginScrollLayout;
 
     editorTemplate -addControl "type";
@@ -57,5 +60,7 @@ global proc AEliquidCoordSysTemplate( string $nodeName )
     editorTemplate -addExtraControls;
 
   editorTemplate -endScrollLayout;
+
+  liqPopIdent();
 }
 

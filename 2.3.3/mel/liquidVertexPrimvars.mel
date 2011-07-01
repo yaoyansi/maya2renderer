@@ -1,6 +1,7 @@
 source xxliquidutility.mel;
 
 proc int getCurveVertexNum ( string $shapeNode ) {
+  liqPushIdent();
 	liqlog("getCurveVertexNum(...)");
   int $ustyle = `getAttr ($shapeNode + ".form")`;
   int $nu;
@@ -15,10 +16,12 @@ proc int getCurveVertexNum ( string $shapeNode ) {
     $n = `getAttr ($shapeNode + ".spans")`;
     break;
   }
+  liqPopIdent();
   return $n;
 }
 
 proc int getNURBSVertexNum ( string $shapeNode ) {
+  liqPushIdent();
 	liqlog("getNURBSVertexNum(...)");
   int $ustyle = `getAttr ($shapeNode + ".formU")`;
   int $vstyle = `getAttr ($shapeNode + ".formV")`;
@@ -46,16 +49,21 @@ proc int getNURBSVertexNum ( string $shapeNode ) {
     $nv = `getAttr ($shapeNode + ".spansV")`;
     break;
   }
-
-  return ($nu * $nv);
+  int $ret = ($nu * $nv);
+  liqPopIdent();
+  return $ret;
 }
 
 proc int getMeshVertexNum ( string $shapeNode ) {
+  liqPushIdent();
 	liqlog("getMeshVertexNum(...)");
-  return `getAttr -s ($shapeNode + ".vrts")`;
+	int $ret = `getAttr -s ($shapeNode + ".vrts")`;
+  liqPopIdent();
+  return $ret;
 }
 
 proc createVectorPrimvarArray(string $shapeNode, string $varName, int $num) {
+  liqPushIdent();
 	liqlog("createVectorPrimvarArray(...)");
 
   addAttr -ln $varName -k true -m -at "double3" $shapeNode;
@@ -68,18 +76,22 @@ proc createVectorPrimvarArray(string $shapeNode, string $varName, int $num) {
     setAttr ($shapeNode + "." + $varName + "[" + $i + "].y") 0;
     setAttr ($shapeNode + "." + $varName + "[" + $i + "].z") 0;
   }
+  liqPopIdent();
 }
 
 proc createFloatPrimvarArray(string $shapeNode, string $varName, int $num) {
+  liqPushIdent();
 	liqlog("createFloatPrimvarArray(...)");
   addAttr -ln $varName -k true -m -at "double" $shapeNode;
   int $i;
   for($i=0; $i<$num; $i++){
     setAttr ($shapeNode + "." + $varName + "[" + $i + "]") 0;
   }
+  liqPopIdent();
 }
 
 global proc makeVertexPrimVar(string $shapeNode, string $name, string $type){
+  liqPushIdent();
 	liqlog("makeVertexPrimVar("+$shapeNode+","+$name+","+$type+")");
   string $prefix = "";
   int $isVec = 0;
@@ -123,4 +135,5 @@ global proc makeVertexPrimVar(string $shapeNode, string $name, string $type){
   string $attrType = ( $isVec == 1 )? "multiVector":"multiFloat";
   string $nodeType = nodeType( $shapeNode );
   makePaintable -attrType $attrType $nodeType ($prefix + $name);
+  liqPopIdent();
 }

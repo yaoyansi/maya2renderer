@@ -32,7 +32,9 @@
 //
 source xxliquidutility.mel;
 
-proc int liquidINIRead( string $ini_file, string $keys[], string $values[] ) {
+proc int liquidINIRead( string $ini_file, string $keys[], string $values[] ) 
+{
+  liqPushIdent();
 	liqlog("liquidINIRead(...)");
   int $i=0, $num_lines = 0;
 
@@ -59,12 +61,15 @@ proc int liquidINIRead( string $ini_file, string $keys[], string $values[] ) {
     fclose $fileId;
 
   }
+  liqPopIdent();
   return $num_lines;
 }
 
 
 
-proc int liquidINIWrite( string $ini_file, string $keys[], string $values[] ) {
+proc int liquidINIWrite( string $ini_file, string $keys[], string $values[] ) 
+{
+  liqPushIdent();
 	liqlog("liquidINIWrite(...)");
   int $fileId, $i = 0;
   string $liquidDirectory = liquidGetUserHomeDir();
@@ -81,10 +86,13 @@ proc int liquidINIWrite( string $ini_file, string $keys[], string $values[] ) {
     }
     fclose $fileId;
   }
+  liqPopIdent();
   return $i;
 }
 
-global proc string liquidINIGetValue( string $keys[], string $values[], string $key ) {
+global proc string liquidINIGetValue( string $keys[], string $values[], string $key ) 
+{
+  liqPushIdent();
 	liqlog("liquidINIGetValue(...)");
   string $Value = "";
   int $i;
@@ -94,11 +102,13 @@ global proc string liquidINIGetValue( string $keys[], string $values[], string $
       $Value = $values[$i];
       break;
     }
-
+  liqPopIdent();
   return $Value;
 }
 
-global proc liquidINISetValue( string $keys[], string $values[], string $key, string $value ) {
+global proc liquidINISetValue( string $keys[], string $values[], string $key, string $value ) 
+{
+  liqPushIdent();
 	liqlog("liquidINISetValue(...)");
   int $i, $found = false;
 
@@ -112,10 +122,13 @@ global proc liquidINISetValue( string $keys[], string $values[], string $key, st
     $keys[$i] = $key;
     $values[$i] = $value;
   }
+  liqPopIdent();
 }
 
 
-global proc int liquidINIGetSectionsList( string $ini_file, string $list[] ) {
+global proc int liquidINIGetSectionsList( string $ini_file, string $list[] ) 
+{
+  liqPushIdent();
 	liqlog("liquidINIGetSectionsList(...)");
   int	$num = 0;
 
@@ -135,10 +148,13 @@ global proc int liquidINIGetSectionsList( string $ini_file, string $list[] ) {
     }
     fclose $fileId;
   }
+  liqPopIdent();
   return $num;
 }
 
-global proc int liquidINIGetSection( string $ini_file, string $section, string $keys[], string $vals[] ) {
+global proc int liquidINIGetSection( string $ini_file, string $section, string $keys[], string $vals[] ) 
+{
+  liqPushIdent();
 	liqlog("liquidINIGetSection(...)");
 int $num = 0;
 string $fileName = toNativePath( liquidGetUserHomeDir() + "/" + $ini_file + ".ini" );
@@ -189,10 +205,13 @@ string $fileName = toNativePath( liquidGetUserHomeDir() + "/" + $ini_file + ".in
     }
     fclose $fileId;
   }
+  liqPopIdent();
   return $num;
 }
 
-global proc liquidINISetSection( string $ini_file, string $section, string $keys[], string $vals[], int $remove ) {
+global proc liquidINISetSection( string $ini_file, string $section, string $keys[], string $vals[], int $remove ) 
+{
+  liqPushIdent();
 	liqlog("liquidINISetSection(...)");
 int	$k, $i = 0;
 int	$found = false, $finished = false;
@@ -263,32 +282,47 @@ int	$fileId;
     }
     fclose $fileId;
   }
+  liqPopIdent();
 }
 
 
 
-global proc string liquidINIGet( string $ini_file, string $key ) {
+global proc string liquidINIGet( string $ini_file, string $key ) 
+{
+  liqPushIdent();
 	liqlog("liquidINIGet(...)");
   string $keys[], $values[];
   string $Value = ( liquidINIRead( $ini_file, $keys, $values ) )? liquidINIGetValue(  $keys, $values, $key ) : "";
+
+  liqPopIdent();
   return $Value;
 }
 
-global proc int liquidINIGetInt( string $ini_file, string $key ) {
+global proc int liquidINIGetInt( string $ini_file, string $key ) 
+{
+  liqPushIdent();
 	liqlog("liquidINIGetInt(...)");
   string $Value = liquidINIGet( $ini_file, $key );
   int  $ret = ( $Value != "" )? $Value : 0 ;
-  return $ret;
+
+  liqPopIdent();
+  return $ret; 
 }
 
-global proc float liquidINIGetFloat( string $ini_file, string $key ) {
+global proc float liquidINIGetFloat( string $ini_file, string $key ) 
+{
+  liqPushIdent();
 	liqlog("liquidINIGetFloat(...)");
   string $Value = liquidINIGet( $ini_file, $key );
   float  $ret = ( $Value != "" )? $Value : 0 ;
+
+  liqPopIdent();
   return $ret;
 }
 
-global proc int liquidINIGetColor( string $ini_file, string $key, float $color[] ) {
+global proc int liquidINIGetColor( string $ini_file, string $key, float $color[] ) 
+{
+  liqPushIdent();
 	liqlog("liquidINIGetColor(...)");
   string $value = liquidINIGet( $ini_file, $key );
   string $cmp[3];
@@ -301,60 +335,84 @@ global proc int liquidINIGetColor( string $ini_file, string $key, float $color[]
     $color[2] = $cmp[2];
     $ret = true;
   }
+  liqPopIdent();
   return $ret;
 }
 
 
 global proc liquidINISet( string $ini_file, string $key, string $SetValue )
 {
+  liqPushIdent();
 	liqlog("liquidINISet(...)");
   string $keys[], $values[];
 
   liquidINIRead( $ini_file, $keys, $values );
   liquidINISetValue( $keys, $values, $key, $SetValue );
   liquidINIWrite( $ini_file, $keys, $values );
+  liqPopIdent();
 }
 
 
-global proc liqSettingsChangeText( string $ini_file, string $ini_key, string $field  ) {
+global proc liqSettingsChangeText( string $ini_file, string $ini_key, string $field  ) 
+{
+  liqPushIdent();
 	liqlog("liqSettingsChangeText(...)");
   string $value = `textFieldGrp -q -text $field`;
   liquidINISet( $ini_file, $ini_key, $value );
+  liqPopIdent();
 }
 
-global proc liqSettingsChangeBool( string $ini_file, string $ini_key, string $field  ) {
+global proc liqSettingsChangeBool( string $ini_file, string $ini_key, string $field  ) 
+{
+  liqPushIdent();
 	liqlog("liqSettingsChangeBool(...)");
   int $value = `checkBoxGrp -q -v1 $field`;
   liquidINISet( $ini_file, $ini_key, $value );
+  liqPopIdent();
 }
 
-global proc liqSettingsChangeInt( string $ini_file, string $ini_key, string $field  ) {
+global proc liqSettingsChangeInt( string $ini_file, string $ini_key, string $field  ) 
+{
+  liqPushIdent();
 	liqlog("liqSettingsChangeInt(...)");
   int $value = `intFieldGrp -q -v1 $field`;
   liquidINISet( $ini_file, $ini_key, $value );
+  liqPopIdent();
 }
 
-global proc liqSettingsChangeFloat( string $ini_file, string $ini_key, string $field  ) {
+global proc liqSettingsChangeFloat( string $ini_file, string $ini_key, string $field  ) 
+{
+  liqPushIdent();
 	liqlog("liqSettingsChangeFloat(...)");
   float $value = `floatFieldGrp -q -v1 $field`;
   liquidINISet( $ini_file, $ini_key, $value );
+  liqPopIdent();
 }
 
-global proc liqSettingsChangeSlider( string $ini_file, string $ini_key, string $field  ) {
+global proc liqSettingsChangeSlider( string $ini_file, string $ini_key, string $field  ) 
+{
+  liqPushIdent();
 	liqlog("liqSettingsChangeSlider(...)");
   float $value = `floatSliderGrp -q -v $field`;
   liquidINISet( $ini_file, $ini_key, $value );
+  liqPopIdent();
 }
 
-global proc liqSettingsChangeMenu( string $ini_file, string $ini_key, string $field  ) {
+global proc liqSettingsChangeMenu( string $ini_file, string $ini_key, string $field  ) 
+{
+  liqPushIdent();
 	liqlog("liqSettingsChangeMenu(...)");
   string $value = `optionMenuGrp -q -value $field`;
   liquidINISet( $ini_file, $ini_key, $value );
+  liqPopIdent();
 }
 
-global proc liqSettingsChangeColor( string $ini_file, string $ini_key, string $field  ) {
+global proc liqSettingsChangeColor( string $ini_file, string $ini_key, string $field  ) 
+{
+  liqPushIdent();
 	liqlog("liqSettingsChangeColor(...)");
   float $rgb[3] = `colorSliderGrp -q -rgb $field`;
   string $value = $rgb[0] + " " + $rgb[1] + " " + $rgb[2];
   liquidINISet( $ini_file, $ini_key, $value );
+  liqPopIdent();
 }

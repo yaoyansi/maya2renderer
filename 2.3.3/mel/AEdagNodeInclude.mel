@@ -32,9 +32,13 @@
 //  Output Value:
 //	None
 //
+source xxliquidutility.mel;
 
 global proc AEdagNodeInclude ( string $nodeName )
 {
+  liqPushIdent();
+  //liqlog("AEdagNodeInclude("+$nodeName+")");
+
   // include/call base class/node attributes
   editorTemplate -suppress "renderInfo";
 
@@ -52,4 +56,6 @@ global proc AEdagNodeInclude ( string $nodeName )
       `objectType $nodeName` == "pointLight" ) AEliquidShadowControls  $nodeName;
 
   AEdependNodeTemplate $nodeName;
+
+  liqPopIdent();
 }

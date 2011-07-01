@@ -1,8 +1,10 @@
 source xxliquidutility.mel;
 
 global proc create_loc_FE()
-{
+{ 
+	liqPushIdent();
 	liqlog("create_loc_FE()");
+
 	string $sel[] = `ls -sl`;
 
 	string $fluid_shape[] = `listRelatives -s $sel[0]`;
@@ -67,11 +69,14 @@ global proc create_loc_FE()
 		addAttr -ln "ribBox" -dt "string" $loc_shape[0];
 		update_FE $loc_shape[0];
 	}
+  liqPopIdent();
 }
 
 global proc update_FE(string $loc_shape)
-{	
+{ 
+	liqPushIdent();	
 	liqlog("update_FE("+$loc_shape+")");
+
 	string $fluid_shape = `getAttr ($loc_shape + ".fluid_shape")`;
 
 	string $tofile = `getAttr ($loc_shape + ".tofile")`;
@@ -107,7 +112,7 @@ global proc update_FE(string $loc_shape)
 			evalDeferred ("fluid_data_export -node \"" + $fluid_shape + "\" -dens " + $dens + " -binary " + $binary + " -tofile \"" + $base_fname + "\"");
 		}else
 		{
-			print("Lazy on " + $dens_fname + " !!!\n");
+			liqlog("Lazy on " + $dens_fname + " !!!\n");
 		}
 	}
 	if($fuel)
@@ -119,7 +124,7 @@ global proc update_FE(string $loc_shape)
 			evalDeferred ("fluid_data_export -node \"" + $fluid_shape + "\" -fuel " + $fuel + " -binary " + $binary + " -tofile \"" + $base_fname + "\"");
 		}else
 		{
-			print("Lazy on " + $fuel_fname + " !!!\n");
+			liqlog("Lazy on " + $fuel_fname + " !!!\n");
 		}
 	}
 	if($temp)
@@ -131,7 +136,7 @@ global proc update_FE(string $loc_shape)
 			evalDeferred ("fluid_data_export -node \"" + $fluid_shape + "\" -temp " + $temp + " -binary " + $binary + " -tofile \"" + $base_fname + "\"");
 		}else
 		{
-			print("Lazy on " + $temp_fname + " !!!\n");
+			liqlog("Lazy on " + $temp_fname + " !!!\n");
 		}
 	}
 	if($velo)
@@ -143,7 +148,7 @@ global proc update_FE(string $loc_shape)
 			evalDeferred ("fluid_data_export -node \"" + $fluid_shape + "\" -velo " + $velo + " -binary " + $binary + " -tofile \"" + $base_fname + "\"");
 		}else
 		{
-			print("Lazy on " + $velo_fname + " !!!\n");
+			liqlog("Lazy on " + $velo_fname + " !!!\n");
 		}
 	}
 
@@ -205,4 +210,6 @@ global proc update_FE(string $loc_shape)
 
 
 	setAttr -type "string" ( $loc_shape + ".ribBox" ) $rib_string;
+ 
+	liqPopIdent();
 }

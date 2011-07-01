@@ -17,6 +17,7 @@ global proc string[] validConnections_blinn ()
 
 global proc writeRSL_blinn ( string $node )
 {
+  liqPushIdent();
 	liqlog("writeRSL_blinn(...)");
     beginRSL $node;
 
@@ -68,6 +69,7 @@ global proc writeRSL_blinn ( string $node )
     addToRSL "Ci = Cs * Oi * color outColor;";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -82,6 +84,7 @@ global proc writeRSL_layeredShader (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_layeredShader(...)");
     beginRSL $node;
 
@@ -130,6 +133,7 @@ global proc writeRSL_layeredShader (
     addToRSL( "Ci = Cs * Oi * color outColor;" );
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -145,6 +149,7 @@ global proc writeRSL_lambert (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_lambert(...)");
     beginRSL $node;
 
@@ -167,6 +172,7 @@ global proc writeRSL_lambert (
     addToRSL "Ci = Cs * Oi * color outColor;";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -184,6 +190,7 @@ global proc writeRSL_phong (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_phong(...)");
     beginRSL $node;
 
@@ -221,4 +228,5 @@ global proc writeRSL_phong (
     addToRSL "Ci = Cs * Oi * color outColor;";
 
     endRSL;
+  liqPopIdent();
 }

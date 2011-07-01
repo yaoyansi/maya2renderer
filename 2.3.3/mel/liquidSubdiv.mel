@@ -31,8 +31,9 @@
 //
 source xxliquidutility.mel;
 
-global proc liquidMakeSubdivUI() {
-
+global proc liquidMakeSubdivUI() 
+{
+  liqPushIdent();
 	liqlog("liquidMakeSubdivUI(...)");
   if (`window -exists liqSubdivWindow`)
     deleteUI liqSubdivWindow;
@@ -90,10 +91,12 @@ global proc liquidMakeSubdivUI() {
     setParent ..;
 
   showWindow liqSubdivWindow;
+  liqPopIdent();
 }
 
 global proc liquidMakeSubdivDoIt()
 {
+  liqPushIdent();
 	liqlog("liquidMakeSubdivDoIt(...)");
   int $r = `checkBoxGrp -q -v1 "liqSubdivWindow|c1|parameters|liqSubdiv"`;
   optionVar -iv "liqSubdiv" $r;
@@ -106,9 +109,12 @@ global proc liquidMakeSubdivDoIt()
 
   deleteUI liqSubdivWindow;
   liquidMakeSubdiv();
+  liqPopIdent();
 }
 
-global proc liquidMakeSubdiv() {
+global proc liquidMakeSubdiv()
+{
+  liqPushIdent();
 	liqlog("liquidMakeSubdiv(...)");
   string $selected[] = `ls -dag -type mesh -type subdiv -sl`;
   string $current;
@@ -141,9 +147,12 @@ global proc liquidMakeSubdiv() {
       setAttr ( $current + ".liqSubdivInterpolateBoundary" ) $interp;
     }
   }
+  liqPopIdent();
 }
 
-global proc liquidUnMakeSubdiv() {
+global proc liquidUnMakeSubdiv() 
+{
+  liqPushIdent();
 	liqlog("liquidUnMakeSubdiv(...)");
   string $selected[] = `ls -dag -type mesh -type subdiv -sl`;
   string $current;
@@ -158,24 +167,27 @@ global proc liquidUnMakeSubdiv() {
     if ( `attributeQuery -node $current -ex "liqSubdivInterpolateBoundary"`)
       deleteAttr ( $current + ".liqSubdivInterpolateBoundary" );
   }
+  liqPopIdent();
 }
 
 global proc string liqSubdivAddAttribute( string $node, string $attr, string $type, int $keyable )
 {
+  liqPushIdent();
 	liqlog("liqSubdivAddAttribute(...)");
     string $nm = ($node + "." + $attr);
     string $result[] = `listAttr -r -st $attr $node`;
     if ( 0 == size($result))  {
-
-  addAttr -at $type -ln $attr $node;
-  if( $keyable ) 	{
-      setAttr -e -keyable true $nm;
-  }
+	  addAttr -at $type -ln $attr $node;
+	  if( $keyable ) 	{
+		  setAttr -e -keyable true $nm;
+	  }
     }
+  liqPopIdent();
     return $nm;
 }
 
 global proc liquidSubdivCreaseUI() {
+  liqPushIdent();
 	liqlog("liquidSubdivCreaseUI(...)");
 
   if (`window -exists liqSubdivCreaseWin`)
@@ -199,17 +211,21 @@ global proc liquidSubdivCreaseUI() {
       button -e -c "liquidSubdivCreaseDoIt" okButton;
     setParent ..;
   showWindow liqSubdivCreaseWin;
+  liqPopIdent();
 }
 
 global proc liquidSubdivCreaseDoIt() {
+  liqPushIdent();
 	liqlog("liquidSubdivCreaseDoIt(...)");
 
   int $r = `floatSliderGrp -q -v "liqSubdivCreaseWin|c1|parameters|hardness"`;
   optionVar -iv "liqSubdivCrease" $r;
       liquidSubdivCreaseApply;
+  liqPopIdent();
 }
 
 global proc liquidSubdivCreaseApply() {
+  liqPushIdent();
 	liqlog("liquidSubdivCreaseApply(...)");
 
   int $crease = `optionVar -q "liqSubdivCrease"`;
@@ -224,9 +240,11 @@ global proc liquidSubdivCreaseApply() {
   string $attr = liqSubdivAddAttribute( $newSet, "liqSubdivCrease", "float", 1 );
   setAttr $attr $crease;
   select -noExpand $newSet;
+  liqPopIdent();
 }
 
 global proc liquidSubdivCornerUI() {
+  liqPushIdent();
 	liqlog("liquidSubdivCornerUI(...)");
 
   if (`window -exists liqSubdivCornerWin`)
@@ -250,17 +268,21 @@ global proc liquidSubdivCornerUI() {
       button -e -c "liquidSubdivCornerDoIt" okButton;
     setParent ..;
   showWindow liqSubdivCornerWin;
+  liqPopIdent();
 }
 
 global proc liquidSubdivCornerDoIt() {
+  liqPushIdent();
 	liqlog("liquidSubdivCornerDoIt(...)");
 
   int $r = `floatSliderGrp -q -v "liqSubdivCornerWin|c1|parameters|hardness"`;
   optionVar -iv "liqSubdivCorner" $r;
       liquidSubdivCornerApply;
+  liqPopIdent();
 }
 
 global proc liquidSubdivCornerApply() {
+  liqPushIdent();
 	liqlog("liquidSubdivCornerApply(...)");
 
   int $Corner = `optionVar -q "liqSubdivCorner"`;
@@ -275,9 +297,11 @@ global proc liquidSubdivCornerApply() {
   string $attr = liqSubdivAddAttribute( $newSet, "liqSubdivCorner", "float", 1 );
   setAttr $attr $Corner;
   select -noExpand $newSet;
+  liqPopIdent();
 }
 
 global proc liquidSubdivHoleUI() {
+  liqPushIdent();
 	liqlog("liquidSubdivHoleUI(...)");
 
   if (`window -exists liqSubdivHoleWin`)
@@ -298,17 +322,21 @@ global proc liquidSubdivHoleUI() {
       button -e -c "liquidSubdivHoleDoIt" okButton;
     setParent ..;
   showWindow liqSubdivHoleWin;
+  liqPopIdent();
 }
 
 global proc liquidSubdivHoleDoIt() {
+  liqPushIdent();
 	liqlog("liquidSubdivHoleDoIt(...)");
 
   int $r = `checkBoxGrp -q -v1 "hole"`;
   optionVar -iv "liqSubdivHole" $r;
       liquidSubdivHoleApply;
+  liqPopIdent();
 }
 
 global proc liquidSubdivHoleApply() {
+  liqPushIdent();
 	liqlog("liquidSubdivHoleApply(...)");
 
   int $Hole = `optionVar -q "liqSubdivHole"`;
@@ -323,9 +351,11 @@ global proc liquidSubdivHoleApply() {
   string $attr = liqSubdivAddAttribute( $newSet, "liqSubdivHole", "short", 1 );
   setAttr $attr $Hole;
   select -noExpand $newSet;
+  liqPopIdent();
 }
 
 global proc liquidSubdivStitchUI() {
+  liqPushIdent();
 	liqlog("liquidSubdivStitchUI(...)");
 
   if (`window -exists liqSubdivStitchWin`)
@@ -349,17 +379,21 @@ global proc liquidSubdivStitchUI() {
       button -e -c "liquidSubdivStitchDoIt" okButton;
     setParent ..;
   showWindow liqSubdivStitchWin;
+  liqPopIdent();
 }
 
 global proc liquidSubdivStitchDoIt() {
+  liqPushIdent();
 	liqlog("liquidSubdivStitchDoIt(...)");
 
   int $r = `intFieldGrp -q -v1 "liqSubdivStitchWin|c1|parameters|uid"`;
   optionVar -iv "liqSubdivStitch" $r;
       liquidSubdivStitchApply;
+  liqPopIdent();
 }
 
 global proc liquidSubdivStitchApply() {
+  liqPushIdent();
 	liqlog("liquidSubdivStitchApply(...)");
 
   int $Stitch = `optionVar -q "liqSubdivStitch"`;
@@ -374,4 +408,5 @@ global proc liquidSubdivStitchApply() {
   string $attr = liqSubdivAddAttribute( $newSet, "liqSubdivStitch", "short", 1 );
   setAttr $attr $Stitch;
   select -noExpand $newSet;
+  liqPopIdent();
 }

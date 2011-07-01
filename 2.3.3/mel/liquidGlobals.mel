@@ -38,6 +38,7 @@ source xxliquidutility.mel;
 
 global proc liquidGlobalsUpdateBitsMenus( string $theAttr )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsUpdateBitsMenus(...)");
   string $menus[];
   if ( $theAttr == "bits_filters" ) $menus = { "ddPixelFilter_0__LRG_optionMenu", "LG_DDpixelfilterCtl", "LG_DCpixelfilterCtl" };
@@ -65,7 +66,7 @@ global proc liquidGlobalsUpdateBitsMenus( string $theAttr )
     }
 
   }
-
+  liqPopIdent();
 }
 
 
@@ -74,6 +75,7 @@ global proc liquidGlobalsUpdateBitsMenus( string $theAttr )
 
 global proc liquidGlobalsRenderLayerOverrideUpdateMenu( string $attr, string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsRenderLayerOverrideUpdateMenu(...)");
   int $en = (`editRenderLayerGlobals -q -crl` == "defaultRenderLayer")? 0 : 1;
   string $ctl = (gmatch( $attr, "*[*]*"))? substitute( $attr, "s/\\[*\\]*/_/g" ) : $attr;
@@ -81,10 +83,12 @@ global proc liquidGlobalsRenderLayerOverrideUpdateMenu( string $attr, string $pr
   string $remove = (gmatch( $nodeOverrides, ("*liquidGlobals."+$attr+"*")))? "-remove":"";
   string $label = ($remove == "")? "Create Layer Override":"Remove Layer Override";
   menuItem -e -l $label -c ("evalEcho(\"editRenderLayerAdjustment "+$remove+" liquidGlobals."+$attr+"\")") -en $en ($prefix+"liquidGlobalsOverride_"+$ctl);
+  liqPopIdent();
 }
 
 proc resizeLayout( string $root, int $levels )
 {
+  liqPushIdent();
 	liqlog("resizeLayout(...)");
   string $old = `setParent -q`;
   //trace ("----------------------------------------------");
@@ -101,6 +105,7 @@ proc resizeLayout( string $root, int $levels )
 
   if ( $height <= 1 ) {
     layout -e -h 1 $layout;
+    liqPopIdent();
     return;
   }
 
@@ -112,10 +117,12 @@ proc resizeLayout( string $root, int $levels )
   }
 
   setParent $old;
+  liqPopIdent();
 }
 
 proc liquidShowBoolGlobalPlus( string $name, string $label, string $info, string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidShowBoolGlobalPlus(...)");
   string $onCommand  = ("setAttr liquidGlobals." + $name + " true; ");
   string $offCommand = ("setAttr liquidGlobals." + $name + " false; ");
@@ -173,16 +180,20 @@ proc liquidShowBoolGlobalPlus( string $name, string $label, string $info, string
   {
     warning ( "global attribute " + $name + " does not exist\n" );
   }
+  liqPopIdent();
 }
 //[merge] use mesh branch
 proc liquidShowBoolGlobal( string $name, string $label, string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidShowBoolGlobal(...)");
   liquidShowBoolGlobalPlus( $name, $label, "", $prefix );
+  liqPopIdent();
 }
 
 proc liquidShowBitFieldGlobal( string $attr )
 {
+  liqPushIdent();
 	liqlog("liquidShowBitFieldGlobal(...)");
   string $bitFields[] = `attributeQuery -n liquidGlobals -lc $attr`;
   string $bit;
@@ -190,16 +201,19 @@ proc liquidShowBitFieldGlobal( string $attr )
     string $ctl = `checkBoxGrp -label (liquidToUI($bit))`;
     connectControl -index 2 $ctl ("liquidGlobals."+$attr+"."+$bit);
   }
+  liqPopIdent();
 }
 
 global proc liquidShowViewerDefinition()
 {
+  liqPushIdent();
 	liqlog("liquidShowViewerDefinition()");
   string $attrExt = "liquidGlobals.viewTextureFilter";
   string $attrCmd = "liquidGlobals.viewTextureCommand";
   string $parent = `setParent -q`;
 
   if ( !objExists( $attrExt ) || !objExists( $attrCmd ) ) {
+    liqPopIdent();
     return;
   }
   string $ext[] = `getAttr $attrExt`;
@@ -229,11 +243,13 @@ global proc liquidShowViewerDefinition()
     textField -tx $cmd[$i] -cc ("liquidChangeViewerDefinition("+$i+")") ("viewerDef_"+$i+"_Cmd");
   }
 
-  setParent $parent;
+  setParent $parent; 
+  liqPopIdent();
 }
 
 global proc liquidChangeViewerDefinition( int $index )
-{
+{ 
+	liqPushIdent();
 	liqlog("liquidChangeViewerDefinition(...)");
   string $extCtl = ("viewerDef_"+$index+"_Ext");
   string $cmdCtl = ("viewerDef_"+$index+"_Cmd");
@@ -256,10 +272,12 @@ global proc liquidChangeViewerDefinition( int $index )
     eval $cmd;
 
   } else error("liquidChangeViewerDefinition: got bad index !");
+  liqPopIdent();
 }
 
 global proc liquidShowStringGlobalPlus( string $name, string $label, string $info, string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidShowStringGlobalPlus(...)");
   if ( `objExists ("liquidGlobals."+$name)` ) {
     string $ctl = `textFieldGrp -label $label -ann $info`;
@@ -267,18 +285,22 @@ global proc liquidShowStringGlobalPlus( string $name, string $label, string $inf
     popupMenu -pmc ("liquidGlobalsRenderLayerOverrideUpdateMenu \""+$name+"\" \""+$prefix+"\"");
     menuItem -l "Create Layer Override" ($prefix+"liquidGlobalsOverride_"+$name);
   } else {
-    print ( "Warning : global attribute " + $name + " does not exist\n" );
+    liqlog ( "Warning : global attribute " + $name + " does not exist\n" );
   }
+  liqPopIdent();
 }
 
 proc liquidShowStringGlobal( string $name, string $label, string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidShowStringGlobal(...)");
   liquidShowStringGlobalPlus( $name, $label, "", $prefix );
+  liqPopIdent();
 }
 
 global proc liquidShowLargeStringGlobalPlus( string $name, string $label, string $info, string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidShowLargeStringGlobalPlus(...)");
   string $nodeDotAttr = ("liquidGlobals."+$name);
   if ( `objExists $nodeDotAttr` ) {
@@ -311,11 +333,13 @@ global proc liquidShowLargeStringGlobalPlus( string $name, string $label, string
   } else {
     warning( "Global attribute " + $name + " does not exist" );
   }
+  liqPopIdent();
 }
 
 
 proc liquidShowIntGlobalPlus( string $name, string $label, string $info, string $cmd )
 {
+	liqPushIdent();
 	liqlog("liquidShowIntGlobalPlus(...)");
   if ( objExists( ("liquidGlobals."+$name) ) ) {
     //setUITemplate -pst attributeEditorTemplate;
@@ -325,16 +349,20 @@ proc liquidShowIntGlobalPlus( string $name, string $label, string $info, string 
   } else {
     warning( "global attribute " + $name + " does not exist\n" );
   }
+  liqPopIdent();
 }
 
 proc liquidShowIntGlobal( string $name, string $label )
 {
+  liqPushIdent();
 	liqlog("liquidShowIntGlobal(...)");
   liquidShowIntGlobalPlus( $name, $label, "", "" );
+  liqPopIdent();
 }
 
 proc liquidShowFloatGlobalPlus( string $name, string $label, string $info, string $cmd )
 {
+  liqPushIdent();
 	liqlog("liquidShowFloatGlobalPlus(...)");
   if ( objExists( ("liquidGlobals."+$name) ) ) {
     //setUITemplate -pst attributeEditorTemplate;
@@ -344,16 +372,20 @@ proc liquidShowFloatGlobalPlus( string $name, string $label, string $info, strin
   } else {
     warning( "global attribute " + $name + " does not exist\n" );
   }
+  liqPopIdent();
 }
 
 proc liquidShowFloatGlobal( string $name, string $label )
 {
+  liqPushIdent();
 	liqlog("liquidShowFloatGlobal(...)");
   liquidShowFloatGlobalPlus( $name, $label, "", "" );
+  liqPopIdent();
 }
 
 proc liquidShowColorGlobalPlus( string $name, string $label, string $info )
 {
+  liqPushIdent();
 	liqlog("liquidShowColorGlobalPlus(...)");
   if ( objExists( ("liquidGlobals."+$name) ) ) {
     //setUITemplate -pst attributeEditorTemplate;
@@ -363,20 +395,25 @@ proc liquidShowColorGlobalPlus( string $name, string $label, string $info )
   } else {
     warning( "global attribute " + $name + " does not exist\n" );
   }
+  liqPopIdent();
 }
 
 proc liquidShowColorGlobal( string $name, string $label )
 {
+  liqPushIdent();
 	liqlog("liquidShowColorGlobal(...)");
   liquidShowColorGlobalPlus( $name, $label, "" );
+  liqPopIdent();
 }
 
 proc liquidShowIntGlobalMenu( string $name, string $label, string $items[], string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidShowIntGlobalMenu(...)");
   if (size($items) == 0) {
     warning( "empty list specified in liquidShowIntGlobalMenu() for attribute " + $name + "\n");
-    return;
+    liqPopIdent();
+	return;
   }
   if ( objExists( ("liquidGlobals."+$name) ) ) {
     //setUITemplate -pst attributeEditorTemplate;
@@ -392,6 +429,7 @@ proc liquidShowIntGlobalMenu( string $name, string $label, string $items[], stri
   } else {
     warning ( "global attribute " + $name + " does not exist\n" );
   }
+  liqPopIdent();
 }
 
 // proc to update the enable state of menu items
@@ -399,6 +437,7 @@ proc liquidShowIntGlobalMenu( string $name, string $label, string $items[], stri
 
 proc liquidUpdateBitsIntGlobalMenu( string $name, string $attr )
 {
+  liqPushIdent();
 	liqlog("liquidUpdateBitsIntGlobalMenu(...)");
   string $optionMenu = ($name+"_LRG_optionMenu");
 
@@ -421,12 +460,14 @@ proc liquidUpdateBitsIntGlobalMenu( string $name, string $attr )
     }
 
   }
+  liqPopIdent();
 }
 
 // creates an option menu based on renderer capacities.
 // links to an int attribute.
 proc liquidShowBitsIntGlobalMenuPlus( string $name, string $label, string $attr, string $callback, string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidShowBitsIntGlobalMenuPlus(...)");
   if ( `attributeQuery -node liquidGlobals -ex $attr` ) {
     //setUITemplate -pst attributeEditorTemplate;
@@ -445,12 +486,15 @@ proc liquidShowBitsIntGlobalMenuPlus( string $name, string $label, string $attr,
   } else {
     warning ( "global attribute " + $name + " does not exist\n" );
   }
+  liqPopIdent();
 }
 
 proc liquidShowBitsIntGlobalMenu( string $name, string $label, string $attr, string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidShowBitsIntGlobalMenu(...)");
   liquidShowBitsIntGlobalMenuPlus( $name, $label, $attr, "", $prefix );
+  liqPopIdent();
 }
 
 // end of local procs ---------------------------------------------------------
@@ -472,6 +516,7 @@ liquidInitGlobalVals();
  */
 global proc liquidInitGlobalVals()
 {
+  liqPushIdent();
 	liqlog("liquidInitGlobalVals(...)");
   global string $liquidGlobalsVals[];
   $liquidGlobalsVals = {
@@ -747,6 +792,7 @@ global proc liquidInitGlobalVals()
     "dshDisplayName",
     "dshImageMode"
   };
+  liqPopIdent();
 }
 
 
@@ -756,9 +802,13 @@ global proc liquidInitGlobalVals()
  */
 global proc int liquidGlobalsFeatureQuery( string $feature )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsFeatureQuery(...)");
   string $attr = ("liquidGlobals.bits_features." + $feature);
-  return ( objExists( $attr ) )? `getAttr $attr`: 0;
+
+  int $ret = ( objExists( $attr ) )? `getAttr $attr`: 0;
+  liqPopIdent();
+  return $ret;
 }
 
 
@@ -766,6 +816,7 @@ global proc int liquidGlobalsFeatureQuery( string $feature )
 // WETA SPECIFIC: Start
 global proc liquidAddNimbusLightParam()
 {
+  liqPushIdent();
 	liqlog("liquidAddNimbusLightParam()");
   global string $liquidGlobalsVals[];
   string $selected[] = `ls -sl -dag -lights`;
@@ -796,37 +847,45 @@ global proc liquidAddNimbusLightParam()
       }
     }
   }
+  liqPopIdent();
 }
 // WETA SPECIFIC: End
 
 global proc liquidChangeTextAttr ( string $selectedObj, string $argName, string $fieldName )
 {
+  liqPushIdent();
 	liqlog("liquidChangeTextAttr(...)");
   string $fieldValue = `textFieldGrp -q -text $fieldName`;
   setAttr ( $selectedObj + "." + $argName ) -type "string" $fieldValue;
+  liqPopIdent();
 }
 
 // REVIEW : not called anywhere
 global proc liquidChangeScrollAttr ( string $selectedObj, string $argName, string $fieldName )
 {
+  liqPushIdent();
 	liqlog("liquidChangeScrollAttr(...)");
     string $fieldValue = `scrollField -q -text $fieldName`;
     setAttr ( $selectedObj + "." + $argName ) -type "string" $fieldValue;
+  liqPopIdent();
 }
 
 global proc int oldLiquidGlobalsExists()
 {
+  liqPushIdent();
 	liqlog("oldLiquidGlobalsExists()");
   int $returnVal;
   $returnVal = `objExists liquidGlobals`;
   if ( $returnVal ) {
-    if ( nodeType( $returnVal ) != "oldBlindDataBase" ) return 0;
+	  if ( nodeType( $returnVal ) != "oldBlindDataBase" ) {liqPopIdent();return 0;}
   }
+  liqPopIdent();
   return $returnVal;
 }
 
 global proc int liquidGlobalsExists()
-{
+{ 
+	liqPushIdent();
 	liqlog("liquidGlobalsExists()");
   int $returnVal;
   $returnVal = `objExists liquidGlobals`;
@@ -834,10 +893,12 @@ global proc int liquidGlobalsExists()
     if ( nodeType( "liquidGlobals" ) == "oldBlindDataBase" ) {
       delete liquidGlobals;
       if ( `window -q -ex unifiedRenderGlobalsWindow` ) deleteUI unifiedRenderGlobalsWindow;
-      return 0;
+      liqPopIdent();
+	  return 0;
     }
-    if ( nodeType( "liquidGlobals" ) != "liquidGlobals" ) return 0;
+	if ( nodeType( "liquidGlobals" ) != "liquidGlobals" ) {liqPopIdent();return 0;}
   }
+  liqPopIdent();
   return $returnVal;
 }
 
@@ -847,13 +908,14 @@ global proc int liquidGlobalsExists()
  */
 global proc liquidCreateGlobals()
 {
+  liqPushIdent();
 	liqlog("liquidCreateGlobals()");
   if ( `liquidGlobalsExists` ) {
     delete liquidGlobals;
   }
   if ( !`liquidGlobalsExists` ) {
     createNode "liquidGlobals" -n "liquidGlobals";
-    print "Liquid Globals Created!\n";
+    liqlog( "Liquid Globals Created!\n");
   }
 
   // set the default display driver
@@ -870,7 +932,7 @@ global proc liquidCreateGlobals()
 
   liquidLoadGlobals( "default", "global" );
 
-
+  liqPopIdent();
 
 }
 
@@ -879,7 +941,8 @@ global proc liquidCreateGlobals()
  *  Check and add the default render globals attributes to the Liquid Render Globals node.
  */
 global proc liquidAddGlobals()
-{
+{  
+	liqPushIdent();
 	liqlog("liquidAddGlobals()");
   global string $liquidGlobalsVals[];
   int $liquidGlobalsNumber = size( $liquidGlobalsVals ) / 3;
@@ -979,29 +1042,37 @@ global proc liquidAddGlobals()
     setAttr -type "string" liquidGlobals.ddImageMode[0] "rgba";
   }
 
+  liqPopIdent();
 }
 
 global proc int liquidGlobalsAvailable()
 {
+    liqPushIdent();
 	liqlog("liquidGlobalsAvailable()");
 
-	if(  0==size(`getAttr "liquidGlobals.renderCommand"`) )
+	if(  0==size(`getAttr "liquidGlobals.renderCommand"`) ){
+		liqPopIdent();
 		return 0;
-
+	}
+	liqPopIdent();
 	return 1;
 }
 
 global proc liquidCheckGlobals()
 {
-	liqlog("liquidCheckGlobals()");
+  liqPushIdent();
+  liqlog("liquidCheckGlobals()");
   if (  !liquidGlobalsExists() || !liquidGlobalsAvailable() )
 	  liquidCreateGlobals();
+  
+  liqPopIdent();
 }
 
 /* Preset systems --------------------------------------------------------------------------------- */
 
 global proc liquidAddPresets()
 {
+    liqPushIdent();
 	liqlog("liquidAddPresets()");
   string $liquidDirectory = liquidGetHome() + "/";
 
@@ -1066,6 +1137,7 @@ global proc liquidAddPresets()
     string $preset = substring( $currentPreset, 1, size( $currentPreset ) - 3 );
     menuItem -label $preset -c ( "liquidLoadPreset \"" + $preset + "\"" + " \"local\"" )  ( "liquidGlobalsPresetMenu" + $preset );
   }
+  liqPopIdent();
 }
 
 /**
@@ -1083,6 +1155,7 @@ global proc liquidAddPresets()
  */
 global proc int liquidSaveGlobals( string $name, string $presetType, int $forceOverwrite )
 {
+  liqPushIdent();
 	liqlog("liquidSaveGlobals()");
   global string $liqRendererOptions[];
 
@@ -1098,14 +1171,15 @@ global proc int liquidSaveGlobals( string $name, string $presetType, int $forceO
     case "":
     case "all":
     case "global":
-      if ( !liquidCreateUserHomeDir() ) return false;
+		if ( !liquidCreateUserHomeDir() ) {  liqPopIdent(); return false;}
       break;
 
     case "renderer":
-      if ( !liquidCreateUserHomeDir() ) return false;
+		if ( !liquidCreateUserHomeDir() ) {  liqPopIdent(); return false;}
       $liquidDirectory += "/renderers";
       if ( !`sysFile -makeDir $liquidDirectory` ) {
         warning ( "Can not create dir: " + $liquidDirectory);
+		liqPopIdent();
         return false;
       }
       break;
@@ -1130,6 +1204,7 @@ global proc int liquidSaveGlobals( string $name, string $presetType, int $forceO
           string $msg = ("liquidSaveGlobals: \""+$presetType+"\" is not a valid path !");
           trace $msg;
           warning $msg;
+		  liqPopIdent();
           return false;
         }
       }
@@ -1145,6 +1220,7 @@ global proc int liquidSaveGlobals( string $name, string $presetType, int $forceO
   //
   if ( !`nodePreset -isValidName $name` ) {
     warning "This name is not valid - it should only contain letters, numbers and underscores.";
+    liqPopIdent();
     return false;
   }
 
@@ -1194,6 +1270,7 @@ global proc int liquidSaveGlobals( string $name, string $presetType, int $forceO
 
   }
 
+  liqPopIdent();
   return $ret;
 }
 
@@ -1212,7 +1289,9 @@ global proc int liquidSaveGlobals( string $name, string $presetType, int $forceO
  *          If all fails (and provided you are not in batch mode),
  *          it will pop-up a dialog for you to choose a file.
  */
-global proc int liquidLoadGlobals( string $name, string $presetType ) {
+global proc int liquidLoadGlobals( string $name, string $presetType ) 
+{
+    liqPushIdent();
 	liqlog("liquidLoadGlobals(...)");
   // check the environment var
   //
@@ -1260,6 +1339,7 @@ global proc int liquidLoadGlobals( string $name, string $presetType ) {
     // the file can be read : do it !
     eval ("source \""+$globalName+"\"");
     select $oldSel;
+    liqPopIdent();
     return true;
 
   } else {
@@ -1275,6 +1355,7 @@ global proc int liquidLoadGlobals( string $name, string $presetType ) {
       // it is in the user's home dir !!
       eval ("source \""+$globalName+"\"");
       select $oldSel;
+      liqPopIdent();
       return true;
 
     } else if  ( `filetest -r $homeDirRendererPath` ) {
@@ -1282,6 +1363,7 @@ global proc int liquidLoadGlobals( string $name, string $presetType ) {
       // it is in the renderer directory of the user's home dir.
       eval ("source \""+$homeDirRendererPath+"\"");
       select $oldSel;
+      liqPopIdent();
       return true;
 
     } else {
@@ -1313,12 +1395,14 @@ global proc int liquidLoadGlobals( string $name, string $presetType ) {
                               "   unifiedRenderGlobalsWindow; "+
                               " }"+
                               "}");
+          liqPopIdent();
           return true;
       }  else warning ("Preset file not found! : you might not be able to render correctly...");
     }
   }
   select $oldSel;
 
+  liqPopIdent();
   return false;
 }
 
@@ -1327,12 +1411,15 @@ global proc int liquidLoadGlobals( string $name, string $presetType ) {
  */
 global proc liquidLoadPreset(string $preset, string $presetType )
 {
+  liqPushIdent();
 	liqlog("liquidLoadPreset(...)");
   liquidLoadGlobals $preset $presetType;
+  liqPopIdent();
 }
 
 global proc liquidSavePresetOk()
-{
+{  
+	liqPushIdent();
 	liqlog("liquidSavePresetOk()");
   string $presetName = `textFieldGrp -q -tx liquidSavePresetTxFld`;
   string $presetType = "global";
@@ -1354,8 +1441,10 @@ global proc liquidSavePresetOk()
       string $i,$ia[] = `menu -q -ia liquidGlobalsPresetMenu`;
       for ( $i in $ia ) {
         string $label = ( !`menuItem -q -divider  $i` )? `menuItem -q -label $i` : "";
-        if ( $presetName_lower == tolower( $label ) )
-          return; // same preset menu item already exists
+		if ( $presetName_lower == tolower( $label ) ){
+			liqPopIdent();
+			return; // same preset menu item already exists
+		}
       }
       menuItem -label $presetName
                //-c ("liquidLoadPreset \"" + $presetName  + "\" " + (( $rendererOnly )? "\"renderer\"" : "\"global\"" ) ) //[merge]duran and xx
@@ -1363,9 +1452,12 @@ global proc liquidSavePresetOk()
                -p liquidGlobalsPresetMenu ( "liquidGlobalsPresetMenu" + $presetName );
     }
   }
+  liqPopIdent();
 }
 
-global proc liquidSavePreset() {
+global proc liquidSavePreset() 
+{
+  liqPopIdent();
 	liqlog("liquidSavePreset(...)");
   if (`window -ex liquidSavePresetWin`) 
 	deleteUI liquidSavePresetWin;
@@ -1393,6 +1485,7 @@ global proc liquidSavePreset() {
       -attachPosition $ok_btn "right" 1 50
     $form;
   showWindow liquidSavePresetWin;
+  liqPopIdent();
 }
 
 
@@ -1402,6 +1495,7 @@ global proc liquidSavePreset() {
 
 global proc liquidBuildChannelMenu()
 {
+  liqPushIdent();
 	liqlog("liquidBuildChannelMenu()");
   popupMenu -e -deleteAllItems LG_DDChannelMenuCtl;
   int $i = 0;
@@ -1417,10 +1511,12 @@ global proc liquidBuildChannelMenu()
 				  "setAttr -type \"string\" $attr $p;"+
 				  "textFieldGrp -e -tx $p LG_DDmodeCtl;}");
   }
+  liqPopIdent();
 }
 
 global proc liquidBuildDisplayDriverMenu()
 {
+  liqPushIdent();
 	liqlog("liquidBuildDisplayDriverMenu()");
   if ( !objExists( "liquidGlobals.displayList" ) || !size(`getAttr liquidGlobals.displayList`) ) liquidGlobalsGetAvailableDisplayDrivers();
 
@@ -1433,10 +1529,12 @@ global proc liquidBuildDisplayDriverMenu()
              "setAttr -type \"string\" $attr \""+$n+"\";"+
              "textFieldGrp -e -tx \""+$n+"\" LG_DDtypeCtl;}");
   }
+  liqPopIdent();
 }
 
 global proc liquidBuildRenderCameraMenu( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidBuildRenderCameraMenu()");
   popupMenu -e -deleteAllItems ($prefix + "LG_RenderCameraMenuCtl");
   int $i;
@@ -1445,6 +1543,7 @@ global proc liquidBuildRenderCameraMenu( string $prefix )
     menuItem -parent ($prefix+"LG_RenderCameraMenuCtl") -label $cameras[$i] 
 	         -c ("{setAttr -type \"string\" liquidGlobals.renderCamera "+$cameras[$i]+";}");
   }
+  liqPopIdent();
 }
 
 
@@ -1453,6 +1552,7 @@ global proc liquidBuildRenderCameraMenu( string $prefix )
 
 global proc liquidShowCropWindowViewer()
 {
+  liqPushIdent();
 	liqlog("liquidShowCropWindowViewer()");
   //setUITemplate -pst attributeEditorTemplate;
   string $cb = `checkBoxGrp -ncb 1
@@ -1461,6 +1561,7 @@ global proc liquidShowCropWindowViewer()
   if ( objExists( "liqCropWindowViewer" ) ) 
 	checkBoxGrp -e -v1 1 $cb;
   //setUITemplate -ppt;
+  liqPopIdent();
 }
 
 
@@ -1473,8 +1574,10 @@ global proc liquidShowCropWindowViewer()
  */
 proc int getNumDDParams( int $DDnum )
 {
+  liqPushIdent();
 	liqlog("getNumDDParams(...)");
   int $numDDParam = size( `getAttr ("liquidGlobals.ddXtraParamNames[" + $DDnum + "]")` );
+  liqPopIdent();
   return $numDDParam;
 }
 
@@ -1483,12 +1586,16 @@ proc int getNumDDParams( int $DDnum )
  */
 global proc int getNumDD()
 {
+  liqPushIdent();
 	liqlog("getNumDD(...)");
-  return `getAttr -s liquidGlobals.ddImageName`;
+	int $ret = `getAttr -s liquidGlobals.ddImageName`;
+  liqPopIdent();
+  return $ret;
 }
 
 proc string ddPad( string $str, int $len )
 {
+  liqPushIdent();
 	liqlog("ddPad(...)");
   string $result = $str;
 
@@ -1502,7 +1609,7 @@ proc string ddPad( string $str, int $len )
     $result = `substring $result 1 ($len - 3)`;
     $result += "...";
   }
-
+  liqPopIdent();
   return $result;
 }
 
@@ -1512,6 +1619,7 @@ proc string ddPad( string $str, int $len )
  */
 global proc liquidGlobalsGetAvailableDisplayDrivers()
 {
+	liqPushIdent();
 	liqlog("liquidGlobalsGetAvailableDisplayDrivers()");
   string $renderer = `getAttr liquidGlobals.renderCommand`;
   string $rendermnIni = "";
@@ -1655,7 +1763,7 @@ global proc liquidGlobalsGetAvailableDisplayDrivers()
   //
   if ( gmatch( $renderer, "*rndr*") ) {
   }
-
+  liqPopIdent();
 }
 
 /*
@@ -1663,6 +1771,7 @@ global proc liquidGlobalsGetAvailableDisplayDrivers()
  */
 global proc liquidXtraDDParamsUpdate( int $display, int $xtraParam )
 {
+  liqPushIdent();
 	liqlog("liquidXtraDDParamsUpdate(...)");
   //print ("liquidXtraDDParamsUpdate( "+$display+", "+$xtraParam+" )\n");
   string $paramNames[] = `getAttr liquidGlobals.ddXtraParamNames[$display]`;
@@ -1676,17 +1785,19 @@ global proc liquidXtraDDParamsUpdate( int $display, int $xtraParam )
   $paramDatas[$xtraParam] = `textField -q -tx ( $controlPrefix + $xtraParam + "DataField" )`;
 
   string $cmd = ("setAttr -type stringArray liquidGlobals.ddXtraParamNames["+$display+"] "+(size( $paramNames ))+" \""+stringArrayToString( $paramNames, "\" \"")+"\"");
-  print ($cmd+"\n");
+  liqlog ($cmd+"\n");
   eval $cmd;
 
   string $cmd = ("setAttr -type Int32Array liquidGlobals.ddXtraParamTypes["+$display+"] "+(size( $paramTypes )));
   for ( $i=0; $i<size( $paramTypes ); $i++) $cmd += (" "+$paramTypes[$i]);
-  print ($cmd+"\n");
+  liqlog ($cmd+"\n");
   eval $cmd;
 
   string $cmd = ("setAttr -type stringArray liquidGlobals.ddXtraParamDatas["+$display+"] "+(size( $paramDatas ))+" \""+stringArrayToString( $paramDatas, "\" \"")+"\"");
-  print ($cmd+"\n");
-  eval $cmd;
+  liqlog ($cmd+"\n");
+  eval $cmd; 
+  
+  liqPopIdent();
 }
 
 /**
@@ -1694,6 +1805,7 @@ global proc liquidXtraDDParamsUpdate( int $display, int $xtraParam )
  */
 global proc liquidXtraDDParamsRefresh( int $numDD )
 {
+  liqPushIdent();
 	liqlog("liquidXtraDDParamsRefresh(...)");
   // extra params
   int $j = 0;
@@ -1740,10 +1852,12 @@ global proc liquidXtraDDParamsRefresh( int $numDD )
     deleteUI ($layoutPrefix + $j + "paneLayoutDD");
     $j++;
   }
+  liqPopIdent();
 }
 
 global proc liquidDisplayDriverGuiUpdateCtls()
-{
+{ 
+	liqPushIdent();
 	liqlog("liquidDisplayDriverGuiUpdateCtls()");
   if ( `textScrollList -q -ex LG_DDlist` && `textScrollList -q -numberOfItems LG_DDlist` ) {
 
@@ -1787,6 +1901,7 @@ global proc liquidDisplayDriverGuiUpdateCtls()
     liquidXtraDDParamsRefresh( $sel[0] );
 
   }
+  liqPopIdent();
 }
 
 /**
@@ -1796,9 +1911,10 @@ global proc liquidDisplayDriverGuiUpdateCtls()
  */
 global proc liquidDisplayDriverGuiUpdateList()
 {
+  liqPushIdent();
 	liqlog("liquidDisplayDriverGuiUpdateList()");
   // if the list does not exist, don't do it.
-  if ( !`textScrollList -q -ex LG_DDlist` ) return;
+	if ( !`textScrollList -q -ex LG_DDlist` ) { liqPopIdent();return;}
 
   // get the selection
   int $sel[] = `textScrollList -q -sii LG_DDlist`;
@@ -1807,7 +1923,7 @@ global proc liquidDisplayDriverGuiUpdateList()
   int $numDD = getNumDD();
   textScrollList -e -removeAll LG_DDlist;
 
-  if ( $numDD < 2 ) return;
+  if ( $numDD < 2 ) { liqPopIdent();return;}
 
   //print (">> got "+$numDD+" displays\n");
 
@@ -1828,16 +1944,19 @@ global proc liquidDisplayDriverGuiUpdateList()
   }
   if ( `textScrollList -q -numberOfItems LG_DDlist` >= $sel[0] ) textScrollList -e -sii $sel[0] LG_DDlist;
   liquidDisplayDriverGuiUpdateCtls();
+
+  liqPopIdent();
 }
 
 global proc liquidDrawDisplayDrivers()
 {
+  liqPushIdent();
 	liqlog("liquidDrawDisplayDrivers()");
   string $ctl;
   int $numDD = getNumDD();
   setParent liquidGlobalsDisplaysSetSecondary;
 
-  if ( `layout -q -nch liquidGlobalsDisplaysSetSecondary` ) return;
+  if ( `layout -q -nch liquidGlobalsDisplaysSetSecondary` ) { liqPopIdent();return;}
 
   checkBoxGrp -label "Disable 2ndary Displays" -ncb 1 -cc ("layout -e -en (1-(getAttr(\"liquidGlobals.ignoreAOVDisplays\"))) LG_topDDframeLayout") LG_ignoreAOVDisplaysCB;
   connectControl -index 2 LG_ignoreAOVDisplaysCB "liquidGlobals.ignoreAOVDisplays";
@@ -1950,6 +2069,8 @@ global proc liquidDrawDisplayDrivers()
   liquidDisplayDriverGuiUpdateList();
   if ( `textScrollList -q -ni LG_DDlist` ) textScrollList -e -selectIndexedItem 1 LG_DDlist;
   layout -e -en (1-(getAttr("liquidGlobals.ignoreAOVDisplays"))) LG_topDDframeLayout;
+
+  liqPopIdent();
 }
 
 /**
@@ -1958,6 +2079,7 @@ global proc liquidDrawDisplayDrivers()
  */
 global proc liquidGlobalsAddDD()
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsAddDD()");
   int $numDD = `getAttr -size liquidGlobals.ddImageName`;
 
@@ -1977,6 +2099,8 @@ global proc liquidGlobalsAddDD()
   setAttr liquidGlobals.ddPixelFilterY[$numDD]              2;
 
   liquidDisplayDriverGuiUpdateList();
+
+  liqPopIdent();
 }
 
 /**
@@ -1988,6 +2112,7 @@ global proc liquidGlobalsAddDD()
  */
 global proc liquidXtraDDParamsAdd( int $DDnum )
 {
+  liqPushIdent();
 	liqlog("liquidXtraDDParamsAdd(...)");
   if ( $DDnum == -1 ) {
     int $tmp[] = `textScrollList -q -sii LG_DDlist`;
@@ -2037,6 +2162,8 @@ global proc liquidXtraDDParamsAdd( int $DDnum )
 	liquidXtraDDParamsRefresh( 0 );
   else 
 	liquidDisplayDriverGuiUpdateList();
+
+  liqPopIdent();
 }
 
 /**
@@ -2048,6 +2175,7 @@ global proc liquidXtraDDParamsAdd( int $DDnum )
  */
 global proc liquidXtraDDParamsDelete( int $DDnum )
 {
+  liqPushIdent();
 	liqlog("liquidXtraDDParamsDelete(...)");
   if ( $DDnum == -1 ) {
     int $tmp[] = `textScrollList -q -sii LG_DDlist`;
@@ -2078,6 +2206,8 @@ global proc liquidXtraDDParamsDelete( int $DDnum )
 	liquidXtraDDParamsRefresh( 0 );
   else 
 	liquidDisplayDriverGuiUpdateList();
+
+  liqPopIdent();
 }
 
 /**
@@ -2087,6 +2217,7 @@ global proc liquidXtraDDParamsDelete( int $DDnum )
  */
 global proc liquidGlobalsDeleteDD( int $DDnumber )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsDeleteDD(...)");
   int $numDD;
 
@@ -2155,6 +2286,8 @@ global proc liquidGlobalsDeleteDD( int $DDnumber )
   } else {
     //warning("Liquid : Can't delete the first display driver!");
   }
+
+  liqPopIdent();
 }
 
 /**
@@ -2162,10 +2295,12 @@ global proc liquidGlobalsDeleteDD( int $DDnumber )
  */
 global proc liquidGlobalsDuplicateDD ()
 {
+  liqPushIdent();
+
 	liqlog("liquidGlobalsDuplicateDD()");
   int $sel[] = `textScrollList -q -sii LG_DDlist`;
   //$sel[0] += 1;
-  if ( $sel[0] < 1 ) return;
+  if ( $sel[0] < 1 ) { liqPopIdent();return;}
 
   liquidGlobalsAddDD();
   int $new = getNumDD() - 1;
@@ -2208,11 +2343,13 @@ global proc liquidGlobalsDuplicateDD ()
   }
 
   liquidDisplayDriverGuiUpdateList();
+  liqPopIdent();
 }
 
 
 global proc liquidDisplayChannelsGuiUpdateList()
 {
+  liqPushIdent();
 	liqlog("liquidDisplayChannelsGuiUpdateList()");
   int $numChannels = `getAttr -size liquidGlobals.channelName`;
 
@@ -2234,10 +2371,12 @@ global proc liquidDisplayChannelsGuiUpdateList()
     if ( $sel[0] > 0 && `textScrollList -q -ni LG_DClist` >= $sel[0] ) textScrollList -e -sii $sel[0] LG_DClist;
   }
   liquidDisplayChannelsGuiUpdateCtls();
+  liqPopIdent();
 }
 
 global proc liquidDisplayChannelsGuiUpdateCtls()
 {
+  liqPushIdent();
 	liqlog("liquidDisplayChannelsGuiUpdateCtls()");
   if ( `textScrollList -q -ex LG_DClist` && `getAttr -size liquidGlobals.channelName` ) {
     int $sel[] = `textScrollList -q -sii LG_DClist`;
@@ -2258,10 +2397,12 @@ global proc liquidDisplayChannelsGuiUpdateCtls()
     connectControl -index 2 LG_DCbitdepthCtl        liquidGlobals.channelBitDepth[$i];
     connectControl -index 2 LG_DCditherCtl          liquidGlobals.channelDither[$i];
   }
+  liqPopIdent();
 }
 
 global proc liquidGlobalsAddDC()
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsAddDC()");
   int $numChannels = `getAttr -size liquidGlobals.channelName`;
   setAttr -type "string" liquidGlobals.channelName[$numChannels]         "";
@@ -2275,10 +2416,12 @@ global proc liquidGlobalsAddDC()
   setAttr                liquidGlobals.channelBitDepth[$numChannels]      0;
   setAttr                liquidGlobals.channelDither[$numChannels]        0;
   liquidDisplayChannelsGuiUpdateList();
+  liqPopIdent();
 }
 
 global proc liquidGlobalsDeleteDC( int $channelNum )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsDeleteDC()");
   int $channel;
   if ( $channelNum < 0 ) {
@@ -2291,7 +2434,7 @@ global proc liquidGlobalsDeleteDC( int $channelNum )
 		$channel = $channelNum;
 
   int $size = `getAttr -size liquidGlobals.channelName`;
-  if ( $size == 0 ) return;
+  if ( $size == 0 ) { liqPopIdent();return;}
 
   if ( $channel < $size-1 ) {
     for ( $i=$channel; $i<$size-1; $i++  ) {
@@ -2333,12 +2476,14 @@ global proc liquidGlobalsDeleteDC( int $channelNum )
   int $size = `getAttr -size liquidGlobals.channelName`;
 
   evalDeferred -lp "liquidDisplayChannelsGuiUpdateList()";
+  liqPopIdent();
 }
 
 global proc liquidGlobalsDuplicateDC()
 {
+	liqPushIdent();
 	liqlog("liquidGlobalsDuplicateDC()");
-  if ( !`textScrollList -q -ex LG_DClist` ) return;
+  if ( !`textScrollList -q -ex LG_DClist` ) { liqPopIdent();return;}
 
   int $tmp[] = `textScrollList -q -sii LG_DClist`;
   int $channel = $tmp[0] - 1;
@@ -2358,12 +2503,14 @@ global proc liquidGlobalsDuplicateDC()
   setAttr liquidGlobals.channelDither[$size]               (`getAttr liquidGlobals.channelDither[$channel]`);
 
   liquidDisplayChannelsGuiUpdateList();
+  liqPopIdent();
 }
 
 global proc liquidDrawDisplayChannels()
-{
+{ 
+	liqPushIdent();
 	liqlog("liquidDrawDisplayChannels()");
-  if ( `layout -q -nch liquidGlobalsDisplaysSetChannels` ) return;
+  if ( `layout -q -nch liquidGlobalsDisplaysSetChannels` ) { liqPopIdent();return;}
 
   string $ctl;
   setParent liquidGlobalsDisplaysSetChannels;
@@ -2430,6 +2577,7 @@ global proc liquidDrawDisplayChannels()
   if ( `textScrollList -q -ni LG_DClist` ) 
 	textScrollList -e -selectIndexedItem 1 LG_DClist;
 
+  liqPopIdent();
 }
 
 
@@ -2440,6 +2588,7 @@ global proc liquidDrawDisplayChannels()
 
 global proc liquidGlobalsFrameTab( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsFrameTab("+$prefix+")");
   ////setUITemplate -pushTemplate attributeEditorTemplate;
   string $previousParent = `setParent -q`;
@@ -2512,16 +2661,20 @@ global proc liquidGlobalsFrameTab( string $prefix )
 
   //if ( `layout -q -ex liquidGlobalsTab` ) setParent liquidGlobalsTab;
   ////setUITemplate -popTemplate;
+  liqPopIdent();
 }
 
 global proc liquidGlobalsFileTab( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsFileTab(...)");
   columnLayout -adj true ($prefix + "liquidGlobalsFileSet" );
+  liqPopIdent();
 }
 
 global proc liquidGlobalsFileTab_buildIt( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsFileTab_buildIt(...)");
   setUITemplate -pushTemplate renderGlobalsTemplate;
   setUITemplate -pushTemplate attributeEditorTemplate;
@@ -2588,16 +2741,21 @@ global proc liquidGlobalsFileTab_buildIt( string $prefix )
 
   setUITemplate -ppt;
   setUITemplate -ppt;
+
+  liqPopIdent();
 }
 
 global proc liquidGlobalsImageTab( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsImageTab(...)");
   columnLayout -adj true ($prefix + "liquidGlobalsImageSet" );
+  liqPopIdent();
 }
 
 global proc liquidHiderOptions_buildIt( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidHiderOptions_buildIt(...)");
   int $hider = `getAttr liquidGlobals.hider`;
   string $previousParent = `setParent -q`;
@@ -2802,10 +2960,12 @@ global proc liquidHiderOptions_buildIt( string $prefix )
   setUITemplate -ppt;
 
   setParent $previousParent;
+  liqPopIdent();
 }
 
 global proc liquidGlobalsImageTab_buildIt( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsImageTab_buildIt(...)");
   global string $liqHidersList[];
 
@@ -2886,17 +3046,22 @@ global proc liquidGlobalsImageTab_buildIt( string $prefix )
   setUITemplate -ppt;
 
   setParent $previousParent;
-  //if ( `layout -q -ex liquidGlobalsTab` ) setParent liquidGlobalsTab;
+  //if ( `layout -q -ex liquidGlobalsTab` ) setParent liquidGlobalsTab; 
+  
+  liqPopIdent();
 }
 
 global proc liquidGlobalsDisplaysTab( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsDisplaysTab(...)");
   columnLayout -w 355 -h 1000 ($prefix + "liquidGlobalsDisplaysSet" );
+  liqPopIdent();
 }
 
 global proc liquidGlobalsDisplaysTab_buildIt( string $prefix )
 {
+	liqPushIdent();
 	liqlog("liquidGlobalsDisplaysTab_buildIt(...)");
   setUITemplate -pushTemplate renderGlobalsTemplate;
   setUITemplate -pushTemplate attributeEditorTemplate;
@@ -2962,16 +3127,20 @@ global proc liquidGlobalsDisplaysTab_buildIt( string $prefix )
   setParent $previousParent;
 
   ////setUITemplate -ppt;
+  liqPopIdent();
 }
 
 global proc liquidGlobalsRaysTab( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsRaysTab(...)");
   columnLayout -adj true ($prefix + "liquidGlobalsRaysSet" );
+  liqPopIdent();
 }
 
 global proc liquidGlobalsRaysTab_buildIt( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsRaysTab_buildIt(...)");
   setUITemplate -pushTemplate renderGlobalsTemplate;
   setUITemplate -pushTemplate attributeEditorTemplate;
@@ -3027,16 +3196,20 @@ global proc liquidGlobalsRaysTab_buildIt( string $prefix )
 
   //if ( `layout -q -ex liquidGlobalsTab` ) setParent liquidGlobalsTab;
   setParent $previousParent;
+  liqPopIdent();
 }
 
 global proc liquidGlobalsOptionsTab( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsOptionsTab(...)");
   columnLayout -adj true ($prefix + "liquidGlobalsOptionsSet" );
+  liqPopIdent();
 }
 
 global proc liquidGlobalsOptionsTab_buildIt( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsOptionsTab_buildIt(...)");
   setUITemplate -pushTemplate renderGlobalsTemplate;
   setUITemplate -pushTemplate attributeEditorTemplate;
@@ -3155,16 +3328,22 @@ global proc liquidGlobalsOptionsTab_buildIt( string $prefix )
 
   //if ( `layout -q -ex liquidGlobalsTab` ) setParent liquidGlobalsTab;
   setParent $previousParent;
+
+  liqPopIdent();
 }
 
 global proc liquidGlobalsJobTab( string $prefix )
 {
+	liqPushIdent();
 	liqlog("liquidGlobalsJobTab(...)");
   columnLayout -adj true ($prefix + "liquidGlobalsJobSet" );
+
+  liqPopIdent();
 }
 
 global proc liquidGlobalsJobTab_buildIt( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsJobTab_buildIt(...)");
   setUITemplate -pushTemplate renderGlobalsTemplate;
   setUITemplate -pushTemplate attributeEditorTemplate;
@@ -3253,16 +3432,21 @@ global proc liquidGlobalsJobTab_buildIt( string $prefix )
 
   setUITemplate -ppt;
   setUITemplate -ppt;
+
+  liqPopIdent();
 }
 
 global proc liquidGlobalsRendererTab( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsRendererTab(...)");
   columnLayout -cat left 0 -adj true ($prefix + "liquidGlobalsRendererSet" );
+  liqPopIdent();
 }
 
 global proc liquidGlobalsRendererTab_buildIt( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsRendererTab_buildIt(...)");
   global string $liqHidersList[];
   global string $liqFeaturesList[];
@@ -3346,16 +3530,20 @@ global proc liquidGlobalsRendererTab_buildIt( string $prefix )
                         -allChildren
                         -attributeChange "liquidGlobals.bits_hiders" "liquidGlobalsUpdateBitsMenus bits_hiders"`;
 
+  liqPopIdent();
 }
 
 global proc liquidGlobalsFluidTab( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsFluidTab(...)");
   columnLayout -adj true ($prefix + "liquidGlobalsFluidSet" );
+  liqPopIdent();
 }
 
 global proc liquidGlobalsFluidTab_buildIt( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsFluidTab_buildIt(...)");
   setUITemplate -pushTemplate renderGlobalsTemplate;
   setUITemplate -pushTemplate attributeEditorTemplate;
@@ -3406,17 +3594,21 @@ global proc liquidGlobalsFluidTab_buildIt( string $prefix )
 
   setUITemplate -ppt;
   setUITemplate -ppt;
+  liqPopIdent();
 }
 
 
 global proc liquidGlobalsAdvanceTab( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsAdvanceTab("+$prefix+")");
   columnLayout -adj true ($prefix + "liquidGlobalsAdvanceSet" );
+  liqPopIdent();
 }
 
 global proc liquidGlobalsAdvanceTab_buildIt( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidGlobalsAdvanceTab_buildIt("+$prefix+")");
   setUITemplate -pushTemplate renderGlobalsTemplate;
   setUITemplate -pushTemplate attributeEditorTemplate;
@@ -3443,4 +3635,6 @@ global proc liquidGlobalsAdvanceTab_buildIt( string $prefix )
 
   setUITemplate -ppt;
   setUITemplate -ppt;
+
+  liqPopIdent();
 }

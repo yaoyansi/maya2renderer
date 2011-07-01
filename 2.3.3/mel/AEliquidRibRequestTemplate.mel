@@ -2,6 +2,9 @@ source xxliquidutility.mel;
 
 global proc AEliquidRibRequestTemplate( string $nodeName )
 {
+  liqPushIdent();
+  liqlog("AEliquidRibRequestTemplate("+$nodeName+")");
+
 	string $msg = "preFrame&preWorld&postWorld&preGeom";
 
 	editorTemplate -suppress "preFrame";
@@ -13,11 +16,14 @@ global proc AEliquidRibRequestTemplate( string $nodeName )
 	editorTemplate -callCustom ( "liquidRibRequestEditorNew " + $nodeName ) ( "liquidRibRequestEditorReplace " + $nodeName ) $msg;
 	editorTemplate -addExtraControls;
  	editorTemplate -endLayout;
+
+  liqPopIdent();
 }
 global proc liquidRibRequestEditorNew( string $nodeName, string $strmsg )
 {
-	
-	liqlog("liquidRibRequestEditorNew(...)");
+  liqPushIdent();
+  liqlog("liquidRibRequestEditorNew(...)");
+
 	string $msg[] = stringToStringArray( $strmsg, "&" );
 	string $tmp[] = stringToStringArray( $msg[0], "." );
 	$msg[0] = $tmp[1];
@@ -32,11 +38,15 @@ global proc liquidRibRequestEditorNew( string $nodeName, string $strmsg )
 		scrollField -wordWrap false -font smallFixedWidthFont -h 80 liquidRibRequestPreGeomField;
 	setUITemplate -ppt;
 	liquidRibRequestEditorReplace( $nodeName, $strmsg );
+ 
+  liqPopIdent();
 }
 
 global proc liquidRibRequestEditorReplace( string $nodeName, string $strmsg )
-{
-	liqlog("liquidRibRequestEditorReplace(...)");
+{ 
+  liqPushIdent();
+  liqlog("liquidRibRequestEditorReplace(...)");
+
 	string $msg[] = stringToStringArray( $strmsg, "&" );
 	string $tmp[] = stringToStringArray( $msg[0], "." );
 	$nodeName = $tmp[0];
@@ -62,5 +72,7 @@ global proc liquidRibRequestEditorReplace( string $nodeName, string $strmsg )
               -cc ( "{ string $s = `scrollField -q -tx liquidRibRequestPreGeomField`; setAttr -type \"string\" " + $nodeName + "." + $msg[3] + " $s; }" )
               -ec ( "{ string $s = `scrollField -q -tx liquidRibRequestPreGeomField`; setAttr -type \"string\" " + $nodeName + "." + $msg[3] + " $s; }" )
               liquidRibRequestPreGeomField;
+
+  liqPopIdent();
 }
 

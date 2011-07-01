@@ -38,6 +38,7 @@ source xxliquidutility.mel;
 
 global proc liquidMenuHelp()
 {
+  liqPushIdent();
 	liqlog("liquidMenuHelp()");
     // Try to figure out where help pages could be
     string $helphome = `getenv "LIQUIDHELPHOME"`;
@@ -59,7 +60,8 @@ global proc liquidMenuHelp()
 	if( `file -q -ex ( $helphome + "/index.html" )` == false )
 	{
 	    confirmDialog -title "Error" -message ( "Error locating Liquid Help files into " + $helphome +".\nPlease set your $LIQUIDHOME or $LIQUIDHELPHOME environment variable appropriately." );
-	    return;
+	    liqPopIdent();
+		return;
 	}
 	$helpUrl = ( "file:" + $helphome + "/index.html" );
     }
@@ -73,8 +75,9 @@ global proc liquidMenuHelp()
 	    if( `file -q -ex ( $localPath )` == false )
 	    {
 	    	confirmDialog -title "Error" -message ( "Error locating Liquid Help files into " + $helphome +".\nPlease set your $LIQUIDHELPHOME environment variable appropriately." );
-	    	return;
-    	    }
+	    	liqPopIdent();
+			return;
+    	}
 	    $helpUrl = ( "file:" + $localPath );
     	}
 	else
@@ -82,8 +85,10 @@ global proc liquidMenuHelp()
 	    $helpUrl = $helphome; // Keep it as it is
 	}	    
     }
-    print( $helpUrl + "\n" );
+    liqlog( $helpUrl + "\n" );
     showHelp -absolute $helpUrl;
+
+  liqPopIdent();
 }
 
 //print "Initialized Liquid Help Interface...\n";

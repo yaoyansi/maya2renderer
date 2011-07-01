@@ -2,14 +2,19 @@ source xxliquidutility.mel;
 
 global proc liquidRibBoxEditorUpdateMenu( string $msg )
 {
-	liqlog("liquidRibBoxEditorUpdateMenu(...)");
+  liqPushIdent();
+	liqlog("liquidRibBoxEditorUpdateMenu("+$msg+")");
   int $en = (`editRenderLayerGlobals -q -crl` == "defaultRenderLayer")? 0 : 1;
   menuItem -e -c ("editRenderLayerAdjustment "+$msg) -en $en liquidRibboxEditorOverrideMenuItem;
+
+  liqPopIdent();
 }
 
 global proc liquidRibBoxEditorNew( string $nodeName, string $msg )
 {
-	liqlog("liquidRibBoxEditorNew(...)");
+  liqPushIdent();
+  liqlog("liquidRibBoxEditorNew(...)");
+
   setUITemplate -pst attributeEditorTemplate;
   scrollField -wordWrap false -font smallFixedWidthFont -h 250 liquidRibboxEditorCtl;
   popupMenu liquidRibboxEditorOverrideMenu;
@@ -17,10 +22,13 @@ global proc liquidRibBoxEditorNew( string $nodeName, string $msg )
   setUITemplate -ppt;
 
   liquidRibBoxEditorReplace( $nodeName, $msg );
+
+  liqPopIdent();
 }
 
 global proc liquidRibBoxEditorReplace( string $nodeName, string $msg )
 {
+  liqPushIdent();
 	liqlog("liquidRibBoxEditorReplace(...)");
   scrollField -e
               -tx (`getAttr $msg`)
@@ -29,6 +37,8 @@ global proc liquidRibBoxEditorReplace( string $nodeName, string $msg )
               liquidRibboxEditorCtl;
 
   popupMenu -e -pmc ("liquidRibBoxEditorUpdateMenu "+$msg) liquidRibboxEditorOverrideMenu;
+
+  liqPopIdent();
 }
 
 
@@ -36,6 +46,9 @@ global proc liquidRibBoxEditorReplace( string $nodeName, string $msg )
 
 global proc AEliquidRibBoxTemplate( string $nodeName )
 {
+  liqPushIdent();
+  liqlog("AEliquidRibBoxTemplate("+$nodeName+")");
+
   AEswatchDisplay $nodeName;
 
   editorTemplate -beginScrollLayout;
@@ -48,5 +61,7 @@ global proc AEliquidRibBoxTemplate( string $nodeName )
     editorTemplate -addExtraControls;
 
   editorTemplate -endScrollLayout;
+
+  liqPopIdent();
 }
 

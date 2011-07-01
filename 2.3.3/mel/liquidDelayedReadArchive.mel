@@ -34,6 +34,7 @@ source xxliquidutility.mel;
 // create the liquid menu interface
 global proc liquidDelayedReadArchive ()
 {
+  liqPushIdent();
 	liqlog("liquidDelayedReadArchive()");
   string $nodes[] = `ls -dag -s -sl`;
   string $currentNode;
@@ -64,10 +65,12 @@ global proc liquidDelayedReadArchive ()
     connectAttr ( $currentNodeParent[0] + ".ribDelayedArchiveBBox" ) ( $bbox + ".ribDelayedArchiveBBoxIn" );
     parent $bbox $currentNodeParent[0];
   }
+  liqPopIdent();
 }
 
 global proc liquidDeleteDelayedReadArchive ()
 {
+  liqPushIdent();
 	liqlog("liquidDeleteDelayedReadArchive()");
   string $nodes[] = `ls -dag -s -sl`;
   string $currentNode;
@@ -85,4 +88,5 @@ global proc liquidDeleteDelayedReadArchive ()
       deleteAttr ( $currentNodeParent[0] + ".ribDelayedArchiveBBox" );
     }
   }
+  liqPopIdent();
 }

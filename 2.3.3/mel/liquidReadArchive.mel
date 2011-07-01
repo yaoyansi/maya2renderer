@@ -39,16 +39,19 @@ source xxliquidutility.mel;
 // create the liquid menu interface
 global proc liquidReadArchive ()
 {
+  liqPushIdent();
 	liqlog("liquidReadArchive()");
   string $nodes[] = `ls -dag -sl`;
   string $currentNode;
   for ( $currentNode in $nodes ) {
     addAttr -ln "liqRIBReadArchive" -dt "string" $currentNode;
   }
+  liqPopIdent();
 }
 
 global proc liquidDeleteReadArchive ()
 {
+  liqPushIdent();
 	liqlog("liquidDeleteReadArchive()");
   string $nodes[] = `ls -dag -sl`;
   string $currentNode;
@@ -57,4 +60,5 @@ global proc liquidDeleteReadArchive ()
       deleteAttr ( $currentNode + ".liqRIBReadArchive" );
     }
   }
+  liqPopIdent();
 }

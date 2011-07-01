@@ -40,6 +40,7 @@ source xxliquidutility.mel;
 
 global proc string liquidGetCurrentRenderLayerName()
 {	
+  liqPushIdent();
 	liqlog("liquidGetCurrentRenderLayerName()");
 	/*string	$layerNames[]	= `listConnections renderLayerManager`;
 	int		$currentLayerId = `getAttr renderLayerManager.currentRenderLayer`;
@@ -61,12 +62,14 @@ global proc string liquidGetCurrentRenderLayerName()
 	if ((0 == `getAttr ($layerName + ".identification")`) && (size(`getAttr renderLayerManager.renderLayerId`) > 1)) {
 		$layerNameResult = "masterLayer";
 	}
-	
+	  
+	liqPopIdent();
 	return $layerNameResult;
 }
 
 global proc liquidSwitchGlobalsRenderLayer()
 {
+  liqPushIdent();
 	liqlog("liquidSwitchGlobalsRenderLayer()");
   string $prefix = `liquidGetCurrentRenderLayerName`;
   string $unifiedRendererTabName = rendererTabName("liquid","Liquid");
@@ -92,10 +95,12 @@ global proc liquidSwitchGlobalsRenderLayer()
 	
 	  setParent $prevParent;
   }
+  liqPopIdent();
 }
 
 global proc liquidCreateMayaGlobalsTabContent( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidCreateMayaGlobalsTabContent(...)");
   string $theTabLayout = ( $prefix + "liquidUnifiedRenderGlobalsMainTabLayout" );
   if ( `tabLayout -q -ex $theTabLayout` ) {
@@ -110,11 +115,13 @@ global proc liquidCreateMayaGlobalsTabContent( string $prefix )
 
     }
   }
+  liqPopIdent();
 }
 
 
 global proc liquidCreateMayaGlobalsTab( string $prefix, string $name )
 {
+  liqPushIdent();
 	liqlog("liquidCreateMayaGlobalsTab("+$prefix+","+$name+")");
   // sanity check : we need valid globals
   if ( !liquidGlobalsExists() ) liquidCreateGlobals();
@@ -125,6 +132,8 @@ global proc liquidCreateMayaGlobalsTab( string $prefix, string $name )
   evalEcho ("liquidGlobals"+$name+"Tab( \""+$prefix+"\");");
   string $newlayout = ($prefix+"liquidGlobals"+$name+"Set");
   if ( `layout -q -ex $newlayout` ) tabLayout -e -tabLabel $newlayout $name $theTabLayout;
+
+  liqPopIdent();
 }
 
 
@@ -133,6 +142,7 @@ global proc liquidCreateMayaGlobalsTab( string $prefix, string $name )
 
 global proc liquidCreateGlobalsTab()
 {
+  liqPushIdent();
 	liqlog("liquidCreateGlobalsTab()");
    string $currentParent = `setParent -q`;
    
@@ -165,7 +175,8 @@ global proc liquidCreateGlobalsTab()
   
   // bail if already created
   if (`layout -q -ex $ourUberLayout`) {
-  	return;
+  	 liqPopIdent();
+	 return;
   }
   
   columnLayout -adjustableColumn true $ourUberLayout;
@@ -241,11 +252,13 @@ global proc liquidCreateGlobalsTab()
   columnLayout -edit -manage true $ourUberLayout;
   
   setParent $currentParent;
+  liqPopIdent();
 }
 
 
 global proc liquidUpdateMayaGlobals()
 {
+  liqPushIdent();
 	liqlog("liquidUpdateMayaGlobals(...)");
   if ( `layout -q -ex liquidCommonTab` ) layout -e -m false -vis false liquidCommonTab;
  
@@ -263,6 +276,8 @@ global proc liquidUpdateMayaGlobals()
   setAttr defaultResolution.width $resx;
   setAttr defaultResolution.height $resy;
   setAttr defaultResolution.deviceAspectRatio ($resx/$resy);
+
+  liqPopIdent();
 }
 
 

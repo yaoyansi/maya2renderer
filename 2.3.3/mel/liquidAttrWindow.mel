@@ -32,8 +32,15 @@
 //  Description:
 //	Opens a maya window with controls to add/delete/change settings for liquid specific attributes
 //
+source xxliquidutility.mel;
 
-global proc liquidAttrWindow() {
+global proc liquidAttrWindow() 
+{ 
+    liqPushIdent();
+    liqlog("liquidAttrWindow()");
+
 	window -title "Liquid Attributes" liquidAttrWindow;
 	showWindow liquidAttrWindow;
+
+    liqPopIdent();
 }

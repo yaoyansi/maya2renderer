@@ -33,16 +33,20 @@
 //
 //  Returns:
 //
+source xxliquidutility.mel;
 
 proc liqRVSetRenderCamera( string $editor )
 {
+  liqPushIdent();
 	liqlog("liqRVSetRenderCamera(...)");
   string $renderCamera = `getAttr liquidGlobals.renderCamera`;
   renderWindowEditor -e -currentCamera $renderCamera $editor;
+  liqPopIdent();
 }
 
 proc liqRVSetUpShortCuts()
 {
+  liqPushIdent();
 	liqlog("liqRVSetUpShortCuts()");
   nameCommand -default true -ann "exposure +0.25 f-stop" -c "liqRVExposure 0.25"  liqExposureUpCmd;
   nameCommand -default true -ann "exposure -0.25 f-stop" -c "liqRVExposure -0.25" liqExposureDownCmd;
@@ -67,10 +71,12 @@ proc liqRVSetUpShortCuts()
   if ( `hotkeyCheck -keyString "4" -ctl` == "" ) hotkey -k "4" -ctl -name liqRVViewAlphaCmd;
   if ( `hotkeyCheck -keyString "5" -ctl` == "" ) hotkey -k "5" -ctl -name liqRVViewLumCmd;
 
+  liqPopIdent();
 }
 
 global proc string liqGetRVPanel()
 {
+  liqPushIdent();
 	liqlog("liqGetRVPanel()");
   string $thePanel;
   string $renderPanels[] = `getPanel -scriptType "renderWindowPanel"`;
@@ -78,11 +84,15 @@ global proc string liqGetRVPanel()
     $thePanel = `scriptedPanel -type "renderWindowPanel" -unParent`;
     scriptedPanel -e -label `interToUI $thePanel` $thePanel;
   } else $thePanel = $renderPanels[0];
+
+
+  liqPopIdent();
   return $thePanel;
 }
 
 global proc liqShowRV()
 {
+  liqPushIdent();
 	liqlog("liqShowRV()");
   string $editor = `liqGetRVPanel`;
 
@@ -97,6 +107,7 @@ global proc liqShowRV()
         liqRVSetRenderCamera( $editor );
         liqRenderViewMenu( $editor );
         showWindow $w;
+		liqPopIdent();
         return;
       }
     }
@@ -110,6 +121,7 @@ global proc liqShowRV()
         liqRVSetUpShortCuts();
         liqRVSetRenderCamera( $editor );
         liqRenderViewMenu( $editor );
+		liqPopIdent();
         return;
       }
     }
@@ -121,10 +133,12 @@ global proc liqShowRV()
   liqRenderViewMenu( $editor );
   scriptedPanel -edit -tearOff $editor;
 
+  liqPopIdent();
 }
 
 global proc liqRVDisplayChannels( int $num )
 {
+  liqPushIdent();
 	liqlog("liqRVDisplayChannels(...)");
   string $editor = liqGetRVPanel();
   string $upd = ";refreshRenderViewIcons(\""+$editor+"\")";
@@ -149,6 +163,7 @@ global proc liqRVDisplayChannels( int $num )
       break;
   }
   eval $upd;
+  liqPopIdent();
 }
 
 /**
@@ -157,10 +172,12 @@ global proc liqRVDisplayChannels( int $num )
  */
 global proc liqRVExposure( float $val )
 {
+  liqPushIdent();
 	liqlog("liqRVExposure(...)");
   global int $gLiqLastRenderIsRenderRegion;
   if ( $gLiqLastRenderIsRenderRegion ) {
     warning "Liquid cannot change the exposure of render regions. make a full render first.";
+    liqPopIdent();
     return;
   }
   global string $gLiqLastExposed;
@@ -195,27 +212,35 @@ global proc liqRVExposure( float $val )
 
   }
 
+  liqPopIdent();
 }
 
 
 global proc int liqRVGetAutoSaveState()
 {
+  liqPushIdent();
 	liqlog("liqRVGetAutoSaveState()");
   if ( !`optionVar -ex liquidRenderViewAutoSave` ) {
     optionVar -intValue liquidRenderViewAutoSave 1;
   }
-  return (`optionVar -q liquidRenderViewAutoSave`);
+  int $ret = (`optionVar -q liquidRenderViewAutoSave`);
+
+  liqPopIdent();
+  return $ret;
 }
 
 global proc liqRVToggleAutoSaveState()
 {
+  liqPushIdent();
 	liqlog("liqRVToggleAutoSaveState()");
   optionVar -iv liquidRenderViewAutoSave (1-`liqRVGetAutoSaveState`);
+  liqPopIdent();
 }
 
 
 global proc liqRenderViewMenu( string $editor)
 {
+  liqPushIdent();
 	liqlog("liqRenderViewMenu("+$editor+")");
   if ( !`menu -q -ex ($editor + "LiquidRVMenu")` ) {
 
@@ -265,10 +290,12 @@ global proc liqRenderViewMenu( string $editor)
               ($editor + "RVAutoSave");
 
   }
+  liqPopIdent();
 }
 
 global proc string liquidmayaRender(int $resolution0, int $resolution1, int $doShadows, int $doGlowPass, string $camera, string $option)
 {
+  liqPushIdent();
 	liqlog("liquidmayaRender()");
   global int $gLiqLastRenderIsRenderRegion;
   if ( !`liquidGlobalsExists` ) {
@@ -290,21 +317,25 @@ global proc string liquidmayaRender(int $resolution0, int $resolution1, int $doS
   liquidPreview();
   $gLiqLastRenderIsRenderRegion = 0;
 
+  liqPopIdent();
   return "";
 }
 
 global proc liquidmayaRenderRegion( string $editor )
 {
+  liqPushIdent();
 	liqlog("liquidmayaRenderRegion(...)");
   global int $gLiqLastRenderIsRenderRegion;
   liquidCropPreview();
   $gLiqLastRenderIsRenderRegion = 1;
+  liqPopIdent();
 }
 
 global proc liquidSaveRenderViewImage()
 {
+  liqPushIdent();
 	liqlog("liquidSaveRenderViewImage()");
-  if ( liqRVGetAutoSaveState() == 0 ) return;
+	if ( liqRVGetAutoSaveState() == 0 ) { liqPopIdent(); return; }
   string $editor = `liqGetRVPanel`;
 
   int $currentImage = `renderWindowEditor -q -displayImage $editor`;
@@ -314,4 +345,5 @@ global proc liquidSaveRenderViewImage()
     renderWindowRefreshMenu("file", $editor);
     renderWindowRefreshLayout($editor);
   }
+  liqPopIdent();
 }

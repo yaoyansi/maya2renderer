@@ -2,14 +2,17 @@ source xxliquidutility.mel;
 
 proc AEliquidCreateMenu()
 {
+  liqPushIdent();
+  liqlog("AEliquidCreateMenu()");
+
   global string $gAERootLayoutName;
 
-  if ( $gAERootLayoutName == "" ) return ;
+  if ( $gAERootLayoutName == "" ) {  liqPopIdent(); return ; }
 
   string $parent = `setParent -q`;
   setParent $gAERootLayoutName;
 
-  if ( `menu -q -ex liquidAEMenu` ) return ;
+  if ( `menu -q -ex liquidAEMenu` ){  liqPopIdent(); return ;}
 
   menu -label "Liquid" liquidAEMenu;
       liquidCreateObjectsAttributesMenu( "attrEd" );
@@ -17,11 +20,14 @@ proc AEliquidCreateMenu()
       liquidCreateSetsAttributesMenu( "attrEd" );
 
   setParent $parent;
+
+  liqPopIdent();
 }
 
 global proc liquidLargeFieldUpdater()
 {
-	liqlog("liquidLargeFieldUpdater()");
+  liqPushIdent();
+  liqlog("liquidLargeFieldUpdater()");
   //early exit
   string $globalsExists = objExists( "liquidGlobals" );
 
@@ -50,12 +56,14 @@ global proc liquidLargeFieldUpdater()
     }
   }
   //trace "\n";
+
+  liqPopIdent();
 }
 
 global proc liquidFieldUpdateMenu( string $msg )
 {
-	
-	liqlog("liquidFieldUpdateMenu(...)");
+  liqPushIdent();
+  liqlog("liquidFieldUpdateMenu(...)");
   string $attr[] = stringToStringArray( $msg, ".");
   int $en = (`editRenderLayerGlobals -q -crl` == "defaultRenderLayer")? 0 : 1;
 
@@ -64,11 +72,14 @@ global proc liquidFieldUpdateMenu( string $msg )
   string $label = ($remove == "")? "Create Layer Override":"Remove Layer Override";
 
   menuItem -e -l $label -c ("editRenderLayerAdjustment "+$remove+" "+$msg) -en $en ("liquidFieldOverrideMenuItem"+$attr[1]);
+ 
+  liqPopIdent();
 }
 
 
 global proc liquidLargeFieldReplace( string $nodeName, string $label, string $msg )
 {
+	liqPushIdent();
 	liqlog("liquidLargeFieldReplace(...)");
   string $attr[] = stringToStringArray( $msg, ".");
   string $layout = ("liquidLargeFieldLayout"+$attr[1]);
@@ -86,12 +97,15 @@ global proc liquidLargeFieldReplace( string $nodeName, string $label, string $ms
     popupMenu -e -pmc ("liquidFieldUpdateMenu "+$msg) ("liquidFieldOverrideMenu"+$attr[1]);
 
   }
+  liqPopIdent();
 }
 
 
 global proc liquidLargeFieldNew( string $nodeName, string $label, string $msg )
 {
-	liqlog("liquidLargeFieldNew(...)");
+  liqPushIdent();
+  liqlog("liquidLargeFieldNew(...)");
+
   string $attr[] = stringToStringArray( $msg, ".");
   setUITemplate -pst attributeEditorTemplate;
   string $layout = `rowLayout -nc 2 -adj 2 ("liquidLargeFieldLayout"+$attr[1])`;
@@ -103,12 +117,15 @@ global proc liquidLargeFieldNew( string $nodeName, string $label, string $msg )
   setUITemplate -ppt;
 
   liquidLargeFieldReplace( $nodeName, $label, $msg );
+
+  liqPopIdent();
 }
 
 
 global proc liquidSmallFieldReplace( string $nodeName, string $label, string $msg )
 {
-	liqlog("liquidSmallFieldReplace(...)");
+  liqPushIdent();
+  liqlog("liquidSmallFieldReplace(...)");
   string $attr[] = stringToStringArray( $msg, ".");
   string $ctl = ("liquidSmallFieldCtl"+$attr[1]);
 
@@ -118,12 +135,15 @@ global proc liquidSmallFieldReplace( string $nodeName, string $label, string $ms
     connectControl -index 2 $ctl $msg;
     popupMenu -e -pmc ("liquidFieldUpdateMenu "+$msg) ("liquidFieldOverrideMenu"+$attr[1]);
   }
+  liqPopIdent();
 }
 
 
 global proc liquidSmallFieldNew( string $nodeName, string $label, string $msg )
 {
-	liqlog("liquidSmallFieldNew(...)");
+  liqPushIdent();
+  liqlog("liquidSmallFieldNew(...)");
+
   string $attr[] = stringToStringArray( $msg, ".");
   setUITemplate -pst attributeEditorTemplate;
   textFieldGrp -label $label -adj 2 ("liquidSmallFieldCtl"+$attr[1]);
@@ -132,11 +152,14 @@ global proc liquidSmallFieldNew( string $nodeName, string $label, string $msg )
   setUITemplate -ppt;
 
   liquidSmallFieldReplace( $nodeName, $label, $msg );
+
+  liqPopIdent();
 }
 
 // for shading group connections
 global proc liquidSGCreateMenuItems( string $parent, string $name, string $msg )
 {
+  liqPushIdent();
 	liqlog("liquidSGCreateMenuItems(...)");
 	string $sg[] = `ls -type shadingEngine`;
 	
@@ -151,9 +174,11 @@ global proc liquidSGCreateMenuItems( string $parent, string $name, string $msg )
 		string $item = `menuItem -label $sg[$i] -p $parent ( "liquidSGMessageMenuItem" + $i )`;
 		menuItem -e -c ( "liquidSGCreateMenuItemsConnect " + $item + " " + $msg ) $item;
 	}
+  liqPopIdent();
 }
 global proc liquidSGCreateMenuItemsNew( string $msg )
 {
+  liqPushIdent();
 	liqlog("liquidSGCreateMenuItemsNew(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	string $con[] = `listConnections -p 1 $msg`;
@@ -167,9 +192,11 @@ global proc liquidSGCreateMenuItemsNew( string $msg )
 	string $con[] = `listConnections $msg`;
 	if( !`gmatch $con[0] ""` )
 		textFieldButtonGrp -e -eb 1 -tx $con[0] $ctl;
+  liqPopIdent();
 }
 global proc liquidSGCreateMenuItemsConnect( string $item, string $msg )
 {
+  liqPushIdent();
 	liqlog("liquidSGCreateMenuItemsConnect(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	string $con[] = `listConnections -p 1 $msg`;
@@ -181,10 +208,12 @@ global proc liquidSGCreateMenuItemsConnect( string $item, string $msg )
 	string $con[] = `listConnections $msg`;
 	if( !`gmatch $con[0] ""` )
 		textFieldButtonGrp -e -eb 1 -tx $con[0] $ctl;
+  liqPopIdent();
 }
 
 global proc liquidSGSelect( string $msg )
 {
+  liqPushIdent();
 	liqlog("liquidSGSelect(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	string $SG = `textFieldButtonGrp -q -tx ( "liquidSGMessageGrp" + $parts[1] )`;
@@ -197,10 +226,12 @@ global proc liquidSGSelect( string $msg )
 		select $displ[0];
 	else if( !`gmatch $vol[0] ""` )
 		select $vol[0];
+  liqPopIdent();
 }
 
 global proc liquidSGMessageNew( string $nodeName, string $label, string $msg )
 {
+  liqPushIdent();
 	liqlog("liquidSGMessageNew(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	setUITemplate -pst attributeEditorTemplate;
@@ -218,10 +249,12 @@ global proc liquidSGMessageNew( string $nodeName, string $label, string $msg )
 	liquidSGCreateMenuItems( $popup, $parts[0], $msg );
 	setUITemplate -ppt;
 	liquidSGMessageReplace( $nodeName, $msg );
+  liqPopIdent();
 }
 
 global proc liquidSGMessageReplace( string $nodeName, string $msg )
 {
+  liqPushIdent();
 	liqlog("liquidSGMessageReplace(...)");
 	string $parts[] = stringToStringArray( $msg, ".");
 	string $ctl = ( "liquidSGMessageGrp" + $parts[1] );
@@ -242,10 +275,12 @@ global proc liquidSGMessageReplace( string $nodeName, string $msg )
 		popupMenu -e -dai ( "liquidSGMessagePopup" + $parts[1] );
 		liquidSGCreateMenuItems( ( "liquidSGMessagePopup" + $parts[1] ), $parts[0], $msg );
 	}
+  liqPopIdent();
 }
 
 global proc AEliquidInstanceFlags( string $node )
 {
+  liqPushIdent();
   global int $gLiqNewVisibilityStyle;
 
   AEliquidCreateMenu();
@@ -417,5 +452,7 @@ global proc AEliquidInstanceFlags( string $node )
     editorTemplate -endLayout;
 
   editorTemplate -endLayout;
+
+  liqPopIdent();
 }
 

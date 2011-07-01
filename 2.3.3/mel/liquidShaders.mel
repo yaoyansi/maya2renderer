@@ -42,6 +42,7 @@ global string $liquidShadersLastDirectory = "";
  */
 global proc string[] liquidGetShaderList(string $type)
 {
+  liqPushIdent();
 	liqlog("liquidGetShaderList(...)");
   string $out_shaderlist[];
   if($type == "all") {
@@ -52,6 +53,7 @@ global proc string[] liquidGetShaderList(string $type)
   } else {
     $out_shaderlist = `ls -type ("liquid"+$type)`;
   }
+  liqPopIdent();
   return $out_shaderlist;
 }
 
@@ -60,6 +62,7 @@ global proc string[] liquidGetShaderList(string $type)
  */
 global proc string liquidGetShaderNodeType( string $node )
 {
+  liqPushIdent();
 	liqlog("liquidGetShaderNodeType(...)");
   string $returnValue;
   string $nodeType, $typeId, $type;
@@ -85,6 +88,7 @@ global proc string liquidGetShaderNodeType( string $node )
   if( ( $type == "liquidCont" ) || ( $typeId == 303126795 ) ) {
     $returnValue = "Container";
   }
+  liqPopIdent();
   return $returnValue;
 }
 
@@ -93,6 +97,7 @@ global proc string liquidGetShaderNodeType( string $node )
  */
 global proc liquidAssignShaderNode_old( string $node, string $shaderNode )
 {
+  liqPushIdent();
 	liqlog("liquidAssignShaderNode_old(...)");
   string $type = `liquidGetShaderNodeType $shaderNode`;
 
@@ -118,21 +123,27 @@ global proc liquidAssignShaderNode_old( string $node, string $shaderNode )
     connectAttr -f ( $shaderNode + ".ribbox" ) ( $transform + ".liqRIBBox" );
   }
   constructionHistory -tgl $ch;
+  liqPopIdent();
 }
 
 
 
 global proc int liquidIsShadingGroup( string $node ) 
 {
+	liqPushIdent();
 	liqlog("liquidIsShadingGroup(...)");
 	if ( objExists($node) )
-		if (( nodeType($node) == "shadingEngine" ) || ( nodeType($node) == "materialFacade" ))
+		if (( nodeType($node) == "shadingEngine" ) || ( nodeType($node) == "materialFacade" )){
+			liqPopIdent();
 			return true;
-	return false;
+		}
+		liqPopIdent();
+		return false;
 }
 
 global proc string[] liquidShadersGetShapes( string $node )
 {
+  liqPushIdent();
 	liqlog("liquidShadersGetShapes(...)");
 	string $shapes[];
 	if ( objectType( $node ) == "transform" )
@@ -142,6 +153,7 @@ global proc string[] liquidShadersGetShapes( string $node )
 			if ( objectType( fs(`listRelatives -pa -p $node`) ) == "transform" )
 				$shapes[0] = $node;
 	}
+  liqPopIdent();
 	return $shapes;
 }
 
@@ -157,12 +169,15 @@ global proc string[] liquidShadersGetShapes( string $node )
 //
 global proc string[] liquidGetShadingGroup( string $node )
 {
+	liqPushIdent();
 	liqlog("liquidGetShadingGroup(...)");
 	// if we've been passed a shading group then pass it right back again
-	if( liquidIsShadingGroup($node) )
+	if( liquidIsShadingGroup($node) ){
+		liqPopIdent();
 		return {$node};
-		
-    string $allSG[];
+	}
+
+	string $allSG[];
 	// first assume that the passed object is a transform or a shape
 	string $shapes[] = liquidShadersGetShapes( $node ), $s;
 	// collect the shading groups attached to all shapes
@@ -179,8 +194,9 @@ global proc string[] liquidGetShadingGroup( string $node )
 		string $upStreamNodes[] = (`listHistory -future true $node`), $currNode;
 		for ($currNode in $upStreamNodes)
 			if( liquidIsShadingGroup($currNode) )
-	            $allSG[size($allSG)] = $currNode;
+				$allSG[size($allSG)] = $currNode;
 	}
+	liqPopIdent();
 	return $allSG;
 }
 
@@ -219,6 +235,7 @@ global proc string[] liquidGetShadingGroup( string $node )
  */
 global proc liquidAssignShaderNode( string $node, string $shaderNode )
 {
+  liqPushIdent();
 	liqlog("liquidAssignShaderNode(...)");
   float $version = liquidGetVersion();
   string $newNodeName;
@@ -277,6 +294,7 @@ global proc liquidAssignShaderNode( string $node, string $shaderNode )
 			break;
 	}
   }
+  liqPopIdent();
 }
 
 
@@ -285,6 +303,7 @@ global proc liquidAssignShaderNode( string $node, string $shaderNode )
  */
 proc string liquidNewRibboxNode_old( string $nodename )
 {
+  liqPushIdent();
 	liqlog("liquidNewRibboxNode_old(...)");
   if($nodename == "")
   {
@@ -323,6 +342,7 @@ proc string liquidNewRibboxNode_old( string $nodename )
   }
       connectAttr -f "liquidGlobals.liquidRibboxShaders" ( $newNodeName + ".liquidShaderManager" );
   evalDeferred("liquidFluidUpdateList");
+  liqPopIdent();
   return $returnValue;
 }
 
@@ -331,6 +351,7 @@ proc string liquidNewRibboxNode_old( string $nodename )
  */
 global proc string liquidNewRibboxNode( string $nodename )
 {
+  liqPushIdent();
 	liqlog("liquidNewRibboxNode(...)");
   string $newRibbox;
   float $version = liquidGetVersion();
@@ -338,6 +359,7 @@ global proc string liquidNewRibboxNode( string $nodename )
   else {
     $newRibbox = `shadingNode -asUtility liquidRibBox`;
   }
+  liqPopIdent();
   return $newRibbox;
 }
 
@@ -346,6 +368,7 @@ global proc string liquidNewRibboxNode( string $nodename )
  */
 proc string liquidNewShaderNode_old( string $filename )
 {
+  liqPushIdent();
 	liqlog("liquidNewShaderNode_old(...)");
   // Get the shortest usable project path.
   int $i;
@@ -428,6 +451,7 @@ proc string liquidNewShaderNode_old( string $filename )
     }
     connectAttr -f "liquidGlobals.liquidVolumeShaders" ( $newNodeName + ".liquidShaderManager" );
   }
+  liqPopIdent();
   return $returnValue;
 }
 
@@ -436,6 +460,7 @@ proc string liquidNewShaderNode_old( string $filename )
  */
 global proc string liquidNewShaderNode( string $filename )
 {
+  liqPushIdent();
 	liqlog("liquidNewShaderNode(...)");
   float $version = liquidGetVersion();
   string $newNodeName;
@@ -460,6 +485,7 @@ global proc string liquidNewShaderNode( string $filename )
     eval( "liquidShaderNodes_initParams " + $nodeName );
     $newNodeName = $nodeName;
   }
+  liqPopIdent();
   return $newNodeName;
 }
 
@@ -468,6 +494,7 @@ global proc string liquidNewShaderNode( string $filename )
  */
 proc string liquidDuplicateShaderNode_old( string $nodename )
 {
+  liqPushIdent();
 	liqlog("liquidDuplicateShaderNode_old(...)");
   string $shaderFileName = `getAttr ( $nodename + ".rmanShaderLong" )`;
 
@@ -540,6 +567,7 @@ proc string liquidDuplicateShaderNode_old( string $nodename )
 
   liquidAttachShaderParams( $currentNodeName, $shaderFileName );
 
+  liqPopIdent();
   return $currentNodeName;
 }
 
@@ -548,6 +576,7 @@ proc string liquidDuplicateShaderNode_old( string $nodename )
  */
 global proc string liquidDuplicateShaderNode( string $nodename )
 {
+  liqPushIdent();
 	liqlog("liquidDuplicateShaderNode(...)");
   float $version = liquidGetVersion();
   string $newNodeName;
@@ -597,11 +626,13 @@ global proc string liquidDuplicateShaderNode( string $nodename )
     }
   }
 
+  liqPopIdent();
   return $newNodeName;
 }
 
 global proc string getSLShaderNodeFor( string $nodeName )
 {
+  liqPushIdent();
 	liqlog("getSLShaderNodeFor("+$nodeName+")");
   string $classification[] = getClassification( nodeType( $nodeName ) );
   string $liquidType = match("/[surfacediplmntvou]+", $classification[0]);
@@ -612,8 +643,12 @@ global proc string getSLShaderNodeFor( string $nodeName )
 
     string $connections[] = `listConnections -plugs true ($nodeName+".liquid"+$liquidType+"ShaderNode")`;
     //trace ("SLShaderNodeAlreadyExists( "+$nodeName+") -> "+$nodeName+".liquid"+$liquidType+"ShaderNode is connected to "+$connections[0]);
-    return match("[A-Za-z0-9_]+", $connections[0]);
+    string $ret = match("[A-Za-z0-9_]+", $connections[0]);
+
+    liqPopIdent();
+	return $ret;
   }
 
+  liqPopIdent();
   return "";
 }

@@ -1,12 +1,18 @@
-
+global int $g_IndentNum = 0;
 proc log2(string $prefix, string $log)
 {
-	print($prefix +">"+ $log +"\n");
+	global int $g_IndentNum;
+	string $indent;
+	int $i=0;
+	for(; $i<$g_IndentNum; ++$i){
+		$indent +="  ";
+	}
+	print($indent + $prefix +">"+ $log +"\n");
 }
 
 global proc liqlog(string $log)
 {
-	log2("liquid", $log);
+	log2("liq", $log);
 }
 
 global proc liqDebug(string $log)
@@ -24,4 +30,15 @@ global proc liqWarn(string $log)
 global proc liqTrace(string $log)
 {
 	trace($log);
+}
+
+global proc liqPushIdent()
+{
+	global int $g_IndentNum;
+	$g_IndentNum++;
+}
+global proc liqPopIdent()
+{
+	global int $g_IndentNum;
+	$g_IndentNum--;
 }

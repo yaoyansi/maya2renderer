@@ -32,15 +32,19 @@ global string $liquidFileMatch; // Current search criteria in fluid
 
 global proc string[] liquidGetFileList( string $dir, string $fileMatch )
 {
+	liqPushIdent();
 	liqlog("liquidGetFileList()");
   string $returnValue[];
 
   string $dirList[] = `getFileList -fld ( $dir + "/" ) -fs $fileMatch`;
+
+  liqPopIdent();
   return $dirList;
 }
 
 global proc string[] liquidGetDirList( string $dir )
 {
+  liqPushIdent();
 	liqlog("liquidGetDirList("+$dir+")");
   string $returnValue[];
   string $dirList[] = `getFileList -fld ( $dir + "/" )`;
@@ -53,11 +57,13 @@ global proc string[] liquidGetDirList( string $dir )
       $currentVal++;
     }
   }
+  liqPopIdent();
   return $returnValue;
 }
 
 global proc string liquidFileBrowserUpOneDir( string $dir )
 {
+  liqPushIdent();
 	liqlog("liquidFileBrowserUpOneDir("+$dir+")");
   string $OS = `about -os`; // "nt", "mac", "irix" or "linux"
   string $returnValue;
@@ -77,11 +83,14 @@ global proc string liquidFileBrowserUpOneDir( string $dir )
     $returnValue += $dirList[ $i ];
     $i++;
   }
+
+  liqPopIdent();
   return $returnValue;
 }
 
 global proc liquidUpdateDirList( string $widget )
 {
+  liqPushIdent();
 	liqlog("liquidUpdateDirList(...)");
   global string $liquidCFD;
   if ( `textScrollList -exists $widget` ) {
@@ -93,10 +102,12 @@ global proc liquidUpdateDirList( string $widget )
       textScrollList -e -append $currentDir $widget;
     }
   }
+  liqPopIdent();
 }
 
 global proc liquidUpdateFileList( string $widget, string $liquidFileDescText )
 {
+  liqPushIdent();
 	liqlog("liquidUpdateFileList(...)");
   global string $liquidCFD;
   global string $liquidFileMatch;
@@ -108,6 +119,7 @@ global proc liquidUpdateFileList( string $widget, string $liquidFileDescText )
       textScrollList -e -append $currentFile $widget;
     }
   }
+  liqPopIdent();
 }
 
 
@@ -115,6 +127,7 @@ global proc liquidUpdateFileList( string $widget, string $liquidFileDescText )
 
 proc lfbw_displayInfo( string $filePath )
 {
+  liqPushIdent();
 	liqlog("lfbw_displayInfo(...)");
   string $shaderExt  = `getAttr liquidGlobals.shaderExt`;
 
@@ -125,18 +138,22 @@ proc lfbw_displayInfo( string $filePath )
       text -e -l (liquidSlShaderType()) lfb_infoType;
     }
   } else text -e -l "-" lfb_infoType;
+  liqPopIdent();
 }
 
 proc lfbw_displayPreview( string $filePath )
 {
+  liqPushIdent();
 	liqlog("lfbw_displayPreview(...)");
   string $previewPath = ( dirname($filePath) + "/." + basenameEx($filePath) + ".tif" );
   if ( `filetest -r $previewPath` ) image -e -i $previewPath lfb_preview;
   else image -e -i (liquidGetHome()+"/icons/noPreview.iff") lfb_preview;
+  liqPopIdent();
 }
 
 proc lfbw_makeShaderPreview()
 {
+  liqPushIdent();
 	liqlog("lfbw_makeShaderPreview(...)");
   string $shaderExt  = `getAttr liquidGlobals.shaderExt`;
   string $renderer   = `getAttr liquidGlobals.renderCommand`;
@@ -145,7 +162,8 @@ proc lfbw_makeShaderPreview()
   // not a shader ? exit !
   if ( !gmatch( $shaderLong, ("*."+$shaderExt) ) ) {
     warning ("[liquid] this is not a shader !");
-    return;
+    liqPopIdent();
+	return;
   }
 
   // check shaderType
@@ -153,7 +171,8 @@ proc lfbw_makeShaderPreview()
   string $shaderType = liquidSlShaderType();
   if ( $shaderType == "light" || $shaderType == "volume" ) {
     warning ("[liquid] preview does not support "+$shaderType+" shader !");
-    return;
+    liqPopIdent();
+	return;
   }
 
   string  $primitive = `getAttr liquidGlobals.previewPrimitive`;
@@ -175,10 +194,13 @@ proc lfbw_makeShaderPreview()
   string $args = ( "liquidPreviewShader -shader \"" + $shaderLong + "\" " + $primArg + " -dd tiff -dn \"" + $displayName + "\" -ds 128 -renderer \"" + $renderer + "\" -type " + $shaderType + ";");
   eval $args;
   lfbw_displayPreview( $shaderLong );
+
+  liqPopIdent();
 }
 
 global proc liquidFileBrowserWindow_makePreview()
 {
+  liqPushIdent();
 	liqlog("liquidFileBrowserWindow_makePreview(...)");
   string $mask = `textFieldGrp -q -text lfb_fileMask`;
   string $shaderExt = `getAttr liquidGlobals.shaderExt`;
@@ -187,9 +209,11 @@ global proc liquidFileBrowserWindow_makePreview()
   if ( gmatch( $mask, ("*."+$shaderExt) )  ) lfbw_makeShaderPreview();
   else {
     warning ("[liquid] previewing "+$mask+" files is not supported !");
-    return;
+    liqPopIdent();
+	return;
   }
-
+ 
+  liqPopIdent();
 }
 
 
@@ -197,6 +221,7 @@ global proc liquidFileBrowserWindow_makePreview()
 
 global proc liquidFileBrowserBuildBookmarkMenu( string $parentMenu, string $finder, string $refreshCallback )
 {
+  liqPushIdent();
 	liqlog("liquidFileBrowserBuildBookmarkMenu(...)");
   if ( ! `menu -q -ex $parentMenu` ) error ("liquidFileBrowserBuildBookmarkMenu: the bookmark menu "+$parentMenu+" does not exist.");
 
@@ -210,7 +235,7 @@ global proc liquidFileBrowserBuildBookmarkMenu( string $parentMenu, string $find
   menuItem -parent $parentMenu -divider true ;
 
   // error checking
-  if ( ! `optionVar -exists liquidFileBrowserBookmarks` ) return;
+  if ( ! `optionVar -exists liquidFileBrowserBookmarks` ){ liqPopIdent(); return;}
 
   // rebuild menu
   string $bkm[] = `optionVar -q liquidFileBrowserBookmarks`;
@@ -220,10 +245,12 @@ global proc liquidFileBrowserBuildBookmarkMenu( string $parentMenu, string $find
     string $cmd = ("finder -e -fp \""+$data[1]+"\" "+$finder+";"+$refreshCallback+";");
     menuItem -parent $parentMenu -l $data[0] -ann $data[1] -c $cmd;
   }
+  liqPopIdent();
 }
 
 global proc liquidFileBrowserAddBookmark( string $finder )
 {
+  liqPushIdent();
 	liqlog("liquidFileBrowserAddBookmark(...)");
   $liquidCFD = `finder -q -fp $finder`;
 
@@ -243,20 +270,21 @@ global proc liquidFileBrowserAddBookmark( string $finder )
     $bookmarkName = ($bookmarkName+"|"+$liquidCFD);
     optionVar -stringValueAppend "liquidFileBrowserBookmarks" $bookmarkName;
   }
-
+  liqPopIdent();
 }
 
 global proc liquidFileBrowserClearBookmarks()
-{
+{ 
+	liqPushIdent();
 	liqlog("liquidFileBrowserClearBookmarks(...)");
   string $result = `confirmDialog -title "Delete All Bookmarks ?" -message "Are you sure?"
                                   -button "Yes" -button "Cancel" -defaultButton "Cancel"
                                   -cancelButton "Cancel" -dismissString "Cancel"`;
 
-  if ( $result == "Cancel" ) return;
+  if ( $result == "Cancel" ) {liqPopIdent();return;}
 
   optionVar -remove liquidFileBrowserBookmarks;
-
+  liqPopIdent();
 }
 
 
@@ -267,10 +295,11 @@ global proc liquidFileBrowserClearBookmarks()
 */
 global proc liquidFileBrowserWindow_updateList( string $filemask )
 {
+	liqPushIdent();
 	liqlog("liquidFileBrowserWindow_updateList(...)");
   global string $gLiquidFileBrowserWindowDirectory;
 
-  if ( !`window -q -ex liquidFileBrowserWindow` ) return;
+  if ( !`window -q -ex liquidFileBrowserWindow` ) { liqPopIdent(); return;}
 
   // retrieve the current path
   string $finder = `finder -q -fp lfb_finder`;
@@ -296,6 +325,8 @@ global proc liquidFileBrowserWindow_updateList( string $filemask )
   // update globals and finder
   $gLiquidFileBrowserWindowDirectory = $thePath;
   finder -e -fp $thePath lfb_finder;
+  
+  liqPopIdent();
 }
 
 
@@ -304,6 +335,7 @@ global proc liquidFileBrowserWindow_updateList( string $filemask )
 */
 global proc liquidFileBrowserWindow_updateFinder( int $doLoad, string $filemask, string $callback )
 {
+	liqPushIdent();
 	liqlog("liquidFileBrowserWindow_updateFinder(...)");
   global string $gLiquidFileBrowserWindowDirectory;
 
@@ -337,7 +369,7 @@ global proc liquidFileBrowserWindow_updateFinder( int $doLoad, string $filemask,
   // when double-clicking an item, the window may be destroyed
   // before the refresh, so we bail out here if need be...
   //
-  if ( !`control -q -ex lfb_makePreview` ) return;
+  if ( !`control -q -ex lfb_makePreview` ){  liqPopIdent();  return;}
 
   // if the directory is not writable, do not allow preview creation
   //
@@ -348,6 +380,7 @@ global proc liquidFileBrowserWindow_updateFinder( int $doLoad, string $filemask,
   lfbw_displayInfo( $newPath );
 
   //$gLiquidFileBrowserWindowDirectory = $newPath;
+    liqPopIdent();
 }
 
 
@@ -356,6 +389,7 @@ global proc liquidFileBrowserWindow_updateFinder( int $doLoad, string $filemask,
 */
 global proc liquidFileBrowserWindow_load( string $filemask, string $callback )
 {
+  liqPushIdent();
 	liqlog("liquidFileBrowserWindow_load(...)");
   // get the full file path
   string $finder = `finder -q -fp lfb_finder`;
@@ -363,7 +397,8 @@ global proc liquidFileBrowserWindow_load( string $filemask, string $callback )
   // if it is a directory just update the list
   if ( `filetest -d $finder` ) {
     liquidFileBrowserWindow_updateList($filemask);
-    return;
+    liqPopIdent();
+	return;
   }
 
   // if the file is readable, delete the window and launch the callback.
@@ -371,15 +406,21 @@ global proc liquidFileBrowserWindow_load( string $filemask, string $callback )
     deleteUI liquidFileBrowserWindow;
     if ( $callback !=  "" ) eval ( $callback + " \"" + $finder + "\" \"" + $finder + "\"" );
   } else error( "This file is not readable." );
+    
+  liqPopIdent();
 }
 
 
 /**
 	this proc wraps the callback for NT / OSX
 */
-global proc liquidFileBrowserWindow_wrapCallback(string $callback, string $arg1, string $arg2){
+global proc liquidFileBrowserWindow_wrapCallback(string $callback, string $arg1, string $arg2)
+{
+  liqPushIdent();
 	liqlog("liquidFileBrowserWindow_wrapCallback(...)");
 	if ( $callback !=  "" ) eval ( $callback + " \"" + $arg1 + "\" \"" + $arg2 + "\"" );
+  
+	liqPopIdent();
 }
 
 /*
@@ -387,7 +428,8 @@ global proc liquidFileBrowserWindow_wrapCallback(string $callback, string $arg1,
   the callback should be : callback string selectedfile string filetype
 */
 global proc liquidFileBrowserWindow( string $path, string $filemask, string $callback )
-{
+{  
+	liqPushIdent();
 	liqlog("liquidFileBrowserWindow(...)");
 	if (`about -nt` || `about -mac`) {
 		string $workspace = `workspace -q -fn`;
@@ -411,6 +453,7 @@ global proc liquidFileBrowserWindow( string $path, string $filemask, string $cal
 		if( $dialogSuccess )
 		{
 			// previous call blocks
+			liqPopIdent();
 			return;
 		}
 	}
@@ -494,6 +537,8 @@ global proc liquidFileBrowserWindow( string $path, string $filemask, string $cal
   liquidFileBrowserWindow_updateList($gLiquidFileBrowserWindowFileMask);
 
   showWindow liquidFileBrowserWindow;
+
+  liqPopIdent();
 }
 
 
@@ -503,6 +548,7 @@ global proc liquidFileBrowserWindow( string $path, string $filemask, string $cal
 
 global proc liquidFileBrowserDIRDCC( string $fileWidget, string $dirWidget, string $fileMatch, string $curdirWidget )
 {
+  liqPushIdent();
 	liqlog("liquidFileBrowserDIRDCC(...)");
   global string $liquidCFD;
   string $selection[] = `textScrollList -q -si $dirWidget`;
@@ -514,10 +560,13 @@ global proc liquidFileBrowserDIRDCC( string $fileWidget, string $dirWidget, stri
   textFieldGrp -e -tx $liquidCFD $curdirWidget;
   liquidUpdateDirList $dirWidget;
   liquidUpdateFileList $fileWidget $fileMatch;
+
+  liqPopIdent();
 }
 
 global proc liquidInitCFD()
-{
+{ 
+	liqPushIdent();
 	liqlog("liquidInitCFD(...)");
   global string $liquidCFD;
   string $homeDirectory = liquidGetHome();
@@ -526,19 +575,26 @@ global proc liquidInitCFD()
   if ( $getINI != "" ) {
     $liquidCFD = $getINI;
   }
+
+  liqPopIdent();
 }
 
 global proc liquidFileSpecCC( string $fileWidget, string $dirWidget, string $fileMatch )
 {
+	liqPushIdent();
 	liqlog("liquidFileSpecCC(...)");
+
   global string $liquidFileMatch;
   $liquidFileMatch = `textFieldGrp -q -tx $fileMatch`;
   liquidUpdateDirList $dirWidget;
   liquidUpdateFileList $fileWidget $fileMatch;
+
+  liqPopIdent();
 }
 
 global proc liquidCurDirCC( string $fileWidget, string $dirWidget, string $fileMatch, string $widget )
 {
+	liqPushIdent();
 	liqlog("liquidCurDirCC(...)");
   global string $liquidCFD;
   $liquidCFD = `textFieldGrp -q -tx $widget`;
@@ -552,10 +608,13 @@ global proc liquidCurDirCC( string $fileWidget, string $dirWidget, string $fileM
 
   liquidUpdateDirList $dirWidget;
   liquidUpdateFileList $fileWidget $fileMatch;
+
+  liqPopIdent();
 }
 
 global proc string[] liquidFileBrowserIn( string $fileMatch, string $doubleClickCommand )
 {
+	liqPushIdent();
 	liqlog("liquidFileBrowserIn(...)");
   global string $liquidCFD;
   global string $liquidFileMatch;
@@ -614,6 +673,8 @@ global proc string[] liquidFileBrowserIn( string $fileMatch, string $doubleClick
   liquidUpdateDirList $liquidDirList;
   $returnValue[0] = $liquidFileForm;
   $returnValue[1] = $liquidFileList;
+
+  liqPopIdent();
   return $returnValue;
 }
 

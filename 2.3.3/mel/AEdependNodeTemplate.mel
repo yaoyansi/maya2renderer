@@ -31,12 +31,17 @@
 //  Output Value:
 //	None
 //
-
+source xxliquidutility.mel;
 
 global proc AEdependNodeTemplate ( string $nodeName )
 {
+	liqPushIdent();
+    //liqlog("AEdagNodeInclude("+$nodeName+")");
+
 	editorTemplate -beginLayout "Node Behavior";
 		editorTemplate -addControl "caching";
 		editorTemplate -addControl "nodeState";
 	editorTemplate -endLayout;
+
+    liqPopIdent();
 }

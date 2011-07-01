@@ -38,18 +38,21 @@ source xxliquidutility.mel;
 
 global proc liquidRibGenParameterEditor()
 {
+  liqPushIdent();
 	liqlog("liquidRibGenParameterEditor()");
   string $selectedNode[] = `ls -dag -s -sl`;
   if ( size($selectedNode) > 0 ) {
     string $liquidShaderNode = `getAttr ( $selectedNode[0] + ".liquidRibGen" )`;
     //liquidParamDialogWindow $liquidShaderNode "surface";
   } else {
-    print "No DAG Node Selected...";
+    liqlog( "No DAG Node Selected...");
   }
+  liqPopIdent();
 }
 
 global proc liquidRibGenDelete()
 {
+  liqPushIdent();
 	liqlog("liquidRibGenDelete()");
   string $selectedNode[] = `ls -dag -s -sl`;
   if ( size($selectedNode) > 0 ) {
@@ -57,16 +60,18 @@ global proc liquidRibGenDelete()
     for ( $currentNode in $selectedNode ) {
       if ( `attributeQuery -node $currentNode -ex "liquidRibGen"`) {
         deleteAttr ( $currentNode + ".liquidRibGen" );
-        print "Deleted.";
+        liqlog( "Deleted.");
       }
     }
   } else {
-    print "No DAG Node Selected...";
+    liqlog("No DAG Node Selected...");
   }
+  liqPopIdent();
 }
 
 global proc string liquidNewRibGen( string $filename )
 {
+  liqPushIdent();
 	liqlog("liquidNewRibGen()");
   int $i;
   string $ext = (`about -win`)? ".dll" : ".so";
@@ -89,7 +94,7 @@ global proc string liquidNewRibGen( string $filename )
     for( $i = 1;; $i++ ) {
       string $cNum = $i;
       $testNodeName = ( $newNodeName + $cNum );
-      print $testNodeName;
+      liqlog( $testNodeName);
       if ( !`objExists $testNodeName` ) 
 		break;
     }
@@ -102,11 +107,13 @@ global proc string liquidNewRibGen( string $filename )
   addAttr -m -ln "assignedObjects" -at message $newNodeName;
   setAttr ( $newNodeName + ".RibGenSo" ) -type "string" ( $longName + $ext );
 
+  liqPopIdent();
   return $newNodeName;
 }
 
 global proc int liquidAssignRibGen( string $node, string $ribGenNode )
 {
+  liqPushIdent();
 	liqlog("liquidAssignRibGen(...)");
   if ( `attributeQuery -node $node -ex "liquidRibGen"`) {
     deleteAttr ( $node + ".liquidRibGen" );
@@ -114,11 +121,13 @@ global proc int liquidAssignRibGen( string $node, string $ribGenNode )
   addAttr -ln "liquidRibGen" -at message $node;
   connectAttr -f ( $ribGenNode + ".assignedObjects" ) ( $node + ".liquidRibGen" );
 
+  liqPopIdent();
   return true;
 }
 
 global proc liquidAssignRibGenCMD()
 {
+  liqPushIdent();
 	liqlog("liquidAssignRibGenCMD()");
   string $selectedNode[] = `ls -dag -s -sl`;
   string $ext = (`about -win`)? "*.dll" : "*.so";
@@ -134,6 +143,7 @@ global proc liquidAssignRibGenCMD()
       }
     }
   }
+  liqPopIdent();
 }
 
 //print "Initialized Liquid RibGen Interface...\n";

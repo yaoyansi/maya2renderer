@@ -33,10 +33,13 @@
 //
 //  Returns:
 //
-
+source xxliquidutility.mel;
 
 global proc AEliquidPaintEffects( string $node )
 {
+  liqPushIdent();
+  liqlog("AEliquidPaintEffects("+$node+")");
+
   editorTemplate -beginLayout "Liquid" -collapse true;
 
     editorTemplate -ccu ("liquidSGMessageNew "+$node+" \"Tube Shading Group\"") ("liquidSGMessageReplace "+$node ) "liquidTubeShadingGroup";
@@ -51,4 +54,6 @@ global proc AEliquidPaintEffects( string $node )
     editorTemplate -label "Curve ID" -addControl "liquidCurveID";
 
   editorTemplate -endLayout;
+
+  liqPopIdent();
 }

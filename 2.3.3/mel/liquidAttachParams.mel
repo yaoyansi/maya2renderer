@@ -41,6 +41,7 @@ source xxliquidutility.mel;
 
 global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFileName )
 {
+  liqPushIdent();
   liqlog("liquidAttachShaderParams( "+$currentNodeName+", "+$shaderFileName+" )");
 
 	// parse the shader
@@ -218,11 +219,13 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 			}
 		}
 	}
+  liqPopIdent();
 }
 
 
 global proc liquidAttachParams ( string $currentNodeName )
 {
+  liqPushIdent();
   liqlog("liquidAttachParams("+$currentNodeName+")");
   int $i;
   string $shaderFileName = `getAttr ( $currentNodeName + ".rmanShaderLong" )`;
@@ -310,4 +313,5 @@ global proc liquidAttachParams ( string $currentNodeName )
 	}
 
 	liquidAttachShaderParams( $currentNodeName, $shaderFileName );
+  liqPopIdent();
 }

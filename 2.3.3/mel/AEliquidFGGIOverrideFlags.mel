@@ -1,5 +1,10 @@
+source xxliquidutility.mel;
+
 global proc AEliquidFGGIOverrideFlags(string $node)
 {
+  liqPushIdent();
+  //liqlog("AEliquidFGGIOverrideFlags("+$node+")");
+
   editorTemplate -beginLayout "Liquid" -collapse true;
 
     editorTemplate  -beginLayout "Rendering" -collapse false;
@@ -10,10 +15,15 @@ global proc AEliquidFGGIOverrideFlags(string $node)
     editorTemplate -endLayout;
 
   editorTemplate -endLayout;
+
+  liqPopIdent();
 }
 
 global proc AEliquidRenderSubdivisonMeshActive(string $node)
 {
+  liqPushIdent();
+  //liqlog("AEliquidRenderSubdivisonMeshActive("+$node+")");
+
   string $nodes[] = `ls -dag -sl`;
   string $currentNode;
     for ( $currentNode in $nodes ) {
@@ -22,4 +32,6 @@ global proc AEliquidRenderSubdivisonMeshActive(string $node)
       editorTemplate -dimControl $node "liqSubdivInterpolateBoundary" $dfm;
     }
   }
+
+  liqPopIdent();
 }

@@ -49,24 +49,29 @@ global string $cmdLine;
 //===========================================================================================
 global proc liquiduidSLManagerStoreSourceDir( string $curDirText )
 {
+  liqPushIdent();
 	liqlog("liquiduidSLManagerStoreSourceDir(...)");
   string $liquidCFD = `textFieldGrp -q -tx $curDirText`;
   optionVar -sv "liqSLManagerSourceDir" $liquidCFD;
+  liqPopIdent();
 }
 //===========================================================================================
 //
 //===========================================================================================
 global proc liquidSLManagerStoreDesinationDir( string $curDirText )
 {
+  liqPushIdent();
 	liqlog("liquidSLManagerStoreDesinationDir(...)");
   string $liquidCFD = `textFieldGrp -q -tx $curDirText`;
   optionVar -sv "liqSLManagerDestinationDir" $liquidCFD;
+  liqPopIdent();
 }
 //===========================================================================================
 //
 //===========================================================================================
 global proc liquidSLManagerEditCommand ( string $widget, string $curDirText )
 {	
+  liqPushIdent();
 	liqlog("liquidSLManagerEditCommand(...)");
 	global string $defTextViewerName;
   string $textViewerName = liquidINIGet( "liquid", "textviewer" );
@@ -87,11 +92,14 @@ global proc liquidSLManagerEditCommand ( string $widget, string $curDirText )
     }
   }
   //select $currentlySelected;
+  liqPopIdent();
 }
 //===========================================================================================
 //
 //===========================================================================================
-global proc liquidSLManagerSetRenderer( int $curRenderer ) {
+global proc liquidSLManagerSetRenderer( int $curRenderer ) 
+{
+  liqPushIdent();
 	liqlog("liquidSLManagerSetRenderer(...)");
 global string $RenderersList[];
 global string $curRendererName;
@@ -117,12 +125,16 @@ global string $cmdLine;
   //textFieldGrp -e -tx $curShaderCompInclude $slInclude;
 
   eval( $refreshCmdDst );
-  print $curRendererName; print "\n";
+  liqlog( $curRendererName); 
+
+  liqPopIdent();
 }
 //===========================================================================================
 //
 //===========================================================================================
-global proc liquidSLManagerCompile() {
+global proc liquidSLManagerCompile() 
+{
+  liqPushIdent();
 	liqlog("liquidSLManagerCompile(...)");
   global string $curRendererName;
   global string $curShaderExt;
@@ -157,16 +169,16 @@ global proc liquidSLManagerCompile() {
       $cmd += ( " -I\""  + $include + "\" ");
       $cmd += tolower( $selected );
 
-      print $cmd; print "\n";
+      liqlog( $cmd);
       $out = system ( $cmd );
-      print $out; print "\n";
+      liqlog( $out);
 
       string $shaderName = basename( tolower($srcPath), ".sl");
       string $srcName =  $srcDir + "/" + $shaderName + "." + 	$curShaderExt;
       string $dstName =  $dstDir + "/" + $shaderName + "." + 	$curShaderExt;
 
       if ( `filetest -f $srcName`) {
-        print $selected; print " compiled to : "; print $srcName; print "\n";
+        liqlog( $selected +" compiled to : " + $srcName); 
         if ( $srcDir != $dstDir ) {
           if ( `filetest -f $dstName` )
             sysFile -delete $dstName;
@@ -181,12 +193,15 @@ global proc liquidSLManagerCompile() {
   }
 
   eval( $refreshCmdDst );
+  liqPopIdent();
 }
 
 //===========================================================================================
 //
 //===========================================================================================
-global proc liquidSLManagerDelete() {
+global proc liquidSLManagerDelete() 
+{
+  liqPushIdent();
 	liqlog("liquidSLManagerDelete(...)");
   global string $refreshCmdDst;
   global string $dstBrowser[];
@@ -203,11 +218,15 @@ global proc liquidSLManagerDelete() {
       warning ( "delete error " + $dstName );
   }
   eval( $refreshCmdDst );
+
+  liqPopIdent();
 }
 //===========================================================================================
 //
 //===========================================================================================
-global proc liquidSLManager() {
+global proc liquidSLManager() 
+{
+  liqPushIdent();
 	liqlog("liquidSLManager(...)");
   global string $curRendererName;
   global string $curShaderExt;
@@ -357,15 +376,19 @@ global proc liquidSLManager() {
     window  -edit -rtf true $wnd;
     showWindow $wnd;  //	 show the new window
   }
+  liqPopIdent();
 }
 
 //===========================================================================================
 //
 //===========================================================================================
-global proc liquidSLManagerRefreshPanel( string $dirWidget, string $curDirText, string $fileWidget, string $fileMatch ) {
+global proc liquidSLManagerRefreshPanel( string $dirWidget, string $curDirText, string $fileWidget, string $fileMatch )
+{
+  liqPushIdent();
   	liqlog("liquidSLManagerRefreshPanel(...)");
 	liquidUpdateDirList $dirWidget $curDirText;
   liquidUpdateFileList $fileWidget $fileMatch $curDirText;
+  liqPopIdent();
 }
 
 // Moritz: do these three below need to be global procs really???
@@ -373,33 +396,42 @@ global proc liquidSLManagerRefreshPanel( string $dirWidget, string $curDirText, 
 //===========================================================================================
 //
 //===========================================================================================
-global proc swapSrcDstDir( string $srcCurDirText, string $dstCurDirText ) {
+global proc swapSrcDstDir( string $srcCurDirText, string $dstCurDirText ) 
+{
+  liqPushIdent();
 	liqlog("swapSrcDstDir(...)");
   string 	$src = `textFieldGrp -q -tx $srcCurDirText`;
   string 	$dst = `textFieldGrp -q -tx $dstCurDirText`;
 
   textFieldGrp -e -tx $dst $srcCurDirText;
   textFieldGrp -e -tx $src $dstCurDirText;
+  liqPopIdent();
 }
 //===========================================================================================
 //
 //===========================================================================================
-global proc setSrc2Dst( string $srcCurDirText, string $dstCurDirText ) {
+global proc setSrc2Dst( string $srcCurDirText, string $dstCurDirText ) 
+{
+  liqPushIdent();
 	liqlog("setSrc2Dst(...)");
   string 	$src = `textFieldGrp -q -tx $srcCurDirText`;
   string 	$dst = `textFieldGrp -q -tx $dstCurDirText`;
 
   textFieldGrp -e -tx $src $dstCurDirText;
+  liqPopIdent();
 }
 //===========================================================================================
 //
 //===========================================================================================
-global proc setDst2Src( string $srcCurDirText, string $dstCurDirText ) {
+global proc setDst2Src( string $srcCurDirText, string $dstCurDirText ) 
+{
+  liqPushIdent();
 	liqlog("setDst2Src(...)");
   string 	$src = `textFieldGrp -q -tx $srcCurDirText`;
   string 	$dst = `textFieldGrp -q -tx $dstCurDirText`;
 
   textFieldGrp -e -tx $dst $srcCurDirText;
+  liqPopIdent();
 }
 
 // liqSLmanager();

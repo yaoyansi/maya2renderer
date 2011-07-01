@@ -30,9 +30,13 @@
 //
 //  Description: Attribute Editor Template for the liquidSurface node
 //
+source xxliquidutility.mel;
 
 global proc AEliquidSurfaceTemplate( string $nodeName )
 {
+  liqPushIdent();
+  liqlog("AEliquidSurfaceTemplate("+$nodeName+")");
+
   layout -e -vis false "AEcontrolFormLayout";
 
   editorTemplate -callCustom ("liquidPreviewSwatchNew "+$nodeName) ("liquidPreviewSwatchReplace "+$nodeName) "message";
@@ -100,5 +104,7 @@ global proc AEliquidSurfaceTemplate( string $nodeName )
 
   layout -e -vis true "AEcontrolFormLayout";
 
+
+  liqPopIdent();
 }
 

@@ -21,6 +21,7 @@ source xxliquidutility.mel;
 
 global proc string LLL_lightCentricUI()
 {
+  liqPushIdent();
 	liqlog("LLL_lightCentricUI()");
 	string $liquidGlobals[] = `ls -type liquidGlobals`;
 	if ( !size( $liquidGlobals ) )
@@ -57,12 +58,15 @@ global proc string LLL_lightCentricUI()
 		LLL_inclusiveUI;
 
 	showWindow $window;
+
+  liqPopIdent();
 	return $window;
 
 }
 
 global proc LLL_menuCase( string $value )
 {
+  liqPushIdent();
 	liqlog("LLL_menuCase(...)");
 	switch ($value) {
 	    case "Liquid Set Editing":
@@ -72,7 +76,7 @@ global proc LLL_menuCase( string $value )
 	        LLL_lightCentricUI;
 	        break;
 	}
-
+  liqPopIdent();
 }
 
 //--------------->
@@ -81,6 +85,7 @@ global proc LLL_menuCase( string $value )
 
 global proc LLL_link( string $lightShape, string $set )
 {
+	liqPushIdent();
 	liqlog("LLL_link(...)");
     if (!`objExists($set+".liqLinkedLights")`)
         addAttr -h true -ln liqLinkedLights -multi -indexMatters false $set;
@@ -91,6 +96,7 @@ global proc LLL_link( string $lightShape, string $set )
             $match = 1;
     if (!$match)
         connectAttr -f -na ($lightShape+".message") ($set+".liqLinkedLights");
+  liqPopIdent();
 }
 
 //---------------->
@@ -99,6 +105,7 @@ global proc LLL_link( string $lightShape, string $set )
 
 global proc LLL_unlink( string $lightShape, string $set )
 {
+  liqPushIdent();
 	liqlog("LLL_unlink(...)");
     if (`objExists($set+".liqLinkedLights")`) {
         string $connections[] = `connectionInfo -dfs ($lightShape+".message")`;
@@ -106,7 +113,7 @@ global proc LLL_unlink( string $lightShape, string $set )
             if (`gmatch $cnct ($set+".liqLinkedLights*")`)
                 disconnectAttr ($lightShape+".message") $cnct;
     }
-
+  liqPopIdent();
 }
 
 //--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=--=
@@ -121,6 +128,7 @@ global proc LLL_unlink( string $lightShape, string $set )
 
 global proc LLL_inclusiveUI()
 {
+  liqPushIdent();
 	liqlog("LLL_inclusiveUI()");
 
 	string $liquidGlobals[] = `ls -type liquidGlobals`;
@@ -181,7 +189,8 @@ global proc LLL_inclusiveUI()
     editor -edit -selectionConnection $setsSelConnection $setsOutliner;
 	outlinerEditor -e -sec ("LLL_lc_lights_addCallback \""+$lightsSelConnection+"\" \""+$setsSelConnection+"\";") $lightsOutliner;
 	outlinerEditor -e -sec ("LLL_lc_sets_addCallback \""+$lightsSelConnection+"\" \""+$setsSelConnection+"\";") $setsOutliner;
-
+ 
+	liqPopIdent();
 }
 
 //------------------------->
@@ -190,9 +199,12 @@ global proc LLL_inclusiveUI()
 
 global proc int LLL_setsFilterScript( string $name )
 {
+    liqPushIdent();
 	liqlog("LLL_setsFilterScript(...)");
-	int $return = `objExists($name+".liqLinkedLights")`;
-	return ($return);
+	int $ret = `objExists($name+".liqLinkedLights")`;
+
+    liqPopIdent();
+	return ($ret);
 
 }
 
@@ -202,6 +214,8 @@ global proc int LLL_setsFilterScript( string $name )
 
 global proc LLL_lc_lights_addCallback( string $lightsSelConnection, string $setsSelConnection )
 {
+
+  liqPushIdent();
 	liqlog("LLL_lc_lights_addCallback(...)");
 	//Display Common Links
 	string $rightSelection[], $leftSelectionShapes[];
@@ -227,6 +241,7 @@ global proc LLL_lc_lights_addCallback( string $lightsSelConnection, string $sets
 				selectionConnection -e -obj $selection $setsSelConnection;
 	}
 
+  liqPopIdent();
 }
 
 //----------------------------->
@@ -235,6 +250,7 @@ global proc LLL_lc_lights_addCallback( string $lightsSelConnection, string $sets
 
 global proc LLL_lc_sets_addCallback( string $lightsSelConnection, string $setsSelConnection )
 {
+  liqPushIdent();
 	liqlog("LLL_lc_sets_addCallback(...)");
 	string $leftSelectionShapes[], $leftSelectionLinked[];
 	string $leftSelection[] = `selectionConnection -q -obj $lightsSelConnection`;
@@ -271,6 +287,7 @@ global proc LLL_lc_sets_addCallback( string $lightsSelConnection, string $setsSe
 			LLL_unlink($shape, $remove);
 	}
 
+  liqPopIdent();
 }
 
 //---------------------------->
@@ -279,6 +296,7 @@ global proc LLL_lc_sets_addCallback( string $lightsSelConnection, string $setsSe
 
 global proc string[] LLL_lc_getLinkedSets( string $lightShape )
 {
+  liqPushIdent();
 	liqlog("LLL_lc_getLinkedSets(...)");
     string $connections[] = `connectionInfo -dfs ($lightShape+".message")`;
     string $linkedSets[] = {};
@@ -289,6 +307,7 @@ global proc string[] LLL_lc_getLinkedSets( string $lightShape )
                 $linkedSets[`size($linkedSets)`] = $objects[0];
         }
     }
+  liqPopIdent();
     return $linkedSets;
 
 }
@@ -305,6 +324,7 @@ global proc string[] LLL_lc_getLinkedSets( string $lightShape )
 
 global proc LLL_exclusiveUI()
 {
+  liqPushIdent();
 	liqlog("LLL_exclusiveUI()");
 	string $liquidGlobals[] = `ls -type liquidGlobals`;
 	if ( !size( $liquidGlobals ) )
@@ -364,6 +384,7 @@ global proc LLL_exclusiveUI()
 	outlinerEditor -e -sec ("LLL_sc_lights_addCallback \""+$lightsSelConnection+"\" \""+$setsSelConnection+"\";") $lightsOutliner;
 	outlinerEditor -e -sec ("LLL_sc_sets_addCallback \""+$lightsSelConnection+"\" \""+$setsSelConnection+"\";") $setsOutliner;
 
+  liqPopIdent();
 }
 
 //--------------------------------->
@@ -372,6 +393,7 @@ global proc LLL_exclusiveUI()
 
 global proc LLL_sc_lights_addCallback( string $lightsSelConnection, string $setsSelConnection )
 {
+  liqPushIdent();
 	liqlog("LLL_sc_lights_addCallback(...)");
 	//Display Common Links
 	string $rightSelection[], $leftSelectionShapes[];
@@ -397,6 +419,7 @@ global proc LLL_sc_lights_addCallback( string $lightsSelConnection, string $sets
 				selectionConnection -e -obj $selection $setsSelConnection;
 	}
 
+  liqPopIdent();
 }
 
 //----------------------------->
@@ -405,6 +428,7 @@ global proc LLL_sc_lights_addCallback( string $lightsSelConnection, string $sets
 
 global proc LLL_sc_sets_addCallback( string $lightsSelConnection, string $setsSelConnection )
 {
+  liqPushIdent();
 	liqlog("LLL_sc_sets_addCallback(...)");
 	string $leftSelectionShapes[], $leftSelectionLinked[];
 	string $leftSelection[] = `selectionConnection -q -obj $lightsSelConnection`;
@@ -444,6 +468,7 @@ global proc LLL_sc_sets_addCallback( string $lightsSelConnection, string $setsSe
 			LLL_link($shape, $remove);
 	}
 
+  liqPopIdent();
 }
 
 //---------------------------->
@@ -452,6 +477,7 @@ global proc LLL_sc_sets_addCallback( string $lightsSelConnection, string $setsSe
 
 global proc string[] LLL_sc_getLinkedSets( string $lightShape )
 {
+  liqPushIdent();
 	liqlog("LLL_sc_getLinkedSets(...)");
     string $connections[] = `connectionInfo -dfs ($lightShape+".message")`;
     string $linkedSets[] = {};
@@ -463,6 +489,8 @@ global proc string[] LLL_sc_getLinkedSets( string $lightShape )
         }
     }
 	$linkedSets = stringArrayRemove($linkedSets, `ls -type "objectSet"`);
+
+  liqPopIdent();
     return $linkedSets;
 
 }
@@ -479,6 +507,7 @@ global proc string[] LLL_sc_getLinkedSets( string $lightShape )
 
 global proc LLL_setsUI()
 {
+  liqPushIdent();
 	liqlog("LLL_setsUI()");
 	string $liquidGlobals[] = `ls -type liquidGlobals`;
 	if ( !size( $liquidGlobals ) )
@@ -533,6 +562,7 @@ global proc LLL_setsUI()
 	outlinerEditor -e -sec ("LLL_SM_sets_addCallback \""+$setsSelConnection+"\" \""+$membSelConnection+"\";") $setsOutliner;
 	outlinerEditor -e -sec ("LLL_SM_members_addCallback \""+$setsSelConnection+"\" \""+$membSelConnection+"\";") $membersOutliner;
 
+  liqPopIdent();
 }
 
 //------------------->
@@ -541,6 +571,7 @@ global proc LLL_setsUI()
 
 global proc LLL_SM_assign( string $set, string $member )
 {
+  liqPushIdent();
 	liqlog("LLL_SM_assign(...)");
 	if(`nodeType $member` != "objectSet")
     	sets -edit -forceElement $set $member;
@@ -549,6 +580,7 @@ global proc LLL_SM_assign( string $set, string $member )
 		for ($m in $members)
 			sets -e -add $set $m;
 	}
+  liqPopIdent();
 }
 
 //--------------------->
@@ -557,8 +589,10 @@ global proc LLL_SM_assign( string $set, string $member )
 
 global proc LLL_SM_unassign( string $set, string $member )
 {
+  liqPushIdent();
 	liqlog("LLL_SM_unassign(...)");
     sets -e -remove $set $member;
+  liqPopIdent();
 }
 
 //------------------------------>
@@ -567,6 +601,7 @@ global proc LLL_SM_unassign( string $set, string $member )
 
 global proc LLL_SM_sets_addCallback( string $setsSelConnection, string $membersSelConnection )
 {
+  liqPushIdent();
 	liqlog("LLL_SM_sets_addCallback(...)");
 	//Display Common Links
 	string $rightSelection[];
@@ -583,6 +618,7 @@ global proc LLL_SM_sets_addCallback( string $setsSelConnection, string $membersS
 				selectionConnection -e -obj $selection $membersSelConnection;
 	}
 
+  liqPopIdent();
 }
 
 //------------------------------->
@@ -591,6 +627,7 @@ global proc LLL_SM_sets_addCallback( string $setsSelConnection, string $membersS
 
 global proc LLL_SM_members_addCallback( string $setsSelConnection, string $membersSelConnection )
 {
+  liqPushIdent();
 	liqlog("LLL_SM_members_addCallback(...)");
 	string $leftSelectionMembers[], $commonMembers[];
 	string $leftSelection[] = `selectionConnection -q -obj $setsSelConnection`;
@@ -614,4 +651,5 @@ global proc LLL_SM_members_addCallback( string $setsSelConnection, string $membe
 			LLL_SM_unassign($set, $remove);
 	}
 
+  liqPopIdent();
 }

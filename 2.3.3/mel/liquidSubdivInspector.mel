@@ -47,6 +47,7 @@ global string $liq_inspectorWin = "liqSubdivInspectorWin";
 global int $liq_inspInCompMode;
 
 global proc liquidSubdivInspector( ) {
+  liqPushIdent();
 	liqlog("liquidSubdivInspector(...)");
 	global string $liq_inspectorWin;
 
@@ -62,9 +63,11 @@ global proc liquidSubdivInspector( ) {
   showWindow $liq_inspectorWin;  //	 show the new window
 
   scriptJob -e "SelectionChanged" liquidUpdateSubdivInspector -p $liq_inspectorWin;
+  liqPopIdent();
 }
 
 proc dispSelectedName( string $curSelection) {
+  liqPushIdent();
 	liqlog("dispSelectedName(...)");
 
   setParent liq_sbd_insp_main;
@@ -97,10 +100,12 @@ proc dispSelectedName( string $curSelection) {
 
   nameField -edit -object $curSelection liq_sbd_insp_nameObject;
 
+  liqPopIdent();
 
 }
 
 global proc liq_sbd_insp_dispAttributes( string $shape ) {
+  liqPushIdent();
 	liqlog("liq_sbd_insp_dispAttributes(...)");
 
   //string $liqNodes[] = `listConnections -s false -sh 1 -type liqSubdivNode $shape`;
@@ -166,9 +171,11 @@ global proc liq_sbd_insp_dispAttributes( string $shape ) {
     connectControl -index 2 $menu ( $attr );
   }
   setParent liq_sbd_insp_attr_tabs;
+  liqPopIdent();
 }
 
 global proc liq_sbd_insp_dispExtraTags( string $shape ) {
+  liqPushIdent();
 	liqlog("liq_sbd_insp_dispExtraTags(...)");
   string $inSetNodes[] = `listConnections -s false -type objectSet $shape`;
   string $inSetNode;
@@ -307,10 +314,12 @@ global proc liq_sbd_insp_dispExtraTags( string $shape ) {
   }
 
   setParent liq_sbd_insp_attr_tabs;
+  liqPopIdent();
 }
 
 
 proc string liq_sbd_insp_selected_mesh( string $selection ) {
+  liqPushIdent();
 	liqlog("liq_sbd_insp_selected_mesh(...)");
   string  $ret = "";
 
@@ -323,11 +332,13 @@ proc string liq_sbd_insp_selected_mesh( string $selection ) {
       $ret = $shape; // liqSubdiv selected
     // print ("node type: " + $nt + "\n" );
   }
+  liqPopIdent();
   return $ret;
 }
 
 
 global proc liquidUpdateSubdivInspector() {
+  liqPushIdent();
 	liqlog("liquidUpdateSubdivInspector(...)");
 global string $liq_inspectorWin;
 global int $liq_inspInCompMode;
@@ -423,6 +434,7 @@ string $selection[] = `ls -sl`;
   -attachControl $activeLayout "bottom" 2 liq_sbd_insp_CloseButton
   liq_sbd_insp_main_form;
 
+  liqPopIdent();
 }
 
 

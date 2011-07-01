@@ -1,9 +1,15 @@
+source xxliquidutility.mel;
 
 global proc AEliquidSetFlags( string $node )
 {
+  liqPushIdent();
+  liqlog("AEliquidSetFlags("+$node+")");
+
   editorTemplate -beginLayout "Liquid" -collapse true;
 
     editorTemplate -label "Trace Set" -addDynamicControl "liqTraceSet";
 
   editorTemplate -endLayout;
+
+  liqPopIdent();
 }

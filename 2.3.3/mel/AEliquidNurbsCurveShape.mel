@@ -1,5 +1,10 @@
+source xxliquidutility.mel;
+
 global proc AEliquidNurbsCurveShape(string $node)
 {
+  liqPushIdent();
+  liqlog("AEliquidNurbsCurveShape("+$node+")");
+
 	editorTemplate -beginLayout "Liquid"   -collapse true;
 	
 		editorTemplate -beginLayout "Rendering"  -collapse false;
@@ -11,10 +16,15 @@ global proc AEliquidNurbsCurveShape(string $node)
 		editorTemplate -endLayout;
 	
 	editorTemplate -endLayout;
+
+  liqPopIdent();
 }
 
 global proc AEliquidRenderasCurveActive(string $node)
 {
+  liqPushIdent();
+  liqlog("AEliquidRenderasCurveActive("+$node+")");
+
 	string $nodes[] = `ls -dag -sl`;
 	string $currentNode;
 	for ( $currentNode in $nodes ) {
@@ -23,4 +33,6 @@ global proc AEliquidRenderasCurveActive(string $node)
 			editorTemplate -dimControl $node "liqCurveWidth" $dfm;
 		}		
 	}
+
+  liqPopIdent();
 }

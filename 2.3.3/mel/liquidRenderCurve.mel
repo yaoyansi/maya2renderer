@@ -28,9 +28,11 @@
 //  Description:
 //  An interface for working with Renderable Curves with Liquid
 //
+source xxliquidutility.mel;
 
 global proc liquidMakeRenderCurve()
 {
+  liqPushIdent();
 	liqlog("liquidMakeRenderCurve()");
 	string $selected[] = `ls -dag -type "nurbsCurve" -sl`;
 	string $current;
@@ -54,10 +56,12 @@ global proc liquidMakeRenderCurve()
 		if ( `attributeQuery -node $current -ex "liquidCurveTipWidth"`)
 			setAttr ( $current + ".liquidCurveTipWidth" ) 0.1;
 	}
+  liqPopIdent();
 }
 
 global proc liquidUnMakeRenderCurve()
 {
+  liqPushIdent();
 	liqlog("liquidUnMakeRenderCurve()");
 	string $selected[] = `ls -dag -type "nurbsCurve" -sl`;
 	string $current;
@@ -72,11 +76,13 @@ global proc liquidUnMakeRenderCurve()
 		if ( `attributeQuery -node $current -ex "liquidCurveTipWidth"`)
 			deleteAttr ( $current + ".liquidCurveTipWidth" );
 	}
+  liqPopIdent();
 }
 
 
 global proc liquidCreateCurveGroup()
 {
+  liqPushIdent();
 	liqlog("liquidCreateCurveGroup()");
 	// have to do it different to support instances
 	string $selected[] = `ls -dag -type "transform" -sl`;
@@ -109,4 +115,5 @@ global proc liquidCreateCurveGroup()
 		addAttr -k true -dv .1 -ln "liquidCurveTipWidth" -at double $bb;
 		
 	select -r $transform;
+  liqPopIdent();
 }

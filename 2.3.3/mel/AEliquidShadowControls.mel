@@ -39,22 +39,33 @@ source xxliquidutility.mel;
 
 global proc liquidLightViewShadowNew( string $nodeDotAttr )
 {
-	liqlog("liquidLightViewShadowNew(...)");
+  liqPushIdent();
+  liqlog("liquidLightViewShadowNew(...)");
+
   string $node = basenameEx($nodeDotAttr);
   string $ctlname = ("liqViewShad"+nodeType($node));
   button -l "View Shadow Map" -c ("liquidViewShadowMap "+$node) $ctlname;
+
+  liqPopIdent();
 }
 
 global proc liquidLightViewShadowReplace( string $nodeDotAttr )
 {
-	liqlog("liquidLightViewShadowReplace(...)");
+  liqPushIdent();
+  liqlog("liquidLightViewShadowReplace(...)");
+
   string $node = basenameEx($nodeDotAttr);
   string $ctlname = ("liqViewShad"+nodeType($node));
   button -e -c ("liquidViewShadowMap "+$node) $ctlname;
+
+  liqPopIdent();
 }
 
 global proc AEliquidShadowControls( string $node )
 {
+  liqPushIdent();
+  liqlog("AEliquidShadowControls("+$node+")");
+
   editorTemplate -beginLayout "Liquid" -collapse false;
 
     editorTemplate -beginLayout "Output" -collapse false;
@@ -110,4 +121,6 @@ global proc AEliquidShadowControls( string $node )
     editorTemplate -endLayout;
 
   editorTemplate -endLayout;
+
+  liqPopIdent();
 }

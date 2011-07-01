@@ -40,6 +40,7 @@ global proc buildHypergraphNodePopupMenuItems(
 	string $hypershade,
 	string $node)
 {
+	liqPushIdent();
 	liqlog("buildHypergraphNodePopupMenuItems("+$hypershade+","+$node+")");
 	//
 	// Description:
@@ -466,4 +467,6 @@ global proc buildHypergraphNodePopupMenuItems(
 		-label "Rename"
 		-command
 		("hyperGraph -e -rename -useFeedbackList " + $hypershade);
+
+  liqPopIdent();
 }

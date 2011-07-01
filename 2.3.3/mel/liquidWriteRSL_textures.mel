@@ -30,6 +30,7 @@ global proc string[] validConnections_checker ()
 
 global proc writeRSL_checker ( string $node )
 {
+  liqPushIdent();
 	liqlog("writeRSL_checker(...)");
     beginRSL $node;
 
@@ -112,6 +113,7 @@ global proc writeRSL_checker ( string $node )
     addToRSL "}";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -127,6 +129,7 @@ global proc writeRSL_cloth (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_cloth(...)");
     beginRSL $node;
 
@@ -203,6 +206,7 @@ global proc writeRSL_cloth (
     addToRSL "}";
 
    endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -217,6 +221,7 @@ global proc writeRSL_file (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_file(...)");
     beginRSL( $node );
 
@@ -239,6 +244,7 @@ global proc writeRSL_file (
     }
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -255,6 +261,7 @@ global proc writeRSL_fractal (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_fractal(...)");
     beginRSL $node;
 
@@ -309,6 +316,7 @@ global proc writeRSL_fractal (
     }
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -324,6 +332,7 @@ global proc writeRSL_snow (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_snow(...)");
     beginRSL( $node );
 
@@ -343,6 +352,7 @@ global proc writeRSL_snow (
     addToRSL "outColor = mix( surfaceColor, snowColor, up );";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -359,6 +369,7 @@ global proc writeRSL_solidFractal (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_solidFractal(...)");
     beginRSL $node;
 
@@ -410,6 +421,7 @@ global proc writeRSL_solidFractal (
     }
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -427,6 +439,7 @@ global proc writeRSL_grid (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_grid(...)");
     beginRSL( $node );
 
@@ -484,5 +497,6 @@ global proc writeRSL_grid (
     addToRSL "}";
 
     endRSL;
+  liqPopIdent();
 }
 

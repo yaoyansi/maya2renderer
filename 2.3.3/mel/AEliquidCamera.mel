@@ -33,10 +33,13 @@
 //
 //  Returns:
 //
-
+source xxliquidutility.mel;
 
 global proc AEliquidCamera( string $node )
 {
+  liqPushIdent();
+  //liqlog("AEliquidCamera("+$node+")");
+
   editorTemplate -beginLayout "Liquid" -collapse true;
 
     editorTemplate -label "Shadow Resolution" -addControl "liqShadowResolution";
@@ -53,4 +56,6 @@ global proc AEliquidCamera( string $node )
     editorTemplate -label "Shading Rate Factor" -addControl "liqShadingRateFactor";
 
   editorTemplate -endLayout;
+
+  liqPopIdent();
 }

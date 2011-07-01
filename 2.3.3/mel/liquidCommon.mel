@@ -36,16 +36,20 @@ global string $defTextViewerName = "notepad.exe";
 global string $gLiquidVersion = "2.3.5";
 
 global proc string liquidGetUserHomeDir() {
+    liqPushIdent();
     liqlog("liquidGetUserHomeDir()");
 
 	string $homeVarName = ( `about -os` == "nt" )? "USERPROFILE" : "HOME" ;
 	string $homeGetEnv =  `getenv $homeVarName`;
 	string $homeDirectory = $homeGetEnv + "/.liquid";
 	string $liquidDirectory = $homeDirectory;
+
+    liqPopIdent();
 	return $liquidDirectory;
 }
 
 global proc int liquidCreateUserHomeDir() {
+    liqPushIdent();
     liqlog("liquidCreateUserHomeDir()");
 
 	string $liquidDirectory = liquidGetUserHomeDir();
@@ -58,10 +62,13 @@ global proc int liquidCreateUserHomeDir() {
 	  else
 		$ret = true;
 	}
+
+    liqPopIdent();
 	return $ret;
 }
 
 global proc string liquidGetUserMayaHomeDir() {
+    liqPushIdent();
     liqlog("liquidGetUserMayaHomeDir()");
 
   string $homeVarName = ( `about -os` == "nt" )? "USERPROFILE" : "HOME" ;
@@ -69,11 +76,14 @@ global proc string liquidGetUserMayaHomeDir() {
   string $homeDirectory = $homeGetEnv;
   string $mayaVersion = `about -f`;
   string $mayaDirectory = ( $homeDirectory + "/maya/" + $mayaVersion );
+
+  liqPopIdent();
   return $mayaDirectory;
 }
 
 
 global proc formAttachButtons( string $form, string $buttons[], string $valign, int $dist ) {
+    liqPushIdent();
     liqlog("formAttachButtons("+$form+","+size($buttons)+","+$valign+","+$dist+")");
 
 	int $i, $num = size( $buttons );
@@ -106,6 +116,7 @@ global proc formAttachButtons( string $form, string $buttons[], string $valign, 
 			}
 		}
 	}
+  liqPopIdent();
 }
 
 /**
@@ -115,14 +126,16 @@ global proc formAttachButtons( string $form, string $buttons[], string $valign, 
  */
 global proc string liquidGetTransform( string $shape )
 {  
+  liqPushIdent();
   liqlog("liquidGetTransform("+$shape+")");
   if ( !objExists( $shape ) ) error ("liquidGetTransform : \""+$shape+"\" does not exists !");
-  if ( nodeType( $shape ) == "transform" ) return $shape;
+  if ( nodeType( $shape ) == "transform" ) { liqPopIdent(); return $shape;}
 
   string $parents[] = `listRelatives -path -parent -type "transform" $shape`;
 
   if ( !size($parents) ) error ("liquidGetTransform : could not find a transform for \""+$shape+"\"");
 
+  liqPopIdent();
   return $parents[0];
 }
 
@@ -132,6 +145,7 @@ global proc string liquidGetTransform( string $shape )
  */
 global proc string liquidGetModifiersState()
 {
+    liqPushIdent();
 	liqlog("liquidGetModifiersState()");
 
 	int $mods = `getModifiers`;
@@ -141,11 +155,13 @@ global proc string liquidGetModifiersState()
 	if (($mods / 4) % 2) $result += ("Ctrl");
 	if (($mods / 8) % 2) $result += ("Alt");
 
+    liqPopIdent();
 	return $result;
 }
 
 global proc string liquidGetVersion()
 {
+  liqPushIdent();
   liqlog("liquidGetVersion()");
   global string $gLiquidVersion;
   if ( $gLiquidVersion == "" ) {
@@ -153,5 +169,6 @@ global proc string liquidGetVersion()
   	string $gLiquidVersionTokensA[]; tokenize $gLiquidVersion "\." $gLiquidVersionTokensA;
 	$gLiquidVersion = ( $gLiquidVersionTokensA[0] + $gLiquidVersionTokensA[1] );
   }
+  liqPopIdent();
   return $gLiquidVersion;
 }

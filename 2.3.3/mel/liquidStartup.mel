@@ -35,6 +35,7 @@ source xxliquidutility.mel;
 
 global proc string liquidGetHome()
 {
+  liqPushIdent();
   string $home = `getenv "LIQUIDHOME"`;
   if( !size( $home ) ) {
 	liqlog("liquidGetHome(...)");
@@ -47,23 +48,28 @@ global proc string liquidGetHome()
   }
   // make sure we don't have a trailing slash
   $home = substitute("/$", $home, "");
+  liqPopIdent();
   return $home;
+
 }
 
 
 global proc string liquidGetPluginName()
 {
+  liqPushIdent();
 	liqlog("liquidGetPluginName(...)");
   string $plugs[] = `pluginInfo -q -listPlugins`;
   for ( $p in $plugs ) {
-    if ( gmatch( $p, "liquid*") ) return $p;
+	  if ( gmatch( $p, "liquid*") ) { liqPopIdent();return $p;}
   }
+  liqPopIdent();
   return "";
 }
 
 
 global proc liquidLoadScripts()
 {
+  liqPushIdent();
 	liqlog("liquidLoadScripts()");
   string $mel_files[] = {
     "AEdagNodeInclude.mel",
@@ -135,12 +141,15 @@ global proc liquidLoadScripts()
   string $liquidHome = liquidGetHome();
   int $i;
   for ( $i = 0; $i < size($mel_files); $i++) {
+	liqlog( "source \"" + $liquidHome + "/mel/" + $mel_files[$i]  + "\"");
     eval( "source \"" + $liquidHome + "/mel/" + $mel_files[$i]  + "\"" );
   }
+  liqPopIdent();
 }
 
 global proc liquidMayaVersionOverwrite()
 {
+  liqPushIdent();
 	liqlog("liquidMayaVersionOverwrite()");
 	global string $liq_maya_version;
   
@@ -154,19 +163,23 @@ global proc liquidMayaVersionOverwrite()
   	eval( "source \"" + $liquidHome + "/mel/2011/liquidParamDialogWindow.mel"  + "\"" );
   } 
   
+  liqPopIdent();
 }
 
 global proc liquidAETemplateOverwrite()
 {
+  liqPushIdent();
 	liqlog("liquidAETemplateOverwrite(...)");
   //liquidDebugPrint("OVERWRITING DEFAULT AE TEMPLATES");
   // eval( "source \"" + liquidGetHome() + "/mel/AEdagNodeInclude.mel\"" );
   // eval( "source \"" + liquidGetHome() + "/mel/AEtransformTemplate.mel\"" );
+  liqPopIdent();
 }
 
 
 global proc liquidShowAbout()
 {
+  liqPushIdent();
 	liqlog("liquidShowAbout(...)");
   if (`window -exists liquidAbout`) {
     deleteUI liquidAbout;
@@ -209,10 +222,12 @@ global proc liquidShowAbout()
   formLayout -e -attachPosition liquidAbout|liquidAboutForm|liquidAboutContent "top"  0 8 liquidAbout|liquidAboutForm;
 
   showWindow liquidAbout;
+  liqPopIdent();
 }
 
 global proc liquidMenuPostVisibilityAttributes( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidMenuPostVisibilityAttributes(...)");
   int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );
 
@@ -223,47 +238,59 @@ global proc liquidMenuPostVisibilityAttributes( string $prefix )
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemVisibilityMidpoint")` )       menuItem -e -en $newStyle     ($prefix+"LiquidMenuItemVisibilityMidpoint");
 
 
+  liqPopIdent();
 }
 
 global proc liquidMenuPostRaytracingAttributes( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidMenuPostRaytracingAttributes(...)");
   int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );
 
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemDiffuseHitMode")` )       menuItem -e -en $newStyle ($prefix+"LiquidMenuItemDiffuseHitMode");
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemSpecularHitMode")` )      menuItem -e -en $newStyle ($prefix+"LiquidMenuItemSpecularHitMode");
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemTransmissionHitMode")` )  menuItem -e -en $newStyle ($prefix+"LiquidMenuItemTransmissionHitMode");
+  liqPopIdent();
 }
 
 global proc liquidMenuPostShadingAttributes( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidMenuPostShadingAttributes(...)");
   int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );
 
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemCameraHitMode")` )
      menuItem -e -en $newStyle ($prefix+"LiquidMenuItemCameraHitMode");
+  liqPopIdent();
 }
 global proc liquidMenuPostTrimCurveAttribute( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidMenuPostTrimCurveAttribute(...)");
   //int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );
 
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemTrimCurveSense")` )  
 	  menuItem -e -en true ($prefix+"LiquidMenuItemTrimCurveSense");
+  liqPopIdent();
 }
 
 global proc liquidMenuPostStitchAttribute( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidMenuPostStitchAttribute(...)");
+  liqPopIdent();
 }
 
 global proc liquidMenuPostStochasticAttribute( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidMenuPostStochasticAttribute(...)");
+  liqPopIdent();
 }
 
 global proc liquidCreateObjectsAttributesMenu( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidCreateObjectsAttributesMenu(...)");
   menuItem -label "Object Attributes" -subMenu true -tearOff true;
     menuItem -label "Create Shading Group" -command liquidCreateShadingAttributes -ann "Add Shading attributes to selected Transform node(s)";
@@ -398,10 +425,12 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
 	menuItem -label "Remove Procedural Group" -command liquidDeleteProceduralAttributes -ann "Remove Procedural control from selected node";
 
   setParent -menu ..;
+  liqPopIdent();
 }
 
 global proc liquidCreateLightsAttributesMenu( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidCreateLightsAttributesMenu(...)");
   menuItem -label "Light Attributes" -subMenu true -tearOff true;
     menuItem -label "Create Area Light Attributes" -command liquidCreateAreaLightAttributes -ann "Add Area Light attributes to selected Light shape node(s)";
@@ -430,15 +459,18 @@ global proc liquidCreateLightsAttributesMenu( string $prefix )
     menuItem -label "Add Z-Threshold" -command liquidAddZThres -ann "Add a z-threshold control to selected light(s)";
     menuItem -label "Delete Z-Threshold" -command liquidRemoveZThres -ann "Remove a z-threshold control from selected light(s)";
   setParent -menu ..;
+  liqPopIdent();
 }
 
 global proc liquidCreateSetsAttributesMenu( string $prefix )
 {
+  liqPushIdent();
 	liqlog("liquidCreateSetsAttributesMenu(...)");
   menuItem -label "Set Attributes" -subMenu true -tearOff true;
     menuItem -label "Add Trace Set Attribute" -command liquidCreateSetAttributes -ann "Add Set attributes to the selected Set node(s)";
     menuItem -label "Delete Trace Set Attribute" -command liquidDeleteSetAttributes -ann "Remove Set attributes from selected Set node(s)";
   setParent -menu ..;
+  liqPopIdent();
 }
 
 /**
@@ -446,6 +478,7 @@ global proc liquidCreateSetsAttributesMenu( string $prefix )
  */
 global proc liquidCreateMenus()
 {
+  liqPushIdent();
 	liqlog("liquidCreateMenus(...)");
   global string $gMainWindow;
 
@@ -563,6 +596,7 @@ global proc liquidCreateMenus()
       menuItem -label "Help" -ann "HTML Help" -command "liquidMenuHelp";
       menuItem -label "About..." -command "liquidShowAbout";
   }
+  liqPopIdent();
 }
 
 /**
@@ -570,24 +604,29 @@ global proc liquidCreateMenus()
  */
 global proc liquidRemoveMenus()
 {
+  liqPushIdent();
 	liqlog("liquidRemoveMenus(...)");
   deleteUI liquidMainWindowMenu;
+  liqPopIdent();
 }
 
 /**
  * Command called when the preview menu item is picked
  */
 global proc liquidRender()
-{
+{ 
+	liqPushIdent();
 	liqlog("liquidRender(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
   }
   liquid -GL;
+  liqPushIdent();
 }
 
 global proc int[] liquidPreview_getRenderViewResolution()
 {
+  liqPushIdent();
 	liqlog("liquidPreview_getRenderViewResolution(...)");
   float $xres = `getAttr liquidGlobals.xResolution`;
   float $yres = `getAttr liquidGlobals.yResolution`;
@@ -629,11 +668,13 @@ global proc int[] liquidPreview_getRenderViewResolution()
       break;
   }
 
+  liqPopIdent();
   return {$width, $heigth};
 }
 
 global proc float[] liquidPreview_getRenderViewCropWindow()
 {
+  liqPushIdent();
 	liqlog("liquidPreview_getRenderViewCropWindow(...)");
   int $imageSize[] = liquidPreview_getRenderViewResolution();
   int $renderRegion[] = `liquidRenderView -rg`;
@@ -644,27 +685,33 @@ global proc float[] liquidPreview_getRenderViewCropWindow()
   $y1 = min( 1.0, float( $imageSize[1] - $renderRegion[3] - 2 ) / ( $imageSize[1] ) );
   $y2 = min( 1.0, float( $imageSize[1] - $renderRegion[2] - 1 ) / ( $imageSize[1] ) );
 
+  liqPopIdent();
   return {$x1, $x2, $y1, $y2};
 }
 
 global proc liquidmayaCmdlineRender( string $options )
 {
+  liqPushIdent();
 	liqlog("liquidmayaCmdlineRender(...)");
   string $cmd = ( "liquid -GL " + $options );
   eval $cmd;
+  liqPopIdent();
 }
 
 global proc liquidmayaBatchRender( string $options )
 {
+  liqPushIdent();
 	liqlog("liquidmayaBatchRender("+$options+")");
   //if( ! `pluginInfo -q -l "liquid"` ) loadPlugin "liquid";
   if( ! `pluginInfo -q -l "liquid_2008x32d"` ) loadPlugin "liquid_2008x32d";
   string $cmd = ( "liquid -GL " + $options );
   eval $cmd;
+  liqPopIdent();
 }
 
 global proc liquidPreview()
 {
+  liqPushIdent();
 	liqlog("liquidPreview(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
@@ -679,10 +726,12 @@ global proc liquidPreview()
   }
   undoInfo -stateWithoutFlush 1;
 
+  liqPopIdent();
 }
 
 global proc liquidCropPreview()
 {
+  liqPushIdent();
 	liqlog("liquidCropPreview(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
@@ -690,21 +739,25 @@ global proc liquidCropPreview()
   int $imageSize[2] = liquidPreview_getRenderViewResolution();
   float $crop[] = liquidPreview_getRenderViewCropWindow();
   liquid -GL -renderView -x $imageSize[0] -y $imageSize[1] -cw $crop[0] $crop[1] $crop[2] $crop[3];
+  liqPopIdent();
 }
 
 
 global proc liquidRenderSelected()
 {
+  liqPushIdent();
 	liqlog("liquidRenderSelected(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
   }
 
   liquid -GL -sel;
+  liqPopIdent();
 }
 
 global proc liquidPreviewSelected()
 {
+  liqPushIdent();
 	liqlog("liquidPreviewSelected(...)");
   if ( !`liquidGlobalsExists` ) {
     liquidCreateGlobals;
@@ -712,6 +765,7 @@ global proc liquidPreviewSelected()
   liqShowRV();
   int $imageSize[2] = liquidPreview_getRenderViewResolution();
   liquid -GL -renderView -x $imageSize[0] -y $imageSize[1] -sel;
+  liqPopIdent();
 }
 
 
@@ -720,6 +774,7 @@ global proc liquidPreviewSelected()
  */
 global proc string liquidGetSceneName()
 {
+  liqPushIdent();
 	liqlog("liquidGetSceneName(...)");
   string $fullName = `file -q -a`;
   string $choppedName[];
@@ -727,7 +782,10 @@ global proc string liquidGetSceneName()
   string $shortName = $choppedName[ size( $choppedName ) - 1 ];
   tokenize $shortName "." $choppedName;
   $shortName = $choppedName[0];
+
+  liqPopIdent();
   return $shortName;
+
 }
 
 /**
@@ -735,6 +793,7 @@ global proc string liquidGetSceneName()
  */
 global proc liquidRegisterSlLib()
 {
+  liqPushIdent();
 	liqlog("liquidRegisterSlLib(...)");
   global string $gLiquidSlLibFunctions[];
   clear $gLiquidSlLibFunctions;
@@ -759,6 +818,7 @@ global proc liquidRegisterSlLib()
     warning ("The slLib is not in "+$libPath+" !!!");
   }
 
+  liqPopIdent();
 }
 
 /**
@@ -766,8 +826,10 @@ global proc liquidRegisterSlLib()
  */
 global proc liquidCleanUp()
 {
+  liqPushIdent();
 	liqlog("liquidCleanUp(...)");
   // nothing to do
+  liqPopIdent();
 }
 
 /**
@@ -777,16 +839,19 @@ global proc liquidCleanUp()
  */
 global proc liquidCreateScriptNode()
 {
+  liqPushIdent();
 	liqlog("liquidCreateScriptNode(...)");
   if ( !objExists( "liquidCleanUpNode" ) )  
 	scriptNode  -scriptType     2
                 -beforeScript   "if ( `whatIs liquid` == \"Command\" ) liquidCreateScriptNode;"
                 -afterScript    "if ( `whatIs liquid` == \"Command\" ) liquidCleanUp;"
                 -name           liquidCleanUpNode;
+  liqPopIdent();
 }
 
 global proc liquidCreateScriptJobs()
 {
+  liqPushIdent();
 	liqlog("liquidCreateScriptJobs(...)");
   // setup a scriptJob to update some widgets
   // when the renderlayers change
@@ -801,6 +866,8 @@ global proc liquidCreateScriptJobs()
   scriptJob -event "renderLayerManagerChange" "eval(\"liquidSwitchGlobalsRenderLayer\")" -protected;
   scriptJob -event "renderLayerChange" "eval(\"liquidLargeFieldUpdater;liquidAE_LifStringOverrideDisplayAll\")" -protected;
   scriptJob -event "renderLayerManagerChange" "eval(\"liquidLargeFieldUpdater;liquidAE_LifStringOverrideDisplayAll\")" -protected;
+
+  liqPopIdent();
 }
 
 /**
@@ -808,6 +875,7 @@ global proc liquidCreateScriptJobs()
  */
 global proc liquidStartup()
 {
+  liqPushIdent();
 	liqlog("liquidStartup(...)");
   // BT: the module manager takes care of sourcing so we dont want to be sourcing this lot twice
   // MM: We need to add code that checks the environment to see if we are at RSP.
@@ -824,10 +892,12 @@ global proc liquidStartup()
 
   eval "liquidAETemplateOverwrite";
   evalDeferred -lp "liquidAETemplateOverwrite";
+  liqPopIdent();
 }
 
 global proc liquidmayaBatchRenderOptions()
 {
+  liqPushIdent();
 	liqlog("liquidmayaBatchRenderOptions(...)");
 	global string $gBatchRenderWindow = "batchRenderWnd";
 	//$gBatchRenderWindow contains the window frame and 3 buttons:
@@ -864,12 +934,17 @@ global proc liquidmayaBatchRenderOptions()
 
 
 	showWindow $gBatchRenderWindow;
+  liqPopIdent();
 }
 
 //NOTE: create a xml in Maya_Root\bin\rendererDesc\, e.g. elvishrayRenderer.xml.
 global proc string liquidmayaBatchRenderOptionsString()
 {
+	liqPushIdent();
 	liqlog("elvishrayBatchRenderOptionsString()");
+
+	liqPopIdent();
 	return " -r liquid ";
+
 }
 

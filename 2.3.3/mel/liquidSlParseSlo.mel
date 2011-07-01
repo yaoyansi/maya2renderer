@@ -55,6 +55,7 @@ source xxliquidutility.mel;
 
 proc liquidSl_setShaderName( string $token )
 {
+  liqPushIdent();
 	liqlog("liquidSl_setShaderName(...)");
   global string $gLiquidSlShaderName;
 
@@ -63,11 +64,13 @@ proc liquidSl_setShaderName( string $token )
   } else {
     $gLiquidSlShaderName = basenameEx( $token );
   }
+  liqPopIdent();
 }
 
 
 proc string liquidSl_getShaderType( int $fid )
 {
+  liqPushIdent();
 	liqlog("liquidSl_getShaderType(...)");
   string $type = "";
   // The first word on the first non-empty
@@ -99,80 +102,93 @@ proc string liquidSl_getShaderType( int $fid )
     }
     $line = `fgetline $fid`;
   }
+  liqPopIdent();
   return $type;
 }
 
 proc string liquidSl_getParamName( string $line )
 {
+  liqPushIdent();
 	liqlog("liquidSl_getParamName(...)");
     string $strip = `substitute "^[^\"]*\"" $line ""`;
-    if ( $strip == $line ) return "";
+	if ( $strip == $line ) { liqPopIdent();return "";}
 
     string $name = `substitute "\".*$" $strip ""`;
-    if ( $name == $strip ) return "";
+	if ( $name == $strip ) { liqPopIdent();return "";}
 
+  liqPopIdent();
     return $name;
 }
 
 proc string liquidSl_getParamDetail( string $line )
 {
+  liqPushIdent();
 	liqlog("liquidSl_getParamDetail(...)");
     string $prefix = "\"[^\"]*parameter *";
     string $suffix = " *[floatpinvecorlsgmx]+";
 
-    if      ( `match ($prefix+"uniform"+$suffix) $line` != "" ) return "uniform";
-    else if ( `match ($prefix+"varying"+$suffix) $line` != "" ) return "varying";
+	if      ( `match ($prefix+"uniform"+$suffix) $line` != "" ) { liqPopIdent();return "uniform";}
+	else if ( `match ($prefix+"varying"+$suffix) $line` != "" ) { liqPopIdent();return "varying";}
 
+  liqPopIdent();
     return "";
 }
 
 proc int liquidSl_isOutputParam( string $line )
 {
+  liqPushIdent();
 	liqlog("liquidSl_isOutputParam(...)");
-  if ( gmatch( $line, "*output parameter*") ) return 1;
+	if ( gmatch( $line, "*output parameter*") ) { liqPopIdent();return 1;}
 
+  liqPopIdent();
   return 0;
 }
 
 proc string liquidSl_getParamType( string $line )
 {
+  liqPushIdent();
 	liqlog("liquidSl_getParamType(...)");
     string $prefix = "\"[^\"]*parameter *[uniformvaryg]+ *";
 
-    if      ( `match ($prefix+"string") $line` != "" ) return "string";
-    else if ( `match ($prefix+"shader") $line` != "" ) return "shader";
-    else if ( `match ($prefix+"float")  $line` != "" ) return "float";
-    else if ( `match ($prefix+"color")  $line` != "" ) return "color";
-    else if ( `match ($prefix+"point")  $line` != "" ) return "point";
-    else if ( `match ($prefix+"vector") $line` != "" ) return "vector";
-    else if ( `match ($prefix+"normal") $line` != "" ) return "normal";
-    else if ( `match ($prefix+"matrix") $line` != "" ) return "matrix";
+	if      ( `match ($prefix+"string") $line` != "" ) { liqPopIdent();return "string";}
+	else if ( `match ($prefix+"shader") $line` != "" ) { liqPopIdent();return "shader";}
+	else if ( `match ($prefix+"float")  $line` != "" ) { liqPopIdent();return "float";}
+	else if ( `match ($prefix+"color")  $line` != "" ) { liqPopIdent();return "color";}
+	else if ( `match ($prefix+"point")  $line` != "" ) { liqPopIdent();return "point";}
+	else if ( `match ($prefix+"vector") $line` != "" ) { liqPopIdent();return "vector";}
+	else if ( `match ($prefix+"normal") $line` != "" ) { liqPopIdent();return "normal";}
+	else if ( `match ($prefix+"matrix") $line` != "" ) { liqPopIdent();return "matrix";}
 
+  liqPopIdent();
     return "";
 }
 
 proc int liquidSl_getParamArraySize( string $line )
 {
+  liqPushIdent();
 	liqlog("liquidSl_getParamArraySize(...)");
     string $strip = `substitute "^.*[a-z]\\[" $line ""`;
-    if ( $strip == $line ) return -1;
+	if ( $strip == $line ) { liqPopIdent();return -1;}
 
     string $sizeStr = `substitute "\\].*$" $strip ""`;
-    if ( $sizeStr == $strip ) return -1;
+	if ( $sizeStr == $strip ) { liqPopIdent();return -1;}
 
-	if ($sizeStr == "") return 0;
+	if ($sizeStr == "") { liqPopIdent();return 0;}
 
     int $sizeInt = $sizeStr;
+  liqPopIdent();
     return $sizeInt;
 }
 
 proc string liquidSl_getParamDefaultF( string $value)
 {
+	liqPushIdent();
 	liqlog("liquidSl_getParamDefaultF(...)");
     string $result = "0.0";
 
     // First check for "Unknown" or null for shaders
     if ( ($value == "") || ($value == "Unknown") ) {
+		liqPopIdent();
         return $result;
     }
 
@@ -185,17 +201,20 @@ proc string liquidSl_getParamDefaultF( string $value)
     	$result += ".0";
 	}
 	
+	liqPopIdent();
     return $result;
 }
 
 proc string liquidSl_getParamDefaultS( string $value )
 {
+  liqPushIdent();
 	liqlog("liquidSl_getParamDefaultS("+$value+")");
     string $result = "\"\"";
 
     // First check for "Unknown" or null for shaders
     if ( ($value == "") || ($value == "Unknown") || ($value == "null") || ($value == "(nil)") ) {
         liqDebug("  > return, value="+$result);
+		liqPopIdent();
 		return $result;
     }
     
@@ -206,11 +225,13 @@ proc string liquidSl_getParamDefaultS( string $value )
     }
         
 	liqDebug("  >  value="+$result);
+	liqPopIdent();
     return $result;
 }
 
 proc string liquidSl_getParamDefaultM( string $value )
 {
+  liqPushIdent();
 	liqlog("liquidSl_getParamDefaultM(...)");
     string $result = ( "<<0, 0, 0, 0; " +
                         "0, 0, 0, 0;" +
@@ -219,6 +240,7 @@ proc string liquidSl_getParamDefaultM( string $value )
 
     // First check for "Unknown"
     if ( ($value == "") || ($value == "Unknown") ) {
+		liqPopIdent();
         return $result;
 	}
 
@@ -232,17 +254,19 @@ proc string liquidSl_getParamDefaultM( string $value )
                       $t[8 ]+", "+$t[9 ]+", "+$t[10]+", "+$t[11]+"; "+
                       $t[12]+", "+$t[13]+", "+$t[14]+", "+$t[15]+">>" );
 	}
-
+	liqPopIdent();
     return $result;
 }
 
 // TODO : parse the space string too? ("rgb", "current")
 proc string liquidSl_getParamDefaultV( string $value )
 {
+  liqPushIdent();
     string $result = "<<0,0,0>>";
 
     // First check for "Unknown"
     if ( ($value == "") || ($value == "Unknown") ) {
+		liqPopIdent();
         return $result;
 	}
 
@@ -254,11 +278,13 @@ proc string liquidSl_getParamDefaultV( string $value )
 		$result = ("<<"+$result+">>");
 	}
 
+	liqPopIdent();
     return $result;
 }
 
 proc string liquidSl_getParamDefault( string $line, string $paramType )
 {
+  liqPushIdent();
 	liqlog("liquidSl_getParamDefault(...)");
     string $value = "";
 	
@@ -288,12 +314,14 @@ proc string liquidSl_getParamDefault( string $line, string $paramType )
         		error( "unknown parameter type \"" + $paramType + "\"" );
     	}
 	}
+  liqPopIdent();
     return $value;
 }
 
 // Consolidated / coherent line from a sloFile
 proc string getSloLine (int $fid)
 {
+  liqPushIdent();
 	string $line = "";
 
 	// get a non empty line
@@ -313,6 +341,7 @@ proc string getSloLine (int $fid)
 		error( "mismatched opening and closing brackets in line:\n"+$line );
 	}
 
+  liqPopIdent();
 	return $line;
 }
 
@@ -324,10 +353,12 @@ proc string getSloLine (int $fid)
 
 global proc liquidSlParseSlo( string $sloFile )
 {
+  liqPushIdent();
 	liqlog("liquidSlParseSlo(...)");
     if ( ! `filetest -r $sloFile` )
     {
         error( "shader does not exist: " + $sloFile );
+		liqPopIdent();
         return;
     }
 
@@ -387,6 +418,7 @@ global proc liquidSlParseSlo( string $sloFile )
         pclose $fid;
         error( "unknown shader type \"" + $shaderType +
                "\": " + $sloFile );
+		liqPopIdent();
         return;
     }
 
@@ -442,6 +474,7 @@ global proc liquidSlParseSlo( string $sloFile )
             pclose $fid;
             error( "parameter #" + $paramNum +
                    ": cannot parse parameter name" );
+			liqPopIdent();
             return;
         }
 
@@ -451,6 +484,7 @@ global proc liquidSlParseSlo( string $sloFile )
             pclose $fid;
             error( "parameter " + $paramNum +
                    ": cannot parse parameter detail > " + $line );
+			liqPopIdent();
             return;
         }
 
@@ -462,6 +496,7 @@ global proc liquidSlParseSlo( string $sloFile )
             pclose $fid;
             error( "parameter " + $paramNum +
                    ": cannot parse parameter type" );
+			liqPopIdent();
             return;
         }
 
@@ -510,4 +545,5 @@ global proc liquidSlParseSlo( string $sloFile )
     $gLiquidSlNumParams = $paramNum;
 
     pclose $fid;
+	liqPopIdent();
 }

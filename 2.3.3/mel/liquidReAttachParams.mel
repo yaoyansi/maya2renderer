@@ -37,6 +37,7 @@ source xxliquidutility.mel;
 
 global proc liquidReAttachParams ( string $currentNodeName, string $oldShader )
 {
+  liqPushIdent();
 	liqlog("liquidReAttachParams(...)");
   int $i;
   string $shaderFileName = `getAttr ( $currentNodeName + ".rmanShaderLong" )`;
@@ -86,4 +87,5 @@ global proc liquidReAttachParams ( string $currentNodeName, string $oldShader )
   if ( !size( `connectionInfo -sfd ( $currentNodeName + ".liquidShaderManager" )` ) ) {
     connectAttr -f ("liquidGlobals.liquid"+(capitalizeString($oldShader))+"Shaders") ( $currentNodeName + ".liquidShaderManager" );
   }
+  liqPopIdent();
 }

@@ -1,5 +1,11 @@
+source xxliquidutility.mel;
+
 global proc AEliquidSubdivisionSurfaceShape(string $node)
 {
+  liqPushIdent();
+  liqlog("AEliquidSubdivisionSurfaceShape("+$node+")");
+
+
   editorTemplate -beginLayout "Liquid" -collapse true;
 
     editorTemplate  -beginLayout "Rendering" -collapse false;
@@ -9,4 +15,6 @@ global proc AEliquidSubdivisionSurfaceShape(string $node)
     editorTemplate -endLayout;
 
   editorTemplate -endLayout;
+
+  liqPopIdent();
 }

@@ -32,10 +32,13 @@
 //  Output Value:
 //	None
 // 
-
+source xxliquidutility.mel;
 
 global proc AEobjectSetTemplate ( string $nodeName )
 {
+  liqPushIdent();
+  liqlog("AEobjectSetTemplate("+$nodeName+")");
+
 	editorTemplate -beginScrollLayout;
 		AEobjectSetNoScroll $nodeName;
 
@@ -43,4 +46,6 @@ global proc AEobjectSetTemplate ( string $nodeName )
 
 	editorTemplate -addExtraControls;
 	editorTemplate -endScrollLayout;
+
+  liqPopIdent();
 }

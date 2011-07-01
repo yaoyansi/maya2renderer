@@ -14,6 +14,7 @@ global proc string[] validConnections_condition ()
 
 global proc writeRSL_condition ( string $node )
 {
+  liqPushIdent();
 	liqlog("writeRSL_condition(...)");
     beginRSL $node;
 
@@ -92,6 +93,7 @@ global proc writeRSL_condition ( string $node )
     addToRSL "}";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -106,6 +108,7 @@ global proc writeRSL_multiplyDivide (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_multiplyDivide(...)");
     beginRSL $node;
 
@@ -136,6 +139,7 @@ global proc writeRSL_multiplyDivide (
     addToRSL "}";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -150,6 +154,7 @@ global proc writeRSL_place2dTexture (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_place2dTexture(...)");
     beginRSL $node;
 
@@ -161,6 +166,7 @@ global proc writeRSL_place2dTexture (
     addToRSL "outUV[ 1 ] = mod( s * repeatUV[ 1 ], 1 );";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -176,6 +182,7 @@ global proc writeRSL_reverse (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_reverse(...)");
     beginRSL( $node );
 
@@ -226,6 +233,7 @@ global proc writeRSL_reverse (
     }
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -242,6 +250,7 @@ global proc writeRSL_samplerInfo (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_samplerInfo(...)");
     beginRSL $node;
 
@@ -333,6 +342,7 @@ global proc writeRSL_samplerInfo (
         addToRSL "facingRatio = Nf . normalize( -I );";
     }
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -347,6 +357,7 @@ global proc writeRSL_blendColors (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_blendColors(...)");
     beginRSL $node;
 
@@ -358,6 +369,7 @@ global proc writeRSL_blendColors (
     addToRSL "outColor = mix( color2, color1, blender );";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -372,6 +384,7 @@ global proc writeRSL_gammaCorrect (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_gammaCorrect(...)");
     beginRSL $node;
 
@@ -386,6 +399,7 @@ global proc writeRSL_gammaCorrect (
     addToRSL "outValue = vector ( outR, outG, out B );";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -400,6 +414,7 @@ global proc writeRSL_hsvToRgb (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_hsvToRgb(...)");
     beginRSL( $node );
 
@@ -466,6 +481,7 @@ global proc writeRSL_hsvToRgb (
     addToRSL "}";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -480,6 +496,7 @@ global proc writeRSL_luminance (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_luminance(...)");
     beginRSL( $node );
 
@@ -515,6 +532,7 @@ global proc writeRSL_luminance (
     addToRSL "           0.11 * zcomp(value);";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -529,6 +547,7 @@ global proc writeRSL_rgbToHsv (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_rgbToHsv(...)");
     beginRSL( $node );
 
@@ -591,6 +610,7 @@ global proc writeRSL_rgbToHsv (
     addToRSL "outHsv = ( H, S, V );";
 
     endRSL;
+  liqPopIdent();
 }
 
 //--------------------------------------------------------------------
@@ -607,6 +627,7 @@ global proc writeRSL_clamp (
     string $node
 )
 {
+  liqPushIdent();
 	liqlog("writeRSL_clamp(...)");
     beginRSL( $node );
 
@@ -691,5 +712,6 @@ global proc writeRSL_clamp (
     }
 
     endRSL;
+  liqPopIdent();
 }
 

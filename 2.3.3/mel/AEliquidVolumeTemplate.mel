@@ -1,6 +1,10 @@
+source xxliquidutility.mel;
 
 global proc AEliquidVolumeTemplate( string $nodeName )
 {
+  liqPushIdent();
+  liqlog("AEliquidVolumeTemplate("+$nodeName+")");
+
   layout -e -vis false "AEcontrolFormLayout";
 
   editorTemplate -callCustom ("liquidPreviewSwatchNew "+$nodeName) ("liquidPreviewSwatchReplace "+$nodeName) "message";
@@ -41,5 +45,7 @@ global proc AEliquidVolumeTemplate( string $nodeName )
 
   editorTemplate -endScrollLayout;
   layout -e -vis true "AEcontrolFormLayout";
+
+  liqPopIdent();
 }
 

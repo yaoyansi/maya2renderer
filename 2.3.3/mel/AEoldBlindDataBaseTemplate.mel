@@ -2,11 +2,14 @@
 // version 0.1
 // 20th of May 2005, lunchTime
 // philippe.leprince@framestore-cfc.com
-
+source xxliquidutility.mel;
 
 
 global proc AEoBDupdateLiqShaderParams( string $attr )
 {
+  liqPushIdent();
+  liqlog("AEoBDupdateLiqShaderParams("+$attr+")");
+
 	global string $AEliqShaderParams[];
 	string $nodeName = match("[A-Za-z0-9_]+", $attr);
 	string $userDefinedAttr[] = `listAttr -ud $nodeName`;
@@ -25,12 +28,17 @@ global proc AEoBDupdateLiqShaderParams( string $attr )
 		}
 		if ( $tmp[$i] != "" ) $AEliqShaderParams[size( $AEliqShaderParams )] = $tmp[$i];
 	}
+
+  liqPopIdent();
 }
 
 global proc AEoBDliqRmanShaderFieldReplace( string $attr )
 {
+  liqPushIdent();
+  liqlog("AEoBDliqRmanShaderFieldReplace("+$attr+")");
+
 	string $nodeName = match("[A-Za-z0-9_]+", $attr);
-	if ( $nodeName == "liquidGlobals" ) return;
+	if ( $nodeName == "liquidGlobals" ){  liqPopIdent(); return;}
 
 	global string $AEliqShaderParams[];
 	AEoBDupdateLiqShaderParams( $attr );
@@ -68,11 +76,17 @@ global proc AEoBDliqRmanShaderFieldReplace( string $attr )
 		setParent ..;
 	setUITemplate -ppt;
 
+  liqPopIdent();
 }
 
 global proc AEoBDliqRmanShaderFieldNew( string $attr )
 {
+  liqPushIdent();
+  liqlog("AEoBDliqRmanShaderFieldNew("+$attr+")");
+
 	AEoBDliqRmanShaderFieldReplace $attr;
+
+  liqPopIdent();
 }
 
 
@@ -80,6 +94,8 @@ global proc AEoBDliqRmanShaderFieldNew( string $attr )
 
 global proc AEoldBlindDataBaseTemplate ( string $nodeName )
 {
+  liqPushIdent();
+  liqlog("AEoldBlindDataBaseTemplate("+$nodeName+")");
 
 	AEoBDupdateLiqShaderParams( $nodeName );
 
@@ -116,6 +132,8 @@ global proc AEoldBlindDataBaseTemplate ( string $nodeName )
 		editorTemplate -endLayout;
 
 	editorTemplate -endScrollLayout;
+
+  liqPopIdent();
 }
 
 

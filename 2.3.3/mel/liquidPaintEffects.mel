@@ -32,6 +32,7 @@ source xxliquidutility.mel;
 
 global proc liquidAddPFXAttributes()
 {
+  liqPushIdent();
 	liqlog("liquidAddPFXAttributes()");
 	string $list[] = `ls -dag -type "stroke" -sl`;
 	for( $s in $list )
@@ -60,10 +61,13 @@ global proc liquidAddPFXAttributes()
 		if( !attributeExists( "liquidCurveID", $s ) )
 			addAttr -ln liquidCurveID -at bool -dv false $s;
 	}
+
+  liqPopIdent();
 }
 
 global proc liquidRemovePFXAttributes()
 {
+  liqPushIdent();
 	liqlog("liquidRemovePFXAttributes()");
 	string $list[] = `ls -dag -type "stroke" -sl`;
 	for( $s in $list )
@@ -92,5 +96,6 @@ global proc liquidRemovePFXAttributes()
 		if( attributeExists( "liquidCurveID", $s ) )
 			deleteAttr -at liquidCurveID $s;
 	}
+  liqPopIdent();
 }
 

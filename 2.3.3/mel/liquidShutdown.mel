@@ -38,8 +38,10 @@ source xxliquidutility.mel;
 
 global proc liquidShutdown()
 {
+  liqPushIdent();
 	liqlog("liquidShutdown()");
     if ( `menu -exists liquidMainWindowMenu` ) deleteUI liquidMainWindowMenu;
     unregisterLiquidRenderer();
+  liqPopIdent();
 }
 

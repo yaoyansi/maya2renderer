@@ -38,16 +38,19 @@ source xxliquidutility.mel;
 
 global proc liquidContainer_notYet()
 {
+	liqPushIdent();
   //liqlog("liquidContainer_notYet()");
   warning ("Not implemented Yet !");
+  liqPopIdent();
 }
 
 global proc int liquidContainerWindowIsOpen( string $shortContainerName )
 {  
+  liqPushIdent();
   liqlog("liquidContainerWindowIsOpen("+$shortContainerName+")");
 
-  if ( `window -q -ex ("liquidContainerWindow"+$shortContainerName)` ) return true;
-  else return false;
+  if ( `window -q -ex ("liquidContainerWindow"+$shortContainerName)` ) {  liqPopIdent(); return true;}
+  else{ liqPopIdent(); return false;}
 }
 
 /**
@@ -56,7 +59,9 @@ global proc int liquidContainerWindowIsOpen( string $shortContainerName )
  */
 global proc string[] liquidContainer_nodeDragCB( string $dragControl, int $x, int $y, int $mods )
 {
+	liqPushIdent();
   liqlog("liquidContainer_nodeDragCB("+$dragControl+","+$x+","+$y+","+$mods+")");
+  liqPopIdent();
   return {};
 }
 
@@ -67,6 +72,7 @@ global proc string[] liquidContainer_nodeDragCB( string $dragControl, int $x, in
  */
 global proc liquidContainer_nodeDropCB( string $dragControl, string $dropControl, string $msgs[], int $x, int $y, int $type )
 {
+	liqPushIdent();
   liqlog("liquidContainer_nodeDropCB("+$dragControl+","+$dropControl+","+size($msgs)+","+$x+","+$y+","+$type+")");
   //string $nodeLayout = substitute("_[a-zA-Z0-9]+$", $dragControl, "" );
   //string $gridLayout = substitute("|[a-zA-Z0-9_]+$", $nodeLayout, "" );
@@ -84,6 +90,7 @@ global proc liquidContainer_nodeDropCB( string $dragControl, string $dropControl
   //print ($x+"/"+$cellw+", "+$y+"/"+$cellh+" -> "+$cellx+" "+$celly+" = "+$newPos+"\n");
   //
   //gridLayout -e -pos $nodeLayout $newPos $gridLayout;
+  liqPopIdent();
 }
 
 /**
@@ -93,6 +100,7 @@ global proc liquidContainer_nodeDropCB( string $dragControl, string $dropControl
  */
 global proc string liquidContainer_getHistoryDir()
 { 
+	liqPushIdent();
 	liqlog("liquidContainer_getHistoryDir()");
   // retrieve the current project path
   string $projectPath = `workspace -q -rootDirectory`;
@@ -104,8 +112,10 @@ global proc string liquidContainer_getHistoryDir()
 
   if ( $failure ) {
     warning ("Could not create \""+$historyDir+"\"");
-    return "";
+    liqPopIdent();
+	return "";
   }
+  liqPopIdent();
   return $historyDir;
 }
 
@@ -115,22 +125,25 @@ global proc string liquidContainer_getHistoryDir()
  */
 global proc int liquidContainer_import_sanityCheck( string $filePath )
 {
+	liqPushIdent();
   liqlog("liquidContainer_import_sanityCheck("+$filePath+")");
 
   string $containerList[] = liquidContainer_getContainerList();
   int $result = 0;
   for ( $c in $containerList ) {
-    print ($c+".rmanShaderLong\n");
+    liqlog ($c+".rmanShaderLong\n");
     if ( objExists( ($c+".rmanShaderLong") ) && `getAttr ($c+".rmanShaderLong")` == $filePath ) {
       $result = 1;
       break;
     }
   }
+  liqPopIdent();
   return $result;
 }
 
 global proc int liquidContainer_import_doIt( string $shortContainerName, string $filePath, string $fileType )
 {
+  liqPushIdent();
   liqlog ("liquidContainer_import_doIt("+$shortContainerName+","+$filePath+","+$fileType+")");
 
   // file readable ?
@@ -144,7 +157,7 @@ global proc int liquidContainer_import_doIt( string $shortContainerName, string 
     string $replace = `confirmDialog  -title "Confirm" -message "This Container already exists !"
                                       -button "Import as new container" -button "Cancel" -defaultButton "Cancel"
                                       -cancelButton "Cancel" -dismissString "Cancel"`;
-    if ( $replace == "Cancel" ) return 1;
+	if ( $replace == "Cancel" ) { liqPopIdent(); return 1;}
   }
 
   float $containerVersion, $containerFileVersion;
@@ -295,6 +308,7 @@ global proc int liquidContainer_import_doIt( string $shortContainerName, string 
   // refresh the list in fluid
   liquidFluidUpdateList();
 
+  liqPopIdent();
   return true;
 }
 
@@ -309,6 +323,7 @@ global proc int liquidContainer_import_doIt( string $shortContainerName, string 
  */
 global proc int liquidContainer_export_doIt( string $shortContainerName, string $filePath, string $fileType )
 {  
+  liqPushIdent();
   liqlog ("liquidContainer_export_doIt("+$shortContainerName+","+$filePath+","+$fileType+")");
   float $version = 1.0;
 
@@ -345,7 +360,7 @@ global proc int liquidContainer_export_doIt( string $shortContainerName, string 
 
     if ( $replace == "Yes" ) {
       string $historyDir = liquidContainer_getHistoryDir();
-      if ( $historyDir == "" ) return false;
+	  if ( $historyDir == "" ){ liqPopIdent(); return false;}
 
       // get the current file version
       int $fhdl = `fopen $filePath "r"`;
@@ -361,7 +376,7 @@ global proc int liquidContainer_export_doIt( string $shortContainerName, string 
       sysFile -move $backupPath $filePath;
       $version++;
 
-    } else return true;
+	} else{  liqPopIdent();  return true;}
 
   }
 
@@ -454,8 +469,9 @@ global proc int liquidContainer_export_doIt( string $shortContainerName, string 
   if ( !objExists( ($shortContainerName+".containerPath") ) ) addAttr -dt "string" -ln containerPath $shortContainerName;
   setAttr -type "string" ($shortContainerName+".containerPath") $filePath;
 
-  print ("done!\n");
+  liqlog ("done!\n");
 
+  liqPopIdent();
   return true;
 }
 
@@ -463,7 +479,8 @@ global proc int liquidContainer_export_doIt( string $shortContainerName, string 
  * Opens a file browser to save a container file to disk.
  */
 global proc liquidContainer_fileBrowser( string $mode, string $shortContainerName )
-{ 
+{  
+  liqPushIdent();
   liqlog("liquidContainer_fileBrowser("+$mode+","+$shortContainerName+")");
 
   global string $gDefaultFileBrowserDir;
@@ -493,34 +510,40 @@ global proc liquidContainer_fileBrowser( string $mode, string $shortContainerNam
     if ( $action == "Export" ) window -e -title ($action+" container \""+$shortContainerName+"\"") projectViewerWindow;
     else window -e -title ($action+" container...") projectViewerWindow;
   }
+  liqPopIdent();
 }
 
 global proc string liquidContainer_getPreviewNodeName( string $shader )
-{
+{ 
+  liqPushIdent();
   liqlog("liquidContainer_fileBrowser("+$shader+")");
 
-  if ( objExists( ($shader+"_liqPreview") ) ) return ($shader+"_liqPreview");
-  else return "";
+  if ( objExists( ($shader+"_liqPreview") ) ) {  liqPopIdent();return ($shader+"_liqPreview");}
+  else{  liqPopIdent(); return "";}
 }
 
 global proc string liquidContainer_getPreviewNodeTex( string $shader )
-{
+{ 
+  liqPushIdent();
   liqlog("liquidContainer_getPreviewNodeTex("+$shader+")");
 
-  if ( objExists( ($shader+"_liqPreview") ) ) return (getAttr ($shader+"_liqPreview.fileTextureName"));
-  else return (liquidGetHome()+"/icons/noPreview.jpg");
+  if ( objExists( ($shader+"_liqPreview") ) ) {  liqPopIdent();return (getAttr ($shader+"_liqPreview.fileTextureName"));}
+  else{ liqPopIdent(); return (liquidGetHome()+"/icons/noPreview.jpg");}
 }
 
 
 // ok
 global proc string[] liquidContainer_getContainerList()
 {
+  liqPushIdent();
   liqlog("liquidContainer_getContainerList( )");
   string $containerList[];
   string $FluidNodes[] = `ls -type oldBlindDataBase`;
   for ( $node in $FluidNodes ) {
     if ( liquidGetShaderNodeType($node) == "Container" ) $containerList[size( $containerList )] = $node;
   }
+
+  liqPopIdent();
   return $containerList;
 }
 
@@ -531,10 +554,13 @@ global proc string[] liquidContainer_getContainerList()
 //ok
 global proc string[] liquidContainer_getMemberList( string $shortContainerName )
 {
+  liqPushIdent();
   liqlog("liquidContainer_getMemberList("+$shortContainerName+")");
 
   if ( !objExists( $shortContainerName ) ) error ("Container "+$shortContainerName+" dos not exist !");
   string $result[] = `listConnections -source true ($shortContainerName+".containerMembers")`;
+  
+  liqPopIdent();
   return $result;
 }
 
@@ -544,12 +570,15 @@ global proc string[] liquidContainer_getMemberList( string $shortContainerName )
 //ok
 global proc string[] liquidContainer_getMembersPath( string $shortContainerName )
 {
+  liqPushIdent();
   liqlog("liquidContainer_getMembersPath("+$shortContainerName+")");
   string $result[];
   string $membersList[] = liquidContainer_getMemberList( $shortContainerName );
   for ( $member in $membersList ) {
     $result[size( $result )] = `getAttr ($member+".rmanShaderLong")`;
   }
+
+  liqPopIdent();
   return $result;
 }
 
@@ -557,6 +586,7 @@ global proc string[] liquidContainer_getMembersPath( string $shortContainerName 
 //ok
 global proc string[] liquidContainerWin_getSelectedNodes( string $shortContainerName )
 {
+  liqPushIdent();
   liqlog("liquidContainerWin_getSelectedNodes("+$shortContainerName+")");
   string $result[];
   string $gridLayout = ("containerLayoutGrid"+$shortContainerName);
@@ -568,6 +598,7 @@ global proc string[] liquidContainerWin_getSelectedNodes( string $shortContainer
       if ( $col[0] == 0.0 && $col[1] <= 0.85 && $col[2] == 1.0 ) $result[size( $result )] = substitute( ("liquidContainerNode"+$shortContainerName), $n, "");
     }
   }
+  liqPopIdent();
   return $result;
 }
 
@@ -576,6 +607,7 @@ global proc string[] liquidContainerWin_getSelectedNodes( string $shortContainer
  */
 global proc string liquidContainer_newNode()
 {  
+  liqPushIdent();
   liqlog("liquidContainer_newNode()");
   string $containerName;
 
@@ -603,43 +635,53 @@ global proc string liquidContainer_newNode()
 
   liquidFluidUpdateList();
 
+  liqPopIdent();
   return $containerName;
 }
 
 global proc liquidContainer_selectContainer()
 {
+  liqPushIdent();
   liqlog("liquidContainer_selectContainer()");
   string $selection[] = `textScrollList -q -si liquidFluidShaderList`;
   select -cl;
   select $selection;
+
+  liqPopIdent();
 }
 
 global proc int liquidContainer_isInContainer( string $node, string $container )
 {
+  liqPushIdent();
   liqlog("liquidContainer_isInContainer("+$node+","+$container+")");
 
   int $result = false;
 
   string $members[] = liquidContainer_getMemberList( $container );
   for ( $m in $members ) {
-    if ( $m == $node ) return true;
+	  if ( $m == $node ) { liqPopIdent(); return true;}
   }
 
+  liqPopIdent();
   return $result;
 }
 
 global proc liquidContainer_fluidAssignToContainer( string $container )
 {
+	liqPushIdent();
   liqlog("liquidContainer_isInContainer("+$container+")");
 
   string $selection[] = `textScrollList -q -si liquidFluidShaderList`;
   if ( !objExists( $container ) ) error ("Container \""+$container+"\" does not exist !!");
 
   liquidContainer_assignToContainer( $container, $selection );
+  
+  liqPopIdent();
 }
 
 global proc liquidContainer_assignToContainer( string $container, string $nodes[] )
 {
+	liqPushIdent();
   liqlog("liquidContainer_isInContainer("+$container+","+size($nodes)+")");
   for ( $node in $nodes ) {
     string $type = liquidGetShaderNodeType($node);
@@ -658,10 +700,12 @@ global proc liquidContainer_assignToContainer( string $container, string $nodes[
     }
   }
   liquidContainerWin_refresh( $container, 0 );
+  liqPopIdent();
 }
 
 global proc liquidContainer_removeFromContainer( string $shader, string $shortContainerName )
 {
+	liqPushIdent();
   liqlog("liquidContainer_removeFromContainer("+$shader+","+$shortContainerName+")");
 
   string $selected[] = ($shader == "")? liquidContainerWin_getSelectedNodes( $shortContainerName ):{$shader};
@@ -679,37 +723,45 @@ global proc liquidContainer_removeFromContainer( string $shader, string $shortCo
     disconnectAttr -na ($sel+".liquidShaderManager") ($shortContainerName+".containerMembers");
 
   }
-
+  liqPopIdent();
 }
 
 global proc liquidContainer_assignNode( string $shortContainerName )
 {
+	liqPushIdent();
   liqlog("liquidContainer_assignNode("+$shortContainerName+")");
   string $selected[] = liquidContainerWin_getSelectedNodes( $shortContainerName );
   liquidFluidAssign( $selected );
+  liqPopIdent();
 }
 
 global proc liquidContainer_unAssignNode( string $shortContainerName )
 {
+	liqPushIdent();
   liqlog("liquidContainer_unAssignNode("+$shortContainerName+")");
   string $selected[] = liquidContainerWin_getSelectedNodes( $shortContainerName );
   liquidFluidUnAssign( $selected[0] );
+  liqPopIdent();
 }
 
 global proc liquidContainerWin_dropCB( string $dragControl, string $dropControl, string $msgs[], int $x, int $y, int $type )
 {
+	liqPushIdent();
   liqlog("liquidContainerWin_dropCB()");
 
-  print ("$dragControl : "+$dragControl+"\n");
-  print ("$dropControl : "+$dropControl+"\n");
-  print ("$msgs[] : "+stringArrayToString( $msgs, ", ")+"\n");
-  print ("$x : "+$x+"\n");
-  print ("$y : "+$y+"\n");
-  print ("$type : "+$type+"\n");
+  liqlog ("$dragControl : "+$dragControl+"\n");
+  liqlog ("$dropControl : "+$dropControl+"\n");
+  liqlog ("$msgs[] : "+stringArrayToString( $msgs, ", ")+"\n");
+  liqlog ("$x : "+$x+"\n");
+  liqlog ("$y : "+$y+"\n");
+  liqlog ("$type : "+$type+"\n");
+
+  liqPopIdent();
 }
 
 global proc liquidContainerWin_iconToggle( string $container, string $shader )
 {
+	liqPushIdent();
   liqlog ("* liquidContainerWin_iconToggle "+$container+" "+$shader+"\n");
 
   global float $gLiquidContainerSwatchTime;
@@ -725,7 +777,8 @@ global proc liquidContainerWin_iconToggle( string $container, string $shader )
     } else {
       //print "clic! RESET\n";
       $gLiquidContainerSwatchTime = `timerX`;
-    }
+    } 
+	liqPopIdent();
     return;
   } else {
     //print "clic! RESET\n";
@@ -773,31 +826,38 @@ global proc liquidContainerWin_iconToggle( string $container, string $shader )
     }
     canvas -e -rgbValue 0.0 0.70 1.0 $canvas;
   }
+  
+  liqPopIdent();
 }
 
 //ok
 global proc liquidContainerWin_IconRefreshSelected( string $shortContainerName, int $force )
 {
+  liqPushIdent();
   liqlog("liquidContainerWin_IconRefreshSelected(...)");
   string $selected[] = liquidContainerWin_getSelectedNodes( $shortContainerName );
   for ( $sel in $selected ) {
     liquidContainerWin_IconRefresh( $sel, $shortContainerName, $force );
   }
+  liqPopIdent();
 }
 
 //ok
 global proc liquidContainerWin_IconRefreshAll( string $shortContainerName, int $force )
 { 
+	liqPushIdent();
 	liqlog("liquidContainerWin_IconRefreshAll(...)");
   string $all[] = liquidContainer_getMemberList( $shortContainerName );
   for ( $item in $all ) {
     liquidContainerWin_IconRefresh( $item, $shortContainerName, $force );
   }
+  liqPopIdent();
 }
 
 //ok
 global proc liquidContainerWin_IconRefresh( string $shader, string $shortContainerName, int $force )
 {
+	liqPushIdent();
 	liqlog("liquidContainerWin_IconRefresh(...)");
   string $swatch =      ("liquidContainerNode"+$shortContainerName+$shader+"_swatch");
   string $previewDir =  liquidFluidGetPreviewDir();
@@ -823,10 +883,13 @@ global proc liquidContainerWin_IconRefresh( string $shader, string $shortContain
   }
 
   setAttr ($shader+"_liqPreview.fileTextureName") -type "string" $image;
+ 
+  liqPopIdent();
 }
 
 global proc liquidContainerWin_iconMenuContext( string $shader, string $shortContainerName )
 {	
+	liqPushIdent();
 	liqlog("liquidContainerWin_iconMenuContext(...)");
   string $selected[] = liquidContainerWin_getSelectedNodes( $shortContainerName );
 
@@ -852,10 +915,12 @@ global proc liquidContainerWin_iconMenuContext( string $shader, string $shortCon
     menuItem -e -enable 0 ($shortContainerName+$shader+"_pickObjMenu");
   }
 
+  liqPopIdent();
 }
 
 proc liquidContainerWin_iconMenu( string $shader, string $shortContainerName )
-{	
+{	 
+	liqPushIdent();
 	liqlog("liquidContainerWin_iconMenu(...)");
   popupMenu -pmc ("liquidContainerWin_iconMenuContext "+$shader+" "+$shortContainerName)
             ("liquidContainerNode"+$shortContainerName+$shader+"_menu");
@@ -872,15 +937,18 @@ proc liquidContainerWin_iconMenu( string $shader, string $shortContainerName )
 
     menuItem -l "Select Shader Node" -c ("select (liquidContainerWin_getSelectedNodes(\""+$shortContainerName+"\"));") ($shortContainerName+$shader+"_selectShaderNode");
     menuItem -l "Render Icon" -c ("liquidContainerWin_IconRefreshSelected \""+$shortContainerName+"\" 1") ($shortContainerName+$shader+"_renderIconMenu");
+
+  liqPopIdent();
 }
 
 global proc liquidContainerWin_iconRename( string $shader, string $newShaderName )
 {
+  liqPushIdent();
 	liqlog("liquidContainerWin_iconRename(...)");
   // rename texture preview node
   string $previewNode = liquidContainer_getPreviewNodeName( $shader );
   string $newPreviewNode = substitute( $shader, $previewNode, $newShaderName);
-  if ( !objExists( $previewNode ) ) return;
+  if ( !objExists( $previewNode ) ) {  liqPopIdent();return;}
   rename $previewNode $newPreviewNode;
 
   // rename the preview file
@@ -907,10 +975,12 @@ global proc liquidContainerWin_iconRename( string $shader, string $newShaderName
       renameUI $topLayout ( "liquidContainerNode" + $shortContainerName + $newShaderName );
     }
   }
+    liqPopIdent();
 }
 
 global proc liquidContainerWin_iconNew( string $shader, string $shortContainerName, string $parent)
 {
+	liqPushIdent();
   liqlog("liquidContainerWin_iconNew("+$shader+","+$shortContainerName+","+$parent+"\n");
   if ( !objExists( ($shader+"_liqPreview") ) ) {
     shadingNode -asTexture file -n ($shader+"_liqPreview");
@@ -918,7 +988,7 @@ global proc liquidContainerWin_iconNew( string $shader, string $shortContainerNa
   }
 
   setParent $parent;
-  print ("> > > "+$parent+"\n");
+  liqlog ("> > > "+$parent+"\n");
 
   formLayout ("liquidContainerNode"+$shortContainerName+$shader);
 
@@ -965,10 +1035,13 @@ global proc liquidContainerWin_iconNew( string $shader, string $shortContainerNa
                   -af $lb "right"   4
                   ("liquidContainerNode"+$shortContainerName+$shader);
     }
+
+	liqPopIdent();
 }
 
 global proc liquidContainerWin_refresh( string $selectedObj, int $force )
-{
+{ 
+	liqPushIdent();
   liqlog("liquidContainerWin_refresh(...)");
   string $membersShort[] = liquidContainer_getMemberList( $selectedObj );
   string $parent = ("containerLayoutGrid"+$selectedObj);
@@ -985,6 +1058,7 @@ global proc liquidContainerWin_refresh( string $selectedObj, int $force )
       liquidContainerWin_IconRefresh( $member, $selectedObj, $force );
     }
   }
+  liqPopIdent();
 }
 
 /**
@@ -992,7 +1066,8 @@ global proc liquidContainerWin_refresh( string $selectedObj, int $force )
  * \param $selectedObj The name of the container node
  */
 global proc liquidContainerWindow( string $selectedObj )
-{ 
+{  
+	liqPushIdent();
 	liqlog("liquidContainerWindow(...)");
   liquidCreateScriptNode();
   int $i;
@@ -1034,14 +1109,17 @@ global proc liquidContainerWindow( string $selectedObj )
    showWindow ( "liquidContainerWindow" + $selectedObj );
 
    liquidContainerWin_refresh( $selectedObj, 0 );
-
+ 
+   liqPopIdent();
 }
 
 global proc liquidEditAllContainers()
 {	
+	liqPushIdent();
 	liqlog("liquidEditAllContainers()");
   string $containers[] = liquidContainer_getContainerList();
   for ( $c in $containers ) {
     if ( !liquidContainerWindowIsOpen( $c ) ) liquidContainerWindow( $c );
   }
+   liqPopIdent();
 }

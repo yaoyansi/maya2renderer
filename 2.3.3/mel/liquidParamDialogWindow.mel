@@ -42,6 +42,7 @@ source xxliquidutility.mel;
 
 global proc liquidAddTextureViewerMenu( string $textFieldGrp, string $nodeDotAttr )
 {
+	liqPushIdent();
 	liqlog("liquidAddTextureViewerMenu(...)");
   string $viewer = `getAttr liquidGlobals.viewTexture`;
   if ( $viewer != "" ) {
@@ -53,15 +54,19 @@ global proc liquidAddTextureViewerMenu( string $textFieldGrp, string $nodeDotAtt
                     "  liquidTextureViewer( $file );"+
                     "}");
   }
+
+  liqPopIdent();
 }
 
 
 global proc liquidChangeTextAttr ( string $selectedObj, string $argName, string $fieldName )
 {
+  liqPushIdent();
 	liqlog("liquidChangeTextAttr(...)");
   string $fieldValue = `textFieldGrp -q -text $fieldName`;
   setAttr ( $selectedObj + "." + $argName ) -type "string" $fieldValue;
   liquidParamAU $selectedObj;
+  liqPopIdent();
 }
 
 /**
@@ -70,6 +75,7 @@ global proc liquidChangeTextAttr ( string $selectedObj, string $argName, string 
  */
 global proc liquidChangeTextFileAttr ( string $selectedObj, string $argName, string $fieldName )
 {
+  liqPushIdent();
 	liqlog("liquidChangeTextFileAttr(...)");
   string $currentAttrValue = `getAttr ($selectedObj+"."+$argName)`;
   string $defaultPath = (`getAttr liquidGlobals.textureDirectory`);
@@ -80,10 +86,12 @@ global proc liquidChangeTextFileAttr ( string $selectedObj, string $argName, str
 
   liquidChangeTextFileAttrPlus ( $selectedObj, $argName, $fieldName, $defaultPath, $fileSpec );
   liquidParamAU $selectedObj;
+  liqPopIdent();
 }
 
 global proc liquidChangeTextFileAttrPlus ( string $selectedObj, string $argName, string $fieldName, string $defaultPath, string $fileSpec )
 {
+  liqPushIdent();
 	liqlog("liquidChangeTextFileAttrPlus(...)");
   string $currentAttrValue = `getAttr ($selectedObj+"."+$argName)`;
 
@@ -106,6 +114,7 @@ global proc liquidChangeTextFileAttrPlus ( string $selectedObj, string $argName,
 
   liquidFileBrowserWindow( $defaultPath, $fileSpec, encodeString($cmd) );
 
+  liqPopIdent();
 }
 
 /*
@@ -114,6 +123,7 @@ global proc liquidChangeTextFileAttrPlus ( string $selectedObj, string $argName,
 
 global proc int liquidChangeTextFileAttrPlusCB ( string $selectedObj, string $argName, string $fieldName, string $filename, string $fileType )
 {
+  liqPushIdent();
 	liqlog("liquidChangeTextFileAttrPlusCB(...)");
   if ( $filename != "" ) {
   	$filename = `workspace -projectPath $filename`; // get relative name if possible
@@ -134,6 +144,7 @@ global proc int liquidChangeTextFileAttrPlusCB ( string $selectedObj, string $ar
     if ( $argName == "rmanShaderLong" ) 
 		eval("liquidShaderNodes_initParams( \""+$selectedObj+"\" );");
   }
+  liqPopIdent();
   return true;
 }
 
@@ -141,6 +152,7 @@ global proc int liquidChangeTextFileAttrPlusCB ( string $selectedObj, string $ar
 
 global proc liquidLifCoordSysBrowserFilter()
 {
+  liqPushIdent();
 	liqlog("liquidLifCoordSysBrowserFilter()");
   string $list[] = `ls -type liquidCoordSys`;
   string $filter = `textField -q -tx liquidLifCoordSysBrowserTF`;
@@ -150,10 +162,12 @@ global proc liquidLifCoordSysBrowserFilter()
   for ( $l in $list ) {
     if ( gmatch( $l, $filter ) ) textScrollList -e -append $l liquidLifCoordSysBrowserTSL;
   }
+  liqPopIdent();
 }
 
 global proc liquidLifCoordSysBrowser( string $selectedObj, string $argName, string $fieldName )
 {
+  liqPushIdent();
 	liqlog("liquidLifCoordSysBrowser(...)");
   string $coordSys[] = `ls -type liquidCoordSys`;
 
@@ -197,25 +211,29 @@ global proc liquidLifCoordSysBrowser( string $selectedObj, string $argName, stri
     textScrollList -e -append $c liquidLifCoordSysBrowserTSL;
   }
   showWindow liquidLifCoordSysBrowserW;
+  liqPopIdent();
 }
 
 
 global proc liquidParamAU( string $selectedObj )
 {
+  liqPushIdent();
 	liqlog("liquidParamAU(...)");
   if ( `optionVar -ex liquidAE_autoRefresh` && `optionVar -q liquidAE_autoRefresh` ) {
     trace ("+ liquidParamAU "+$selectedObj);
     liquidShaderNodePreview $selectedObj;
   }
+  liqPopIdent();
 }
 
 
 global proc liquidFluidBuildLifFile( string $longShaderName )
 {
+  liqPushIdent();
 	liqlog("liquidFluidBuildLifFile(...)");
   $longShaderName = `workspace -expandName $longShaderName`; // get absolute name from relative
   
-  print ("[liquidFluidBuildLifFile] $longShaderName = " + $longShaderName + "\n");
+  liqlog ("[liquidFluidBuildLifFile] $longShaderName = " + $longShaderName + "\n");
   
   string $longLifName = substitute( "\\..+$", $longShaderName, ".lif" );
   string $shortShaderName = basenameEx( $longShaderName );
@@ -253,10 +271,12 @@ global proc liquidFluidBuildLifFile( string $longShaderName )
   }
 
   fclose $fileHdl;
+  liqPopIdent();
 }
 
 global proc liquidFluidEditLifFile( string $selectedObj )
 {
+  liqPushIdent();
 	liqlog("liquidFluidEditLifFile(...)");
   string $longShaderName = `getAttr ( $selectedObj + ".rmanShaderLong" )`;
   $longShaderName = `workspace -expandName $longShaderName`; // get absolute name from relative
@@ -269,8 +289,10 @@ global proc liquidFluidEditLifFile( string $selectedObj )
                                     -cancelButton "No" -dismissString "No"`;
     if ( $answer == "Yes" ) 
 		liquidFluidBuildLifFile( $longShaderName );
-    else
+	else{
+        liqPopIdent();
 		return;
+	}
   }
 
   string $os = `about -os`;
@@ -292,6 +314,7 @@ global proc liquidFluidEditLifFile( string $selectedObj )
       break;
   }
 
+  liqPopIdent();
 }
 
 

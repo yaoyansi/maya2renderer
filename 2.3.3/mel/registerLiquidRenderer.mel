@@ -10,6 +10,7 @@ source xxliquidutility.mel;
 
 global proc int liquidmayaHasCommonGlobalValue( string $global )
 {
+  liqPushIdent();
 	liqlog("liquidmayaHasCommonGlobalValue(...)");
   if ( !`liquidGlobalsExists` ) {
     string $sel[] = `ls -sl`;
@@ -36,7 +37,7 @@ global proc int liquidmayaHasCommonGlobalValue( string $global )
       $isSupported = false;
       break;
   }
-
+  liqPopIdent();
   return $isSupported;
 }
 
@@ -48,6 +49,7 @@ global proc int liquidmayaHasCommonGlobalValue( string $global )
  */
 global proc string liquidmayaGetCommonGlobalValue( string $global )
 {
+  liqPushIdent();
 	liqlog("liquidmayaGetCommonGlobalValue(...)");
   string 	$value;
 
@@ -98,6 +100,7 @@ global proc string liquidmayaGetCommonGlobalValue( string $global )
       break;
   }
 
+  liqPopIdent();
   return $value;
 }
 
@@ -111,6 +114,7 @@ global proc string liquidmayaGetCommonGlobalValue( string $global )
  */
 global proc liquidmayaSetCommonGlobalValue( string $global, string $value )
 {
+  liqPushIdent();
 	liqlog("liquidmayaSetCommonGlobalValue(...)");
 
   int $intValue;
@@ -163,6 +167,7 @@ global proc liquidmayaSetCommonGlobalValue( string $global, string $value )
         + "Modify liquidmayaHasCommonGlobalValue() to fix the problem\n");
       break;
   }
+  liqPopIdent();
 }
 
 /**
@@ -173,14 +178,18 @@ global proc liquidmayaSetCommonGlobalValue( string $global, string $value )
  */
 global proc liquidRenderLogoCallback()
 {
+  liqPushIdent();
 	liqlog("liquidRenderLogoCallback()");
   string $url = `getenv "LIQUIDHELP"`;
   if ( $url == "" ) $url = "http://liquidmaya.sourceforge.net/liquidwiki/";
   evalDeferred ("showHelp -absolute \""+$url+"\"" );
+
+  liqPopIdent();
 }
 
 global proc registerLiquidRenderer()
 {
+  liqPushIdent();
 	liqlog("registerLiquidRenderer()");
   //eval "source createMayaSoftwareCommonGlobalsTab.mel";
 
@@ -230,10 +239,13 @@ global proc registerLiquidRenderer()
   // to replace MAYA_ROOT\scripts\other\mayaBatchRenderProcedure.mel
   //replaceMayaBatchRenderProcedure(1);
   updateRendererUI();
+
+  liqPopIdent();
 }
 
 global proc liquidAddTabs()
 {
+  liqPushIdent();
 	liqlog("liquidAddTabs()");
   if ( `renderer -exists "liquid"`)
   {
@@ -249,16 +261,19 @@ global proc liquidAddTabs()
                             "liquidUpdateMayaGlobals"
              liquid;
   }
+  liqPopIdent();
 }
 
 global proc unregisterLiquidRenderer()
 {
+  liqPushIdent();
 	liqlog("unregisterLiquidRenderer(...)");
 
   if ( `renderer -q -ex liquid` ) renderer -unregisterRenderer liquid;
   
   //replaceMayaBatchRenderProcedure(0);
   updateRendererUI();
+  liqPopIdent();
 }
 
 
