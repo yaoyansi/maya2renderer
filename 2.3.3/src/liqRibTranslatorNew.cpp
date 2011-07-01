@@ -4051,63 +4051,64 @@ void liqRibTranslator::oneObjectBlock(
 			{
 				RiBasis( RiBSplineBasis, 1, RiBSplineBasis, 1 );
 			} 
-
-			bool bGeometryMotion = 
-				liqglo.liqglo_doDef 
-				&& bMotionBlur
-				&& ( ribNode->object(0)->type != MRT_RibGen );
-
-			if( bGeometryMotion )
+			bool hasRibBoxData=ribNode->rib.hasGenerator()
+							|| ribNode->rib.hasReadArchive()  
+							|| ribNode->rib.hasDelayedReadArchive();
+			if(hasRibBoxData)
 			{
+				//if ribNode is tagged as readArchive or delayedReadArchive, 
+				//we do not output its geometry data.
+				liqRIBMsg("%s has ribbox data,so we do not output the deometry.", ribNode->name.asChar());
+			}else{
+				bool bGeometryMotion = 
+					liqglo.liqglo_doDef 
+					&& bMotionBlur
+					&& ( ribNode->object(0)->type != MRT_RibGen );
+
+				if( bGeometryMotion )
+				{
 #define GeometryMotionBlur_SimpleEdition
 #ifndef GeometryMotionBlur_SimpleEdition
-				// For each grain, open a new motion block...
-				for( unsigned i( 0 ); i < ribNode->object( 0 )->granularity(); i++ ) //granularity() is always 1.
-				{
-					if( ribNode->object( 0 )->isNextObjectGrainAnimated() ) //isNextObjectGrainAnimated() is always true.
+					// For each grain, open a new motion block...
+					for( unsigned i( 0 ); i < ribNode->object( 0 )->granularity(); i++ ) //granularity() is always 1.
 					{
-						if(liqglo.liqglo_relativeMotion)
-							RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
-						else
-							RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
+						if( ribNode->object( 0 )->isNextObjectGrainAnimated() ) //isNextObjectGrainAnimated() is always true.
+						{
+							if(liqglo.liqglo_relativeMotion)
+								RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
+							else
+								RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
 
-						for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
-						{ 
-							_writeObject(ribNode, currentJob, true, msampleOn);
+							for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
+							{ 
+								_writeObject(ribNode, currentJob, true, msampleOn);
+							}
+							RiMotionEnd();
+						}else {
+							RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
+
+							_writeObject(ribNode, currentJob, false, 0);
 						}
-						RiMotionEnd();
-					}else {
-						RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
-
-						_writeObject(ribNode, currentJob, false, 0);
 					}
-				}
 #else
-				if(liqglo.liqglo_relativeMotion)
-					RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
-				else
-					RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
+					if(liqglo.liqglo_relativeMotion)
+						RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
+					else
+						RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
 
-				for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
-				{ 
-					_writeObject(ribNode, currentJob, true, msampleOn);
-				}
-				RiMotionEnd();
+					for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
+					{ 
+						_writeObject(ribNode, currentJob, true, msampleOn);
+					}
+					RiMotionEnd();
 #endif
-			}else{
-				if(    ribNode->rib.hasGenerator()
-					|| ribNode->rib.hasReadArchive()  
-					|| ribNode->rib.hasDelayedReadArchive() 
-					)
-				{
-					//if ribNode is tagged as readArchive or delayedReadArchive, 
-					//we do not output its geometry data.
-					liqRIBMsg("%s has ribbox data,(and no geometry deform),so we do not output the deometry.", ribNode->name.asChar());
 				}else{
 					//ribNode->object( 0 )->writeObject();
 					_writeObject(ribNode, currentJob, false, 0);
-				}
-			}
+				}// if(bGeometryMotion)
+			}//if(hasRibBoxData)
+
+
 			// Alf: postShapeMel
 			postShapeMel(transform);
 		} // else RiArchiveRecord( RI_COMMENT, " Shapes Ignored !!" );
