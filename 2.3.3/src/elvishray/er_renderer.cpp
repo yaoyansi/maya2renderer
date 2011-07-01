@@ -27,7 +27,7 @@
 
 #include "../renderermgr.h"
 #include "../log/mayacheck.h"
-
+#include "ercall.h"
 namespace elvishray
 {
 #define _s( _log_ ) dummy.get()<< _log_ <<std::endl;
@@ -41,37 +41,9 @@ namespace elvishray
 #define _S(_call_)  my_##_call_ ; 
 
 	//static const char *LogName="d:/script.er";
-	static /*const*/ Renderer dummy; 
+	/*static const*/ Renderer dummy; 
 	// the only goal to define a Renderer variable is 
 	// to run the constructor to register this renderer.
-	//////////////////////////////////////////////////////////////////////////
-	void my_ei_transform(
-		float t00,float t01,float t02,float t03,
-		float t10,float t11,float t12,float t13,
-		float t20,float t21,float t22,float t23,
-		float t30,float t31,float t32,float t33
-		)
-	{
-		_s("this is ei_transform("<< t00 <<",...);");
-		//ei_transform(...);
-	}
-	void my_ei_scene()
-	{
-		_s("ei_scene();"); 
-	}
-	void my_ei_scene(const char *log, float a)
-	{
-		_s("ei_scene(\""<<log<<"\","<<a<<");"); 
-	}
-	void my_ei_shader(const char* shadertype, const char* param0, const float v)
-	{
-
-	}
-	void ei_shading_rate(const float v)
-	{
-
-	}
-	//////////////////////////////////////////////////////////////////////////
 	static const char *RendererName="elvishray";
 
 	Renderer::Renderer()
@@ -143,7 +115,7 @@ namespace elvishray
 		const liqString & shadowname,
 		const liqMatrix &t)
 	{
-//		_s("\n// Renderer::exportShadowPassLight()");
+		_s("\n// Renderer::exportShadowPassLight()");
 		_s("ei_shader( \"shadowlight\", \"intensity\", 10.0)");
 
 		_s("ei_light("<<shadertype<<")");
@@ -477,10 +449,6 @@ namespace elvishray
 		}	
 		_s("//### SCENE BEGIN ###");
 		_S( ei_scene() );
-		_S( ei_scene("hello.", 10.0f) );
-		float a = 30;
-		_S( ei_scene("hello.", a) );
-		//_S( ei_scene("hello.", boost::format("%f")%a) );
 
 		_s("ei_set_connection(MayaConnection::getInstance());");
 
