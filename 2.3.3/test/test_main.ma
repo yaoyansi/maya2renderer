@@ -1,6 +1,6 @@
 //Maya ASCII 2008 scene
 //Name: test_main.ma
-//Last modified: Wed, Nov 10, 2010 06:36:58 PM
+//Last modified: Thu, Nov 11, 2010 02:55:26 PM
 //Codeset: 936
 requires maya "2008";
 requires "liquid_2008x32d" "2.3.5";
@@ -1716,6 +1716,7 @@ createNode mesh -n "pSphereShape7" -p "pSphere7";
 	setAttr ".covm[0]"  0 1 1;
 	setAttr ".cdvm[0]"  0 1 1;
 createNode transform -n "spotLight5";
+	setAttr ".v" no;
 	setAttr ".t" -type "double3" 6.3741298509934632 8.9645536145283735 0.3341812347953661 ;
 	setAttr ".r" -type "double3" -51.000000000001677 42.800000000000523 4.3347761013087066e-015 ;
 createNode spotLight -n "spotLightShape5" -p "spotLight5";
@@ -1748,7 +1749,7 @@ createNode renderLayerManager -n "renderLayerManager";
 createNode renderLayer -n "defaultRenderLayer";
 	setAttr ".g" yes;
 	setAttr ".rndr" no;
-	setAttr -s 11 ".adjs";
+	setAttr -s 12 ".adjs";
 	setAttr ".adjs[0].val" 0;
 	setAttr ".adjs[1].val" 0;
 	setAttr ".adjs[2].val" 1;
@@ -1756,6 +1757,7 @@ createNode renderLayer -n "defaultRenderLayer";
 	setAttr ".adjs[4].val" 0;
 	setAttr ".adjs[5].val" 0;
 	setAttr ".adjs[6].val" -type "string" "perspShape";
+	setAttr ".adjs[8].val" 1;
 	setAttr ".adjs[9].val" 1;
 	setAttr ".adjs[10].val" 1;
 	setAttr ".adjs[12].val" 1;
@@ -1801,7 +1803,7 @@ createNode script -n "uiConfigurationScriptNode";
 		+ "                -graphType \"DAG\" \n                -updateSelection 1\n                -updateNodeAdded 1\n                -useDrawOverrideColor 0\n                -limitGraphTraversal -1\n                -iconSize \"smallIcons\" \n                -showCachedConnections 0\n                $editorName;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Hypergraph Hierarchy\")) -mbv $menusOkayInPanels  $panelName;\n\n\t\t\t$editorName = ($panelName+\"HyperGraphEd\");\n            hyperGraph -e \n                -graphLayoutStyle \"hierarchicalLayout\" \n                -orientation \"horiz\" \n                -zoom 1\n                -animateTransition 0\n                -showShapes 0\n                -showDeformers 0\n                -showExpressions 0\n                -showConstraints 0\n                -showUnderworld 0\n                -showInvisible 0\n                -transitionFrames 1\n                -freeform 0\n                -imagePosition 0 0 \n                -imageScale 1\n                -imageEnabled 0\n"
 		+ "                -graphType \"DAG\" \n                -updateSelection 1\n                -updateNodeAdded 1\n                -useDrawOverrideColor 0\n                -limitGraphTraversal -1\n                -iconSize \"smallIcons\" \n                -showCachedConnections 0\n                $editorName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"hyperShadePanel\" (localizedPanelLabel(\"Hypershade\")) `;\n\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"hyperShadePanel\" -l (localizedPanelLabel(\"Hypershade\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Hypershade\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\tif ($useSceneConfig) {\n\t\tscriptedPanel -e -to $panelName;\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"visorPanel\" (localizedPanelLabel(\"Visor\")) `;\n"
 		+ "\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"visorPanel\" -l (localizedPanelLabel(\"Visor\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Visor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"polyTexturePlacementPanel\" (localizedPanelLabel(\"UV Texture Editor\")) `;\n\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"polyTexturePlacementPanel\" -l (localizedPanelLabel(\"UV Texture Editor\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"UV Texture Editor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"multiListerPanel\" (localizedPanelLabel(\"Multilister\")) `;\n"
-		+ "\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"multiListerPanel\" -l (localizedPanelLabel(\"Multilister\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Multilister\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"renderWindowPanel\" (localizedPanelLabel(\"Render View\")) `;\n\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"renderWindowPanel\" -l (localizedPanelLabel(\"Render View\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Render View\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\tif ($useSceneConfig) {\n\t\tscriptedPanel -e -to $panelName;\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextPanel \"blendShapePanel\" (localizedPanelLabel(\"Blend Shape\")) `;\n"
+		+ "\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"multiListerPanel\" -l (localizedPanelLabel(\"Multilister\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Multilister\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"renderWindowPanel\" (localizedPanelLabel(\"Render View\")) `;\n\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"renderWindowPanel\" -l (localizedPanelLabel(\"Render View\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Render View\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextPanel \"blendShapePanel\" (localizedPanelLabel(\"Blend Shape\")) `;\n"
 		+ "\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\tblendShapePanel -unParent -l (localizedPanelLabel(\"Blend Shape\")) -mbv $menusOkayInPanels ;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tblendShapePanel -edit -l (localizedPanelLabel(\"Blend Shape\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"dynRelEdPanel\" (localizedPanelLabel(\"Dynamic Relationships\")) `;\n\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"dynRelEdPanel\" -l (localizedPanelLabel(\"Dynamic Relationships\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Dynamic Relationships\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextPanel \"devicePanel\" (localizedPanelLabel(\"Devices\")) `;\n\tif (\"\" == $panelName) {\n"
 		+ "\t\tif ($useSceneConfig) {\n\t\t\tdevicePanel -unParent -l (localizedPanelLabel(\"Devices\")) -mbv $menusOkayInPanels ;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tdevicePanel -edit -l (localizedPanelLabel(\"Devices\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"relationshipPanel\" (localizedPanelLabel(\"Relationship Editor\")) `;\n\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"relationshipPanel\" -l (localizedPanelLabel(\"Relationship Editor\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Relationship Editor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"referenceEditorPanel\" (localizedPanelLabel(\"Reference Editor\")) `;\n\tif (\"\" == $panelName) {\n"
 		+ "\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"referenceEditorPanel\" -l (localizedPanelLabel(\"Reference Editor\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Reference Editor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"componentEditorPanel\" (localizedPanelLabel(\"Component Editor\")) `;\n\tif (\"\" == $panelName) {\n\t\tif ($useSceneConfig) {\n\t\t\t$panelName = `scriptedPanel -unParent  -type \"componentEditorPanel\" -l (localizedPanelLabel(\"Component Editor\")) -mbv $menusOkayInPanels `;\n\t\t}\n\t} else {\n\t\t$label = `panel -q -label $panelName`;\n\t\tscriptedPanel -edit -l (localizedPanelLabel(\"Component Editor\")) -mbv $menusOkayInPanels  $panelName;\n\t\tif (!$useSceneConfig) {\n\t\t\tpanel -e -l $label $panelName;\n\t\t}\n\t}\n\n\n\t$panelName = `sceneUIReplacement -getNextScriptedPanel \"dynPaintScriptedPanelType\" (localizedPanelLabel(\"Paint Effects\")) `;\n"
@@ -3614,7 +3616,9 @@ createNode liquidSurface -n "lambert13";
 	setAttr ".rmt" -type "stringArray" 1 "surface"  ;
 	setAttr ".rio" -type "Int32Array" 0 ;
 createNode renderLayer -n "DeepShadow";
+	setAttr -s 2 ".adjs";
 	setAttr ".adjs[0].val" 1;
+	setAttr ".adjs[1].val" 0;
 	setAttr -s 2 ".oajs";
 	setAttr ".do" 22;
 createNode polyPlane -n "polyPlane5";
@@ -3829,13 +3833,28 @@ createNode liquidSurface -n "lambert25";
 	setAttr ".rlc" -type "stringArray" 0  ;
 	setAttr ".rmt" -type "stringArray" 1 "surface"  ;
 	setAttr ".rio" -type "Int32Array" 0 ;
+createNode liquidSurface -n "lambert26";
+	addAttr -ci true -m -sn "assignedObjects" -ln "assignedObjects" -at "message";
+	setAttr ".rms" -type "string" "lambert1";
+	setAttr ".rml" -type "string" "E:/MyDocuments/maya/projects/default/generatedShader/lambert1.slo";
+	setAttr ".rpr" -type "stringArray" 0  ;
+	setAttr ".rdt" -type "stringArray" 0  ;
+	setAttr ".rty" -type "stringArray" 0  ;
+	setAttr ".rdf" -type "stringArray" 0  ;
+	setAttr ".ras" -type "Int32Array" 0 ;
+	setAttr ".rlc" -type "stringArray" 0  ;
+	setAttr ".rmt" -type "stringArray" 1 "surface"  ;
+	setAttr ".rio" -type "Int32Array" 0 ;
+	setAttr ".pcp" -type "string" "";
+	setAttr ".pcb" -type "string" "";
+	setAttr ".ois" yes;
 select -ne :time1;
 	setAttr ".o" 1;
 select -ne :renderPartition;
 	setAttr -s 24 ".st";
 select -ne :renderGlobalsList1;
 select -ne :defaultShaderList1;
-	setAttr -s 38 ".s";
+	setAttr -s 39 ".s";
 select -ne :postProcessList1;
 	setAttr -s 2 ".p";
 select -ne :defaultRenderUtilityList1;
@@ -3846,7 +3865,7 @@ select -ne :defaultTextureList1;
 	setAttr -s 2 ".tx";
 select -ne :lambert1;
 	setAttr ".c" -type "float3" 0.50414002 0.50414002 0.50414002 ;
-	setAttr ".it" -type "float3" 0.50414002 0.50414002 0.50414002 ;
+	setAttr ".it" -type "float3" 0.81818002 0.81818002 0.81818002 ;
 select -ne :initialShadingGroup;
 	setAttr -s 65 ".dsm";
 	setAttr ".ro" yes;
@@ -4081,7 +4100,7 @@ connectAttr "polyPlane5.out" "pPlaneShape5.i";
 connectAttr "lambert21.assignedObjects" "pPlaneShape5.liquidSurfaceShaderNode";
 connectAttr "DeepShadow.ri" "pCube53.rlio[0]";
 connectAttr "polyCube53.out" "pCubeShape53.i";
-connectAttr "lambert25.assignedObjects" "pCubeShape53.liquidSurfaceShaderNode";
+connectAttr "lambert26.assignedObjects" "pCubeShape53.liquidSurfaceShaderNode";
 connectAttr "DeepShadow.ri" "spotLight3.rlio[0]";
 connectAttr "polyPlane6.out" "pPlaneShape6.i";
 connectAttr "polySphere7.out" "pSphereShape7.i";
@@ -4192,6 +4211,7 @@ connectAttr "liquidGlobals.db" "defaultRenderLayer.adjs[4].plg";
 connectAttr "liquidGlobals.ray" "defaultRenderLayer.adjs[5].plg";
 connectAttr "liquidGlobals.rc" "defaultRenderLayer.adjs[6].plg";
 connectAttr "liquidGlobals.lrp" "defaultRenderLayer.adjs[7].plg";
+connectAttr "spotLight5.v" "defaultRenderLayer.adjs[8].plg";
 connectAttr "pointLight4.v" "defaultRenderLayer.adjs[9].plg";
 connectAttr "pointLight5.v" "defaultRenderLayer.adjs[10].plg";
 connectAttr "spotLight3.v" "defaultRenderLayer.adjs[12].plg";
@@ -4352,6 +4372,7 @@ connectAttr "renderLayerManager.rlmi[22]" "DeepShadow.rlid";
 connectAttr "pCubeShape53.iog" "DeepShadow.oajs[0].opg";
 connectAttr "pPlaneShape5.iog" "DeepShadow.oajs[1].opg";
 connectAttr "spotLight3.v" "DeepShadow.adjs[0].plg";
+connectAttr "spotLight5.v" "DeepShadow.adjs[1].plg";
 connectAttr "liquid_for_DeepShadow.oc" "liquidSurface14SG.ss";
 connectAttr "liquidSurface14SG.msg" "materialInfo19.sg";
 connectAttr "liquid_for_DeepShadow.msg" "materialInfo19.m";
@@ -4423,6 +4444,7 @@ connectAttr "lambert21.msg" ":defaultShaderList1.s" -na;
 connectAttr "lambert22.msg" ":defaultShaderList1.s" -na;
 connectAttr "lambert24.msg" ":defaultShaderList1.s" -na;
 connectAttr "lambert25.msg" ":defaultShaderList1.s" -na;
+connectAttr "lambert26.msg" ":defaultShaderList1.s" -na;
 connectAttr "liquidRibBox1.msg" ":defaultRenderUtilityList1.u" -na;
 connectAttr "liquidCoShader1.msg" ":defaultRenderUtilityList1.u" -na;
 connectAttr "place2dTexture1.msg" ":defaultRenderUtilityList1.u" -na;

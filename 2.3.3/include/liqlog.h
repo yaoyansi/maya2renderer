@@ -9,6 +9,12 @@
 	liquidMessage(gLogBuffer, msgtype );\
 }
 
+//output debug info to rib file
+#define liqRIBMsg( msg,...) \
+{\
+	sprintf_s(gLogBuffer, LOG_BUFFER_LEN, (msg),__VA_ARGS__ );\
+	RiArchiveRecord( RI_COMMENT, "[DEBUG] %s", gLogBuffer );\
+}
 
 extern char gLogBuffer[LOG_BUFFER_LEN];
 

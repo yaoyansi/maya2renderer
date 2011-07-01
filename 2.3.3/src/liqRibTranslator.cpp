@@ -6587,13 +6587,18 @@ MStatus liqRibTranslator::objectBlock()
 			( ( !liqglo_currentJob.deepShadows && !m_outputShadersInShadows ) || ( liqglo_currentJob.deepShadows && !m_outputShadersInDeepShadows ) )
 			)
 			writeShaders = false;
-
+		
+		liqRIBMsg("[6] writeShaders=%d=%d && ((!%d&&!%d)||(%d&&!%d) ", writeShaders, 
+			liqglo_currentJob.isShadow, 
+			liqglo_currentJob.deepShadows, m_outputShadersInShadows, liqglo_currentJob.deepShadows, m_outputShadersInDeepShadows );
 		if( writeShaders ) 
 		{
+			liqRIBMsg("[5] hasVolumeShader=%d, m_ignoreVolumes=%d", hasVolumeShader, m_ignoreVolumes );
 			if( hasVolumeShader && !m_ignoreVolumes ) 
 			{
 				//liqShader& currentShader( liqGetShader( ribNode->assignedVolume.object() ) );
 				liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode->assignedVolume.object() );
+				liqRIBMsg("[1] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", liqglo_currentJob.isShadow, currentShader.outputInShadow );
 				// per shader shadow pass override
 				if( !liqglo_currentJob.isShadow || currentShader.outputInShadow )
 				{
@@ -6648,7 +6653,7 @@ MStatus liqRibTranslator::objectBlock()
 					}
 					else
 						RiOpacity( currentShader.rmOpacity );
-
+					liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", liqglo_currentJob.isShadow, currentShader.outputInShadow );
 					// per shader shadow pass override
 					if( !liqglo_currentJob.isShadow || currentShader.outputInShadow )
 					{
@@ -6802,8 +6807,11 @@ MStatus liqRibTranslator::objectBlock()
 		} //if( writeShaders ) 
 		else if( liqglo_currentJob.deepShadows ) 
 		{
+			liqRIBMsg("[7] liqglo_currentJob[.deepShadows=%d, .isShadow=%d ], hasSurfaceShader=%d, hasCustomSurfaceShader=%d",
+				liqglo_currentJob.deepShadows, liqglo_currentJob.isShadow, hasSurfaceShader, hasCustomSurfaceShader );
+
 			// if the current job is a deep shadow,
-			// we still want to output primitive color and opacity.
+			// we still want to output primitive color and opacity and surface shader
 			// In case of custom shaders, what should we do ? Stephane.
 			if( hasSurfaceShader && ! hasCustomSurfaceShader ) 
 			{
@@ -6832,6 +6840,12 @@ MStatus liqRibTranslator::objectBlock()
 				} 
 				else 
 					RiOpacity( currentShader.rmOpacity );
+				
+				liqRIBMsg("[8] currentShader[.filename=%s, .outputInShadow=%d]", currentShader.file.c_str(), currentShader.outputInShadow );
+				if(currentShader.outputInShadow){
+					currentShader.write(liqglo_shortShaderNames, 0);
+				}
+
 			} 
 			else 
 			{
@@ -6912,11 +6926,13 @@ MStatus liqRibTranslator::objectBlock()
 		else 
 			RiSurface( "null", RI_NULL );
 
+		liqRIBMsg("[4] hasDisplacementShader=%d, m_ignoreDisplacements=%d", hasDisplacementShader, m_ignoreDisplacements );
 		if( hasDisplacementShader && !m_ignoreDisplacements ) 
 		{
 			//liqShader & currentShader = liqGetShader( ribNode->assignedDisp.object() );
 			liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode->assignedDisp.object() );
-
+			
+			liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", liqglo_currentJob.isShadow, currentShader.outputInShadow );
 			// per shader shadow pass override
 			if( !liqglo_currentJob.isShadow || currentShader.outputInShadow )
 			{
