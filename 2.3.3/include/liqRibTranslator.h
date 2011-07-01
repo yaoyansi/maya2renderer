@@ -517,8 +517,7 @@ private :
 
 	TempControlBreak processOneFrame(
 		const unsigned int frameIndex,
-		struct liqGlobalVariable &liqglo__,
-		liqRenderScript &jobScript__
+		struct liqGlobalVariable &liqglo__
 		);
 
 private:
