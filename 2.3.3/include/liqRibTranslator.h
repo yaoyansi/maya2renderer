@@ -499,6 +499,7 @@ private :
 		const unsigned int frameIndex,
 		struct liqGlobalVariable &liqglo__
 		);
+	void doRenderView();
 
 private:
 	liqRibTranslator(const liqRibTranslator&);
