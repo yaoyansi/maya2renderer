@@ -1,0 +1,96 @@
+
+source xxliquidutility.mel;
+source liquidAttributes.mel;
+
+global proc lux_CreateMenu(string $prefix)
+{
+	liqPushIdent();
+	liqlog("lux_CreateMenu("+$prefix+")");
+
+	menuItem -label "luxrenderer menu" -subMenu true -tearOff true;
+
+		menuItem -label "add object attrs" -command lux_AddObjectAttributes -ann "Add test attributes to selected Transform node(s)";
+		menuItem -label "test1 " -subMenu true -tearOff true -postMenuCommand ("lux_MenuPost_test1 "+$prefix);
+		  menuItem -label "attr0" -command lux_AddObjectAttribute_attr0;
+		  menuItem -label "attr1" -command lux_AddObjectAttribute_attr1;
+		setParent -menu ..;
+		menuItem -label "Remove attrs" -command lux_DelObjectAttributes -ann "Delete test attributes from selected Transform node(s)";
+		menuItem -d true;
+
+    setParent -menu ..;
+
+	liqPopIdent();
+}
+//
+global proc lux_AddObjectAttributes()
+{
+  liqPushIdent();
+  liqlog("lux_AddObjectAttributes()");
+
+  lux_AddObjectAttribute_attr0();
+  lux_AddObjectAttribute_attr1();
+
+  liqPopIdent();
+}
+//
+global proc lux_AddObjectAttribute_attr0()
+{
+  liqPushIdent();
+  liqlog("lux_AddObjectAttribute_attr0()");
+  
+  string $nodes[] = liquidGetSelection( "-tr" );
+  string $currentNode;
+  for ( $currentNode in $nodes ){ 
+	  if ( !`attributeQuery -node $currentNode -ex "lux_testattr0"` ) {
+		addAttr -k true -ln "lux_testattr0" -at "float" -dv 1.0 -min 0.001 $currentNode;
+	  }
+  }
+
+  liqPopIdent();
+}
+global proc lux_AddObjectAttribute_attr1()
+{
+  liqPushIdent();
+  liqlog("lux_AddObjectAttribute_attr1()");
+
+  string $nodes[] = liquidGetSelection( "-tr" );
+  string $currentNode;
+  for ( $currentNode in $nodes ){ 
+	  if ( !`attributeQuery -node $currentNode -ex "lux_testattr1"` ) {
+		addAttr -k true -ln "lux_testattr1" -dt "string" $currentNode;
+	  }
+  }
+  liqPopIdent();
+}
+//
+global proc lux_DelObjectAttributes()
+{
+  liqPushIdent();
+  liqlog("lux_DelObjectAttributes()");
+
+  string $nodes[] = liquidGetSelection( "-tr" );
+  string $attr[] = {"lux_testattr0", "lux_testattr1"};
+  string $currentNode;
+
+  for ( $currentNode in $nodes ) 
+  {
+    for ( $a in $attr ) 
+    {
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+      {
+        // philippe: this is a fix to deal with a bug with compound attributes
+        renameAttr ( $currentNode + "."+$a ) "TO_BE_DELETED";
+        deleteAttr ( $currentNode + ".TO_BE_DELETED" );
+      }
+    }
+  }
+  liqPopIdent();
+}
+//
+global proc lux_MenuPost_test1(string $prefix)
+{
+  liqPushIdent();
+  liqlog("lux_MenuPost_test1("+$prefix+")");
+
+  liqPopIdent();
+}

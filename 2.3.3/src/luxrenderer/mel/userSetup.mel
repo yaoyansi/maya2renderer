@@ -1,0 +1,5 @@
+
+print "This is luxrenderer usersetup.mel.\n";
+
+source lux_AEliquidInstanceFlags.mel;
+source lux_CreateMenus.mel;

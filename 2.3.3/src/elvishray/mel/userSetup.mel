@@ -1,0 +1,5 @@
+
+print "This is elvishray usersetup.mel.\n";
+
+source er_AEliquidInstanceFlags.mel;
+source er_CreateMenus.mel;

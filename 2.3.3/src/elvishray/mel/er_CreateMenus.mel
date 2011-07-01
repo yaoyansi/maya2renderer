@@ -1,0 +1,96 @@
+
+source xxliquidutility.mel;
+source liquidAttributes.mel;
+
+global proc er_CreateMenu(string $prefix)
+{
+	liqPushIdent();
+	liqlog("er_CreateMenu("+$prefix+")");
+
+	menuItem -label "elvishray menu" -subMenu true -tearOff true;
+
+		menuItem -label "add object attrs" -command er_AddObjectAttributes -ann "Add test attributes to selected Transform node(s)";
+		menuItem -label "test1 " -subMenu true -tearOff true -postMenuCommand ("er_MenuPost_test1 "+$prefix);
+		  menuItem -label "attr0" -command er_AddObjectAttribute_attr0;
+		  menuItem -label "attr1" -command er_AddObjectAttribute_attr1;
+		setParent -menu ..;
+		menuItem -label "Remove attrs" -command er_DelObjectAttributes -ann "Delete test attributes from selected Transform node(s)";
+		menuItem -d true;
+
+	setParent -menu ..;
+
+	liqPopIdent();
+}
+//
+global proc er_AddObjectAttributes()
+{
+  liqPushIdent();
+  liqlog("er_AddObjectAttributes()");
+
+  er_AddObjectAttribute_attr0();
+  er_AddObjectAttribute_attr1();
+
+  liqPopIdent();
+}
+//
+global proc er_AddObjectAttribute_attr0()
+{
+  liqPushIdent();
+  liqlog("er_AddObjectAttribute_attr0()");
+  
+  string $nodes[] = liquidGetSelection( "-tr" );
+  string $currentNode;
+  for ( $currentNode in $nodes ){ 
+	  if ( !`attributeQuery -node $currentNode -ex "er_testattr0"` ) {
+		addAttr -k true -ln "er_testattr0" -at "float" -dv 1.0 -min 0.001 $currentNode;
+	  }
+  }
+
+  liqPopIdent();
+}
+global proc er_AddObjectAttribute_attr1()
+{
+  liqPushIdent();
+  liqlog("er_AddObjectAttribute_attr1()");
+
+  string $nodes[] = liquidGetSelection( "-tr" );
+  string $currentNode;
+  for ( $currentNode in $nodes ){ 
+	  if ( !`attributeQuery -node $currentNode -ex "er_testattr1"` ) {
+		addAttr -k true -ln "er_testattr1" -dt "string" $currentNode;
+	  }
+  }
+  liqPopIdent();
+}
+//
+global proc er_DelObjectAttributes()
+{
+  liqPushIdent();
+  liqlog("er_DelObjectAttributes()");
+
+  string $nodes[] = liquidGetSelection( "-tr" );
+  string $attr[] = {"er_testattr0", "er_testattr1"};
+  string $currentNode;
+
+  for ( $currentNode in $nodes ) 
+  {
+    for ( $a in $attr ) 
+    {
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+      {
+        // philippe: this is a fix to deal with a bug with compound attributes
+        renameAttr ( $currentNode + "."+$a ) "TO_BE_DELETED";
+        deleteAttr ( $currentNode + ".TO_BE_DELETED" );
+      }
+    }
+  }
+  liqPopIdent();
+}
+//
+global proc er_MenuPost_test1(string $prefix)
+{
+  liqPushIdent();
+  liqlog("er_MenuPost_test1("+$prefix+")");
+
+  liqPopIdent();
+}

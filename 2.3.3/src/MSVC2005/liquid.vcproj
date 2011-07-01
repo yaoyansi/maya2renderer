@@ -4030,6 +4030,14 @@
 					RelativePath="..\renderman\rm_renderer.h"
 					>
 				</File>
+				<Filter
+					Name="mel"
+					>
+					<File
+						RelativePath="..\renderman\mel\userSetup.mel"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="elvishray"
@@ -4074,6 +4082,22 @@
 					RelativePath="..\elvishray\MayaConnection.h"
 					>
 				</File>
+				<Filter
+					Name="mel"
+					>
+					<File
+						RelativePath="..\elvishray\mel\er_AEliquidInstanceFlags.mel"
+						>
+					</File>
+					<File
+						RelativePath="..\elvishray\mel\er_CreateMenus.mel"
+						>
+					</File>
+					<File
+						RelativePath="..\elvishray\mel\userSetup.mel"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="log"
@@ -4094,6 +4118,26 @@
 					RelativePath="..\log\mayacheck.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="luxrenderer"
+				>
+				<Filter
+					Name="mel"
+					>
+					<File
+						RelativePath="..\luxrenderer\mel\lux_AEliquidInstanceFlags.mel"
+						>
+					</File>
+					<File
+						RelativePath="..\luxrenderer\mel\lux_CreateMenus.mel"
+						>
+					</File>
+					<File
+						RelativePath="..\luxrenderer\mel\userSetup.mel"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

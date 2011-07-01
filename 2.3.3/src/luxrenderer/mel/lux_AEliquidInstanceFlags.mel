@@ -1,0 +1,15 @@
+source xxliquidutility.mel;
+
+//
+global proc AEliquidInstanceFlags_luxrenderer( string $node )
+{
+	liqPushIdent();
+	liqlog("AEliquidInstanceFlags_luxrenderer("+$node+")");
+
+	editorTemplate -beginLayout "luxrenderer" -collapse true;
+		editorTemplate -label "lux_testattr0"    -addDynamicControl "lux_testattr0";
+		editorTemplate -label "lux_testattr1"    -addDynamicControl "lux_testattr1";
+	editorTemplate -endLayout;
+
+	liqPopIdent();
+}

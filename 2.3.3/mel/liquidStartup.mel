@@ -144,6 +144,22 @@ global proc liquidLoadScripts()
 	liqlog( "source \"" + $liquidHome + "/mel/" + $mel_files[$i]  + "\"");
     eval( "source \"" + $liquidHome + "/mel/" + $mel_files[$i]  + "\"" );
   }
+
+  //source mels for each renderer
+  global string $renderer[];
+  string $liquidHome = liquidGetHome();
+  for( $r in $renderer )
+  {
+	  $usersetup = $liquidHome+"/src/"+$r+"/mel/userSetup.mel";
+	  if( `filetest -e $usersetup` ){
+		  string $cmd = "source \""+$usersetup+"\"";
+		  print ($cmd+"\n");
+		  eval($cmd);
+	  }else{
+		  print("file NOT exists:"+$usersetup+"\n");
+	  }
+  }
+
   liqPopIdent();
 }
 
@@ -595,6 +611,13 @@ global proc liquidCreateMenus()
       menuItem -d true;
       menuItem -label "Help" -ann "HTML Help" -command "liquidMenuHelp";
       menuItem -label "About..." -command "liquidShowAbout";
+
+	  //
+	  menuItem -d true;
+	  er_CreateMenu("main");
+	  //
+	  menuItem -d true;
+	  lux_CreateMenu("main");
   }
   liqPopIdent();
 }

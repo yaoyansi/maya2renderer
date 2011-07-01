@@ -1,0 +1,15 @@
+source xxliquidutility.mel;
+
+//
+global proc AEliquidInstanceFlags_elvishray( string $node )
+{
+	liqPushIdent();
+	liqlog("AEliquidInstanceFlags_elvishray("+$node+")");
+
+	editorTemplate -beginLayout "elvishray" -collapse true;
+		editorTemplate -label "er_testattr0"    -addDynamicControl "er_testattr0";
+		editorTemplate -label "er_testattr1"    -addDynamicControl "er_testattr1";
+	editorTemplate -endLayout;
+
+	liqPopIdent();
+}

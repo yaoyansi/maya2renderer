@@ -1,6 +1,6 @@
 source xxliquidutility.mel;
 
-proc string[] liquidGetSelection( string $flag )
+global proc string[] liquidGetSelection( string $flag )
 { 
 	liqlog("liquidGetSelection( "+$flag+" )");
   return ( evalEcho ("ls "+ $flag + ( ( liquidGetModifiersState() == "Alt" )? " -dag":"" )+" -sl;") );

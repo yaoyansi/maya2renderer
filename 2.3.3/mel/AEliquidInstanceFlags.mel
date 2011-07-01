@@ -18,7 +18,10 @@ proc AEliquidCreateMenu()
       liquidCreateObjectsAttributesMenu( "attrEd" );
       liquidCreateLightsAttributesMenu( "attrEd" );
       liquidCreateSetsAttributesMenu( "attrEd" );
-
+	  menuItem -d true;
+	  er_CreateMenu("attrEd");
+	  menuItem -d true;
+	  lux_CreateMenu("attrEd");
   setParent $parent;
 
   liqPopIdent();
@@ -281,6 +284,8 @@ global proc liquidSGMessageReplace( string $nodeName, string $msg )
 global proc AEliquidInstanceFlags( string $node )
 {
   liqPushIdent();
+  liqlog("AEliquidInstanceFlags("+$node+")");
+ 
   global int $gLiqNewVisibilityStyle;
 
   AEliquidCreateMenu();
@@ -451,7 +456,12 @@ global proc AEliquidInstanceFlags( string $node )
       editorTemplate -label "attribute"    -addDynamicControl "liqProceduralAttribute";
     editorTemplate -endLayout;
 
-  editorTemplate -endLayout;
+  editorTemplate -endLayout;//"Liquid"
+
+  //create elvishray attributes
+  AEliquidInstanceFlags_elvishray( $node );
+  //
+  AEliquidInstanceFlags_luxrenderer( $node );
 
   liqPopIdent();
 }
