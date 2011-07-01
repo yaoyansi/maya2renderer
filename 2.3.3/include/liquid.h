@@ -383,4 +383,8 @@ enum TempControlBreak//for my refactoring only [3/4/2011 yys]
 		continue;\
 	else if(TCB_OK == tcb){/* go ahead */}
 
+
+typedef unsigned long		ulong;
+typedef unsigned int		uint;
+
 #endif

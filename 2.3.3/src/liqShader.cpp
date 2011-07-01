@@ -36,18 +36,19 @@
 #include <maya/MPlugArray.h>
 #include <maya/MFnMatrixData.h>
 
-#include <lights.h>
+//#include <core/lights.h>
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
 #include <liqMayaNodeIds.h>
 #include <liqShaderFactory.h>
-#include <liqTokenPointer.h>
 #include <liqRibLightData.h>
 #include <liqRibTranslator.h>
 #include <liqExpression.h>
+//#include <liqTokenPointer.h>
+#include <liqGetSloInfo.h>
 
-using namespace std;
-using namespace boost;
+//using namespace std;
+//using namespace boost;
 
 
 liqShader::liqShader()
@@ -165,7 +166,7 @@ liqShader::liqShader( MObject shaderObj )
 	int success = ( shaderInfo.setShaderNode( shaderNode ) );
 	if ( !success )
 	{
-		liquidMessage( "Problem using shader '" + string( shaderNode.name().asChar() ) + "'", messageError );
+		liquidMessage( "Problem using shader '" + std::string( shaderNode.name().asChar() ) + "'", messageError );
 		rmColor[0] = 1.0;
 		rmColor[1] = 0.0;
 		rmColor[2] = 0.0;
@@ -619,7 +620,7 @@ void liqShader::appendCoShader(MObject coshader, MPlug plug)
 }
 
 
-MStatus liqShader::liqShaderParseVectorAttr ( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType )
+MStatus liqShader::liqShaderParseVectorAttr ( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType )
 {
 	MStatus status( MS::kSuccess );
 
@@ -639,7 +640,7 @@ MStatus liqShader::liqShaderParseVectorAttr ( const MFnDependencyNode& shaderNod
 }
 
 // philippe : multi attr support
-MStatus liqShader::liqShaderParseVectorArrayAttr ( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType, unsigned int arraySize )
+MStatus liqShader::liqShaderParseVectorArrayAttr ( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType, unsigned int arraySize )
 {
   MStatus status( MS::kSuccess );
 
@@ -690,8 +691,8 @@ void liqShader::write(bool shortShaderNames, unsigned int indentLevel)
 		}
 	}
 	// write shader
-	scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
-	scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
+	boost::scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
+	boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
 	assignTokenArrays( tokenPointerArray.size(), &tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
 	char* shaderFileName = shortShaderNames ? basename( const_cast<char *>(file.c_str())) : const_cast<char *>(file.c_str());
 	if( shaderSpace != "" )
@@ -757,8 +758,8 @@ void liqShader::writeAsCoShader(bool shortShaderNames, unsigned int indentLevel)
 		coShader.writeAsCoShader(shortShaderNames, indentLevel);
 	}
 	// write co-shader
-	scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
-	scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
+	boost::scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
+	boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
 	assignTokenArrays( tokenPointerArray.size(), &tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
 	char* shaderFileName = shortShaderNames ? basename( const_cast<char *>(file.c_str())) : const_cast<char *>(file.c_str());
 	if( shaderSpace != "" )
@@ -800,7 +801,7 @@ void liqShader::outputIndentation(unsigned int indentLevel)
 	}
 }
 
-MStatus liqShader::liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType )
+MStatus liqShader::liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType )
 {
 	MStatus status( MS::kSuccess );
 
@@ -848,7 +849,7 @@ void liqShader::buildJobs()
 // replace expression with calculated values
 void liqShader::scanExpressions( liqShader & currentShader )
 {
-	for ( vector< liqTokenPointer >::iterator it( currentShader.tokenPointerArray.begin() ); 
+	for ( std::vector< liqTokenPointer >::iterator it( currentShader.tokenPointerArray.begin() ); 
 		it != currentShader.tokenPointerArray.end(); 
 		it++ ) 
 	{
@@ -861,7 +862,7 @@ void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *ligh
 {
 	if( token != NULL ) 
 	{
-		string strValue( token->getTokenString() );
+		std::string strValue( token->getTokenString() );
 		LIQDEBUGPRINTF( "-> Expression:(%s)\n", token->getTokenName().c_str() );
 		// NOTE:
 		// For convenience, we use the image path instead of [MakeTexture ...],
@@ -900,7 +901,7 @@ void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *ligh
 						std::size_t loc = strValue.find_last_of('.');
 						if( loc == std::string::npos )
 							liquidMessage2(messageError,"%s has no extention!", strValue.c_str());
-						string extention;
+						std::string extention;
 						if( *(strValue.rbegin())==']' ){//if the strValue end with ']', extention should exclude the ']'
 							extention = strValue.substr(loc+1, strValue.size()-loc-2);
 							cout << "extention = "<<extention<<endl;
@@ -909,7 +910,7 @@ void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *ligh
 						}
 						thisJob.skip = ("tex"==extention);
 
-						vector<structJob>::iterator iter = liqRibTranslator::getInstancePtr()->txtList.begin();
+						std::vector<structJob>::iterator iter = liqRibTranslator::getInstancePtr()->txtList.begin();
 						while ( iter != liqRibTranslator::getInstancePtr()->txtList.end() ) {
 							if( iter->imageName == thisJob.imageName )
 								break; // already have this job

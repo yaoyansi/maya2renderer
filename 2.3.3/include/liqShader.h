@@ -33,8 +33,11 @@
 #include <maya/MString.h>
 #include <maya/MObject.h>
 
-#include <liqTokenPointer.h>
-#include <liqGetSloInfo.h>
+#include "ri_interface.h"
+
+#include "liqShaderParameterType.h"
+#include "liqTokenParameterType.h"
+
 #define MR_SURFPARAMSIZE 1024
 
 class liqTokenPointer;

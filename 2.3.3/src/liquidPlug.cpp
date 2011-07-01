@@ -78,6 +78,7 @@
 #include <liqCoShaderNode.h>
 #include <liqShaderFactory.h>
 #include <liqGlobalVariable.h>
+#include <liqGetSloInfo.h>
 
 #define LIQVENDOR "http://liquidmaya.sourceforge.net/"
 

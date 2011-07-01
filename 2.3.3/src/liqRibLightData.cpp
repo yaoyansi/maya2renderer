@@ -56,7 +56,7 @@
 
 // Liquid headers
 #include <liqGlobalHelpers.h>
-#include <liqGetSloInfo.h>
+//#include <liqGetSloInfo.h>
 #include <liqRenderer.h>
 #include <liqShaderFactory.h>
 #include <liqGlobalVariable.h>

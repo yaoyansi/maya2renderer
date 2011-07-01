@@ -49,7 +49,7 @@
 #include <liquid.h>
 #include <liqRibData.h>
 #include <liqRibObj.h>
-#include <liqTokenPointer.h>
+//#include <liqTokenPointer.h>
 //#include <liqRibNode.h>
 
 //enum transmissions {TRANS, OPAQUE, OS, SHADER};
