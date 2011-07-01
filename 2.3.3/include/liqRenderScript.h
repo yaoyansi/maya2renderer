@@ -33,7 +33,7 @@
 #include <string>
 #include <map>
 #include <vector>
-
+#include<iosfwd>
 
 
 
@@ -62,7 +62,7 @@ public:
   {
   public:
     Cmd();
-    Cmd(const std::string &c, bool r);
+	explicit Cmd(const std::string &c, bool r);
 	virtual ~Cmd();
 
 	Cmd(const Cmd& o);
@@ -78,6 +78,8 @@ public:
 
     std::string getALF() const;
     std::string getXML() const;
+  
+	std::ostream& Print(std::ostream& o) const;
 
   private:
 
@@ -113,6 +115,7 @@ public:
     std::vector<Job> childJobs;
     bool isInstance;
 
+	std::ostream& Print(std::ostream& o) const;
   private:
 
   };
@@ -161,6 +164,9 @@ private:
 	liqRenderScript(const liqRenderScript&);
 	liqRenderScript& operator=(const liqRenderScript&);
 };
+
+std::ostream& operator<<(std::ostream& o, const liqRenderScript::Cmd& renderer);
+std::ostream& operator<<(std::ostream& o, const liqRenderScript::Job& renderer);
 
 
 #endif // liqRenderScript_H

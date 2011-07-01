@@ -53,7 +53,7 @@ typedef boost::shared_ptr< liqRibData > liqRibDataPtr;
 
 class liqRibObj {
 public:
-            liqRibObj( const MDagPath &, ObjectType objType );
+    explicit liqRibObj( const MDagPath &, ObjectType objType );
 	virtual ~liqRibObj(){}
 
     AnimType compareMatrix( const liqRibObjPtr, int instance ) const;

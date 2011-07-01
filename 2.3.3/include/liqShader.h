@@ -45,7 +45,7 @@ public :
     liqShader();
     liqShader( const liqShader & src );
     liqShader & operator=( const liqShader & src );
-    liqShader ( MObject shaderObj );
+    explicit liqShader ( MObject shaderObj );
     virtual ~liqShader();
 	MStatus liqShaderParseVectorAttr( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType );
     MStatus liqShaderParseVectorArrayAttr( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType, unsigned int arraySize );

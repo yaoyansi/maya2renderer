@@ -33,6 +33,7 @@
 
 class liqEntropyRenderer : public liqRenderer {
 public:
+	explicit:
     liqEntropyRenderer(MString version)
 	: liqRenderer(REN_ENTROPY, version)
     {

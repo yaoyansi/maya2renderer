@@ -40,7 +40,7 @@
 
 class liqRibBakeSubdivisionData : public liqRibData {
 public: // Methods
-  liqRibBakeSubdivisionData( MObject mesh );
+  explicit liqRibBakeSubdivisionData( MObject mesh );
   virtual ~liqRibBakeSubdivisionData();
 
   virtual void       _write();

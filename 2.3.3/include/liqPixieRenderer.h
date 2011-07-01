@@ -33,6 +33,7 @@
 
 class liqPixieRenderer : public liqRenderer {
 public:
+	explicit 
     liqPixieRenderer(MString version)
 	: liqRenderer(REN_PIXIE, version)
     {

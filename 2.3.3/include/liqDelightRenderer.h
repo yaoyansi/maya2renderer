@@ -33,6 +33,7 @@
 
 class liqDelightRenderer : public liqRenderer {
 public:
+	explicit:
     liqDelightRenderer(MString version)
 	: liqRenderer(REN_DELIGHT, version)
     {

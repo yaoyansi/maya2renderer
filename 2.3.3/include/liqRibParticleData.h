@@ -40,7 +40,7 @@
 class liqRibParticleData : public liqRibData {
 public:
 
-  liqRibParticleData( MObject curve );
+  explicit liqRibParticleData( MObject curve );
   virtual ~liqRibParticleData(){}
 
   virtual void	_write();

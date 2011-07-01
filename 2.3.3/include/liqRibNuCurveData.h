@@ -42,7 +42,7 @@
 class liqRibNuCurveData : public liqRibData {
 public: // Methods
 
-            liqRibNuCurveData( MObject curve );
+    explicit liqRibNuCurveData( MObject curve );
 	virtual ~liqRibNuCurveData(){}
 
     virtual void       _write();

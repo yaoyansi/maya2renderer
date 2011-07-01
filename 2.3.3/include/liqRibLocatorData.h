@@ -40,7 +40,7 @@
 class liqRibLocatorData : public liqRibData {
 public: // Methods
 
-            liqRibLocatorData( MObject locator );
+    explicit liqRibLocatorData( MObject locator );
 	virtual ~liqRibLocatorData(){}
 
     virtual void       _write();

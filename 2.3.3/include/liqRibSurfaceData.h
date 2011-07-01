@@ -41,7 +41,7 @@
 class liqRibSurfaceData : public liqRibData {
 public: // Methods
 
-          liqRibSurfaceData( MObject surface );
+  explicit liqRibSurfaceData( MObject surface );
   virtual ~liqRibSurfaceData(){}
 
   virtual void          _write();

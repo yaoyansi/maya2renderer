@@ -43,7 +43,7 @@
 class liqRibMeshData : public liqRibData {
 public: // Methods
 
-          liqRibMeshData( MObject mesh );
+  explicit liqRibMeshData( MObject mesh );
   virtual ~liqRibMeshData(){}
 
   virtual void       _write();

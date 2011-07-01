@@ -33,7 +33,7 @@
 class liqRibClipPlaneData : public liqRibData {
 public: // Methods
 
-    liqRibClipPlaneData( MObject locator );
+    explicit liqRibClipPlaneData( MObject locator );
 	virtual ~liqRibClipPlaneData(){}
 
     virtual void       _write();

@@ -82,7 +82,7 @@ extern structJob liqglo_currentJob;
 class liq_particleInfo
 {
 public:
-  liq_particleInfo( int num, int id )
+  explicit liq_particleInfo( int num, int id )
     : m_particleNum( num ), m_particleId( id )
     {
       // nothing else needed
@@ -90,6 +90,10 @@ public:
 
   int m_particleNum; // index into the per particle attribute arrays
   int m_particleId; // global particle id
+
+private:
+	liq_particleInfo(const liq_particleInfo&);
+	liq_particleInfo& operator=(const liq_particleInfo&);
 };
 
 typedef shared_ptr< liq_particleInfo > liq_particleInfoPtr;

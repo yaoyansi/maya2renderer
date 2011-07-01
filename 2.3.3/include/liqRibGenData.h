@@ -65,7 +65,8 @@ private:
 
 class liqRibGenData : public liqRibData {
 public: // Methods
-    liqRibGenData( MObject obj, MDagPath path );
+    explicit liqRibGenData( MObject obj, MDagPath path );
+	virtual ~liqRibGenData(){}
 
     virtual void       _write();
     virtual bool       compare( const liqRibData & other ) const;

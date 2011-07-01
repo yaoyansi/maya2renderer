@@ -44,13 +44,14 @@
 class liqNodeSwatch : public MSwatchRenderBase
 {
   public:
-
-    liqNodeSwatch(MObject swatchObj, MObject renderObj, int resolution):
-      MSwatchRenderBase( swatchObj, renderObj, resolution ) {
-        //initialisation de l'image
-        MImage &img = image();
-        img.create(resolution,resolution);
-      }
+	  explicit 
+	  liqNodeSwatch(MObject swatchObj, MObject renderObj, int resolution)
+		  : MSwatchRenderBase( swatchObj, renderObj, resolution ) 
+	  {
+			  //initialisation de l'image
+			  MImage &img = image();
+			  img.create(resolution,resolution);
+	  }
 
     virtual         ~liqNodeSwatch () {};
 

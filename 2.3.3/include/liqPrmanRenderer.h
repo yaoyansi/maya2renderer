@@ -33,6 +33,7 @@
 
 class liqPrmanRenderer : public liqRenderer {
 public:
+	explicit 
     liqPrmanRenderer(MString version)
 	: liqRenderer(REN_PRMAN, version)
     {

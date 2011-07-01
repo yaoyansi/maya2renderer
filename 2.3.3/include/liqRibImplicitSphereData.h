@@ -40,7 +40,7 @@
 class liqRibImplicitSphereData : public liqRibData {
 public: // Methods
 
-            liqRibImplicitSphereData( MObject sphere );
+    explicit liqRibImplicitSphereData( MObject sphere );
 	virtual ~liqRibImplicitSphereData(){}
 
     virtual void       _write();

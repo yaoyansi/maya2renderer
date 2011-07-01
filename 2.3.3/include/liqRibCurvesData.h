@@ -35,7 +35,7 @@
 class liqRibCurvesData : public liqRibData {
 public: // Methods
 
-    liqRibCurvesData( MObject curveGroup );
+    explicit liqRibCurvesData( MObject curveGroup );
 	virtual ~liqRibCurvesData(){}
 
     virtual void       _write();

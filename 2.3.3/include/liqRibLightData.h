@@ -41,7 +41,7 @@
 class liqRibLightData : public liqRibData {
 public:
 
-  liqRibLightData( const MDagPath & light );
+  explicit liqRibLightData( const MDagPath & light );
   virtual ~liqRibLightData(){}
 
   virtual void       _write();

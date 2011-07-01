@@ -33,7 +33,7 @@
 class liqRibCoordData : public liqRibData {
 public: // Methods
 
-    liqRibCoordData( MObject locator );
+    explicit liqRibCoordData( MObject locator );
 	virtual ~liqRibCoordData(){}
 
     virtual void       _write();

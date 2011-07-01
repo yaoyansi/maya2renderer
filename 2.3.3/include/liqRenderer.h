@@ -29,6 +29,8 @@
 #ifndef liqRenderer_H
 #define liqRenderer_H
 
+#include<iosfwd>
+
 #include <maya/MString.h>
 #include <maya/MStringArray.h>
 #include <maya/MObject.h>
@@ -99,10 +101,14 @@ public:
 
   MString rifParams;
 
+  std::ostream& Print(std::ostream& o) const;
+
 private:
 	liqRenderer(const liqRenderer&);
 	liqRenderer& operator=(const liqRenderer&);
 };
+//
+std::ostream& operator<<(std::ostream& o, const liqRenderer& renderer);
 
 
 #endif

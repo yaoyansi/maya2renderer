@@ -234,42 +234,8 @@ MStatus liqRenderer::setRenderer()
       MGlobal::displayError( "Liquid : The " + envvar + " environment variable is not defined !!\n" );
 	}
   }
-  /* cout <<"\nrenderName : "<<renderName<<endl;
-  cout <<"  renderCommand   : "<<renderCommand<<endl;
-  cout <<"  renderPreview   : "<<renderPreview<<endl;
-  cout <<"  renderCmdFlags  : "<<renderCmdFlags<<endl;
-  cout <<"  shaderExtension : "<<shaderExtension<<endl;
-  cout <<"  shaderInfo      : "<<shaderInfo<<endl;
-  cout <<"  shaderCompiler  : "<<shaderCompiler<<endl;
-  cout <<"  supports_BLOBBIES            : "<<supports_BLOBBIES<<endl;
-  cout <<"  supports_POINTS              : "<<supports_POINTS<<endl;
-  cout <<"  supports_EYESPLITS           : "<<supports_EYESPLITS<<endl;
-  cout <<"  supports_RAYTRACE            : "<<supports_RAYTRACE<<endl;
-  cout <<"  supports_DOF                 : "<<supports_DOF<<endl;
-  cout <<"  supports_ADVANCED_VISIBILITY : "<<supports_ADVANCED_VISIBILITY<<endl;
-  cout <<"  supports_DISPLAY_CHANNELS    : "<<supports_DISPLAY_CHANNELS<<endl;
-  cout <<"  pixelfilter_BOX            : "<<pixelfilter_BOX<<endl;
-  cout <<"  pixelfilter_TRIANGLE       : "<<pixelfilter_TRIANGLE<<endl;
-  cout <<"  pixelfilter_CATMULLROM     : "<<pixelfilter_CATMULLROM<<endl;
-  cout <<"  pixelfilter_GAUSSIAN       : "<<pixelfilter_GAUSSIAN<<endl;
-  cout <<"  pixelfilter_SINC           : "<<pixelfilter_SINC<<endl;
-  cout <<"  pixelfilter_BLACKMANHARRIS : "<<pixelfilter_BLACKMANHARRIS<<endl;
-  cout <<"  pixelfilter_MITCHELL       : "<<pixelfilter_MITCHELL<<endl;
-  cout <<"  pixelfilter_SEPCATMULLROM  : "<<pixelfilter_SEPCATMULLROM<<endl;
-  cout <<"  pixelfilter_LANCZOS        : "<<pixelfilter_LANCZOS<<endl;
-  cout <<"  pixelfilter_BESSEL         : "<<pixelfilter_BESSEL<<endl;
-  cout <<"  pixelfilter_DISK           : "<<pixelfilter_DISK<<endl;
-  cout <<"  hider_HIDDEN    : "<<hider_HIDDEN<<endl;
-  cout <<"  hider_PHOTON    : "<<hider_PHOTON<<endl;
-  cout <<"  hider_ZBUFFER   : "<<hider_ZBUFFER<<endl;
-  cout <<"  hider_RAYTRACE  : "<<hider_RAYTRACE<<endl;
-  cout <<"  hider_OPENGL    : "<<hider_OPENGL<<endl;
-  cout <<"  hider_DEPTHMASK : "<<hider_DEPTHMASK<<endl;
-  cout <<"  requires_SWAPPED_UVS : "<<requires_SWAPPED_UVS<<endl;
-  cout <<"  requires__PREF       : "<<requires__PREF<<endl;
-  cout <<"  requires_MAKESHADOW  : "<<requires_MAKESHADOW<<endl;
-  cout <<"  dshDisplayName : "<<dshDisplayName<<endl;
-  cout <<"  dshImageMode   : "<<dshImageMode<<endl; */
+
+  //cout << *this <<endl;
   return MS::kSuccess;
 }
 
@@ -299,4 +265,52 @@ MObject liqRenderer::initGlobals()
 
   return MObject::kNullObj;
 }
+//
+std::ostream& liqRenderer::Print(std::ostream& o) const
+{
+	o <<"\n";
+	o <<"liqRenderer ---------------------------------"<<endl;
+	o <<"  renderName : "<<renderName<<endl;
+	o <<"  renderCommand   : "<<renderCommand<<endl;
+	o <<"  renderPreview   : "<<renderPreview<<endl;
+	o <<"  renderCmdFlags  : "<<renderCmdFlags<<endl;
+	o <<"  shaderExtension : "<<shaderExtension<<endl;
+	o <<"  shaderInfo      : "<<shaderInfo<<endl;
+	o <<"  shaderCompiler  : "<<shaderCompiler<<endl;
+	o <<"  supports_BLOBBIES            : "<<supports_BLOBBIES<<endl;
+	o <<"  supports_POINTS              : "<<supports_POINTS<<endl;
+	o <<"  supports_EYESPLITS           : "<<supports_EYESPLITS<<endl;
+	o <<"  supports_RAYTRACE            : "<<supports_RAYTRACE<<endl;
+	o <<"  supports_DOF                 : "<<supports_DOF<<endl;
+	o <<"  supports_ADVANCED_VISIBILITY : "<<supports_ADVANCED_VISIBILITY<<endl;
+	o <<"  supports_DISPLAY_CHANNELS    : "<<supports_DISPLAY_CHANNELS<<endl;
+	o <<"  pixelfilter_BOX            : "<<pixelfilter_BOX<<endl;
+	o <<"  pixelfilter_TRIANGLE       : "<<pixelfilter_TRIANGLE<<endl;
+	o <<"  pixelfilter_CATMULLROM     : "<<pixelfilter_CATMULLROM<<endl;
+	o <<"  pixelfilter_GAUSSIAN       : "<<pixelfilter_GAUSSIAN<<endl;
+	o <<"  pixelfilter_SINC           : "<<pixelfilter_SINC<<endl;
+	o <<"  pixelfilter_BLACKMANHARRIS : "<<pixelfilter_BLACKMANHARRIS<<endl;
+	o <<"  pixelfilter_MITCHELL       : "<<pixelfilter_MITCHELL<<endl;
+	o <<"  pixelfilter_SEPCATMULLROM  : "<<pixelfilter_SEPCATMULLROM<<endl;
+	o <<"  pixelfilter_LANCZOS        : "<<pixelfilter_LANCZOS<<endl;
+	o <<"  pixelfilter_BESSEL         : "<<pixelfilter_BESSEL<<endl;
+	o <<"  pixelfilter_DISK           : "<<pixelfilter_DISK<<endl;
+	o <<"  hider_HIDDEN    : "<<hider_HIDDEN<<endl;
+	o <<"  hider_PHOTON    : "<<hider_PHOTON<<endl;
+	o <<"  hider_ZBUFFER   : "<<hider_ZBUFFER<<endl;
+	o <<"  hider_RAYTRACE  : "<<hider_RAYTRACE<<endl;
+	o <<"  hider_OPENGL    : "<<hider_OPENGL<<endl;
+	o <<"  hider_DEPTHMASK : "<<hider_DEPTHMASK<<endl;
+	o <<"  requires_SWAPPED_UVS : "<<requires_SWAPPED_UVS<<endl;
+	o <<"  requires__PREF       : "<<requires__PREF<<endl;
+	o <<"  requires_MAKESHADOW  : "<<requires_MAKESHADOW<<endl;
+	o <<"  dshDisplayName : "<<dshDisplayName<<endl;
+	o <<"  dshImageMode   : "<<dshImageMode<<endl; 
 
+	return o;
+}
+//
+std::ostream& operator<<(std::ostream& o, const liqRenderer& renderer)
+{
+    return renderer.Print(o);
+}

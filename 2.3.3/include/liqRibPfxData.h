@@ -43,7 +43,7 @@
 class liqRibPfxData : public liqRibData {
 public: // Methods
 
-  liqRibPfxData( MObject pfxGeo, ObjectType pfxtype );
+  explicit liqRibPfxData( MObject pfxGeo, ObjectType pfxtype );
   virtual ~liqRibPfxData(){}
 
   virtual void            _write();

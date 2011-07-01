@@ -61,7 +61,7 @@ typedef struct tagSbdExtraTag {
 
 class liqRibSubdivisionData : public liqRibData {
 public: // Methods
-  liqRibSubdivisionData( MObject mesh );
+  explicit liqRibSubdivisionData( MObject mesh );
   virtual ~liqRibSubdivisionData(){}
 
   virtual void       _write();

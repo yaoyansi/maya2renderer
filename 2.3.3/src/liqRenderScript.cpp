@@ -4,6 +4,7 @@
 #include <cassert>
 #include <sstream>
 #include <fstream>
+#include <boost/bind.hpp>
 
 #include <maya/MString.h>
 
@@ -393,4 +394,34 @@ void liqRenderScript::swap(liqRenderScript::Cmd &l, liqRenderScript::Cmd &r)
 void liqRenderScript::swap(liqRenderScript::Job &l, liqRenderScript::Job &r)
 {
 	l.Swap(r);
+}
+//
+std::ostream& liqRenderScript::Cmd::Print(std::ostream& o) const
+{
+	//o<<"liqRenderScript::Cmd-------------"<<endl;
+	o<<" cmd={"<<command<<","<<remote<<","<<alfredExpand<<","<<alfredTags<<","<<alfredServices<<"}"<<endl;
+
+	return o;
+}
+//
+std::ostream& operator<<(std::ostream& o, const liqRenderScript::Cmd& cmd)
+{
+	return cmd.Print(o);
+}
+//
+std::ostream& liqRenderScript::Job::Print(std::ostream& o) const
+{
+	//o<<"liqRenderScript::Cmd-------------"<<endl;
+	o<<" job={"<<title<<","<<chaserCommand<<","<<isInstance<<","<<endl;
+	for_each(commands.begin(),        commands.end(),        boost::bind(&liqRenderScript::Cmd::Print, _1, boost::ref(o)));
+	for_each(cleanupCommands.begin(), cleanupCommands.end(), boost::bind(&liqRenderScript::Cmd::Print, _1, boost::ref(o)));
+	for_each(childJobs.begin(),       childJobs.end(),       boost::bind(&liqRenderScript::Job::Print, _1, boost::ref(o)));
+	o<<"}"<<endl;
+
+	return o;
+}
+//
+std::ostream& operator<<(std::ostream& o, const liqRenderScript::Job& job)
+{
+	return job.Print(o);
 }

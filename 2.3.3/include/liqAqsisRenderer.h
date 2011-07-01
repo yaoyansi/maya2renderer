@@ -33,7 +33,8 @@
 
 class liqAqsisRenderer : public liqRenderer {
 public:
-    liqAqsisRenderer(MString version)
+    explicit
+	liqAqsisRenderer(MString version)
 	: liqRenderer(REN_AQSIS, version)
     {
 	// nothing else needed

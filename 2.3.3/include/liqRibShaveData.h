@@ -40,7 +40,7 @@
 class liqRibShaveData : public liqRibData {
 public: // Methods
 
-          liqRibShaveData( MObject surface );
+  explicit liqRibShaveData( MObject surface );
   virtual ~liqRibShaveData(){}
 
   virtual void          _write();

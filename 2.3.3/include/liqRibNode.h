@@ -63,7 +63,7 @@ class liqRibNode {
   public:
 
 
-    liqRibNode( liqRibNodePtr instanceOfNode = liqRibNodePtr(),
+    explicit liqRibNode( liqRibNodePtr instanceOfNode = liqRibNodePtr(),
                 const MString instanceOfNodeStr = "" );
     virtual ~liqRibNode();
 

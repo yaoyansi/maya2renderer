@@ -41,7 +41,7 @@
 class liqRibPfxToonData : public liqRibData {
 public: // Methods
 
-            liqRibPfxToonData( MObject curve );
+    explicit liqRibPfxToonData( MObject curve );
 	virtual ~liqRibPfxToonData(){}
 
     virtual void       _write();

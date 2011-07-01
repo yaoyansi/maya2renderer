@@ -43,7 +43,7 @@
 class liqRibPfxHairData : public liqRibData {
 public: // Methods
 
-    liqRibPfxHairData( MObject curve );
+    explicit liqRibPfxHairData( MObject curve );
 	virtual ~liqRibPfxHairData(){}
 
     virtual void       _write();

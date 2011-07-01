@@ -62,7 +62,7 @@ typedef struct tagMayaSbdExtraTag {
 
 class liqRibMayaSubdivisionData : public liqRibData {
 public: // Methods
-  liqRibMayaSubdivisionData( MObject mesh );
+  explicit liqRibMayaSubdivisionData( MObject mesh );
   virtual ~liqRibMayaSubdivisionData(){}
 
   virtual void       _write();
