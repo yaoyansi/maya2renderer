@@ -325,10 +325,8 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 							currentBlock++;
 
 						jobScriptMgr.addDefferedJob(currentBlock, frameIndex,
-							framePreCommand, frameRibgenCommand, liqglo.tempDefname	
+							framePreCommand, frameRibgenCommand
 						);
-
-
 					}
 				}//if( m_deferredGen )
 				if( !m_justRib ) 

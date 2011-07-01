@@ -25,16 +25,14 @@ public:
 	void addDefferedJob(const int currentBlock__,
 		const unsigned int frameIndex__,
 		const MString &framePreCommand__,
-		const MString &frameRibgenCommand__,
-		const MString &tempDefname__
+		const MString &frameRibgenCommand__
 	);
 	void addDefferedJob(
 		liqRenderScript::Job &deferredJob__,
 		const int currentBlock__,
 		const unsigned int frameIndex__,
 		const MString &framePreCommand__,
-		const MString &frameRibgenCommand__,
-		const MString &tempDefname__
+		const MString &frameRibgenCommand__
 	);
 protected:
 	liqRenderScript &m_jobScript;

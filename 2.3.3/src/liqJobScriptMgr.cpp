@@ -54,12 +54,11 @@ void tJobScriptMgr::addJob(
 void tJobScriptMgr::addDefferedJob(const int currentBlock__,
 								   const unsigned int frameIndex__,
 								   const MString &framePreCommand__,
-								   const MString &frameRibgenCommand__,
-								   const MString &tempDefname__)
+								   const MString &frameRibgenCommand__)
 {
 	liqRenderScript::Job deferredJob;
 	addDefferedJob(deferredJob, currentBlock__, frameIndex__,
-		framePreCommand__, frameRibgenCommand__, tempDefname__			
+		framePreCommand__, frameRibgenCommand__			
 		);
 	m_jobScript.addJob(deferredJob);
 }
@@ -69,8 +68,7 @@ void tJobScriptMgr::addDefferedJob(
 									  const int currentBlock__,
 									  const unsigned int frameIndex__,
 									  const MString &framePreCommand__,
-									  const MString &frameRibgenCommand__,
-									  const MString &tempDefname__
+									  const MString &frameRibgenCommand__
 									  )
 {
 	std::stringstream ribGenExtras;
@@ -92,7 +90,7 @@ void tJobScriptMgr::addDefferedJob(
 	deferredJob__.title = titleStream.str();
 
 	std::stringstream ss;
-	ss << framePreCommand__.asChar() << " " << frameRibgenCommand__.asChar() << ribGenExtras.str() << " " << tempDefname__.asChar();
+	ss << framePreCommand__.asChar() << " " << frameRibgenCommand__.asChar() << ribGenExtras.str() << " " <<  liqglo.tempDefname.asChar();
 	liqRenderScript::Cmd cmd( ss.str(), liqglo.remoteRender );
 	cmd.alfredServices = liqglo.m_defGenService.asChar();
 	cmd.alfredTags     = liqglo.m_defGenKey.asChar();
