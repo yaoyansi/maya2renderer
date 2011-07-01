@@ -7649,6 +7649,8 @@ RtToken g_typeAscii       = tokenCast("Ascii");
 RtToken g_typeBinary      = tokenCast("Binary");
 RtToken g_compressionNone = tokenCast("None");
 RtToken g_compressionGzip = tokenCast("Gzip");
+RtToken g_indentSpace = tokenCast("Space");
+RtToken g_indentTab   = tokenCast("Tab");
 void liqRibTranslator::_RiOption_format_compress(bool bBinary, bool bCompress)
 {
  #ifdef RIBLIB_AQSIS
@@ -7661,6 +7663,14 @@ void liqRibTranslator::_RiOption_format_compress(bool bBinary, bool bCompress)
   	RtToken gzip[1]; gzip[0] = g_compressionGzip;
   	RtToken none[1]; none[0] = g_compressionNone;
   	RiOption( tokenCast("RI2RIB_Output"), "Compression", ( RtPointer )(bCompress?&gzip:&none), RI_NULL );
+
+  	LIQDEBUGPRINTF( "-> setting indent option\n" );
+    RtToken itype[1];			RtInt isize[1];
+	//itype[0] = g_indentTab;		isize[0] = 1;
+	itype[0] = g_indentSpace;	isize[0] = 4;
+	RiOption( tokenCast("RI2RIB_Indentation"), "Type", &itype, RI_NULL );
+	RiOption( tokenCast("RI2RIB_Indentation"), "Size", &isize, RI_NULL );
+
  #else
 	LIQDEBUGPRINTF( "-> setting binary option\n" );
 	if( liqglo_doBinary ) 
