@@ -6737,14 +6737,14 @@ MStatus liqRibTranslator::objectBlock()
 					//
 					if( m_shaderDebug ) {
 						RiSurface( "constant", RI_NULL );
-						LIQDEBUGPRINTF("add more constant parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorBlinn.sl as an example.(?)");
+						LIQDEBUGPRINTF("add more constant parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorBlinn.sl as an example.(?)");
 					}
 // 					else if( shader.apiType() == MFn::kLambert ){ 
 // 						RiSurface( "matte", RI_NULL );
-// 						LIQDEBUGPRINTF("add more lambert parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorLambert.sl as an example.");
+// 						LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
 // 					}else if( shader.apiType() == MFn::kPhong ) {
 // 						RiSurface( "plastic", RI_NULL );
-// 						LIQDEBUGPRINTF("add more phong parameters here. take \RMS-1.0.1-Maya2008\lib\shaders\src\mtorPhong.sl as an example.");
+// 						LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
 // 					}
 					else if( path.hasFn( MFn::kPfxHair ) ) 
 					{
@@ -7625,19 +7625,22 @@ void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode
 	}
 	
 }
-
+RtToken g_typeAscii       = tokenCast("Ascii");
+RtToken g_typeBinary      = tokenCast("Binary");
+RtToken g_compressionNone = tokenCast("None");
+RtToken g_compressionGzip = tokenCast("Gzip");
 void liqRibTranslator::_RiOption_format_compress(bool bBinary, bool bCompress)
 {
  #ifdef RIBLIB_AQSIS
   	LIQDEBUGPRINTF( "-> setting binary option\n" );
-  	RtString binary[1] = {"binary"};
-  	RtString ascii[1] = {"ascii"};
-  	RiOption( tokenCast("rib"), "format", ( RtPointer )(bBinary?binary[0]:ascii[0]),        RI_NULL );
+  	RtToken binary[1]; binary[0] = g_typeBinary;
+  	RtToken ascii[1] ; ascii[0]  = g_typeAscii;
+  	RiOption( tokenCast("RI2RIB_Output"), "Type", ( RtPointer )(bBinary?&binary:&ascii),        RI_NULL );
   
   	LIQDEBUGPRINTF( "-> setting compression option\n" );
-  	RtString gzip[1] = {"gzip"};
-  	RtString none[1] = {"none"};
-  	RiOption( tokenCast("rib"), "compression", ( RtPointer )(bCompress?gzip[0]:none[0]), RI_NULL );
+  	RtToken gzip[1]; gzip[0] = g_compressionGzip;
+  	RtToken none[1]; none[0] = g_compressionNone;
+  	RiOption( tokenCast("RI2RIB_Output"), "Compression", ( RtPointer )(bCompress?&gzip:&none), RI_NULL );
  #else
 	LIQDEBUGPRINTF( "-> setting binary option\n" );
 	if( liqglo_doBinary ) 
