@@ -511,7 +511,7 @@ private :
 		int &count__ );
 	void getCameraData( std::vector<structJob>::iterator &iter__ , const int sample__);
 	void getLightData( std::vector<structJob>::iterator &iter__ , const int sample__);
-
+	MString getBaseShadowName(const structJob &job__);
 
 	MTime originalTime;
 

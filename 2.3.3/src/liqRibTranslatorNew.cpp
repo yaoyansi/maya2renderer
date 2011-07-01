@@ -419,6 +419,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 					}
 					if( liqglo.m_alfShadowRibGen ) 
 					{
+						MString     baseShadowName(getBaseShadowName(liqglo.liqglo_currentJob));
 						frameScriptJobMgr.cleanShadowRibGen(framePreCommand, baseShadowName);
 					}
 				}
@@ -912,14 +913,7 @@ TempControlBreak liqRibTranslator::processOneFrame(
 			else 
 				liqglo__.liqglo_isShadowPass = false;
 
-			// build the shadow archive name for the job
-			{
-				bool renderAllFrames( liqglo__.liqglo_currentJob.everyFrame );
-				long refFrame( liqglo__.liqglo_currentJob.renderFrame );
-				MString geoSet( liqglo__.liqglo_currentJob.shadowObjectSet );
-				baseShadowName = generateShadowArchiveName( renderAllFrames, refFrame, geoSet );
-				baseShadowName = liquidGetRelativePath( liqglo__.liqglo_relativeFileNames, baseShadowName, liqglo__.liqglo_ribDir );
-			}
+
 
 			{//export geometry objects to rib files.
 				//  						MMatrix matrix;
@@ -956,16 +950,19 @@ TempControlBreak liqRibTranslator::processOneFrame(
 
 			// world RiReadArchives and Rib Boxes ************************************************
 			//
-			if( liqglo__.liqglo_currentJob.isShadow &&!liqglo.fullShadowRib )
+			if( liqglo__.liqglo_currentJob.isShadow && !liqglo.fullShadowRib )
 			{
-				if(!liqglo__.liqglo_currentJob.shadowArchiveRibDone) 
+				MString     baseShadowName__(getBaseShadowName(liqglo__.liqglo_currentJob));
+
+
+				if( !liqglo__.liqglo_currentJob.shadowArchiveRibDone ) 
 				{
 					//
 					//  create the read-archive shadow files
 					//
 #ifndef RENDER_PIPE
-					liquidMessage( "Beginning RIB output to '" + string( baseShadowName.asChar() ) + "'", messageInfo );
-					RiBegin( const_cast< RtToken >( baseShadowName.asChar() ) );
+					liquidMessage( "Beginning RIB output to '" + string( baseShadowName__.asChar() ) + "'", messageInfo );
+					RiBegin( const_cast< RtToken >( baseShadowName__.asChar() ) );
 #else
 					liqglo__.liqglo_ribFP = fopen( baseShadowName.asChar(), "w" );
 					if( liqglo__.liqglo_ribFP ) {
@@ -1014,11 +1011,7 @@ TempControlBreak liqRibTranslator::processOneFrame(
 				else{
 					//todo....
 				}
-			}//if( liqglo_currentJob.isShadow && !fullShadowRib ) 
-
-
-			if( liqglo__.liqglo_currentJob.isShadow && !liqglo.fullShadowRib ) 
-			{
+				//----------------------------------------------------------------
 #ifndef RENDER_PIPE
 				liquidMessage( "Beginning RIB output to '" + string( liqglo__.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
 				RiBegin( const_cast< RtToken >( liqglo__.liqglo_currentJob.ribFileName.asChar() ) );
@@ -1046,13 +1039,14 @@ TempControlBreak liqRibTranslator::processOneFrame(
 						break;
 					//MString realShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, baseShadowName, liqglo_projectDir ) ) );
 					RiArchiveRecord( RI_COMMENT, "Read Archive Data:\n" );
-					RiReadArchive( const_cast< RtToken >( baseShadowName.asChar() ), NULL, RI_NULL );
+					RiReadArchive( const_cast< RtToken >( baseShadowName__.asChar() ), NULL, RI_NULL );
 					if( frameEpilogue( scanTime ) != MS::kSuccess ) 
 						break;
 					ribEpilogue();
 				}
 				RiEnd();
-			} 
+				//------------------------------------------------------------
+			}//if( liqglo_currentJob.isShadow && !fullShadowRib ) 
 			else 
 			{
 #ifndef RENDER_PIPE
@@ -2043,4 +2037,17 @@ void liqRibTranslator::getLightData( vector<structJob>::iterator &iter__ , const
 		iter__->imageMode += "z";
 		iter__->format = "shadow";
 	}
+}
+//
+MString liqRibTranslator::getBaseShadowName(const structJob &job__)
+{
+	MString     baseShadowName___;
+	// build the shadow archive name for the job
+	bool renderAllFrames( job__.everyFrame );
+	long refFrame( job__.renderFrame );
+	MString geoSet( job__.shadowObjectSet );
+	baseShadowName___ = generateShadowArchiveName( renderAllFrames, refFrame, geoSet );
+	baseShadowName___ = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, baseShadowName___, liqglo.liqglo_ribDir );
+
+	return baseShadowName___;
 }
