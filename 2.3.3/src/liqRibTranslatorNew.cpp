@@ -1215,7 +1215,7 @@ MStatus liqRibTranslator::buildShadowJobs__()
 			thisJob__.skip                  = false;
 			//
 			// We have a shadow job, so find out if we need to use deep shadows,
-			// and the pixel sample count
+			// and the pixel sample__ count
 			//
 			thisJob__.deepShadows                 = false;
 			thisJob__.shadowPixelSamples          = 1;
@@ -1648,36 +1648,89 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 		{
 			LIQ_CHECK_CANCEL_REQUEST;
 			// scanScene: Get the camera/light info for this job at this frame
-			MStatus status;
+			/*MStatus status;*/
 
 			if( !iter->isShadow ) 
 			{
+				getCameraData( iter , sample);
+			} //if( !iter->isShadow )  
+			else 
+			{
+				getLightData( iter , sample);
+			}//if( !iter->isShadow ) else
+			++iter;
+		}//while ( iter != jobList.end() )
+
+		// post-frame script execution
+		if( m_postFrameMel != "" ) 
+		{
+			MString postFrameMel( parseString( m_postFrameMel, false ) );
+			if( fileExists( postFrameMel  ) ) 
+				MGlobal::sourceFile( postFrameMel );
+			else 
+				if( MS::kSuccess == MGlobal::executeCommand( postFrameMel, false, false ) ) 
+					cout <<"Liquid -> post-frame script executed successfully."<<endl<<flush;
+				else 
+					cout <<"Liquid -> ERROR :post-frame script failed."<<endl<<flush;
+		}
+		return MS::kSuccess;
+	}
+	return MS::kFailure;
+}
+//
+void liqRibTranslator::dealwithParticleInstancedObjects(
+	const float lframe__, const int sample__,
+	int &count__ 
+	)
+{
+	MItInstancer instancerIter;
+	while( !instancerIter.isDone() )
+	{
+		MDagPath path( instancerIter.path() );
+		MString instanceStr( ( MString )"|INSTANCE_" +
+			instancerIter.instancerId() + (MString)"_" +
+			instancerIter.particleId() + (MString)"_" +
+			instancerIter.pathId() );
+
+		MMatrix instanceMatrix( instancerIter.matrix() );
+
+		if( ( sample__ > 0 ) && isObjectMotionBlur( path ))
+			htable->insert( path, lframe__, sample__, MRT_Unknown,count__++, &instanceMatrix, instanceStr, instancerIter.particleId() );
+		else
+			htable->insert( path, lframe__, 0, MRT_Unknown,count__++, &instanceMatrix, instanceStr, instancerIter.particleId() );
+		instancerIter.next();
+	}
+}
+//
+void liqRibTranslator::getCameraData( vector<structJob>::iterator &iter__ , const int sample__)
+{
+	MStatus status;
 				MDagPath path;
-				MFnCamera   fnCamera( iter->path );
-				iter->gotJobOptions = false;
+				MFnCamera   fnCamera( iter__->path );
+				iter__->gotJobOptions = false;
 				status.clear();
 				MPlug cPlug = fnCamera.findPlug( MString( "ribOptions" ), &status );
 				if( status == MS::kSuccess ) 
 				{
-					cPlug.getValue( iter->jobOptions );
-					iter->gotJobOptions = true;
+					cPlug.getValue( iter__->jobOptions );
+					iter__->gotJobOptions = true;
 				}
 				getCameraInfo( fnCamera );
-				iter->width = cam_width;
-				iter->height = cam_height;
+				iter__->width = cam_width;
+				iter__->height = cam_height;
 				// scanScene: Renderman specifies shutter by time open
 				// so we need to convert shutterAngle to time.
 				// To do this convert shutterAngle to degrees and
 				// divide by 360.
 				//
-				iter->camera[sample].shutter = fnCamera.shutterAngle() * 0.5 / M_PI;
-				liqglo.liqglo_shutterTime = iter->camera[sample].shutter;
-				iter->camera[sample].orthoWidth     = fnCamera.orthoWidth();
-				iter->camera[sample].orthoHeight    = fnCamera.orthoWidth() * ((float)cam_height / (float)cam_width);
-				iter->camera[sample].motionBlur     = fnCamera.isMotionBlur();
-				iter->camera[sample].focalLength    = fnCamera.focalLength();
-				iter->camera[sample].focalDistance  = fnCamera.focusDistance();
-				iter->camera[sample].fStop          = fnCamera.fStop();
+				iter__->camera[sample__].shutter = fnCamera.shutterAngle() * 0.5 / M_PI;
+				liqglo.liqglo_shutterTime = iter__->camera[sample__].shutter;
+				iter__->camera[sample__].orthoWidth     = fnCamera.orthoWidth();
+				iter__->camera[sample__].orthoHeight    = fnCamera.orthoWidth() * ((float)cam_height / (float)cam_width);
+				iter__->camera[sample__].motionBlur     = fnCamera.isMotionBlur();
+				iter__->camera[sample__].focalLength    = fnCamera.focalLength();
+				iter__->camera[sample__].focalDistance  = fnCamera.focusDistance();
+				iter__->camera[sample__].fStop          = fnCamera.fStop();
 
 				// film back offsets
 				double hSize, vSize, hOffset, vOffset;
@@ -1731,12 +1784,12 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 						break;
 					}
 				}
-				iter->camera[sample].horizontalFilmOffset = ho;
-				iter->camera[sample].verticalFilmOffset   = vo;
+				iter__->camera[sample__].horizontalFilmOffset = ho;
+				iter__->camera[sample__].verticalFilmOffset   = vo;
 
 				// convert focal length to scene units
-				MDistance flenDist(iter->camera[sample].focalLength,MDistance::kMillimeters);
-				iter->camera[sample].focalLength = flenDist.as(MDistance::uiUnit());
+				MDistance flenDist(iter__->camera[sample__].focalLength,MDistance::kMillimeters);
+				iter__->camera[sample__].focalLength = flenDist.as(MDistance::uiUnit());
 
 				fnCamera.getPath(path);
 				MTransformationMatrix xform( path.inclusiveMatrix() );
@@ -1757,30 +1810,30 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 					{  0.0,  0.0,  0.0,  1.0 }};
 					camRotMatrix = crm;
 				}
-				iter->camera[sample].mat = xform.asMatrixInverse() * camRotMatrix;
+				iter__->camera[sample__].mat = xform.asMatrixInverse() * camRotMatrix;
 
 				if( fnCamera.isClippingPlanes() ) 
 				{
-					iter->camera[sample].neardb    = fnCamera.nearClippingPlane();
-					iter->camera[sample].fardb    = fnCamera.farClippingPlane();
+					iter__->camera[sample__].neardb    = fnCamera.nearClippingPlane();
+					iter__->camera[sample__].fardb    = fnCamera.farClippingPlane();
 				} 
 				else 
 				{
-					iter->camera[sample].neardb    = 0.001;    // TODO: these values are duplicated elsewhere in this file
-					iter->camera[sample].fardb    = 250000.0; // TODO: these values are duplicated elsewhere in this file
+					iter__->camera[sample__].neardb    = 0.001;    // TODO: these values are duplicated elsewhere in this file
+					iter__->camera[sample__].fardb    = 250000.0; // TODO: these values are duplicated elsewhere in this file
 				}
-				iter->camera[sample].isOrtho = fnCamera.isOrtho();
+				iter__->camera[sample__].isOrtho = fnCamera.isOrtho();
 
 				// scanScene: The camera's fov may not match the rendered image in Maya
 				// if a film-fit is used. 'fov_ratio' is used to account for
 				// this.
 				//
-				iter->camera[sample].hFOV = fnCamera.horizontalFieldOfView()/fov_ratio;
-				iter->aspectRatio = aspectRatio;
+				iter__->camera[sample__].hFOV = fnCamera.horizontalFieldOfView()/fov_ratio;
+				iter__->aspectRatio = aspectRatio;
 
 				// scanScene: Determine what information to write out (RGB, alpha, zbuffer)
 				//
-				iter->imageMode.clear();
+				iter__->imageMode.clear();
 
 				bool isOn;
 				MPlug boolPlug;
@@ -1791,8 +1844,8 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 				{
 					// We are writing RGB info
 					//
-					iter->imageMode = "rgb";
-					iter->format = outFormat;
+					iter__->imageMode = "rgb";
+					iter__->format = outFormat;
 				}
 				boolPlug = fnCamera.findPlug( "mask" );
 				boolPlug.getValue( isOn );
@@ -1800,217 +1853,178 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 				{
 					// We are writing alpha channel info
 					//
-					iter->imageMode += "a";
-					iter->format = outFormat;
+					iter__->imageMode += "a";
+					iter__->format = outFormat;
 				}
 				boolPlug = fnCamera.findPlug( "depth" );
 				boolPlug.getValue( isOn );
 				if( isOn ) {
 					// We are writing z-buffer info
 					//
-					iter->imageMode = "z";
-					iter->format = "zfile";
+					iter__->imageMode = "z";
+					iter__->format = "zfile";
 				}
-			} 
-			else 
-			{
-				// scanScene: doing shadow render
-				//
-				MDagPath path;
-				MFnLight   fnLight( iter->path );
-				status.clear();
-
-				iter->gotJobOptions = false;
-				MPlug cPlug = fnLight.findPlug( MString( "ribOptions" ), &status );
-				if( status == MS::kSuccess ) {
-					cPlug.getValue( iter->jobOptions );
-					iter->gotJobOptions = true;
-				}
-
-				// philippe: this block is obsolete as we now get the resolution when building the job list
-				//
-				/* MPlug lightPlug = fnLight.findPlug( "dmapResolution" );
-				float dmapSize;
-				lightPlug.getValue( dmapSize );
-				iter->height = iter->width = (int)dmapSize; */
-
-				if( iter->hasShadowCam ) 
-				{
-					// scanScene: the light uses a shadow cam
-					//
-					MFnCamera fnCamera( iter->shadowCamPath );
-					fnCamera.getPath(path);
-					MTransformationMatrix xform( path.inclusiveMatrix() );
-
-					// the camera is pointing toward negative Z
-					double scale[] = { 1, 1, -1 };
-					xform.setScale( scale, MSpace::kTransform );
-
-					iter->camera[sample].mat         = xform.asMatrixInverse();
-					iter->camera[sample].neardb      = fnCamera.nearClippingPlane();
-					iter->camera[sample].fardb       = fnCamera.farClippingPlane();
-					iter->camera[sample].isOrtho     = fnCamera.isOrtho();
-					iter->camera[sample].orthoWidth  = fnCamera.orthoWidth();
-					iter->camera[sample].orthoHeight = fnCamera.orthoWidth();
-				} 
-				else 
-				{
-					// scanScene: the light does not use a shadow cam
-					//
-
-					// get the camera world matrix
-					fnLight.getPath(path);
-					MTransformationMatrix xform( path.inclusiveMatrix() );
-
-					// the camera is pointing toward negative Z
-					double scale[] = { 1, 1, -1 };
-					xform.setScale( scale, MSpace::kTransform );
-
-					if( iter->isPoint ) 
-					{
-						double ninty = M_PI/2;
-						if( iter->pointDir == pPX ) { double rotation[] = { 0, -ninty, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
-						if( iter->pointDir == pNX ) { double rotation[] = { 0, ninty, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
-						if( iter->pointDir == pPY ) { double rotation[] = { ninty, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
-						if( iter->pointDir == pNY ) { double rotation[] = { -ninty, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
-						if( iter->pointDir == pPZ ) { double rotation[] = { 0, M_PI, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
-						if( iter->pointDir == pNZ ) { double rotation[] = { 0, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
-					}
-					iter->camera[sample].mat = xform.asMatrixInverse();
-
-					MPlug shaderConnection( fnLight.findPlug( "liquidLightShaderNode", &status ) );
-					if( status == MS::kSuccess && shaderConnection.isConnected() ) 
-					{
-						MPlugArray LightShaderPlugArray;
-						shaderConnection.connectedTo( LightShaderPlugArray, true, true );
-						MFnDependencyNode fnLightShaderNode( LightShaderPlugArray[0].node() );
-						fnLightShaderNode.findPlug( "nearClipPlane" ).getValue( iter->camera[sample].neardb );
-						fnLightShaderNode.findPlug( "farClipPlane" ).getValue( iter->camera[sample].fardb );
-					} 
-					else 
-					{
-						iter->camera[sample].neardb   = 0.001;    // TODO: these values are duplicated elsewhere in this file
-						iter->camera[sample].fardb    = 250000.0; // TODO: these values are duplicated elsewhere in this file
-						MPlug nearPlug = fnLight.findPlug( "nearClipPlane", &status );
-						if( status == MS::kSuccess ) 
-							nearPlug.getValue( iter->camera[sample].neardb );
-						MPlug farPlug = fnLight.findPlug( "farClipPlane", &status );
-						if( status == MS::kSuccess ) 
-							farPlug.getValue( iter->camera[sample].fardb );
-					}
-
-					if( fnLight.dagPath().hasFn( MFn::kDirectionalLight ) ) 
-					{
-						iter->camera[sample].isOrtho = true;
-						fnLight.findPlug( "dmapWidthFocus" ).getValue( iter->camera[sample].orthoWidth );
-						fnLight.findPlug( "dmapWidthFocus" ).getValue( iter->camera[sample].orthoHeight );
-					} 
-					else 
-					{
-						iter->camera[sample].isOrtho = false;
-						iter->camera[sample].orthoWidth = 0.0;
-					}
-				}
-
-				if( iter->deepShadows )
-				{
-					iter->camera[sample].shutter = liqglo.liqglo_shutterTime;
-					iter->camera[sample].motionBlur = true;
-				}
-				else
-				{
-					iter->camera[sample].shutter = 0;
-					iter->camera[sample].motionBlur = false;
-				}
-				iter->camera[sample].focalLength = 0;
-				iter->camera[sample].focalDistance = 0;
-				iter->camera[sample].fStop = 0;
-				//doCameraMotion = 0;
-
-				iter->aspectRatio = 1.0;
-
-				// The camera's fov may not match the rendered image in Maya
-				// if a film-fit is used. 'fov_ratio' is used to account for
-				// this.
-				//
-				if( iter->hasShadowCam ) 
-				{
-					MFnCamera fnCamera( iter->shadowCamPath );
-					float camFov = fnCamera.horizontalFieldOfView();
-					iter->camera[sample].hFOV = camFov;
-				} 
-				else 
-				{
-					MStatus coneStatus;
-					MPlug lightPlug = fnLight.findPlug( "coneAngle", &coneStatus );
-					if( coneStatus == MS::kSuccess ) 
-					{
-						// philippe : if we have a penumbra > 0, we must add it to the coneangle
-						// to cover correctly the penumbra area.
-						float angle = 0, penumbra = 0;
-						lightPlug.getValue( angle );
-						lightPlug = fnLight.findPlug( "penumbraAngle", &coneStatus );
-						if( coneStatus == MS::kSuccess ) lightPlug.getValue( penumbra );
-						if( penumbra > 0 ) angle += penumbra * 2;
-						iter->camera[sample].hFOV = angle;
-					} 
-					else 
-						iter->camera[sample].hFOV = 95;
-				}
-
-				// Determine what information to write out ( depth map or deep shadow )
-				//
-				iter->imageMode.clear();
-				if( iter->deepShadows )
-				{
-					iter->imageMode    += liqglo.liquidRenderer.dshImageMode;        //"deepopacity";
-					iter->format        =  liqglo.liquidRenderer.dshDisplayName;    //"deepshad";
-				}
-				else
-				{
-					iter->imageMode += "z";
-					iter->format = "shadow";
-				}
-			}
-			++iter;
-		}
-		// post-frame script execution
-		if( m_postFrameMel != "" ) 
-		{
-			MString postFrameMel( parseString( m_postFrameMel, false ) );
-			if( fileExists( postFrameMel  ) ) 
-				MGlobal::sourceFile( postFrameMel );
-			else 
-				if( MS::kSuccess == MGlobal::executeCommand( postFrameMel, false, false ) ) 
-					cout <<"Liquid -> post-frame script executed successfully."<<endl<<flush;
-				else 
-					cout <<"Liquid -> ERROR :post-frame script failed."<<endl<<flush;
-		}
-		return MS::kSuccess;
-	}
-	return MS::kFailure;
 }
 //
-void liqRibTranslator::dealwithParticleInstancedObjects(
-	const float lframe__, const int sample__,
-	int &count__ 
-	)
+void liqRibTranslator::getLightData( vector<structJob>::iterator &iter__ , const int sample__)
 {
-	MItInstancer instancerIter;
-	while( !instancerIter.isDone() )
+	MStatus status;
+
+	// scanScene: doing shadow render
+	//
+	MDagPath path;
+	MFnLight   fnLight( iter__->path );
+	status.clear();
+
+	iter__->gotJobOptions = false;
+	MPlug cPlug = fnLight.findPlug( MString( "ribOptions" ), &status );
+	if( status == MS::kSuccess ) {
+		cPlug.getValue( iter__->jobOptions );
+		iter__->gotJobOptions = true;
+	}
+
+	// philippe: this block is obsolete as we now get the resolution when building the job list
+	//
+	/* MPlug lightPlug = fnLight.findPlug( "dmapResolution" );
+	float dmapSize;
+	lightPlug.getValue( dmapSize );
+	iter__->height = iter__->width = (int)dmapSize; */
+
+	if( iter__->hasShadowCam ) 
 	{
-		MDagPath path( instancerIter.path() );
-		MString instanceStr( ( MString )"|INSTANCE_" +
-			instancerIter.instancerId() + (MString)"_" +
-			instancerIter.particleId() + (MString)"_" +
-			instancerIter.pathId() );
+		// scanScene: the light uses a shadow cam
+		//
+		MFnCamera fnCamera( iter__->shadowCamPath );
+		fnCamera.getPath(path);
+		MTransformationMatrix xform( path.inclusiveMatrix() );
 
-		MMatrix instanceMatrix( instancerIter.matrix() );
+		// the camera is pointing toward negative Z
+		double scale[] = { 1, 1, -1 };
+		xform.setScale( scale, MSpace::kTransform );
 
-		if( ( sample__ > 0 ) && isObjectMotionBlur( path ))
-			htable->insert( path, lframe__, sample__, MRT_Unknown,count__++, &instanceMatrix, instanceStr, instancerIter.particleId() );
-		else
-			htable->insert( path, lframe__, 0, MRT_Unknown,count__++, &instanceMatrix, instanceStr, instancerIter.particleId() );
-		instancerIter.next();
+		iter__->camera[sample__].mat         = xform.asMatrixInverse();
+		iter__->camera[sample__].neardb      = fnCamera.nearClippingPlane();
+		iter__->camera[sample__].fardb       = fnCamera.farClippingPlane();
+		iter__->camera[sample__].isOrtho     = fnCamera.isOrtho();
+		iter__->camera[sample__].orthoWidth  = fnCamera.orthoWidth();
+		iter__->camera[sample__].orthoHeight = fnCamera.orthoWidth();
+	} 
+	else 
+	{
+		// scanScene: the light does not use a shadow cam
+		//
+
+		// get the camera world matrix
+		fnLight.getPath(path);
+		MTransformationMatrix xform( path.inclusiveMatrix() );
+
+		// the camera is pointing toward negative Z
+		double scale[] = { 1, 1, -1 };
+		xform.setScale( scale, MSpace::kTransform );
+
+		if( iter__->isPoint ) 
+		{
+			double ninty = M_PI/2;
+			if( iter__->pointDir == pPX ) { double rotation[] = { 0, -ninty, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+			if( iter__->pointDir == pNX ) { double rotation[] = { 0, ninty, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+			if( iter__->pointDir == pPY ) { double rotation[] = { ninty, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+			if( iter__->pointDir == pNY ) { double rotation[] = { -ninty, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+			if( iter__->pointDir == pPZ ) { double rotation[] = { 0, M_PI, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+			if( iter__->pointDir == pNZ ) { double rotation[] = { 0, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+		}
+		iter__->camera[sample__].mat = xform.asMatrixInverse();
+
+		MPlug shaderConnection( fnLight.findPlug( "liquidLightShaderNode", &status ) );
+		if( status == MS::kSuccess && shaderConnection.isConnected() ) 
+		{
+			MPlugArray LightShaderPlugArray;
+			shaderConnection.connectedTo( LightShaderPlugArray, true, true );
+			MFnDependencyNode fnLightShaderNode( LightShaderPlugArray[0].node() );
+			fnLightShaderNode.findPlug( "nearClipPlane" ).getValue( iter__->camera[sample__].neardb );
+			fnLightShaderNode.findPlug( "farClipPlane" ).getValue( iter__->camera[sample__].fardb );
+		} 
+		else 
+		{
+			iter__->camera[sample__].neardb   = 0.001;    // TODO: these values are duplicated elsewhere in this file
+			iter__->camera[sample__].fardb    = 250000.0; // TODO: these values are duplicated elsewhere in this file
+			MPlug nearPlug = fnLight.findPlug( "nearClipPlane", &status );
+			if( status == MS::kSuccess ) 
+				nearPlug.getValue( iter__->camera[sample__].neardb );
+			MPlug farPlug = fnLight.findPlug( "farClipPlane", &status );
+			if( status == MS::kSuccess ) 
+				farPlug.getValue( iter__->camera[sample__].fardb );
+		}
+
+		if( fnLight.dagPath().hasFn( MFn::kDirectionalLight ) ) 
+		{
+			iter__->camera[sample__].isOrtho = true;
+			fnLight.findPlug( "dmapWidthFocus" ).getValue( iter__->camera[sample__].orthoWidth );
+			fnLight.findPlug( "dmapWidthFocus" ).getValue( iter__->camera[sample__].orthoHeight );
+		} 
+		else 
+		{
+			iter__->camera[sample__].isOrtho = false;
+			iter__->camera[sample__].orthoWidth = 0.0;
+		}
+	}
+
+	if( iter__->deepShadows )
+	{
+		iter__->camera[sample__].shutter = liqglo.liqglo_shutterTime;
+		iter__->camera[sample__].motionBlur = true;
+	}
+	else
+	{
+		iter__->camera[sample__].shutter = 0;
+		iter__->camera[sample__].motionBlur = false;
+	}
+	iter__->camera[sample__].focalLength = 0;
+	iter__->camera[sample__].focalDistance = 0;
+	iter__->camera[sample__].fStop = 0;
+	//doCameraMotion = 0;
+
+	iter__->aspectRatio = 1.0;
+
+	// The camera's fov may not match the rendered image in Maya
+	// if a film-fit is used. 'fov_ratio' is used to account for
+	// this.
+	//
+	if( iter__->hasShadowCam ) 
+	{
+		MFnCamera fnCamera( iter__->shadowCamPath );
+		float camFov = fnCamera.horizontalFieldOfView();
+		iter__->camera[sample__].hFOV = camFov;
+	} 
+	else 
+	{
+		MStatus coneStatus;
+		MPlug lightPlug = fnLight.findPlug( "coneAngle", &coneStatus );
+		if( coneStatus == MS::kSuccess ) 
+		{
+			// philippe : if we have a penumbra > 0, we must add it to the coneangle
+			// to cover correctly the penumbra area.
+			float angle = 0, penumbra = 0;
+			lightPlug.getValue( angle );
+			lightPlug = fnLight.findPlug( "penumbraAngle", &coneStatus );
+			if( coneStatus == MS::kSuccess ) lightPlug.getValue( penumbra );
+			if( penumbra > 0 ) angle += penumbra * 2;
+			iter__->camera[sample__].hFOV = angle;
+		} 
+		else 
+			iter__->camera[sample__].hFOV = 95;
+	}
+
+	// Determine what information to write out ( depth map or deep shadow )
+	//
+	iter__->imageMode.clear();
+	if( iter__->deepShadows )
+	{
+		iter__->imageMode    += liqglo.liquidRenderer.dshImageMode;        //"deepopacity";
+		iter__->format        =  liqglo.liquidRenderer.dshDisplayName;    //"deepshad";
+	}
+	else
+	{
+		iter__->imageMode += "z";
+		iter__->format = "shadow";
 	}
 }

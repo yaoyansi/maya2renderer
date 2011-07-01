@@ -509,6 +509,9 @@ private :
 	void dealwithParticleInstancedObjects(
 		const float lframe__, const int sample__,
 		int &count__ );
+	void getCameraData( std::vector<structJob>::iterator &iter__ , const int sample__);
+	void getLightData( std::vector<structJob>::iterator &iter__ , const int sample__);
+
 
 	MTime originalTime;
 
