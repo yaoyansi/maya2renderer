@@ -104,6 +104,8 @@ struct liqGlobalVariable
 	// these are little storage variables to keep track of the current graphics state and will eventually be wrapped in
 	// a specific class
 #endif
+
+	MString tempDefname;
 };
 
 extern struct liqGlobalVariable liqglo;

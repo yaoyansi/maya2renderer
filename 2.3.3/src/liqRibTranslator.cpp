@@ -111,7 +111,7 @@ extern const char *LIQUIDVERSION;
 #include <liqCustomNode.h>
 #include <liqShaderFactory.h>
 #include <liqExpression.h>
-#include <liqGlobalVariable.h>
+
 
 using namespace boost;
 using namespace std;

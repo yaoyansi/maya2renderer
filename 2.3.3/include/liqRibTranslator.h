@@ -50,8 +50,30 @@
 #include <liqRibHT.h>
 #include <liqShader.h>
 #include <liqRenderScript.h>
+#include <liqGlobalVariable.h>
+
+enum TempControlBreak//for my refactoring only [3/4/2011 yys]
+{
+	TCB_OK     = 0,
+	TCB_Break  = 1,
+	TCB_Continue = 2,
+	TCB_MS_Success = 3,
+	TCB_MS_Failure = 4,
+};
+
+#define PROCESS_TEMP_CONTROL_BREAK(tcb) \
+	if(TCB_Break == tcb)\
+		break;\
+	else if(TCB_Continue == tcb)\
+		continue;\
+	else if(TCB_MS_Success == tcb)\
+		return MS::kSuccess;\
+	else if(TCB_MS_Failure == tcb)\
+		return MS::kFailure;\
+	else if(TCB_OK == tcb){/* go ahead */}
 
 class liqRibLightData;
+class liqRenderScript;
 
 class liqRibTranslator : public MPxCommand {
 public:
@@ -490,6 +512,14 @@ private :
 		const MString &tempDefname__
 		);
 	void calaculateSamplingTime(const long scanTime__);
+
+	MStatus buildJobs__();
+
+	TempControlBreak processOneFrame(
+		const unsigned int frameIndex,
+		struct liqGlobalVariable &liqglo__,
+		liqRenderScript &jobScript__
+		);
 
 private:
 	liqRibTranslator(const liqRibTranslator&);

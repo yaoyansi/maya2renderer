@@ -2596,7 +2596,7 @@ global proc liquidGlobalsFrameTab( string $prefix )
   columnLayout -adj true -vis false ($prefix + "liquidGlobalsFrameSet" );
     frameLayout -bs "etchedIn" -l "Debug" -cll true -cl false;
       columnLayout -adj true ;
-        liquidShowBoolGlobal "useNewTranslator(refactoring)" "UseNewTranslator" $prefix;
+        liquidShowBoolGlobal "useNewTranslator" "UseNewTranslator(refactoring)" $prefix;
       setParent ..;
     setParent ..;
 
