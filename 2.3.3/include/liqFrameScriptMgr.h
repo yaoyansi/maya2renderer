@@ -69,6 +69,16 @@ public:
 		const MString &framePreCommand__, 
 		const MString &frameRenderCommand__
 		);
+	void cleanHeroPass(const MString &framePreCommand__,
+		const MString &ribFileName__);
+	void cleanShadowPass(const MString &framePreCommand__,
+		const MString &ribFileName__);
+	void cleanShadowRibGen(const MString &framePreCommand__,
+		const MString &ribFileName__);
+
+	void viewHeroPassImage(const MString &imageName__);
+	void viewShadowPassImage(const MString &imageName__);
+
 protected:
 	liqRenderScript::Job &m_frameScriptJob;
 

@@ -34,6 +34,13 @@ public:
 		const MString &framePreCommand__,
 		const MString &frameRibgenCommand__
 	);
+	
+	void cleanupDefferedJob();
+	void cleanupRenderScript(const MString &renderScriptName__);
+	void cleanupPostJob(const MString &m_postJobCommand__);
+
+	void writeRenderScript(const renderScriptFormat format, const MString &renderScriptName__);
+
 protected:
 	liqRenderScript &m_jobScript;
 

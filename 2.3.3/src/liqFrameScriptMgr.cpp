@@ -374,3 +374,53 @@ void tFrameScriptJobMgr::addShadowPass(
 	cmd.alfredTags     = liqglo.m_alfredTags.asChar();
 	m_frameScriptJob.commands.push_back(cmd);
 }
+//
+void tFrameScriptJobMgr::cleanHeroPass(const MString &framePreCommand__,
+									   const MString &ribFileName__
+									   )
+{
+	std::stringstream ss;
+#ifdef _WIN32
+	ss << framePreCommand__.asChar() << " " << RM_CMD << " \"" << ribFileName__.asChar() << "\"";
+#else
+	ss << framePreCommand__.asChar() << " " << RM_CMD << " " << ribFileName__.asChar();
+#endif
+	m_frameScriptJob.cleanupCommands.push_back(liqRenderScript::Cmd(ss.str(), liqglo.remoteRender));
+
+}
+//
+void tFrameScriptJobMgr::cleanShadowPass(const MString &framePreCommand__,
+										 const MString &ribFileName__)
+{
+	std::stringstream ss;
+#ifdef _WIN32
+	ss << framePreCommand__.asChar() << " " << RM_CMD << " \"" << ribFileName__.asChar() << "\"";
+#else
+	ss << framePreCommand__.asChar() << " " << RM_CMD << " " << ribFileName__.asChar();
+#endif
+	m_frameScriptJob.cleanupCommands.push_back(liqRenderScript::Cmd(ss.str(), liqglo.remoteRender));
+
+}
+//
+void tFrameScriptJobMgr::cleanShadowRibGen(const MString &framePreCommand__,
+										   const MString &ribFileName__)
+{
+	std::stringstream ss;
+#ifdef _WIN32
+	ss << framePreCommand__.asChar() << " " << RM_CMD << " \"" << ribFileName__.asChar() << "\"";
+#else
+	ss << framePreCommand__.asChar() << " " << RM_CMD << " " << ribFileName__.asChar();
+#endif
+	m_frameScriptJob.cleanupCommands.push_back(liqRenderScript::Cmd(ss.str(), liqglo.remoteRender));
+
+}
+//
+void tFrameScriptJobMgr::viewHeroPassImage(const MString &imageName__)
+{
+	m_frameScriptJob.chaserCommand = (std::string( "sho \"" ) + imageName__.asChar() + "\"" );
+}
+//
+void tFrameScriptJobMgr::viewShadowPassImage(const MString &imageName__)
+{
+	m_frameScriptJob.chaserCommand = (std::string( "sho \"" ) + imageName__.asChar() + "\"" );
+}

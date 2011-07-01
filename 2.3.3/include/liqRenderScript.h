@@ -168,5 +168,10 @@ private:
 std::ostream& operator<<(std::ostream& o, const liqRenderScript::Cmd& renderer);
 std::ostream& operator<<(std::ostream& o, const liqRenderScript::Job& renderer);
 
+enum renderScriptFormat {
+	NONE   = 0,
+	ALFRED = 1,
+	XML    = 2 
+};
 
 #endif // liqRenderScript_H

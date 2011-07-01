@@ -100,3 +100,32 @@ void tJobScriptMgr::addDefferedJob(
 	deferredJob__.commands.push_back(cmd);
 
 }
+//
+void tJobScriptMgr::cleanupDefferedJob()
+{
+	std::stringstream ss;
+	ss << RM_CMD << " " << liqglo.tempDefname.asChar();
+	m_jobScript.cleanupCommands.push_back( liqRenderScript::Cmd( ss.str(), liqglo.remoteRender ) );
+
+}
+void tJobScriptMgr::cleanupRenderScript(const MString &renderScriptName__)
+{
+	std::stringstream ss;
+	ss << RM_CMD << " " << renderScriptName__.asChar();
+	m_jobScript.cleanupCommands.push_back( liqRenderScript::Cmd( ss.str(), liqglo.remoteRender ) );
+
+}
+void tJobScriptMgr::cleanupPostJob(const MString &m_postJobCommand__)
+{
+	m_jobScript.cleanupCommands.push_back( liqRenderScript::Cmd(m_postJobCommand__.asChar(), (liqglo.remoteRender && !liqglo.useNetRman) ) );
+
+}
+//
+void tJobScriptMgr::writeRenderScript(const renderScriptFormat format, const MString &renderScriptName__)
+{
+	if( format == ALFRED ) 
+		m_jobScript.writeALF( liquidGetRelativePath( liqglo.liqglo_relativeFileNames, renderScriptName__, liqglo.liqglo_projectDir ).asChar() );
+	if( format == XML ) 
+		m_jobScript.writeXML( liquidGetRelativePath( liqglo.liqglo_relativeFileNames, renderScriptName__, liqglo.liqglo_projectDir ).asChar() );
+
+}

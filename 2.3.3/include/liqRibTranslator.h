@@ -166,11 +166,8 @@ private: // Data
 
 	MString m_userRenderScriptFileName;
 	MString m_renderScriptCommand;
-	enum renderScriptFormat {
-		NONE   = 0,
-		ALFRED = 1,
-		XML    = 2 }
-	m_renderScriptFormat;
+
+	renderScriptFormat m_renderScriptFormat;
 
 
 
@@ -494,14 +491,6 @@ private :
 		const int currentBlock__
 		);
 
-	void addDefferedJob(
-		liqRenderScript::Job &deferredJob__,
-		const int currentBlock__,
-		const unsigned int frameIndex__,
-		const MString &framePreCommand__,
-		const MString &frameRibgenCommand__,
-		const MString &tempDefname__
-		);
 	void calaculateSamplingTime(const long scanTime__);
 
 	MStatus buildJobs__();
