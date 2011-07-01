@@ -755,5 +755,27 @@ namespace renderman
 			RiArchiveRecord( RI_VERBATIM, "Option \"searchpath\" \"display\" [\"%s\"]\n", list );
 		}
 	}
+	//
+	MStatus Renderer::framePrologue(long lframe, const structJob &currentJob)
+	{
+		RiFrameBegin( lframe );
+
+		if( currentJob.isShadow )
+		{
+			tShadowRibWriterMgr::framePrologue_display(currentJob);
+		}//if( liqglo.liqglo_currentJob.isShadow )
+		else
+		{
+			tHeroRibWriterMgr::framePrologue_display(currentJob);
+		}
+
+		tRibCameraMgr::framePrologue_camera(lframe, currentJob);
+			
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::framePrologue_camera(long lframe, const structJob &currentJob)
+	{
+		return MStatus::kSuccess;
+	}
 
 }//namespace

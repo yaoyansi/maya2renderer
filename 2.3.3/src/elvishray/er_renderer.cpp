@@ -556,4 +556,16 @@ namespace elvishray
 
 		return MStatus::kSuccess;
 	}
+	//
+	MStatus Renderer::framePrologue(long lframe, const structJob &currentJob)
+	{
+		framePrologue_camera(lframe, currentJob);
+
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::framePrologue_camera(long lframe, const structJob &currentJob)
+	{
+
+		return MStatus::kSuccess;
+	}
 }//namespace

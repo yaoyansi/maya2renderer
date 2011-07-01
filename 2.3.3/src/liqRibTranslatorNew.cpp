@@ -1144,19 +1144,9 @@ MStatus liqRibTranslator::framePrologue__( long lframe, const structJob &current
 	{
 		return MS::kSuccess;
 	}
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->framePrologue(lframe, currentJob);
 
-		RiFrameBegin( lframe );
 
-		if( currentJob.isShadow )
-		{
-			tShadowRibWriterMgr::framePrologue_display(currentJob);
-		}//if( liqglo.liqglo_currentJob.isShadow )
-		else
-		{
-			tHeroRibWriterMgr::framePrologue_display(currentJob);
-		}
-
-		tRibCameraMgr::framePrologue_camera(lframe, currentJob);
 
 	return MS::kSuccess;
 }

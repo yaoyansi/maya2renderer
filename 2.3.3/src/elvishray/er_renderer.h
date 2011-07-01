@@ -24,7 +24,8 @@ namespace elvishray
 		virtual MStatus ribPrologue_options(const structJob& currentJob);
 		virtual void ribPrologue_comment(const char* liqversion, 
 			const char* scenename, const char* user, const time_t &time);
-		//		virtual MStatus framePrologue(const long scanTime,const structJob& currentJob);
+		virtual MStatus framePrologue(const long scanTime,const structJob& currentJob);
+		virtual MStatus framePrologue_camera(long lframe, const structJob &currentJob);
 		virtual MStatus worldPrologue(const structJob& currentJob);
 		//		virtual MStatus lightBlock(const structJob& currentJob);
 		//		virtual MStatus coordSysBlock(const structJob& currentJob);

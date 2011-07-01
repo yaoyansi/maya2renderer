@@ -301,6 +301,8 @@ void tHeroRibWriterMgr::framePrologue_display(const structJob &currentJob)
 					m_channels_iterator++;
 				}//while ( m_channels_iterator != m_channels.end() ) 
 			}//if( liqglo.liquidRenderer.supports_DISPLAY_CHANNELS ) 
+			
+			
 			// output display drivers
 			RiArchiveRecord( RI_COMMENT, "Display Drivers:" );
 			liqRIBMsg("Display 6");

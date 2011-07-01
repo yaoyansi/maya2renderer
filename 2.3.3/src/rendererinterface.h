@@ -31,7 +31,8 @@ public:
 	virtual void ribPrologue_comment(const char* liqversion, 
 		const char* scenename, const char* user, const time_t &time) = 0;
 	virtual MStatus ribPrologue_options(const structJob& currentJob) = 0;
-//	virtual MStatus framePrologue(const long scanTime,const structJob& currentJob) = 0;
+	virtual MStatus framePrologue(const long scanTime,const structJob& currentJob) = 0;
+	virtual MStatus framePrologue_camera(long lframe, const structJob &currentJob) = 0;
 	virtual MStatus worldPrologue(const structJob& currentJob) = 0;
 //	virtual MStatus lightBlock(const structJob& currentJob) = 0;
 //	virtual MStatus coordSysBlock(const structJob& currentJob) = 0;
