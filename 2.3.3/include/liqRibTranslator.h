@@ -98,7 +98,9 @@ private: // Methods
 	MString getHiderOptions( MString rendername, MString hidername );
 
 	MStatus buildJobs();
-public://temp
+#ifdef Refactoring 
+public: 
+#endif
 	MStatus ribPrologue();
 	MStatus ribEpilogue();
 	MStatus framePrologue( long );
@@ -128,12 +130,17 @@ private: // Data
 	MRibStatus ribStatus;
 
 	// Render Globals and RIB Export Options
+#ifdef Refactoring 
+public: 
+#endif
 	std::vector<structJob>  jobList;
 	std::vector<structJob>  shadowList;
 
 	std::vector<structJob>  refList;  // reflections list
 	std::vector<structJob>  envList;  // environments list
-public:
+#ifdef Refactoring 
+public: 
+#endif
 	std::vector<structJob>  txtList;  // make textures list
 
 	// MDagPathArray shadowLightArray;            //  UN-USED GLOBAL

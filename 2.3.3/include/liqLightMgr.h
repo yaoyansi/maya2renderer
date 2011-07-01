@@ -16,7 +16,12 @@ public:
 		boost::shared_ptr< liqRibHT > &htable__,
 		int &count__,
 		MStatus &returnStatus__);
-
+	static MStatus buildShadowJob( 
+		structJob &thisJob___, bool m_lazyCompute__
+		);
+	static MStatus tLightMgr::buildShadowCameraJob( 
+		structJob &thisJob___, bool m_lazyCompute__
+		);
 private:
 	tLightMgr(const tLightMgr&);
 	tLightMgr& operator=(const tLightMgr&);
