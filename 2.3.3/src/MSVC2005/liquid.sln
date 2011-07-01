@@ -43,6 +43,8 @@ Global
 		Prman Release2008|x64 = Prman Release2008|x64
 		Prman2008Debug|Win32 = Prman2008Debug|Win32
 		Prman2008Debug|x64 = Prman2008Debug|x64
+		Prman2009Debug|Win32 = Prman2009Debug|Win32
+		Prman2009Debug|x64 = Prman2009Debug|x64
 		Release|Win32 = Release|Win32
 		Release|x64 = Release|x64
 	EndGlobalSection
@@ -99,6 +101,10 @@ Global
 		{2C342CB8-4207-4594-8C09-74201C27A23C}.Prman2008Debug|Win32.Build.0 = Prman2008Debug|Win32
 		{2C342CB8-4207-4594-8C09-74201C27A23C}.Prman2008Debug|x64.ActiveCfg = Prman2008Debug|x64
 		{2C342CB8-4207-4594-8C09-74201C27A23C}.Prman2008Debug|x64.Build.0 = Prman2008Debug|x64
+		{2C342CB8-4207-4594-8C09-74201C27A23C}.Prman2009Debug|Win32.ActiveCfg = Prman2009Debug|Win32
+		{2C342CB8-4207-4594-8C09-74201C27A23C}.Prman2009Debug|Win32.Build.0 = Prman2009Debug|Win32
+		{2C342CB8-4207-4594-8C09-74201C27A23C}.Prman2009Debug|x64.ActiveCfg = Prman2009Debug|x64
+		{2C342CB8-4207-4594-8C09-74201C27A23C}.Prman2009Debug|x64.Build.0 = Prman2009Debug|x64
 		{2C342CB8-4207-4594-8C09-74201C27A23C}.Release|Win32.ActiveCfg = Release|Win32
 		{2C342CB8-4207-4594-8C09-74201C27A23C}.Release|Win32.Build.0 = Release|Win32
 		{2C342CB8-4207-4594-8C09-74201C27A23C}.Release|x64.ActiveCfg = Release|x64
@@ -155,6 +161,10 @@ Global
 		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Prman2008Debug|Win32.Build.0 = Prman2008Debug|Win32
 		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Prman2008Debug|x64.ActiveCfg = Prman2008Debug|x64
 		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Prman2008Debug|x64.Build.0 = Prman2008Debug|x64
+		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Prman2009Debug|Win32.ActiveCfg = Prman2009Debug|Win32
+		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Prman2009Debug|Win32.Build.0 = Prman2009Debug|Win32
+		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Prman2009Debug|x64.ActiveCfg = Prman2009Debug|x64
+		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Prman2009Debug|x64.Build.0 = Prman2009Debug|x64
 		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Release|Win32.ActiveCfg = 3Delight Release|Win32
 		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Release|Win32.Build.0 = 3Delight Release|Win32
 		{C819AC2D-82DD-4A79-A777-DE415CE09E11}.Release|x64.ActiveCfg = 3Delight Release|x64
@@ -211,6 +221,10 @@ Global
 		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Prman2008Debug|Win32.Build.0 = Prman2008Debug|Win32
 		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Prman2008Debug|x64.ActiveCfg = Prman2008Debug|x64
 		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Prman2008Debug|x64.Build.0 = Prman2008Debug|x64
+		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Prman2009Debug|Win32.ActiveCfg = Prman2009Debug|Win32
+		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Prman2009Debug|Win32.Build.0 = Prman2009Debug|Win32
+		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Prman2009Debug|x64.ActiveCfg = Prman2009Debug|x64
+		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Prman2009Debug|x64.Build.0 = Prman2009Debug|x64
 		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Release|Win32.ActiveCfg = Air Release|Win32
 		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Release|Win32.Build.0 = Air Release|Win32
 		{BAED7037-8C31-41AB-897C-49A07BED17A5}.Release|x64.ActiveCfg = Air Release|x64
@@ -267,6 +281,10 @@ Global
 		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Prman2008Debug|Win32.Build.0 = Prman2008Debug|Win32
 		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Prman2008Debug|x64.ActiveCfg = Prman2008Debug|x64
 		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Prman2008Debug|x64.Build.0 = Prman2008Debug|x64
+		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Prman2009Debug|Win32.ActiveCfg = Prman2009Debug|Win32
+		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Prman2009Debug|Win32.Build.0 = Prman2009Debug|Win32
+		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Prman2009Debug|x64.ActiveCfg = Prman2009Debug|x64
+		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Prman2009Debug|x64.Build.0 = Prman2009Debug|x64
 		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Release|Win32.ActiveCfg = Aqsis Release|Win32
 		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Release|Win32.Build.0 = Aqsis Release|Win32
 		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}.Release|x64.ActiveCfg = Aqsis Release|x64
@@ -323,6 +341,10 @@ Global
 		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Prman2008Debug|Win32.Build.0 = Prman2008Debug|Win32
 		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Prman2008Debug|x64.ActiveCfg = Prman2008Debug|x64
 		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Prman2008Debug|x64.Build.0 = Prman2008Debug|x64
+		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Prman2009Debug|Win32.ActiveCfg = Prman2009Debug|Win32
+		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Prman2009Debug|Win32.Build.0 = Prman2009Debug|Win32
+		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Prman2009Debug|x64.ActiveCfg = Prman2009Debug|x64
+		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Prman2009Debug|x64.Build.0 = Prman2009Debug|x64
 		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Release|Win32.ActiveCfg = Pixie Release|Win32
 		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Release|Win32.Build.0 = Pixie Release|Win32
 		{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}.Release|x64.ActiveCfg = Pixie Release|x64
@@ -331,7 +353,6 @@ Global
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.3Delight Generic ribLib Release|Win32.Build.0 = 3Delight Generic ribLib Release|Win32
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.3Delight Generic ribLib Release|x64.ActiveCfg = 3Delight Generic ribLib Release|x64
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.3Delight Generic ribLib Release|x64.Build.0 = 3Delight Generic ribLib Release|x64
-		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.3Delight Generic ribLib Release|x64.Build.2 = Prman Release|x64
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.3Delight Release|Win32.ActiveCfg = 3Delight Release|Win32
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.3Delight Release|Win32.Build.0 = 3Delight Release|Win32
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.3Delight Release|x64.ActiveCfg = 3Delight Release|x64
@@ -380,6 +401,10 @@ Global
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Prman2008Debug|Win32.Build.0 = Prman2008Debug|Win32
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Prman2008Debug|x64.ActiveCfg = Prman2008Debug|x64
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Prman2008Debug|x64.Build.0 = Prman2008Debug|x64
+		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Prman2009Debug|Win32.ActiveCfg = Prman2009Debug|Win32
+		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Prman2009Debug|Win32.Build.0 = Prman2009Debug|Win32
+		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Prman2009Debug|x64.ActiveCfg = Prman2009Debug|x64
+		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Prman2009Debug|x64.Build.0 = Prman2009Debug|x64
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Release|Win32.ActiveCfg = Generic RibLib Release|Win32
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Release|Win32.Build.0 = Generic RibLib Release|Win32
 		{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}.Release|x64.ActiveCfg = Prman Release|x64
@@ -388,7 +413,6 @@ Global
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.3Delight Generic ribLib Release|Win32.Build.0 = Air Generic ribLib Release|Win32
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.3Delight Generic ribLib Release|x64.ActiveCfg = 3Delight Generic ribLib Release|x64
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.3Delight Generic ribLib Release|x64.Build.0 = 3Delight Generic ribLib Release|x64
-		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.3Delight Generic ribLib Release|x64.Build.2 = Generic ribLib Release|x64
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.3Delight Release|Win32.ActiveCfg = 3Delight Release|Win32
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.3Delight Release|Win32.Build.0 = 3Delight Release|Win32
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.3Delight Release|x64.ActiveCfg = 3Delight Release|x64
@@ -437,6 +461,10 @@ Global
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Prman2008Debug|Win32.Build.0 = Prman2008Debug|Win32
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Prman2008Debug|x64.ActiveCfg = Prman2008Debug|x64
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Prman2008Debug|x64.Build.0 = Prman2008Debug|x64
+		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Prman2009Debug|Win32.ActiveCfg = Prman2009Debug|Win32
+		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Prman2009Debug|Win32.Build.0 = Prman2009Debug|Win32
+		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Prman2009Debug|x64.ActiveCfg = Prman2009Debug|x64
+		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Prman2009Debug|x64.Build.0 = Prman2009Debug|x64
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Release|Win32.ActiveCfg = Generic ribLib Release|Win32
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Release|Win32.Build.0 = Generic ribLib Release|Win32
 		{C72B3D60-A418-41EF-9B83-0F16430BC6CF}.Release|x64.ActiveCfg = Generic ribLib Release|x64
