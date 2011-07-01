@@ -59,6 +59,16 @@ public:
 		);
 	void try_addPreFrameCommand(const MString &framePreFrameCommand__);
 	void try_addPostFrameCommand(const MString &framePostFrameCommand__);
+	void addHeroPass(
+		const MString &ribFileName__,
+		const MString &framePreCommand__, 
+		const MString &frameRenderCommand__
+		);
+	void addShadowPass(
+		const MString &ribFileName__,
+		const MString &framePreCommand__, 
+		const MString &frameRenderCommand__
+		);
 protected:
 	liqRenderScript::Job &m_frameScriptJob;
 

@@ -451,7 +451,7 @@ liqRibTranslator::liqRibTranslator()
 	liqglo.liqglo_preRibBox.clear();
 	liqglo.m_alfredTags.clear();
 	liqglo.m_alfredServices.clear();
-	m_dirmaps.clear();
+	liqglo.m_dirmaps.clear();
 	liqglo.m_defGenKey.clear();
 	liqglo.m_defGenService.clear();
 	m_preFrameMel.clear();
@@ -1684,7 +1684,7 @@ void liqRibTranslator::liquidReadGlobals()
 		liqglo.m_alfredServices = parseString( varVal );
 
 	if ( liquidGetPlugValue( rGlobalNode, "dirmaps", varVal, gStatus ) == MS::kSuccess ) 
-		m_dirmaps = parseString( varVal );
+		liqglo.m_dirmaps = parseString( varVal );
 
 
 	if ( liquidGetPlugValue( rGlobalNode, "key", varVal, gStatus ) == MS::kSuccess ) 
@@ -2422,8 +2422,8 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				jobScript.maxServers = 1;
 			}
 
-			if ( m_dirmaps.length() )
-				jobScript.dirmaps = m_dirmaps.asChar();
+			if ( liqglo.m_dirmaps.length() )
+				jobScript.dirmaps = liqglo.m_dirmaps.asChar();
 
 			if( m_preJobCommand != MString( "" ) ) 
 			{
@@ -3040,10 +3040,10 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				{
 					stringstream ss;
 					MString ribFileName = frameJob->ribFileName;
-					if ( m_dirmaps.length() )
+					if ( liqglo.m_dirmaps.length() )
 					{  
 						ribFileName = "\\\"%D(" + ribFileName + ")\\\"";      
-						LIQDEBUGPRINTF( "==> Set DirMaps : %s.\n", m_dirmaps.asChar() );
+						LIQDEBUGPRINTF( "==> Set DirMaps : %s.\n", liqglo.m_dirmaps.asChar() );
 					}
 					if( liqglo.useNetRman ) 
 					{
@@ -4153,12 +4153,12 @@ MStatus liqRibTranslator::ribPrologue()
 		}
 		// set search paths
 		//
-		if ( m_dirmaps.length() )
+		if ( liqglo.m_dirmaps.length() )
 		{
 			using namespace std;
 			using namespace boost;
 
-			const string str( m_dirmaps.asChar() );
+			const string str( liqglo.m_dirmaps.asChar() );
 			stringstream ss;
 			vector< string > names;
 			typedef tokenizer< char_separator< char > > tokenizer;

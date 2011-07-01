@@ -306,3 +306,71 @@ void tFrameScriptJobMgr::try_addPostFrameCommand(const MString &framePostFrameCo
 		m_frameScriptJob.cleanupCommands.push_back(cmd);// why cleanupCommand? not command or childJob? Is it a bug?
 	}
 }
+//
+void tFrameScriptJobMgr::addHeroPass(
+	const MString &ribFileName__t,
+	const MString &framePreCommand__, 
+	const MString &frameRenderCommand__
+)
+{
+	std::stringstream ss;
+	MString ribFileName__ = ribFileName__t;
+	if ( liqglo.m_dirmaps.length() )
+	{  
+		ribFileName__ = "\\\"%D(" + ribFileName__t + ")\\\"";      
+		LIQDEBUGPRINTF( "==> Set DirMaps : %s.\n", liqglo.m_dirmaps.asChar() );
+	}
+	if( liqglo.useNetRman ) 
+	{
+#ifdef _WIN32
+		ss << framePreCommand__.asChar() << " netrender %H -Progress \"" << ribFileName__.asChar() << "\"";
+#else
+		ss << framePreCommand__.asChar() << " netrender %H -Progress " << ribFileName__.asChar();
+#endif
+	} 
+	else 
+	{
+#ifdef _WIN32
+		ss << framePreCommand__.asChar() << " " << frameRenderCommand__.asChar() << " -Progress \"" << ribFileName__.asChar() << "\"";
+#else
+		ss << framePreCommand__.asChar() << " " << frameRenderCommand__.asChar() << " -Progress " << ribFileName__.asChar();
+#endif
+	}
+	liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !liqglo.useNetRman));
+	if( liqglo.m_alfredExpand ) 
+		cmd.alfredExpand = true;
+
+	cmd.alfredServices = liqglo.m_alfredServices.asChar();
+	cmd.alfredTags     = liqglo.m_alfredTags.asChar();
+	m_frameScriptJob.commands.push_back(cmd);
+}
+//
+void tFrameScriptJobMgr::addShadowPass(
+				   const MString &ribFileName__,
+				   const MString &framePreCommand__, 
+				   const MString &frameRenderCommand__
+				   )
+{
+	std::stringstream ss;
+	if( liqglo.useNetRman ) 
+	{
+#ifdef _WIN32
+		ss << framePreCommand__.asChar() << " netrender %H -Progress \"" << ribFileName__.asChar() << "\"";
+#else
+		ss << framePreCommand__.asChar() << " netrender %H -Progress " << ribFileName__.asChar();
+#endif
+	} else {
+#ifdef _WIN32
+		ss << framePreCommand__.asChar() << " " << frameRenderCommand__.asChar() << " \"" << ribFileName__.asChar() << "\"";
+#else
+		ss << framePreCommand__.asChar() << " " << frameRenderCommand__.asChar() << " " << ribFileName__.asChar();
+#endif
+	}
+	liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !liqglo.useNetRman));
+	if( liqglo.m_alfredExpand ) 
+		cmd.alfredExpand = true;
+
+	cmd.alfredServices = liqglo.m_alfredServices.asChar();
+	cmd.alfredTags     = liqglo.m_alfredTags.asChar();
+	m_frameScriptJob.commands.push_back(cmd);
+}

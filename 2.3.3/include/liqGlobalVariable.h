@@ -112,6 +112,7 @@ struct liqGlobalVariable
 	bool m_alfShadowRibGen;
 	bool fullShadowRib;
 	bool cleanRib;              // clean the rib files up
+	MString m_dirmaps;
 #if 0
 #ifdef _WIN32
 	// Hmmmmmmmm what's this ?

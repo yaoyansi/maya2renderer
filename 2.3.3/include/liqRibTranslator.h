@@ -163,7 +163,7 @@ private: // Data
 
 	MString renderJobName;
 
-	MString m_dirmaps;
+
 	MString m_userRenderScriptFileName;
 	MString m_renderScriptCommand;
 	enum renderScriptFormat {

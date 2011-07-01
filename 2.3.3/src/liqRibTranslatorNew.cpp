@@ -272,7 +272,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 				renderJobName = liqglo.liqglo_sceneName;
 
 			jobScriptMgr.setCommonParameters(
-				renderJobName.asChar(), liqglo.useNetRman, m_minCPU, m_maxCPU, m_dirmaps 
+				renderJobName.asChar(), liqglo.useNetRman, m_minCPU, m_maxCPU, liqglo.m_dirmaps 
 			);
 			if( m_preJobCommand != MString( "" ) ) 
 			{
@@ -394,62 +394,13 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 
 				if( m_outputHeroPass ) 
 				{
-					stringstream ss;
-					MString ribFileName = frameJob->ribFileName;
-					if ( m_dirmaps.length() )
-					{  
-						ribFileName = "\\\"%D(" + ribFileName + ")\\\"";      
-						LIQDEBUGPRINTF( "==> Set DirMaps : %s.\n", m_dirmaps.asChar() );
-					}
-					if( liqglo.useNetRman ) 
-					{
-		#ifdef _WIN32
-						ss << framePreCommand.asChar() << " netrender %H -Progress \"" << ribFileName.asChar() << "\"";
-		#else
-						ss << framePreCommand.asChar() << " netrender %H -Progress " << ribFileName.asChar();
-		#endif
-					} 
-					else 
-					{
-		#ifdef _WIN32
-						ss << framePreCommand.asChar() << " " << frameRenderCommand.asChar() << " -Progress \"" << ribFileName.asChar() << "\"";
-		#else
-						ss << framePreCommand.asChar() << " " << frameRenderCommand.asChar() << " -Progress " << ribFileName.asChar();
-		#endif
-					}
-					liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !liqglo.useNetRman));
-					if( liqglo.m_alfredExpand ) 
-						cmd.alfredExpand = true;
 
-					cmd.alfredServices = liqglo.m_alfredServices.asChar();
-					cmd.alfredTags     = liqglo.m_alfredTags.asChar();
-					frameScriptJob.commands.push_back(cmd);
+					frameScriptJobMgr.addHeroPass(frameJob->ribFileName, framePreCommand, frameRenderCommand);
 				}//if( m_outputHeroPass ) 
 				LIQDEBUGPRINTF( "-> finished writing out hero information to alfred file.\n" );
 				if( m_outputShadowPass ) 
 				{
-					stringstream ss;
-					if( liqglo.useNetRman ) 
-					{
-		#ifdef _WIN32
-						ss << framePreCommand.asChar() << " netrender %H -Progress \"" << shadowPassJob->ribFileName.asChar() << "\"";
-		#else
-						ss << framePreCommand.asChar() << " netrender %H -Progress " << shadowPassJob->ribFileName.asChar();
-		#endif
-					} else {
-		#ifdef _WIN32
-						ss << framePreCommand.asChar() << " " << frameRenderCommand.asChar() << " \"" << shadowPassJob->ribFileName.asChar() << "\"";
-		#else
-						ss << framePreCommand.asChar() << " " << frameRenderCommand.asChar() << " " << shadowPassJob->ribFileName.asChar();
-		#endif
-					}
-					liqRenderScript::Cmd cmd(ss.str(), (liqglo.remoteRender && !liqglo.useNetRman));
-					if( liqglo.m_alfredExpand ) 
-						cmd.alfredExpand = true;
-
-					cmd.alfredServices = liqglo.m_alfredServices.asChar();
-					cmd.alfredTags     = liqglo.m_alfredTags.asChar();
-					frameScriptJob.commands.push_back(cmd);
+					frameScriptJobMgr.addShadowPass(shadowPassJob->ribFileName, framePreCommand, frameRenderCommand);
 				}//if( m_outputShadowPass )
 
 //				if( liqglo.cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
