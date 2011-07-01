@@ -1,7 +1,8 @@
 #include "ercall.h"
 #include "../log/prerequest_std.h"
+#include "er_renderer.h"
 
-//#define _USE_ER_LIB_
+#define _USE_ER_LIB_
 
 #ifdef _USE_ER_LIB_
 #	include <core/include/eray_core.h>
@@ -10,11 +11,8 @@
 #	pragma comment( lib, "eray_core.lib" )
 #	define _e( _call_ )  _call_ 
 #else 
-#	define _e( _call_ )  
+#	define _e( _call_ )  dummy.get()<< "// eray_core.lib is not linked. "<< #_call_<<" is not called. You should define _USE_ER_LIB_." <<std::endl;
 #endif
-
-#include "er_renderer.h"
-
 
 #define _s( _log_ ) dummy.get()<< _log_ <<";"<<std::endl;
 

@@ -441,6 +441,8 @@ namespace elvishray
 	//
 	MStatus Renderer::ribPrologue_begin(const structJob& currentJob)
 	{
+
+
 		if( true )
 		{
 			_S( ei_make_texture( currentJob.imageName.asChar(), currentJob.texName.asChar() , EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f ) );
@@ -472,17 +474,21 @@ namespace elvishray
 			_s( "//MayaConnection: error occured in startRender." );
 			return MS::kFailure;
 		}
+
 		_S( ei_render( m_root_group.c_str(), currentJob.camera[0].name.asChar(), m_option.c_str() ) );
 		//ei_render( "world",	"caminst1",	"opt" );
 		
+		_S( ei_end_scene() );
+
 		// end render
 		if (MayaConnection::getInstance()->endRender() != MS::kSuccess)
 		{
 			_s( "//MayaConnection: error occured in endRender." );
+			MayaConnection::delInstance();
 			return MS::kFailure;
 		}
+		MayaConnection::delInstance();
 
-		_S( ei_end_scene() );
 		return MS::kSuccess;
 	}
 	//
