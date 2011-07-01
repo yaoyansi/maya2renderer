@@ -297,3 +297,12 @@ void tFrameScriptJobMgr::try_addPreFrameCommand(const MString &framePreFrameComm
 		m_frameScriptJob.commands.push_back(cmd);
 	}
 }
+//
+void tFrameScriptJobMgr::try_addPostFrameCommand(const MString &framePostFrameCommand__)
+{
+	if( framePostFrameCommand__ != MString("") ) 
+	{
+		liqRenderScript::Cmd cmd(framePostFrameCommand__.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
+		m_frameScriptJob.cleanupCommands.push_back(cmd);// why cleanupCommand? not command or childJob? Is it a bug?
+	}
+}

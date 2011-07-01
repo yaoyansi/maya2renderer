@@ -58,7 +58,7 @@ public:
 		bool &alf_refmaps__
 		);
 	void try_addPreFrameCommand(const MString &framePreFrameCommand__);
-
+	void try_addPostFrameCommand(const MString &framePostFrameCommand__);
 protected:
 	liqRenderScript::Job &m_frameScriptJob;
 

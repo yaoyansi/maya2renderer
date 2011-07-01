@@ -483,11 +483,9 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 					}
 					frameScriptJob.cleanupCommands.push_back(liqRenderScript::Cmd(ss.str(), liqglo.remoteRender));
 				}
-				if( framePostFrameCommand != MString("") ) 
-				{
-					liqRenderScript::Cmd cmd(framePostFrameCommand.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
-					frameScriptJob.cleanupCommands.push_back(cmd);
-				}
+				// try to add post frame command
+				frameScriptJobMgr.try_addPostFrameCommand(framePostFrameCommand);
+
 				//}//if( cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
 				if( m_outputHeroPass ) 
 					frameScriptJob.chaserCommand = (string( "sho \"" ) + frameJob->imageName.asChar() + "\"" );
