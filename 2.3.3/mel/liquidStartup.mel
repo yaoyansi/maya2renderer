@@ -667,7 +667,7 @@ global proc int[] liquidPreview_getRenderViewResolution()
       $heigth = $yres;
       break;
   }
-
+  //liqlog("Resolution={"+$width+","+ $heigth+"}");
   liqPopIdent();
   return {$width, $heigth};
 }
@@ -677,7 +677,9 @@ global proc float[] liquidPreview_getRenderViewCropWindow()
   liqPushIdent();
 	liqlog("liquidPreview_getRenderViewCropWindow(...)");
   int $imageSize[] = liquidPreview_getRenderViewResolution();
+  //liqlog("$imageSize={"+$imageSize[0]+","+$imageSize[1]+"}");
   int $renderRegion[] = `liquidRenderView -rg`;
+  //liqlog("$renderRegion={"+$renderRegion[0]+","+$renderRegion[1]+","+$renderRegion[2]+","+$renderRegion[3]+"}");
   float $x1, $x2, $y1, $y2;
 
   $x1 = max( 0.0, float( $renderRegion[0] ) / ( $imageSize[0] - 1 ) );
@@ -737,7 +739,9 @@ global proc liquidCropPreview()
     liquidCreateGlobals;
   }
   int $imageSize[2] = liquidPreview_getRenderViewResolution();
+  //liqlog("$imageSize={"+$imageSize[0]+","+$imageSize[1]+"}");
   float $crop[] = liquidPreview_getRenderViewCropWindow();
+  //liqlog("$crop={"+$crop[0]+","+$crop[1]+","+$crop[2]+","+$crop[3]+"}");
   liquid -GL -renderView -x $imageSize[0] -y $imageSize[1] -cw $crop[0] $crop[1] $crop[2] $crop[3];
   liqPopIdent();
 }

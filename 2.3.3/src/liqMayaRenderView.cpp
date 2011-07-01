@@ -74,6 +74,9 @@ typedef int socklen_t;
 #include <string>
 #include <iostream>
 
+#include <liquid.h>
+#include <liqGlobalHelpers.h>
+
 using namespace std;
 
 int	readSockData(int s,char *data,int n);
@@ -263,12 +266,12 @@ MStatus liqMayaRenderCmd::redoIt()
 			return MS::kFailure;
 		}
     
-		// printf("[liqMayaRenderView] imgInfo: %d %d %d %d %d %d (%d)\n", imgInfo.width, imgInfo.height, imgInfo.xo, imgInfo.yo, imgInfo.wo, imgInfo.ho, imgInfo.channels ); 
+		//liquidMessage2(messageInfo, "[liqMayaRenderView] imgInfo: %d %d   %d %d   %d %d (%d)\n", imgInfo.width,imgInfo.height, imgInfo.xo, imgInfo.yo, imgInfo.wo,imgInfo.ho, imgInfo.channels ); 
 
 		if ( !m_bDoRegionRender ) 
       MRenderView::startRender (imgInfo.wo,imgInfo.ho, false, true );
 		else 
-      MRenderView::startRegionRender (imgInfo.wo,imgInfo.ho,imgInfo.xo, imgInfo.yo, imgInfo.xo+imgInfo.width,imgInfo.yo+ imgInfo.height, false, true );
+      MRenderView::startRegionRender (imgInfo.wo,imgInfo.ho,imgInfo.xo, imgInfo.xo+imgInfo.width, imgInfo.height-(imgInfo.yo), imgInfo.height-(imgInfo.yo+ imgInfo.height), false, true );
 		vector<bucket*> buckets;
 		bool bTestEnd;
 		MComputation renderComputation;
