@@ -426,35 +426,7 @@ liqRibTranslator::liqRibTranslator()
 	m_statistics        = 0;
 	m_statisticsFile    = "";
 
-	m_hiddenJitter = 1;
-	// PRMAN 13 BEGIN
-	m_hiddenAperture[0] = 0.0;
-	m_hiddenAperture[1] = 0.0;
-	m_hiddenAperture[2] = 0.0;
-	m_hiddenAperture[3] = 0.0;
-	m_hiddenShutterOpening[0] = 0.0;
-	m_hiddenShutterOpening[0] = 1.0;
-	// PRMAN 13 END
-	m_hiddenOcclusionBound = 0;
-	m_hiddenMpCache = true;
-	m_hiddenMpMemory = 6144;
-	m_hiddenMpCacheDir = ".";
-	m_hiddenSampleMotion = true;
-	m_hiddenSubPixel = 1;
-	m_hiddenExtremeMotionDof = false;
-	m_hiddenMaxVPDepth = -1;
-	// PRMAN 13 BEGIN
-	m_hiddenSigma = false;
-	m_hiddenSigmaBlur = 1.0;
-	// PRMAN 13 END
-
-	m_raytraceFalseColor = 0;
-	m_photonEmit = 0;
-	m_photonSampleSpectrum = 0;
-
-	m_depthMaskZFile = "";
-	m_depthMaskReverseSign = false;
-	m_depthMaskDepthBias = 0.01;
+	initHinderParameters();
 
 	m_minCPU = m_maxCPU = 1;
 	m_cropX1 = m_cropY1 = 0.0;
@@ -1604,38 +1576,9 @@ void liqRibTranslator::liquidReadGlobals()
 	liquidGetPlugValue( rGlobalNode, "preframeMel", m_preFrameMel, gStatus );
 	liquidGetPlugValue( rGlobalNode, "postframeMel", m_postFrameMel, gStatus );
 
-	// RENDER OPTIONS:BEGIN
-	if ( liquidGetPlugValue( rGlobalNode, "hider", var, gStatus ) == MS::kSuccess ) 
-		liqglo.liqglo_hider = (enum HiderType) var;
-	liquidGetPlugValue( rGlobalNode, "jitter", m_hiddenJitter, gStatus );
-	// PRMAN 13 BEGIN
-	liquidGetPlugValue( rGlobalNode, "hiddenApertureNSides", m_hiddenAperture[0], gStatus );
-	liquidGetPlugValue( rGlobalNode, "hiddenApertureAngle", m_hiddenAperture[1], gStatus );
-	liquidGetPlugValue( rGlobalNode, "hiddenApertureRoundness", m_hiddenAperture[2], gStatus );
-	liquidGetPlugValue( rGlobalNode, "hiddenApertureDensity", m_hiddenAperture[3], gStatus );   
-	liquidGetPlugValue( rGlobalNode, "hiddenShutterOpeningOpen", m_hiddenShutterOpening[0], gStatus );     
-	liquidGetPlugValue( rGlobalNode, "hiddenShutterOpeningClose", m_hiddenShutterOpening[1], gStatus );   
-	// PRMAN 13 END
-	liquidGetPlugValue( rGlobalNode, "hiddenOcclusionBound", m_hiddenOcclusionBound, gStatus );  
-	liquidGetPlugValue( rGlobalNode, "hiddenMpCache", m_hiddenMpCache, gStatus ); 
-	liquidGetPlugValue( rGlobalNode, "hiddenMpMemory", m_hiddenMpMemory, gStatus ); 
-	liquidGetPlugValue( rGlobalNode, "hiddenMpCacheDir", m_hiddenMpCacheDir, gStatus );   
-	liquidGetPlugValue( rGlobalNode, "hiddenSampleMotion", m_hiddenSampleMotion, gStatus );     
-	liquidGetPlugValue( rGlobalNode, "hiddenSubPixel", m_hiddenSubPixel, gStatus );  
-	liquidGetPlugValue( rGlobalNode, "hiddenExtremeMotionDof", m_hiddenExtremeMotionDof, gStatus ); 
-	liquidGetPlugValue( rGlobalNode, "hiddenMaxVPDepth", m_hiddenMaxVPDepth, gStatus ); 
-	// PRMAN 13 BEGIN  
-	liquidGetPlugValue( rGlobalNode, "hiddenSigmaHiding", m_hiddenSigma, gStatus );   
-	liquidGetPlugValue( rGlobalNode, "hiddenSigmaBlur", m_hiddenSigmaBlur, gStatus );   
-	// PRMAN 13 END  
-	liquidGetPlugValue( rGlobalNode, "raytraceFalseColor", m_raytraceFalseColor, gStatus );     
-	liquidGetPlugValue( rGlobalNode, "photonEmit", m_photonEmit, gStatus );   
-	liquidGetPlugValue( rGlobalNode, "photonSampleSpectrum", m_photonSampleSpectrum, gStatus );  
-	if ( liquidGetPlugValue( rGlobalNode, "depthMaskZFile", varVal, gStatus ) == MS::kSuccess )   
-		m_depthMaskZFile = parseString( varVal, false );  
-	liquidGetPlugValue( rGlobalNode, "depthMaskReverseSign", m_depthMaskReverseSign, gStatus ); 
-	liquidGetPlugValue( rGlobalNode, "depthMaskDepthBias", m_depthMaskDepthBias, gStatus ); 
-	// RENDER OPTIONS:END
+
+	getHinderParameters(rGlobalNode);
+
 
 	liquidGetPlugValue( rGlobalNode, "cropX1", m_cropX1, gStatus );
 	liquidGetPlugValue( rGlobalNode, "cropX2", m_cropX2, gStatus );
@@ -7311,169 +7254,6 @@ bool liqRibTranslator::renderFrameSort( const structJob& a, const structJob& b )
 	long v1 = ( a.isShadow )? a.renderFrame : 100000000;
 	long v2 = ( b.isShadow )? b.renderFrame : 100000000;
 	return v1 < v2;
-}
-
-MString liqRibTranslator::getHiderOptions( MString rendername, MString hidername )
-{
-	MString options;
-	// PRMAN
-	if( rendername == "PRMan" ) 
-	{
-		if( hidername == "hidden" ) 
-		{
-			{
-				stringstream tmp;
-				tmp << "\"int jitter\" [" << m_hiddenJitter << "] " << ends;
-				options += tmp.str().c_str();
-			}
-			// PRMAN 13 BEGIN
-			if( m_hiddenAperture[0] != 0.0 ||
-				m_hiddenAperture[1] != 0.0 ||
-				m_hiddenAperture[2] != 0.0 ||
-				m_hiddenAperture[3] != 0.0 ) 
-			{
-				char tmp[255];
-				sprintf( tmp, "\"float aperture[4]\" [%f %f %f %f] ", m_hiddenAperture[0], m_hiddenAperture[1], m_hiddenAperture[2], m_hiddenAperture[3] );
-				options += tmp;
-			}
-			if( m_hiddenShutterOpening[0] != 0.0 && m_hiddenShutterOpening[1] != 1.0) 
-			{
-				char tmp[255];
-				sprintf( tmp, "\"float[2] shutteropening\" [%f %f] ", m_hiddenShutterOpening[0], m_hiddenShutterOpening[1] );
-				options += tmp;
-			}
-			// PRMAN 13 END
-			if( m_hiddenOcclusionBound != 0.0 ) 
-			{
-				char tmp[128];
-				sprintf( tmp, "\"occlusionbound\" [%f] ", m_hiddenOcclusionBound );
-				options += tmp;
-			}
-			if( m_hiddenMpCache != true ) 
-				options += "\"int mpcache\" [0] ";
-			if( m_hiddenMpMemory != 6144 ) 
-			{
-				char tmp[128];
-				sprintf( tmp, "\"mpcache\" [%d] ", m_hiddenMpMemory );
-				options += tmp;
-			}
-			if( m_hiddenMpCacheDir != "" ) 
-			{
-				char tmp[1024];
-				sprintf( tmp, "\"mpcachedir\" [\"%s\"] ", m_hiddenMpCacheDir.asChar() );
-				options += tmp;
-			}
-			if( m_hiddenSampleMotion != true ) 
-				options += "\"int samplemotion\" [0] ";
-			if( m_hiddenSubPixel != 1 ) 
-			{
-				char tmp[128];
-				sprintf( tmp, "\"subpixel\" [%d] ", m_hiddenSubPixel );
-				options += tmp;
-			}
-			if( m_hiddenExtremeMotionDof != false ) 
-				options += "\"extrememotiondof\" [1] ";
-			if( m_hiddenMaxVPDepth != -1 ) 
-			{
-				char tmp[128];
-				sprintf( tmp, "\"maxvpdepth\" [%d] ", m_hiddenMaxVPDepth );
-				options += tmp;
-			}
-			// PRMAN 13 BEGIN
-			if( m_hiddenSigma != false ) 
-			{
-				options += "\"int sigma\" [1] ";
-				char tmp[128];
-				sprintf( tmp, "\"sigmablur\" [%f] ", m_hiddenSigmaBlur );
-				options += tmp;
-			}
-			// PRMAN 13 END
-		} 
-		else if( hidername == "photon" ) 
-		{
-			if( m_photonEmit != 0 ) 
-			{
-				char tmp[128];
-				sprintf( tmp, " \"int emit\" [%d] ", m_photonEmit );
-				options += tmp;
-			}
-		} 
-		else if( hidername == "depthmask" ) 
-		{
-			{
-				char tmp[1024];
-				sprintf( tmp, "\"zfile\" [\"%s\"] ", m_depthMaskZFile.asChar() );
-				options += tmp;
-			}
-			{
-				char tmp[128];
-				sprintf( tmp, "\"reversesign\" [\"%d\"] ", m_depthMaskReverseSign );
-				options += tmp;
-			}
-			{
-				char tmp[128];
-				sprintf( tmp, "\"depthbias\" [%f] ", m_depthMaskDepthBias );
-				options += tmp;
-			}
-		}
-	}
-	// 3DELIGHT
-	if( rendername == "3Delight" ) 
-	{
-		if( hidername == "hidden" ) 
-		{
-			{
-				char tmp[128];
-				sprintf( tmp, "\"jitter\" [%d] ", m_hiddenJitter );
-				options += tmp;
-			}
-			if( m_hiddenSampleMotion != true ) 
-				options += "\"int samplemotion\" [0] ";
-			if( m_hiddenExtremeMotionDof != false ) 
-				options += "\"int extrememotiondof\" [1] ";
-		}
-	}
-	// PIXIE
-	if( rendername == "Pixie" ) 
-	{
-		if( hidername == "hidden" ) 
-		{
-			char tmp[128];
-			sprintf( tmp, "\"float jitter\" [%d] ", m_hiddenJitter );
-			options += tmp;
-		} 
-		else if( hidername == "raytrace" ) 
-			if( m_raytraceFalseColor != 0 ) 
-				options += "\"int falsecolor\" [1] ";
-			else if( hidername == "photon" ) 
-			{
-				if( m_photonEmit != 0 ) 
-				{
-					char tmp[128];
-					sprintf( tmp, " \"int emit\" [%d] ", m_photonEmit );
-					options += tmp;
-				}
-				if( m_photonSampleSpectrum ) 
-				{
-					char tmp[128];
-					sprintf( tmp, " \"int samplespectrum\" [1] ");
-					options += tmp;
-				}
-			}
-	}
-
-	// AQSIS
-	if( rendername == "Aqsis" ) 
-	{
-		// no known options
-	}
-
-	// AIR
-	if( rendername == "Air" ) 
-	{
-		// no known options
-	}
-	return options;
 }
 
 void liqRibTranslator::_writeObject(

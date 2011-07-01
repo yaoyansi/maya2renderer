@@ -131,9 +131,37 @@ struct liqGlobalVariable
 	bool m_outputComments;
 	bool m_illuminateByDefault;
 
+	//option   ribPrologue
+	int           m_hiddenJitter;
+	// PRMAN 13 BEGIN
+	float         m_hiddenAperture[4];
+	float         m_hiddenShutterOpening[2];
+	// PRMAN 13 END
+	float         m_hiddenOcclusionBound;
+	bool          m_hiddenMpCache;
+	int           m_hiddenMpMemory;
+	MString       m_hiddenMpCacheDir;
+	bool          m_hiddenSampleMotion;
+	int           m_hiddenSubPixel;
+	bool          m_hiddenExtremeMotionDof;
+	int           m_hiddenMaxVPDepth;
+	// PRMAN 13 BEGIN
+	bool          m_hiddenSigma;
+	float         m_hiddenSigmaBlur;
+	// PRMAN 13 END
+	int           m_raytraceFalseColor;
+	int           m_photonEmit;
+	int           m_photonSampleSpectrum;
+	MString       m_depthMaskZFile;
+	bool          m_depthMaskReverseSign;
+	float         m_depthMaskDepthBias;
 };
 
 extern struct liqGlobalVariable liqglo;
 extern liquidVerbosityType liqglo_verbosity;
+
+void initHinderParameters();
+void getHinderParameters(const MFnDependencyNode& rGlobalNode);
+MString getHiderOptions( MString rendername, MString hidername );
 
 #endif//_liqGlobalVariable_H

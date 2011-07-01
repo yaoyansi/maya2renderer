@@ -19,14 +19,24 @@ namespace elvishray
 		virtual void test();
 
 		virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress);
+		//		virtual MStatus ribPrologue(const structJob& currentJob);
+		//		virtual MStatus framePrologue(const long scanTime,const structJob& currentJob);
 		virtual MStatus worldPrologue(const structJob& currentJob);
+		//		virtual MStatus lightBlock(const structJob& currentJob);
+		//		virtual MStatus coordSysBlock(const structJob& currentJob);
+		//		virtual MStatus objectBlock(const structJob& currentJob);
 		virtual MStatus worldEpilogue();
-		virtual MStatus exportLight(const liqRibNodePtr& light, const structJob &currentJob);
-		virtual MStatus liqRibLightData_write(const liqRibLightData *lightdata, const structJob &currentJob);
+		//		virtual MStatus frameEpilogue(const long scanTime);
+		//		virtual MStatus ribEpilogue();
 
 		virtual void openLog();
 		virtual void closeLog();
 
+		//
+		//light
+		//
+		virtual MStatus exportLight(const liqRibNodePtr& light, const structJob &currentJob);
+		virtual MStatus liqRibLightData_write(const liqRibLightData *lightdata, const structJob &currentJob);
 		virtual liqLightHandle exportShadowPassLight(
 			const std::string &shadertype, 
 			const std::string &shaderinstance, 

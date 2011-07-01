@@ -69,3 +69,98 @@ struct liqGlobalVariable &liqglo___,
 
 	return TCB_OK;
 }
+//
+//
+void tHeroRibWriterMgr::ribPrologue_samples(RtFloat xsamples, RtFloat ysamples)
+{
+	RiPixelSamples( xsamples, ysamples );
+}
+//
+void tHeroRibWriterMgr::ribPrologue_shadingrate(RtFloat size)
+{
+	RiShadingRate( size );
+}
+//
+void tHeroRibWriterMgr::ribPrologue_filter(
+	liquidlong m_rFilter,
+	RtFloat m_rFilterX, RtFloat m_rFilterY)
+{
+		switch (m_rFilter) 
+		{
+		case pfBoxFilter:
+			RiPixelFilter( RiBoxFilter, m_rFilterX, m_rFilterY );
+			break;
+		case pfTriangleFilter:
+			RiPixelFilter( RiTriangleFilter, m_rFilterX, m_rFilterY );
+			break;
+		case pfCatmullRomFilter:
+			RiPixelFilter( RiCatmullRomFilter, m_rFilterX, m_rFilterY );
+			break;
+		case pfGaussianFilter:
+			RiPixelFilter( RiGaussianFilter, m_rFilterX, m_rFilterY );
+			break;
+		case pfSincFilter:
+			RiPixelFilter( RiSincFilter, m_rFilterX, m_rFilterY );
+			break;
+#if defined ( DELIGHT ) || defined ( PRMAN ) || defined ( GENERIC_RIBLIB )
+		case pfBlackmanHarrisFilter:
+			RiArchiveRecord( RI_VERBATIM, "PixelFilter \"blackman-harris\" %g %g\n", m_rFilterX, m_rFilterY);
+			break;
+		case pfMitchellFilter:
+			RiArchiveRecord( RI_VERBATIM, "PixelFilter \"mitchell\" %g %g\n", m_rFilterX, m_rFilterY);
+			break;
+		case pfSepCatmullRomFilter:
+			RiArchiveRecord( RI_VERBATIM, "PixelFilter \"separable-catmull-rom\" %g %g\n", m_rFilterX, m_rFilterY);
+			break;
+		case pfBesselFilter:
+			RiArchiveRecord( RI_VERBATIM, "PixelFilter \"bessel\" %g %g\n", m_rFilterX, m_rFilterY);
+			break;
+#endif
+#if defined ( PRMAN ) || defined ( GENERIC_RIBLIB )
+		case pfLanczosFilter:
+			RiArchiveRecord( RI_VERBATIM, "PixelFilter \"lanczos\" %g %g\n", m_rFilterX, m_rFilterY);
+			break;
+		case pfDiskFilter:
+			RiArchiveRecord( RI_VERBATIM, "PixelFilter \"disk\" %g %g\n", m_rFilterX, m_rFilterY);
+			break;
+#endif
+		default:
+			RiArchiveRecord( RI_COMMENT, "Unknown Pixel Filter selected" );
+			break;
+		}
+		//RiPixelFilter( filterfunc, xwidth, ywidth );
+}
+//
+void tHeroRibWriterMgr::ribPrologue_hider(HiderType hidertype)
+{
+	RtString hiderName;
+	switch( hidertype ) 
+	{
+	case htPhoton:
+		hiderName = "photon";
+		break;
+	case htRaytrace:
+		hiderName = "raytrace";
+		break;
+	case htOpenGL:
+		hiderName = "OpenGL";
+		break;
+	case htZbuffer:
+		hiderName = "zbuffer";
+		break;
+	case htDepthMask:
+		hiderName = "depthmask";
+		break;
+	case htHidden:
+	default:
+		hiderName = "hidden";
+	}
+	MString hiderOptions = getHiderOptions( liqglo.liquidRenderer.renderName, hiderName );
+	RiArchiveRecord( RI_VERBATIM, "Hider \"%s\" %s\n", hiderName, ( char* )hiderOptions.asChar() );
+
+}
+//
+void tHeroRibWriterMgr::ribPrologue_pass(RtString pass)
+{
+	RiOption( "user", "string pass", ( RtPointer )&pass, RI_NULL );	
+}

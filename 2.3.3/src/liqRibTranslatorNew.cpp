@@ -1112,8 +1112,11 @@ liqRibTranslator* liqRibTranslator::getInstancePtr()
 //
 MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 {
-	if( !liqglo.m_exportReadArchive ) 
+	if( liqglo.m_exportReadArchive ) 
 	{
+		ribStatus = kRibBegin;
+		return MS::kSuccess;
+	}
 		LIQDEBUGPRINTF( "-> beginning to write prologue\n" );
 		// general info for traceability
 		//
@@ -1146,6 +1149,7 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 				RiArchiveRecord( RI_VERBATIM, "Option \"statistics\" \"xmlfilename\" [\"%s\"]\n", const_cast< char* > ( m_statisticsFile.asChar() ) );
 			}
 		}
+		//limits options
 		if( bucketSize != 0 )    
 			RiOption( "limits", "bucketsize", ( RtPointer ) &bucketSize, RI_NULL );
 		if( gridSize != 0 )      
@@ -1220,93 +1224,24 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 		//RiOrientation( RI_RH ); // Right-hand coordinates
 		if( currentJob.isShadow ) 
 		{
-			RiPixelSamples( currentJob.shadowPixelSamples, currentJob.shadowPixelSamples );
-			RiShadingRate( currentJob.shadingRateFactor );
-			// Need to use Box filter for deep shadows.
-			RiPixelFilter( RiBoxFilter, 1, 1 );
-			RtString option;
-			if( currentJob.deepShadows ) 
-				option = "deepshadow";
-			else 
-				option = "shadow";
-			RiOption( "user", "string pass", ( RtPointer )&option, RI_NULL );
+			tShadowRibWriterMgr::ribPrologue_samples(currentJob.shadowPixelSamples, currentJob.shadowPixelSamples);
+			tShadowRibWriterMgr::ribPrologue_shadingrate(currentJob.shadingRateFactor);
+			// Need to use Box filter for deep shadows.			
+			tShadowRibWriterMgr::ribPrologue_filter( pfBoxFilter, 1, 1);
+			tShadowRibWriterMgr::ribPrologue_pass(currentJob.deepShadows? "deepshadow":"shadow");
 		} 
 		else 
 		{
-			RtString hiderName;
-			switch( liqglo.liqglo_hider ) 
-			{
-			case htPhoton:
-				hiderName = "photon";
-				break;
-			case htRaytrace:
-				hiderName = "raytrace";
-				break;
-			case htOpenGL:
-				hiderName = "OpenGL";
-				break;
-			case htZbuffer:
-				hiderName = "zbuffer";
-				break;
-			case htDepthMask:
-				hiderName = "depthmask";
-				break;
-			case htHidden:
-			default:
-				hiderName = "hidden";
-			}
-			MString hiderOptions = getHiderOptions( liqglo.liquidRenderer.renderName, hiderName );
-			RiArchiveRecord( RI_VERBATIM, "Hider \"%s\" %s\n", hiderName, ( char* )hiderOptions.asChar() );
-			RiPixelSamples( pixelSamples, pixelSamples );
-			RiShadingRate( shadingRate );
+			tHeroRibWriterMgr::ribPrologue_hider(liqglo.liqglo_hider);
+			//samples 
+			tHeroRibWriterMgr::ribPrologue_samples( pixelSamples, pixelSamples );
+			tHeroRibWriterMgr::ribPrologue_shadingrate( shadingRate );
+			//filter options
 			if( m_rFilterX > 1 || m_rFilterY > 1 ) 
 			{
-				switch (m_rFilter) 
-				{
-				case pfBoxFilter:
-					RiPixelFilter( RiBoxFilter, m_rFilterX, m_rFilterY );
-					break;
-				case pfTriangleFilter:
-					RiPixelFilter( RiTriangleFilter, m_rFilterX, m_rFilterY );
-					break;
-				case pfCatmullRomFilter:
-					RiPixelFilter( RiCatmullRomFilter, m_rFilterX, m_rFilterY );
-					break;
-				case pfGaussianFilter:
-					RiPixelFilter( RiGaussianFilter, m_rFilterX, m_rFilterY );
-					break;
-				case pfSincFilter:
-					RiPixelFilter( RiSincFilter, m_rFilterX, m_rFilterY );
-					break;
-#if defined ( DELIGHT ) || defined ( PRMAN ) || defined ( GENERIC_RIBLIB )
-				case pfBlackmanHarrisFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"blackman-harris\" %g %g\n", m_rFilterX, m_rFilterY);
-					break;
-				case pfMitchellFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"mitchell\" %g %g\n", m_rFilterX, m_rFilterY);
-					break;
-				case pfSepCatmullRomFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"separable-catmull-rom\" %g %g\n", m_rFilterX, m_rFilterY);
-					break;
-				case pfBesselFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"bessel\" %g %g\n", m_rFilterX, m_rFilterY);
-					break;
-#endif
-#if defined ( PRMAN ) || defined ( GENERIC_RIBLIB )
-				case pfLanczosFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"lanczos\" %g %g\n", m_rFilterX, m_rFilterY);
-					break;
-				case pfDiskFilter:
-					RiArchiveRecord( RI_VERBATIM, "PixelFilter \"disk\" %g %g\n", m_rFilterX, m_rFilterY);
-					break;
-#endif
-				default:
-					RiArchiveRecord( RI_COMMENT, "Unknown Pixel Filter selected" );
-					break;
-				}
+			tHeroRibWriterMgr::ribPrologue_filter(m_rFilter, m_rFilterX, m_rFilterY);
 			}
-			RtString option( "beauty" );
-			RiOption( "user", "string pass", ( RtPointer )&option, RI_NULL );
+			tHeroRibWriterMgr::ribPrologue_pass("beauty");
 		}
 
 		// RAYTRACING OPTIONS
@@ -1356,7 +1291,7 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 			if( m_bakeNoCullHidden )
 				RiAttribute( "cull","int hidden", &zero, RI_NULL );
 		}
-	}
+
 	ribStatus = kRibBegin;
 	return MS::kSuccess;
 }

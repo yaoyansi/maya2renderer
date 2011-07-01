@@ -119,3 +119,69 @@ TempControlBreak tShadowRibWriterMgr::write(
 
 	return TCB_OK;
 }
+
+
+//
+void tShadowRibWriterMgr::ribPrologue_samples(RtFloat xsamples, RtFloat ysamples)
+{
+	RiPixelSamples( xsamples, ysamples );
+}
+//
+void tShadowRibWriterMgr::ribPrologue_shadingrate(RtFloat size)
+{
+	RiShadingRate( size );
+}
+//
+void tShadowRibWriterMgr::ribPrologue_filter(
+	liquidlong m_rFilter,
+	RtFloat m_rFilterX, RtFloat m_rFilterY)
+{
+	switch (m_rFilter) 
+	{
+	case pfBoxFilter:
+		RiPixelFilter( RiBoxFilter, m_rFilterX, m_rFilterY );
+		break;
+	case pfTriangleFilter:
+		RiPixelFilter( RiTriangleFilter, m_rFilterX, m_rFilterY );
+		break;
+	case pfCatmullRomFilter:
+		RiPixelFilter( RiCatmullRomFilter, m_rFilterX, m_rFilterY );
+		break;
+	case pfGaussianFilter:
+		RiPixelFilter( RiGaussianFilter, m_rFilterX, m_rFilterY );
+		break;
+	case pfSincFilter:
+		RiPixelFilter( RiSincFilter, m_rFilterX, m_rFilterY );
+		break;
+#if defined ( DELIGHT ) || defined ( PRMAN ) || defined ( GENERIC_RIBLIB )
+	case pfBlackmanHarrisFilter:
+		RiArchiveRecord( RI_VERBATIM, "PixelFilter \"blackman-harris\" %g %g\n", m_rFilterX, m_rFilterY);
+		break;
+	case pfMitchellFilter:
+		RiArchiveRecord( RI_VERBATIM, "PixelFilter \"mitchell\" %g %g\n", m_rFilterX, m_rFilterY);
+		break;
+	case pfSepCatmullRomFilter:
+		RiArchiveRecord( RI_VERBATIM, "PixelFilter \"separable-catmull-rom\" %g %g\n", m_rFilterX, m_rFilterY);
+		break;
+	case pfBesselFilter:
+		RiArchiveRecord( RI_VERBATIM, "PixelFilter \"bessel\" %g %g\n", m_rFilterX, m_rFilterY);
+		break;
+#endif
+#if defined ( PRMAN ) || defined ( GENERIC_RIBLIB )
+	case pfLanczosFilter:
+		RiArchiveRecord( RI_VERBATIM, "PixelFilter \"lanczos\" %g %g\n", m_rFilterX, m_rFilterY);
+		break;
+	case pfDiskFilter:
+		RiArchiveRecord( RI_VERBATIM, "PixelFilter \"disk\" %g %g\n", m_rFilterX, m_rFilterY);
+		break;
+#endif
+	default:
+		RiArchiveRecord( RI_COMMENT, "Unknown Pixel Filter selected" );
+		break;
+	}
+}
+//
+void tShadowRibWriterMgr::ribPrologue_pass(RtString pass)
+{
+	RiOption( "user", "string pass", ( RtPointer )&pass, RI_NULL );	
+}

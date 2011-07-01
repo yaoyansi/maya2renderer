@@ -25,8 +25,16 @@ public:
 	// RenderScript means .rib files for renderman, and .er files for elvishray. and etc.
 	virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress) = 0;
 
+//	virtual MStatus ribPrologue(const structJob& currentJob) = 0;
+//	virtual MStatus framePrologue(const long scanTime,const structJob& currentJob) = 0;
 	virtual MStatus worldPrologue(const structJob& currentJob) = 0;
+//	virtual MStatus lightBlock(const structJob& currentJob) = 0;
+//	virtual MStatus coordSysBlock(const structJob& currentJob) = 0;
+//	virtual MStatus objectBlock(const structJob& currentJob) = 0;
 	virtual MStatus worldEpilogue() = 0;
+//	virtual MStatus frameEpilogue(const long scanTime) = 0;
+//	virtual MStatus ribEpilogue() = 0;
+
 
 	virtual void openLog() = 0;
 	virtual void closeLog() = 0;
