@@ -88,8 +88,8 @@ liqShader &liqShaderFactory::getShader( MObject shaderObj )
 	}
 	liqShader *currentShader = new liqShader( shaderObj );
 	LIQDEBUGPRINTF("CREATE AND PUSH SHADER FOR NODE %s \n", shaderNode.name().asChar() );
-	LIQDEBUGPRINTF("    name = %s\n", currentShader->name.c_str());
-	LIQDEBUGPRINTF("    file = %s\n", currentShader->file.c_str());
+	LIQDEBUGPRINTF("    name = %s\n", currentShader->getName().c_str());
+	LIQDEBUGPRINTF("    file = %s\n", currentShader->getShaderFileName().c_str());
 	LIQDEBUGPRINTF("    hdl  = %s\n", currentShader->shaderHandler.asChar());
 	m_shaders.push_back( currentShader );
 	return *(m_shaders.back());

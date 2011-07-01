@@ -62,7 +62,7 @@ char* basename( const char* filename );
 #  include <libgen.h> // for basename()
 #endif
 
-#define LIQ_GET_SHADER_FILE_NAME(a, b, c) if( b ) a = basename( const_cast<char *>(c.file.c_str())); else a = const_cast<char *>(c.file.c_str());
+#define LIQ_GET_SHADER_FILE_NAME(a, b, c) if( b ) a = basename( const_cast<char *>(c.getShaderFileName().c_str())); else a = const_cast<char *>(c.getShaderFileName().c_str());
 
 
 MStringArray findAttributesByPrefix(const char* pPrefix, MFnDependencyNode& NodeFn );

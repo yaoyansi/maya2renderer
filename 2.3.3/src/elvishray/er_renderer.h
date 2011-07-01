@@ -192,19 +192,19 @@ namespace elvishray
 		virtual void shader_transformBegin(const liqString  shaderSpace);
 		virtual void shader_transformEnd(const liqString  shaderSpace);
 		virtual void shader_surface(
-			const liqString &shaderFileName, 
+			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
 		);
 		virtual liqLightHandle shader_light(
-			const liqString &shaderFileName, 
+			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
 		);
 		virtual void shader_displacement(
-			const liqString &shaderFileName, 
+			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
 		);
 		virtual void shader_volume(
-			const liqString &shaderFileName, 
+			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
 		);
 

@@ -696,7 +696,7 @@ void liqShader::write(/*, */)
 	}
 
 	// write shader
-	char* shaderFileName = liqglo.liqglo_shortShaderNames ? basename( const_cast<char *>(file.c_str())) : const_cast<char *>(file.c_str());
+	char* shaderFileName = const_cast<char*>(getShaderFileName().c_str());
 	if( shaderSpace != "" )
 	{
 		liquid::RendererMgr::getInstancePtr()->
@@ -712,7 +712,7 @@ void liqShader::write(/*, */)
 
       //outputIndentation(indentLevel);
 		RtLightHandle ret = liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_light( shaderFileName,  tokenPointerArray );
+			getRenderer()->shader_light( *this,  tokenPointerArray );
 #ifdef RIBLIB_AQSIS
 		shaderHandler.set( reinterpret_cast<ptrdiff_t>(static_cast<RtLightHandle>(ret)) );
 #else
@@ -725,7 +725,7 @@ void liqShader::write(/*, */)
 
 		//outputIndentation(indentLevel);
 		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_surface( shaderFileName,  tokenPointerArray );
+			getRenderer()->shader_surface( *this,  tokenPointerArray );
 
 		}break;
 	case SHADER_TYPE_DISPLACEMENT :
@@ -733,7 +733,7 @@ void liqShader::write(/*, */)
 
 		//outputIndentation(indentLevel);
 		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_displacement( shaderFileName,  tokenPointerArray );
+			getRenderer()->shader_displacement( *this,  tokenPointerArray );
 
 		}break;
 	case SHADER_TYPE_VOLUME :
@@ -741,7 +741,7 @@ void liqShader::write(/*, */)
 
 		//outputIndentation(indentLevel);
 		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_volume( shaderFileName,   tokenPointerArray );
+			getRenderer()->shader_volume( *this,   tokenPointerArray );
 
 		}break;
 	default :
@@ -781,7 +781,9 @@ void liqShader::writeAsCoShader()
 	boost::scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
 	boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
 	assignTokenArrays( tokenPointerArray.size(), &tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
-	char* shaderFileName = liqglo.liqglo_shortShaderNames ? basename( const_cast<char *>(file.c_str())) : const_cast<char *>(file.c_str());
+
+
+	char* shaderFileName = const_cast<char*>(getShaderFileName().c_str());
 	if( shaderSpace != "" )
 	{
 		liquid::RendererMgr::getInstancePtr()->
@@ -966,4 +968,15 @@ void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *ligh
 			}
 		}
 	}
+}
+
+const std::string liqShader::getName() const
+{
+	return name;
+}
+const std::string liqShader::getShaderFileName() const
+{
+	return liqglo.liqglo_shortShaderNames ? 
+		basename( file.c_str() ) : file.c_str();
+
 }

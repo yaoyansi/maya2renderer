@@ -67,8 +67,15 @@ public :
     // void freeShader( void ); -- not needed anymore. vector calls the dtors itself when going out of scope
     // int numTPV; -- handled by tokenPointerArray.size() now
 
+	const std::string getName() const;
+	const std::string getShaderFileName() const;
+	void setShaderFileName(const std::string &file_){ file = file_; }
+
+protected:
 	std::string      name;
-    std::string      file;
+	std::string      file;
+
+public:
     RtColor     rmColor;
     RtColor     rmOpacity;
     bool        hasShadingRate;

@@ -508,7 +508,7 @@ int liquidOutputPreviewShader( const string& fileName, const liqPreviewShaderOpt
     //shaderFileName = const_cast<char*>(options.shaderNodeName);
 
     string tmp( options.shaderNodeName );
-    currentShader.file = tmp.substr( 0, tmp.length() -  4 );
+    currentShader.setShaderFileName(tmp.substr( 0, tmp.length() -  4 ) );
 
     if ( options.type == "surface" ) 
 			currentShader.shader_type = SHADER_TYPE_SURFACE;

@@ -889,7 +889,7 @@ namespace renderman
 		RiTransformEnd();
 	}
 	void Renderer::shader_surface(
-		const liqString &shaderFileName, 
+		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
@@ -898,11 +898,11 @@ namespace renderman
 		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
 		assignTokenArrays( tokenPointerArray.size(), &tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
 
-		RiSurfaceV ( shaderFileName, shaderParamCount, tokenArray.get() , pointerArray.get() );
+		RiSurfaceV ( const_cast<char *>(shader.getShaderFileName().c_str()), shaderParamCount, tokenArray.get() , pointerArray.get() );
 
 	}
 	liqLightHandle Renderer::shader_light(
-		const liqString &shaderFileName, 
+		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
@@ -911,10 +911,10 @@ namespace renderman
 		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
 		assignTokenArrays( tokenPointerArray.size(), &tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
 
-		return RiLightSourceV( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
+		return RiLightSourceV( const_cast<char *>(shader.getShaderFileName().c_str()), shaderParamCount, tokenArray.get(), pointerArray.get() );
 	}
 	void Renderer::shader_displacement(
-		const liqString &shaderFileName, 
+		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
@@ -923,11 +923,11 @@ namespace renderman
 		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
 		assignTokenArrays( tokenPointerArray.size(), &tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
 
-		RiDisplacementV( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get());
+		RiDisplacementV( const_cast<char *>(shader.getShaderFileName().c_str()), shaderParamCount, tokenArray.get(), pointerArray.get());
 
 	}
 	void Renderer::shader_volume(
-		const liqString &shaderFileName,  
+		const liqShader &shader, 
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
@@ -936,7 +936,7 @@ namespace renderman
 		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
 		assignTokenArrays( tokenPointerArray.size(), &tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
 
-		RiAtmosphereV ( shaderFileName, shaderParamCount,  tokenArray.get(), pointerArray.get() );
+		RiAtmosphereV ( const_cast<char *>(shader.getShaderFileName().c_str()), shaderParamCount,  tokenArray.get(), pointerArray.get() );
 
 	}
 }//namespace

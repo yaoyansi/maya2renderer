@@ -420,7 +420,7 @@ namespace elvishray
  		_S( ei_visible( on ) );
 // 		ei_shadow( on );
 // 		ei_trace( on );
-		_S( ei_set_material( shader.name.c_str(), ei_end ) );
+		_S( ei_set_material( shader.getName().c_str(), ei_end ) );
 		_S( ei_element( mesh->getName() ) );
 // 		if( motion_transform )
 // 		{
@@ -761,11 +761,11 @@ namespace elvishray
 
 	}
 	void Renderer::shader_surface(
-		const liqString &shaderFileName, //e.g."your_shader_dir/test_type2"
+		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
-		_s( "// shader_surface("<<shaderFileName<<","<<", ...)" );
+		_s( "// shader_surface("<<shader.getShaderFileName()<<","<<", ...)" );//e.g."your_shader_dir/test_type2"
 		size_t parameterNum =  tokenPointerArray.size() - 1;
 		for(size_t i=0; i<parameterNum; ++i)
 		{
@@ -824,7 +824,7 @@ namespace elvishray
 		}		 
 	}
 	liqLightHandle Renderer::shader_light(
-		const liqString &shaderFileName, 
+		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
@@ -832,14 +832,14 @@ namespace elvishray
 		return (liqLightHandle)0;	
 	}
 	void Renderer::shader_displacement(
-		const liqString &shaderFileName, 
+		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
 		 
 	}
 	void Renderer::shader_volume(
-		const liqString &shaderFileName, 
+		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
