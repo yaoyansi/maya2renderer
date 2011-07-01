@@ -7,7 +7,7 @@ echo 4.make sure you choose the right rib file.
 echo -------------------------------------------------------------------------
 echo   start ....
 
-prman -rif E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/lib/plugins/pointToDSO.dll E:/MyDocuments/maya/projects/default/rib/_perspShape.0011.rib
+prman -rif E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/lib/plugins/pointToDSO.dll E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/lib/plugins/src/dataExpansion_2/_perspShape.0149.rib
 
 echo   end.
 pause
