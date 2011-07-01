@@ -727,11 +727,20 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 	// Compile the shader with the current renderer's shader compiler
 	string $shaderComp = `getAttr "liquidGlobals.shaderComp"`;
 	string $shaderdirpath = $shaderdir;
-	if ( !gmatch( $shaderdir, "/*") || !gmatch( $shaderdir, "?:*") )
+	string $outSLO = ($shaderdirpath + $startingNode + ".slo");
+	string $sourceSL = ($shaderdirpath + $startingNode + ".sl");
+
+	if ( !gmatch( $shaderdir, "/*") || !gmatch( $shaderdir, "?:*") )// or &&
 		$shaderdirpath = ( workspace( "-q", "-rd" ) + $shaderdir );
-	string $outSLO = $shaderFileName+".slo";
-	trace  ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
-	system ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
+
+	//string $outSLO = $shaderFileName+".slo";
+	trace  ( $shaderComp + " -o "+ $outSLO +" " + $sourceSL );
+	system ( $shaderComp + " -o "+ $outSLO +" " + $sourceSL );
+
+	//record shader absolute full path
+	if(!`objExists($assingToNode + ".shaderFullPath")`)
+		addAttr -hidden false -longName "shaderFullPath" -dt "string" $assingToNode;
+	setAttr ($assingToNode + ".shaderFullPath") -type "string" $outSLO;
 
 	// omitted by yaoyansi [2010-09-26]
 	//duran and mesh use this section(test needed), but xx will ommit this section.
@@ -759,6 +768,13 @@ global proc liquidConvertShadingNetworkToRSL ()
 	liqlog("liquidConvertShadingNetworkToRSL()");
 	if ( !`liquidGlobalsExists` ) {
 		liquidCreateGlobals;
+	}
+	//make sure the shaderDirectory is not empty.
+	if(`getAttr liquidGlobals.shaderDirectory`==""){
+		error ("[liquid Error] liquidGlobals.shaderDirectory is empty, can't convert. " +
+			   "Please set the shaderDirectory in RenderSetting->File->Directories->Generated Shaders");
+		liqPopIdent();
+		return;
 	}
 
 	// convert shape selections to shaders attached to shapes
