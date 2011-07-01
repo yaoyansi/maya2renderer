@@ -30,7 +30,7 @@ surface
 liquidPfxHair(  uniform float specularPower = 3.0;
                 uniform float translucence  = 0.0;
                 uniform color specularColor = 0.0;
-                output varying color pfxHair_vtxColor   = 0.0;
+                output varying color pfxHair_vtxColor   = color(1.0, 0.0, 0.0);
                 output varying color pfxHair_vtxOpacity = 1.0;
               )
 {
