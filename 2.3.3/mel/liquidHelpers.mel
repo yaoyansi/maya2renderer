@@ -641,3 +641,12 @@ global proc liquidViewShadowMap( string $node )
 }
 
 
+// replace '\\' by '/'
+global proc string toLinuxPath ( string $strFile )
+{
+  liqPushIdent();
+	liqlog("toLinuxPath(...)");
+	string $ret = python("(u\"" + encodeString($strFile) + "\").replace(\"\\\\\",\"/\");");
+  liqPopIdent();
+	return $ret;
+}

@@ -710,8 +710,9 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 	$shaderdir = toNativePath( $shaderdir);
 	sysFile -md $shaderdir;
 	// create the file
-	string $shaderFileName = ( $shaderdir + $startingNode );
+	string $shaderFileName = toLinuxPath( $shaderdir + $startingNode );
 	$RSLfileId =`fopen ( $shaderFileName + ".sl" ) "w"`;
+	liqlog("$shaderFileName="+$shaderFileName);
 
 	// Traverse the graph outputing functions for nodes that have received all
 	// of their respective inputs
@@ -744,17 +745,17 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 
 	// omitted by yaoyansi [2010-09-26]
 	//duran and mesh use this section(test needed), but xx will ommit this section.
-// 	string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
-// 
-// 	string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
-// 
-// 	if ( $SLShaderNode == "" ) {
-// 		string $shader = `liquidNewShaderNode ( $shaderFileName + "." + $shaderExt )`;
-// 		liquidAssignShaderNode_old( $assingToNode, $shader );
-// 	} else {
-// 		setAttr -type "string" ($SLShaderNode+".rmanShaderLong")  ($shaderFileName+"."+$shaderExt);
-// 		liquidShaderNodes_initParams( $SLShaderNode );
-// 	}
+	string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
+
+	string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
+
+	if ( $SLShaderNode == "" ) {
+		string $shader = `liquidNewShaderNode ( $shaderFileName + "." + $shaderExt )`;
+		liquidAssignShaderNode_old( $assingToNode, $shader );
+	} else {
+		setAttr -type "string" ($SLShaderNode+".rmanShaderLong")  ($shaderFileName+"."+$shaderExt);
+		liquidShaderNodes_initParams( $SLShaderNode );
+	}
 	liqPopIdent();
 }
 
