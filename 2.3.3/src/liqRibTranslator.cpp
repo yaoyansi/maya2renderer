@@ -385,7 +385,7 @@ void liqRibTranslator::printProgress( unsigned stat, unsigned numFrames, unsigne
 	else 
 	{
 		strstream progressOutput;
-		progressOutput << "Progress: " << progress << "%" << ends;
+		progressOutput << "Progress: frame "<< where <<", " << progress << "%" << ends;
 		liquidMessage( progressOutput.str(), messageInfo );
 	}
 }
@@ -7564,8 +7564,10 @@ void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode
 		//if ribNode is tagged as readArchive or delayedReadArchive, we do not output its geometry data.
 		return;
 	}
+	MString frame; 
+	frame.set(liqglo_lframe);
 
-	MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +".rib" );
+	MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+frame+".rib" );
 
 	if(reference)
 	{
