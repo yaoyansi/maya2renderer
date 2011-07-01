@@ -526,7 +526,10 @@ public:
 	MStatus preTransformMel(const MObject &transform__);
 	MStatus postTransformMel(const MObject &transform__);
 	MStatus tRiIlluminate(const liqRibNodePtr ribNode__);
-	MStatus tRiMotion(const liqRibNodePtr ribNode__, MDagPath &path__, const bool bMotionBlur);
+	MStatus MaxtrixMotionBlur(const liqRibNodePtr ribNode__, MDagPath &path__, const bool bMotionBlur);
+	MStatus GeometryMotionBlur(
+		const liqRibNodePtr ribNode__, MDagPath &path__, const structJob &currentJob
+		);
 	MStatus preShapeMel(const MObject &transform__);
 	MStatus postShapeMel(const MObject &transform__);
 	MStatus checkSurfaceShader(
@@ -566,6 +569,16 @@ public:
 		const bool isDeepShadowJob
 		);
 
+	//
+	void F1(
+		const liqRibNodePtr &ribNode__, liqShader &currentShader
+		);
+	void F2(
+		const bool m_shaderDebug, const liqRibNodePtr &ribNode__
+		);
+	void getPfxHairData(const MDagPath &path__,
+		RtFloat &translucence, RtFloat &specularPower, RtColor &specularColor
+		);
 	//
 	MStatus _doItNewWithoutRenderScript(const MArgList& args , const MString& originalLayer );
 	MStatus _doItNewWithRenderScript(const MArgList& args , const MString& originalLayer );

@@ -2234,7 +2234,7 @@ MStatus liqRibTranslator::tRiIlluminate(const liqRibNodePtr ribNode__)
 	return MS::kSuccess;
 }
 //
-MStatus liqRibTranslator::tRiMotion(const liqRibNodePtr ribNode__, MDagPath &path__, const bool bMotionBlur)
+MStatus liqRibTranslator::MaxtrixMotionBlur(const liqRibNodePtr ribNode__, MDagPath &path__, const bool bMotionBlur)
 {
 	MMatrix matrix;
 
@@ -3021,29 +3021,9 @@ MStatus liqRibTranslator::writeShader(
 				{
 					//liqShader& currentShader( liqGetShader( ribNode__->assignedShader.object() ) );
 					liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
+					
+					F1(ribNode__, currentShader);
 
-					// Output color overrides or color
-					if(ribNode__->shading.color.r != -1.0)
-					{
-						RtColor rColor;
-						rColor[0] = ribNode__->shading.color[0];
-						rColor[1] = ribNode__->shading.color[1];
-						rColor[2] = ribNode__->shading.color[2];
-						RiColor( rColor );
-					}
-					else
-						RiColor( currentShader.rmColor );
-
-					if(ribNode__->shading.opacity.r != -1.0)
-					{
-						RtColor rOpacity;
-						rOpacity[0] = ribNode__->shading.opacity[0];
-						rOpacity[1] = ribNode__->shading.opacity[1];
-						rOpacity[2] = ribNode__->shading.opacity[2];
-						RiOpacity( rOpacity );
-					}
-					else
-						RiOpacity( currentShader.rmOpacity );
 					liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
 					// per shader shadow pass override
 					if( !isShadowJob || currentShader.outputInShadow )
@@ -3075,51 +3055,7 @@ MStatus liqRibTranslator::writeShader(
 					//}
 				}
 			}else{//if( hasSurfaceShader && !m_ignoreSurfaces )
-			
-				RtColor rColor,rOpacity;
-				if( m_shaderDebug ) 
-				{
-					liqRIBMsg("shader debug is turned on, so the object is red.");
-					// shader debug on !! everything goes red and opaque !!!
-					rColor[0] = 1.;
-					rColor[1] = 0.;
-					rColor[2] = 0.;
-					RiColor( rColor );
-
-					rOpacity[0] = 1.;
-					rOpacity[1] = 1.;
-					rOpacity[2] = 1.;
-					RiOpacity( rOpacity );
-				}else{
-					if(ribNode__->shading.color.r != -1.0) 
-					{
-						rColor[0] = ribNode__->shading.color[0];
-						rColor[1] = ribNode__->shading.color[1];
-						rColor[2] = ribNode__->shading.color[2];
-						RiColor( rColor );
-					} 
-					else if( ( ribNode__->color.r != -1.0 ) ) 
-					{
-						rColor[0] = ribNode__->color[0];
-						rColor[1] = ribNode__->color[1];
-						rColor[2] = ribNode__->color[2];
-						RiColor( rColor );
-					}
-					if(ribNode__->shading.opacity.r != -1.0) 
-					{
-						rOpacity[0] = ribNode__->shading.opacity[0];
-						rOpacity[1] = ribNode__->shading.opacity[1];
-						rOpacity[2] = ribNode__->shading.opacity[2];
-						RiOpacity( rOpacity );
-					} 
-					else if( ( ribNode__->opacity.r != -1.0 ) ) 
-					{
-						rOpacity[0] = ribNode__->opacity[0];
-						rOpacity[1] = ribNode__->opacity[1];
-						rOpacity[2] = ribNode__->opacity[2];
-						RiOpacity( rOpacity );
-					}
-				}
+				F2(m_shaderDebug, ribNode__);
 
 				if( !m_ignoreSurfaces ) 
 				{
@@ -3146,37 +3082,9 @@ MStatus liqRibTranslator::writeShader(
 						// get some of the hair system parameters
 						RtFloat translucence = 0, specularPower = 0;
 						RtColor specularColor;
-						//cout <<"getting pfxHair shading params..."<<endl;
-						MObject hairSystemObj;
-						MFnDependencyNode pfxHairNode( path__.node() );
-						MPlug plugToHairSystem = pfxHairNode.findPlug( "renderHairs", &status );
-						MPlugArray hsPlugs;
-						status.clear();
-						if( plugToHairSystem.connectedTo( hsPlugs, true, false, &status ) ) 
-							if( status == MS::kSuccess ) 
-								hairSystemObj = hsPlugs[0].node();
 
-						if( hairSystemObj != MObject::kNullObj ) 
-						{
-							MFnDependencyNode hairSystemNode(hairSystemObj);
-							MPlug paramPlug;
-							status.clear();
-							paramPlug = hairSystemNode.findPlug( "translucence", &status );
-							if( status == MS::kSuccess ) 
-								paramPlug.getValue( translucence );
-							status.clear();
-							paramPlug = hairSystemNode.findPlug( "specularColor", &status );
-							if( status == MS::kSuccess ) 
-							{
-								paramPlug.child(0).getValue( specularColor[0] );
-								paramPlug.child(1).getValue( specularColor[1] );
-								paramPlug.child(2).getValue( specularColor[2] );
-							}
-							status.clear();
-							paramPlug = hairSystemNode.findPlug( "specularPower", &status );
-							if( status == MS::kSuccess ) 
-								paramPlug.getValue( specularPower );
-						}
+						getPfxHairData(path__, translucence, specularPower, specularColor);
+
 						RiSurface(  "liquidpfxhair",
 							"float specularpower", &specularPower,
 							"float translucence",  &translucence,
@@ -3208,28 +3116,7 @@ MStatus liqRibTranslator::writeShader(
 				//liqShader & currentShader = liqGetShader( ribNode__->assignedShader.object());
 				liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
 
-				// Output color overrides or color
-				if(ribNode__->shading.color.r != -1.0) 
-				{
-					RtColor rColor;
-					rColor[0] = ribNode__->shading.color[0];
-					rColor[1] = ribNode__->shading.color[1];
-					rColor[2] = ribNode__->shading.color[2];
-					RiColor( rColor );
-				} 
-				else 
-					RiColor( currentShader.rmColor );
-
-				if(ribNode__->shading.opacity.r != -1.0) 
-				{
-					RtColor rOpacity;
-					rOpacity[0] = ribNode__->shading.opacity[0];
-					rOpacity[1] = ribNode__->shading.opacity[1];
-					rOpacity[2] = ribNode__->shading.opacity[2];
-					RiOpacity( rOpacity );
-				} 
-				else 
-					RiOpacity( currentShader.rmOpacity );
+				F1(ribNode__, currentShader);
 
 				liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.name.c_str(), currentShader.file.c_str(), currentShader.outputInShadow );
 				if(currentShader.outputInShadow){
@@ -3238,72 +3125,16 @@ MStatus liqRibTranslator::writeShader(
 			} 
 			else 
 			{
-				RtColor rColor,rOpacity;
+				F2(false, ribNode__ );
 
-				if(ribNode__->shading.color.r != -1.0) 
-				{
-					rColor[0] = ribNode__->shading.color[0];
-					rColor[1] = ribNode__->shading.color[1];
-					rColor[2] = ribNode__->shading.color[2];
-					RiColor( rColor );
-				} 
-				else if( ( ribNode__->color.r != -1.0 ) ) 
-				{
-					rColor[0] = ribNode__->color[0];
-					rColor[1] = ribNode__->color[1];
-					rColor[2] = ribNode__->color[2];
-					RiColor( rColor );
-				}
-				if(ribNode__->shading.opacity.r != -1.0) 
-				{
-					rOpacity[0] = ribNode__->shading.opacity[0];
-					rOpacity[1] = ribNode__->shading.opacity[1];
-					rOpacity[2] = ribNode__->shading.opacity[2];
-					RiOpacity( rOpacity );
-				} 
-				else if( ( ribNode__->opacity.r != -1.0 ) ) 
-				{
-					rOpacity[0] = ribNode__->opacity[0];
-					rOpacity[1] = ribNode__->opacity[1];
-					rOpacity[2] = ribNode__->opacity[2];
-					RiOpacity( rOpacity );
-				}
 				if( path__.hasFn( MFn::kPfxHair ) ) 
 				{
 					// get some of the hair system parameters
-					float translucence = 0, specularPower = 0;
-					float specularColor[3];
-					//cout <<"getting pfxHair shading params..."<<endl;
-					MObject hairSystemObj;
-					MFnDependencyNode pfxHairNode( path__.node() );
-					MPlug plugToHairSystem = pfxHairNode.findPlug( "renderHairs", &status );
-					MPlugArray hsPlugs;
-					status.clear();
-					if( plugToHairSystem.connectedTo( hsPlugs, true, false, &status ) ) 
-						if( status == MS::kSuccess ) 
-							hairSystemObj = hsPlugs[0].node();
-					if( hairSystemObj != MObject::kNullObj ) 
-					{
-						MFnDependencyNode hairSystemNode(hairSystemObj);
-						MPlug paramPlug;
-						status.clear();
-						paramPlug = hairSystemNode.findPlug( "translucence", &status );
-						if( status == MS::kSuccess ) 
-							paramPlug.getValue( translucence );
-						status.clear();
-						paramPlug = hairSystemNode.findPlug( "specularColor", &status );
-						if( status == MS::kSuccess ) 
-						{
-							paramPlug.child(0).getValue( specularColor[0] );
-							paramPlug.child(1).getValue( specularColor[1] );
-							paramPlug.child(2).getValue( specularColor[2] );
-							//cout <<"specularColor = "<<specularColor<<endl;
-						}
-						status.clear();
-						paramPlug = hairSystemNode.findPlug( "specularPower", &status );
-						if( status == MS::kSuccess ) 
-							paramPlug.getValue( specularPower );
-					}
+					RtFloat translucence = 0, specularPower = 0;
+					RtColor specularColor;
+
+					getPfxHairData(path__, translucence, specularPower, specularColor);
+
 					RiSurface(  "liquidPfxHair",
 						"float specularPower", &specularPower,
 						"float translucence",  &translucence,
@@ -3435,13 +3266,17 @@ MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
 		{
 			tRiIlluminate(ribNode);
 		}
-		bool doMotionBlur = 
-			liqglo.liqglo_doMotion &&
+		bool bMotionBlur =
 			ribNode->motion.transformationBlur &&
 			( ribNode->object( 1 ) ) &&
 			//( ribNode->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
 			( !currentJob.isShadow || currentJob.deepShadows );
-		tRiMotion(ribNode, path, doMotionBlur);
+
+		bool bMatrixMotionBlur = 
+			liqglo.liqglo_doMotion 
+			&& bMotionBlur;
+
+		MaxtrixMotionBlur(ribNode, path, bMatrixMotionBlur);
 
 		// Alf: postTransformMel
 		postTransformMel(transform);
@@ -3560,42 +3395,14 @@ MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
 				RiBasis( RiBSplineBasis, 1, RiBSplineBasis, 1 );
 			} 
 
-			bool doMotion ( 
+			bool bGeometryMotion = 
 				liqglo.liqglo_doDef 
-				&& ribNode->motion.deformationBlur
-				&& ( ribNode->object(1) )
-				&& ( ribNode->object(0)->type != MRT_RibGen ) 
-				//&&( ribNode->object(0)->type != MRT_Locator ) 
-				&&(
-				   !  currentJob.isShadow 
-				   || currentJob.deepShadows 
-				  ) 
-			);
+				&& bMotionBlur
+				&& ( ribNode->object(0)->type != MRT_RibGen );
 
-			if( doMotion )
+			if( bGeometryMotion )
 			{
-				// For each grain, open a new motion block...
-				for( unsigned i( 0 ); i < ribNode->object( 0 )->granularity(); i++ ) 
-				{
-					if( ribNode->object( 0 )->isNextObjectGrainAnimated() ) 
-					{
-						if(liqglo.liqglo_relativeMotion)
-							RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
-						else
-							RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
-
-						for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ ){ 
-							MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".m"+(int)msampleOn+".rib" );
-							ribNode->object( msampleOn )->writeNextObjectGrain(geometryRibFile, currentJob);
-						}
-						RiMotionEnd();
-					}else {
-						RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
-
-						MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".rib" );
-						ribNode->object( 0 )->writeNextObjectGrain(geometryRibFile, currentJob);
-					}
-				}
+				GeometryMotionBlur(ribNode, path, currentJob);
 			}else{
 				//ribNode->object( 0 )->writeObject();
 				_writeObject(ribNode, currentJob);
@@ -4271,5 +4078,158 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 		freeShaders();*/
 		m_escHandler.endComputation();
 		return MS::kFailure;
+	}
+}
+//
+MStatus liqRibTranslator::GeometryMotionBlur(
+	const liqRibNodePtr ribNode__, MDagPath &path__, const structJob &currentJob
+	)
+{
+	// For each grain, open a new motion block...
+	for( unsigned i( 0 ); i < ribNode__->object( 0 )->granularity(); i++ ) 
+	{
+		if( ribNode__->object( 0 )->isNextObjectGrainAnimated() ) 
+		{
+			if(liqglo.liqglo_relativeMotion)
+				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
+			else
+				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
+
+			for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ ){ 
+				MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode__->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".m"+(int)msampleOn+".rib" );
+				ribNode__->object( msampleOn )->writeNextObjectGrain(geometryRibFile, currentJob);
+			}
+			RiMotionEnd();
+		}else {
+			RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
+
+			MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode__->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".rib" );
+			ribNode__->object( 0 )->writeNextObjectGrain(geometryRibFile, currentJob);
+		}
+	}
+	return MS::kSuccess;
+}
+
+void liqRibTranslator::F1(
+						  const liqRibNodePtr &ribNode__,  liqShader &currentShader
+						  )
+{
+	// Output color overrides or color
+	if(ribNode__->shading.color.r != -1.0)
+	{
+		RtColor rColor;
+		rColor[0] = ribNode__->shading.color[0];
+		rColor[1] = ribNode__->shading.color[1];
+		rColor[2] = ribNode__->shading.color[2];
+		RiColor( rColor );
+	}
+	else
+		RiColor( currentShader.rmColor );
+
+	if(ribNode__->shading.opacity.r != -1.0)
+	{
+		RtColor rOpacity;
+		rOpacity[0] = ribNode__->shading.opacity[0];
+		rOpacity[1] = ribNode__->shading.opacity[1];
+		rOpacity[2] = ribNode__->shading.opacity[2];
+		RiOpacity( rOpacity );
+	}
+	else
+		RiOpacity( currentShader.rmOpacity );
+}
+
+////////////////////////////////////////
+void liqRibTranslator::F2(
+						  const bool m_shaderDebug, const liqRibNodePtr &ribNode__
+						  )
+{ 
+	if( m_shaderDebug ) 
+	{
+		RtColor rColor,rOpacity;
+		liqRIBMsg("shader debug is turned on, so the object is red.");
+		// shader debug on !! everything goes red and opaque !!!
+		rColor[0] = 1.;
+		rColor[1] = 0.;
+		rColor[2] = 0.;
+		RiColor( rColor );
+
+		rOpacity[0] = 1.;
+		rOpacity[1] = 1.;
+		rOpacity[2] = 1.;
+		RiOpacity( rOpacity );
+	}else{
+		if(ribNode__->shading.color.r != -1.0) 
+		{
+			RtColor rColor;
+			rColor[0] = ribNode__->shading.color[0];
+			rColor[1] = ribNode__->shading.color[1];
+			rColor[2] = ribNode__->shading.color[2];
+			RiColor( rColor );
+		} 
+		else if( ( ribNode__->color.r != -1.0 ) ) 
+		{
+			RtColor rColor;
+			rColor[0] = ribNode__->color[0];
+			rColor[1] = ribNode__->color[1];
+			rColor[2] = ribNode__->color[2];
+			RiColor( rColor );
+		}
+
+		if(ribNode__->shading.opacity.r != -1.0) 
+		{
+			RtColor rOpacity;
+			rOpacity[0] = ribNode__->shading.opacity[0];
+			rOpacity[1] = ribNode__->shading.opacity[1];
+			rOpacity[2] = ribNode__->shading.opacity[2];
+			RiOpacity( rOpacity );
+		} 
+		else if( ( ribNode__->opacity.r != -1.0 ) ) 
+		{	
+			RtColor rOpacity;
+			rOpacity[0] = ribNode__->opacity[0];
+			rOpacity[1] = ribNode__->opacity[1];
+			rOpacity[2] = ribNode__->opacity[2];
+			RiOpacity( rOpacity );
+		}
+	}
+}
+
+////////////////////////////////////
+void liqRibTranslator::getPfxHairData(const MDagPath &path__,
+	RtFloat &translucence, RtFloat &specularPower, RtColor &specularColor
+)
+{
+	MStatus status;
+
+	//cout <<"getting pfxHair shading params..."<<endl;
+	MObject hairSystemObj;
+	MFnDependencyNode pfxHairNode( path__.node() );
+	MPlug plugToHairSystem = pfxHairNode.findPlug( "renderHairs", &status );
+	MPlugArray hsPlugs;
+	status.clear();
+	if( plugToHairSystem.connectedTo( hsPlugs, true, false, &status ) ) 
+		if( status == MS::kSuccess ) 
+			hairSystemObj = hsPlugs[0].node();
+
+	if( hairSystemObj != MObject::kNullObj ) 
+	{
+		MFnDependencyNode hairSystemNode(hairSystemObj);
+		MPlug paramPlug;
+		status.clear();
+		paramPlug = hairSystemNode.findPlug( "translucence", &status );
+		if( status == MS::kSuccess ) 
+			paramPlug.getValue( translucence );
+		status.clear();
+		paramPlug = hairSystemNode.findPlug( "specularColor", &status );
+		if( status == MS::kSuccess ) 
+		{
+			paramPlug.child(0).getValue( specularColor[0] );
+			paramPlug.child(1).getValue( specularColor[1] );
+			paramPlug.child(2).getValue( specularColor[2] );
+		}
+		status.clear();
+		paramPlug = hairSystemNode.findPlug( "specularPower", &status );
+		if( status == MS::kSuccess ) 
+			paramPlug.getValue( specularPower );
 	}
 }
