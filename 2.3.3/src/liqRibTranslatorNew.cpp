@@ -178,6 +178,11 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 		if( ( m_renderCommand == MString( "render" ) ) || ( m_renderCommand == MString( "prman" ) ) || ( m_renderCommand == MString( "renderdl" ) ) ) 
 			m_renderCommand = m_renderCommand + " -Progress";
 
+	if( !liqglo.m_deferredGen && m_justRib ) 
+		useRenderScript = false;
+	liquidMessage2(messageInfo,"useRenderScript=%d", useRenderScript);
+
+
 	// check to see if the output camera, if specified, is available
 	if( liqglo.liquidBin && ( renderCamera == "" ) ) 
 	{
@@ -264,9 +269,6 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 			MFileIO::exportAll( liqglo.tempDefname, currentFileType.asChar() );
 		}
 
-		if( !liqglo.m_deferredGen && m_justRib ) 
-			useRenderScript = false;
-		liquidMessage2(messageInfo,"useRenderScript=%d", useRenderScript);
 
 		liqRenderScript jobScript;
 		// 		liqRenderScript::Job preJobInstance;
