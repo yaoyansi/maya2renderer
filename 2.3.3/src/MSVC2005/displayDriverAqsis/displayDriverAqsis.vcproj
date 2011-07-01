@@ -1234,7 +1234,7 @@
 				OutputFile="../../../displayDrivers/Aqsis/win32/liqmaya.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(AQSISHOME)/lib"
+				AdditionalLibraryDirectories="$(AQSISI_ROOT)\build\DebugLib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
