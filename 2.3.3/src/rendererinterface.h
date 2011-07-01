@@ -26,6 +26,8 @@ public:
 	virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress) = 0;
 
 //	virtual MStatus ribPrologue(const structJob& currentJob) = 0;
+	virtual MStatus ribPrologue_begin(const structJob& currentJob) = 0;
+
 	virtual void ribPrologue_comment(const char* liqversion, 
 		const char* scenename, const char* user, const time_t &time) = 0;
 	virtual MStatus ribPrologue_options(const structJob& currentJob) = 0;
@@ -36,6 +38,7 @@ public:
 //	virtual MStatus objectBlock(const structJob& currentJob) = 0;
 	virtual MStatus worldEpilogue() = 0;
 //	virtual MStatus frameEpilogue(const long scanTime) = 0;
+	virtual MStatus ribPrologue_end(const structJob& currentJob) = 0;
 //	virtual MStatus ribEpilogue() = 0;
 
 

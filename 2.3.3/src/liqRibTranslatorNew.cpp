@@ -1117,6 +1117,8 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 		user, now
 		);
 
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->ribPrologue_begin(currentJob);
+
 	liquid::RendererMgr::getInstancePtr()->getRenderer()->ribPrologue_options(currentJob);
 
 	ribStatus = kRibBegin;
@@ -1124,9 +1126,13 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 }
 
 //
-MStatus liqRibTranslator::ribEpilogue__()
+MStatus liqRibTranslator::ribEpilogue__(const structJob &currentJob)
 {
-	return ribEpilogue();
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->ribPrologue_end(currentJob);
+
+	if(ribStatus == kRibBegin) 
+		ribStatus = kRibOK;
+	return (ribStatus == kRibOK ? MS::kSuccess : MS::kFailure);
 }
 //
 MStatus liqRibTranslator::framePrologue__( long lframe, const structJob &currentJob)

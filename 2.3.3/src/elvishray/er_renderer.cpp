@@ -30,13 +30,48 @@
 
 namespace elvishray
 {
-	#define _s(_log_) dummy.get()<< _log_ <<std::endl;
+#define _s( _log_ ) dummy.get()<< _log_ <<std::endl;
+
+#define _t( _log_or_call_ )  \
+	if(0) dummy.get()<< _log_or_call_ <<std::endl; \
+	else  dummy.get()<< #_log_or_call_ <<";"<<std::endl; _log_or_call_ ; 
+
+// #define _S(_call_)  \
+// 	dummy.get()<<#_call_<<std::endl; my_##_call_ ; 
+#define _S(_call_)  my_##_call_ ; 
 
 	//static const char *LogName="d:/script.er";
 	static /*const*/ Renderer dummy; 
 	// the only goal to define a Renderer variable is 
 	// to run the constructor to register this renderer.
+	//////////////////////////////////////////////////////////////////////////
+	void my_ei_transform(
+		float t00,float t01,float t02,float t03,
+		float t10,float t11,float t12,float t13,
+		float t20,float t21,float t22,float t23,
+		float t30,float t31,float t32,float t33
+		)
+	{
+		_s("this is ei_transform("<< t00 <<",...);");
+		//ei_transform(...);
+	}
+	void my_ei_scene()
+	{
+		_s("ei_scene();"); 
+	}
+	void my_ei_scene(const char *log, float a)
+	{
+		_s("ei_scene(\""<<log<<"\","<<a<<");"); 
+	}
+	void my_ei_shader(const char* shadertype, const char* param0, const float v)
+	{
 
+	}
+	void ei_shading_rate(const float v)
+	{
+
+	}
+	//////////////////////////////////////////////////////////////////////////
 	static const char *RendererName="elvishray";
 
 	Renderer::Renderer()
@@ -68,10 +103,7 @@ namespace elvishray
 
 		_s("\n//worldPrologue");
 
-		if( true )
-		{
-			_s("ei_make_texture(\"d:\\lunatexmap.bmp\", \"d:\\lunatexmap.tex\", EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f );");
-		}
+
 
 		return MS::kSuccess;
 	}
@@ -109,22 +141,15 @@ namespace elvishray
 		const std::string &shadertype, 
 		const std::string &shaderinstance, 
 		const liqString & shadowname,
-		const liqMatrix &transform)
+		const liqMatrix &t)
 	{
-		_s("\n// Renderer::exportShadowPassLight()");
-		_s("ei_shader( \"shadowlight\", ");
-		_s("           \"intensity\", ToString<liqFloat>(intensity),");
-		_s("           \"lightcolor\", ToString<liqColor>(color)");
-		_s(");");
+//		_s("\n// Renderer::exportShadowPassLight()");
+		_s("ei_shader( \"shadowlight\", \"intensity\", 10.0)");
 
-		_s("ei_light( "<<shadertype<<" );");
-		_s("ei_lightsource(	shadowlight, ei_end );");
-		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
-		_s(");");
-		_s("ei_end_light();");
+		_s("ei_light("<<shadertype<<")");
+		_s("ei_lightsource(	\"shadowlight\", ei_end )");
+		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
+		_s("ei_end_light()");
 
 		_s("ei_instance( "<<shaderinstance<<" );");
 		_s("ei_element(	"<<shadertype<<" );");
@@ -137,7 +162,7 @@ namespace elvishray
 		const std::string &shaderinstance, 
 		const liqFloat & intensity,
 		const liqColor & color,
-		const liqMatrix &transform)
+		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportAmbientLight()");
 		_s("ei_shader( \"ambientlight\", ");
@@ -147,11 +172,8 @@ namespace elvishray
 
 		_s("ei_light( "<<shadertype<<" );");
 		_s("ei_lightsource(	ambientlight, ei_end );");
-		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
-		_s(");");
+		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
+
 		_s("ei_end_light();");
 
 		_s("ei_instance( "<<shaderinstance<<" );");
@@ -187,7 +209,7 @@ namespace elvishray
 		const liqColor &o_unshadowed_Cl,
 		const liqFloat &o_nondiffuse,
 		const liqFloat &o_nonspecular,
-		const liqMatrix &transform)
+		const liqMatrix &t)
 	{
 		_s("// Renderer::exportDistantLight()");
 		_s("ei_shader( \"distantlight\", ");
@@ -197,11 +219,7 @@ namespace elvishray
 
 		_s("ei_light( "<<shadertype<<" );");
 		_s("ei_lightsource(	distantlight, ei_end );");
-		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
-		_s(");");
+		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 		_s("ei_end_light();");
 
 		_s("ei_instance( "<<shaderinstance<<" );");
@@ -235,7 +253,7 @@ namespace elvishray
 		const liqColor &o_unshadowed_Cl,
 		const liqFloat &o_nondiffuse,
 		const liqFloat &o_nonspecular,
-		const liqMatrix &transform)
+		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportPointLight()");
 		_s("ei_shader( \"pointlight\", ");
@@ -245,11 +263,7 @@ namespace elvishray
 
 		_s("ei_light( "<<shadertype<<" );");
 		_s("ei_lightsource(	pointlight, ei_end );");
-		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
-		_s(");");
+		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 		_s("ei_end_light();");
 
 		_s("ei_instance( "<<shaderinstance<<" );");
@@ -306,7 +320,7 @@ namespace elvishray
 		const liqColor &o_unshadowed_Cl,
 		const liqFloat &o_nondiffuse,
 		const liqFloat &o_nonspecular,
-		const liqMatrix &transform)
+		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportSpotLight()");
 		_s("ei_shader( \"spotlight\", ");
@@ -316,11 +330,7 @@ namespace elvishray
 
 		_s("ei_light( "<<shadertype<<" );");
 		_s("ei_lightsource(	spotlight, ei_end );");
-		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
-		_s(");");
+		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 		_s("ei_end_light();");
 
 		_s("ei_instance( "<<shaderinstance<<" );");
@@ -352,7 +362,7 @@ namespace elvishray
 		const liqColor &o_unshadowed_Cl,
 		const liqFloat &o_arealightIntensity,
 		const liqColor &o_arealightColor,
-		const liqMatrix &transform)
+		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportAreaLight()");
 		_s( "ei_shader( \"arealight\", ");
@@ -362,11 +372,7 @@ namespace elvishray
 
 		_s("ei_light( "<<shadertype<<" );");
 		_s("ei_lightsource(	arealight, ei_end );");
-		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
-		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
-		_s(");");
+		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 		_s("ei_end_light();");
 
 		_s("ei_instance( "+shaderinstance+" );");
@@ -463,6 +469,31 @@ namespace elvishray
 
 	}
 	//
+	MStatus Renderer::ribPrologue_begin(const structJob& currentJob)
+	{
+		if( true )
+		{
+			_s("ei_make_texture("<<currentJob.imageName<<","<<currentJob.texName<<", EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f );");
+		}	
+		_s("//### SCENE BEGIN ###");
+		_S( ei_scene() );
+		_S( ei_scene("hello.", 10.0f) );
+		float a = 30;
+		_S( ei_scene("hello.", a) );
+		//_S( ei_scene("hello.", boost::format("%f")%a) );
+
+		_s("ei_set_connection(MayaConnection::getInstance());");
+
+		//ei_verbose(	EI_VERBOSE_ALL );
+		_s("ei_link( \"dso\" );");
+		return MS::kSuccess;
+	}
+	MStatus Renderer::ribPrologue_end(const structJob& currentJob)
+	{ 
+		_s("ei_end_scene();");
+		return MS::kSuccess;
+	}
+	//
 	MStatus Renderer::ribPrologue_options(const structJob& currentJob)
 	{
 		_s("\n//###option");
@@ -479,7 +510,7 @@ namespace elvishray
 		}else{
 			_s("ei_samples(0,2);");//_s("ei_samples("<< liqglo.pixelSamples<<","<<liqglo.pixelSamples<<");");//4,4
 			_s("ei_filter( EI_FILTER_GAUSSIAN, 3.0f );");
-			_s("ei_shading_rate( "<< liqglo.shadingRate <<" );");
+			_s("ei_shading_rate( "<<liqglo.shadingRate <<");");
 		}
 //		_s("ei_bucket_size( int size );");
 		

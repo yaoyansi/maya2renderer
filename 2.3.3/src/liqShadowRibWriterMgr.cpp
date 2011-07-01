@@ -112,7 +112,7 @@ TempControlBreak tShadowRibWriterMgr::write(
 		RiReadArchive( const_cast< RtToken >( baseShadowName__.asChar() ), NULL, RI_NULL );
 		if( liqRibTranslator::getInstancePtr()->frameEpilogue__( scanTime__ ) != MS::kSuccess ) 
 			return TCB_Break;//break;
-		liqRibTranslator::getInstancePtr()->ribEpilogue__();
+		liqRibTranslator::getInstancePtr()->ribEpilogue__(currentJob___);
 	}
 	RiEnd();
 	//------------------------------------------------------------

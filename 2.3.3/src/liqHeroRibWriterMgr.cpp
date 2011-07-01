@@ -61,7 +61,7 @@ struct liqGlobalVariable &liqglo___,
 			return TCB_Break;//break;
 		if( liqRibTranslator::getInstancePtr()->frameEpilogue__( scanTime__ ) != MS::kSuccess ) 
 			return TCB_Break;//break;
-		liqRibTranslator::getInstancePtr()->ribEpilogue__();
+		liqRibTranslator::getInstancePtr()->ribEpilogue__(currentJob___);
 		// output info when done with the rib - Alf
 		cout <<"Finished RIB generation "<<currentJob___.ribFileName.asChar()<<endl;
 	}

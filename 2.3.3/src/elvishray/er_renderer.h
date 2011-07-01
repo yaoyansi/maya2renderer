@@ -20,6 +20,7 @@ namespace elvishray
 
 		virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress);
 		//		virtual MStatus ribPrologue(const structJob& currentJob);
+		virtual MStatus ribPrologue_begin(const structJob& currentJob);
 		virtual MStatus ribPrologue_options(const structJob& currentJob);
 		virtual void ribPrologue_comment(const char* liqversion, 
 			const char* scenename, const char* user, const time_t &time);
@@ -30,6 +31,7 @@ namespace elvishray
 		//		virtual MStatus objectBlock(const structJob& currentJob);
 		virtual MStatus worldEpilogue();
 		//		virtual MStatus frameEpilogue(const long scanTime);
+		virtual MStatus ribPrologue_end(const structJob& currentJob);
 		//		virtual MStatus ribEpilogue();
 
 		virtual void openLog();

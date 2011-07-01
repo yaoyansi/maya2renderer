@@ -602,6 +602,15 @@ namespace renderman
 
 	}
 	//
+	MStatus Renderer::ribPrologue_begin(const structJob& currentJob)
+	{
+		return MS::kSuccess;
+	}
+	MStatus Renderer::ribPrologue_end(const structJob& currentJob)
+	{
+		return MS::kSuccess;
+	}
+	//
 	MStatus Renderer::ribPrologue_options(const structJob& currentJob)
 	{
 		LIQDEBUGPRINTF( "-> beginning to write prologue\n" );

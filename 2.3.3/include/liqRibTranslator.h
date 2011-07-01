@@ -484,7 +484,7 @@ public:
 
 public:
 	MStatus ribPrologue__(const structJob &currentJob);
- 	MStatus ribEpilogue__();
+ 	MStatus ribEpilogue__(const structJob &currentJob);
  	MStatus framePrologue__( long , const structJob &currentJob);
 	MStatus worldPrologue__(const structJob &currentJob);
 	MStatus lightBlock__(const structJob &currentJob);
