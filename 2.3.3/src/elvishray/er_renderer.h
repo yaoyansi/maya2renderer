@@ -12,6 +12,8 @@ namespace elvishray
 		virtual ~Renderer();
 
 		virtual void test();
+
+		virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress);
 	};
 }
 

@@ -12,6 +12,9 @@ public:
 
 //interface:
 	virtual void test() = 0;
+	
+	// RenderScript means .rib files for renderman, and .er files for elvishray. and etc.
+	virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress) = 0;
 
 
 protected:

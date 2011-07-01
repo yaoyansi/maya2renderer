@@ -11,8 +11,11 @@ namespace renderman
 		Renderer();
 		virtual ~Renderer();
 		virtual void test();
-	protected:
 
+		virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress);
+
+	protected:
+		void _RiOption_format_compress(bool bBinary, bool bCompress);
 	};
 }
 

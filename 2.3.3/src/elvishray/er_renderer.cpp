@@ -27,4 +27,9 @@ namespace elvishray
 		liquidMessage2(messageInfo, "this is %s.", RendererName );
 
 	}
+	//
+	void Renderer::setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress)
+	{
+		//todo...
+	}
 }

@@ -116,6 +116,8 @@
 #include <liqHeroRibWriterMgr.h>
 #include <liqRibCamera.h>
 
+#include "renderermgr.h"
+
 using namespace boost;
 using namespace std;
 
@@ -497,12 +499,9 @@ TempControlBreak liqRibTranslator::processOneFrame(
 			//************************************************************************************
 			LIQDEBUGPRINTF( "-> setting RiOptions\n" );
 			//************************************************************************************
-
-			// Rib client file creation options MUST be set before RiBegin
-#if defined(PRMAN) || defined(DELIGHT)
-			/* THERE IS A RIBLIB BUG WHICH PREVENTS THIS WORKING */
-			_RiOption_format_compress(liqglo__.liqglo_doBinary, liqglo__.liqglo_doCompression);
-#endif // PRMAN || DELIGHT
+			
+			liquid::RendererMgr::getInstancePtr()->
+				getRenderer()->setRenderScriptFormatAndCompress(liqglo__.liqglo_doBinary, liqglo__.liqglo_doCompression);
 
 			// world RiReadArchives and Rib Boxes ************************************************
 			//
