@@ -125,7 +125,7 @@ class arrayDeleter // needed to free a shared/scoped/weak_ptr to an array
       delete[] t;
     }
 };
-
+const MString replaceAll(const MString& str, const char from, const char to);
 
 
 #endif

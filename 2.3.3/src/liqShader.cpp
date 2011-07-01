@@ -409,7 +409,7 @@ liqShader::liqShader( MObject shaderObj )
 				}
 				case SHADER_TYPE_MATRIX:
 				{
-					liquidMessage2(messageInfo,  "[liqShader]  %s.%s arraySize=%d", shaderNode.name().asChar(), paramName.asChar(), arraySize );
+					//liquidMessage2(messageInfo,  "[liqShader]  %s.%s arraySize=%d", shaderNode.name().asChar(), paramName.asChar(), arraySize );
 					if ( arraySize > 0 )
 					{
  						liquidMessage2(messageError, "[liqShader] matrix array is not supported. %s.%s ...\n", shaderNode.name().asChar(), paramName.asChar() );

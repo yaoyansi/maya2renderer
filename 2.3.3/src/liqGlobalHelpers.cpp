@@ -1302,3 +1302,11 @@ unsigned int liquidGetPlugNumElements( MFnDependencyNode node, const char *name,
   }
   return num;
 }
+
+const MString replaceAll(const MString& str, const char from, const char to)
+{
+	std::string dump(str.asChar());
+	std::replace(dump.begin(), dump.end(), from, to);
+	
+	return MString(dump.c_str());
+}
