@@ -306,46 +306,77 @@ void liqRibMeshData::_write(const structJob &currentJob)
 {
   if ( numPoints > 1 ) 
   {
-    LIQDEBUGPRINTF( "-> writing mesh\n" );
-    RtLightHandle handle = INVALID_LIGHT_INDEX;
-    if ( areaLight ) 
-    { // What happens if we're inside a motion block????? This whole approach of Liquid is flawed...
-      LIQDEBUGPRINTF( "-> mesh is area light\n" );
-      //	RiAttributeBegin();
-      RtString ribname = const_cast< char* >( name.asChar() );
-      RiAttribute( "identifier", "name", &ribname, RI_NULL );
-      RtMatrix tmp;
-      memcpy( tmp, transformationMatrix, sizeof( RtMatrix ) );
-      RiTransform( tmp );
+	  LIQDEBUGPRINTF( "-> writing mesh\n" );
 
-      handle = RiAreaLightSource( "arealight", "intensity", &areaIntensity, RI_NULL );
-    }
+	if(areaLight)
+	{
+		RtLightHandle handle = INVALID_LIGHT_INDEX;
 
-    // Each loop has one polygon, so we just want an array of 1's of
-    // the correct size. Stack version.
-    //vector< RtInt > nloops( numFaces, 1 );
-    // Alternatively (heap version):
-    scoped_array< RtInt > nloops( new RtInt[ numFaces ] );
-    fill( nloops.get(), nloops.get() + numFaces, ( RtInt )1 );
+		{ // What happens if we're inside a motion block????? This whole approach of Liquid is flawed...
+			LIQDEBUGPRINTF( "-> mesh is area light\n" );
+			//	RiAttributeBegin();
+			RtString ribname = const_cast< char* >( name.asChar() );
+			RiAttribute( "identifier", "name", &ribname, RI_NULL );
+			RtMatrix tmp;
+			memcpy( tmp, transformationMatrix, sizeof( RtMatrix ) );
+			RiTransform( tmp );
 
-    unsigned numTokens( tokenPointerArray.size() );
-    scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-    scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-    assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
+			handle = RiAreaLightSource( "arealight", "intensity", &areaIntensity, RI_NULL );
+		}
+		//
+		//mesh data begin
+		//
+		// Each loop has one polygon, so we just want an array of 1's of
+		// the correct size. Stack version.
+		//vector< RtInt > nloops( numFaces, 1 );
+		// Alternatively (heap version):
+		scoped_array< RtInt > nloops( new RtInt[ numFaces ] );
+		fill( nloops.get(), nloops.get() + numFaces, ( RtInt )1 );
 
-    RiPointsGeneralPolygonsV( numFaces,
-                              &nloops[ 0 ],
-                              nverts.get(),
-                              verts.get(),
-                              numTokens,
-                              tokenArray.get(),
-                              pointerArray.get() );
+		unsigned numTokens( tokenPointerArray.size() );
+		scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+		scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+		assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
 
-    if ( areaLight ) 
-    {
-      // RiAttributeEnd();
-      RiIlluminate( handle, 1 );
-    }
+		RiPointsGeneralPolygonsV( numFaces,
+			&nloops[ 0 ],
+			nverts.get(),
+			verts.get(),
+			numTokens,
+			tokenArray.get(),
+			pointerArray.get() );
+		//mesh data end
+
+		{
+			// RiAttributeEnd();
+			RiIlluminate( handle, 1 );
+		}
+	}else{
+		//
+		//mesh data begin
+		//
+		// Each loop has one polygon, so we just want an array of 1's of
+		// the correct size. Stack version.
+		//vector< RtInt > nloops( numFaces, 1 );
+		// Alternatively (heap version):
+		scoped_array< RtInt > nloops( new RtInt[ numFaces ] );
+		fill( nloops.get(), nloops.get() + numFaces, ( RtInt )1 );
+
+		unsigned numTokens( tokenPointerArray.size() );
+		scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+		scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+		assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
+
+		RiPointsGeneralPolygonsV( numFaces,
+			&nloops[ 0 ],
+			nverts.get(),
+			verts.get(),
+			numTokens,
+			tokenArray.get(),
+			pointerArray.get() );
+		//mesh data end
+	}
+
   } 
   else 
   {
