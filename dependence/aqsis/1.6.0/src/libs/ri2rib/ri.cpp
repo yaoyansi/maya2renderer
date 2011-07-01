@@ -1494,3 +1494,28 @@ RtVoid RiConnectShaderLayers( RtToken type, RtToken layer1, RtToken variable1,
 	        variable2 );
 	RI2RIB_EXCEPTION_CATCH_GUARD("RiConnectShaderLayers", )
 }
+
+#ifdef __LIQUID__
+// RtVoid RiShader( RtToken type, RtToken name, ... )
+// {
+// 	RI2RIB_EXCEPTION_TRY_GUARD
+// 		AQSIS_COLLECT_RI_PARAMETERS(name)
+// 		RiShader( type, name, AQSIS_PASS_RI_PARAMETERS );
+// 	RI2RIB_EXCEPTION_CATCH_GUARD("RiShader", )
+// }
+
+RtVoid RiShaderV( RtToken type, RtToken name,
+					  RtInt count, RtToken tokens[], RtPointer values[] )
+{
+	RI2RIB_EXCEPTION_TRY_GUARD
+		context.current().RiShaderV( type, name, count, tokens, values );
+	RI2RIB_EXCEPTION_CATCH_GUARD("RiShaderV", )
+}
+
+RtVoid RiDisplayChannelV(RtToken channel, RtInt count, RtToken tokens[], RtPointer values[])
+{
+	RI2RIB_EXCEPTION_TRY_GUARD
+		context.current().RiDisplayChannelV( channel, count, tokens, values );
+	RI2RIB_EXCEPTION_CATCH_GUARD("RiDisplayChannelV", )
+}
+#endif

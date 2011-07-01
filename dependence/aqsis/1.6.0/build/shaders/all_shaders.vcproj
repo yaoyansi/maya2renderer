@@ -206,6 +206,38 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="DebugLib_Liquid|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Release\&quot;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -273,6 +305,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=""
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\build\shaders\displacement\AqDMap.slx;..\..\build\shaders\displacement\borg_metal.slx;..\..\build\shaders\displacement\bumpy.slx;..\..\build\shaders\displacement\dented.slx;..\..\build\shaders\displacement\micro_bumps.slx;..\..\build\shaders\displacement\wavy.slx;..\..\build\shaders\imager\background.slx;..\..\build\shaders\imager\bluescreen.slx;..\..\build\shaders\imager\exposure.slx;..\..\build\shaders\imager\fakesky.slx;..\..\build\shaders\imager\filmgrain.slx;..\..\build\shaders\imager\gradient.slx;..\..\build\shaders\imager\iramp.slx;..\..\build\shaders\light\ambientlight.slx;..\..\build\shaders\light\distantlight.slx;..\..\build\shaders\light\pointlight.slx;..\..\build\shaders\light\shadowdistant.slx;..\..\build\shaders\light\shadowpoint.slx;..\..\build\shaders\light\shadowspot.slx;..\..\build\shaders\light\spotlight.slx;..\..\build\shaders\surface\AqSMap.slx;..\..\build\shaders\surface\cd.slx;..\..\build\shaders\surface\cellnoisetest.slx;..\..\build\shaders\surface\constant.slx;..\..\build\shaders\surface\curvetube.slx;..\..\build\shaders\surface\debug.slx;..\..\build\shaders\surface\DPBlueMarble.slx;..\..\build\shaders\surface\expensive.slx;..\..\build\shaders\surface\face_plastic.slx;..\..\build\shaders\surface\matte.slx;..\..\build\shaders\surface\metal.slx;..\..\build\shaders\surface\microscope.slx;..\..\build\shaders\surface\paintedplastic.slx;..\..\build\shaders\surface\pinkGranite.slx;..\..\build\shaders\surface\plastic.slx;..\..\build\shaders\surface\randgrid.slx;..\..\build\shaders\surface\shinymetal.slx;..\..\build\shaders\surface\showuser.slx;..\..\build\shaders\surface\show_N.slx;..\..\build\shaders\surface\show_st.slx;..\..\build\shaders\surface\SpaceTest.slx;..\..\build\shaders\surface\sticky_texture.slx;..\..\build\shaders\surface\uvtest.slx;..\..\build\shaders\volume\depthcue.slx;..\..\build\shaders\volume\fog.slx;"
+						Outputs="..\..\build\shaders\CMakeFiles\all_shaders"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -352,6 +395,17 @@
 						Outputs="..\..\build\shaders\light\ambientlight.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/ambientlight.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/light/ambientlight.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/ambientlight.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\light\ambientlight.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\light\ambientlight.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\displacement\AqDMap.slx.rule"
@@ -413,6 +467,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/AqDMap.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/displacement/AqDMap.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/AqDMap.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\displacement\AqDMap.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\displacement\AqDMap.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -492,6 +557,17 @@
 						Outputs="..\..\build\shaders\surface\AqSMap.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/AqSMap.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/AqSMap.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/AqSMap.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\AqSMap.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\AqSMap.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\imager\background.slx.rule"
@@ -553,6 +629,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/background.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/imager/background.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/background.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\imager\background.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\imager\background.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -632,6 +719,17 @@
 						Outputs="..\..\build\shaders\imager\bluescreen.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/bluescreen.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/imager/bluescreen.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/bluescreen.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\imager\bluescreen.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\imager\bluescreen.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\displacement\borg_metal.slx.rule"
@@ -693,6 +791,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/borg_metal.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/displacement/borg_metal.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/borg_metal.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\displacement\borg_metal.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\displacement\borg_metal.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -772,6 +881,17 @@
 						Outputs="..\..\build\shaders\displacement\bumpy.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/bumpy.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/displacement/bumpy.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/bumpy.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\displacement\bumpy.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\displacement\bumpy.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\cd.slx.rule"
@@ -833,6 +953,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/cd.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/cd.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/cd.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\cd.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\cd.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -912,6 +1043,17 @@
 						Outputs="..\..\build\shaders\surface\cellnoisetest.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/cellnoisetest.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/cellnoisetest.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/cellnoisetest.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\cellnoisetest.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\cellnoisetest.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\constant.slx.rule"
@@ -973,6 +1115,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/constant.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/constant.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/constant.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\constant.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\constant.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1052,6 +1205,17 @@
 						Outputs="..\..\build\shaders\surface\curvetube.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/curvetube.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/curvetube.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/curvetube.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\curvetube.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\curvetube.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\debug.slx.rule"
@@ -1113,6 +1277,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/debug.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/debug.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/debug.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\debug.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\debug.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1192,6 +1367,17 @@
 						Outputs="..\..\build\shaders\displacement\dented.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/dented.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/displacement/dented.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/dented.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\displacement\dented.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\displacement\dented.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\volume\depthcue.slx.rule"
@@ -1253,6 +1439,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/volume/depthcue.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/volume/depthcue.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/volume/depthcue.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\volume\depthcue.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\volume\depthcue.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1332,6 +1529,17 @@
 						Outputs="..\..\build\shaders\light\distantlight.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/distantlight.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/light/distantlight.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/distantlight.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\light\distantlight.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\light\distantlight.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\DPBlueMarble.slx.rule"
@@ -1393,6 +1601,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/DPBlueMarble.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/DPBlueMarble.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/DPBlueMarble.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\DPBlueMarble.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\DPBlueMarble.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1472,6 +1691,17 @@
 						Outputs="..\..\build\shaders\surface\expensive.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/expensive.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/expensive.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/expensive.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\expensive.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\expensive.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\imager\exposure.slx.rule"
@@ -1533,6 +1763,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/exposure.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/imager/exposure.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/exposure.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\imager\exposure.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\imager\exposure.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1612,6 +1853,17 @@
 						Outputs="..\..\build\shaders\surface\face_plastic.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/face_plastic.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/face_plastic.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/face_plastic.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\face_plastic.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\face_plastic.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\imager\fakesky.slx.rule"
@@ -1673,6 +1925,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/fakesky.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/imager/fakesky.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/fakesky.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\imager\fakesky.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\imager\fakesky.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1752,6 +2015,17 @@
 						Outputs="..\..\build\shaders\imager\filmgrain.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/filmgrain.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/imager/filmgrain.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/filmgrain.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\imager\filmgrain.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\imager\filmgrain.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\volume\fog.slx.rule"
@@ -1813,6 +2087,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/volume/fog.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/volume/fog.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/volume/fog.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\volume\fog.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\volume\fog.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1892,6 +2177,17 @@
 						Outputs="..\..\build\shaders\imager\gradient.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/gradient.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/imager/gradient.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/gradient.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\imager\gradient.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\imager\gradient.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\imager\iramp.slx.rule"
@@ -1953,6 +2249,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/iramp.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/imager/iramp.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/imager/iramp.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\imager\iramp.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\imager\iramp.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -2032,6 +2339,17 @@
 						Outputs="..\..\build\shaders\surface\matte.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/matte.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/matte.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/matte.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\matte.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\matte.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\metal.slx.rule"
@@ -2093,6 +2411,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/metal.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/metal.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/metal.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\metal.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\metal.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -2172,6 +2501,17 @@
 						Outputs="..\..\build\shaders\displacement\micro_bumps.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/micro_bumps.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/displacement/micro_bumps.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/micro_bumps.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\displacement\micro_bumps.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\displacement\micro_bumps.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\microscope.slx.rule"
@@ -2233,6 +2573,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/microscope.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/microscope.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/microscope.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\microscope.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\microscope.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -2312,6 +2663,17 @@
 						Outputs="..\..\build\shaders\surface\paintedplastic.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/paintedplastic.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/paintedplastic.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/paintedplastic.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\paintedplastic.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\paintedplastic.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\pinkGranite.slx.rule"
@@ -2373,6 +2735,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/pinkGranite.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/pinkGranite.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/pinkGranite.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\pinkGranite.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\pinkGranite.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -2452,6 +2825,17 @@
 						Outputs="..\..\build\shaders\surface\plastic.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/plastic.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/plastic.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/plastic.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\plastic.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\plastic.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\light\pointlight.slx.rule"
@@ -2513,6 +2897,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/pointlight.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/light/pointlight.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/pointlight.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\light\pointlight.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\light\pointlight.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -2592,6 +2987,17 @@
 						Outputs="..\..\build\shaders\surface\randgrid.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/randgrid.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/randgrid.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/randgrid.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\randgrid.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\randgrid.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\light\shadowdistant.slx.rule"
@@ -2653,6 +3059,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/shadowdistant.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/light/shadowdistant.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/shadowdistant.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\light\shadowdistant.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\light\shadowdistant.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -2732,6 +3149,17 @@
 						Outputs="..\..\build\shaders\light\shadowpoint.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/shadowpoint.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/light/shadowpoint.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/shadowpoint.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\light\shadowpoint.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\light\shadowpoint.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\light\shadowspot.slx.rule"
@@ -2793,6 +3221,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/shadowspot.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/light/shadowspot.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/shadowspot.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\light\shadowspot.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\light\shadowspot.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -2872,6 +3311,17 @@
 						Outputs="..\..\build\shaders\surface\shinymetal.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/shinymetal.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/shinymetal.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/shinymetal.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\shinymetal.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\shinymetal.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\show_N.slx.rule"
@@ -2933,6 +3383,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/show_N.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/show_N.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/show_N.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\show_N.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\show_N.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -3012,6 +3473,17 @@
 						Outputs="..\..\build\shaders\surface\show_st.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/show_st.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/show_st.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/show_st.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\show_st.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\show_st.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\showuser.slx.rule"
@@ -3073,6 +3545,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/showuser.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/showuser.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/showuser.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\showuser.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\showuser.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -3152,6 +3635,17 @@
 						Outputs="..\..\build\shaders\surface\SpaceTest.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/SpaceTest.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/SpaceTest.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/SpaceTest.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\SpaceTest.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\SpaceTest.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\light\spotlight.slx.rule"
@@ -3213,6 +3707,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/spotlight.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/light/spotlight.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/light/spotlight.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\light\spotlight.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\light\spotlight.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -3292,6 +3797,17 @@
 						Outputs="..\..\build\shaders\surface\sticky_texture.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/sticky_texture.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/sticky_texture.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/sticky_texture.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\sticky_texture.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\sticky_texture.slx"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\build\shaders\surface\uvtest.slx.rule"
@@ -3353,6 +3869,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/uvtest.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/surface/uvtest.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/surface/uvtest.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\surface\uvtest.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\surface\uvtest.slx"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -3432,6 +3959,17 @@
 						Outputs="..\..\build\shaders\displacement\wavy.slx"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling shader E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/wavy.sl"
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;..\tools\aqsl\Release\aqsl.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/shaders/displacement/wavy.slx -I E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/include E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/displacement/wavy.sl&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\src\shaders\displacement\wavy.sl;..\..\build\tools\aqsl\Release\aqsl.exe;"
+						Outputs="..\..\build\shaders\displacement\wavy.slx"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
@@ -3498,6 +4036,17 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="DebugLib|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/shaders/CMakeLists.txt"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\build\libs\util\$(OutDir);..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cmake.exe&quot; -HE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src -BE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build --check-stamp-file ..\..\build\shaders\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+					AdditionalDependencies="..\..\src\shaders\CMakeLists.txt;..\..\src\shaders\CMakeLists.txt;"
+					Outputs="..\..\build\shaders\CMakeFiles\generate.stamp"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="DebugLib_Liquid|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

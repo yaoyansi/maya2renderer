@@ -26,6 +26,7 @@
 #ifndef AQSIS_CONFIG_H_INCLUDED
 #define AQSIS_CONFIG_H_INCLUDED
 
+#define __LIQUID__
 /*----------------------------------------------------------------------------*/
 /* Config from cmake system introspection */
 

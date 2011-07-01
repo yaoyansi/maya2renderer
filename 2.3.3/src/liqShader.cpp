@@ -754,11 +754,7 @@ void liqShader::writeAsCoShader(bool shortShaderNames, unsigned int indentLevel)
 	case SHADER_TYPE_DISPLACEMENT :
 	case SHADER_TYPE_VOLUME :
 		outputIndentation(indentLevel);
-		#ifdef RIBLIB_AQSIS
-		assert(0&&"RiShaderV() is not supported in Aqsis1.6.0 !");
-		#else
 		RiShaderV(shaderFileName, shaderHandlerPtr, shaderParamCount, tokenArray.get(), pointerArray.get());
-		#endif
 		break;
 	default :
 		char errorMsg[512];

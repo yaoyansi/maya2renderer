@@ -574,6 +574,88 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="DebugLib_Liquid|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="4"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_SLCOMP_EXPORTS,CMAKE_INTDIR=\&quot;Release\&quot;,aqsis_slcomp_EXPORTS"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				Optimization="0"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\slcomp\parse;..\..\..\build\libs\slcomp\parse;"
+				PreprocessorDefinitions="WIN32;_WINDOWS;DEBUG;_DEBUG;NO_SYSLOG;_USE_MATH_DEFINES;AQSIS_SLCOMP_EXPORTS;CMAKE_INTDIR=\&quot;Release\&quot;;aqsis_slcomp_EXPORTS;AQSIS_STATIC_LINK"
+				ExceptionHandling="1"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="true"
+				AssemblerListingLocation="DebugLib"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="..\..\..\build\libs\slcomp\DebugLib/aqsis_slcomp.pdb"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				CompileAs="2"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_SLCOMP_EXPORTS,CMAKE_INTDIR=\&quot;Release\&quot;,aqsis_slcomp_EXPORTS"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\slcomp\parse;..\..\..\build\libs\slcomp\parse;"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="..\..\..\build\DebugLib\$(ProjectName).lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -739,6 +821,17 @@
 					Outputs="..\..\..\build\libs\slcomp\CMakeFiles\generate.stamp"
 				/>
 			</FileConfiguration>
+			<FileConfiguration
+				Name="DebugLib_Liquid|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/libs/slcomp/CMakeLists.txt"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cmake.exe&quot; -HE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src -BE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build --check-stamp-file ..\..\..\build\libs\slcomp\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+					AdditionalDependencies="..\..\..\src\libs\slcomp\CMakeLists.txt;..\..\..\src\libs\slcomp\parse\project.cmake;..\..\..\src\libs\slcomp\backend\project.cmake;..\..\..\src\libs\slcomp\CMakeLists.txt;"
+					Outputs="..\..\..\build\libs\slcomp\CMakeFiles\generate.stamp"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\..\..\src\libs\slcomp\parse\parser.yy"
@@ -809,6 +902,17 @@
 					Outputs="..\..\..\build\libs\slcomp\parse\parser.cpp;..\..\..\build\libs\slcomp\parse\parser.hpp"
 				/>
 			</FileConfiguration>
+			<FileConfiguration
+				Name="DebugLib_Liquid|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating parse/parser.cpp, parse/parser.hpp"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;E:\dev\tools\bison\2.4.1\bin -d -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/libs/slcomp/parse/parser.cpp E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/libs/slcomp/parse/parser.yy&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+					AdditionalDependencies="..\..\..\src\libs\slcomp\parse\parser.yy;"
+					Outputs="..\..\..\build\libs\slcomp\parse\parser.cpp;..\..\..\build\libs\slcomp\parse\parser.hpp"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath="..\..\..\src\libs\slcomp\parse\scanner.ll"
@@ -870,6 +974,17 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="DebugLib|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating parse/scanner.cpp"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;E:\dev\tools\flex\2.5.4a\bin -oE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/libs/slcomp/parse/scanner.cpp E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/libs/slcomp/parse/scanner.ll&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+					AdditionalDependencies="..\..\..\build\libs\slcomp\parse\parser.hpp;..\..\..\src\libs\slcomp\parse\scanner.ll;"
+					Outputs="..\..\..\build\libs\slcomp\parse\scanner.cpp"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="DebugLib_Liquid|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

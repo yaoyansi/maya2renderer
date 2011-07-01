@@ -5418,12 +5418,8 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 #endif
 
 #if defined( DELIGHT )  || defined( PRMAN ) || defined( PIXIE )
-					#ifdef RIBLIB_AQSIS
-					assert(0&&"RiDisplayChannelV() is not supported in Aqsis1.6.0 !");
-					#else
 					//if( liquidRenderer.renderName == MString("PRMan") )
 					RiDisplayChannelV( ( RtToken )channel.asChar(), numTokens, tokens, values );
-					#endif
 #else
 					// || defined( GENERIC_RIBLIB )
 
@@ -7025,7 +7021,19 @@ MStatus liqRibTranslator::objectBlock()
 							RiMotionBeginV( liqglo_motionSamples, liqglo_sampleTimes );
 
 						for ( unsigned msampleOn( 0 ); msampleOn < liqglo_motionSamples; msampleOn++ ){ 
+							MString sFrame, sSample;
+							sFrame.set(liqglo_lframe);
+							sSample.set(msampleOn);
+
+							MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+sFrame+".m"+sSample+".rib" );
+
+							RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
+
+							RtContextHandle c = RiGetContext();//push context
+							RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
 							ribNode->object( msampleOn )->writeNextObjectGrain();//_writeObject(true, ribNode);
+							RiEnd();
+							RiContext(c);//pop context
 						}
 
 						RiMotionEnd();

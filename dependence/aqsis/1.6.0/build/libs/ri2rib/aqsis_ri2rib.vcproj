@@ -577,6 +577,89 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="DebugLib_Liquid|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="4"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_RI_EXPORTS,CMAKE_INTDIR=\&quot;Release\&quot;,aqsis_ri2rib_EXPORTS"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				Optimization="0"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;E:\dev\tools\zlib\zlib"
+				PreprocessorDefinitions="WIN32;_WINDOWS;DEBUG;_DEBUG;NO_SYSLOG;_USE_MATH_DEFINES;CMAKE_INTDIR=\&quot;Release\&quot;"
+				ExceptionHandling="1"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="true"
+				AssemblerListingLocation="DebugLib"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="..\..\..\build\libs\ri2rib\DebugLib/aqsis_ri2rib.pdb"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				CompileAs="2"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_SYSLOG;_USE_MATH_DEFINES;CMAKE_INTDIR=\&quot;Release\&quot;;AQSIS_STATIC_LINK"
+				AdditionalIncludeDirectories=""
+				ResourceOutputFileName=""
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				OutputFile="..\..\..\build\DebugLib\$(ProjectName).lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -721,6 +804,17 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="DebugLib|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/libs/ri2rib/CMakeLists.txt"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cmake.exe&quot; -HE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src -BE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build --check-stamp-file ..\..\..\build\libs\ri2rib\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+					AdditionalDependencies="..\..\..\src\libs\ri2rib\CMakeLists.txt;..\..\..\src\libs\ri2rib\CMakeLists.txt;"
+					Outputs="..\..\..\build\libs\ri2rib\CMakeFiles\generate.stamp"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="DebugLib_Liquid|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

@@ -2076,4 +2076,25 @@ RtVoid CqOutput::RiConnectShaderLayers( RtToken type, RtToken layer1, RtToken va
 	printToken( variable2 );
 }
 
+#ifdef __LIQUID__
+RtVoid CqOutput::RiShaderV( RtToken type, RtToken name, RtInt count, RtToken tokens[], RtPointer values[] )
+{
+	PR( "Shader", Shader );
+	S;
+	printToken( type );
+	S;
+	printToken( name );
+	S;
+	printPL( count, tokens, values );
+}
+RtVoid CqOutput::RiDisplayChannelV( RtToken channel, RtInt count, RtToken tokens[], RtPointer values[] )
+{
+	PR( "DisplayChannel", DisplayChannel );
+	S;
+	printToken( channel );
+	S;
+	printPL( count, tokens, values );
+}
+#endif
+
 } // namespace libri2rib

@@ -613,6 +613,105 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="DebugLib_Liquid|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Release\&quot;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\rib2ri;..\..\..\build\libs\rib2ri;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Release\&quot;"
+				ExceptionHandling="1"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="true"
+				AssemblerListingLocation="Release"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="..\..\..\build\tools\miqser\Release/miqser.pdb"
+				WarningLevel="3"
+				CompileAs="2"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Release\&quot;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\rib2ri;..\..\..\build\libs\rib2ri;"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkLibraryDependencies="false"
+				AdditionalOptions=" /STACK:10000000 /machine:X86"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  ..\..\libs\util\Release\aqsis_util.lib ..\..\libs\ribparse\Release\aqsis_ribparse.lib ..\..\libs\ri2rib\Release\aqsis_ri2rib.lib ..\..\libs\riutil\Release\aqsis_riutil.lib ..\..\libs\util\Release\aqsis_util.lib E:\dev\boost\1_39\stage\lib\libboost_filesystem-vc80-mt-1_39.lib ws2_32.lib E:\dev\boost\1_39\stage\lib\libboost_system-vc80-mt-1_39.lib E:\dev\boost\1_39\stage\lib\libboost_iostreams-vc80-mt-1_39.lib "
+				OutputFile="..\..\..\build\tools\miqser\Release\miqser.exe"
+				Version="0.0"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="E:\dev\boost\1_39\stage\lib\$(OutDir),E:\dev\boost\1_39\stage\lib"
+				ProgramDatabaseFile="..\..\..\build\tools\miqser\Release/miqser.pdb"
+				SubSystem="1"
+				ImportLibrary="..\..\..\build\tools\miqser\Release\miqser.lib"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -725,6 +824,17 @@
 						Outputs="..\..\..\build\libs\rib2ri\requesthandler_method_defs.inl"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating requesthandler_method_defs.inl via XSL transformation..."
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;E:\dev\tools\libxslt\1.1.26\bin\xsltproc.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/libs/rib2ri/requesthandler_method_defs.inl --path E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/tools/miqser:E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/libs/rib2ri:E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/include/aqsis/ri requesthandler_method_defs.xsl ri.xml&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\..\build\libs\rib2ri\requesthandler_method_defs.inl.rule"
+						Outputs="..\..\..\build\libs\rib2ri\requesthandler_method_defs.inl"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\build\libs\rib2ri\requesthandler_method_impl.inl.rule"
@@ -786,6 +896,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating requesthandler_method_impl.inl via XSL transformation..."
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;E:\dev\tools\libxslt\1.1.26\bin\xsltproc.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/libs/rib2ri/requesthandler_method_impl.inl --path E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/tools/miqser:E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/libs/rib2ri:E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/include/aqsis/ri requesthandler_method_impl.xsl ri.xml&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\..\build\libs\rib2ri\requesthandler_method_impl.inl.rule"
+						Outputs="..\..\..\build\libs\rib2ri\requesthandler_method_impl.inl"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -865,6 +986,17 @@
 						Outputs="..\..\..\build\libs\rib2ri\requestlists.inl"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating requestlists.inl via XSL transformation..."
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;E:\dev\tools\libxslt\1.1.26\bin\xsltproc.exe -o E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build/libs/rib2ri/requestlists.inl --path E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/tools/miqser:E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/libs/rib2ri:E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/include/aqsis/ri requestlists.xsl ri.xml&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\..\build\libs\rib2ri\requestlists.inl.rule"
+						Outputs="..\..\..\build\libs\rib2ri\requestlists.inl"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
@@ -927,6 +1059,17 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="DebugLib|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/tools/miqser/CMakeLists.txt"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\build\libs\util\$(OutDir);..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cmake.exe&quot; -HE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src -BE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build --check-stamp-file ..\..\..\build\tools\miqser\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+					AdditionalDependencies="..\..\..\src\tools\miqser\CMakeLists.txt;..\..\..\src\libs\rib2ri\project.cmake;..\..\..\src\tools\miqser\CMakeLists.txt;"
+					Outputs="..\..\..\build\tools\miqser\CMakeFiles\generate.stamp"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="DebugLib_Liquid|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

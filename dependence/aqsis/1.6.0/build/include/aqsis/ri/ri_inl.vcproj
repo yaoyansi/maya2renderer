@@ -206,6 +206,38 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="DebugLib_Liquid|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Release\&quot;"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -273,6 +305,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="DebugLib|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating ri.inl via XSL transformation..."
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;E:\dev\tools\libxslt\1.1.26\bin\xsltproc.exe -o E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build/include/aqsis/ri/ri.inl --path E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\src/include/aqsis/ri ri_inl.xsl ri.xml&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+						AdditionalDependencies="E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\include\aqsis\ri\ri.inl.rule"
+						Outputs="E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\aqsis\1.6.0\build\include\aqsis\ri\ri.inl"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -353,6 +396,18 @@
 						Outputs="..\..\..\..\build\include\aqsis\ri\CMakeFiles\ri_inl"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugLib_Liquid|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description=""
+						CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;"
+						AdditionalDependencies="..\..\..\..\build\include\aqsis\ri\ri.inl;"
+						Outputs="..\..\..\..\build\include\aqsis\ri\CMakeFiles\ri_inl"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
@@ -415,6 +470,17 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="DebugLib|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/include/aqsis/ri/CMakeLists.txt"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;..\..\..\..\build\libs\util\$(OutDir);..\..\..\..\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cmake.exe&quot; -HE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src -BE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build --check-stamp-file ..\..\..\..\build\include\aqsis\ri\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto VCReportError&#x0D;&#x0A;"
+					AdditionalDependencies="..\..\..\..\src\include\aqsis\ri\CMakeLists.txt;..\..\..\..\src\include\aqsis\ri\CMakeLists.txt;"
+					Outputs="..\..\..\..\build\include\aqsis\ri\CMakeFiles\generate.stamp"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="DebugLib_Liquid|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

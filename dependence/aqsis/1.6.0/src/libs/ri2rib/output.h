@@ -70,6 +70,9 @@ class CqOutput
 		                  MakeBump, MakeLatLongEnvironment, MakeCubeFaceEnvironment, MakeShadow, MakeOcclusion,
 		                  ArchiveRecord, ReadArchive, ErrorHandler, IfBegin, IfEnd, Else, ElseIf,
 		                  ShaderLayer, ConnectShaderLayers,
+#ifdef __LIQUID__
+						  Shader,DisplayChannel,
+#endif
 		                  LAST_Function,
 		};
 		/** \brief Block types (used to check context nesting)
@@ -373,6 +376,10 @@ class CqOutput
 		RtVoid RiShaderLayerV( RtToken type, RtToken name, RtToken layername, 
 				RtInt count, RtToken tokens[], RtPointer values[] );
 		RtVoid RiConnectShaderLayers( RtToken type, RtToken layer1, RtToken variable1, RtToken layer2, RtToken variable2 );
+#ifdef __LIQUID__
+		RtVoid RiShaderV( RtToken type, RtToken name, RtInt count, RtToken tokens[], RtPointer values[] );
+		RtVoid RiDisplayChannelV( RtToken channel, RtInt count, RtToken tokens[], RtPointer values[] );
+#endif
 };
 
 
