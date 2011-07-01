@@ -1,6 +1,6 @@
 //Maya ASCII 2008 scene
 //Name: test_coshader.ma
-//Last modified: Wed, Oct 20, 2010 06:43:25 PM
+//Last modified: Wed, Oct 20, 2010 06:55:24 PM
 //Codeset: 936
 requires maya "2008";
 requires "liquid_2008x32d" "2.3.5";
@@ -259,10 +259,10 @@ createNode liquidSurface -n "liquidSurface1";
 	setAttr ".pcp" -type "string" "";
 	setAttr ".pcb" -type "string" "";
 	setAttr ".texturename" -type "string" "test_cat.tex";
-	setAttr -k on ".Kd" 0.8595;
-	setAttr -k on ".Kg" 1;
-	setAttr -k on ".alpha_u" 0.1;
-	setAttr -k on ".RRthreshold" 0.0013223999999999998;
+	setAttr -k on ".Kd" 1.719;
+	setAttr -k on ".Kg" 1.4710800000000002;
+	setAttr -k on ".alpha_u" 0.038016;
+	setAttr -k on ".RRthreshold" 0.0011366;
 createNode shadingEngine -n "liquidSurface1SG";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;

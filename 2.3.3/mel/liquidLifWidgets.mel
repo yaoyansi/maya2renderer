@@ -723,7 +723,8 @@ global proc liquidAE_LifStringOverrideDisplayAll()
 
         // early exit if we have a message or string attr.
         if ( $version >= 8.0 && `attributeQuery -node $gLiquid_currentAENode -message $a` ) continue;
-        if ( `getAttr -type ($gLiquid_currentAENode+"."+$a)` != "string" ) continue;
+        liqDebug(">>>attr="+$gLiquid_currentAENode+"."+$a);
+		if ( `getAttr -type ($gLiquid_currentAENode+"."+$a)` != "string" ) continue;
 
         string $ctlName = ( $gLiquid_currentAEShader + "_" + match("[A-Za-z0-9_]+$", $a) + "_0_LIF" );
         int $overrideState = ( $isRenderLayer && gmatch( $nodeOverrides, ("* "+$gLiquid_currentAENode+"."+$a+" *")) )? 1:0;

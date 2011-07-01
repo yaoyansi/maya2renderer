@@ -8,3 +8,8 @@ global proc liqlog(string $log)
 {
 	log2("liquid", $log);
 }
+
+global proc liqDebug(string $log)
+{
+	log2("DEBUG", $log);
+}
