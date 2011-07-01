@@ -129,7 +129,7 @@ global proc liquidCreateObjectRayTracingAttributes()
   liquidCreateSampleMotionAttribute;
   liquidCreateTraceDisplacementsAttribute;
   liquidCreateTraceBiasAttribute;
-  liquidCreateTransmissionAttribute();
+  liquidCreateVisibilityTransmission();//liquidCreateTransmissionAttribute();
   liquidCreateMaxDiffuseDepthAttribute;
   liquidCreateMaxSpecularDepthAttribute;
   liquidCreateHitModeDiffuseAttribute();
@@ -202,7 +202,7 @@ global proc liquidCreateMaxSpecularDepthAttribute()
   
   for ( $currentNode in $nodes ) 
     if ( !`attributeQuery -node $currentNode -ex "liqMaxSpecularDepth"` ) 
-      addAttr -ln "liqMaxSpecularDepth" -at "short" -dv 3 $currentNode;
+      addAttr -ln "liqMaxSpecularDepth" -at "short" -dv 2 $currentNode;
 }
 
 
