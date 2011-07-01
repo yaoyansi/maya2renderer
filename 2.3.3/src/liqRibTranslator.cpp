@@ -2728,22 +2728,22 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
  						MObject transform;
  						MFnDagNode dagFn;
  
- 						for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
- 						{
- 							LIQ_CHECK_CANCEL_REQUEST;
- 
- 							liqRibNodePtr ribNode( rniter->second );
- 							path = ribNode->path();
- 							transform = path.transform();
- 							
- 							if( ( !ribNode ) || ( ribNode->object(0)->type == MRT_Light ) ) 
- 								continue;
- 							if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
- 								continue;
- 
- 							_writeObject(false, ribNode);
- 
- 						}
+//  						for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
+//  						{
+//  							LIQ_CHECK_CANCEL_REQUEST;
+//  
+//  							liqRibNodePtr ribNode( rniter->second );
+//  							path = ribNode->path();
+//  							transform = path.transform();
+//  							
+//  							if( ( !ribNode ) || ( ribNode->object(0)->type == MRT_Light ) ) 
+//  								continue;
+//  							if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
+//  								continue;
+//  
+//  							_writeObject(false, ribNode);
+//  
+//  						}
  					}
 
 					LIQDEBUGPRINTF( "-> setting RiOptions\n" );
@@ -7594,22 +7594,34 @@ void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode
 		//if ribNode is tagged as readArchive or delayedReadArchive, we do not output its geometry data.
 		return;
 	}
-	MString frame; 
-	frame.set(liqglo_lframe);
 
-	MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+frame+".rib" );
-
+	RtContextHandle c;
 	if(reference)
 	{
+		MString frame; 
+		frame.set(liqglo_lframe);
+
+		MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+frame+".rib" );
+
 		RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
-	}else{
+
+		c = RiGetContext();//push context
 
 		_RiOption_format_compress(liqglo_doBinary, liqglo_doCompression);
 
 		liquidMessage("output geometry rib: "+ string(geometryRibFile.asChar()) , messageInfo);
 		RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
+	}
+	
+	{// write geometry data
 		ribNode->object( 0 )->writeObject();
+	}
+
+	if(reference)
+	{
 		RiEnd();
+		RiContext(c);//pop context
+
 	}
 	
 }
