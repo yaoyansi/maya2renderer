@@ -417,11 +417,11 @@ unsigned liqRibObj::granularity() const {
 
 /** Write the next grain (component) of an object.
  */
-bool liqRibObj::writeNextObjectGrain(const MString& ribFileFullPath,const structJob &currentJob) const {
+void liqRibObj::writeNextObjectGrain(const MString& ribFileFullPath,const structJob &currentJob) const {
   if( data ) {
-    return data->writeNextGrain(ribFileFullPath, currentJob);
+    /*return */data->writeNextGrain(ribFileFullPath, currentJob);
   } else {
-    return false;
+    /*return false;*/
   }
 }
 
