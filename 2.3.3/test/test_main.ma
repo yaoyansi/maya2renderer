@@ -1,6 +1,6 @@
 //Maya ASCII 2008 scene
 //Name: test_main.ma
-//Last modified: Thu, Oct 21, 2010 06:33:00 PM
+//Last modified: Fri, Oct 22, 2010 01:54:56 PM
 //Codeset: 936
 requires maya "2008";
 requires "liquid_2008x32d" "2.3.5";
@@ -1148,17 +1148,37 @@ createNode liquidSurface -n "liquidSurface10";
 	addAttr -ci true -h true -k true -sn "a_ca" -ln "a_ca" -at "float" -p "a_c";
 	addAttr -ci true -h true -k true -sn "a_cb" -ln "a_cb" -at "float" -p "a_c";
 	addAttr -ci true -h true -k true -sn "a_cc" -ln "a_cc" -at "float" -p "a_c";
+	addAttr -ci true -h true -k true -m -sn "a_vf" -ln "a_vf" -at "double";
+	addAttr -ci true -h true -k true -m -sn "a_vv" -ln "a_vv" -at "double3" -nc 3;
+	addAttr -ci true -h true -k true -sn "a_vva" -ln "a_vva" -at "double" -p "a_vv";
+	addAttr -ci true -h true -k true -sn "a_vvb" -ln "a_vvb" -at "double" -p "a_vv";
+	addAttr -ci true -h true -k true -sn "a_vvc" -ln "a_vvc" -at "double" -p "a_vv";
+	addAttr -ci true -h true -k true -m -sn "a_vn" -ln "a_vn" -at "double3" -nc 3;
+	addAttr -ci true -h true -k true -sn "a_vna" -ln "a_vna" -at "double" -p "a_vn";
+	addAttr -ci true -h true -k true -sn "a_vnb" -ln "a_vnb" -at "double" -p "a_vn";
+	addAttr -ci true -h true -k true -sn "a_vnc" -ln "a_vnc" -at "double" -p "a_vn";
+	addAttr -ci true -h true -k true -m -sn "a_vp" -ln "a_vp" -at "double3" -nc 3;
+	addAttr -ci true -h true -k true -sn "a_vpa" -ln "a_vpa" -at "double" -p "a_vp";
+	addAttr -ci true -h true -k true -sn "a_vpb" -ln "a_vpb" -at "double" -p "a_vp";
+	addAttr -ci true -h true -k true -sn "a_vpc" -ln "a_vpc" -at "double" -p "a_vp";
+	addAttr -ci true -uac -h true -k true -m -sn "a_vc__" -ln "a_vc__" -at "float3" 
+		-nc 3;
+	addAttr -ci true -h true -k true -sn "a_vc__a" -ln "a_vc__a" -at "float" -p "a_vc__";
+	addAttr -ci true -h true -k true -sn "a_vc__b" -ln "a_vc__b" -at "float" -p "a_vc__";
+	addAttr -ci true -h true -k true -sn "a_vc__c" -ln "a_vc__c" -at "float" -p "a_vc__";
 	setAttr ".rms" -type "string" "test_type_array";
 	setAttr ".rml" -type "string" "E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/lib/shaders/test_type_array.slo";
-	setAttr ".rpr" -type "stringArray" 6 "a_f" "a_s" "a_v" "a_n" "a_p" "a_c"  ;
-	setAttr ".rdt" -type "stringArray" 6 "uniform" "uniform" "uniform" "uniform" "uniform" "uniform"  ;
-	setAttr ".rty" -type "stringArray" 6 "float" "string" "vector" "normal" "point" "color"  ;
-	setAttr ".rdf" -type "stringArray" 6 "3.142.170.0-1.0" "AB0CDE" "0.0000000.0000000.0000001.0000002.0000003.000000" "0.0000000.0000000.0000001.0000002.0000003.000000" "0.0000000.0000000.0000001.0000002.0000003.000000" "0.0000000.0000000.0000001.0000000.0000001.000000"  ;
-	setAttr ".ras" -type "Int32Array" 6 4 2 2 2 2 2 ;
-	setAttr ".rlc" -type "stringArray" 6 "liquidAE_LifFloat2( \"a_f\", 4, \"float\", \"a_f\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifString2( \"a_s\", 2, \"string\", \"a_s\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifVector2( \"a_v\", 2, \"vector\", \"a_v\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifVector2( \"a_n\", 2, \"normal\", \"a_n\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifVector2( \"a_p\", 2, \"point\", \"a_p\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifColor2( \"a_c\", 2, \"color\", \"a_c\", {\"0\", \"0\"}, \"\", 1 );"  ;
+	setAttr ".rpr" -type "stringArray" 11 "a_f" "a_s" "a_v" "a_n" "a_p" "a_c" "a_vf" "a_vv" "a_vn" "a_vp" "a_vc__"  ;
+	setAttr ".rdt" -type "stringArray" 11 "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "varying" "varying" "varying" "varying" "varying"  ;
+	setAttr ".rty" -type "stringArray" 11 "float" "string" "vector" "normal" "point" "color" "float" "vector" "normal" "point" "color"  ;
+	setAttr ".rdf" -type "stringArray" 11 "3.142.170.0-1.0" "AB0CDE" "0.0000000.0000000.0000001.0000002.0000003.000000" "0.0000000.0000000.0000001.0000002.0000003.000000" "0.0000000.0000000.0000001.0000002.0000003.000000" "0.0000000.0000000.0000001.0000000.0000001.000000" "3.142.170.0-1.0" "0.0000000.0000000.0000001.0000002.0000003.000000" "0.0000000.0000000.0000001.0000002.0000003.000000" "0.0000000.0000000.0000001.0000002.0000003.000000" "0.0000000.0000000.0000001.0000000.0000001.000000"  ;
+	setAttr ".ras" -type "Int32Array" 11 4 2 2 2 2 2
+		 4 2 2 2 2 ;
+	setAttr ".rlc" -type "stringArray" 11 "liquidAE_LifFloat2( \"a_f\", 4, \"float\", \"a_f\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifString2( \"a_s\", 2, \"string\", \"a_s\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifVector2( \"a_v\", 2, \"vector\", \"a_v\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifVector2( \"a_n\", 2, \"normal\", \"a_n\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifVector2( \"a_p\", 2, \"point\", \"a_p\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifColor2( \"a_c\", 2, \"color\", \"a_c\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifFloat2( \"a_vf\", 4, \"float\", \"a_vf\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifVector2( \"a_vv\", 2, \"vector\", \"a_vv\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifVector2( \"a_vn\", 2, \"normal\", \"a_vn\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifVector2( \"a_vp\", 2, \"point\", \"a_vp\", {\"0\", \"0\"}, \"\", 1 );" "liquidAE_LifColor2( \"a_vc__\", 2, \"color\", \"a_vc__\", {\"0\", \"0\"}, \"\", 1 );"  ;
 	setAttr ".rmt" -type "stringArray" 1 "surface"  ;
-	setAttr ".rio" -type "Int32Array" 6 0 0 0 0 0 0 ;
-	setAttr -s 4 -k on ".a_f[0:3]"  3.14 2.17 1 -1;
+	setAttr ".rio" -type "Int32Array" 11 0 0 0 0 0 0
+		 0 0 0 0 0 ;
+	setAttr -s 4 -k on ".a_f[0:3]"  3.14 2.17 0 -1;
 	setAttr -s 2 ".a_s";
 	setAttr ".a_s[0]" -type "string" "AB0";
 	setAttr ".a_s[1]" -type "string" "CDE";
@@ -1166,6 +1186,11 @@ createNode liquidSurface -n "liquidSurface10";
 	setAttr -s 2 -k on ".a_n[1]" -type "double3" 1 2 3;
 	setAttr -s 2 -k on ".a_p[1]" -type "double3" 1 2 3;
 	setAttr -s 2 -k on ".a_c[1]" -type "float3"  1 0 1;
+	setAttr -s 4 -k on ".a_vf[0:3]"  3.14 2.17 0 -1;
+	setAttr -s 2 -k on ".a_vv[1]" -type "double3" 1 2 3;
+	setAttr -s 2 -k on ".a_vn[1]" -type "double3" 1 2 3;
+	setAttr -s 2 -k on ".a_vp[1]" -type "double3" 1 2 3;
+	setAttr -s 2 -k on ".a_vc__[1]" -type "float3"  1 0 1;
 createNode shadingEngine -n "liquidSurface10SG";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
