@@ -2285,12 +2285,18 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 	if( !status ) 
 		return MS::kFailure;
 
-// 	if(m_useNewTranslator){
-// 		liquidMessage("doItNew()", messageInfo);
-// 		return doItNew(args, originalLayer);
-// 	}
-	liquidMessage("doIt()", messageInfo);
-
+	if(m_useNewTranslator){
+		liquidMessage("_doItNew()", messageInfo);
+		return _doItNew(args, originalLayer);// new doIt() process
+	}else{
+		liquidMessage("_doIt()", messageInfo);
+		return  _doIt(args, originalLayer);//original doIt() process
+	}
+}
+//
+MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalLayer )
+{
+	MStatus status;
 	MString lastRibName;
 	bool hashTableInited = false;
 
@@ -2515,7 +2521,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						deferredJob.commands.push_back(cmd);
 						jobScript.addJob(deferredJob);
 					}
-				}
+				}//if( m_deferredGen )
 				if( !m_justRib ) 
 				{
 					stringstream titleStream;
@@ -2532,7 +2538,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						frameScriptJob.childJobs.push_back(instanceJob);
 					}
 				}
-			}
+			}//if( useRenderScript ) 
 
 			LIQDEBUGPRINTF( "-> building jobs\n" );
 			// Hmmmmmm not really clean ....
@@ -2650,11 +2656,11 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 					}
 
  					{//export geometry objects to rib files.
- 						MMatrix matrix;
- 						MDagPath path;
- 						MObject transform;
- 						MFnDagNode dagFn;
- 
+//  						MMatrix matrix;
+//  						MDagPath path;
+//  						MObject transform;
+//  						MFnDagNode dagFn;
+//
 //  						for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
 //  						{
 //  							LIQ_CHECK_CANCEL_REQUEST;
@@ -2872,7 +2878,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						textureJob.childJobs.push_back( textureSubtask );
 					}
 					frameScriptJob.childJobs.push_back( textureJob );
-				}
+				}//if( txtList.size() )
 
 				// write out shadows
 				if( liqglo.liqglo_doShadows ) 
@@ -2951,7 +2957,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						}
 						frameScriptJob.childJobs.push_back( shadowJob );
 					}
-				}
+				}//if( liqglo.liqglo_doShadows ) 
 				LIQDEBUGPRINTF( "-> finished writing out shadow information to render script file.\n" );
 
 				// write out make reflection pass
@@ -3067,7 +3073,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 					cmd.alfredServices = m_alfredServices.asChar();
 					cmd.alfredTags     = m_alfredTags.asChar();
 					frameScriptJob.commands.push_back(cmd);
-				}
+				}//if( m_outputHeroPass ) 
 				LIQDEBUGPRINTF( "-> finished writing out hero information to alfred file.\n" );
 				if( m_outputShadowPass ) 
 				{
@@ -3093,7 +3099,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 					cmd.alfredServices = m_alfredServices.asChar();
 					cmd.alfredTags     = m_alfredTags.asChar();
 					frameScriptJob.commands.push_back(cmd);
-				}
+				}//if( m_outputShadowPass )
 
 				if( cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
 				{
@@ -3131,7 +3137,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						liqRenderScript::Cmd cmd(framePostFrameCommand.asChar(), (remoteRender && !useNetRman));
 						frameScriptJob.cleanupCommands.push_back(cmd);
 					}
-				}
+				}//if( cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
 				if( m_outputHeroPass ) 
 					frameScriptJob.chaserCommand = (string( "sho \"" ) + frameJob->imageName.asChar() + "\"" );
 				if( m_outputShadowPass ) 
@@ -3140,7 +3146,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 					lastRibName = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, shadowPassJob->ribFileName, liqglo.liqglo_projectDir );
 				else 
 					lastRibName = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, frameJob->ribFileName, liqglo.liqglo_projectDir );
-			}
+			}//if( useRenderScript && !m_justRib ) 
 			jobScript.addJob( frameScriptJob );
 			if( ( ribStatus != kRibOK ) && !m_deferredGen ) 
 				break;
@@ -3148,7 +3154,8 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 
 		if( useRenderScript ) 
 		{
-			if( m_preJobCommand != MString( "" ) ) {
+			if( m_preJobCommand != MString( "" ) ) 
+			{
 				liqRenderScript::Job preJobInstance;
 				preJobInstance.title = "liquid pre-job";
 				preJobInstance.isInstance = true;

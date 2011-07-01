@@ -61,7 +61,10 @@ public:
 	static MSyntax syntax();
 
 	MStatus doIt(const MArgList& args );
-	MStatus doItNew(const MArgList& args, const MString& originalLayer );
+	
+	MStatus _doItNew(const MArgList& args, const MString& originalLayer );
+	MStatus _doIt(const MArgList& args, const MString& originalLayer );
+
 	friend class liqJobList;
 
 private: // Methods
