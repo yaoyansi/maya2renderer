@@ -133,6 +133,7 @@ proc string liquidSl_getParamDetail( string $line )
 
 proc int liquidSl_isOutputParam( string $line )
 {
+  liqPushIdent();
   liqlog("liquidSl_isOutputParam(...)");
   if ( gmatch( $line, "*output parameter*") ) { liqPopIdent(); return 1;}
   
@@ -142,6 +143,7 @@ proc int liquidSl_isOutputParam( string $line )
 
 proc string liquidSl_getParamType( string $line )
 {
+  liqPushIdent();
 	liqlog("liquidSl_getParamType(...)");
     string $prefix = "\"[^\"]*[uniformvaryg]+ *";
 
