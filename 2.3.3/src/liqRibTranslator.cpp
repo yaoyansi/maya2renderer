@@ -134,120 +134,22 @@ void *liqRibTranslator::creator()
 	return mInstance;// will be deleted by maya
 }
 
-// check shaders to see if "string" parameters are expression
-// replace expression with calculated values
-void liqRibTranslator::scanExpressions( liqShader & currentShader )
-{
-	for ( vector< liqTokenPointer >::iterator it( currentShader.tokenPointerArray.begin() ); it != currentShader.tokenPointerArray.end(); it++ ) 
-	{
-		if( it->getParameterType() == rString )
-			processExpression( &( *it ) );
-	}
-}
-
-void liqRibTranslator::scanExpressions( liqRibLightData *light )
-{
-	if( light != NULL ) 
-	{
-		vector<liqTokenPointer>::iterator iter = light->tokenPointerArray.begin();
-		while ( iter != (light->tokenPointerArray.end()) ) 
-		{
-			if( iter->getParameterType() == rString ) 
-			{
-				liqTokenPointer i = *iter;
-				processExpression( &i, light );
-			}
-			++iter;
-		}
-	}
-}
-
-void liqRibTranslator::processExpression( liqTokenPointer *token, liqRibLightData *light )
-{
-	if( token != NULL ) 
-	{
-		string strValue( token->getTokenString() );
-		LIQDEBUGPRINTF( "-> Expression:(%s)\n", token->getTokenName().c_str() );
-		// NOTE:
-		// For convenience, we use the image path instead of [MakeTexture ...],
-		// e.g. we use c:/test.bmp for  [MakeTexture c:/test.bmp]
-		if( !IS_EXPRESSION(strValue.c_str()) )
-		{
-			LIQDEBUGPRINTF("texturePathPoint=%s, strValue=%s\n", strValue.c_str(), strValue.c_str());
-			strValue = "[MakeTexture "+strValue+"]";
-		}
-
-		liqExpression expr( strValue );
-		if( expr.type != exp_None && expr.isValid ) 
-		{ // we've got expression here
-			expr.CalcValue(); // calculate value;
-			switch ( expr.type ) 
-			{
-			case exp_CoordSys:
-				LIQDEBUGPRINTF( "-> CoordSys Expression: %s\n", expr.GetValue().asChar() );
-				token->setTokenString( 0, expr.GetValue().asChar() );
-				break;
-
-			case exp_MakeTexture:
-				{
-					token->setTokenString( 0, expr.GetValue().asChar() );
-					if( !expr.destExists || !expr.destIsNewer ) {
-						LIQDEBUGPRINTF( "-> Making Texture: %s\n", liqglo.liquidRenderer.textureMaker.asChar() );
-						LIQDEBUGPRINTF( "-> MakeTexture Command: %s\n", expr.GetCmd().asChar() );
-
-						structJob thisJob;
-						thisJob.pass = rpMakeTexture;
-						thisJob.renderName = liqglo.liquidRenderer.textureMaker;
-						thisJob.ribFileName = expr.GetCmd();
-						thisJob.imageName = expr.GetValue(); // destination file name
-
-						//skip
-						std::size_t loc = strValue.find_last_of('.');
-						if( loc == std::string::npos )
-							liquidMessage2(messageError,"%s has no extention!", strValue.c_str());
-						string extention;
-						if( *(strValue.rbegin())==']' ){//if the strValue end with ']', extention should exclude the ']'
-							extention = strValue.substr(loc+1, strValue.size()-loc-2);
-							cout << "extention = "<<extention<<endl;
-						}else{
-							extention = strValue.substr(loc+1);
-						}
-						thisJob.skip = ("tex"==extention);
-						
-						vector<structJob>::iterator iter = txtList.begin();
-						while ( iter != txtList.end() ) {
-							if( iter->imageName == thisJob.imageName )
-								break; // already have this job
-							++iter;
-						}
-						txtList.push_back( thisJob );
-
-					}
-				}
-				break;
-
-			case exp_ReflectMap:
-				LIQDEBUGPRINTF( "-> ReflectMap Expression: %s\n", expr.GetValue().asChar());
-				token->setTokenString( 0, expr.GetValue().asChar() );
-				break;
-
-			case exp_Shadow:
-			case exp_PointShadow:
-				{
-					MString shadowName = liqglo.liqglo_textureDir + light->autoShadowName();
-					token->setTokenString( 0, shadowName.asChar() );
-				}
-				break;
-
-			case exp_EnvMap:
-			case exp_CubeEnvMap:
-			case exp_None:
-			default:
-				break;
-			}
-		}
-	}
-}
+// void liqRibTranslator::scanExpressions( liqRibLightData *light )
+// {
+// 	if( light != NULL ) 
+// 	{
+// 		vector<liqTokenPointer>::iterator iter = light->tokenPointerArray.begin();
+// 		while ( iter != (light->tokenPointerArray.end()) ) 
+// 		{
+// 			if( iter->getParameterType() == rString ) 
+// 			{
+// 				liqTokenPointer i = *iter;
+// 				processExpression( &i, light );
+// 			}
+// 			++iter;
+// 		}
+// 	}
+// }
 
 //liqShader & liqRibTranslator::liqGetShader( MObject shaderObj )
 //{
@@ -3585,7 +3487,7 @@ MStatus liqRibTranslator::buildJobs()
 			{
 				MString name(dependencyNodeFn.name());
 				liqShader currentShader(dependencyNodesIter.thisNode());
-				scanExpressions(currentShader);
+				currentShader.buildJobs();
 			}
 		}
 	}

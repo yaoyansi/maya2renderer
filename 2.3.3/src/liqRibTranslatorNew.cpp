@@ -231,7 +231,7 @@ MStatus liqRibTranslator::buildJobs__()
 			{
 				MString name(dependencyNodeFn.name());
 				liqShader currentShader(dependencyNodesIter.thisNode());
-				scanExpressions(currentShader);
+				currentShader.buildJobs();
 			}
 		}
 	}

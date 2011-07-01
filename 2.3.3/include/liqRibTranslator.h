@@ -133,6 +133,7 @@ private: // Data
 
 	std::vector<structJob>  refList;  // reflections list
 	std::vector<structJob>  envList;  // environments list
+public:
 	std::vector<structJob>  txtList;  // make textures list
 
 	// MDagPathArray shadowLightArray;            //  UN-USED GLOBAL
@@ -456,9 +457,7 @@ private :
 	MStatus liqShaderParseVectorAttr ( liqShader & currentShader, MFnDependencyNode & shaderNode, const char * argName, ParameterType pType );
 	//void freeShaders( void );
 
-	void scanExpressions( liqShader & currentShader );
-	void scanExpressions( liqRibLightData *light );
-	void processExpression( liqTokenPointer *token, liqRibLightData *light = NULL );
+//	void scanExpressions( liqRibLightData *light );
 
 	void _writeObject( const liqRibNodePtr& ribNode);
 	void _RiOption_format_compress(bool bBinary, bool bCompress);
