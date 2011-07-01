@@ -50,6 +50,377 @@
 //
 //
 source xxliquidutility.mel;
+// Some useful type checking and conversion procedures
+// some checks on strings, messy as Maya doesn't support ? in regexes
+
+// locals
+
+// Empty is considered valid
+global proc int isValidIntPart(string $part)
+{
+	string $tmp = match("^[\-+0-9][0-9]*", $part);
+	if ( size($tmp) == size($part) ) {
+		return 1;
+	}
+	
+	return 0;
+}
+
+// Non empty for non degenerate forms, like in -.04
+// which still make a valid float as long as float part is non empty
+proc int isNonEmptyIntPart(string $part)
+{
+	return ( isValidIntPart($part) && size(match("[0-9]", $part)) );
+}
+
+// Empty is considered valid
+proc int isValidFloatPart (string $part)
+{
+	string $tmp = match("^[\.][0-9]*", $part);
+	if ( size($tmp) == size($part) ) {
+		return 1;
+	}
+	
+	return 0;
+}
+
+// Non empty for non degenerate forms, like in 4.
+// which still make a valid float as long as int part is non empty
+proc int isNonEmptyFloatPart(string $part)
+{
+	return ( isValidFloatPart($part) && size(match("[0-9]", $part)) );
+}
+
+// Here the degenerate forms of exponents like e+ are allways invalid
+proc int isNonEmptyExpPart (string $part)
+{
+	string $tmp = match("^e[\-+0-9][0-9]*", $part);
+	if ( size($tmp) == size($part) ) {
+		if ( size(match("[0-9]", $tmp)) ) {
+			return 1;
+		}
+	}
+	
+	return 0;
+}
+
+// Empty is considered valid
+proc int isValidExpPart (string $part)
+{
+	return ( ($part == "") || isNonEmptyExpPart($part) );
+}
+
+// globals
+
+global proc int liquidSlValidFloatString (string $theString)
+{
+	liqlog("liquidSlValidFloatString(...)");
+	string $tmp = $theString;
+	string $intPart = `match "^[^e\.]*" $tmp`;
+	if ( isValidIntPart($intPart) ) {
+		catchQuiet($tmp  = `substring $tmp (size($intPart)+1) (size($tmp))`);
+		$floatPart = `match "^[\.][0-9]*" $tmp`;
+		$expPart = `match "e[\-+0-9][0-9]*$" $tmp`;		 
+		if ( (size($floatPart) + size($expPart)) == size($tmp) ) {
+			if ( 	( isNonEmptyIntPart($intPart) || isNonEmptyFloatPart($floatPart) )
+			 		&&	isValidExpPart($expPart)	) {	
+				float $f;
+				if ( !catchQuiet($f = float($theString)) ) {
+					string $s = $f;
+					if ( !size(match("inf", $s)) ) {
+						return 1;
+					}
+				}
+			}		
+		}
+	}
+	
+	return 0;
+}
+
+global proc int liquidSlValidIntString (string $theString)
+{
+	liqlog("liquidSlValidIntString(...)");
+	if (liquidSlValidFloatString($theString)) {
+		float $f = $theString;
+		int $i = $f;
+		if ($i == $f) {
+			return 1;
+		}
+	}
+	
+	return 0;
+}
+
+global proc int liquidSlValidFloat3String (string $theString)
+{
+	liqlog("liquidSlValidFloat3String(...)");
+	string $tmp = substitute("^<<", $theString, "");
+	$tmp = substitute(">>$", $tmp, "");
+	string $v[];
+	if (tokenize($tmp,", \t",$v) == 3) {
+		if (	liquidSlValidFloatString(strip($v[0]))
+			&&	liquidSlValidFloatString(strip($v[1]))
+			&&	liquidSlValidFloatString(strip($v[2]))	) {
+			return 1;
+		}
+	}	
+	return 0;
+}
+
+global proc int liquidSlValidMatrixString (string $theString)
+{
+	liqlog("liquidSlValidMatrixString(...)");
+	// string $tmp = substitute("^<<", $theString, "");
+	// $tmp = substitute(">>$", $tmp, "");
+	string $tmp = $theString;
+	int $success = false;
+	string $v[];
+	if (`tokenize $theString ", \t" $v` == 16) {
+		$success = true;
+		for ($i=0; $i<16; $i++) {
+			$success *= liquidSlValidFloatString(strip($v[$i]));
+		}
+	}
+	
+	return $success;
+}
+
+// some conversion procs
+
+// Maya accepts casting string to vector in form "<<x, y, z>>"
+// or "x y z" but there is a bug with "(x, y, z)", careful!
+global proc vector liquidSlStringToVector (string $theString)
+{
+	liqlog("liquidSlStringToVector(...)");
+	vector $theVector = <<0.0, 0.0, 0.0>>;
+	int $success = false;
+	
+	string $v[];
+	if (`tokenize $theString ", \t" $v` == 3)
+	{
+		if (`liquidSlValidFloatString $v[0]` && `liquidSlValidFloatString $v[1]` && `liquidSlValidFloatString $v[2]`)
+		{
+			$theVector = <<(float($v[0])), (float($v[1])), (float($v[2]))>>;
+			$success = true;
+		}
+	}
+	
+	if (!$success)
+		warning ("[liquidSlStringToFloatMatrix] converting string "+$theString+" to null vector <<0, 0, 0>>");
+		
+	return $theVector;
+}
+
+
+global proc float[] liquidSlStringToFloatMatrix (string $theString)
+{
+	liqlog("liquidSlStringToFloatMatrix(...)");
+	float $fMatrix[16];
+	int $success = false;
+
+	// string $tmp = substitute("^<<", $theString, "");
+	// $tmp = substitute(">>$", $tmp, "");
+	string $tmp = $theString;
+	string $v[];
+	if (`tokenize $theString ", \t" $v` == 16) {	
+		$success = true;
+		for ($i=0; $i<16; $i++) {
+			if ( liquidSlFloatString($v[$i]) ) {
+				$fMatrix[$i] = float($v[$i]);
+			} else {	
+				$success = false;
+				break;
+			}
+		}
+	}
+		
+	if (!$success) {
+		warning ("[liquidSlStringToFloatMatrix] converting string "+$theString+" to null matrix failed");
+	}
+	
+	return $fMatrix;
+}
+
+global proc matrix liquidSlStringToMatrix (string $theString)
+{
+	liqlog("liquidSlStringToMatrix(...)");
+	return liquidSlFloatToMatrix44( liquidSlStringToFloatMatrix ($theString) );
+}
+
+global proc string liquidSlfloatMatrixToString (float $fMatrix[])
+{
+	liqlog("liquidSlfloatMatrixToString(...)");
+	string $s[16];
+		
+	for ($i=0; $i<16; $i++) {
+		$s[$i] = string( $fMatrix[$i] );
+	}
+	
+	return stringArrayToString($s, " ");
+}
+
+global proc string liquidSlmatrixToString (matrix $matrix)
+{
+	liqlog("liquidSlmatrixToString(...)");
+	return liquidSlfloatMatrixToString( liquidSlmatrix44ToFloat ($matrix));
+}
+
+// Compares matrices
+
+global proc int liquidSlEqualFloatMatrix (float $matrixA[], float $matrixB[])
+{
+	liqlog("liquidSlEqualFloatMatrix(...)");
+	for ($i=0; $i<16; $i++) {
+		if ($matrixA[$i] != $matrixB[$i]) {
+			return 0;
+		}
+	}
+	
+	return 1;
+}
+
+global proc int liquidSlEqualMatrix (matrix $matrixA, matrix $matrixB)
+{
+	liqlog("liquidSlEqualMatrix(...)");
+	return liquidSlEqualFloatMatrix(liquidSlmatrix44ToFloat ($matrixA), liquidSlmatrix44ToFloat ($matrixB));
+}
+
+// To ensure we can build setAttr commands 
+global proc int liquidSlConformStrings (string $type, string $strings[])
+{
+	liqlog("liquidSlConformStrings(...)");
+	int $success = 1;
+	string $result = "";
+	int $id;
+	int $ns = size($strings);
+	
+	switch ($type) {
+		case "int":
+			for ($id=0; $id<$ns; $id++) {
+				if ( liquidSlValidIntString($strings[$id]) ) {
+					int $i = $strings[$id];
+					$strings[$id] = $i;
+				} else {
+					$success = 0;
+					$strings[$id] = "0";
+				}
+			}
+			break;	
+		case "float":
+			for ($id=0; $id<$ns; $id++) {
+				if ( liquidSlValidFloatString($strings[$id]) ) {
+					float $f = $strings[$id];
+					$strings[$id] = $f;
+					if ( !size(match("[e\.]", $strings[$id])) ) {
+						$strings[$id] = ($strings[$id] + ".0");
+					}
+				} else {
+					$success = 0;
+					$strings[$id] = "0.0";
+				}
+			}
+			break;			
+		case "point":
+		case "vector":
+		case "normal":
+		case "color":
+			for ($id=0; $id<$ns; $id++) {
+				if ( liquidSlValidFloat3String($strings[$id]) ) {
+					vector $v = liquidSlStringToVector($strings[$id]);
+					$strings[$id] = $v;
+				} else {
+					$success = 0;
+					$strings[$id] = "0.0 0.0 0.0";
+				}
+			}
+			break;
+		case "shader":
+		case "string":
+			/*
+			for ($id=0; $id<$ns; $id++) {
+				if ( !size(match("^\"", $strings[$id])) ) {
+					$strings[$id] = ("\""+$strings[$id]);
+				}
+				if ( !size(match("\"$", $strings[$id])) ) {
+					$strings[$id] = ($strings[$id]+"\"");
+				}
+			}
+			*/	
+			break;
+		case "matrix":
+			for ($id=0; $id<$ns; $id++) {
+				float $m[16];
+				if ( liquidSlValidMatrixString($strings[$id]) ) {
+					$m = liquidSlStringToFloatMatrix($strings[$id]);
+					$strings[$id] = liquidSlfloatMatrixToString($m);
+				} else {
+					$success = 0;
+					$strings[$id] = liquidSlfloatMatrixToString($m);
+				}
+			}	
+			break;									
+		default:
+			error("[liquidSlConformStrings] unknown type: "+$type);
+			break;
+		}
+		
+	return $success;
+
+}
+
+global proc int liquidSlTypedStringEquivalent(string $type, string $stringA, string $stringB)
+{
+	liqlog("liquidSlTypedStringEquivalent(...)");
+	switch ($type) {
+		case "int":
+			if ( liquidSlValidIntString($stringA) && liquidSlValidIntString($stringB) ) {
+				int $a = $stringA;
+				int $b = $stringB;
+				return ($a == $b);
+			}
+			break;	
+		case "float":
+			if ( liquidSlValidFloatString($stringA) && liquidSlValidFloatString($stringB) ) {
+				float $a = $stringA;
+				float $b = $stringB;
+				return ($a == $b);
+			}
+			break;			
+		case "point":
+		case "vector":
+		case "normal":
+		case "color":
+			if ( liquidSlValidFloat3String($stringA) && liquidSlValidFloat3String($stringB) ) {
+				vector $a = liquidSlStringToVector($stringA);
+				vector $b = liquidSlStringToVector($stringB);
+				return ($a == $b);
+			}
+			break;	
+		case "shader":
+		case "string":
+			// string $a = substitute("^\"", $stringA, "");
+			// $a = substitute("\"$", $a, "");
+			// string $b = substitute("^\"", $stringB, "");
+			// $b = substitute("\"$", $b, "");	
+			// return ($a == $b);
+			return ($stringA == $stringB);
+			break;
+		case "matrix":
+			if ( liquidSlValidMatrixString($stringA) && liquidSlValidMatrixString($stringB) ) {
+				matrix $a[4][4] = liquidSlDefaultToMatrix($stringA);
+				matrix $b[4][4] = liquidSlDefaultToMatrix($stringB);
+				return ($a == $b);
+			}
+			break;									
+		default:
+			error("[liquidSlConformStrings] unknown type: "+$type);
+			break;
+		}
+	
+	return 0;
+}
+
 
 global proc liquidSlSetShader( string $shaderFile )
 {
@@ -89,7 +460,7 @@ global proc liquidSlSetShader( string $shaderFile )
         liquidSlParseSlb( $shaderFile );
         break;
       default:
-        error( "unknown shader extension: " + $ext );
+        error( "[liquidSlSetShader] unknown shader extension: " + $ext );
     }
 
     liquidSlParseLif( $shaderFile );
@@ -99,29 +470,29 @@ global proc liquidSlSetShader( string $shaderFile )
 global proc liquidSlSetShaderNode( string $node )
 {
 	liqlog("liquidSlSetShaderNode(...)");
-    global string $gLiquidSlShaderFile;
-    global string $gLiquidSLifFile[];
+    global string	$gLiquidSlShaderFile;
+    global string	$gLiquidSLifFile[];
 
-    global string $gLiquidSlShaderFile;
-    global string $gLiquidSlShaderName;
-    global string $gLiquidSlShaderType;
+    global string	$gLiquidSlShaderFile;
+    global string	$gLiquidSlShaderName;
+    global string	$gLiquidSlShaderType;
 	global int		$gLiquidSlNumShaderMethods;
 	global string	$gLiquidSlShaderMethods[];
-    global int    $gLiquidSlNumParams;
-    global string $gLiquidSlParamNames[];
-    global int    $gLiquidSlParamIsOutput[];
-    global string $gLiquidSlParamTypes[];
-    global string $gLiquidSlParamDefaults[];
-    global int    $gLiquidSlParamArraySizes[];
+    global int		$gLiquidSlNumParams;
+    global string	$gLiquidSlParamNames[];
+    global int		$gLiquidSlParamIsOutput[];
+    global string	$gLiquidSlParamTypes[];
+    global string	$gLiquidSlParamDefaults[];
+    global int		$gLiquidSlParamArraySizes[];
 
-    global string $gLiquidSLifFile[];
-    global int    $gLiquidSlParamGuiOrder[];
-    global string $gLiquidSlParamGuiLabel[];
-    global string $gLiquidSlParamGuiDescription[];
-    global string $gLiquidSlParamGuiType[];
-    global string $gLiquidSlParamGuiRange[];
-    global string $gLiquidSlLifShaderDescription;
-    global int    $gLiquidSlLifGuiSize;
+    global string	$gLiquidSLifFile[];
+    global int		$gLiquidSlParamGuiOrder[];
+    global string	$gLiquidSlParamGuiLabel[];
+    global string	$gLiquidSlParamGuiDescription[];
+    global string	$gLiquidSlParamGuiType[];
+    global string	$gLiquidSlParamGuiRange[];
+    global string	$gLiquidSlLifShaderDescription;
+    global int		$gLiquidSlLifGuiSize;
 
     $gLiquidSlShaderFile      = `getAttr ($node+".rmanShaderLong")`;
     $gLiquidSlShaderName      =  basenameEx( $gLiquidSlShaderFile );
@@ -138,27 +509,27 @@ global proc liquidSlSetShaderNode( string $node )
 global proc liquidSlInfoReset()
 {
 	liqlog("liquidSlInfoReset(...)");
-  global string $gLiquidSlShaderFile;
-  global string $gLiquidSlShaderName;
-  global string $gLiquidSlShaderType;
-  global int	$gLiquidSlNumMethods;
-  global string	$gLiquidSlMethods[];
-  global int    $gLiquidSlNumParams;
-  global string $gLiquidSlParamNames[];
-  global int    $gLiquidSlParamIsOutput[];
-  global string $gLiquidSlParamTypes[];
-  global string $gLiquidSlParamDefaults[];
-  global int    $gLiquidSlParamArraySizes[];
+	global string	$gLiquidSlShaderFile;
+	global string	$gLiquidSlShaderName;
+	global string	$gLiquidSlShaderType;
+	global int		$gLiquidSlNumMethods;
+	global string	$gLiquidSlMethods[];
+	global int		$gLiquidSlNumParams;
+	global string	$gLiquidSlParamNames[];
+	global int		$gLiquidSlParamIsOutput[];
+ 	global string	$gLiquidSlParamTypes[];
+ 	global string	$gLiquidSlParamDefaults[];
+ 	global int		$gLiquidSlParamArraySizes[];
 
-  global string $gLiquidSLifFile[];
-  global int    $gLiquidSlParamGuiOrder[];
-  global string $gLiquidSlParamGuiLabel[];
-  global string $gLiquidSlParamGuiDescription[];
-  global string $gLiquidSlParamGuiType[];
-  global string $gLiquidSlParamGuiRange[];
-  global string $gLiquidSlLifShaderDescription;
-  global int    $gLiquidSlLifGuiSize;
-  global int    $gLiquidSlLifExists;
+ 	global string	$gLiquidSLifFile[];
+ 	global int		$gLiquidSlParamGuiOrder[];
+ 	global string	$gLiquidSlParamGuiLabel[];
+ 	global string	$gLiquidSlParamGuiDescription[];
+	global string	$gLiquidSlParamGuiType[];
+	global string	$gLiquidSlParamGuiRange[];
+	global string	$gLiquidSlLifShaderDescription;
+	global int		$gLiquidSlLifGuiSize;
+	global int		$gLiquidSlLifExists;
 
   clear $gLiquidSLifFile;
   clear $gLiquidSlParamGuiOrder;
@@ -181,7 +552,7 @@ global proc string liquidSlShaderName()
 	liqlog("liquidSlShaderName(...)");
     global string $gLiquidSlShaderName;
     if ( $gLiquidSlShaderName == "" )
-        error( "no shader set" );
+        error( "[liquidSlShaderName] no shader set" );
     return $gLiquidSlShaderName;
 }
 
@@ -190,12 +561,13 @@ global proc string liquidSlShaderType()
 	liqlog("liquidSlShaderType(...)");
     global string $gLiquidSlShaderType;
     if ( $gLiquidSlShaderType == "" )
-        error( "no shader set" );
+        error( "[liquidSlShaderType] no shader set" );
     return $gLiquidSlShaderType;
 }
 
 global proc int liquidSlNumMethods()
 {
+	liqlog("liquidSlNumMethods(...)");
     global int $gLiquidSlNumMethods;
     if ( $gLiquidSlNumMethods == -1 )
         error( "[liquidSlNumMethods] no shader set" );
@@ -204,6 +576,7 @@ global proc int liquidSlNumMethods()
 
 global proc string[] liquidSlMethods()
 {
+	liqlog("liquidSlMethods(...)");
     global int $gLiquidSlNumMethods;
     if ( $gLiquidSlNumMethods == -1 )
         error( "[liquidSlMethods] no shader set" );
@@ -213,6 +586,7 @@ global proc string[] liquidSlMethods()
 
 global proc string liquidSlMethodName( int $index )
 {
+	liqlog("liquidSlMethodName(...)");
     global int $gLiquidSlNumMethods;
     if ( $gLiquidSlNumMethods == -1 )
         error( "[liquidSlMethodName] no shader set" );
@@ -230,7 +604,7 @@ global proc int liquidSlNumParams()
 	liqlog("liquidSlNumParams(...)");
     global int $gLiquidSlNumParams;
     if ( $gLiquidSlNumParams == -1 )
-        error( "no shader set" );
+        error( "[liquidSlNumParams] no shader set" );
     return $gLiquidSlNumParams;
 }
 
@@ -240,11 +614,11 @@ global proc string liquidSlParamName( int $index )
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
-        error( "no shader set" );
+        error( "[liquidSlParamName] no shader set" );
 
     if ( $index < 0 ||
          $index >= $gLiquidSlNumParams )
-        error( "liquidSlParamName( "+$index+" ): parameter index out of range" );
+        error( "[liquidSlParamName] liquidSlParamName( "+$index+" ): parameter index out of range" );
 
     global string $gLiquidSlParamNames[];
     return $gLiquidSlParamNames[$index];
@@ -256,11 +630,11 @@ global proc int liquidSlParamIsOutput( int $index )
   global int $gLiquidSlNumParams;
 
   if ( $gLiquidSlNumParams == -1 )
-        error( "no shader set" );
+        error( "[liquidSlParamIsOutput] no shader set" );
 
   if ( $index < 0 ||
          $index >= $gLiquidSlNumParams )
-        error( "liquidSlParamName( "+$index+" ): parameter index out of range" );
+        error( "[liquidSlParamIsOutput] liquidSlParamName( "+$index+" ): parameter index out of range" );
 
   global int    $gLiquidSlParamIsOutput[];
   return $gLiquidSlParamIsOutput[$index];
@@ -272,11 +646,11 @@ global proc  string liquidSlParamDetail( int $index )
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
-        error( "no shader set" );
+        error( "[liquidSlParamDetail] no shader set" );
 
     if ( $index < 0 ||
          $index >= $gLiquidSlNumParams )
-        error( "liquidSlParamType: parameter index out of range" );
+        error( "[liquidSlParamDetail] liquidSlParamType: parameter index out of range" );
 
     global string $gLiquidSlParamDetails[];
     return $gLiquidSlParamDetails[$index];
@@ -288,30 +662,74 @@ global proc  string liquidSlParamType( int $index )
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
-        error( "no shader set" );
+        error( "[liquidSlParamType] no shader set" );
 
     if ( $index < 0 ||
          $index >= $gLiquidSlNumParams )
-        error( "liquidSlParamType: parameter index out of range" );
+        error( "[liquidSlParamType] liquidSlParamType: parameter index out of range" );
 
     global string $gLiquidSlParamTypes[];
     return $gLiquidSlParamTypes[$index];
 }
 
+// Convention, -1 means not an array, so as not
+// to get confused with 0 sized (resizable) arrays
 global proc int liquidSlParamArraySize( int $index )
 {
 	liqlog("liquidSlParamArraySize(...)");
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
-        error( "no shader set" );
+        error( "[liquidSlParamArraySize] no shader set" );
 
     if ( $index < 0 ||
          $index >= $gLiquidSlNumParams )
-        error( "liquidSlParamArraySize: parameter index out of range" );
+        error( "[liquidSlParamArraySize] liquidSlParamArraySize: parameter index out of range" );
 
     global int $gLiquidSlParamArraySizes[];
     return $gLiquidSlParamArraySizes[$index];
+}
+
+global proc int liquidSlParamIsArray( int $index )
+{
+	liqlog("liquidSlParamIsArray(...)");
+	global int $gLiquidSlNumParams;
+
+    if ( $gLiquidSlNumParams == -1 )
+        error( "[liquidSlParamIsArray] no shader set" );
+
+    if ( $index < 0 ||
+         $index >= $gLiquidSlNumParams )
+        error( "[liquidSlParamIsArray] liquidSlParamArraySize: parameter index out of range" );
+
+    global int $gLiquidSlParamArraySizes[];
+
+	if ($gLiquidSlParamArraySizes[$index] < 0) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+global proc int liquidSlParamIsResizable( int $index )
+{
+	liqlog("liquidSlParamIsResizable(...)");
+	global int $gLiquidSlNumParams;
+
+    if ( $gLiquidSlNumParams == -1 )
+        error( "[liquidSlParamIsResizable] no shader set" );
+
+    if ( $index < 0 ||
+         $index >= $gLiquidSlNumParams )
+        error( "[liquidSlParamIsResizable] liquidSlParamArraySize: parameter index out of range" );
+
+    global int $gLiquidSlParamArraySizes[];
+
+	if ($gLiquidSlParamArraySizes[$index] == 0) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 global proc string liquidSlParamDefault( int $index )
@@ -320,11 +738,11 @@ global proc string liquidSlParamDefault( int $index )
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
-        error( "no shader set" );
+        error( "[liquidSlParamDefault] no shader set" );
 
     if ( $index < 0 ||
          $index >= $gLiquidSlNumParams )
-        error( "liquidSlParamDefault: parameter index out of range" );
+        error( "[liquidSlParamDefault] liquidSlParamDefault: parameter index out of range" );
 
     global string $gLiquidSlParamDefaults[];
     return $gLiquidSlParamDefaults[$index];
@@ -336,11 +754,11 @@ global proc string liquidSlParamDefaultRaw( int $index )
     global int $gLiquidSlNumParams;
 
     if ( $gLiquidSlNumParams == -1 )
-        error( "no shader set" );
+        error( "[liquidSlParamDefaultRaw] no shader set" );
 
     if ( $index < 0 ||
          $index >= $gLiquidSlNumParams )
-        error( "liquidSlParamDefault: parameter index out of range" );
+        error( "[liquidSlParamDefaultRaw] liquidSlParamDefault: parameter index out of range" );
 
     global string $gLiquidSlParamDefaults[];
     string $result = $gLiquidSlParamDefaults[$index];
@@ -348,8 +766,6 @@ global proc string liquidSlParamDefaultRaw( int $index )
     while( size( match("[<>{},\"]+", $result ) ) ) $result = substitute("[<>{},\"]+", $result, "" );
     return $result;
 }
-
-
 
 //
 // Procedures for converting the string default returned
@@ -368,6 +784,20 @@ global proc string[] liquidSlDefaultToStringArray( string $default )
 {
 	liqlog("liquidSlDefaultToStringArray(...)");
     string $val[] = eval( "string $foo_Sarray[] = " + $default );
+    return $val;
+}
+
+global proc int liquidSlDefaultToBool( string $default )
+{
+	//liqlog("liquidSlDefaultToBool(...)");
+    int $val = $default;
+    return ($val > 0);
+}
+
+global proc int liquidSlDefaultToInt( string $default )
+{
+	liqlog("liquidSlDefaultToInt(...)");
+    int $val = $default;
     return $val;
 }
 
@@ -395,8 +825,8 @@ global proc vector liquidSlDefaultToVector( string $default )
 global proc vector[] liquidSlDefaultToVectorArray( string $default )
 {
 	liqlog("liquidSlDefaultToVectorArray(...)");
-  vector $val[] = eval("vector $foo_Varray[] =" + $default );
-  return $val;
+	vector $val[] = eval("vector $foo_Varray[] =" + $default );
+	return $val;
 }
 
 global proc matrix liquidSlDefaultToMatrix( string $default )
@@ -410,49 +840,93 @@ global proc matrix liquidSlDefaultToMatrix( string $default )
     return $_tmpMatrix;
 }
 
-global proc float[] liquidSlDefaultToMatrixArray( string $default )
+// Depending on type, so we can build setAttr commands
+global proc string liquidSlDefaultToType( string $type, int $array, string $default )
 {
-	liqlog("liquidSlDefaultToMatrixArray(...)");
-    // There is no matrix-array mel type, so
-    // we just return a single float array with
-    // 16 floats for each matrix in the array.
-    //
-    // Not yet implemented.
-    //
-    float $val[]; clear($val);
-    return $val;
+	liqlog("liquidSlDefaultToType(...)");
+    string $result = "";
+    
+    switch ( $type ) {
+    	case "shader":
+		case "string":
+			if ($array) {
+				string $s[] = liquidSlDefaultToStringArray( $default );
+				$result = stringArrayToString ($s, " ");
+			} else {
+				$result = liquidSlDefaultToString( $default );
+			}
+			break;
+		case "float":
+			if ($array) {
+				float $f[] = liquidSlDefaultToFloatArray( $default );
+				string $s[];
+				int $nf = size($f);
+				for ($i=0; $i<$nf; $i++) {
+					$s[$i] = $f[$i];
+				}
+				$result = stringArrayToString ($s, " ");
+			} else {
+				$result = liquidSlDefaultToFloat( $default );
+			}		
+		break;
+		case "color":
+		case "point":
+		case "vector":
+		case "normal":
+			if ($array) {
+				vector $v[] = liquidSlDefaultToVectorArray( $default );
+				string $s[];
+				int $nf = size($v);
+				for ($i=0; $i<$nf; $i++) {
+					$s[$i] = $v[$i];
+				}				
+				$result = stringArrayToString ($s, " ");			
+			} else {		
+				vector $v = liquidSlDefaultToVector( $default );
+				$result = $v;
+			}
+			break;
+		case "matrix":
+			if ($array) {
+				error ("[liquidSlDefaultToType] don't know how to convert to matrix array: "+$default);		
+			} else {		
+				matrix $m[4][4] = liquidSlDefaultToMatrix( $default );
+				$result = liquidSlMatrixToString($m);
+			}
+			break;		
+		default:
+			error ("[liquidSlDefaultToType] unknown type "+$type);
+			break;
+	}
+	
+	return $result;
 }
 
 global proc string[] liquidSlAllParamNames()
 {
-	liqlog("liquidSlAllParamNames(...)");
   global string $gLiquidSlParamNames[];
   return $gLiquidSlParamNames;
 }
 
 global proc string[] liquidSlAllParamTypes()
 {
-	liqlog("liquidSlAllParamTypes(...)");
   global string $gLiquidSlParamTypes[];
   return $gLiquidSlParamTypes;
 }
 
 global proc string[] liquidSlAllParamDetails()
 {
-	liqlog("liquidSlAllParamDetails(...)");
   global string $gLiquidSlParamDetails[];
   return $gLiquidSlParamDetails;
 }
 
 global proc int[] liquidSlAllParamArraySizes()
 {
-	liqlog("liquidSlAllParamArraySizes(...)");
   global int $gLiquidSlParamArraySizes[];
   return $gLiquidSlParamArraySizes;
 }
 global proc string[] liquidSlAllParamDefaultsRaw()
 {
-	liqlog("liquidSlAllParamDefaultsRaw(...)");
   global string $gLiquidSlParamDefaults[];
   string $result[];
   int $i;
@@ -473,7 +947,7 @@ global proc string[] liquidSlAllParamDefaultsRaw()
 
 global proc liquidSlInfo( string $shaderFile )
 {
-	liqlog("liquidSlInfo(...)");
+	liqlog("liquidSlInfo("+$shaderFile+")");
     liquidSlSetShader( $shaderFile );
     string $shaderType = liquidSlShaderType();
     print( "shaderType = " + $shaderType + "\n" );
@@ -507,7 +981,7 @@ global proc liquidSlInfo( string $shaderFile )
         {
             switch ( $paramType )
             {
-			case "shader":
+            case "shader":            
             case "string":
                 string $s = liquidSlDefaultToString( $paramDefault );
                 break;

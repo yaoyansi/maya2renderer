@@ -69,7 +69,7 @@ global proc string liquidNewRibGen( string $filename )
 {
 	liqlog("liquidNewRibGen()");
   int $i;
-
+  string $ext = (`about -win`)? ".dll" : ".so";
 
   string $shortName = `workspace -pp $filename`;
   string $longName;
@@ -90,7 +90,8 @@ global proc string liquidNewRibGen( string $filename )
       string $cNum = $i;
       $testNodeName = ( $newNodeName + $cNum );
       print $testNodeName;
-      if ( !`objExists $testNodeName` ) break;
+      if ( !`objExists $testNodeName` ) 
+		break;
     }
     $newNodeName = $testNodeName;
   }
@@ -99,7 +100,7 @@ global proc string liquidNewRibGen( string $filename )
 
   addAttr -ln "RibGenSo" -dt "string" $newNodeName;
   addAttr -m -ln "assignedObjects" -at message $newNodeName;
-  setAttr ( $newNodeName + ".RibGenSo" ) -type "string" ( $longName + ".so" );
+  setAttr ( $newNodeName + ".RibGenSo" ) -type "string" ( $longName + $ext );
 
   return $newNodeName;
 }
@@ -120,9 +121,12 @@ global proc liquidAssignRibGenCMD()
 {
 	liqlog("liquidAssignRibGenCMD()");
   string $selectedNode[] = `ls -dag -s -sl`;
-  if ( size($selectedNode) > 0 ) {
-    string $path = `fileDialog -dm "*.so"`;
-    if ( `filetest -f $path` ) {
+  string $ext = (`about -win`)? "*.dll" : "*.so";
+  if ( size($selectedNode) > 0 ) 
+  {
+    string $path = `fileDialog -dm $ext`;
+    if ( `filetest -f $path` ) 
+    {
       string $ribGenNodeName = `liquidNewRibGen $path`;
       string $currentNode;
       for ( $currentNode in $selectedNode ) {

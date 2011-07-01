@@ -110,7 +110,7 @@ global proc liquidMakeSubdivDoIt()
 
 global proc liquidMakeSubdiv() {
 	liqlog("liquidMakeSubdiv(...)");
-  string $selected[] = `ls -dag -type "mesh" -sl`;
+  string $selected[] = `ls -dag -type mesh -type subdiv -sl`;
   string $current;
   int $render = `optionVar -q "liqSubdiv"`;
   int $fv = `optionVar -q "liqSubdivUVInterpolation"`;
@@ -145,7 +145,7 @@ global proc liquidMakeSubdiv() {
 
 global proc liquidUnMakeSubdiv() {
 	liqlog("liquidUnMakeSubdiv(...)");
-  string $selected[] = `ls -dag -type "mesh" -sl`;
+  string $selected[] = `ls -dag -type mesh -type subdiv -sl`;
   string $current;
   for ( $current in $selected ) {
 

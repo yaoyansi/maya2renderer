@@ -1,9 +1,6 @@
-source xxliquidutility.mel;
-
 proc string[] liquidGetSelection( string $flag )
 {
-  //liqlog("liquidGetSelection("+$flag+")");
-  return ( evalEcho ("ls "+$flag+( ( liquidGetModifiersState() == "Alt" )? " -dag":"" )+" -sl;") );
+  return ( evalEcho ("ls "+ $flag + ( ( liquidGetModifiersState() == "Alt" )? " -dag":"" )+" -sl;") );
 }
 
 
@@ -36,16 +33,17 @@ global proc liquidDeleteShadingAttributes()
                     };
   string $currentNode;
 
-  for ( $currentNode in $nodes ) {
-
-    for ( $a in $attr ) {
-      if ( `attributeQuery -node $currentNode -ex $a` ) {
+  for ( $currentNode in $nodes ) 
+  {
+    for ( $a in $attr ) 
+    {
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+      {
         // philippe: this is a fix to deal with a bug with compound attributes
         renameAttr ( $currentNode + "."+$a ) "TO_BE_DELETED";
         deleteAttr ( $currentNode + ".TO_BE_DELETED" );
       }
     }
-
   }
 }
 
@@ -53,65 +51,55 @@ global proc liquidCreateShadingRateAttribute()
 {
   string $nodes[] = liquidGetSelection( "-tr" );
   string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqShadingRate"` ) {
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqShadingRate"` ) 
       addAttr -k true -ln "liqShadingRate" -at "float" -dv 1.0 -min 0.001 $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateRasterOrientedDicingAttribute( int $val )
 {
   string $nodes[] = liquidGetSelection( "-tr" );
   string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqDiceRasterOrient"` ) {
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqDiceRasterOrient"` ) 
       addAttr -k true -ln "liqDiceRasterOrient" -at bool -dv $val $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateDoubleShadedAttribute( int $val )
 {
   string $nodes[] = liquidGetSelection( "-tr" );
   string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqDoubleShaded"` ) {
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqDoubleShaded"` ) 
       addAttr -k true -ln "liqDoubleShaded" -at bool -dv $val $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateColorAttribute()
 {
   string $nodes[] = liquidGetSelection( "-tr" );
   string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqColor"` ) {
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqColor"` ) 
+    {
       addAttr -ln "liqColor" -uac -at "float3" -k true $currentNode;
       addAttr -ln "red" -at "float"  -dv 1 -k true -parent "liqColor" $currentNode;
       addAttr -ln "green" -at "float" -dv 1 -k true -parent "liqColor" $currentNode;
       addAttr -ln "blue" -at "float" -dv 1 -k true -parent "liqColor" $currentNode;
     }
-  }
 }
-
 
 global proc liquidCreateOpacityAttribute()
 {
   string $nodes[] = liquidGetSelection( "-tr" );
   string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqOpacity"` ) {
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqOpacity"` ) 
+    {
       addAttr -ln "liqOpacity" -uac -at "float3" $currentNode;
       addAttr -ln "red1" -at "float" -dv 1 -parent "liqOpacity" $currentNode;
       addAttr -ln "green1" -at "float" -dv 1 -parent "liqOpacity" $currentNode;
       addAttr -ln "blue1" -at "float" -dv 1 -parent "liqOpacity" $currentNode;
     }
-  }
 }
 
 
@@ -119,11 +107,9 @@ global proc liquidCreateMatteAttribute()
 {
   string $nodes[] = liquidGetSelection( "-tr" );
   string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqMatte"` ) {
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqMatte"` ) 
       addAttr -k true -ln "liqMatte" -at bool -dv 0 $currentNode;
-    }
-  }
 }
 
 global proc liquidCreateCustomSGAttribute()
@@ -131,10 +117,8 @@ global proc liquidCreateCustomSGAttribute()
 	string $nodes[] = liquidGetSelection( "-tr" );
 	string $currentNode;
 	for ( $currentNode in $nodes )
-	{
 		if ( !`attributeQuery -node $currentNode -ex "liquidCustomShadingGroup"` )
 			addAttr -k true -ln "liquidCustomShadingGroup" -at "message" $currentNode;
-	}
 }
 
 // Ray Tracing group -----------------------------------------------
@@ -153,7 +137,6 @@ global proc liquidCreateObjectRayTracingAttributes()
   liquidCreateHitModeTransmissionAttribute();
 }
 
-
 global proc liquidCreateLightRayTracingAttributes()
 {
   liquidCreateSampleMotionAttribute;
@@ -161,190 +144,171 @@ global proc liquidCreateLightRayTracingAttributes()
   liquidCreateTraceBiasAttribute;
 }
 
-
 global proc liquidDeleteRayTracingAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $attr[] = {  "liqVisibilityTrace",
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  string $a, $attr[] = {  "liqVisibilityTrace",
                       "liqTraceSampleMotion", "liqTraceDisplacements", "liqTraceBias",
                       "liqMaxDiffuseDepth", "liqMaxSpecularDepth",
                       "liqVisibilityDiffuse", "liqVisibilitySpecular", "liqVisibilityTransmission", "liqVisibilityNewTransmission",
                       "liqHitModeDiffuse", "liqHitModeSpecular", "liqHitModeTransmission",
 					  "liqVisibilityPhoton","liqVisibilityMidpoint"
-                    };
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    for ( $a in $attr ) {
-      if ( `attributeQuery -node $currentNode -ex $a` ) {
+					};
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
         deleteAttr ( $currentNode + "."+$a );
-      }
-    }
-  }
 }
 
 global proc liquidCreateSampleMotionAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqTraceSampleMotion"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqTraceSampleMotion"` ) 
       addAttr -ln "liqTraceSampleMotion" -at bool $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateTraceDisplacementsAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqTraceDisplacements"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqTraceDisplacements"` ) 
       addAttr -ln "liqTraceDisplacements" -at bool $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateTraceBiasAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqTraceBias"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqTraceBias"` ) 
       addAttr -ln "liqTraceBias" -at "float" -dv 0.01 $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateMaxDiffuseDepthAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqMaxDiffuseDepth"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqMaxDiffuseDepth"` ) 
       addAttr -ln "liqMaxDiffuseDepth" -at "short" -dv 1 $currentNode;
-    }
-  }
 }
 
 global proc liquidCreateMaxSpecularDepthAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqMaxSpecularDepth"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqMaxSpecularDepth"` ) 
       addAttr -ln "liqMaxSpecularDepth" -at "short" -dv 3 $currentNode;
-    }
-  }
 }
 
-global proc liquidCreateTransmissionAttribute()
-{
-  int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );
-  if ( $newStyle ) return;
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqVisibilityTransmission"` ) {
-      addAttr -ln "liqVisibilityTransmission" -at enum -enumName "Transparent=0:Opaque=1:Use Opacity=2:From Shader=3" -dv 1  $currentNode;
-    }
-  }
-}
+
+//global proc liquidCreateTransmissionAttribute()
+//{
+//  if ( liquidGlobalsFeatureQuery( "AdvancedVisibility" ) )
+//  {
+//    string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+//    
+//    for ( $currentNode in $nodes ) 
+//      if ( !`attributeQuery -node $currentNode -ex "liqVisibilityTransmission"` ) 
+//        addAttr -ln "liqVisibilityTransmission" -at enum -enumName "Transparent=0:Opaque=1:Use Opacity=2:From Shader=3" -dv 1  $currentNode;
+//  }
+//}
+
 
 // Visibility group --------------------------------------- ###
 
 global proc liquidCreateVisibilityAttributes()
 {
-  liquidCreateVisibilityCameraAttribute();
-  liquidCreateVisibilityTraceAttribute();
-  liquidCreateTransmissionAttribute();
+  liquidCreateVisibilityCameraAttribute;
+  liquidCreateVisibilityTraceAttribute;
+  liquidCreateVisibilityTransmission;
+  //liquidCreateTransmissionAttribute;
 }
-
 
 global proc liquidDeleteVisibilityAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-
-    if ( `attributeQuery -node $currentNode -ex "liqVisibilityCamera"` ) {
-      deleteAttr ( $currentNode + ".liqVisibilityCamera" );
-    }
-    if ( `attributeQuery -node $currentNode -ex "liqVisibilityTrace"` ) {
-      deleteAttr ( $currentNode + ".liqVisibilityTrace" );
-    }
-    if ( `attributeQuery -node $currentNode -ex "liqVisibilityTransmission"` ) {
-      deleteAttr ( $currentNode + ".liqVisibilityTransmission" );
-    }
-    if ( `attributeQuery -node $currentNode -ex "liqVisibilityDiffuse"` ) {
-      deleteAttr ( $currentNode + ".liqVisibilityDiffuse" );
-    }
-    if ( `attributeQuery -node $currentNode -ex "liqVisibilitySpecular"` ) {
-      deleteAttr ( $currentNode + ".liqVisibilitySpecular" );
-    }
-    if ( `attributeQuery -node $currentNode -ex "liqVisibilityNewTransmission"` ) {
-      deleteAttr ( $currentNode + ".liqVisibilityNewTransmission" );
-    }
-    if ( `attributeQuery -node $currentNode -ex "liqVisibilityPhoton"` ) {
-      deleteAttr ( $currentNode + ".liqVisibilityPhoton" );
-    }
-    if ( `attributeQuery -node $currentNode -ex "liqVisibilityMidpoint"` ) {
-      deleteAttr ( $currentNode + ".liqVisibilityMidpoint" );
-    }
-  }
+  string $a, $attr[] = { "liqVisibilityCamera", 
+                         "liqVisibilityTrace", 
+                         "liqVisibilityTransmission", 
+                         "liqVisibilityDiffuse",
+                         "liqVisibilitySpecular",
+                         "liqVisibilityNewTransmission" ,
+						 "liqVisibilityPhoton",
+						 "liqVisibilityMidpoint"
+                       };
+  
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+        deleteAttr ( $currentNode + "."+$a );
 }
 
 global proc liquidCreateVisibilityCameraAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqVisibilityCamera"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqVisibilityCamera"` ) 
       addAttr -ln "liqVisibilityCamera" -at bool -k true -dv 1 $currentNode;
-    }
-  }
 }
 
 global proc liquidCreateVisibilityDiffuse()
 {
-  if ( !liquidGlobalsFeatureQuery( "AdvancedVisibility" ) ) return;
-
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqVisibilityDiffuse"` ) {
-      addAttr -ln "liqVisibilityDiffuse" -at bool -k true $currentNode;
-    }
-  }
+    string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+    
+    for ( $currentNode in $nodes ) 
+      if ( !`attributeQuery -node $currentNode -ex "liqVisibilityDiffuse"` ) 
+        addAttr -ln "liqVisibilityDiffuse" -at bool -k true $currentNode;
 }
 
 global proc liquidCreateVisibilitySpecular()
 {
-  if ( !liquidGlobalsFeatureQuery( "AdvancedVisibility" ) ) return;
+    string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+    
+    for ( $currentNode in $nodes ) 
+      if ( !`attributeQuery -node $currentNode -ex "liqVisibilitySpecular"` ) 
+        addAttr -ln "liqVisibilitySpecular" -at bool -k true $currentNode;
+}
 
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqVisibilitySpecular"` ) {
-      addAttr -ln "liqVisibilitySpecular" -at bool -k true $currentNode;
-    }
-  }
+global proc liquidCreateVisibilityPhoton()
+{
+    string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+    
+    for ( $currentNode in $nodes ) 
+      if ( !`attributeQuery -node $currentNode -ex "liqVisibilityPhoton"` ) 
+        addAttr -ln "liqVisibilityPhoton" -at bool -k true $currentNode;
+}
+
+global proc liquidCreateVisibilityMidpoint()
+{
+    string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+    
+    for ( $currentNode in $nodes ) 
+      if ( !`attributeQuery -node $currentNode -ex "liqVisibilityMidpoint"` ) 
+        addAttr -ln "liqVisibilityMidpoint" -at bool -k true $currentNode;
 }
 
 global proc liquidCreateVisibilityTransmission()
 {
-  if ( !liquidGlobalsFeatureQuery( "AdvancedVisibility" ) ) liquidCreateTransmissionAttribute();
-  else {
-    string $nodes[] = liquidGetSelection( "-tr" );
-    string $currentNode;
-    for ( $currentNode in $nodes ) {
-      if ( !`attributeQuery -node $currentNode -ex "liqVisibilityNewTransmission"` ) {
-        addAttr -ln "liqVisibilityNewTransmission" -at bool -k true $currentNode;
+    string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+    
+    for ( $currentNode in $nodes ) 
+    {
+      if ( liquidGlobalsFeatureQuery( "AdvancedVisibility" ) ) 
+      { 
+        if ( !`attributeQuery -node $currentNode -ex "liqVisibilityNewTransmission"` ) 
+          addAttr -ln "liqVisibilityNewTransmission" -at bool -k true $currentNode;
       }
+      else
+        if ( !`attributeQuery -node $currentNode -ex "liqVisibilityTransmission"` ) 
+          addAttr -ln "liqVisibilityTransmission" -at enum -enumName "Transparent=0:Opaque=1:Use Opacity=2:From Shader=3" -dv 1  $currentNode;    
     }
-  }
 }
 
 global proc liquidCreateVisibilityPhoton()
@@ -375,39 +339,32 @@ global proc liquidCreateVisibilityMidpoint()
     }
 }
 
-global proc liquidCreateVisibilityTraceAttribute()
-{
-  int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );;
 
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  if ( $newStyle ) {
-    for ( $currentNode in $nodes ) {
-      if ( !`attributeQuery -node $currentNode -ex "liqVisibilityDiffuse"` ) {
-        addAttr -ln "liqVisibilityDiffuse" -at bool $currentNode;
-      }
-      if ( !`attributeQuery -node $currentNode -ex "liqVisibilitySpecular"` ) {
-        addAttr -ln "liqVisibilitySpecular" -at bool $currentNode;
-      }
-      if ( !`attributeQuery -node $currentNode -ex "liqVisibilityNewTransmission"` ) {
-        addAttr -ln "liqVisibilityNewTransmission" -at bool $currentNode;
-      }
-	  if ( !`attributeQuery -node $currentNode -ex "liqVisibilityPhoton"` ) {
-        addAttr -ln "liqVisibilityPhoton" -at bool -k true $currentNode;
-      }
-      if ( !`attributeQuery -node $currentNode -ex "liqVisibilityMidpoint"` ) {
-        addAttr -ln "liqVisibilityMidpoint" -at bool -k true $currentNode;
-      }
-    }
-  } else {
-    for ( $currentNode in $nodes ) {
-      if ( !`attributeQuery -node $currentNode -ex "liqVisibilityTrace"` ) {
-        addAttr -ln "liqVisibilityTrace" -at bool -dv 1 $currentNode;
-      }
-    }
-  }
+global proc liquidCreateVisibilityTrace()
+{
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqVisibilityTrace"` ) 
+      addAttr -ln "liqVisibilityTrace" -at bool -dv 1 $currentNode;
 }
 
+global proc liquidCreateVisibilityTraceAttribute()
+{
+  liquidCreateVisibilityTransmission;
+  if ( liquidGlobalsFeatureQuery( "AdvancedVisibility" ) ) 
+  {
+    liquidCreateVisibilityDiffuse;
+    liquidCreateVisibilitySpecular; 
+    liquidCreateHitModeDiffuseAttribute();
+    liquidCreateHitModeSpecularAttribute();
+    liquidCreateHitModeTransmissionAttribute(); 
+	liquidCreateVisibilityPhoton();
+	liquidCreateVisibilityMidpoint();
+  }
+  else
+    liquidCreateVisibilityTrace;
+  
+}
 
 // GI group -----------------------------------------------
 
@@ -421,87 +378,72 @@ global proc liquidCreateGlobalIlluminationAttributes()
   liquidCreateIrradianceFileModeAttribute;
 }
 
-
 global proc liquidDeleteGlobalIlluminationAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  string $attr[] = {"liqIrradianceShadingRate", "liqIrradianceNSamples", "liqIrradianceMaxError", "liqIrradianceMaxPixelDist"};
-  for ( $currentNode in $nodes ) {
-    for ( $a in $attr ) {
-      if ( `attributeQuery -node $currentNode -ex $a` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  string $a, $attr[] = {  "liqIrradianceShadingRate", 
+                          "liqIrradianceNSamples", 
+                          "liqIrradianceMaxError", 
+                          "liqIrradianceMaxPixelDist" };
+                          
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
         deleteAttr ( $currentNode + "."+$a );
-      }
-    }
-  }
 }
 
 global proc liquidCreateIrradianceShadingRateAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceShadingRate"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceShadingRate"` ) 
       addAttr -ln "liqIrradianceShadingRate" -at "float" -dv 1 $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateIrradianceSamplesAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceNSamples"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceNSamples"` ) 
       addAttr -ln "liqIrradianceNSamples" -at short -dv 64 -min 1 -smx 256 $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateIrradianceMaxErrorAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceMaxError"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceMaxError"` ) 
       addAttr -ln "liqIrradianceMaxError" -at "float" -dv 0.5 -min 0 -max 1 $currentNode;
-    }
-  }
 }
 
 global proc liquidCreateIrradianceMaxPixelDistAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceMaxPixelDist"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceMaxPixelDist"` ) 
       addAttr -ln "liqIrradianceMaxPixelDist" -at "float" -dv 30 -min -1 -smx 100 $currentNode;
-    }
-  }
 }
 
 global proc liquidCreateIrradianceHandleAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceHandle"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceHandle"` ) 
       addAttr -ln "liqIrradianceHandle" -dt "string" $currentNode;
-    }
-  }
 }
 
 global proc liquidCreateIrradianceFileModeAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceFileMode"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqIrradianceFileMode"` ) 
       addAttr -ln "liqIrradianceFileMode" -at enum -enumName "None=0:Read=1:Write=2:ReadWrite=3" $currentNode;
-    }
-  }
 }
 
 // Photon group -----------------------------------------------
@@ -514,76 +456,55 @@ global proc liquidCreatePhotonAttributes()
   liquidCreatePhotonShadingModelAttribute;
 }
 
-
 global proc liquidDeletePhotonAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( `attributeQuery -node $currentNode -ex "liqPhotonGlobalMap"` ) {
-      deleteAttr ( $currentNode + ".liqPhotonGlobalMap" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqPhotonCausticMap"` ) {
-      deleteAttr ( $currentNode + ".liqPhotonCausticMap" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqPhotonEstimator"` ) {
-      deleteAttr ( $currentNode + ".liqPhotonEstimator" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqPhotonShadingModel"` ) {
-      deleteAttr ( $currentNode + ".liqPhotonShadingModel" );
-    }
-  }
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  string $a, $attr[] = { "liqPhotonGlobalMap", 
+                         "liqPhotonCausticMap", 
+                         "liqPhotonEstimator", 
+                         "liqPhotonShadingModel" };
+                       
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+        deleteAttr ( $currentNode + "."+$a );
 }
 
 global proc liquidCreateGlobalMapAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqPhotonGlobalMap"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqPhotonGlobalMap"` ) 
       addAttr -ln "liqPhotonGlobalMap" -dt "string" $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateCausticMapAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqPhotonCausticMap"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqPhotonCausticMap"` ) 
       addAttr -ln "liqPhotonCausticMap" -dt "string" $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreatePhotonEstimatorAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqPhotonEstimator"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqPhotonEstimator"` ) 
       addAttr -ln "liqPhotonEstimator" -at "float" -dv 500 -min 0 $currentNode;
-    }
-  }
 }
 
 global proc liquidCreatePhotonShadingModelAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqPhotonShadingModel"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqPhotonShadingModel"` ) 
       addAttr -ln "liqPhotonShadingModel" -at enum -enumName "Matte=0:Glass=1:Water=2:Chrome=3:Transparent=4:Dielectric=5" $currentNode;
-    }
-  }
 }
-
 
 // Motion blur group -----------------------------------------------
 
@@ -595,689 +516,591 @@ global proc liquidCreateMotionBlurAttributes()
   liquidCreateMotionFactorAttribute;
 }
 
-
 global proc liquidDeleteMotionBlurAttributes()
 {
-    string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( `attributeQuery -node $currentNode -ex "liqTransformationBlur"` ) {
-      deleteAttr ( $currentNode + ".liqTransformationBlur" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqDeformationBlur"` ) {
-      deleteAttr ( $currentNode + ".liqDeformationBlur" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqMotionSamples"` ) {
-      deleteAttr ( $currentNode + ".liqMotionSamples" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqMotionFactor"` ) {
-      deleteAttr ( $currentNode + ".liqMotionFactor" );
-    }
-  }
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  string $a, $attr[] = { "liqTransformationBlur", 
+                         "liqDeformationBlur", 
+                         "liqMotionSamples", 
+                         "liqMotionFactor" };
+                       
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+        deleteAttr ( $currentNode + "."+$a );
 }
 
 global proc liquidCreateTransformationBlurAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqTransformationBlur"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqTransformationBlur"` ) 
       addAttr -ln "liqTransformationBlur" -at bool -dv false $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateDeformationBlurAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqDeformationBlur"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqDeformationBlur"` ) 
       addAttr -ln "liqDeformationBlur" -at bool -dv false $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateMotionSamplesAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqMotionSamples"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqMotionSamples"` ) 
       addAttr -ln "liqMotionSamples" -at byte -dv 2 -min 2 -max 16 $currentNode;
-    }
-  }
 }
 
 global proc liquidCreateMotionFactorAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqMotionFactor"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqMotionFactor"` ) 
       addAttr -ln "liqMotionFactor" -at "float" -dv 1 -min 0 -smx 16 $currentNode;
-    }
-  }
 }
 
 // PrePosterous group -----------------------------------------------
 
 global proc liquidCreatePreTransformMelAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqPreTransformMel"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqPreTransformMel"` ) 
       addAttr -ln "liqPreTransformMel" -dt "string" $currentNode;
-    }
-  }
 }
 
 global proc liquidCreatePostTransformMelAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqPostTransformMel"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqPostTransformMel"` ) 
       addAttr -ln "liqPostTransformMel" -dt "string" $currentNode;
-    }
-  }
 }
 
 global proc liquidCreatePreShapeMelAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqPreShapeMel"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqPreShapeMel"` ) 
       addAttr -ln "liqPreShapeMel" -dt "string" $currentNode;
-    }
-  }
 }
 
 global proc liquidCreatePostShapeMelAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqPostShapeMel"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqPostShapeMel"` ) 
       addAttr -ln "liqPostShapeMel" -dt "string" $currentNode;
-    }
-  }
 }
 
 global proc liquidDeletePreTransformMelAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-  if ( `attributeQuery -node $currentNode -ex "liqPreTransformMel"` ) {
-    deleteAttr ( $currentNode + ".liqPreTransformMel" );
-    }
-  }
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( `attributeQuery -node $currentNode -ex "liqPreTransformMel"` ) 
+      deleteAttr ( $currentNode + ".liqPreTransformMel" );
 }
 
 global proc liquidDeletePostTransformMelAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-  if ( `attributeQuery -node $currentNode -ex "liqPostTransformMel"` ) {
-    deleteAttr ( $currentNode + ".liqPostTransformMel" );
-    }
-  }
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( `attributeQuery -node $currentNode -ex "liqPostTransformMel"` ) 
+      deleteAttr ( $currentNode + ".liqPostTransformMel" );
 }
 
 global proc liquidDeletePreShapeMelAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-  if ( `attributeQuery -node $currentNode -ex "liqPreShapeMel"` ) {
-    deleteAttr ( $currentNode + ".liqPreShapeMel" );
-    }
-  }
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( `attributeQuery -node $currentNode -ex "liqPreShapeMel"` ) 
+      deleteAttr ( $currentNode + ".liqPreShapeMel" );
 }
 
 global proc liquidDeletePostShapeMelAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-  if ( `attributeQuery -node $currentNode -ex "liqPostShapeMel"` ) {
-    deleteAttr ( $currentNode + ".liqPostShapeMel" );
-    }
-  }
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes )  
+    if ( `attributeQuery -node $currentNode -ex "liqPostShapeMel"` ) 
+      deleteAttr ( $currentNode + ".liqPostShapeMel" );
 }
-
 
 // RIB group -----------------------------------------------
 
 global proc liquidCreateRIBAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBBox"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBBox"` ) 
       addAttr -ln "liqRIBBox" -dt "string" $currentNode;
-    }
 
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBGenerator"` ) {
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBGenerator"` ) 
       addAttr -ln "liqRIBGenerator" -dt "string" $currentNode;
-    }
 
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBReadArchive"` ) {
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBReadArchive"` ) 
       addAttr -ln "liqRIBReadArchive" -dt "string" $currentNode;
-    }
 
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBDelayedReadArchive"` ) {
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBDelayedReadArchive"` ) 
       addAttr -ln "liqRIBDelayedReadArchive" -dt "string" $currentNode;
-    }
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBDelayedReadArchiveBBoxScale"` ) {
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBDelayedReadArchiveBBoxScale"` ) 
       addAttr -ln "liqRIBDelayedReadArchiveBBoxScale" -at "double" -dv 1.0 -smn 0.0 -smx 2.0 $currentNode;
-    }
   }
 }
 
-
 global proc liquidDeleteRIBAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  string $attr[]=  {"liqRIBBox", "liqRIBGenerator", "liqRIBReadArchive", "liqRIBDelayedReadArchive", "liqRIBDelayedReadArchiveBBoxScale"};
-  for ( $currentNode in $nodes ) {
-    for ( $a in $attr ) {
-      if ( `attributeQuery -node $currentNode -ex $a` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  string $a, $attr[]=  {  "liqRIBBox", 
+                          "liqRIBGenerator", 
+                          "liqRIBReadArchive", 
+                          "liqRIBDelayedReadArchive", 
+                          "liqRIBDelayedReadArchiveBBoxScale" };
+                          
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
         deleteAttr ( $currentNode + "."+$a );
-      }
-    }
-  }
 }
 
 global proc liquidCreateRIBBoxAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBBox"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBBox"` ) 
       addAttr -ln "liqRIBBox" -dt "string" $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateRIBGeneratorAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBGenerator"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBGenerator"` ) 
       addAttr -ln "liqRIBGenerator" -dt "string" $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateReadArchiveAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBReadArchive"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBReadArchive"` ) 
       addAttr -ln "liqRIBReadArchive" -dt "string" $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateDelayedReadArchiveAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBDelayedReadArchive"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBDelayedReadArchive"` ) 
       addAttr -ln "liqRIBDelayedReadArchive" -dt "string" $currentNode;
-    }
-    if ( !`attributeQuery -node $currentNode -ex "liqRIBDelayedReadArchiveBBoxScale"` ) {
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqRIBDelayedReadArchiveBBoxScale"` ) 
       addAttr -ln "liqRIBDelayedReadArchiveBBoxScale" -at "double" -dv 1.0 -smn 0.0 -smx 2.0 $currentNode;
-    }
   }
 }
 
 global proc liquidCreateShdRIBAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
   for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBBox"` ) {
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBBox"` ) 
       addAttr -ln "liqShdRIBBox" -dt "string" $currentNode;
-    }
-
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBGenerator"` ) {
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBGenerator"` ) 
       addAttr -ln "liqShdRIBGenerator" -dt "string" $currentNode;
-    }
-
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBReadArchive"` ) {
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBReadArchive"` ) 
       addAttr -ln "liqShdRIBReadArchive" -dt "string" $currentNode;
-    }
-
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBDelayedReadArchive"` ) {
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBDelayedReadArchive"` ) 
       addAttr -ln "liqShdRIBDelayedReadArchive" -dt "string" $currentNode;
-    }
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBDelayedReadArchiveBBoxScale"` ) {
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBDelayedReadArchiveBBoxScale"` ) 
       addAttr -ln "liqShdRIBDelayedReadArchiveBBoxScale" -at "double" -dv 1.0 -smn 0.0 -smx 2.0 $currentNode;
-    }
   }
 }
 
-
 global proc liquidDeleteShdRIBAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  string $attr[]=  {"liqShdRIBBox", "liqShdRIBGenerator", "liqShdRIBReadArchive", "liqShdRIBDelayedReadArchive", "liqShdRIBDelayedReadArchiveBBoxScale"};
-  for ( $currentNode in $nodes ) {
-    for ( $a in $attr ) {
-      if ( `attributeQuery -node $currentNode -ex $a` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  string $a, $attr[]=  {  "liqShdRIBBox", 
+                          "liqShdRIBGenerator", 
+                          "liqShdRIBReadArchive", 
+                          "liqShdRIBDelayedReadArchive", 
+                          "liqShdRIBDelayedReadArchiveBBoxScale" };
+                          
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
         deleteAttr ( $currentNode + "."+$a );
-      }
-    }
-  }
 }
 
 global proc liquidCreateShdRIBBoxAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBBox"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+ 
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBBox"` ) 
       addAttr -ln "liqShdRIBBox" -dt "string" $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateShdRIBGeneratorAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBGenerator"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBGenerator"` ) 
       addAttr -ln "liqShdRIBGenerator" -dt "string" $currentNode;
-    }
-  }
 }
 
 
 global proc liquidCreateShdReadArchiveAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBReadArchive"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBReadArchive"` ) 
       addAttr -ln "liqShdRIBReadArchive" -dt "string" $currentNode;
-    }
-  }
 }
-
 
 global proc liquidCreateShdDelayedReadArchiveAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBDelayedReadArchive"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBDelayedReadArchive"` ) 
       addAttr -ln "liqShdRIBDelayedReadArchive" -dt "string" $currentNode;
-    }
-    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBDelayedReadArchiveBBoxScale"` ) {
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqShdRIBDelayedReadArchiveBBoxScale"` ) 
       addAttr -ln "liqShdRIBDelayedReadArchiveBBoxScale" -at "double" -dv 1.0 -smn 0.0 -smx 2.0 $currentNode;
-    }
   }
 }
-
 
 // Instancing group -----------------------------------------------
 
 global proc liquidCreateInstancingAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqInheritPPColor"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqInheritPPColor"` ) 
       addAttr -ln "liqInheritPPColor" -at bool $currentNode;
-    }
-  }
 }
 
 
 global proc liquidDeleteInstancingAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( `attributeQuery -node $currentNode -ex "liqInheritPPColor"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( `attributeQuery -node $currentNode -ex "liqInheritPPColor"` ) 
       deleteAttr ( $currentNode + ".liqInheritPPColor" );
-    }
-  }
 }
-
 
 // 3DL SSS group -----------------------------------------------
 
 global proc liquidCreate3DelightSubSurfaceScatteringAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-
-    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSGroupName"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSGroupName"` ) 
       addAttr -ln "liqDelightSSGroupName" -dt "string"  $currentNode;
-    }
-
-    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSScattering"` ) {
-      addAttr -ln "liqDelightSSScattering" -at "float3"  $currentNode;
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSScattering"` ) 
+    {
+      addAttr -ln "liqDelightSSScattering" -usedAsColor -at "float3"  $currentNode;
       addAttr -ln "SSScattering1" -at "float" -parent "liqDelightSSScattering" $currentNode;
       addAttr -ln "SSScattering2" -at "float" -parent "liqDelightSSScattering" $currentNode;
       addAttr -ln "SSScattering3" -at "float" -parent "liqDelightSSScattering" $currentNode;
     }
 
-    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSAbsorption"` ) {
-      addAttr -ln "liqDelightSSAbsorption" -at "float3"  $currentNode;
+    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSAbsorption"` ) 
+    {
+      addAttr -ln "liqDelightSSAbsorption" -usedAsColor -at "float3"  $currentNode;
       addAttr -ln "SSAbsorption1" -at "float" -parent "liqDelightSSAbsorption" $currentNode;
       addAttr -ln "SSAbsorption2" -at "float" -parent "liqDelightSSAbsorption" $currentNode;
       addAttr -ln "SSAbsorption3" -at "float" -parent "liqDelightSSAbsorption" $currentNode;
     }
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSMeanfreepath"` ) 
+    {
+      addAttr -ln "liqDelightSSMeanfreepath" -usedAsColor -at "float3"  $currentNode;
+      addAttr -ln "SSMeanfreepath1" -at "float" -parent "liqDelightSSMeanfreepath" $currentNode;
+      addAttr -ln "SSMeanfreepath2" -at "float" -parent "liqDelightSSMeanfreepath" $currentNode;
+      addAttr -ln "SSMeanfreepath3" -at "float" -parent "liqDelightSSMeanfreepath" $currentNode;
+    }
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSReflectance"` ) 
+    {
+      addAttr -ln "liqDelightSSReflectance" -usedAsColor -at "float3"  $currentNode;
+      addAttr -ln "SSReflectance1" -at "float" -parent "liqDelightSSReflectance" $currentNode;
+      addAttr -ln "SSReflectance2" -at "float" -parent "liqDelightSSReflectance" $currentNode;
+      addAttr -ln "SSReflectance3" -at "float" -parent "liqDelightSSReflectance" $currentNode;
+    }
 
-    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSRefraction"` ) {
+    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSRefraction"` ) 
       addAttr -ln "liqDelightSSRefraction" -at "float" $currentNode;
-    }
 
-    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSScale"` ) {
+    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSScale"` ) 
       addAttr -ln "liqDelightSSScale" -at "float" -dv 1.0 $currentNode;
-    }
-
-    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSShadingRate"` ) {
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSShadingRate"` ) 
       addAttr -ln "liqDelightSSShadingRate" -at "float" -dv 1.0 -min 0.001 $currentNode;
-    }
-
+      
+    if ( !`attributeQuery -node $currentNode -ex "liqDelightSSReferenceCamera"` ) 
+      addAttr -ln "liqDelightSSReferenceCamera" -dt "string"  $currentNode;
   }
 }
-
 
 global proc liquidDelete3DelightSubSurfaceScatteringAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-
-    if ( `attributeQuery -node $currentNode -ex "liqDelightSSGroupName"` ) {
-      deleteAttr ( $currentNode + ".liqDelightSSGroupName" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqDelightSSScattering"` ) {
-      deleteAttr ( $currentNode + ".liqDelightSSScattering" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqDelightSSAbsorption"` ) {
-      deleteAttr ( $currentNode + ".liqDelightSSAbsorption" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqDelightSSRefraction"` ) {
-      deleteAttr ( $currentNode + ".liqDelightSSRefraction" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqDelightSSScale"` ) {
-      deleteAttr ( $currentNode + ".liqDelightSSScale" );
-    }
-
-    if ( `attributeQuery -node $currentNode -ex "liqDelightSSShadingRate"` ) {
-      deleteAttr ( $currentNode + ".liqDelightSSShadingRate" );
-    }
-
-  }
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  string $a, $attr[]=  {  "liqDelightSSGroupName", 
+                          "liqDelightSSScattering", 
+                          "liqDelightSSAbsorption", 
+                          "liqDelightSSRefraction", 
+                          "liqDelightSSScale",
+                          "liqDelightSSShadingRate",
+                          "liqDelightSSMeanfreepath", 
+                          "liqDelightSSReflectance",
+                          "liqDelightSSReferenceCamera"
+                        };
+                          
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+        deleteAttr ( $currentNode + "."+$a );
 }
-
 
 // Visibility group -----------------------------------------------
 
 global proc liquidCreateLiquidInvisibleAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqInvisible"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqInvisible"` ) 
       addAttr -ln "liqInvisible" -at bool -dv 1 $currentNode;
-    }
-  }
 }
-
 
 global proc liquidDeleteLiquidInvisibleAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( `attributeQuery -node $currentNode -ex "liqInvisible"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( `attributeQuery -node $currentNode -ex "liqInvisible"` ) 
       deleteAttr ( $currentNode + ".liqInvisible" );
-    }
-  }
 }
-
 
 global proc liquidCreateMeshRenderingAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqSubdiv"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( !`attributeQuery -node $currentNode -ex "liqSubdiv"` ) 
       addAttr -ln "liqSubdiv" -at bool $currentNode;
-    }
-    if ( !`attributeQuery -node $currentNode -ex "liqSubdivInterpolateBoundary"` ) {
-    addAttr -ln "liqSubdivInterpolateBoundary" -at bool $currentNode;
-    }
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqSubdivInterpolateBoundary"` ) 
+      addAttr -ln "liqSubdivInterpolateBoundary" -at bool $currentNode;
   }
 }
-
 
 global proc liquidDeleteMeshRenderingAttributes()
- {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( `attributeQuery -node $currentNode -ex "liqSubdiv"` ) {
+{
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( `attributeQuery -node $currentNode -ex "liqSubdiv"` ) 
       deleteAttr ( $currentNode + ".liqSubdiv" );
-    }
-    if ( `attributeQuery -node $currentNode -ex "liqSubdivInterpolateBoundary"` ) {
+    
+    if ( `attributeQuery -node $currentNode -ex "liqSubdivInterpolateBoundary"` ) 
       deleteAttr ( $currentNode + ".liqSubdivInterpolateBoundary" );
-    }
   }
 }
-
 
 global proc liquidCreateSubdivRenderingAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqSubdivMayaCrease"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqSubdivMayaCrease"` ) 
       addAttr -ln "liqSubdivMayaCrease" -at "float" $currentNode;
-    }
-  }
 }
-
 
 global proc liquidDeleteSubdivRenderingAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( `attributeQuery -node $currentNode -ex "liqSubdivMayaCrease"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( `attributeQuery -node $currentNode -ex "liqSubdivMayaCrease"` ) 
       deleteAttr ( $currentNode + ".liqSubdivMayaCrease" );
-    }
-  }
 }
-
 
 global proc liquidCreateCurveRenderingAttributes()
- {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqCurve"` ) {
+{
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( !`attributeQuery -node $currentNode -ex "liqCurve"` ) 
       addAttr -ln "liqCurve" -at bool $currentNode;
-    }
-    if ( !`attributeQuery -node $currentNode -ex "liqCurveWidth"` ) {
+    
+    if ( !`attributeQuery -node $currentNode -ex "liqCurveWidth"` ) 
       addAttr -ln "liqCurveWidth" -at "float" $currentNode;
-    }
   }
 }
-
 
 global proc liquidDeleteCurveRenderingAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( `attributeQuery -node $currentNode -ex "liqCurve"` ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( `attributeQuery -node $currentNode -ex "liqCurve"` ) 
       deleteAttr ( $currentNode + ".liqCurve" );
-    }
-    if ( `attributeQuery -node $currentNode -ex "liqCurveWidth"` ) {
+    
+    if ( `attributeQuery -node $currentNode -ex "liqCurveWidth"` ) 
       deleteAttr ( $currentNode + ".liqCurveWidth" );
-    }
   }
 }
-
 
 global proc liquidCreateSetAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-typ objectSet");
-  string $currentNode;
+  string $currentNode, $nodes[] = liquidGetSelection( "-typ objectSet");
 
-  for ( $currentNode in $nodes ) {
-    if ( !`attributeQuery -node $currentNode -ex "liqTraceSet"` ) {
+  for ( $currentNode in $nodes ) 
+    if ( !`attributeQuery -node $currentNode -ex "liqTraceSet"` ) 
       addAttr -ln "liqTraceSet" -at bool -dv true $currentNode;
-    }
-  }
 }
-
 
 global proc liquidDeleteSetAttributes()
 {
-  string $nodes[] = liquidGetSelection( "-typ objectSet");
-  string $currentNode;
+  string $currentNode, $nodes[] = liquidGetSelection( "-typ objectSet");
 
-  for ( $currentNode in $nodes ) {
-    if ( `attributeQuery -node $currentNode -ex "liqTraceSet"` ) {
+  for ( $currentNode in $nodes ) 
+    if ( `attributeQuery -node $currentNode -ex "liqTraceSet"` ) 
       deleteAttr ( $currentNode + ".liqTraceSet" );
-    }
-  }
 }
 
-
-global proc liquidMakeDBlur() {
-  string $selected[] = `ls -dag -sl`;
-  string $current;
-  for ( $current in $selected ) {
-    if ( !`attributeQuery -node $current -ex "deformationBlur"`) {
+global proc liquidMakeDBlur() 
+{
+  string $current, $selected[] = `ls -dag -sl`;
+  
+  for ( $current in $selected ) 
+  {
+    if ( !`attributeQuery -node $current -ex "deformationBlur"`) 
       addAttr -h true -ln deformationBlur -at bool $current;
-    }
-    if ( `attributeQuery -node $current -ex "deformationBlur"`) {
+    
+    if ( `attributeQuery -node $current -ex "deformationBlur"`) 
       setAttr ( $current + ".deformationBlur" ) true;
-    }
   }
 }
 
-
-global proc liquidUnMakeDBlur() {
-  string $selected[] = `ls -dag -sl`;
-  string $current;
-  for ( $current in $selected ) {
-    if ( `attributeQuery -node $current -ex "deformationBlur"`) {
+global proc liquidUnMakeDBlur() 
+{
+  string $current, $selected[] = `ls -dag -sl`;
+  
+  for ( $current in $selected ) 
+    if ( `attributeQuery -node $current -ex "deformationBlur"`) 
       deleteAttr ( $current + ".deformationBlur" );
-    }
-  }
 }
 
-
-global proc liquidMakeTBlur() {
-  string $selected[] = `ls -dag -sl`;
-  string $current;
-  for ( $current in $selected ) {
-    if ( !`attributeQuery -node $current -ex "transformationBlur"`) {
+global proc liquidMakeTBlur() 
+{
+  string $current, $selected[] = `ls -dag -sl`;
+  
+  for ( $current in $selected ) 
+  {
+    if ( !`attributeQuery -node $current -ex "transformationBlur"`) 
       addAttr -h true -ln transformationBlur -at bool $current;
-    }
-    if ( `attributeQuery -node $current -ex "transformationBlur"`) {
+    
+    if ( `attributeQuery -node $current -ex "transformationBlur"`) 
       setAttr ( $current + ".transformationBlur" ) true;
-    }
   }
 }
 
-
-global proc liquidUnMakeTBlur() {
-  string $selected[] = `ls -dag -sl`;
-  string $current;
-  for ( $current in $selected ) {
-    if ( `attributeQuery -node $current -ex "transformationBlur"`) {
+global proc liquidUnMakeTBlur() 
+{
+  string $current, $selected[] = `ls -dag -sl`;
+  
+  for ( $current in $selected ) 
+    if ( `attributeQuery -node $current -ex "transformationBlur"`) 
       deleteAttr ( $current + ".transformationBlur" );
-    }
-  }
 }
 
-
-global proc liquidAddZThres() {
-  string $selected[] = `ls -dag -sl -lights`;
-  string $current;
-  for ( $current in $selected ) {
-    if ( !`attributeQuery -node $current -ex "liqRIBOptions"`) {
+global proc liquidAddZThres() 
+{
+  string $current, $selected[] = `ls -dag -sl -lights`;
+  
+  for ( $current in $selected ) 
+  {
+    if ( !`attributeQuery -node $current -ex "liqRIBOptions"`) 
       addAttr -ln liqRIBOptions -dt "string" $current;
-    }
-    if ( `attributeQuery -node $current -ex "liqRIBOptions"`) {
+    
+    if ( `attributeQuery -node $current -ex "liqRIBOptions"`) 
       setAttr ( $current + ".liqRIBOptions" ) -type "string" "Option \"limits\" \"zthreshold\" [ 1.0 1.0 1.0 ]";
-    }
   }
 }
 
-
-global proc liquidRemoveZThres() {
-  string $selected[] = `ls -dag -sl -lights`;
-  string $current;
-  for ( $current in $selected ) {
-    if ( `attributeQuery -node $current -ex "liqRIBOptions"`) {
+global proc liquidRemoveZThres() 
+{
+  string $current, $selected[] = `ls -dag -sl -lights`;
+  
+  for ( $current in $selected ) 
+    if ( `attributeQuery -node $current -ex "liqRIBOptions"`) 
       deleteAttr ( $current + ".liqRIBOptions" );
-    }
-  }
 }
 
-
-global proc liquidAddLiquidInvisible() {
-  string $selected[] = `ls -dag -sl`;
-  string $current;
-  for ( $current in $selected ) {
-    if ( !`attributeQuery -node $current -ex "liquidInvisible"`) {
+global proc liquidAddLiquidInvisible() 
+{
+  string $current, $selected[] = `ls -dag -sl`;
+  
+  for ( $current in $selected ) 
+  {
+    if ( !`attributeQuery -node $current -ex "liquidInvisible"`) 
       addAttr -ln liquidInvisible -at bool $current;
-    }
-    if ( `attributeQuery -node $current -ex "liquidInvisible"`) {
+    
+    if ( `attributeQuery -node $current -ex "liquidInvisible"`) 
       setAttr ( $current + ".liquidInvisible" ) true;
-    }
   }
 }
 
-
-global proc liquidRemoveLiquidInvisible() {
-  string $selected[] = `ls -dag -sl`;
-  string $current;
-  for ( $current in $selected ) {
-    if ( `attributeQuery -node $current -ex "liquidInvisible"`) {
+global proc liquidRemoveLiquidInvisible() 
+{
+  string $current, $selected[] = `ls -dag -sl`;
+  
+  for ( $current in $selected ) 
+    if ( `attributeQuery -node $current -ex "liquidInvisible"`) 
       deleteAttr ( $current + ".liquidInvisible" );
-    }
-  }
 }
-
 
 // Advanced Visibility Attributes ---------------------------------------
 
@@ -1299,7 +1122,6 @@ global proc liquidCreateCameraHitModeAttribute()
     }
   }
 }
-
 
 global proc liquidCreateHitModeDiffuseAttribute()
 {
@@ -1329,7 +1151,6 @@ global proc liquidCreateHitModeSpecularAttribute()
     }
   }
 }
-
 
 global proc liquidCreateHitModeTransmissionAttribute()
 {
@@ -1382,70 +1203,60 @@ global proc liquidCreateVolumeIntersectionPriorityAttribute()
 
 global proc liquidCreateIgnoreShapesAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !objExists( ($currentNode+".liqIgnoreShapes") ) ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( !objExists( ($currentNode+".liqIgnoreShapes") ) ) 
       addAttr -ln "liqIgnoreShapes" -at bool -dv 1 -k true $currentNode;
-    }
-  }
 }
 
 global proc liquidDeleteIgnoreShapesAttribute()
 {
-  string $nodes[] = liquidGetSelection( "-tr" );
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( objExists( ($currentNode+".liqIgnoreShapes") ) ) {
+  string $currentNode, $nodes[] = liquidGetSelection( "-tr" );
+  
+  for ( $currentNode in $nodes ) 
+    if ( objExists( ($currentNode+".liqIgnoreShapes") ) ) 
       deleteAttr ( $currentNode+".liqIgnoreShapes" );
-    }
-  }
 }
 
 global proc liquidCreateAreaLightAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( !objExists( ($currentNode+".liqBothSidesEmit") ) ) {
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( !objExists( ($currentNode+".liqBothSidesEmit") ) ) 
       addAttr -ln "liqBothSidesEmit" -at bool -dv 0 $currentNode;
-    }
-    if ( !objExists( ($currentNode+".liqLightMap") ) ) {
+    
+    if ( !objExists( ($currentNode+".liqLightMap") ) ) 
       addAttr -ln "liqLightMap" -dt "string" $currentNode;
-    }
-    if ( !objExists( ($currentNode+".liqLightMapSaturation") ) ) {
+    
+    if ( !objExists( ($currentNode+".liqLightMapSaturation") ) ) 
       addAttr -ln "liqLightMapSaturation" -at "float" -dv 1.0 -min 0 -max 10 $currentNode;
-    }
-    if ( !objExists( ($currentNode+".liqAreaHitmode") ) ) {
+    
+    if ( !objExists( ($currentNode+".liqAreaHitmode") ) ) 
       addAttr -ln "liqAreaHitmode" -at "enum" -en "default:primitive:shader" -dv 1 $currentNode;
-    }
   }
 }
 
 global proc liquidDeleteAreaLightAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( objExists( ($currentNode+".liqBothSidesEmit") ) ) {
-      deleteAttr ( $currentNode+".liqBothSidesEmit" );
-    }
-    if ( objExists( ($currentNode+".liqLightMap") ) ) {
-      deleteAttr ( $currentNode+".liqLightMap" );
-    }
-    if ( objExists( ($currentNode+".liqLightMapSaturation") ) ) {
-      deleteAttr ( $currentNode+".liqLightMapSaturation" );
-    }
-    if ( objExists( ($currentNode+".liqAreaHitmode") ) ) {
-      deleteAttr ( $currentNode+".liqAreaHitmode" );
-    }
-  }
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  string $a, $attr[]=  {  "liqBothSidesEmit", 
+                          "liqLightMap", 
+                          "liqLightMapSaturation", 
+                          "liqAreaHitmode" };
+                          
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+        deleteAttr ( $currentNode + "."+$a );
 }
 
 global proc liquidCreateLightShadowAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  
   for ( $currentNode in $nodes ) {
     if ( !( nodeType($currentNode) == "spotLight" || nodeType($currentNode) == "pointLight" || nodeType($currentNode) == "directionalLight" ) ) {
       warning ("These attributes can only be added to spotLights, directionalLights or pointLights !");
@@ -1457,6 +1268,9 @@ global proc liquidCreateLightShadowAttributes()
     if ( !objExists( ($currentNode+".deepShadows") ) ) {
       addAttr -ln "deepShadows" -sn "dsh" -at bool -dv 0 $currentNode;
     }
+    if ( !objExists( ($currentNode+".liqShadowBlur") ) ) {
+  	  addAttr -ln "liqShadowBlur" -sn "shb" -at "float" -dv 0.01 $currentNode;
+  	}
     if ( !objExists( ($currentNode+".pixelSamples") ) ) {
       addAttr -ln "pixelSamples" -sn "dps" -at "short" -dv 0 $currentNode;
     }
@@ -1486,46 +1300,29 @@ global proc liquidCreateLightShadowAttributes()
 
 global proc liquidDeleteLightShadowAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( objExists( ($currentNode+".liqShadowMapSamples") ) ) {
-      deleteAttr ( $currentNode+".liqShadowMapSamples" );
-    }
-    if ( objExists( ($currentNode+".deepShadows") ) ) {
-      deleteAttr ( $currentNode+".deepShadows" );
-    }
-    if ( objExists( ($currentNode+".pixelSamples") ) ) {
-      deleteAttr ( $currentNode+".pixelSamples" );
-    }
-    if ( objExists( ($currentNode+".volumeInterpretation") ) ) {
-      deleteAttr ( $currentNode+".volumeInterpretation" );
-    }
-    if ( objExists( ($currentNode+".everyFrame") ) ) {
-      deleteAttr ( $currentNode+".everyFrame" );
-    }
-    if ( objExists( ($currentNode+".renderAtFrame") ) ) {
-      deleteAttr ( $currentNode+".renderAtFrame" );
-    }
-    if ( objExists( ($currentNode+".geometrySet") ) ) {
-      deleteAttr ( $currentNode+".geometrySet" );
-    }
-    if ( objExists( ($currentNode+".shadingRateFactor") ) ) {
-      deleteAttr ( $currentNode+".shadingRateFactor" );
-    }
-    if ( objExists( ($currentNode+".nearClipPlane") ) ) {
-      deleteAttr ( $currentNode+".nearClipPlane" );
-    }
-    if ( objExists( ($currentNode+".farClipPlane") ) ) {
-      deleteAttr ( $currentNode+".farClipPlane" );
-    }
-  }
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  string $a, $attr[]=  {  "liqShadowMapSamples", 
+                          "deepShadows",
+                          "liqShadowBlur", 
+                          "pixelSamples", 
+                          "volumeInterpretation", 
+                          "everyFrame",
+                          "renderAtFrame",
+                          "geometrySet",
+                          "shadingRateFactor",
+                          "nearClipPlane",
+                          "farClipPlane" };
+                          
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+        deleteAttr ( $currentNode + "."+$a );
 }
 
 global proc liquidCreateLightShadowRIBAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  
   for ( $currentNode in $nodes ) {
     if ( !( nodeType($currentNode) == "spotLight" || nodeType($currentNode) == "pointLight" || nodeType($currentNode) == "directionalLight" ) ) {
       warning ("These attributes can only be added to spotLights, directionalLights or pointLights !");
@@ -1542,8 +1339,8 @@ global proc liquidCreateLightShadowRIBAttributes()
 
 global proc liquidDeleteLightShadowRIBAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  
   for ( $currentNode in $nodes ) {
     if ( objExists( ($currentNode+".liqRIBOptions") ) ) {
       deleteAttr ( $currentNode+".liqRIBOptions" );
@@ -1556,8 +1353,8 @@ global proc liquidDeleteLightShadowRIBAttributes()
 
 global proc liquidCreateLightOutputAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  
   for ( $currentNode in $nodes ) {
     if ( !objExists( ($currentNode+".__category") ) ) {
       addAttr -ln "__category" -dt "string" $currentNode;
@@ -1570,8 +1367,8 @@ global proc liquidCreateLightOutputAttributes()
 
 global proc liquidDeleteLightOutputAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  
   for ( $currentNode in $nodes ) {
     if ( objExists( ($currentNode+".__category") ) ) {
       deleteAttr ( $currentNode+".__category" );
@@ -1584,8 +1381,8 @@ global proc liquidDeleteLightOutputAttributes()
 
 global proc liquidCreateDecayRegionAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  
   for ( $currentNode in $nodes ) {
     if ( !objExists( ($currentNode+".startDistanceIntensity1") ) ) {
       addAttr -ln "startDistanceIntensity1" -at "float" -dv 1 $currentNode;
@@ -1611,29 +1408,32 @@ global proc liquidCreateDecayRegionAttributes()
 
 global proc liquidDeleteDecayRegionAttributes()
 {
-  string $nodes[] = `ls -lights -dag -sl`;
-  string $currentNode;
-  for ( $currentNode in $nodes ) {
-    if ( objExists( ($currentNode+".startDistanceIntensity1") ) ) {
-      deleteAttr ( $currentNode+".startDistanceIntensity1" );
-    }
-    if ( objExists( ($currentNode+".endDistanceIntensity1") ) ) {
-      deleteAttr ( $currentNode+".endDistanceIntensity1" );
-    }
-    if ( objExists( ($currentNode+".startDistanceIntensity2") ) ) {
-      deleteAttr ( $currentNode+".startDistanceIntensity2" );
-    }
-    if ( objExists( ($currentNode+".endDistanceIntensity2") ) ) {
-      deleteAttr ( $currentNode+".endDistanceIntensity2" );
-    }
-    if ( objExists( ($currentNode+".startDistanceIntensity3") ) ) {
-      deleteAttr ( $currentNode+".startDistanceIntensity3" );
-    }
-    if ( objExists( ($currentNode+".endDistanceIntensity3") ) ) {
-      deleteAttr ( $currentNode+".endDistanceIntensity3" );
-    }
+  string $currentNode, $nodes[] = `ls -lights -dag -sl`;
+  string $a, $attr[]=  {  "startDistanceIntensity1", 
+                          "endDistanceIntensity1", 
+                          "startDistanceIntensity2", 
+                          "endDistanceIntensity2", 
+                          "startDistanceIntensity3",
+                          "endDistanceIntensity3" };
+                          
+  for ( $currentNode in $nodes ) 
+    for ( $a in $attr ) 
+      if ( `attributeQuery -node $currentNode -ex $a` ) 
+        deleteAttr ( $currentNode + "."+$a );
+}
+
+global proc liquidAddNoNormalizeNurbs()
+{
+  string $currentNode, $nodes[] = `ls -type nurbsSurface -dag -sl`;
+  
+  for ( $currentNode in $nodes ) 
+  {
+    if ( !objExists( ($currentNode+".noNormalizeNurbs") ) ) 
+      addAttr -ln "noNormalizeNurbs" -at bool $currentNode;
+    setAttr ($currentNode+".noNormalizeNurbs") 1;
   }
 }
+
 //trim curve -------------------------------------------------
 global proc liquidCreateTrimCurveAttribute()
 {
@@ -1994,6 +1794,5 @@ global proc liquidDeleteProceduralAttributes()
     }
   }
 }
-
 
 

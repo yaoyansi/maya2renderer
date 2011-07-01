@@ -3356,6 +3356,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\mel\liquid_FE.mel"
+				>
+			</File>
+			<File
 				RelativePath="..\..\mel\liquidAttachParams.mel"
 				>
 			</File>

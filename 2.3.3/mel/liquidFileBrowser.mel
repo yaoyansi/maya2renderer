@@ -420,7 +420,10 @@ global proc liquidFileBrowserWindow( string $path, string $filemask, string $cal
 
   global string $gLiquidFileBrowserWindowDirectory;
   global string $gLiquidFileBrowserWindowFileMask;
-  $gLiquidFileBrowserWindowDirectory = substitute("/$", $path, "");
+  if( $gLiquidFileBrowserWindowDirectory == "" )
+  {
+	  $gLiquidFileBrowserWindowDirectory = substitute("/$", $path, "");
+  }
   $gLiquidFileBrowserWindowFileMask = $filemask;
 
   // add the bookmarks menu

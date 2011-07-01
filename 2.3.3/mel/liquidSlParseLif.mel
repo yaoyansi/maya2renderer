@@ -36,310 +36,803 @@
 //      is stored in the following global variables later
 //      used by the various liquidSl* routines:
 //
-//          global string $gLiquidSlShaderType;
-//          global int    $gLiquidSlNumParams;
-//          global string $gLiquidSlParamNames[];
-//          global string $gLiquidSlParamTypes[];
-//          global string $gLiquidSlParamDefaults[];
-//          global int    $gLiquidSlParamArraySizes[];
-//          global int    $gLiquidSlParamGuiOrder[];
-//          global string $gLiquidSlParamGuiLabel[];
-//          global string $gLiquidSlParamGuiDescription[];
-//          global string $gLiquidSlParamGuiType[];
-//          global string $gLiquidSlParamGuiRange[];
+//          global string   $gLiquidSlShaderType;
+//          global int      $gLiquidSlNumParams;
+//          global string   $gLiquidSlParamNames[];
+//          global string   $gLiquidSlParamTypes[];
+//          global string   $gLiquidSlParamDefaults[];
+//          global int      $gLiquidSlParamArraySizes[];
+//          global int      $gLiquidSlParamGuiOrder[];
+//          global string   $gLiquidSlParamGuiLabel[];
+//          global string   $gLiquidSlParamGuiDescription[];
+//          global string   $gLiquidSlParamGuiType[];
+//          global string   $gLiquidSlParamGuiRange[];
+//          global int      $gLiquidSlParamGuiState[];
 source xxliquidutility.mel;
+// global utilities
+// also used by liquidLifWidgets.mel
 
-//
+// Collapsed by default
+global proc int liquidLifCollapse(int $state)
+{
+	return ($state / 8);
+}
+// Visible by default
+global proc int liquidLifVisible(int $state)
+{
+	return (($state % 8) / 4);
+}
+// Enabled by default
+global proc int liquidLifEnable(int $state)
+{
+	return (($state % 4) / 2);
+}
+// Not Keyable by default
+global proc int liquidLifKeyable(int $state)
+{
+	return ($state % 2);
+}
+
 // local procs
-//
+
+// changed the channelBox Lif parameter to a more
+// generic "state" that contains flags for various UI modifiers
+// they're set and used as binary flags on the parameter int
+// Suports flags :
+// Bit 3	0:	open
+//			1:	closed == collapsed		8
+// Bit 2	0:	hidden
+//			1:	visible					4
+// Bit 1	0:	disabled
+// 			1:	enabled					2
+// Bit 0	0:	unkeyable
+//			1:	keyable					1
+proc int setState(int $state, string $flag)
+{
+	liqlog("setState(...)");
+	switch ($flag) {
+		case "open" :
+			$state =  ((0 * 8) + ($state % 8));
+			break;
+		case "closed":
+		case "collapsed":
+			$state = ((1 * 8) + ($state % 8));
+			break;
+		case "visible":
+			$state = (($state / 8) * 8 + (1 * 4) + ($state % 4));
+			break;
+		case "hidden":
+			$state = (($state / 8) * 8 + (0 * 4) + ($state % 4));
+			break;
+		case "enabled":
+			$state = (($state / 4) * 4 + (1 * 2) + ($state % 2));
+			break;
+		case "disabled":
+			$state = (($state / 4) * 4 + (0 * 2) + ($state % 2));
+			break;
+		case "keyable":
+			$state = (($state / 2) * 2 + 1);
+			break;
+		case "unkeyable":
+			$state = (($state / 2) * 2 + 0);
+			break;
+		default:
+			error ("[liquidSlParse.setState] unkown flag "+$flag);	
+			break;	
+	}
+	
+	return $state;
+}
+
+// Default is collapsed, visible, enabled but not keyable
+proc int defaultState()
+{
+	return 14;
+}
 
 
 /**
  *  \return the next line in the currently open file.
- *  \note lines MUST end with a semi-colon ( ; ).
+ *  Simplified as parsing stores consolidated lines now
  */
-global proc string getNextLine()
+proc string getNextLine()
 {
-	liqlog("getNextLine()");
-  global string $gLiquidSLifFile[];
-  global int $gLifLineNumber;
+	//liqlog("getNextLine()");
+	global string $gLiquidSLifFile[];
+	global int $gLifLineNumber;
 
-  string $line = "";
-  while ( ! gmatch( $line, "*;") && $gLifLineNumber <= size( $gLiquidSLifFile )  ) {
-    string $buf = ( strip( $gLiquidSLifFile[$gLifLineNumber] ) );
-    if ( ! gmatch( $buf, "#*") ) $line += (" "+$buf);
-    $gLifLineNumber++;
-  }
+	return $gLiquidSLifFile[$gLifLineNumber++];
+}
 
-  return strip($line);
+/**
+ *  \return the index of the lif param of given name.
+ */
+proc int getParamIndex( string $name )
+{
+	//liqlog("getParamIndex(...)");
+ 	global int    $gLiquidSlNumParams;
+	global string $gLiquidSlParamNames[];
+
+	// find the matching index in $gLiquidSlParamNames
+	int $index = 0;
+	for ($index = 0; $index < $gLiquidSlNumParams; $index++) {
+		if ( $gLiquidSlParamNames[$index] == $name ) {
+			return $index;
+		}
+	}
+	return -1;
+
 }
 
 
 /**
- *  simple boolean test.
- *  \note blank lines are either "" or starting with #
- */
-proc int lineIsBlank( string $line )
-{
-	liqlog("lineIsBlank(...)");
-  if ( $line == "" || gmatch( $line, "#*") ) return 1;
-  return 0;
-}
-
-
-/**
- *  \return the index of the lif param in the shader param list.
- */
-proc int getParamIndex( string $line )
-{
-	liqlog("getParamIndex(...)");
-  global int    $gLiquidSlNumParams;
-  global string $gLiquidSlParamNames[];
-  int $i = -1;
-
-  // extract the name in quotes
-  string $name = match("\".+\"", $line );
-
-  // eliminate quotes
-  $name = substitute("\"", $name, "" );
-  $name = substitute("\"", $name, "" );
-
-  // find the matching index in $gLiquidSlParamNames
-  int $index = 0;
-  while( $gLiquidSlParamNames[$index] != $name && $index < $gLiquidSlNumParams ) $index++;
-
-  // error checking : unknown shader param
-  if ( $index == size( $gLiquidSlParamNames ) ) {
-    liquidSlInfoReset();
-    error ("liquidSlParseLif: unknown shader param on line :\n\""+$line+"\"\n");
-  }
-
-  return $index;
-}
-
-
-/**
- *  \return the lif keyword in the line.
+ *  \return the lif keyword and associated values in the line.
  *  \note some error checking to avoid malformed lif files.
  */
-global proc string[] getKeyData( string $line )
+
+proc string[] getKeyData( string $line )
 {
 	liqlog("getKeyData(...)");
-  //trace $line;
-  string $tmp = $line;
-  string $result[];
-  string $buf[];
+	// get everything in that line, must start with an statement keyword
+	string $tmp = strip($line);
+  
+	// tokenize keywords, strings and values,
+	// what is enclosed in brackets or quotes is returned as found
+	// Valid keywords (to extend lif) are of the form :
+	// [a-zA-Z_][a-zA-Z0-9_]+
+	int		$complete	= 0;
+	string	$tok		= "";
+	int		$nt			= 0;
+	int		$nc			= size($tmp);	
+	int		$st			= 0;
+	string $tokens[];
 
-  tokenize (substring($line, 1, size($line)-1)) " " $buf;
-
-  int $keyCount = 0;
-  int $instring = 0;
-  int $i = 0;
-
-  for ( $b in $buf ) {
-
-    if ( gmatch( $b, "\"*" ) ) {
-      $result[$i] = substitute( "\"", $b, "" );
-      $instring = 1;
-      if ( gmatch( $result[$i], "*\"" ) ) {
-        $result[$i] = substitute( "\"", $result[$i], "" );
-        $instring = 0;
-        $i++;
-      }
-      continue;
-    }
-
-    if ( gmatch( $b, "*\"" ) ) {
-      $b = substitute( "\"", $b, "" );
-      $result[$i] = ( $result[$i] + " " + $b );
-      $instring = 0;
-      $i++;
-      continue;
-    }
-
-    if ( $instring ) $result[$i] = ( $result[$i] + " " + $b );
-    else $keyCount++;
-
-    if ( $keyCount > 1 ) error("badly formed lif ( missing semi-colon ): \""+$line+"\"");
-
-  }
-
-  return $result;
+	while ($nc) {
+		if ( $st = size($tok = match ("^[a-zA-Z_][a-zA-Z0-9_]*", $tmp)) ) {
+			// we possibly found a keyword, it's later that it is checked whether it is a known one
+			$tokens[$nt++] = $tok;
+		} else if ( $st = size($tok = match ("^[\"][^\"]*[\"]", $tmp)) ) {		// CORRECT THIS. it doesn't support nested strings
+			// we found a string
+			$tokens[$nt++] = $tok;		
+		} else if ( $st = size($tok = match ("^[\(].*[\)]", $tmp)) ) {
+			// we found a parenthesis enclosed value
+			$tokens[$nt++] = $tok;
+		} else if ( $st = size($tok = match ("^[\[].*[\]]", $tmp)) ) {
+			// we found a bracket enclosed value
+			$tokens[$nt++] = $tok;	
+		} else if ( $st = size($tok = match ("^[\-\.+e0-9]+", $tmp)) ) {
+			// we found a float, check later if it's valid or not
+			$tokens[$nt++] = $tok;
+		} else {
+			// parsing error
+			$st = 0;
+    	}
+		// strip $tmp of parsed part and continue
+    	if ($st == 0) {
+			$complete = 0;
+			break;
+		} else if ($st == $nc) {
+			$complete = 1;
+			break;
+		} else {
+			$tmp = strip(substring($tmp, $st+1, $nc));
+			$nc = size($tmp);
+		}
+	}
+	
+	// Check how parsing went
+	if ($complete) {
+		//trace ("[liquidSlParseLif.getKeyData] successfully tokenized line: "+$line+" into "+stringArrayToString($tokens, "|"));
+	} else {
+		//trace ("[liquidSlParseLif.getKeyData] error while parsing part:\n>"+$tmp+"<\nof line:\n>"+$line+"<\n");
+		error("[liquidSlParseLif.getKeyData] error while parsing part:\n>"+$tmp+"<\nof line:\n>"+$line+"<\n");
+ 	}
+ 
+	return $tokens;
 }
 
 
-/**
- *  \return the lif range in the line.
- *  \todo make more efficient using maya7 regexps
- */
-proc string getRange( string $line )
+// Tries to parse a single argument into a valid [a-zA-Z_][a-zA-Z0-9_]* keyword,
+// shoud not be quote enclosed. Raises an error in case of failure.
+proc string getKeyword (string $arg)
 {
-	liqlog("getRange(...)");
-  // get everything between square brackets
-  string $tmp = match("\\[.+\\]", $line);
-  $tmp = strip( substring( $tmp , 2 , size($tmp)-1 ) );
-
-  // strip potential leading spaces/tabs
-  $tmp = `substitute "^[ \t]*" $tmp ""`;
-
-  // tokenize based on space
-  string $tokens[] = stringToStringArray( $tmp, " ");
-
-  $tmp = "";
-
-  // repack using | as a separator ##### COULD BE MORE EFFICIENT !!!
-  for ( $i=0; $i<size( $tokens ); $i += 2 ) {
-    if ( size( match("\"", $tokens[$i] ) ) ) {
-      $tmp += ($tokens[$i]+" ");
-      $i++;
-      while( ! size( match("\"", $tokens[$i] ) ) ) {
-        $tmp += ($tokens[$i]+" ");
-        $i++;
-      }
-      $tmp += ($tokens[$i]+"|"+$tokens[$i+1]+"|");
-    } else {
-      $tmp += ($tokens[$i]+"|"+$tokens[$i+1]+"|");
-    }
-  }
-  $tmp = substituteAllString( $tmp, "\"", "");
-
-  return substring($tmp, 1, size($tmp)-1);
+	liqlog("getKeyword(...)");
+	string $result = "";
+	
+	if ( $arg == match ("^[a-zA-Z_][a-zA-Z0-9_]*$", $arg) ) {
+		$result = $arg;			
+	} else {
+		// This will probably never be seen, just raise to raise the catchQuiet in getArgs
+		error ("[liquidSlParseLif.getKeyword] failed to parse "+$arg);
+	}
+	
+	return $result;
 }
 
+// Tries to parse a single argument into a string, expects it to be quote enclosed
+// and unquotes it. Raises an error in case of failure
+proc string getString (string $arg)
+{
+	liqlog("getString("+$arg+")");
+	string $result = "";
+	
+	if ( $arg == match ("^[\"][^\"]*[\"]$", $arg) ) {
+		// remove the quotes, possibly resulting in an empty but valid string
+		if (size($arg) > 2) {
+			$result = substring($arg, 2, size($arg)-1);
+		} else {
+			$result = "";
+		}			
+	} else {
+		// This will probably never be seen, just raise to raise the catchQuiet in getArgs
+		error ("[liquidSlParseLif.getString] failed to parse "+$arg);
+	}
+	
+	return $result;
+}
 
-proc int getBoolean( string $line )
+// Lax version that takes the same pattern than a keyword, with or without quotes
+proc string getName (string $arg)
+{
+	liqlog("getName(...)");
+	string $result = "";
+	
+	if ( $arg == match ("^[a-zA-Z_][a-zA-Z0-9_]*$", $arg) ) {
+		return $arg;			
+	} else if ( $arg == match ("^[\"][^\"]*[\"]$", $arg) ) {
+		if (size($arg) > 2) {
+			string $tmp = substring($arg, 2, size($arg)-1);
+			if ( $tmp == match ("^[a-zA-Z_][a-zA-Z0-9_]*$", $tmp) ) {
+				return $tmp;						
+			}
+		}
+	}
+
+	error ("[liquidSlParseLif.getName] failed to parse "+$arg);
+
+}
+
+// Same for matrices, using the MEL float array representation
+// as we probably don't want to do math with it, just do a setAttr
+// with it's values
+proc float[] getFloatMatrix (string $arg)
+{
+	liqlog("getFloatMatrix(...)");
+	float $result[];
+	
+	if ( catchQuiet($result = liquidSlStringToFloatMatrix($arg)) ) {
+		// This will probably never be seen, just raise to raise the catchQuiet in getArgs
+		error ("[liquidSlParseLif.getFloatMatrix] failed to parse "+$arg);
+	}
+	
+	return $result;
+}
+
+// Vector syntax is lax as long as there are 3 valid float elements
+// can be space or comma separated, enclosed in some kind of brackets or not
+// it is always output as 3 space separated floats that can be used in a setAttr
+proc vector getVector (string $arg)
+{
+	liqlog("getVector(...)");
+	vector $result;
+	
+	if ( catchQuiet($result = liquidSlStringToVector($arg)) ) {
+		// This will probably never be seen, just raise to raise the catchQuiet in getArgs
+		error ("[liquidSlParseLif.getVector] failed to parse "+$arg);
+	}
+	
+	return $result;
+}
+
+// Tries to parse a single argument into an float, raises an error in case of failure
+// liquidSlValidFloatString also check for values that would cause an overflow
+// catchQuiet doesn't work so well when casting strings to ints or floats (no always quiet)
+proc float getFloat (string $arg)
+{
+	liqlog("getFloat(...)");
+	float $result = 0;
+	
+	if ( liquidSlValidFloatString($arg) ) {
+		$result = float($arg);
+	} else {
+		// This will probably never be seen, just raise to raise the catchQuiet in getArgs
+		error ("[liquidSlParseLif.getFloat] failed to parse "+$arg);
+	}
+	
+	return $result;
+}
+
+// Tries to parse a single argument into an int, raises an error in case of failure
+// liquidSlValidIntString also check for values that would cause an overflow
+// catchQuiet doesn't work so well when casting strings to ints or floats (no always quiet)
+proc int getInt (string $arg)
+{
+	liqlog("getInt(...)");
+	int $result = 0;
+	
+	if ( liquidSlValidIntString($arg) ) {
+		$result = int($arg);
+	} else {
+		// This will probably never be seen, just raise to raise the catchQuiet in getArgs
+		error ("[liquidSlParseLif.getInt] failed to parse "+$arg);
+	}
+	
+	return $result;
+}
+
+// Tries to parse a single argument into a Boolean, raises an error in case of failure
+proc int getBoolean (string $arg)
 {
 	liqlog("getBoolean(...)");
-  int $result = -1;
+	int $result = 0;
+	
+	float $f;
+	if ( ($arg == match("[Tt]rue", $arg)) || ($arg == match("[Oo]n", $arg)) ) {
+		$result = 1;
+	} else if ( ($arg == match("[Ff]alse", $arg)) || ($arg == match("[Oo]ff", $arg)) ) {
+		$result = 0;
+	} else if (!catchQuiet($f = $arg)) {
+		$result = (($f > 0) ? 1 : 0);
+	} else {
+		// This will probably never be seen, just raise to raise the catchQuiet in getArgs
+		error ("[liquidSlParseLif.getBoolean] failed to parse "+$arg);
+	}
+	
+	return $result;
+}
 
-  if ( size( match("\"*[Tt]rue\"*", $line) ) ) return 1;
-  if ( size( match("\"*[Ff]alse\"*", $line) ) ) return 0;
-  if ( size( match("\"*[Oo]n\"*", $line) ) ) return 1;
-  if ( size( match("\"*[Oo]ff\"*", $line) ) ) return 0;
+// Not much type checking done here but could be made more strict
+// for the new selectors that support all kinds of attributes
+// float, vector, color lists could be parsed with strictier type checking
+proc string getRange (string $arg)
+{
+	liqlog("getRange(...)");
+	string $result = "";
+	string $tokens[];
+	int $nt = 0;
 
-  return $result;
+	
+	// get everything between square brackets
+	string $tmp = match("\\[.+\\]", $arg);
+	if (size($tmp) > 2) {
+		$tmp = strip( substring( $tmp , 2 , size($tmp)-1 ) );
+		// for now can just use getKeyData to parse it
+		if ( !catchQuiet($tokens = getKeyData( $tmp )) ) {
+			$nt = size($tokens);
+			string $tok;
+			int $t = 0;
+			for($t=0; $t<$nt; $t++) {
+				if ( !catchQuiet($tok = getString($tokens[$t])) ) {
+					$tokens[$t] = $tok;
+				}
+			}
+			$result = stringArrayToString($tokens,"|");
+			//trace ("[getRange] for "+$arg+" got: "+$result);
+			return $result;
+ 		}
+ 	}
+
+ 	error ("[liquidSlParseLif.getRange] failed to parse "+$arg);
+}
+
+// Read the requested number of typed arguments (can be optional if a defaults are provided) 
+// from the arguments, handles default values, and pushes any error on provided error stack to return to caller
+// TODO : a handler for named arguments with "name" value or -name value couples
+proc string[] getArgs( int $requested, string $type, string $args[], string $defaults[], string $errors[])
+{
+	liqlog("getArgs(...)");
+	int $na			= size($args);
+	int $nd			= size($defaults);
+	int $ne			= size($errors);
+	int $nr			= 0;
+	int $ni			= 0;
+	string $results[];	
+	string $invalids[];
+	
+	//trace ("[liquidSlParseLif.getArgs] for "+$requested+" args of type "+$type+" on "+stringArrayToString($args, " "));	
+	
+	// -1 means take all there is, and at least one is expect
+	// 0 means take all there is and none is acceptable
+	int $nb;
+	if ($requested > 0) {
+		$nb = $requested;	
+	} else {
+		$nb = $na;
+	}
+	int $a = 0;
+	int $d = 0;
+	while ( ($nr < $nb) && (($a < $na) || ($d < $nd)) ) {
+		if ($a < $na) {
+			string $arg = $args[$a++];
+			int $test = $nr;
+			switch ($type) {
+				case "boolean":
+					int $b;
+					if (!catchQuiet($b = getBoolean ($arg))) {
+						$results[$nr++] = $b;
+					}
+					break;	
+				case "int":
+					int $i;
+					if (!catchQuiet($i = getInt ($arg))) {
+						$results[$nr++] = $i;
+					}
+					break;										
+				case "float":
+					float $f;
+					if (!catchQuiet($f = getFloat ($arg))) {
+						$results[$nr++] = $f;
+					}
+					break;	
+				case "vector":
+					vector $v;
+					if (!catchQuiet($v = getVector ($arg))) {
+						$results[$nr++] = $v;
+					}
+					break;
+				case "matrix":
+					float $fm[];
+					if (!catchQuiet($fm = getFloatMatrix ($arg))) {
+						$results[$nr++] = liquidSlfloatMatrixToString($fm);
+					}
+					break;																				
+				case "string":
+					// must be quote enclosed
+					string $s;
+					if (!catchQuiet($s = getString ($arg))) {
+						$results[$nr++] = $s;
+					}
+					break;
+				case "keyword":
+					// not quote enclosed, of the form [a-zA-Z_][a-zA-Z0-9_]+
+					string $s;
+					if (!catchQuiet($s = getKeyword ($arg))) {
+						$results[$nr++] = $s;
+					}
+					break;
+				case "name":
+					// lax version that will take keywords with or without quotes
+					string $s;
+					if (!catchQuiet($s = getName ($arg))) {
+						$results[$nr++] = $s;
+					}
+					break;											
+				case "range":
+					string $r;
+					if (!catchQuiet($r = getRange ($arg))) {
+						$results[$nr++] = $r;
+					}
+					break;					
+				default :
+					error ("[liquidSlParseLif.getArgs] unkown requested argument type: "+$type);
+					break;										
+			}
+			// Failure to parse
+			if ($test == $nr) {
+				$invalids[$ni++] = $arg;
+				if ($d < $nd) {
+					$results[$nr++] = $defaults[$d++];
+				}
+			}
+		} else if ($d < $nd) {
+			$results[$nr++] = $defaults[$d++];
+		}	  
+	}
+	
+	// Error report
+	if ($a < $na) {                
+		$errors[$ne++] = ("only requests "+$nb+" "+$type+" argument(s), rest were ignored");
+	}
+	if ($ni) {	
+		$errors[$ne++] = ("found "+$ni+" invalid "+$type+" arguments: "+stringArrayToString($invalids, " "));
+	}
+	if ( ($nr == 0) && ($requested == -1) ) {
+		// was called with $nb = -1 but no arguments at all were found
+		$errors[$ne++] = ("needs at least a valid "+$type+" argument");
+	} else if ($nr < $requested) {                
+		$errors[$ne++] = ("needs "+$nb+" "+$type+" valid argument(s), found "+$nr);
+	}
+
+	//trace ("[liquidSlParseLif.getArgs] got: "+$nr+" results and reported "+$ne+" errors: "+stringArrayToString($results, " "));	
+	
+  	return $results;
+}
+
+// TODO : More specific slider range proc that looks for a float range
+proc string getSliderRange( string $args[], string $defaults[], string $errors[])
+{
+	liqlog("getSliderRange(...)");
+	int $na			= size($args);
+	int $nd			= size($defaults);
+	int $ne			= size($errors);
+	int $nr			= 0;
+	int $ni			= 0;
+	string $invalids[];
+	
+	string $result = "";
+	string $tokens[];
+	int $nt = 0;
+	
+	// get everything between square brackets
+	/*
+	string $tmp = match("\\[.+\\]", $arg);
+	if (size($tmp) > 2) {
+		$tmp = strip( substring( $tmp , 2 , size($tmp)-1 ) );
+		// for now can just use getKeyData to parse it
+		if ( !catchQuiet($tokens = getKeyData( $tmp )) ) {
+			for ($tok in $tokens) {
+				// conform it to make sure it is some useable type
+				liquidSlConformStrings (string $type, string $strings[])
+			$result = stringArrayToString($tokens,"|");
+			return $result;
+ 		}
+ 	}
+ 	*/
+	
+	// getFloat (string $arg)
+	return "";
 }
 
 
+// TODO: Generic range with type checking, works for sliders (float ranges),
+// selectors (list of string - value couple), using the attribute value
+proc string getSelectorRange( int $nb, string $type, string $args[], string $defaults[], string $errors[])
+{
+	liqlog("getSelectorRange(...)");
+	// liquidSlConformStrings (string $type, string $strings[])
 
+	int $na			= size($args);
+	int $nd			= size($defaults);
+	int $ne			= size($errors);
+	int $nr			= 0;
+	int $ni			= 0;
+	string $invalids[];
+	
+	string $result = "";
+	string $tokens[];
+	int $nt = 0;
+	
+	/*
+	// get everything between square brackets
+	string $tmp = match("\\[.+\\]", $arg);
+	if (size($tmp) > 2) {
+		$tmp = strip( substring( $tmp , 2 , size($tmp)-1 ) );
+		// for now can just use getKeyData to parse it
+		if ( !catchQuiet($tokens = getKeyData( $tmp )) ) {
+			for ($tok in $tokens) {
+				// conform it to make sure it is some useable type
+				liquidSlConformStrings (string $type, string $strings[])
+			$result = stringArrayToString($tokens,"|");
+			return $result;
+ 		}
+ 	}
+ 	*/
+ 	
+ 	// error ("[liquidSlParseLif.getRange] failed to parse "+$arg);
+ 	
+ 	return $result;
+} 
 
-//
-// global procs
-//
+// Parse the arguments for a list of state flags
+proc string[] getStateFlags(string $args[], string $errors[])
+{
+	liqlog("getStateFlags(...)");
+	string	$results[];
+	int		$nr			= 0;
+	
+	string	$flags[]	= getArgs(-1, "name", $args, {}, $errors);
+	int		$ne			= size($errors);
+	
+	string	$flag;
+	for ($flag in $flags) {
+		switch ($flag) {
+			case "open" :
+			case "closed":
+			case "collapsed":
+			case "visible":
+			case "hidden":
+			case "enabled":
+			case "disabled":
+			case "keyable":
+			case "unkeyable":
+				$results[$nr++] = $flag;
+				break;
+			default :
+				$errors[$ne++] = ($flag+" is not a valid state flag, ignored");
+				break;
+		}
+	}
+	
+	return $results;
+}
+
+// Get valid UI type names from the arguments	
+proc string[] getTypeNames(string $args[], string $errors[])
+{
+	liqlog("getTypeNames(...)");
+	string	$results[];
+	int		$nr			= 0;
+	
+	string	$types[]	= getArgs(-1, "name", $args, {}, $errors);
+	int		$ne			= size($errors);
+	
+	string	$type;
+	for ($type in $types) {
+		switch ($type) {
+			case "field" :
+			case "slider":
+			case "bool"	:
+			case "checkbox" :			// synonym to bool
+			case "radio" :				// TODO 
+			case "selector":
+			case "spline" :				// TODO 
+			case "ramp" :				// TODO 
+			case "floatspline" :		// TODO  check current code
+			case "colorspline" :		// TODO  check current code
+			case "color" :				// TODO maybe some extra ideas
+			case "group" :				// TODO, actual method is using the group keyword
+			case "list" :				// TODO for ordered arrays. Also todo grouplists
+			case "texture" :
+			case "shadow" :
+			case "coordsys" :
+			case "shader" :				// TODO
+				$results[$nr++] = $type;
+				break;
+			default :
+				$errors[$ne++] = ($type+" is not a valid UI type, ignored");
+				break;
+		}
+	}
+	
+	return $results;
+}
+
 
 global proc liquidSlReadLifFromDisk( string $shaderFile )
 {
 	liqlog("liquidSlReadLifFromDisk(...)");
-  global string $gLiquidSLifFile[];
+	global string $gLiquidSLifFile[];
 
-  float $st = `timerX`;
+	float $st = `timerX`;
 
-  clear $gLiquidSLifFile;
-  int $i = 0;
-  string $a;
+	clear $gLiquidSLifFile;
+	int $i = 0;
+	// TODO : remove when done
+	int $safeguard = 0;
+	string $read, $store;
+	string $line = "";
+	string $cline = "";
 
-  $file = fopen( $shaderFile, "r" );
-  while ( !feof( $file ) ) {
-    $a = strip(fgetline( $file ));
-    if ($a!="" && $a != "desc \"\";" ) $gLiquidSLifFile[$i++] = $a;
-  }
-  fclose( $file );
-
-  //trace ("[liquidSlReadLifFromDisk] "+`timerX -st $st`+" sec.");
+ 	$file = fopen( $shaderFile, "r" );
+	// $file2 = fopen( ($shaderFile+".debug"), "w" );
+	while ( !feof($file) && ($safeguard < 400) ) {
+		// since ; was chosen as delimiter we could consolidate lines until next ;
+		$safeguard += 1;
+		while ( !size($cline) && !feof($file) && ($safeguard < 400) ) {
+			// skip empty lines and comments
+			$read = strip(match("^[^#]+", fgetline( $file )));
+			if (size($read)) {		
+				$line += ( " "+substring($read, 1, size($read)) );
+				$cline = match("^[^;]+;", $line);
+				$line = substitute("^[^;]*;", $line, "");  
+			}
+			$safeguard += 1;
+		}
+		while ( size($cline) && ($safeguard < 400)  ) {	
+			// Found a terminated line
+			$store = strip(substring($cline, 1, size($cline)-1));
+			if (size($store)) {
+				$gLiquidSLifFile[$i++] = $store;
+				// fprint($file2, ($store+"\n"));
+			}
+			$cline = match("^[^;]+;", $line);
+			$line = substitute("^[^;]*;", $line, "");  
+			$safeguard += 1;		 
+		}	
+ 	}
+	fclose( $file );
+	// fclose( $file2 );
+	
+	if ($line != "") {
+		error("[liquidSlReadLifFromDisk] unterminated line:\n"+$line);
+	}
+ 	//trace ("[liquidSlReadLifFromDisk] "+$shaderFile+", "+$i+" lines, in "+`timerX -st $st`+" sec.");
 }
 
 global proc liquidSlBuildLifCmdList()
 {
 	liqlog("liquidSlBuildLifCmdList(...)");
-  float $st = `timerX`;
+	float $st = `timerX`;
 
-  global string $gLiquidSlShaderFile;
-  global string $gLifCmdList[];
+	global string $gLiquidSlShaderFile;
+	global string $gLifCmdList[];
 
-  clear $gLifCmdList;
+	clear $gLifCmdList;
 
-  string $shaderType = liquidSlShaderType();
+	string $shaderType = liquidSlShaderType();
 
-  int $groupDepth = 0;
-  int $groupNumber = 0;
+	int $groupDepth = 0;
+	int $groupNumber = 0;
 
-  int $i = 0;
-  int $guiSize = ( liquidLifGuiSize() )? liquidLifGuiSize() : liquidSlNumParams();
+	int $i = 0;
+	int $guiSize = ( liquidLifGuiSize() )? liquidLifGuiSize() : liquidSlNumParams();
 
-  // get the output filter mask from the liquidGlobals.
-  int $filterOutputParams = `getAttr liquidGlobals.shadersIgnoreOutputParams`;
-  string $outputFilter = strip( `getAttr liquidGlobals.shadersOutputParamsFilter` );
-  if ( $outputFilter == "" ) $outputFilter = "^_*";
+	// get the output filter mask from the liquidGlobals.
+	int $filterOutputParams = `getAttr liquidGlobals.shadersIgnoreOutputParams`;
+	string $outputFilter = strip( `getAttr liquidGlobals.shadersOutputParamsFilter` );
+	if ( $outputFilter == "" ) $outputFilter = "^_*";
 
-  string $tmpList[];
+	string $tmpList[];
 	string $lifCmd;
+	
+	while ( $i < $guiSize ) {
+		string	$argType		= liquidLifParamType($i);
 
-  while ( $i < $guiSize ) {
+		string	$argSubType		= liquidLifParamGuiType($i);
+		int		$argArrayLen		= liquidLifParamArraySize($i);
+		string	$label          = liquidLifParamLabel($i);
+		string	$paramName		= liquidLifParamName($i);  
+		string  $range[]		= liquidLifParamGuiRange( $i );
+		string  $description	= liquidLifParamDescription( $i );       
+		int		$state			= liquidLifState( $i );
+		int $isArray = ($argArrayLen >= 0);
+		string $arrayNotation = ($argArrayLen > 0) ? ("["+$argArrayLen+"]") : (($argArrayLen == 0) ? "[]" : "");
+		//trace ("[liquidSlBuildLifCmdList] for param: "+$argType+" ("+$argSubType+") "+$paramName+$arrayNotation+" "+$label);
 
-    string $argType     = liquidLifParamType($i);
+		int $isOutput = ( $filterOutputParams && liquidLifParamIsOutput($i) && match( $outputFilter, $paramName) == "" );
+    
+		if ($isOutput) {
+			//trace ("Lif skip output: "+$paramName+" ( \""+$outputFilter+"\" )");
+		} else {
+			switch( $argType ) {	
+				case "group":
+					$lifCmd = ( "liquidAE_LifGrp( \""+$label+"\", "+$state+" );" );
+					//trace ("\t[liquidSlBuildLifCmdList] group: "+$lifCmd);
+					$gLifCmdList[ $i ] = $lifCmd ;
+					break;
+		
+				case "float":
+					$lifCmd = ( "liquidAE_LifFloat( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$state+" );");
+					//trace ("\t[liquidSlBuildLifCmdList] float: "+$lifCmd);
+					$gLifCmdList[$i] = $lifCmd;
+					break;
+		
+				case "string":
+					$lifCmd = ("liquidAE_LifString( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$state+" );");
+					//trace ("\t[liquidSlBuildLifCmdList] string: "+$lifCmd);
+					$gLifCmdList[$i] = $lifCmd;
+					break;
+		
+				case "shader":
+					$lifCmd = ("liquidAE_LifShader( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$state+" );");
+					//trace ("\t[liquidSlBuildLifCmdList] shader: "+$lifCmd);
+					$gLifCmdList[$i] = $lifCmd;
+					break;
+		
+				case "color":
+					$lifCmd = ( "liquidAE_LifColor( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$state+" );");
+					//trace ("\t[liquidSlBuildLifCmdList] color: "+$lifCmd);
+					$gLifCmdList[$i] = $lifCmd;
+					break;
+		
+				case "point":
+				case "vector":
+				case "normal":
+					$lifCmd = ( "liquidAE_LifVector( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$state+" );");
+					//trace ("\t[liquidSlBuildLifCmdList] point, vector, normal: "+$lifCmd);
+					$gLifCmdList[$i] = $lifCmd;
+					break;
+					
+				default:
+					warning ("[liquidSlBuildLifCmdList] >\""+$argType+"\" not handled yet !");
+					break;
+			}
+		}
+    
+	$i++;
+	}
 
-    string $argSubType  = liquidLifParamGuiType($i);
-    int    $argArrayLen = liquidLifParamArraySize($i);
-    string $label       = liquidLifParamLabel($i);
-    string $paramName   = liquidLifParamName($i);
-    int    $channelBox  = liquidLifChannelBoxState( $i );
-    string $range[]     = liquidLifParamGuiRange( $i );
-    string $description = liquidLifParamDescription( $i );
-
-    //trace ($paramName);
-
-    switch( $argType ) {
-
-      case "group":
-        if ( !gmatch( $label, "end+") ) {
-          $gLifCmdList[ $i ] = ( "liquidAE_LifGrp2( \""+$label+"\" );" );
-        } else {
-          $gLifCmdList[ $i ]  = ( "liquidAE_LifGrp2( \""+$label+"\" );" );
-        }
-        break;
-
-      case "float":
-        if ( $filterOutputParams && liquidLifParamIsOutput($i) && match( $outputFilter, $paramName) == "" ) {
-          //trace ("Lif skip : "+$paramName+" ( \""+$outputFilter+"\" )");
-        } else $gLifCmdList[$i] = ( "liquidAE_LifFloat2( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$channelBox+" );");
-        break;
-
-      case "string":
-        if ( $filterOutputParams && liquidLifParamIsOutput($i) && match( $outputFilter, $paramName) == "" ) {
-          //trace ("Lif skip : "+$paramName+" ( \""+$outputFilter+"\" )");
-        } else $gLifCmdList[$i] = ("liquidAE_LifString2( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$channelBox+" );");
-        break;
-	  
-	  case "shader":
-		if( $filterOutputParams && liquidLifParamIsOutput($i) && match( $outputFilter, $paramName) == ""){
-			trace ("Lif skip : "+$paramName+" ( \""+$outputFilter+"\" )");
-		}else $gLifCmdList[$i] = ("liquidAE_LifShader( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$channelBox+" );");
-		break;
-
-      case "color":
-        if ( $filterOutputParams && liquidLifParamIsOutput($i) && match( $outputFilter, $paramName) == "" ) {
-          //trace ("Lif skip : "+$paramName+" ( \""+$outputFilter+"\" )");
-        } else $gLifCmdList[$i] = ( "liquidAE_LifColor2( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$channelBox+" );");
-        break;
-
-      case "point":
-      case "vector":
-      case "normal":
-        if ( $filterOutputParams && liquidLifParamIsOutput($i) && match( $outputFilter, $paramName) == "" ) {
-          //trace ("Lif skip : "+$paramName+" ( \""+$outputFilter+"\" )");
-        } else $gLifCmdList[$i] = ( "liquidAE_LifVector2( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$channelBox+" );");
-        break;
-
-      default:
-        print ("    > \""+$argType+"\" not handled yet !\n");
-        break;
-    }
-
-    $i++;
-  }
-
-  //trace ( "[liquidSlBuildLifCmdList] " +`timerX -st $st`+" sec.");
-
+	//trace ( "[liquidSlBuildLifCmdList] " +`timerX -st $st`+" sec.");
 
 }
 
@@ -350,149 +843,406 @@ global proc liquidSlBuildLifCmdList()
  */
 global proc liquidSlParseLif( string $shaderFile )
 {
-	liqlog("liquidSlParseLif(...)");
-  // init globals
-  global string $gLiquidSLifFile[];
+	liqlog("liquidSlParseLif("+$shaderFile+")");
+    // init globals
+    global string	$gLiquidSLifFile[];
 
-  global string $gLiquidSlShaderType;
-  global int    $gLiquidSlNumParams;
-  global string $gLiquidSlParamNames[];
-  global string $gLiquidSlParamTypes[];
-  global string $gLiquidSlParamDefaults[];
-  global int    $gLiquidSlParamArraySizes[];
+    global string	$gLiquidSlShaderName;
+    global string	$gLiquidSlShaderType;
+    global int		$gLiquidSlNumParams;
+    global string	$gLiquidSlParamNames[];
+    global string	$gLiquidSlParamTypes[];
+    global string	$gLiquidSlParamDefaults[];
+    global int		$gLiquidSlParamArraySizes[];
 
-  global int    $gLiquidSlParamGuiOrder[];
-  global string $gLiquidSlParamGuiLabel[];
-  global string $gLiquidSlParamGuiDescription[];
-  global string $gLiquidSlParamGuiType[];
-  global string $gLiquidSlParamGuiRange[];
-  global int    $gLiquidSlParamGuiChannelBox[];
-  global string $gLiquidSlLifShaderDescription;
-  global int    $gLiquidSlLifGuiSize;
-  global int    $gLiquidSlLifExists;
+    global int		$gLiquidSlParamGuiOrder[];
+    global string	$gLiquidSlParamGuiLabel[];
+    global string	$gLiquidSlParamGuiDescription[];
+    global string	$gLiquidSlParamGuiType[];
+    global string	$gLiquidSlParamGuiRange[];
+    global int		$gLiquidSlParamGuiState[];     
+    
+    global string	$gLiquidSlLifShaderDescription;
+    global int		$gLiquidSlLifGuiSize;
+    global int		$gLiquidSlLifExists;
 
-  clear $gLiquidSlParamGuiOrder;
-  clear $gLiquidSlParamGuiLabel;
-  clear $gLiquidSlParamGuiDescription;
-  clear $gLiquidSlParamGuiType;
-  clear $gLiquidSlParamGuiRange;
-  clear $gLiquidSlParamGuiChannelBox;
+    clear $gLiquidSlParamGuiOrder;
+    clear $gLiquidSlParamGuiLabel;
+    clear $gLiquidSlParamGuiDescription;
+    clear $gLiquidSlParamGuiType;
+    clear $gLiquidSlParamGuiRange;
+    clear $gLiquidSlParamGuiState;
 
-  $gLiquidSlLifExists = 0;
-  $gLiquidSlLifGuiSize = 0;
-  $gLiquidSlLifShaderDescription = "";
-  $gLiquidSlParamGuiLabel = $gLiquidSlParamNames;
-  $gLiquidSlParamGuiType = $gLiquidSlParamTypes;
+    $gLiquidSlLifExists = 0;
+    $gLiquidSlLifGuiSize = 0;
+    $gLiquidSlLifShaderDescription = "";
+    $gLiquidSlParamGuiLabel = $gLiquidSlParamNames;
+    $gLiquidSlParamGuiType = $gLiquidSlParamTypes;
 
+    // get the lif file name
+    string $lifFile = substitute("[a-zA-Z]{3}$", $shaderFile, "lif" );
 
-  // get the lif file name
-  string $lifFile = substitute("[a-zA-Z]{3}$", $shaderFile, "lif" );
-
-  // check its existence
-  // and mark the existence of the lif file
-  if ( ! `filetest -r $lifFile` ) {
-    liquidSlBuildLifCmdList();
-    liqTrace ( "no lif file for shader: " + $shaderFile );
-    return;
-  } else {
-    $gLiquidSlLifExists = 1;
-  }
-
-  // Open file
-  liquidSlReadLifFromDisk( $lifFile );
-
-  // start timer
-  $timer = `timerX`;
-
-  // init parsing var
-  int $paramNum = 0;
-  int $i = -1;
-  int $shaderDescription = 0;
-  global int $gLifLineNumber;
-  $gLifLineNumber = 0;
-  string $line = getNextLine();
-  int $numLines = size( $gLiquidSLifFile );
-
-  // start parsing
-    while ( $gLifLineNumber <= $numLines ) {
-
-    string $key = match("^[\ta-z]+", $line);
-    $key = `substituteAllString $key "\t" ""`;
-
-      switch( $key ) {
-	//case "shader":
-      case "surface":
-      case "displacement":
-      case "light":
-      case "volume":
-        $shaderDescription = 1;
-        break;
-
-      case "param":
-        $i++;
-        $paramNum = getParamIndex( $line );
-        $gLiquidSlParamGuiOrder[ $i ] = $paramNum;
-        $gLiquidSlParamGuiChannelBox[ $paramNum ] = -1;
-        $shaderDescription = 0;
-        break;
-
-      case "name":
-        string $tmpN[] = getKeyData( $line );
-        $gLiquidSlParamGuiLabel[ $paramNum ] = $tmpN[0];
-        break;
-
-      case "desc":
-        string $tmpD[] = getKeyData( $line );
-        if ( $shaderDescription ) $gLiquidSlLifShaderDescription = $tmpD[0];
-        else $gLiquidSlParamGuiDescription[ $paramNum ] = $tmpD[0];
-        break;
-
-      case "type":
-        string $tmpT[] = getKeyData( $line );
-        if ( $tmpT[0] != "" ) $gLiquidSlParamGuiType[ $paramNum ] = $tmpT[0];
-        break;
-
-      case "range":
-        $gLiquidSlParamGuiRange[ $paramNum ] = getRange( $line );
-        break;
-
-      case "channelbox":
-        $gLiquidSlParamGuiChannelBox[ $paramNum ] = getBoolean( $line );
-        break;
-
-      case "group":
-        $i++;
-        string $tmpG[] = getKeyData( $line );
-
-        // update order
-        $paramNum = size( $gLiquidSlParamGuiLabel );
-        $gLiquidSlParamGuiOrder[ $i ] = $paramNum;
-
-        // -+ means end of group, otherwise name of group plus state (+/-)
-        string $label = $tmpG[0];
-        string $state = "+";
-
-        if ( size($tmpG) > 1 && size( match("[Cc]lose", $tmpG[1] ) ) ) $state = "-";
-        if ( size($tmpG) > 1 && size( match("[Oo]pen", $tmpG[1] ) ) ) $state = "+";
-
-        $gLiquidSlParamGuiLabel[ $paramNum ] = ($label+$state);
-        $gLiquidSlParamGuiType[ $paramNum ] = "group";
-        break;
-
-      default:
-        warning ("unknown key : "+$key+" in \""+$lifFile+"\"\n   > \""+$line+"\"\n");
-        break;
+    // check its existence
+    // and mark the existence of the lif file
+    if ( ! `filetest -r $lifFile` ) {
+        liquidSlBuildLifCmdList();
+        //trace ( "[liquidSlParseLif] no lif file for shader: " + $shaderFile );
+        return;
+    } else {
+        $gLiquidSlLifExists = 1;
     }
 
-    // get next line
-    $line = getNextLine();
-  }
+    // Open file
+    liquidSlReadLifFromDisk( $lifFile );
 
-  $gLiquidSlLifGuiSize = size( $gLiquidSlParamGuiOrder );
+    // start timer
+    $timer = `timerX`;
 
-  liquidSlBuildLifCmdList();
+    // init parsing var
 
-  //trace ("[liquidSlParseLif] "+`timerX -st $timer`+" sec.");
+    int $counter = -1;
+    int $currentParamIndex = -1;
+    string $currentParamName = "";
+    string $currentParamType = "";
+    string $currentParamUI = "";
+    string $parseState = "start";
+
+    global int $gLifLineNumber;
+    $gLifLineNumber = 0;
+    
+    string $line = getNextLine();
+    int $numLines = size( $gLiquidSLifFile );
+    string $groupStack[];
+    int $ng = 0;
+
+	string $lineErrors[];
+
+	int $k = 0;
+    // start parsing
+    while (	($parseState != "abort") && ($gLifLineNumber <= $numLines) && ($k<200) ) {
+		//trace ("[liquidSlParseLif] in parse state "+$parseState+" parsing line: "+substitute("\n",$line,""));
+		$k += 1;
+
+		clear $lineErrors;
+		
+		// Tokenize line
+        string $keyData[];
+        clear $keyData;
+        $keyData = getKeyData($line);
+        /*
+        if ( catch($keyData = getKeyData($line)) || (size($keyData) == 0) ) {
+			$lineErrors[size($lineErrors)] = ("could not parse line, skipping");
+			//trace ("[liquidSlParseLif] skipping line: "+substitute("\n",$line,""));
+			$line = getNextLine();
+        	continue;
+        }
+        */
+        // keyword must come first
+		// to skip line advance when needed
+		int $backtrack = 0;
+        string $key = $keyData[0];
+        string $args[];
+        clear $args;
+        string $vargs[];
+        clear $vargs;        
+        int $na = size($keyData) - 1;
+        for($i=0; $i<$na; $i++) {
+        	$args[$i] = $keyData[$i+1];
+        }
+		//trace ("[liquidSlParseLif] keyword [["+$key+"]], arguments: "+stringArrayToString($args, " "));
+
+		switch ($parseState) {
+			// Top of file
+        	case "start":
+				switch( $key ) {        	
+					case "shader":
+					case "surface":
+					case "displacement":
+					case "light":
+					case "volume":
+						$vargs = getArgs( 1, "string", $args, {}, $lineErrors);
+						string $shader = $vargs[0];
+						//trace ("[liquidSlParseLif] found shader name: "+$shader);
+		                // Check it's indeed the shader name we except
+		                if ($shader == $gLiquidSlShaderName) {
+		                	$parseState = "shaderDescription";
+		                } else {
+		                	$lineErrors[size($lineErrors)] = ("incorrect shader name \""+$shader+"\" doesn't match current parsed shader \""+$gLiquidSlShaderName+"\"");				
+							$parseState = "abort";
+						}
+	            		break;
+	            	default:
+	            		$lineErrors[size($lineErrors)] = "Lif file should start with shader description";
+	            		$parseState = "abort";
+	            		break;
+				}
+				// to next line
+				break;
+			// Once shader has been declared, optionnal shader description
+			// and parameters declarations
+			case "shaderDescription":
+        		switch( $key ) {
+        			case "description":			
+					case "desc":
+						$vargs = getArgs( 1, "string", $args, {" "}, $lineErrors);
+						string $desc = stringArrayToString($vargs, " ");
+                		$gLiquidSlLifShaderDescription  = $desc;
+                		break;
+		            case "group":
+		                $counter++;
+		                // update order
+		                $currentParamIndex = size( $gLiquidSlParamGuiLabel );
+		                $gLiquidSlParamGuiOrder[ $counter ] = $currentParamIndex;
+		
+						$vargs = getArgs( 1, "string", $args, {("group"+$ng)}, $lineErrors);
+		                string $label = strip(stringArrayToString($vargs, " "));
+		                
+		                $currentParamName = "";
+		                $gLiquidSlParamGuiLabel[ $currentParamIndex ] = $label;
+		                $gLiquidSlParamGuiType[ $currentParamIndex ] = "group";
+		                $gLiquidSlParamGuiState[ $currentParamIndex ] = defaultState();
+		                $groupStack[$ng++] = $currentParamIndex;
+		                // Distinguish between group and actual parameter description state
+		                $parseState = "groupDescription";		                
+		            break;	
+		            case "end":
+		                if ($ng) {
+		                    $counter++;
+			                // update order
+			                $currentParamIndex = size( $gLiquidSlParamGuiLabel );
+			                $gLiquidSlParamGuiOrder[ $counter ] = $currentParamIndex;
+			
+		                    string $group = $groupStack[$ng - 1];
+		                    $vargs = getArgs( 1, "string", $args, {""}, $lineErrors);
+			                string $label = strip(stringArrayToString($vargs, " "));
+			                if ( ($label != "") && ($label != $group) ) {
+		                		$lineErrors[size($lineErrors)] = ("mismatched end label \""+$label+"\", last open group is \""+$group+"\"");
+			                }
+			
+							$currentParamName = "";
+			                $gLiquidSlParamGuiLabel[ $currentParamIndex ] = "end";
+			                $gLiquidSlParamGuiType[ $currentParamIndex ] = "group";
+			                $gLiquidSlParamGuiState[ $currentParamIndex ] = defaultState();
+			                
+			                stringArrayRemoveAtIndex($ng - 1, $groupStack);
+			                $ng -= 1;
+			                // Nothing to describe on an end statement, it's not a real parameter
+			                $parseState = "shaderDescription";		                
+						} else {
+							$lineErrors[size($lineErrors)] = ("no currently open group, ignoring end statement");
+						}
+						break;
+		            case "param":
+		            	$vargs = getArgs( 1, "name", $args, {}, $lineErrors);
+		                string $name = $vargs[0];
+						if ($name != "") {
+							int $ind = getParamIndex( $name );
+							if ($ind >= 0) {
+								$counter++;
+								$currentParamIndex = $ind;
+								$currentParamName = $name;
+		                		$gLiquidSlParamGuiOrder[ $counter ] = $currentParamIndex;
+		                		$gLiquidSlParamGuiState[ $currentParamIndex ] = defaultState();
+		                		// Default ui label is parameter name if none is defined in description
+		                		$gLiquidSlParamGuiLabel[ $currentParamIndex ] = $currentParamName; 
+		                		$currentParamType = $gLiquidSlParamTypes[ $currentParamIndex ];       		
+		                		$parseState = "parameterDescription";
+		                	}
+						} else {
+			               $lineErrors[size($lineErrors)] = ("no parameter name provided, ignoring statement");
+			           	}
+		                break;
+					case "shader":
+					case "surface":
+					case "displacement":
+					case "light":
+					case "volume":
+                		$lineErrors[size($lineErrors)] = ("shader declaration should appear once and only once, at top of Lif file, ignored");
+	                	break;
+	                case "name":
+	                case "type":
+	                case "range":
+	                case "collapse" :
+	                case "visible":	
+					case "enable":
+                	case "keyable":	 
+                		$lineErrors[size($lineErrors)] = ("is only valid in a group or parameter description, after a group or parameter has been declared");
+	                	break;                	               						                                		
+					default :
+                		$lineErrors[size($lineErrors)] = ("is not a known Lif keyword in this context");
+	                	break;
+				}
+				// to next line
+				break;
+			case "groupDescription":	
+        		switch( $key ) {
+        			// When we meet that, we're back to a new parameter declaration
+     				case "group":
+     				case "end":
+     				case "param":
+     					// Back to shader description state for a new parameter
+                		$parseState = "shaderDescription";
+                		$backtrack = 1;
+						$currentParamType = "";
+						$currentParamUI = "";                		
+                		break;
+                	// UI label to display
+                	case "label":
+					case "name":
+						$vargs = getArgs( -1, "string", $args, {}, $lineErrors);
+                		string $uiName = strip(stringArrayToString($vargs, " "));    
+						if ($uiName != "") {             		
+                			$gLiquidSlParamGuiLabel[ $currentParamIndex ] = $uiName;
+                		} else {
+			               $lineErrors[size($lineErrors)] = ("no UI name provided, ignoring statement");
+			           	}
+                		break;
+					case "desc":
+						$vargs = getArgs( 1, "string", $args, {""}, $lineErrors);
+						string $desc = strip(stringArrayToString($vargs, " "));    
+                		$gLiquidSlParamGuiDescription[ $currentParamIndex ] = $desc;
+                		break;
+                	// Some UI state indicators
+					case "state" :
+						string $flags[] = getStateFlags($args, $lineErrors);
+						if (size($flags)) {
+							string $flag;
+							int $state = $gLiquidSlParamGuiState[ $currentParamIndex ];
+							for ($flag in $flags) {
+                				$state = setState($state, $flag);
+                			}
+                			$gLiquidSlParamGuiState[ $currentParamIndex ] = $state;
+                		} else {
+                			$lineErrors[size($lineErrors)] = ("need a list of UI states like \"visible\", \"hidden\", etc.");
+                		}
+                		break;
+					case "type" :
+					case "range" :                		 
+                		$lineErrors[size($lineErrors)] = ("invalid in a group description, ignored");
+	                	break;     
+					case "shader":
+					case "surface":
+					case "displacement":
+					case "light":
+					case "volume":
+                		$lineErrors[size($lineErrors)] = ("shader declaration should appear once and only once, at top of Lif file, ignored");
+	                	break;                		                 	                	                                
+					default :
+                		$lineErrors[size($lineErrors)] = ("is not a known Lif keyword in this context");
+	                	break;
+				}	// End of keyword switch for state groupeDescription				
+			case "parameterDescription":
+        		switch( $key ) {
+        			// When we meet that, we're back to a new parameter declaration
+     				case "group":
+     				case "end":
+     				case "param":
+     					// Back to shader description state for a new parameter
+                		$parseState = "shaderDescription";
+                		$backtrack = 1;
+						$currentParamType = "";
+						$currentParamUI = "";                		
+                		break;
+                	// UI label to display
+                	case "label":
+					case "name":
+						// can provide more than one, | separated
+						$vargs = getArgs( -1, "string", $args, {}, $lineErrors);
+                		string $label = strip(stringArrayToString($vargs, "|"));  
+						if ($label != "") {             		
+                			$gLiquidSlParamGuiLabel[ $currentParamIndex ] = $label;
+                		} else {
+			               $lineErrors[size($lineErrors)] = ("no UI name provided, ignoring statement");
+			           	}
+                		break;
+					case "desc":
+						$vargs = getArgs( 1, "string", $args, {""}, $lineErrors);
+						string $desc = strip(stringArrayToString($vargs, " ")); 
+                		$gLiquidSlParamGuiDescription[ $currentParamIndex ] = $desc; 
+                		break;
+					case "type":
+						$vargs = getTypeNames($args, $lineErrors);
+                		string $type = $vargs[0];
+						if ($type != "") {             		
+                			$gLiquidSlParamGuiType[ $currentParamIndex ] = $type;
+                			$currentParamUI = $type;
+                		} else {
+			               $lineErrors[size($lineErrors)] = ("no UI type provided, ignoring statement");
+			           	}
+                		break;
+					case "range":
+					    if ($currentParamUI != "") {
+					    	// TODO : replace with type getRange function, using $currentParamUI and $currentParamType
+					    	$vargs = getArgs( 1, "range", $args, {}, $lineErrors);
+							string $range = $vargs[0];
+							if ($range != "") {
+                				$gLiquidSlParamGuiRange[ $currentParamIndex ] = $range;
+                			} else {
+			               		$lineErrors[size($lineErrors)] = ("no range provided, ignoring statement");
+			           		}			    	
+					    } else {
+					    	$lineErrors[size($lineErrors)] = ("cannot interpret range if UI is unkown, try using \"type\" before \"range\", ignoring statement");
+					    }
+                		break;
+                	// Some UI state indicators
+					case "state" :
+						string $flags[] = getStateFlags($args, $lineErrors);
+						if (size($flags)) {
+							string $flag;
+							int $state = $gLiquidSlParamGuiState[ $currentParamIndex ];
+							for ($flag in $flags) {
+                				$state = setState($state, $flag);
+                			}
+                			$gLiquidSlParamGuiState[ $currentParamIndex ] = $state;
+                		} else {
+                			$lineErrors[size($lineErrors)] = ("need a list of UI states like \"visible\", \"hidden\", etc.");
+                		}
+                		break;
+					case "shader":
+					case "surface":
+					case "displacement":
+					case "light":
+					case "volume":
+                		$lineErrors[size($lineErrors)] = ("shader declaration should appear once and only once, at top of Lif file, ignored");
+	                	break;                		                 	                	                                
+					default :
+                		$lineErrors[size($lineErrors)] = ("is not a known Lif keyword in this context");
+	                	break;
+				}	// End of keyword switch for state parameterDescription
+				break;
+			default :
+				error ("[liquidSlParseLif] unexpected unknown Lif parser state, aborting");
+				$parseState = "abort";
+				break;
+		}	// End of parser state switch
+                
+		// Display the errors for this line
+		int $ne = size($lineErrors);
+		if ($ne) {
+			for ($e=0; $e<min($ne, 20); $e++) {
+				warning ("[liquidSlParseLif] "+$key+": "+$lineErrors[$e]);
+				//trace ("[liquidSlParseLif] "+$key+": "+$lineErrors[$e]);
+			}	
+			warning ($ne+" errors in \""+$lifFile+"\" ("+$parseState+")\n"+$gLifLineNumber+":>"+$line+"<");
+			//trace ($ne+" errors in \""+$lifFile+"\" ("+$parseState+")\n"+$gLifLineNumber+":>"+$line+"<");
+		}
+        // get next line unless it's a backtrack
+        if ($backtrack) {
+        	$backtrack = 0;
+        } else {
+        	$line = getNextLine();
+        }
+    }
+
+    if (size($groupStack)) {
+        warning ("[liquidSlParseLif] group \""+$groupStack[size($groupStack)-1]+"\" has no matching end statement in \""+$lifFile+"\"");
+    }
+    
+    $gLiquidSlLifGuiSize = size( $gLiquidSlParamGuiOrder );
+
+    liquidSlBuildLifCmdList();
+    
+    //trace ("[liquidSlParseLif] "+`timerX -st $timer`+" sec.");
 }
 
 
@@ -510,7 +1260,7 @@ global proc liquidSlParseLif( string $shaderFile )
  */
 global proc int liquidLifIsAvailable()
 {
-	liqlog("liquidLifIsAvailable(...)");
+	//liqlog("liquidLifIsAvailable(...)");
   global int    $gLiquidSlLifExists;
   return $gLiquidSlLifExists;
 }
@@ -542,7 +1292,7 @@ global proc int liquidLifGetGuiOrder( int $i )
 
 global proc string liquidLifShaderDescription()
 {
-	liqlog("liquidLifShaderDescription()");
+	liqlog("liquidLifShaderDescription(...)");
   global string $gLiquidSlLifShaderDescription;
   string $desc = eval("string $foo_S = \""+$gLiquidSlLifShaderDescription+"\"");
   return $desc;
@@ -718,23 +1468,34 @@ global proc int liquidLifParamArraySize( int $i )
   return liquidSlParamArraySize( $i );
 }
 
-global proc int liquidLifChannelBoxState( int $i )
+global proc int liquidLifVisibleState( int $i )
 {
-	liqlog("liquidLifChannelBoxState(...)");
-  int $result = 1;
-
-  if ( liquidLifIsAvailable() ) {
-
-    int $guiOrder = liquidLifGetGuiOrder($i);
-    if ( $guiOrder >= liquidSlNumParams() ) return 0;
-
-    global int    $gLiquidSlParamGuiChannelBox[];
-    $result = abs( $gLiquidSlParamGuiChannelBox[ $guiOrder ] );
-  }
-
-  return $result;
+  return liquidLifVisible(liquidLifState( $i ));
 }
 
+global proc int liquidLifEnableState( int $i )
+{
+  return liquidLifEnable(liquidLifState( $i ));
+}
+
+global proc int liquidLifKeyableState( int $i )
+{
+  return liquidLifKeyable(liquidLifState( $i ));
+}
+
+global proc int liquidLifState( int $i )
+{
+	global int $gLiquidSlParamGuiState[];
+	int $result = defaultState();
+
+ 	if ( liquidLifIsAvailable() ) {
+
+		int $guiOrder = liquidLifGetGuiOrder($i);
+		$result = $gLiquidSlParamGuiState[ $guiOrder ];  
+	}
+
+	return $result;
+}
 
 //
 // debuging utility
@@ -764,39 +1525,41 @@ proc string format( string $str, int $len )
  */
 global proc gdump()
 {
-	liqlog("gdump(...)");
-  if ( `filetest -w "/tmp/gdump.txt"` ) sysFile -delete "/tmp/gdump.txt";
+	liqlog("gdump()");
+    if ( `filetest -w "/tmp/gdump.txt"` ) sysFile -delete "/tmp/gdump.txt";
 
-  global string $gLiquidSlShaderType;
-  global int    $gLiquidSlNumParams;
-  global string $gLiquidSlParamNames[];
-  global string $gLiquidSlParamTypes[];
-  global string $gLiquidSlParamDefaults[];
-  global int    $gLiquidSlParamArraySizes[];
-  global int    $gLiquidSlParamGuiOrder[];
-  global string $gLiquidSlParamGuiLabel[];
-  global string $gLiquidSlParamGuiDescription[];
-  global string $gLiquidSlParamGuiType[];
-  global string $gLiquidSlParamGuiRange[];
-  global int    $gLiquidSlLifExists;
+    global string   $gLiquidSlShaderType;
+    global int      $gLiquidSlNumParams;
+    global string   $gLiquidSlParamNames[];
+    global string   $gLiquidSlParamTypes[];
+    global string   $gLiquidSlParamDefaults[];
+    global int      $gLiquidSlParamArraySizes[];
+    global int      $gLiquidSlParamGuiOrder[];
+    global string   $gLiquidSlParamGuiLabel[];
+    global string   $gLiquidSlParamGuiDescription[];
+    global string   $gLiquidSlParamGuiType[];
+    global string   $gLiquidSlParamGuiRange[];
+    global int      $gLiquidSlParamGuiState[];  
+    global int      $gLiquidSlLifExists;
 
-  int $fh = `fopen "/tmp/gdump.txt" "w"`;
+    int $fh = `fopen "/tmp/gdump.txt" "w"`;
 
+    for ( $i=0; $i<size( $gLiquidSlParamGuiOrder ); $i++ ) {
 
-  for ( $i=0; $i<size( $gLiquidSlParamGuiOrder ); $i++ ) {
+        string $ii = format( $i, 3);
+        string $index  = format( $gLiquidSlParamGuiOrder[$i], 3);
 
-    string $ii = format( $i, 3);
-    string $index  = format( $gLiquidSlParamGuiOrder[$i], 3);
+        int $j = $gLiquidSlParamGuiOrder[$i];
+        string $name   = format( $gLiquidSlParamGuiLabel[$j], 16 );
+        string $type   = format( $gLiquidSlParamGuiType[$j], 10 );
+        string $range  = format( $gLiquidSlParamGuiRange[$j], 30 );
+		string $state  = format( $gLiquidSlParamGuiDescription[$j], 4 );        
+        string $desc   = format( $gLiquidSlParamGuiDescription[$j], 60 );
 
-    int $j = $gLiquidSlParamGuiOrder[$i];
-    string $name   = format( $gLiquidSlParamGuiLabel[$j], 16 );
-    string $type   = format( $gLiquidSlParamGuiType[$j], 10 );
-    string $range  = format( $gLiquidSlParamGuiRange[$j], 30 );
-    string $desc   = format( $gLiquidSlParamGuiDescription[$j], 60 );
+        fprint $fh ( strip( $ii+" "+$index+" "+$name+" "+$type+" "+$range+" "+$state+" "+$desc )+"\n" );
+    }
 
-    fprint $fh ( strip( $ii+" "+$index+" "+$name+" "+$type+" "+$range+" "+$desc )+"\n" );
-  }
-
-  fclose $fh;
-  trace ("gdump : DONE\n");
+    fclose $fh;
+    //trace ("gdump : DONE\n");
 }
+

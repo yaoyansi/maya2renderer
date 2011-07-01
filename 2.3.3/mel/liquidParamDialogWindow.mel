@@ -90,11 +90,13 @@ global proc liquidChangeTextFileAttrPlus ( string $selectedObj, string $argName,
   string $MapDir = ($currentAttrValue == "" || liquidGetModifiersState() == "Shift" )? $defaultPath : (dirname($currentAttrValue));
 
   // we might have a relative path
-  if ( !gmatch( $MapDir, "/*") ) $MapDir = ( `workspace -q -rd` + $MapDir);
+  if ( !gmatch( $MapDir, "/*") ) 
+	$MapDir = ( `workspace -q -rd` + $MapDir);
 
   if( $MapDir != "" ) {
     if ( `filetest -d $MapDir` ) {
-      if ( `match "[^\/]$" $MapDir` != "" ) $MapDir += "/";
+      if ( `match "[^\/]$" $MapDir` != "" ) 
+		$MapDir += "/";
     }
   }
 
@@ -114,7 +116,7 @@ global proc int liquidChangeTextFileAttrPlusCB ( string $selectedObj, string $ar
 {
 	liqlog("liquidChangeTextFileAttrPlusCB(...)");
   if ( $filename != "" ) {
-
+  	$filename = `workspace -projectPath $filename`; // get relative name if possible
 	string $currentDir = `workspace -q -dir`;
     retainWorkingDirectory ($currentDir);
 
@@ -125,10 +127,12 @@ global proc int liquidChangeTextFileAttrPlusCB ( string $selectedObj, string $ar
       }
     }
 
-    if ( `textFieldGrp -q -ex $fieldName` ) textFieldGrp -e -text $filename $fieldName;
+    if ( `textFieldGrp -q -ex $fieldName` ) 
+		textFieldGrp -e -text $filename $fieldName;
     setAttr ( $selectedObj + "." + $argName ) -type "string" $filename;
 
-    if ( $argName == "rmanShaderLong" ) eval("liquidShaderNodes_initParams( \""+$selectedObj+"\" );");
+    if ( $argName == "rmanShaderLong" ) 
+		eval("liquidShaderNodes_initParams( \""+$selectedObj+"\" );");
   }
   return true;
 }
@@ -209,16 +213,23 @@ global proc liquidParamAU( string $selectedObj )
 global proc liquidFluidBuildLifFile( string $longShaderName )
 {
 	liqlog("liquidFluidBuildLifFile(...)");
+  $longShaderName = `workspace -expandName $longShaderName`; // get absolute name from relative
+  
+  print ("[liquidFluidBuildLifFile] $longShaderName = " + $longShaderName + "\n");
+  
   string $longLifName = substitute( "\\..+$", $longShaderName, ".lif" );
   string $shortShaderName = basenameEx( $longShaderName );
 
-  if ( !`filetest -d (dirname($longLifName))` ) error ("Directory \""+(dirname($longLifName))+"\" does not exist !");
+  if ( !`filetest -d (dirname($longLifName))` ) 
+	error ("Directory \""+(dirname($longLifName))+"\" does not exist !");
 
   string $desc = "desc \"\";\n";
 
-  int $fileHdl = `fopen $longLifName "w"`;
-
+  liquidSlSetShader( $longShaderName );
   string $shadertype = liquidSlShaderType();
+  
+  int $fileHdl = `fopen $longLifName "w"`;
+  
   string $lower_stype = `tolower $shadertype`;
   $lower_stype = ($lower_stype == "disp")? "displacement":$lower_stype;
 
@@ -248,6 +259,7 @@ global proc liquidFluidEditLifFile( string $selectedObj )
 {
 	liqlog("liquidFluidEditLifFile(...)");
   string $longShaderName = `getAttr ( $selectedObj + ".rmanShaderLong" )`;
+  $longShaderName = `workspace -expandName $longShaderName`; // get absolute name from relative
   string $longLifName = substitute( "\\..+$", $longShaderName, ".lif" );
   string $shortShaderName = basenameEx( $longShaderName );
 
@@ -255,17 +267,21 @@ global proc liquidFluidEditLifFile( string $selectedObj )
     string $answer = `confirmDialog -title "No Matching LIF File" -message ("Could not find a lif file for "+$shortShaderName+".\nDo you want to create one ?")
                                     -button "Yes" -button "No" -defaultButton "Yes"
                                     -cancelButton "No" -dismissString "No"`;
-    if ( $answer == "Yes" ) liquidFluidBuildLifFile( $longShaderName );
-    else return;
+    if ( $answer == "Yes" ) 
+		liquidFluidBuildLifFile( $longShaderName );
+    else
+		return;
   }
 
   string $os = `about -os`;
 
   switch( $os ) {
     case "linux":
+    case "linux64":
     case "irix":
       string $editor =  getenv( "EDITOR" );
-      if ( $editor == "" ) $editor = "nedit";
+      if ( $editor == "" ) 
+		$editor = "nedit";
       system( ($editor+" "+$longLifName+" &") );
       break;
     case "mac":

@@ -69,28 +69,37 @@ proc liquidSl_setShaderName( string $token )
 proc string liquidSl_getShaderType( int $fid )
 {
 	liqlog("liquidSl_getShaderType(...)");
-    string $type = "";
-
-    // The first word on the first non-empty
-    // line is the shader type.
-
-    string $tokens[];
-    string $tokensquote[];
-    string $line = `fgetline $fid`;
-    while ( ! `feof $fid` )
+  string $type = "";
+  // The first word on the first non-empty
+  // line is the shader type.
+  string $tokens[];
+  string $tokensquote[];
+  string $line = `fgetline $fid`;
+  // brute workaround for windooze "UNC paths are not supported" error if shader name starts with network path
+  if ( `about -win` && startsWith( $line, "\'\\\\") ) 
+  {
+    int $i = 0;
+    while ( $i++ < 3) 
     {
-        clear( $tokens );
-        tokenize $line "\"" $tokensquote;
-        tokenize $line $tokens;
-        $type = $tokens[0];
-        if ( $type != "" ) {
-          liquidSl_setShaderName( $tokensquote[1] );
-          break;
-        }
-        $line = `fgetline $fid`;
+      $line = `fgetline $fid`;
+      print ( ":: skipped " + $line + "\n");
     }
-
-    return $type;
+  }
+  while ( ! `feof $fid` )
+  {
+    print ( ":: " + $line + "\n");
+    clear( $tokens );
+    tokenize $line "\"" $tokensquote;
+    tokenize $line $tokens;
+    $type = $tokens[0];
+    if ( $type != "" ) 
+    {
+      liquidSl_setShaderName( $tokensquote[1] );
+      break;
+    }
+    $line = `fgetline $fid`;
+  }
+  return $type;
 }
 
 proc string liquidSl_getParamName( string $line )
@@ -399,7 +408,8 @@ global proc liquidSlParseSlo( string $sloFile )
 
     $gLiquidSlNumMethods = size($gLiquidSlMethods);
 
-    if ($shaderType == "shader" ) {
+    if ($shaderType == "shader" ) 
+	{
         if (stringArrayContains("surface", $gLiquidSlMethods)) {
             $shaderType = "surface";
         } else if (stringArrayContains("lighting", $gLiquidSlMethods)) {

@@ -48,7 +48,7 @@ global int $liq_inspInCompMode;
 
 global proc liquidSubdivInspector( ) {
 	liqlog("liquidSubdivInspector(...)");
-global string $liq_inspectorWin;
+	global string $liq_inspectorWin;
 
   if ( `window -exists $liq_inspectorWin` ) {
     deleteUI -window $liq_inspectorWin;

@@ -235,12 +235,20 @@ global proc registerLiquidRenderer()
 global proc liquidAddTabs()
 {
 	liqlog("liquidAddTabs()");
-
-  renderer  -edit
-            -addGlobalsTab        "Liquid"
-                                  "liquidCreateGlobalsTab"
-                                  "liquidUpdateMayaGlobals"
-            liquid;
+  if ( `renderer -exists "liquid"`)
+  {
+    renderer -edit
+             -addGlobalsTab "Common"
+                            "createMayaSoftwareCommonGlobalsTab"
+                            "updateMayaSoftwareCommonGlobalsTab"
+             liquid;
+          
+    renderer -edit
+             -addGlobalsTab "Liquid"
+                            "liquidCreateGlobalsTab"
+                            "liquidUpdateMayaGlobals"
+             liquid;
+  }
 }
 
 global proc unregisterLiquidRenderer()
@@ -253,17 +261,5 @@ global proc unregisterLiquidRenderer()
   updateRendererUI();
 }
 
-// global proc replaceMayaBatchRenderProcedure(int $replace)
-// {	
-// 	liqlog("replaceMayaBatchRenderProcedure("+$replace+")");
-// 
-// 	if($replace){
-// 		//replace maya original mayaBatchRenderProcedure() function.
-// 		eval("source xxliquidmayaBatchRenderProcedure.mel;");
-// 	}else{
-// 		//use maya original mayaBatchRenderProcedure() function.
-// 		eval("source mayaBatchRenderProcedure.mel;");
-// 	}
-// }
 
 

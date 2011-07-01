@@ -70,6 +70,7 @@ global proc AEliquidShadowControls( string $node )
 
       editorTemplate -beginLayout "Deep Shadows" -collapse false;
         editorTemplate -label "Deep Shadows"          -addDynamicControl "deepShadows";
+        editorTemplate -label "Shadow Blur"           -addDynamicControl "liqShadowBlur";
         editorTemplate -label "Pixel Samples"         -addDynamicControl "pixelSamples";
         editorTemplate -label "Volume Interpretation" -addDynamicControl "volumeInterpretation";
       editorTemplate -endLayout;

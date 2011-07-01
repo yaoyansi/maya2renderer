@@ -372,9 +372,14 @@ global proc AEliquidInstanceFlags( string $node )
         editorTemplate -label "Group Name" -addDynamicControl "liqDelightSSGroupName";
         editorTemplate -label "Scattering" -addDynamicControl "liqDelightSSScattering";
         editorTemplate -label "Absorption" -addDynamicControl "liqDelightSSAbsorption";
+
+        editorTemplate -label "Reflectance(3delight)" -addDynamicControl "liqDelightSSReflectance";
+        editorTemplate -label "Meanfreepath(3delight)" -addDynamicControl "liqDelightSSMeanfreepath";
+        
         editorTemplate -label "Refraction Index" -addDynamicControl "liqDelightSSRefraction";
         editorTemplate -label "Scale (mm)" -addDynamicControl "liqDelightSSScale";
-
+        editorTemplate -label "Reference Camera(3delight)" -addDynamicControl "liqDelightSSReferenceCamera";
+        
       editorTemplate -endLayout;
     editorTemplate -endLayout;
 

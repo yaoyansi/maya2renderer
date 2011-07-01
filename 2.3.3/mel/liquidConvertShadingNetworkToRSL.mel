@@ -691,24 +691,25 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
   // Compile the shader with the current renderer's shader compiler
   string $shaderComp = `getAttr "liquidGlobals.shaderComp"`;
   string $shaderdirpath = $shaderdir;
-  if ( !gmatch( $shaderdir, "/*") && !gmatch( $shaderdir, "?:*") )
+  if ( !gmatch( $shaderdir, "/*") || !gmatch( $shaderdir, "?:*") )
     $shaderdirpath = ( workspace( "-q", "-rd" ) + $shaderdir );
   string $outSLO = $shaderFileName+".slo";
   trace  ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
   system ( $shaderComp + " -o "+ $outSLO +" " + $shaderFileName + ".sl" );
 
 // omitted by yaoyansi [2010-09-26]
-//   string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
-// 
-//   string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
-// 
-//   if ( $SLShaderNode == "" ) {
-//     string $shader = `liquidNewShaderNode ( $shaderFileName + "." + $shaderExt )`;
-//     liquidAssignShaderNode_old( $assingToNode, $shader );
-//   } else {
-//     setAttr -type "string" ($SLShaderNode+".rmanShaderLong")  ($shaderFileName+"."+$shaderExt);
-//     liquidShaderNodes_initParams( $SLShaderNode );
-//   }
+  //duran and mesh use this section(test needed), but xx will ommit this section.
+   string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
+ 
+   string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
+ 
+   if ( $SLShaderNode == "" ) {
+     string $shader = `liquidNewShaderNode ( $shaderFileName + "." + $shaderExt )`;
+     liquidAssignShaderNode_old( $assingToNode, $shader );
+   } else {
+     setAttr -type "string" ($SLShaderNode+".rmanShaderLong")  ($shaderFileName+"."+$shaderExt);
+     liquidShaderNodes_initParams( $SLShaderNode );
+   }
 }
 
 //--------------------------------------------------------------------
@@ -749,18 +750,4 @@ global proc liquidConvertShadingNetworkToRSL ()
     {
         convertShadingNetworkToRSL $node $node;
     }
-}
-
-global proc addChannel(string $type, string $rslName, string $mayaName, string $mayaNode)
-{
-	string $plug = ($mayaNode+"."+$mayaName);
-	string $plg[] = `listConnections -s 1 -d 0 $plug`;//where the connection come from?
-	
-	if( size($plg)>0 ){
-	  print(`nodeType  $plg[0]`+"\n");
-	  print("connected.\n");
-	}else{
-	  print(`getAttr -type $plug`);
-	}
-
 }

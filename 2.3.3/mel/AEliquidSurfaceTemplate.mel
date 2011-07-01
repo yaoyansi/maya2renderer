@@ -40,6 +40,7 @@ global proc AEliquidSurfaceTemplate( string $nodeName )
   editorTemplate -beginScrollLayout;
 
     editorTemplate -ccu ("liquidShaderPickerNew "+$nodeName) ("liquidShaderPickerReplace "+$nodeName) "rmanShaderLong";
+    editorTemplate -addControl "evaluateAtEveryFrame";
 
     editorTemplate -beginLayout "Preview";
       editorTemplate -addControl "previewPrimitive";

@@ -139,6 +139,22 @@ global proc liquidLoadScripts()
   }
 }
 
+global proc liquidMayaVersionOverwrite()
+{
+	liqlog("liquidMayaVersionOverwrite()");
+	global string $liq_maya_version;
+  
+  string $maya_version_str[] = stringToStringArray( `about -version`, " " );
+  $liq_maya_version = $maya_version_str[0];
+  
+  string $liquidHome = liquidGetHome();
+  
+  if ( $liq_maya_version == "2011" )
+  {	
+  	eval( "source \"" + $liquidHome + "/mel/2011/liquidParamDialogWindow.mel"  + "\"" );
+  } 
+  
+}
 
 global proc liquidAETemplateOverwrite()
 {
@@ -219,6 +235,14 @@ global proc liquidMenuPostRaytracingAttributes( string $prefix )
   if ( `menuItem -q -ex ($prefix+"LiquidMenuItemTransmissionHitMode")` )  menuItem -e -en $newStyle ($prefix+"LiquidMenuItemTransmissionHitMode");
 }
 
+global proc liquidMenuPostShadingAttributes( string $prefix )
+{
+	liqlog("liquidMenuPostShadingAttributes(...)");
+  int $newStyle = liquidGlobalsFeatureQuery( "AdvancedVisibility" );
+
+  if ( `menuItem -q -ex ($prefix+"LiquidMenuItemCameraHitMode")` )
+     menuItem -e -en $newStyle ($prefix+"LiquidMenuItemCameraHitMode");
+}
 global proc liquidMenuPostTrimCurveAttribute( string $prefix )
 {
 	liqlog("liquidMenuPostTrimCurveAttribute(...)");
@@ -243,7 +267,7 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
 	liqlog("liquidCreateObjectsAttributesMenu(...)");
   menuItem -label "Object Attributes" -subMenu true -tearOff true;
     menuItem -label "Create Shading Group" -command liquidCreateShadingAttributes -ann "Add Shading attributes to selected Transform node(s)";
-    menuItem -label "Shading Add" -subMenu true -tearOff true;
+    menuItem -label "Shading Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostShadingAttributes "+$prefix);
       menuItem -label "Shading Rate"          -command liquidCreateShadingRateAttribute;
       menuItem -label "Color"                 -command liquidCreateColorAttribute;
       menuItem -label "Opacity"               -command liquidCreateOpacityAttribute;
@@ -428,7 +452,8 @@ global proc liquidCreateMenus()
   string $iconPath = (liquidGetHome()+"/icons/");
 
   // keep it nice and clean
-  if ( `menu -exists liquidMainWindowMenu` ) deleteUI liquidMainWindowMenu;
+  if ( `menu -exists liquidMainWindowMenu` ) 
+	deleteUI liquidMainWindowMenu;
 
   if ( $gMainWindow != "" )
   {
@@ -463,6 +488,9 @@ global proc liquidCreateMenus()
         menuItem -c liquidSubdivStitchUI -ob true;
         menuItem -d true;
         menuItem -label "Subdivison Surface Inspector..." -command liquidSubdivInspector;
+      setParent -menu ..;
+      menuItem -label "Nurbs" -subMenu true -tearOff true;
+      	menuItem -label "Add noNormalizeNurbs attribute" -command liquidAddNoNormalizeNurbs -ann "Tag NURBS as NOT normalized";
       setParent -menu ..;
       menuItem -label "Curves" -subMenu true -tearOff true;
         menuItem -label "Tag as Render Curve" -command liquidMakeRenderCurve -ann "Tag selected NURBS curve(s) as renderable";
@@ -528,7 +556,7 @@ global proc liquidCreateMenus()
         menuItem -label "Export Selected as RIB Archive Without Shaders" -enable false -ann "Write a RIB file for selected object only without shaders";
       setParent -menu ..;
       menuItem -d true;
-      menuItem -label "Clear Liquid..." -ann "Remove all Liquid nodes from the current scene" -command liquidCleanup;
+      menuItem -label "Clear Liquid..." -ann "Remove all Liquid nodes from the current scene" -command "liquidCleanup( 1 )";
       menuItem -d true;
       menuItem -label "Liquid Light Linker" -ann "Use Liquids Set Light linking" -command LLL_lightCentricUI;
       menuItem -d true;
@@ -750,10 +778,11 @@ global proc liquidCleanUp()
 global proc liquidCreateScriptNode()
 {
 	liqlog("liquidCreateScriptNode(...)");
-  if ( !objExists( "liquidCleanUpNode" ) )  scriptNode  -scriptType     2
-                                                        -beforeScript   "if ( `whatIs liquid` == \"Command\" ) liquidCreateScriptNode;"
-                                                        -afterScript    "if ( `whatIs liquid` == \"Command\" ) liquidCleanUp;"
-                                                        -name           liquidCleanUpNode;
+  if ( !objExists( "liquidCleanUpNode" ) )  
+	scriptNode  -scriptType     2
+                -beforeScript   "if ( `whatIs liquid` == \"Command\" ) liquidCreateScriptNode;"
+                -afterScript    "if ( `whatIs liquid` == \"Command\" ) liquidCleanUp;"
+                -name           liquidCleanUpNode;
 }
 
 global proc liquidCreateScriptJobs()
@@ -763,7 +792,8 @@ global proc liquidCreateScriptJobs()
   // when the renderlayers change
   string $jobs[] = `scriptJob -lj`;
   for ( $j in $jobs ) {
-    if ( gmatch( $j, "*liquidLargeFieldUpdater*") ) scriptJob -kill (int(match("[0-9]+", $j))) -force;
+    if ( gmatch( $j, "*liquidLargeFieldUpdater*") ) 
+		scriptJob -kill (int(match("[0-9]+", $j))) -force;
     if ( gmatch( $j, "*liquidSwitchGlobalsRenderLayer*") ) scriptJob -kill (int(match("[0-9]+", $j))) -force;
   }
 
