@@ -126,6 +126,7 @@ class arrayDeleter // needed to free a shared/scoped/weak_ptr to an array
     }
 };
 const MString replaceAll(const MString& str, const char from, const char to);
-
+MString generateShadowArchiveName( bool renderAllFrames, long renderAtframe, MString geometrySet );
+MString getBaseShadowName(const structJob &job__);
 
 #endif

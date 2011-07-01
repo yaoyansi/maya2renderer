@@ -53,25 +53,6 @@
 #include <liqRenderScript.h>
 #include <liqGlobalVariable.h>
 
-enum TempControlBreak//for my refactoring only [3/4/2011 yys]
-{
-	TCB_OK     = 0,
-	TCB_Break  = 1,
-	TCB_Continue = 2,
-	TCB_MS_Success = 3,
-	TCB_MS_Failure = 4,
-};
-
-#define PROCESS_TEMP_CONTROL_BREAK(tcb) \
-	if(TCB_Break == tcb)\
-		break;\
-	else if(TCB_Continue == tcb)\
-		continue;\
-	else if(TCB_MS_Success == tcb)\
-		return MS::kSuccess;\
-	else if(TCB_MS_Failure == tcb)\
-		return MS::kFailure;\
-	else if(TCB_OK == tcb){/* go ahead */}
 
 class liqRibLightData;
 class liqRenderScript;
@@ -111,6 +92,7 @@ private: // Methods
 	MString getHiderOptions( MString rendername, MString hidername );
 
 	MStatus buildJobs();
+public://temp
 	MStatus ribPrologue();
 	MStatus ribEpilogue();
 	MStatus framePrologue( long );
@@ -120,13 +102,13 @@ private: // Methods
 	MStatus objectBlock();
 	MStatus worldEpilogue();
 	MStatus frameEpilogue( long );
+
 	void doAttributeBlocking( const MDagPath & newPath,  const MDagPath & previousPath );
 	void printProgress ( unsigned stat, unsigned frames, unsigned where );
 
 	MString generateRenderScriptName()  const;
 	MString generateTempMayaSceneName() const;
 	MString generateFileName( fileGenMode mode, const structJob& job );
-	MString generateShadowArchiveName( bool renderAllFrames, long renderAtframe, MString geometrySet );
 	static bool renderFrameSort( const structJob& a, const structJob& b );
 
 private: // Data
@@ -210,7 +192,7 @@ private: // Data
 	// Data used to construct output file names
 	MString       outFormat;
 	MString       outExt;
-	MString       extension;
+//	MString       extension;
 	MString       imageName;
 
 	MString       m_beautyRibFile;
@@ -511,13 +493,20 @@ private :
 		int &count__ );
 	void getCameraData( std::vector<structJob>::iterator &iter__ , const int sample__);
 	void getLightData( std::vector<structJob>::iterator &iter__ , const int sample__);
-	MString getBaseShadowName(const structJob &job__);
 
 	MTime originalTime;
+
 
 private:
 	liqRibTranslator(const liqRibTranslator&);
 	liqRibTranslator& operator=(const liqRibTranslator&);
+
+//singletion pattern
+private:
+	static liqRibTranslator *mInstance;
+public:
+	static liqRibTranslator* getInstancePtr();
+
 };
 
 

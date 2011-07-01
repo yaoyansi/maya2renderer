@@ -130,7 +130,8 @@ MString liqRibTranslator::magic("##Liquid");
 */
 void *liqRibTranslator::creator()
 {
-	return new liqRibTranslator();
+	mInstance = new liqRibTranslator();	
+	return mInstance;// will be deleted by maya
 }
 
 // check shaders to see if "string" parameters are expression
@@ -429,7 +430,7 @@ liqRibTranslator::liqRibTranslator()
 	debugMode = 0;
 #endif
 	m_errorMode = 0;
-	extension = ".rib";
+//	extension = ".rib";
 	bucketSize[0] = 16;
 	bucketSize[1] = 16;
 	gridSize = 256;
@@ -601,6 +602,8 @@ liqRibTranslator::liqRibTranslator()
 */
 liqRibTranslator::~liqRibTranslator()
 {
+	//delete mInstance;
+	//mInstance = NULL;
 }
 
 /**
@@ -2083,26 +2086,26 @@ MString liqRibTranslator::generateTempMayaSceneName() const
 	return tempDefname;
 }
 
-MString liqRibTranslator::generateShadowArchiveName( bool renderAllFrames, long renderAtframe, MString geometrySet )
-{
-	MString baseShadowName;
-	if( !liqglo.liqglo_shapeOnlyInShadowNames ) 
-		baseShadowName += liqglo.liqglo_sceneName + "_";
-
-	baseShadowName += "SHADOWBODY";
-	if( geometrySet != "" ) 
-		baseShadowName += "." + sanitizeNodeName( geometrySet.substring(0, 99) );
-	baseShadowName += LIQ_ANIM_EXT;
-	baseShadowName += extension;
-
-	size_t shadowNameLength = baseShadowName.length() + 1;
-	shadowNameLength += 10;
-	scoped_ptr< char > baseShadowRibName( new char[ shadowNameLength ] );
-	sprintf( baseShadowRibName.get(), baseShadowName.asChar(), liqglo.liqglo_doExtensionPadding ? liqglo.liqglo_outPadding : 0, renderAllFrames ? liqglo.liqglo_lframe : renderAtframe );
-	baseShadowName = baseShadowRibName.get();
-
-	return liquidSanitizePath( baseShadowName );
-}
+ //MString liqRibTranslator::generateShadowArchiveName( bool renderAllFrames, long renderAtframe, MString geometrySet )
+ //{
+ //	MString baseShadowName;
+ //	if( !liqglo.liqglo_shapeOnlyInShadowNames ) 
+ //		baseShadowName += liqglo.liqglo_sceneName + "_";
+ //
+ //	baseShadowName += "SHADOWBODY";
+ //	if( geometrySet != "" ) 
+ //		baseShadowName += "." + sanitizeNodeName( geometrySet.substring(0, 99) );
+ //	baseShadowName += LIQ_ANIM_EXT;
+ //	baseShadowName += ".rib";
+ //
+ //	size_t shadowNameLength = baseShadowName.length() + 1;
+ //	shadowNameLength += 10;
+ //	scoped_ptr< char > baseShadowRibName( new char[ shadowNameLength ] );
+ //	sprintf( baseShadowRibName.get(), baseShadowName.asChar(), liqglo.liqglo_doExtensionPadding ? liqglo.liqglo_outPadding : 0, renderAllFrames ? liqglo.liqglo_lframe : renderAtframe );
+ //	baseShadowName = baseShadowRibName.get();
+ //
+ //	return liquidSanitizePath( baseShadowName );
+ //}
 
 MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& job )
 {

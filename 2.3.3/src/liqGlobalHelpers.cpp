@@ -41,6 +41,7 @@
 
 //#include <process.h>
 #include <io.h>
+#include <boost/scoped_ptr.hpp>
 
 // Maya Headers
 #include <maya/MPlug.h>
@@ -1303,4 +1304,38 @@ const MString replaceAll(const MString& str, const char from, const char to)
 	std::replace(dump.begin(), dump.end(), from, to);
 	
 	return MString(dump.c_str());
+}
+//
+MString generateShadowArchiveName( bool renderAllFrames, long renderAtframe, MString geometrySet )
+{
+	MString baseShadowName;
+	if( !liqglo.liqglo_shapeOnlyInShadowNames ) 
+		baseShadowName += liqglo.liqglo_sceneName + "_";
+
+	baseShadowName += "SHADOWBODY";
+	if( geometrySet != "" ) 
+		baseShadowName += "." + sanitizeNodeName( geometrySet.substring(0, 99) );
+	baseShadowName += LIQ_ANIM_EXT;
+	baseShadowName += ".rib";
+
+	size_t shadowNameLength = baseShadowName.length() + 1;
+	shadowNameLength += 10;
+	boost::scoped_ptr< char > baseShadowRibName( new char[ shadowNameLength ] );
+	sprintf( baseShadowRibName.get(), baseShadowName.asChar(), liqglo.liqglo_doExtensionPadding ? liqglo.liqglo_outPadding : 0, renderAllFrames ? liqglo.liqglo_lframe : renderAtframe );
+	baseShadowName = baseShadowRibName.get();
+
+	return liquidSanitizePath( baseShadowName );
+}
+//
+MString getBaseShadowName(const structJob &job__)
+{
+	MString     baseShadowName___;
+	// build the shadow archive name for the job
+	bool renderAllFrames( job__.everyFrame );
+	long refFrame( job__.renderFrame );
+	MString geoSet( job__.shadowObjectSet );
+	baseShadowName___ = generateShadowArchiveName( renderAllFrames, refFrame, geoSet );
+	baseShadowName___ = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, baseShadowName___, liqglo.liqglo_ribDir );
+
+	return baseShadowName___;
 }

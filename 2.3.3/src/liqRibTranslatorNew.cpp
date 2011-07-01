@@ -112,6 +112,7 @@
 #include <liqFrameScriptMgr.h>
 #include <liqLightMgr.h>
 #include <liqLocatorMgr.h>
+#include <liqShadowRibWriterMgr.h>
 
 using namespace boost;
 using namespace std;
@@ -145,6 +146,8 @@ extern void liqRibTranslatorErrorHandler( RtInt code, RtInt severity, char* mess
 #else
 extern void liqRibTranslatorErrorHandler( RtInt code, RtInt severity, const char* message );
 #endif
+
+liqRibTranslator* liqRibTranslator::mInstance = NULL;
 
 /**
 * This method actually does the renderman output.
@@ -345,7 +348,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 			///////////////////////////////////////////////////
 			TempControlBreak tcb = 
 				processOneFrame(frameIndex, liqglo);
-			PROCESS_TEMP_CONTROL_BREAK(tcb)
+			PROCESS_TEMP_CONTROL_BREAK_CONTINUE_RETURN(tcb)
 			///////////////////////////////////////////////////
 			// now we re-iterate through the job list to write out the alfred file if we are using it
 			if( useRenderScript && !m_justRib ) 
@@ -952,100 +955,15 @@ TempControlBreak liqRibTranslator::processOneFrame(
 			//
 			if( liqglo__.liqglo_currentJob.isShadow && !liqglo.fullShadowRib )
 			{
-				MString     baseShadowName__(getBaseShadowName(liqglo__.liqglo_currentJob));
-
-
-				if( !liqglo__.liqglo_currentJob.shadowArchiveRibDone ) 
-				{
-					//
-					//  create the read-archive shadow files
-					//
-#ifndef RENDER_PIPE
-					liquidMessage( "Beginning RIB output to '" + string( baseShadowName__.asChar() ) + "'", messageInfo );
-					RiBegin( const_cast< RtToken >( baseShadowName__.asChar() ) );
-#else
-					liqglo__.liqglo_ribFP = fopen( baseShadowName.asChar(), "w" );
-					if( liqglo__.liqglo_ribFP ) {
-						LIQDEBUGPRINTF( "-> setting pipe option\n" );
-						RtInt ribFD( fileno( liqglo__.liqglo_ribFP ) );
-						RiOption( "rib", "pipe", &ribFD, RI_NULL );
-					}
-					else
-					{
-						liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
-					}
-					liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-					RiBegin( RI_NULL );
-#endif
-					if( worldPrologue() != MS::kSuccess ) 
-						break;
-					if( liqglo__.liqglo_currentJob.isShadow && liqglo__.liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows ) 
-						if( lightBlock() != MS::kSuccess ) 
-							break;
-					if( coordSysBlock() != MS::kSuccess ) 
-						break;
-					if( objectBlock() != MS::kSuccess ) 
-						break;
-					if( worldEpilogue() != MS::kSuccess ) 
-						break;
-					RiEnd();
-#ifdef RENDER_PIPE  
-					fclose( liqglo__.liqglo_ribFP );
-#endif
-					liqglo__.liqglo_ribFP = NULL;
-
-					// mark all other jobs with the same set as done
-					vector<structJob>::iterator iterCheck = jobList.begin();
-					while ( iterCheck != jobList.end() ) 
-					{
-						if( iterCheck->shadowObjectSet == liqglo__.liqglo_currentJob.shadowObjectSet &&
-							iterCheck->everyFrame == liqglo__.liqglo_currentJob.everyFrame &&
-							iterCheck->renderFrame == liqglo__.liqglo_currentJob.renderFrame
-							)
-							iterCheck->shadowArchiveRibDone = true;
-						++iterCheck;
-					}
-
-					liqglo__.m_alfShadowRibGen = true;
-				}//  !liqglo_currentJob.shadowArchiveRibDone  
-				else{
-					//todo....
-				}
-				//----------------------------------------------------------------
-#ifndef RENDER_PIPE
-				liquidMessage( "Beginning RIB output to '" + string( liqglo__.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
-				RiBegin( const_cast< RtToken >( liqglo__.liqglo_currentJob.ribFileName.asChar() ) );
-#else//RENDER_PIPE
-				liqglo__.liqglo_ribFP = fopen( liqglo__.liqglo_currentJob.ribFileName.asChar(), "w" );
-				if( liqglo__.liqglo_ribFP ) 
-				{
-					RtInt ribFD = fileno( liqglo__.liqglo_ribFP );
-					RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
-				} 
-				else
-				{
-					liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
-				}
-
-				liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-				RiBegin( RI_NULL );
-#endif//RENDER_PIPE
-				// reference the correct shadow archive
-				//
-				/* cout <<"  * referencing shadow archive "<<baseShadowName.asChar()<<endl; */
-				if( ribPrologue() == MS::kSuccess ) 
-				{
-					if( framePrologue( scanTime ) != MS::kSuccess ) 
-						break;
-					//MString realShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, baseShadowName, liqglo_projectDir ) ) );
-					RiArchiveRecord( RI_COMMENT, "Read Archive Data:\n" );
-					RiReadArchive( const_cast< RtToken >( baseShadowName__.asChar() ), NULL, RI_NULL );
-					if( frameEpilogue( scanTime ) != MS::kSuccess ) 
-						break;
-					ribEpilogue();
-				}
-				RiEnd();
-				//------------------------------------------------------------
+				tShadowRibWriterMgr shadowRibWriterMgr;
+				TempControlBreak tcb = 
+					shadowRibWriterMgr.write(
+					liqglo__, 
+					liqglo__.liqglo_currentJob, 
+					scanTime,
+					m_outputLightsInDeepShadows,
+					jobList);
+				PROCESS_TEMP_CONTROL_BREAK_CONTINUE(tcb)
 			}//if( liqglo_currentJob.isShadow && !fullShadowRib ) 
 			else 
 			{
@@ -2039,15 +1957,21 @@ void liqRibTranslator::getLightData( vector<structJob>::iterator &iter__ , const
 	}
 }
 //
-MString liqRibTranslator::getBaseShadowName(const structJob &job__)
+// MString liqRibTranslator::getBaseShadowName(const structJob &job__)
+// {
+// 	MString     baseShadowName___;
+// 	// build the shadow archive name for the job
+// 	bool renderAllFrames( job__.everyFrame );
+// 	long refFrame( job__.renderFrame );
+// 	MString geoSet( job__.shadowObjectSet );
+// 	baseShadowName___ = generateShadowArchiveName( renderAllFrames, refFrame, geoSet );
+// 	baseShadowName___ = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, baseShadowName___, liqglo.liqglo_ribDir );
+// 
+// 	return baseShadowName___;
+// }
+//
+liqRibTranslator* liqRibTranslator::getInstancePtr()
 {
-	MString     baseShadowName___;
-	// build the shadow archive name for the job
-	bool renderAllFrames( job__.everyFrame );
-	long refFrame( job__.renderFrame );
-	MString geoSet( job__.shadowObjectSet );
-	baseShadowName___ = generateShadowArchiveName( renderAllFrames, refFrame, geoSet );
-	baseShadowName___ = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, baseShadowName___, liqglo.liqglo_ribDir );
-
-	return baseShadowName___;
+	assert(mInstance);
+	return mInstance;
 }
