@@ -403,14 +403,30 @@ liqRibShaveData::liqRibShaveData( MObject surface )
 
 /** Write the RIB for this surface.
  */
+extern long   liqglo_lframe;
+extern MString liqglo_ribDir;
 void liqRibShaveData::_write()
 {
   LIQDEBUGPRINTF( "-> writing shave surface\n" );
 
   LIQDEBUGPRINTF( "-> writing shave surface trims\n" );
-  RiArchiveRecord( RI_COMMENT, "This is a shave object data:\n" );
+  liqRIBMsg("This is a shave object data:\n" );
  
+  MString nodeName(objDagPath.partialPathName());
+  liqRIBMsg( "node name = %s", nodeName.asChar() );
 
+  MString frame; 
+  frame.set(liqglo_lframe);
+  MString prefix("shv_");
+  MString shv_RibFile( liquidGetRelativePath( false, getLiquidRibName( (prefix+nodeName).asChar() ), liqglo_ribDir ) +"."+frame+".rib" );
+
+  //1)make a reference
+  RiReadArchive( const_cast< RtToken >( shv_RibFile.asChar() ), NULL, RI_NULL );
+
+  //call shave command to write the rib file(not support motion blur)
+   MGlobal::executeCommand(
+ 	  "shaveWriteRib -hairNode \""+nodeName+"\" \""+shv_RibFile+"\";"
+ 	  );
  
   LIQDEBUGPRINTF( "-> done writing shave surface\n" );
 }
