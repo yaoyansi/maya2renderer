@@ -17,16 +17,42 @@
 //#include <static_chan.hpp>
 #include <sfcnn_ip.hpp>
 
+using namespace std;
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef reviver::dpoint<int,3> Point;
 
 //prman.lib libprmansdk.lib Iphlpapi.lib Ws2_32.lib
 
-using namespace std;
 
 
 
-void setNearestDistances(int nverts,const RtPoint *P_Rib,double *nearestDistances){
-  
+class My_RifPlugin : public RifPlugin
+{
+public:
+	My_RifPlugin();
+	virtual 		~My_RifPlugin();
+
+	virtual RifFilter &     GetFilter();
+
+private:
+
+	RifFilter  m_rifFilter;
+	static RtVoid myPointsV(RtInt nverts, RtInt, RtToken[], RtPointer[] );
+
+
+};
+
+
+
+void setNearestDistances(int nverts,const RtPoint *P_Rib,double *nearestDistances)
+{
+  printf("setNearestDistances()\n");
+
   	double detail = 1000000;
   	double offset = 1000;
   
@@ -89,50 +115,44 @@ void setNearestDistances(int nverts,const RtPoint *P_Rib,double *nearestDistance
   	free(P);
   }
 
-class My_RifPlugin : public RifPlugin
-{
-public:
-	My_RifPlugin();
-	virtual 		~My_RifPlugin();
 
-	virtual RifFilter &     GetFilter();
-
-private:
-
-	RifFilter  m_rifFilter;
-	static RtVoid myPointsV(RtInt nverts, RtInt, RtToken[], RtPointer[]);
-
-
-};
 
 RifPlugin*  RifPluginManufacture(int args, char **argv)
 {
+	printf("RifPluginManufacture()\n");
 	return new My_RifPlugin();
 }
 
  My_RifPlugin::My_RifPlugin()
-{
+{	
+	printf("My_RifPlugin::My_RifPlugin()\n");
 	m_rifFilter.PointsV = myPointsV;
 }
 
- My_RifPlugin::~My_RifPlugin() {
+ My_RifPlugin::~My_RifPlugin() 
+ {
+	 printf("My_RifPlugin::~My_RifPlugin()\n");
 }
 
  RifFilter & My_RifPlugin::GetFilter()
 {
+	printf("My_RifPlugin::GetFilter()\n");
 	return m_rifFilter;
 
 }
 
 RtVoid freestrings(RtString *twostrings) {
+	printf("freestrings()\n");
 	free((void *)twostrings[0]);
 	free((void *)twostrings[1]);
 	free((void *)twostrings);
 }
 
- RtVoid My_RifPlugin::myPointsV(RtInt nverts, RtInt numOfParam, RtToken* paramNames, RtPointer* paramValues)
-{
 
+
+ RtVoid My_RifPlugin::myPointsV(RtInt nverts, RtInt numOfParam, RtToken paramNames[], RtPointer paramValues[])
+{
+	printf("My_RifPlugin::myPointsV()\n");
 	if(numOfParam > 3){
 
 		RtPoint *P = (RtPoint*)paramValues[0];
@@ -159,10 +179,10 @@ RtVoid freestrings(RtString *twostrings) {
 			float r = CS[n][0];
 			float g = CS[n][1];
 			float b = CS[n][2];
-			if(r > 1 || g > 1 || b >1 ){
-				cout << r << " / "<< g <<" / " <<b<<" / "<<endl;
-				cin >> r;
-			}
+// 			if(r > 1 || g > 1 || b >1 ){
+// 				cout << r << " / "<< g <<" / " <<b<<" / "<<endl;
+// 				cin >> r;
+// 			}
 
 			char buffer[256];
 			sprintf(buffer,"%f %d %d %f %f %f %f %f %f %f", multiPointRadius,numOfDots,n, constantwidth[0], px,py,pz,  r,g,b);
@@ -190,3 +210,6 @@ RtVoid freestrings(RtString *twostrings) {
 }
 
 
+#ifdef __cplusplus
+}
+#endif

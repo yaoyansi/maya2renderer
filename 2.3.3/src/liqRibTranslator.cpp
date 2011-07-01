@@ -3357,9 +3357,9 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						liquidMessage( "    + '" + string( liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
 
 #ifdef _WIN32
-						liqProcessLauncher::execute( liquidRenderer.renderCommand, liquidRenderer.renderCmdFlags + " \"" + liqglo_currentJob.ribFileName + "\"", "\"" + liqglo_projectDir + "\"", false );
+						liqProcessLauncher::execute( liquidRenderer.renderCommand, " -rif pointToDSO.dll "+ liquidRenderer.renderCmdFlags + " \"" + liqglo_currentJob.ribFileName + "\"", "\"" + liqglo_projectDir + "\"", false );
 #else
-						liqProcessLauncher::execute( liquidRenderer.renderCommand, liquidRenderer.renderCmdFlags + " " + liqglo_currentJob.ribFileName, liqglo_projectDir, false );
+						liqProcessLauncher::execute( liquidRenderer.renderCommand, " -rif pointToDSO.dll "+ liquidRenderer.renderCmdFlags + " " + liqglo_currentJob.ribFileName, liqglo_projectDir, false );
 #endif
 						/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
 						to display buckets in the renderview.

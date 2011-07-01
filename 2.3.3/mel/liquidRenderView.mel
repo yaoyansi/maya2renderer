@@ -216,7 +216,7 @@ global proc liqRVToggleAutoSaveState()
 
 global proc liqRenderViewMenu( string $editor)
 {
-	liqlog("liqRenderViewMenu()");
+	liqlog("liqRenderViewMenu("+$editor+")");
   if ( !`menu -q -ex ($editor + "LiquidRVMenu")` ) {
 
     menu  -label              "Liquid"
