@@ -2649,11 +2649,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="image.lib OpenMayaFX.lib Foundation.lib OpenMaya.lib OpenMayaRender.lib OpenMayaUI.lib OpenMayaAnim.lib glu32.lib opengl32.lib netapi32.lib ws2_32.lib rilib_d.lib"
+				AdditionalDependencies="image.lib OpenMayaFX.lib Foundation.lib OpenMaya.lib OpenMayaRender.lib OpenMayaUI.lib OpenMayaAnim.lib glu32.lib opengl32.lib netapi32.lib ws2_32.lib"
 				OutputFile="../../bin/prman/win32/liquid_2008x32d.mll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2008)/lib&quot;;../../bin/win32lib"
+				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2008)/lib&quot;;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Debug/Objects/liquid2008x32d.pdb"
@@ -3264,6 +3264,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\liqWriteArchive.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\ri_interface.h"
 				>
 			</File>
 		</Filter>

@@ -28,7 +28,7 @@
 
 // Renderman headers
 extern "C" {
-#include <ri.h>
+#include "ri_interface.h"
 }
 #ifdef _WIN32
   #include <process.h>

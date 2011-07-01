@@ -33,7 +33,7 @@
 
 // PRMan/3Delight Headers
 //extern "C" {
-//#include <ri.h>
+//#include "ri_interface.h"
 //#if defined( PRMAN ) || defined( DELIGHT )
 //#include <slo.h>
 //#endif

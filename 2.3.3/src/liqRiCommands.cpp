@@ -37,7 +37,7 @@
 // Renderman headers
 #include <liqRiCommands.h>
 extern "C" {
-#include <ri.h>
+#include "ri_interface.h"
 }
 
 #include <fstream>

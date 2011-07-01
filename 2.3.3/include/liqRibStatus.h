@@ -39,7 +39,7 @@
 
 //#include <zlib.h>
 extern "C" {
-	#include <ri.h>
+	#include "ri_interface.h"
 }
 #include <string>
 

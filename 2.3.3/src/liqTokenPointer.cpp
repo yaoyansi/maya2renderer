@@ -31,7 +31,7 @@
 #include <strstream>
 
 extern "C" {
-#include <ri.h>
+#include "ri_interface.h"
 }
 #include <liqTokenPointer.h>
 #include <liquid.h>

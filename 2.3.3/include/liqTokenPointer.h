@@ -26,7 +26,7 @@
 #ifndef liqTokenPointer_H
 #define liqTokenPointer_H
 extern "C" {
-#include <ri.h>
+#include "ri_interface.h"
 }
 
 #include <string>

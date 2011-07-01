@@ -37,7 +37,7 @@
 
 #include <liqIOStream.h>
 
-#include <ri.h>
+#include "ri_interface.h"
 
 // RI_VERBATIM is in the current RenderMan spec but
 // some RIB libraries don't know about it

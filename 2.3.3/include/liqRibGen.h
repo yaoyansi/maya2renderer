@@ -37,7 +37,7 @@
 */
 
 extern "C" {
-	#include <ri.h>
+	#include "ri_interface.h"
 }
 #include <liqRibStatus.h>
 #include <zlib.h>

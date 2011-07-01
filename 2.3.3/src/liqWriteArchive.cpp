@@ -42,7 +42,7 @@
 #include <maya/MFnSet.h>
 #include <maya/MPlug.h>
 
-#include <ri.h>
+#include "ri_interface.h"
 
 
 // RI_VERBATIM is in the current RenderMan spec but
