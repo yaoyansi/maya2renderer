@@ -668,7 +668,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\riutil\interpclasscounts.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\riutil\primvartoken.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\riutil\primvartoken.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\riutil\primvartype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\riutil\ri_convenience.h"
 				>
 			</File>
 			<File
@@ -676,7 +692,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\riutil\riparamlist.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\riutil\tokendictionary.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\riutil\tokendictionary.h"
 				>
 			</File>
 		</Filter>

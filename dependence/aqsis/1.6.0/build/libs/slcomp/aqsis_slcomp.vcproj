@@ -834,6 +834,26 @@
 			</FileConfiguration>
 		</File>
 		<File
+			RelativePath="..\..\..\src\include\aqsis\slcomp\icodegen.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\slcomp\ifuncdef.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\slcomp\iparsenode.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\slcomp\ivardef.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\slcomp\libslparse.h"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\src\libs\slcomp\parse\parser.yy"
 			>
 			<FileConfiguration

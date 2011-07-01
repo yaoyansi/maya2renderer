@@ -988,7 +988,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\core\iattributes.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\core\ddmanager\iddmanager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\core\ilightsource.h"
 				>
 			</File>
 			<File
@@ -1004,7 +1012,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\core\interfacefwd.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\core\ioptions.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\core\iparameter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\core\raytrace\iraytrace.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\core\irenderer.h"
 				>
 			</File>
 			<File
@@ -1012,7 +1036,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\core\isurface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\core\texturing_old\itexturemap_old.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\core\itransform.h"
 				>
 			</File>
 			<File

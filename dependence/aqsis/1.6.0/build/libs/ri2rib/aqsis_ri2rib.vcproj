@@ -825,6 +825,38 @@
 				/>
 			</FileConfiguration>
 		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\ri\ndspy.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\ri\pointcloud.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\ri\ri.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\ri\rif.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\ri\ritypes.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\ri\shadeop.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\ri\slo.h"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\src\include\aqsis\ri\slx.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

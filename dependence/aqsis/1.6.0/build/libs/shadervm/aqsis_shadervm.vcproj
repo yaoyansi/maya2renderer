@@ -748,6 +748,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\shadervm\ishader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\shadervm\ishaderdata.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\shadervm\ishaderexecenv.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\shadervm\shadeopmacros.h"
 				>
 			</File>

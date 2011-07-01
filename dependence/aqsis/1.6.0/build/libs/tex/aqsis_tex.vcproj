@@ -796,6 +796,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\buffers\channelinfo.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\buffers\channellist.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\tex\filtering\cubeenvironmentsampler.h"
 				>
 			</File>
@@ -828,6 +836,58 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\buffers\filtersupport.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\filtertexture.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\ienvironmentsampler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\buffers\iimagechannel.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\buffers\imagechannel.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\io\imagefiletype.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\iocclusionsampler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\ishadowsampler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\io\itexinputfile.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\io\itexoutputfile.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\itexturecache.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\itexturesampler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\io\itiledtexinputfile.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\tex\filtering\latlongenvironmentsampler.h"
 				>
 			</File>
@@ -836,7 +896,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\maketexture.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\tex\filtering\mipmap.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\buffers\mixedimagebuffer.h"
 				>
 			</File>
 			<File
@@ -848,11 +916,43 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\sampleaccum.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\samplequad.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\buffers\samplevector.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\tex\filtering\shadowsampler.h"
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\texexception.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\io\texfileattributes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\io\texfileheader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\buffers\texturebuffer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\tex\filtering\texturecache.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\texturesampleoptions.h"
 				>
 			</File>
 			<File
@@ -876,11 +976,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\buffers\tilearray.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\tex\io\tiledanyinputfile.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\src\libs\tex\io\tiledtiffinputfile.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\tex\filtering\wrapmode.h"
 				>
 			</File>
 			<File

@@ -668,7 +668,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\math\cellnoise.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\math\color.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\color.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\derivatives.h"
 				>
 			</File>
 			<File
@@ -680,7 +692,23 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\math\lowdiscrep.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\math.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\math\matrix.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\matrix.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\matrix2d.h"
 				>
 			</File>
 			<File
@@ -688,7 +716,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\math\noise.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\math\noise1234.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\noise1234.h"
 				>
 			</File>
 			<File
@@ -696,7 +732,43 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\math\random.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\region.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\math\spline.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\spline.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\vecfwd.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\vector2d.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\vector3d.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\vector4d.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\vectorcast.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\math\vectorstorage.h"
 				>
 			</File>
 		</Filter>

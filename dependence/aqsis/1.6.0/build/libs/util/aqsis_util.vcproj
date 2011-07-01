@@ -668,11 +668,35 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\util\argparse.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\autobuffer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\util\bitvector.cpp"
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\util\bitvector.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\enum.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\util\exception.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\exception.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\execute.h"
 				>
 			</File>
 			<File
@@ -684,7 +708,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\util\file.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\build\info.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\list.h"
 				>
 			</File>
 			<File
@@ -692,7 +724,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\util\logging.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\logging_streambufs.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\util\memorysentry.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\memorysentry.h"
 				>
 			</File>
 			<File
@@ -700,11 +744,35 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\util\plugins.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\pool.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\util\popen.cpp"
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\include\aqsis\util\popen.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\libs\util\refcount.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\refcount.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\smartptr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\socket.h"
 				>
 			</File>
 			<File
@@ -713,6 +781,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\libs\util\sstring.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\sstring.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\include\aqsis\util\timer.h"
 				>
 			</File>
 		</Filter>
