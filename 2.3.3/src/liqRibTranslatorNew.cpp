@@ -3150,7 +3150,7 @@ void liqRibTranslator::oneObjectBlock(
 				// per shader shadow pass override
 				if( true/*!currentJob.isShadow || currentShader.outputInShadow*/ )
 				{
-					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+					currentShader.write();
 				}
 
 				//if( !currentShader.hasErrors && outputDispShader )
@@ -3198,7 +3198,7 @@ void liqRibTranslator::oneObjectBlock(
 				// per shader shadow pass override
 				if( /*!currentJob.isShadow || */currentShader.outputInShadow )
 				{
-					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+					currentShader.write();
 				}
 
 				//if( !currentShader.hasErrors && outputDispShader )
@@ -3375,7 +3375,7 @@ MStatus liqRibTranslator::writeShader_(
 			// per shader shadow pass override
 			if( !isShadowJob || currentShader.outputInShadow )
 			{
-				currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+				currentShader.write();
 			}
 		}
 
@@ -3411,7 +3411,7 @@ MStatus liqRibTranslator::writeShader_(
 				// per shader shadow pass override
 				if( !isShadowJob || currentShader.outputInShadow )
 				{
-					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+					currentShader.write();
 				}
 
 				//if( outputSurfaceShader )
@@ -3504,8 +3504,9 @@ MStatus liqRibTranslator::writeShader_forShadow(
 
 									  )
 {
-	const bool isShadowJob = currentJob.isShadow; 
-	const bool isDeepShadowJob = currentJob.deepShadows;
+	assert(currentJob.isShadow == true);
+
+	//const bool isDeepShadowJob = ;
 	
 	if(    ( !currentJob.deepShadows && !m_outputShadersInShadows ) // shadow
 		|| (  currentJob.deepShadows && !m_outputShadersInDeepShadows ) )//deep shadow
@@ -3522,11 +3523,11 @@ MStatus liqRibTranslator::writeShader_forShadow(
 		{
 			//liqShader& currentShader( liqGetShader( ribNode__->assignedVolume.object() ) );
 			liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedVolume.object() );
-			liqRIBMsg("[1] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
+			liqRIBMsg("[1] currentShader.outputInShadow=%d", currentShader.outputInShadow );
 			// per shader shadow pass override
-			if( !isShadowJob || currentShader.outputInShadow )
+			if( /* !isShadowJob ||*/ currentShader.outputInShadow )
 			{
-				currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+				currentShader.write();
 			}
 		}
 
@@ -3558,11 +3559,11 @@ MStatus liqRibTranslator::writeShader_forShadow(
 
 				F1(ribNode__, currentShader);
 
-				liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
+				liqRIBMsg("[2] currentShader.outputInShadow=%d", currentShader.outputInShadow );
 				// per shader shadow pass override
-				if( !isShadowJob || currentShader.outputInShadow )
+				if( /*!isShadowJob ||*/ currentShader.outputInShadow )
 				{
-					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+					currentShader.write();
 				}
 
 				//if( outputSurfaceShader )
@@ -3604,13 +3605,13 @@ MStatus liqRibTranslator::writeShader_forShadow(
 					RiSurface( "constant", RI_NULL );
 					LIQDEBUGPRINTF("add more constant parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorBlinn.sl as an example.(?)");
 				}
-				// 					else if( shader.apiType() == MFn::kLambert ){ 
-				// 						RiSurface( "matte", RI_NULL );
-				// 						LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
-				// 					}else if( shader.apiType() == MFn::kPhong ) {
-				// 						RiSurface( "plastic", RI_NULL );
-				// 						LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
-				// 					}
+ 				//else if( shader.apiType() == MFn::kLambert ){ 
+ 				//	RiSurface( "matte", RI_NULL );
+ 				//	LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
+ 				//}else if( shader.apiType() == MFn::kPhong ) {
+ 				//	RiSurface( "plastic", RI_NULL );
+ 				//	LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
+ 				//}
 				else if( path__.hasFn( MFn::kPfxHair ) ) 
 				{
 					// get some of the hair system parameters
@@ -3637,10 +3638,10 @@ MStatus liqRibTranslator::writeShader_forShadow(
 			}
 		}//if( hasSurfaceShader && !m_ignoreSurfaces )else
 	} //if( writeShaders ) 
-	else if( isDeepShadowJob ) 
+	else if( currentJob.deepShadows ) 
 	{
-		liqRIBMsg("[7] liqglo_currentJob[.deepShadows=%d, .isShadow=%d ], hasSurfaceShader=%d, hasCustomSurfaceShader=%d",
-			isDeepShadowJob, isShadowJob, hasSurfaceShader__, hasCustomSurfaceShader__ );
+		liqRIBMsg("[7] liqglo_currentJob[   ], hasSurfaceShader=%d, hasCustomSurfaceShader=%d",
+			hasSurfaceShader__, hasCustomSurfaceShader__ );
 
 		// if the current job is a deep shadow,
 		// we still want to output primitive color and opacity and surface shader
@@ -3654,7 +3655,7 @@ MStatus liqRibTranslator::writeShader_forShadow(
 
 			liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.name.c_str(), currentShader.file.c_str(), currentShader.outputInShadow );
 			if(currentShader.outputInShadow){
-				currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+				currentShader.write();
 			}
 		} 
 		else //if( hasSurfaceShader__ && ! hasCustomSurfaceShader__ ) 

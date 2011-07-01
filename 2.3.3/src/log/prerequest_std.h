@@ -45,5 +45,6 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/shared_array.hpp>
 
 #endif//_PREREQUEST_STD_H_

@@ -3230,18 +3230,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\liqWriteArchive.cpp"
-				>
-				<FileConfiguration
-					Name="Prman2009Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\ri_interface.cpp"
 				>
 			</File>
@@ -3557,18 +3545,6 @@
 			<File
 				RelativePath="..\..\include\liqVolumeNode.h"
 				>
-			</File>
-			<File
-				RelativePath="..\..\include\liqWriteArchive.h"
-				>
-				<FileConfiguration
-					Name="Prman2009Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\include\ri_interface.h"

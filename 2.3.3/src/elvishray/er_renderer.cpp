@@ -736,4 +736,101 @@ namespace elvishray
 		}
 
 	}
+	void Renderer::shader_transformBegin(const liqString  shaderSpace)
+	{
+
+	}
+	void Renderer::shader_transformEnd(const liqString  shaderSpace)
+	{
+
+	}
+	void Renderer::shader_surface(
+		const liqString &shaderFileName, 
+		const std::vector<liqTokenPointer> &tokenPointerArray
+	)
+	{
+		_s( "// shader_surface("<<shaderFileName<<","<<", ...)" );
+		size_t parameterNum =  tokenPointerArray.size() - 1;
+		for(size_t i=0; i<parameterNum; ++i)
+		{
+// 			_s("//- "
+// 				<<const_cast<liqTokenPointer*>(&tokenPointerArray[i])->
+// 				getDetailedTokenName()<<","//uniform float intensity
+// 				<<tokenPointerArray[i].getDetailType()<<","
+// 				<<"//tokenPointerArray[i].getTokenFloatArray()"<<","
+// 				<<"//[error]tokenPointerArray[i].getTokenString()"<<","
+// 				<<tokenPointerArray[i].getTokenName()<<","//intensity,
+// 				<<tokenPointerArray[i].getParameterType()<<","//rFloat,
+// 				<<tokenPointerArray[i].getRiDeclare()<<","//uniform float,
+// 				);
+// 			_s("// "<<tokenPointerArray[i].getTokenName());
+			liqTokenPointer* vp = const_cast< liqTokenPointer* >( &tokenPointerArray[i] );
+			switch( tokenPointerArray[i].getParameterType() )
+			{
+			case rFloat:
+				{
+					const liqFloat *v = vp->getTokenFloatArray();
+					_s("//     "<<v[0]);
+				}
+				break;
+			case rPoint:
+			case rVector:
+			case rNormal:
+			case rColor:
+				{
+					const liqFloat *v = vp->getTokenFloatArray();
+					_s("//     "<<v[0]<<","<<v[1]<<","<<v[2]);
+				}
+				break;
+			case rString:
+			case rShader:
+				{
+					const std::string &v = vp->getTokenString();
+					_s("//     "<<v);
+				}
+				break; 
+			case rHpoint:
+				{
+					const liqFloat *v = vp->getTokenFloatArray();
+					_s("//     "<<v[0]<<","<<v[1]<<","<<v[2]<<","<<v[3]);
+				}
+				break;
+			case rMatrix:
+				{
+					const liqFloat *v = vp->getTokenFloatArray();
+					_s("//     "
+						<<v[0]<<","<<v[1]<<","<<v[2]<<","<<v[3]
+						<<v[4]<<","<<v[5]<<","<<v[6]<<","<<v[7]
+						<<v[8]<<","<<v[9]<<","<<v[10]<<","<<v[11]
+						<<v[12]<<","<<v[13]<<","<<v[14]<<","<<v[15]
+					);
+				}
+				;break;
+			default :
+				assert(0);
+			}
+		}		 
+	}
+	liqLightHandle Renderer::shader_light(
+		const liqString &shaderFileName, 
+		const std::vector<liqTokenPointer> &tokenPointerArray
+	)
+	{
+
+		return (liqLightHandle)0;	
+	}
+	void Renderer::shader_displacement(
+		const liqString &shaderFileName, 
+		const std::vector<liqTokenPointer> &tokenPointerArray
+	)
+	{
+		 
+	}
+	void Renderer::shader_volume(
+		const liqString &shaderFileName, 
+		const std::vector<liqTokenPointer> &tokenPointerArray
+	)
+	{
+		 
+	}
 }//namespace

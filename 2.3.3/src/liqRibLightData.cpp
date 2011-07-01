@@ -1355,7 +1355,7 @@ void liqRibLightData::_write(const structJob &currentJob)
           handle = RiLightSourceV( shaderName, numTokens, tokenArray.get(), pointerArray.get() );
           */
 			RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-          rmanLightShader.write( liqglo.liqglo_shortShaderNames, 0 );
+          rmanLightShader.write();
  		  #ifdef RIBLIB_AQSIS
  		  handle = reinterpret_cast<RtLightHandle>(static_cast<ptrdiff_t>(rmanLightShader.shaderHandler.asInt()));
  		  #else

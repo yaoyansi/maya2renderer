@@ -26,11 +26,9 @@
 #ifndef liqTokenPointer_H
 #define liqTokenPointer_H
 
-#include <string>
-#include <vector>
-#include <boost/shared_array.hpp>
+#include "./log/prerequest_std.h"
 //extern "C" {
-#include "ri_interface.h"
+#include "ri_interface.h"//#include "liqtypes.h"
 //}
 
 #include "liqTokenParameterType.h"

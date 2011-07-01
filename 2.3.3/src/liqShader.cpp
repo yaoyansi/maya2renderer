@@ -46,7 +46,7 @@
 #include <liqExpression.h>
 //#include <liqTokenPointer.h>
 #include <liqGetSloInfo.h>
-
+#include "renderermgr.h"
 //using namespace std;
 //using namespace boost;
 
@@ -666,14 +666,18 @@ MStatus liqShader::liqShaderParseVectorArrayAttr ( const MFnDependencyNode& shad
 }
 
 
-void liqShader::write(bool shortShaderNames, unsigned int indentLevel)
+void liqShader::write(/*, */)
 {
+	//bool shortShaderNames  = ;
+	unsigned int indentLevel = 0;
+
 	MFnDependencyNode node(m_mObject);
 	if( hasErrors )
 	{
 		liquidMessage2(messageError,"[liqShader::write] Erros occured while initializing shader '%s', won't export shader", node.name().asChar());
 		return;
 	}
+
 	// write co-shaders before
 	unsigned int i; 
 	for(i=0; i<m_coShaderArray.size(); i++)
@@ -687,29 +691,29 @@ void liqShader::write(bool shortShaderNames, unsigned int indentLevel)
 		}
 		else
 		{
-			coShader.writeAsCoShader(shortShaderNames, indentLevel);
+			coShader.writeAsCoShader(/*shortShaderNames, indentLevel*/);
 		}
 	}
+
 	// write shader
-	boost::scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
-	boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
-	assignTokenArrays( tokenPointerArray.size(), &tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
-	char* shaderFileName = shortShaderNames ? basename( const_cast<char *>(file.c_str())) : const_cast<char *>(file.c_str());
+	char* shaderFileName = liqglo.liqglo_shortShaderNames ? basename( const_cast<char *>(file.c_str())) : const_cast<char *>(file.c_str());
 	if( shaderSpace != "" )
 	{
-		RiTransformBegin();
-		RiCoordSysTransform( ( RtString )shaderSpace.asChar() );
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->shader_transformBegin((const liqString)shaderSpace.asChar());
 	}
 	// output shader
 	// its one less as the tokenPointerArray has a preset size of 1 not 0
-	int shaderParamCount = tokenPointerArray.size() - 1;
+
 	switch( shader_type )
 	{
     case SHADER_TYPE_LIGHT :
     {  
-      outputIndentation(indentLevel);
-		RtLightHandle ret = RiLightSourceV( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
- #ifdef RIBLIB_AQSIS
+
+      //outputIndentation(indentLevel);
+		RtLightHandle ret = liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->shader_light( shaderFileName,  tokenPointerArray );
+#ifdef RIBLIB_AQSIS
 		shaderHandler.set( reinterpret_cast<ptrdiff_t>(static_cast<RtLightHandle>(ret)) );
 #else
 		shaderHandler.set( ret );
@@ -717,17 +721,29 @@ void liqShader::write(bool shortShaderNames, unsigned int indentLevel)
 	  } break;
 	    
 	case SHADER_TYPE_SURFACE :
-		outputIndentation(indentLevel);
-		RiSurfaceV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
-		break;
+		{
+
+		//outputIndentation(indentLevel);
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->shader_surface( shaderFileName,  tokenPointerArray );
+
+		}break;
 	case SHADER_TYPE_DISPLACEMENT :
-		outputIndentation(indentLevel);
-		RiDisplacementV( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
-		break;
+		{
+
+		//outputIndentation(indentLevel);
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->shader_displacement( shaderFileName,  tokenPointerArray );
+
+		}break;
 	case SHADER_TYPE_VOLUME :
-		outputIndentation(indentLevel);
-		RiAtmosphereV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
-		break;
+		{
+
+		//outputIndentation(indentLevel);
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->shader_volume( shaderFileName,   tokenPointerArray );
+
+		}break;
 	default :
 		char errorMsg[512];
 		sprintf(errorMsg, "[liqShader::write] Unknown shader type for %s shader_type=%d", name.c_str(), shader_type);
@@ -736,13 +752,17 @@ void liqShader::write(bool shortShaderNames, unsigned int indentLevel)
 	}
 	if( shaderSpace != "" )
 	{
-		RiTransformEnd();
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->shader_transformEnd((const liqString)shaderSpace.asChar());
 	}
 }
 
 
-void liqShader::writeAsCoShader(bool shortShaderNames, unsigned int indentLevel)
+void liqShader::writeAsCoShader()
 {
+
+//	unsigned int indentLevel = 0;
+
 	MFnDependencyNode node(m_mObject);
 	if( hasErrors )
 	{
@@ -755,17 +775,18 @@ void liqShader::writeAsCoShader(bool shortShaderNames, unsigned int indentLevel)
 	{
 		//liqShader coShader(m_coShaderArray[i]);
 		liqShader &coShader = liqShaderFactory::instance().getShader(m_coShaderArray[i]);
-		coShader.writeAsCoShader(shortShaderNames, indentLevel);
+		coShader.writeAsCoShader();
 	}
 	// write co-shader
 	boost::scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
 	boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
 	assignTokenArrays( tokenPointerArray.size(), &tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
-	char* shaderFileName = shortShaderNames ? basename( const_cast<char *>(file.c_str())) : const_cast<char *>(file.c_str());
+	char* shaderFileName = liqglo.liqglo_shortShaderNames ? basename( const_cast<char *>(file.c_str())) : const_cast<char *>(file.c_str());
 	if( shaderSpace != "" )
 	{
-		RiTransformBegin();
-		RiCoordSysTransform( ( RtString )shaderSpace.asChar() );
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->shader_transformBegin((const liqString)shaderSpace.asChar());
+
 	}
 	// output shader
 	// its one less as the tokenPointerArray has a preset size of 1 not 0
@@ -777,7 +798,7 @@ void liqShader::writeAsCoShader(bool shortShaderNames, unsigned int indentLevel)
 	case SHADER_TYPE_SURFACE :
 	case SHADER_TYPE_DISPLACEMENT :
 	case SHADER_TYPE_VOLUME :
-		outputIndentation(indentLevel);
+		//outputIndentation(indentLevel);
 		RiShaderV(shaderFileName, shaderHandlerPtr, shaderParamCount, tokenArray.get(), pointerArray.get());
 		break;
 	default :
@@ -788,18 +809,20 @@ void liqShader::writeAsCoShader(bool shortShaderNames, unsigned int indentLevel)
 	}
 	if( shaderSpace != "" )
 	{
-		RiTransformEnd();
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->shader_transformEnd((const liqString)shaderSpace.asChar());
+
 	}
 }
 
-
-void liqShader::outputIndentation(unsigned int indentLevel)
-{
-	for(unsigned int i=0; i<indentLevel; ++i)
-	{
-		RiArchiveRecord(RI_VERBATIM, "\t");
-	}
-}
+// 
+// void liqShader::outputIndentation(unsigned int indentLevel)
+// {
+// 	for(unsigned int i=0; i<indentLevel; ++i)
+// 	{
+// 		RiArchiveRecord(RI_VERBATIM, "\t");
+// 	}
+// }
 
 MStatus liqShader::liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType )
 {

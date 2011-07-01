@@ -56,9 +56,9 @@ public :
 	MStatus liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType );
 
 	void appendCoShader(MObject coshader, MPlug plug);
-	void write(bool shortShaderNames, unsigned int indentLevel);
-  void writeAsCoShader(bool shortShaderNames, unsigned int indentLevel);
-	void outputIndentation(unsigned int indentLevel);
+	void write();
+    void writeAsCoShader();
+	//void outputIndentation(unsigned int indentLevel);
 
 	void buildJobs();
 	void scanExpressions( liqShader & currentShader );

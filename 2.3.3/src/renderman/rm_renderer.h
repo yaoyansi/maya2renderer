@@ -183,7 +183,25 @@ namespace renderman
 			const liqRibMeshData *mesh, 
 			const structJob &currentJob
 			);
-
+		// Shader
+		virtual void shader_transformBegin(const liqString  shaderSpace);
+		virtual void shader_transformEnd(const liqString  shaderSpace);
+		virtual void shader_surface(
+			const liqString &shaderFileName, 
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		virtual liqLightHandle shader_light(
+			const liqString &shaderFileName, 
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		virtual void shader_displacement(
+			const liqString &shaderFileName, 
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		virtual void shader_volume(
+			const liqString &shaderFileName, 
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
 	protected:
 		Renderer(const Renderer&);
 		Renderer& operator=(const Renderer&);

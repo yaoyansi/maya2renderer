@@ -6312,7 +6312,7 @@ MStatus liqRibTranslator::objectBlock()
 				// per shader shadow pass override
 				if( !liqglo_currentJob.isShadow || currentShader.outputInShadow )
 				{
-					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+					currentShader.write( );
 				}
 			}
 			if( hasSurfaceShader && !m_ignoreSurfaces )
@@ -6367,7 +6367,7 @@ MStatus liqRibTranslator::objectBlock()
 					// per shader shadow pass override
 					if( !liqglo_currentJob.isShadow || currentShader.outputInShadow )
 					{
-						currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+						currentShader.write();
 					}
 
 					//if( outputSurfaceShader )
@@ -6555,7 +6555,7 @@ MStatus liqRibTranslator::objectBlock()
 				
 				liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.name.c_str(), currentShader.file.c_str(), currentShader.outputInShadow );
 				if(currentShader.outputInShadow){
-					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+					currentShader.write();
 				}
 
 			} 
@@ -6648,7 +6648,7 @@ MStatus liqRibTranslator::objectBlock()
 			// per shader shadow pass override
 			if( !liqglo_currentJob.isShadow || currentShader.outputInShadow )
 			{
-				currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+				currentShader.write();
 			}
 
 			//if( !currentShader.hasErrors && outputDispShader )
