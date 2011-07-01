@@ -449,13 +449,13 @@ MStatus liqRibTranslator::doItNew( const MArgList& args , const MString& origina
 
 						unsigned lastGenFrame( ( frameIndex + m_deferredBlockSize ) < frameNumbers.size() ? frameIndex + m_deferredBlockSize : frameNumbers.size() );
 
-						//printf (">>> frameIndex = %d m_deferredBlockSize = %d frameNumbers.size = %d lastGenFrame = %d\n",frameIndex,m_deferredBlockSize,frameNumbers.size(),lastGenFrame );
+						//liquidMessage2(messageInfo, ">>> frameIndex = %d m_deferredBlockSize = %d frameNumbers.size = %d lastGenFrame = %d\n",frameIndex,m_deferredBlockSize,frameNumbers.size(),lastGenFrame );
 
 						for( unsigned outputFrame( frameIndex ); outputFrame < lastGenFrame; outputFrame++ )
 						{  
 							ribGenExtras << frameNumbers[ outputFrame ];
 							ribGenExtras << (( outputFrame != ( lastGenFrame - 1 ) )? ", " : " ");
-							// printf ("\t outputFrame = %d\n", outputFrame );
+							//liquidMessage2(messageInfo, "\t outputFrame = %d\n", outputFrame );
 						}
 						stringstream titleStream;
 						titleStream << liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;

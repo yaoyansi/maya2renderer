@@ -331,8 +331,8 @@ liqRibObj::liqRibObj( const MDagPath &path, ObjectType objType )
   LIQDEBUGPRINTF( "==> done creating rep %s\n", path.fullPathName().asChar() );
   if ( debugMode )
   {
-    if ( ignore ) printf( "\t ignoring...\n" );
-    if ( ignoreShadow ) printf( "\t ignoring in shadow...\n" );
+    if ( ignore ) LIQDEBUGPRINTF( "\t ignoring...\n" );
+    if ( ignoreShadow ) LIQDEBUGPRINTF( "\t ignoring in shadow...\n" );
   }
 }
 
@@ -456,7 +456,7 @@ void liqRibObj::setMatrix( int instance, MMatrix matrix )
  */
 void liqRibObj::ref()
 {
-  //printf("-> referencing ribobj: %s\n", data->objDagPath.fullPathName().asChar() );
+  //LIQDEBUGPRINTF("-> referencing ribobj: %s\n", data->objDagPath.fullPathName().asChar() );
   LIQDEBUGPRINTF("-> number of ribobj references prior: %d\n", referenceCount );
   
   referenceCount++;

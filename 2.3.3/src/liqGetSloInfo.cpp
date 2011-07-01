@@ -176,7 +176,7 @@ MString liqGetSloInfo::getTypeStr(SHADER_TYPE type)
 {
 	if( (unsigned int)type > shaderTypeStrSize )
 	{
-		printf("[liqGetSloInfo::getTypeStr] error index out of range %d \n", (int)type);
+		liquidMessage2( messageError, "[liqGetSloInfo::getTypeStr] error index out of range %d \n", (int)type);
 		return MString("??");
 	}
     return MString( shaderTypeStr[ type ] );
@@ -258,7 +258,7 @@ int liqGetSloInfo::setShader( MString shaderFileName )
   resetIt();
 
   if ( !fileExists( shaderFileName ) ) {
-    printf( "[liqGetSloInfo::setShader] Error : Can not find shader '%s'\n", shaderFileName.asChar() );
+    liquidMessage2(messageError, "[liqGetSloInfo::setShader] Error : Can not find shader '%s'\n", shaderFileName.asChar() );
     resetIt();
     return 0;
   } else {
@@ -438,9 +438,9 @@ int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
   // cout << "checking on " << shaderName << endl;
   if ( !fileExists( shaderName ) ) 
   {
-    printf( "[liqGetSloInfo::setShaderNode] Error : Can not find shader '%s'\n", shaderName.asChar());
-    resetIt();
-    return 0;
+		liquidMessage2(messageError, "[liqGetSloInfo::setShaderNode] : Can not find shader '%s'\n", shaderName.asChar() );
+		resetIt();
+		return 0;
   } 
   else 
   {
@@ -496,12 +496,12 @@ int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
 		intArrayData.copyTo( shaderOutputs );
 		if ( shaderOutputs.length() != numParam )
 		{
-			printf("[liqGetSloInfo::setShaderNode] error reading %s.rmanIsOutput ...\n", shaderNode.name().asChar() );
+			liquidMessage2(messageError, "[liqGetSloInfo::setShaderNode] error reading %s.rmanIsOutput ...\n", shaderNode.name().asChar() );
 		}
 	}
 	else
 	{
-		printf("[liqGetSloInfo::setShaderNode] error plug %s.rmanIsOutput doesn't exist\n", shaderNode.name().asChar());
+		liquidMessage2(messageError, "[liqGetSloInfo::setShaderNode] error plug %s.rmanIsOutput doesn't exist\n", shaderNode.name().asChar());
 	}
 
     // get the parameter types

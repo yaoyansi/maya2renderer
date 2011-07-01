@@ -260,7 +260,7 @@ liqShader::liqShader( MObject shaderObj )
 						if( arraySize == 0 ) 
 						{
 							skipToken = true;
-							printf("[liqShader] warning undefined string array size, not yet implemented...\n");
+							liquidMessage2(messageWarning, "[liqShader] warning undefined string array size, not yet implemented...\n");
 						}
 						else if( arraySize > 0 ) 
 						{
@@ -281,13 +281,13 @@ liqShader::liqShader( MObject shaderObj )
 									}
 									else
 									{
-										printf("[liqShader] error while building param %d : %s \n", kk, stringPlug.name().asChar() );
+										liquidMessage2(messageError, "[liqShader] error while building param %d : %s \n", kk, stringPlug.name().asChar() );
 									}
 								}
 							}
 							else
 							{
-								printf("[liqShader] error while building string param %s assumed as an array but wasn't...\n", stringPlug.name().asChar() );
+								liquidMessage2(messageError, "[liqShader] error while building string param %s assumed as an array but wasn't...\n", stringPlug.name().asChar() );
 							}
 						}
 						else if( arraySize == -1 )
@@ -322,7 +322,7 @@ liqShader::liqShader( MObject shaderObj )
 						if( arraySize == 0 )
 						{
 							skipToken = true;
-							printf("[liqShader] warning undefined float array size, not yet implemented ....\n");
+							liquidMessage2(messageWarning, "[liqShader] warning undefined float array size, not yet implemented ....\n");
 						}
 						else if( arraySize > 0 )
 						{
@@ -383,7 +383,7 @@ liqShader::liqShader( MObject shaderObj )
 					}
 					if( arraySize==0 )
 					{
-						printf("[liqShader] warning undefined float[3] array size, not yet implemented ....\n");
+						liquidMessage2(messageWarning, "[liqShader] warning undefined float[3] array size, not yet implemented ....\n");
 						skipToken = true;
 					}
 					else if ( arraySize > 0 )
@@ -392,7 +392,7 @@ liqShader::liqShader( MObject shaderObj )
 						if( status != MS::kSuccess )
 						{
 							skipToken = true;
-							printf("[liqShader] error while building float[3] array param %s on %s ...\n", paramName.asChar(), shaderNode.name().asChar() );
+							liquidMessage2(messageError, "[liqShader] error while building float[3] array param %s on %s ...\n", paramName.asChar(), shaderNode.name().asChar() );
 						}
 					}
 					else
@@ -401,7 +401,7 @@ liqShader::liqShader( MObject shaderObj )
 						if( status != MS::kSuccess )
 						{
 							skipToken = true;
-							printf("[liqShader] error while building float[3] param %s on %s ...\n", paramName.asChar(), shaderNode.name().asChar() );
+							liquidMessage2(messageError, "[liqShader] error while building float[3] param %s on %s ...\n", paramName.asChar(), shaderNode.name().asChar() );
 						}
 					}
 					break;
@@ -578,7 +578,7 @@ void liqShader::appendCoShader(MObject coshader, MPlug plug)
 	{
 		MFnDependencyNode fnObject(coshader);
 		MTypeId depNodeId = fnObject.typeId();
-		//printf("liqSurfaceNodeId=%d  liqDisplacementNodeId=%d  liqVolumeNodeId=%d  liqCoShaderNodeId=%d\n", liqSurfaceNodeId, liqDisplacementNodeId, liqVolumeNodeId, liqCoShaderNodeId);
+		//liquidMessage2(messageInfo, "liqSurfaceNodeId=%d  liqDisplacementNodeId=%d  liqVolumeNodeId=%d  liqCoShaderNodeId=%d\n", liqSurfaceNodeId, liqDisplacementNodeId, liqVolumeNodeId, liqCoShaderNodeId);
 		if( depNodeId==liqSurfaceNodeId || depNodeId==liqDisplacementNodeId || depNodeId==liqVolumeNodeId || depNodeId==liqCoShaderNodeId )
 		{
 			isLiquidShader = 1;
@@ -591,7 +591,7 @@ void liqShader::appendCoShader(MObject coshader, MPlug plug)
 	}
 	else
 	{
-		printf("[liqShader::appendCoShader] Error unsupported connection in plug '%s', abort co-shading for this plug.\n", plug.name().asChar());
+		liquidMessage2(messageError, "[liqShader::appendCoShader] Error unsupported connection in plug '%s', abort co-shading for this plug.\n", plug.name().asChar());
 	}
 }
 
@@ -647,7 +647,7 @@ void liqShader::write(bool shortShaderNames, unsigned int indentLevel)
 	MFnDependencyNode node(m_mObject);
 	if( hasErrors )
 	{
-		printf("[liqShader::write] Erros occured while initializing shader '%s', won't export shader", node.name().asChar());
+		liquidMessage2(messageError,"[liqShader::write] Erros occured while initializing shader '%s', won't export shader", node.name().asChar());
 		return;
 	}
 	// write co-shaders before
@@ -722,7 +722,7 @@ void liqShader::writeAsCoShader(bool shortShaderNames, unsigned int indentLevel)
 	MFnDependencyNode node(m_mObject);
 	if( hasErrors )
 	{
-		printf("[liqShader::write] Erros occured while initializing shader '%s', won't export shader", node.name().asChar());
+		liquidMessage2(messageError, "[liqShader::write] Erros occured while initializing shader '%s', won't export shader", node.name().asChar());
 		return;
 	}
 	// write up co-shaders before

@@ -692,7 +692,7 @@ void liqRibTranslatorErrorHandler( RtInt code, RtInt severity, char* message )
 void liqRibTranslatorErrorHandler( RtInt code, RtInt severity, const char* message )
 #endif
 {
-	printf( "The renderman library is reporting and error! Code: %d  Severity: %d", code, severity );
+	liquidMessage2(messageError, "The renderman library is reporting and error! Code: %d  Severity: %d", code, severity );
 	MString error( message );
 	throw error;
 }
@@ -983,10 +983,10 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 			frameNumbers = generateFrameNumbers( string( argValue.asChar() ) );
 			if( frameNumbers.size() ) { 
 				m_animation = true;
-				//printf(">>> render frames: ");
+				//liquidMessage2(messageInfo, ">>> render frames: ");
 				//for( unsigned i(0) ; i < frameNumbers.size() ; i++ )
-				//  printf( "%d ", frameNumbers[i] );
-				//printf("\n");
+				//  liquidMessage2(messageInfo, "%d ", frameNumbers[i] );
+				//liquidMessage2(messageInfo, "\n");
 			}
 		} 
 		else if((arg == "-m") || (arg == "-mbSamples")) 
@@ -2565,13 +2565,13 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 
 						unsigned lastGenFrame( ( frameIndex + m_deferredBlockSize ) < frameNumbers.size() ? frameIndex + m_deferredBlockSize : frameNumbers.size() );
 
-						//printf (">>> frameIndex = %d m_deferredBlockSize = %d frameNumbers.size = %d lastGenFrame = %d\n",frameIndex,m_deferredBlockSize,frameNumbers.size(),lastGenFrame );
+						//liquidMessage2(messageInfo, ">>> frameIndex = %d m_deferredBlockSize = %d frameNumbers.size = %d lastGenFrame = %d\n",frameIndex,m_deferredBlockSize,frameNumbers.size(),lastGenFrame );
 
 						for( unsigned outputFrame( frameIndex ); outputFrame < lastGenFrame; outputFrame++ )
 						{  
 							ribGenExtras << frameNumbers[ outputFrame ];
 							ribGenExtras << (( outputFrame != ( lastGenFrame - 1 ) )? ", " : " ");
-							// printf ("\t outputFrame = %d\n", outputFrame );
+							// liquidMessage2(messageInfo, "\t outputFrame = %d\n", outputFrame );
 						}
 						stringstream titleStream;
 						titleStream << liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
@@ -5393,8 +5393,8 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 						MString pixFilter( liquidRenderer.pixelFilterNames[ m_channels_iterator->pixelFilter ] );
 						filter = ( char* )pixFilter.asChar();
 
-						printf (">>  m_channels_iterator->pixelFilter = %s\n", liquidRenderer.pixelFilterNames[ m_channels_iterator->pixelFilter ].asChar() );
-						printf (">>  pixFilter.asChar() = %s\n", pixFilter.asChar() );
+						liquidMessage2(messageInfo, ">>  m_channels_iterator->pixelFilter = %s\n", liquidRenderer.pixelFilterNames[ m_channels_iterator->pixelFilter ].asChar() );
+						liquidMessage2(messageInfo, ">>  pixFilter.asChar() = %s\n", pixFilter.asChar() );
 
 						tokens[ numTokens ] = "string filter";
 						values[ numTokens ] = ( RtPointer )&filter;

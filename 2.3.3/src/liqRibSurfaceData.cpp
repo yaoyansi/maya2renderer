@@ -144,7 +144,7 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
       for ( unsigned k = 0; k < vKnots.length(); k++ )
     	{	
     		 vKnots[ k ] = vmax - vKnots[ k ] + vmin;
-    		 //printf( "vKnots[%d]  = %f\n", k, vKnots[ k ] );
+    		 //LIQDEBUGPRINTF( "vKnots[%d]  = %f\n", k, vKnots[ k ] );
     	}
     	
     }

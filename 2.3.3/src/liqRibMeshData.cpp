@@ -271,35 +271,35 @@ void liqRibMeshData::printMesh()
     scoped_array< RtInt > nloops( new RtInt[ numFaces ] );
 	unsigned numTokens( tokenPointerArray.size() );
 
-	printf("numFace %d \n", numFaces);
-	printf("nloops (%d) [ ", numFaces);
+	LIQDEBUGPRINTF("numFace %d \n", numFaces);
+	LIQDEBUGPRINTF("nloops (%d) [ ", numFaces);
 	for(i=0; i<numFaces; i++)
 	{
-		printf(" %d", nloops[i]);
+		LIQDEBUGPRINTF(" %d", nloops[i]);
 	}
-	printf("]\n");
+	LIQDEBUGPRINTF("]\n");
 
 	int nvertsSize = nverts.use_count();
 	RtInt *nvertsPtr = nverts.get();
-	printf("nverts (%d) [ ", nvertsSize);
+	LIQDEBUGPRINTF("nverts (%d) [ ", nvertsSize);
 	for(i=0; i<nvertsSize; i++)
 	{
-		printf(" %d", nvertsPtr[i]);
+		LIQDEBUGPRINTF(" %d", nvertsPtr[i]);
 	}
-	printf("]\n");
+	LIQDEBUGPRINTF("]\n");
 
 
 	int vertsSize = verts.use_count();
 	RtInt *vertsPtr = verts.get();
-	printf("nverts (%d) [ ", vertsSize);
+	LIQDEBUGPRINTF("nverts (%d) [ ", vertsSize);
 	for(i=0; i<vertsSize; i++)
 	{
-		printf(" %d", vertsPtr[i]);
+		LIQDEBUGPRINTF(" %d", vertsPtr[i]);
 	}
-	printf("]\n");
+	LIQDEBUGPRINTF("]\n");
 
-	printf("numTokens (%d)\n", numTokens);
-	printf("\n");
+	LIQDEBUGPRINTF("numTokens (%d)\n", numTokens);
+	LIQDEBUGPRINTF("\n");
 	// print tokens & pointers
 }
 

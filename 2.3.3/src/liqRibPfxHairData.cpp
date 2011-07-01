@@ -130,7 +130,7 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
           //MString err( "liqRibPfxHairData failed to allocate CV memory!" );
           //cout << err << endl << flush;
           //throw( err );
-          printf( "[error] liqRibPfxHairData failed to allocate CV memory!\n" );
+          liquidMessage2(messageError, "liqRibPfxHairData failed to allocate CV memory!\n" );
           return;
         }
 
@@ -140,7 +140,7 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
           //MString err( "liqRibPfxHairData failed to allocate normal memory!" );
           //cout << err << endl << flush;
           //throw( err );
-          printf( "[error] liqRibPfxHairData failed to allocate normal memory!\n" );
+          liquidMessage2(messageError, "[error] liqRibPfxHairData failed to allocate normal memory!\n" );
           return;
         }
 
@@ -150,7 +150,7 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
           //MString err( "liqRibPfxHairData failed to allocate per vertex width memory!" );
           //cout << err << endl << flush;
           //throw( err );
-          printf( "[error] liqRibPfxHairData failed to allocate per vertex width memory!\n" );
+          liquidMessage2(messageError, "[error] liqRibPfxHairData failed to allocate per vertex width memory!\n" );
           return;
         }
 
@@ -160,7 +160,7 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
           //MString err( "liqRibPfxHairData failed to allocate CV color memory!" );
           //cout << err << endl << flush;
           //throw( err );
-          printf( "[error] liqRibPfxHairData failed to allocate CV color memory!\n" );
+          liquidMessage2(messageError, "[error] liqRibPfxHairData failed to allocate CV color memory!\n" );
           return;
         }
 
@@ -170,7 +170,7 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
           //MString err( "liqRibPfxHairData failed to allocate CV opacity memory !" );
           //cout << err << endl << flush;
           //throw( err );
-          printf( "[error] liqRibPfxHairData failed to allocate CV opacity memory!\n" );
+          liquidMessage2(messageError,  "[error] liqRibPfxHairData failed to allocate CV opacity memory!\n" );
           return;
         }
 

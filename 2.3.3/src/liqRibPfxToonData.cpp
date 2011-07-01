@@ -149,7 +149,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
           //MString err( "liqRibPfxToonData failed to allocate CV memory!" );
           //cout << err << endl << flush;
           //throw( err );
-          printf( "[error] liqRibPfxToonData failed to allocate CV memory!\n" );
+          liquidMessage2(messageError, "[error] liqRibPfxToonData failed to allocate CV memory!\n" );
           return;
         }
 
@@ -159,7 +159,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
           //MString err( "liqRibPfxToonData failed to allocate per vertex width memory!" );
           //cout << err << endl << flush;
           //throw( err );
-          printf( "[error] liqRibPfxToonData failed to allocate per vertex width memory!\n" );
+          liquidMessage2(messageError, "[error] liqRibPfxToonData failed to allocate per vertex width memory!\n" );
           return;
         }
 
@@ -169,7 +169,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
           //MString err( "liqRibPfxToonData failed to allocate CV color memory!" );
           //cout << err << endl << flush;
           //throw(err);
-          printf( "[error] liqRibPfxToonData failed to allocate CV color memory!\n" );
+          liquidMessage2(messageError, "[error] liqRibPfxToonData failed to allocate CV color memory!\n" );
           return;
         }
 
@@ -179,7 +179,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
           //MString err("liqRibPfxToonData failed to allocate CV opacity memory !");
           //cout << err << endl << flush;
           //throw( err );
-          printf( "[error] liqRibPfxToonData failed to allocate CV opacity memory !\n" );
+          liquidMessage2(messageError, "[error] liqRibPfxToonData failed to allocate CV opacity memory !\n" );
           return;
         }
 
@@ -238,7 +238,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
           //MString err( "liqRibPfxToonData: liqTokenPointer failed to allocate CV memory !" );
           //cout << err << endl;
           //throw(err);
-          printf( "[error] liqRibPfxToonData: liqTokenPointer failed to allocate CV memory ! \n" );
+          liquidMessage2(messageError, "[error] liqRibPfxToonData: liqTokenPointer failed to allocate CV memory ! \n" );
           return;
         }
         points_pointerPair.setDetailType( rVertex );
@@ -252,7 +252,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
           //MString err("liqRibPfxToonData: liqTokenPointer failed to allocate width memory !");
           //cout <<err<<endl;
           //throw(err);
-          printf( "[error] liqRibPfxToonData: liqTokenPointer failed to allocate width memory ! \n" );
+          liquidMessage2(messageError, "[error] liqRibPfxToonData: liqTokenPointer failed to allocate width memory ! \n" );
           return;
         }
         width_pointerPair.setDetailType( rVarying );
@@ -266,7 +266,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
           //MString err("liqRibPfxToonData: liqTokenPointer failed to allocate color memory !");
           //cout <<err<<endl;
           //throw(err);
-          printf( "[error] liqRibPfxToonData: liqTokenPointer failed to allocate color memory !\n" );
+          liquidMessage2(messageError, "[error] liqRibPfxToonData: liqTokenPointer failed to allocate color memory !\n" );
           return;
         }
         color_pointerPair.setDetailType( rVertex );
@@ -280,7 +280,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
           //MString err("liqRibPfxToonData: liqTokenPointer failed to allocate opacity memory !");
           //cout <<err<<endl<<flush;
           //throw(err);
-          printf( "[error] liqRibPfxToonData: liqTokenPointer failed to allocate opacity memory !\n" );
+          liquidMessage2(messageError, "[error] liqRibPfxToonData: liqTokenPointer failed to allocate opacity memory !\n" );
           return;
         }
         opacity_pointerPair.setDetailType( rVertex );

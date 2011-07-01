@@ -1148,7 +1148,10 @@ void liquidMessage( const string& msg, liquidVerbosityType type )
           MGlobal::displayWarning( infoOutput );
           break;
         case messageError:
-          MGlobal::displayError( infoOutput );
+			//MString err("error(\""+infoOutput+"\");");MGlobal::executeCommand(err,true,false);
+			MGlobal::displayError( infoOutput );
+			printf("[liquid Error] %s\n", infoOutput);
+			break;
       }
     } 
     else 

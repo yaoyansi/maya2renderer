@@ -173,12 +173,12 @@ MStatus liqWriteArchive::parseArguments(const MArgList& args)
 	m_objectNames = listToBeExported;
 	if(m_debug)
 	{
-		printf("[liqWriteArchive::doIt] exporting objects :\n");
+		liquidMessage2(messageInfo,"[liqWriteArchive::doIt] exporting objects :\n");
 		for(i=0; i<listToBeExported.length();i++)
 		{
-			printf("    '%d' : '%s' \n", i, listToBeExported[i].asChar() );
+			liquidMessage2(messageInfo,"    '%d' : '%s' \n", i, listToBeExported[i].asChar() );
 		}
-		printf("et c'est tout\n");
+		liquidMessage2(messageInfo,"et c'est tout\n");
 	}
 	return MS::kSuccess;
 }
@@ -218,7 +218,7 @@ MStatus liqWriteArchive::doIt(const MArgList& args)
 			{
 				MFnDependencyNode fnDepNode(depNode);
 				MString type = fnDepNode.typeName();
-				//printf("OBJ %s : type=%s \n", fnDepNode.name().asChar(), type.asChar());
+				//liquidMessage2(messageInfo, "OBJ %s : type=%s \n", fnDepNode.name().asChar(), type.asChar());
 				if(type=="objectSet")
 				{
 					setsDn.push_back(depNode);
@@ -265,7 +265,7 @@ MStatus liqWriteArchive::doIt(const MArgList& args)
 	{
 		if(m_debug)
 		{
-			printf("[liqWriteArchive::doIt] Export object '%s' \n", m_objectNames[i].asChar());
+			liquidMessage2(messageInfo, "[liqWriteArchive::doIt] Export object '%s' \n", m_objectNames[i].asChar());
 		}
 		writeObjectToRib(objDb[i], m_exportTransform);
 	}
@@ -274,12 +274,12 @@ MStatus liqWriteArchive::doIt(const MArgList& args)
 		MFnSet fnSet(setsDn[i], &status);
 		if(!status)
 		{
-			MGlobal::displayWarning("[liqWriteArchive::doIt] Error init fnSet on object " + m_objectNames[i]);
+			liquidMessage2(messageWarning, "[liqWriteArchive::doIt] Error init fnSet on object %s" , m_objectNames[i]);
 			continue;
 		}
 		if(m_debug)
 		{
-			printf("[liqWriteArchive::doIt] Export set '%s' \n", m_objectNames[i].asChar());
+			liquidMessage2(messageInfo, "[liqWriteArchive::doIt] Export set '%s' \n", m_objectNames[i].asChar());
 		}
 		MSelectionList memberList;
 		fnSet.getMembers(memberList, true);
@@ -289,7 +289,7 @@ MStatus liqWriteArchive::doIt(const MArgList& args)
 			status = memberList.getDagPath(j, objDagPath);
 			if(m_debug)
 			{
-				printf("    - Export object '%s' \n", objDagPath.fullPathName().asChar());
+				liquidMessage2(messageInfo, "    - Export object '%s' \n", objDagPath.fullPathName().asChar());
 			}
 			writeObjectToRib(objDagPath, m_exportTransform);
 		}
@@ -297,7 +297,7 @@ MStatus liqWriteArchive::doIt(const MArgList& args)
 	RiEnd();
 	if(m_debug)
 	{
-		printf("[liqWriteArchive::doIt] Export done \n");
+		liquidMessage2(messageInfo, "[liqWriteArchive::doIt] Export done \n");
 	}
 	return MS::kSuccess;
 }

@@ -83,7 +83,7 @@ void removeTrack( long addr )
 			printf( "-> liquidMemory FREE: %ld FILE: %s LINE: %ld\n", i->address, i->file, i->line );
 			allocList.erase( i );
 			break;
-    }
+		}
 		++i;
 	}
 }
@@ -92,16 +92,16 @@ void ldumpUnfreed()
 {
     long totalSize = 0;
 
-    printf("-------------- Liquid - Current Memory Usage --------------\n");
+    printf(  "-------------- Liquid - Current Memory Usage --------------\n");
 
     std::list<ALLOC_INFO>::iterator i = allocList.begin();
     while ( i != allocList.end() ) {
-		printf("%-50s:\t\tLINE %ld,\t\tADDRESS %ld\t%ld unfreed\n", i->file, i->line, i->address, i->size);
+		printf(  "%-50s:\t\tLINE %ld,\t\tADDRESS %ld\t%ld unfreed\n", i->file, i->line, i->address, i->size);
 		totalSize += i->size;
 		++i;
     }
-    printf("-----------------------------------------------------------\n");
-    printf("Total Unfreed: %ld bytes\n", totalSize);
+    printf( "-----------------------------------------------------------\n");
+    printf( "Total Unfreed: %ld bytes\n", totalSize);
 }
 
 int lmemUsage() 

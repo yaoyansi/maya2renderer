@@ -81,7 +81,7 @@ liqRibHT::~liqRibHT()
     RibNodeMap.clear();
   }
   if ( debugMode ) {
-    printf("-> finished killing hash table\n");
+    LIQDEBUGPRINTF("-> finished killing hash table\n");
   }*/
 }
 

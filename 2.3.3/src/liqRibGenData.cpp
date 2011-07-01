@@ -192,7 +192,7 @@ void liqRibGenData::write()
       // string errorString( "Error reading RIBGenCreate or RIBGenDestroy in RIBGen: " );
       // errorString += ribGenSoName.asChar();
       // liquidMessage( errorString, messageError );
-      printf( "-> [Error] reading RIBGenCreate or RIBGenDestroy in RIBGen: %s\n", ribGenSoName.asChar() );
+      LIQDEBUGPRINTF(  "-> [Error] reading RIBGenCreate or RIBGenDestroy in RIBGen: %s\n", ribGenSoName.asChar() );
     }
 #ifndef _WIN32
     dlclose( handle );
@@ -215,7 +215,7 @@ void liqRibGenData::write()
         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
         (LPTSTR) &lpMsgBuf,
         0, NULL );
-    printf( "-> [Error] opening RIBGen %s (%d) %s \n", ribGenSoName.asChar(), dw, lpMsgBuf );
+    LIQDEBUGPRINTF( "-> [Error] opening RIBGen %s (%d) %s \n", ribGenSoName.asChar(), dw, lpMsgBuf );
 #else
     string errorString( "Opening RIBGen '" );
     errorString += ribGenSoName.asChar();
@@ -303,7 +303,7 @@ MCommandResult * liqRibGenStatus::ExecuteHostCmd( const char *cmd, std::string &
   stat = MGlobal::executeCommand (	MString( cmd ), *CmdResult, true, false );	 
 	if ( stat == MS::kSuccess )
   {
-    // if ( CmdResult != NULL ) printf("executeCommand= MS::kSuccess (%d)\n", CmdResult->resultType() );
+    // if ( CmdResult != NULL ) LIQDEBUGPRINTF("executeCommand= MS::kSuccess (%d)\n", CmdResult->resultType() );
     ret = CmdResult;
   }
   return ret;

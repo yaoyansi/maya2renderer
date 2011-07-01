@@ -2853,6 +2853,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqlog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\liqMayaRenderView.cpp"
 				>
 			</File>
@@ -3091,6 +3095,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\liqLightNodeBehavior.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\liqlog.h"
 				>
 			</File>
 			<File

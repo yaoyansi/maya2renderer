@@ -346,5 +346,6 @@ typedef enum {
   TAG_FACEVARYINGBOUNDARY
 } SBD_EXTRA_TAG;
 
+#include "liqlog.h"
 
 #endif

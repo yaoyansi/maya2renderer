@@ -50,7 +50,7 @@ public:
   liqRibCustomNode(MObject /*obj*/, liqCustomNode *node)
     : customNode(node)
   {
-    if ( debugMode ) { printf("-> creating custom node object\n"); }
+    LIQDEBUGPRINTF("-> creating custom node object\n");
   }
 
   virtual void write()
@@ -70,7 +70,7 @@ public:
 
   virtual ObjectType type() const
   {
-    if ( debugMode ) { printf("-> returning customnode object type\n"); }
+    LIQDEBUGPRINTF("-> returning customnode object type\n");
     return MRT_Custom;
   }
 
