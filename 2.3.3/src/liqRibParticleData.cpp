@@ -1079,7 +1079,7 @@ liqRibParticleData::liqRibParticleData( MObject partobj )
 
 /** Write the RIB for this surface.
  */
-void liqRibParticleData::write()
+void liqRibParticleData::_write()
 {
   LIQDEBUGPRINTF( "-> writing particles\n");
 

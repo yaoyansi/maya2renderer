@@ -55,9 +55,10 @@ typedef shared_ptr< liqRibData > liqRibDataPtr;
 class liqRibData {
 public:
     virtual           ~liqRibData();
-    virtual void       write() = 0;
+	// write() is replaced by write(ribFileFullPath) in order to pass the ribFileFullPath;
+    virtual void       write(const MString &ribFileFullPath);
     virtual unsigned   granularity() const;
-    virtual bool       writeNextGrain();
+    virtual bool       writeNextGrain(const MString& ribFileFullPath);
     virtual bool       isNextGrainAnimated() const;
     virtual bool       compare( const liqRibData& other ) const = 0;
     virtual ObjectType type() const = 0;
@@ -65,9 +66,15 @@ public:
 
     liqTokenPointer::array tokenPointerArray;
     MDagPath	       objDagPath;
+
+protected:
+	MString			   m_ribFileFullPath;
+
 private:
+    virtual void       _write() = 0;
     void               parseVectorAttributes( MFnDependencyNode &nodeFn, MStringArray & strArray, ParameterType pType );
     unsigned int       faceVaryingCount;
+
 };
 
 #endif

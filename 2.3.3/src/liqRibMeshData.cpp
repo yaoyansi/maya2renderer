@@ -306,7 +306,7 @@ void liqRibMeshData::printMesh()
 
 /**      Write the RIB for this mesh.
  */
-void liqRibMeshData::write()
+void liqRibMeshData::_write()
 {
   if ( numPoints > 1 ) 
   {

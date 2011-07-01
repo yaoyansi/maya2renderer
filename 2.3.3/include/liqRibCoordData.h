@@ -35,7 +35,7 @@ public: // Methods
 
     liqRibCoordData( MObject locator );
 
-    virtual void       write();
+    virtual void       _write();
     virtual bool       compare( const liqRibData & other ) const;
     virtual ObjectType type() const;
 

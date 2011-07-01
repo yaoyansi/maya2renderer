@@ -55,7 +55,7 @@ liqRibClipPlaneData::liqRibClipPlaneData( MObject coord )
 
 /** Write the RIB for this coordinate system.
  */
-void liqRibClipPlaneData::write()
+void liqRibClipPlaneData::_write()
 {
   LIQDEBUGPRINTF("-> writing clipPlane");
   RiArchiveRecord( RI_VERBATIM, "ClippingPlane 0 0 -1 0 0 0\n" );

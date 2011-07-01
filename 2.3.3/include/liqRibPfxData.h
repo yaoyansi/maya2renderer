@@ -43,7 +43,7 @@ public: // Methods
 
                           liqRibPfxData( MObject pfxGeo, ObjectType pfxtype );
 
-  virtual void            write();
+  virtual void            _write();
   virtual unsigned        granularity() const;
   virtual bool            writeNextGrain();
   virtual bool            compare( const liqRibData& other ) const;

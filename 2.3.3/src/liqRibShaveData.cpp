@@ -403,51 +403,15 @@ liqRibShaveData::liqRibShaveData( MObject surface )
 
 /** Write the RIB for this surface.
  */
-void liqRibShaveData::write()
+void liqRibShaveData::_write()
 {
   LIQDEBUGPRINTF( "-> writing shave surface\n" );
 
   LIQDEBUGPRINTF( "-> writing shave surface trims\n" );
   RiArchiveRecord( RI_COMMENT, "This is a shave object data:\n" );
-  if ( hasTrims ) 
-  {
-    RiTrimCurve( nloops,
-                 const_cast< RtInt* >( &ncurves[ 0 ] ),
-                 const_cast< RtInt* >( &order[ 0 ] ),
-                 const_cast< RtFloat* >( &knot[ 0 ] ),
-                 const_cast< RtFloat* >( &minKnot[ 0 ] ),
-                 const_cast< RtFloat* >( &maxKnot[ 0 ] ),
-                 const_cast< RtInt* >( &numCVs[ 0 ] ),
-                 const_cast< RtFloat* >( &u[ 0 ] ),
-                 const_cast< RtFloat* >( &v[ 0 ] ),
-                 const_cast< RtFloat* >( &w[ 0 ] ) );
-  }
+ 
 
-  if ( !tokenPointerArray.empty() ) 
-  {
-    unsigned numTokens( tokenPointerArray.size() );
-    scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-    scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-    assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
-
-    RiNuPatchV( nu,
-                uorder,
-                uknot.get(),
-                umin,
-                umax,
-                nv,
-                vorder,
-                vknot.get(),
-                vmin,
-                vmax,
-                numTokens,
-                tokenArray.get(),
-                pointerArray.get() );
-  } 
-  else 
-  {
-    LIQDEBUGPRINTF( "-> ignoring shave surface\n" );
-  }
+ 
   LIQDEBUGPRINTF( "-> done writing shave surface\n" );
 }
 

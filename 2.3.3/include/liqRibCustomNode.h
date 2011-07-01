@@ -53,7 +53,7 @@ public:
     LIQDEBUGPRINTF("-> creating custom node object\n");
   }
 
-  virtual void write()
+  virtual void _write()
   {
     if (customNode) {
       customNode->liquidWrite();

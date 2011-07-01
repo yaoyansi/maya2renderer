@@ -296,7 +296,7 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
 
 /** Write the RIB for this surface
  */
-void liqRibPfxHairData::write()
+void liqRibPfxHairData::_write()
 {
   LIQDEBUGPRINTF( "-> writing pfxHair curves\n" );
 

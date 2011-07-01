@@ -55,7 +55,7 @@ liqRibCoordData::liqRibCoordData( MObject coord )
 
 /** Write the RIB for this coordinate system.
  */
-void liqRibCoordData::write()
+void liqRibCoordData::_write()
 {
   LIQDEBUGPRINTF("-> writing coord"); 
   RiCoordinateSystem( const_cast<char *> ( name.asChar() ) );

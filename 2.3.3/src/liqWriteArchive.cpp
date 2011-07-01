@@ -408,7 +408,7 @@ void liqWriteArchive::writeObjectToRib(const MDagPath &objDagPath, bool writeTra
 				}
 			}
 			outputIndentation();
-			ribNode.object(0)->writeObject();
+			ribNode.object(0)->writeObject("");
 		}
 	}
 	else

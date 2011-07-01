@@ -113,7 +113,7 @@ liqRibGenData::liqRibGenData( MObject obj, MDagPath path )
   LIQDEBUGPRINTF( "-> ribgen name %s\n", fnNode.name().asChar() );
 }
 
-void liqRibGenData::write()
+void liqRibGenData::_write()
 {
   LIQDEBUGPRINTF( "-> writing ribgen\n" ); // || defined( GENERIC_RIBLIB )
 #if defined( PRMAN ) || defined( DELIGHT ) || defined( GENERIC_RIBLIB )

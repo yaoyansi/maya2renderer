@@ -625,7 +625,7 @@ MStatus liqRibTranslator::doItNew( const MArgList& args , const MString& origina
 							if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
 								continue;
 
-							_writeObject(false, ribNode);
+							_writeObject( ribNode);
 
 						}
 					}

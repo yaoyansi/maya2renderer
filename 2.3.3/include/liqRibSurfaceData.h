@@ -46,7 +46,7 @@ public: // Methods
 
                         liqRibSurfaceData( MObject surface );
 
-  virtual void          write();
+  virtual void          _write();
   virtual unsigned      granularity() const;
   virtual bool          writeNextGrain();
   virtual bool          compare( const liqRibData & other ) const;

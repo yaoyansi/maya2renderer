@@ -993,7 +993,7 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
 
 /** Write the RIB for this light.
  */
-void liqRibLightData::write()
+void liqRibLightData::_write()
 {
   if ( !excludeFromRib ) 
   {

@@ -66,7 +66,7 @@ class liqRibMayaSubdivisionData : public liqRibData {
 public: // Methods
   liqRibMayaSubdivisionData( MObject mesh );
 
-  virtual void       write();
+  virtual void       _write();
   virtual bool       compare( const liqRibData & other ) const;
   virtual ObjectType type() const;
 

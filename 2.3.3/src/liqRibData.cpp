@@ -66,9 +66,9 @@ inline unsigned liqRibData::granularity() const
   return 1;
 }
 
-inline bool liqRibData::writeNextGrain() 
+inline bool liqRibData::writeNextGrain(const MString& ribFileFullPath) 
 {
-  write();
+  write(ribFileFullPath);
   return false;
 }
 
@@ -277,4 +277,27 @@ void liqRibData::addAdditionalSurfaceParameters( MObject node )
       tokenPointerArray.push_back( tokenPointerPair );
     }
   }
+}
+
+void liqRibData::write(const MString &fileName)
+{
+	m_ribFileFullPath = fileName;
+
+	RtContextHandle c;
+	//if m_ribFileFullPath is "", write the data into the current rib file.
+	if(m_ribFileFullPath!=""){
+		//1)make a reference
+		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+		//2)write the data into another rib file.
+		c = RiGetContext();//push context
+		liquidMessage("output geometry rib: "+ string(m_ribFileFullPath.asChar()) , messageInfo);
+		RiBegin( const_cast< RtToken >( m_ribFileFullPath.asChar() ) );
+	}
+
+	_write();
+
+	if(m_ribFileFullPath!=""){
+		RiEnd();
+		RiContext(c);//pop context
+	}
 }

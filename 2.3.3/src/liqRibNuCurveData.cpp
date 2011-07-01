@@ -171,7 +171,7 @@ liqRibNuCurveData::liqRibNuCurveData( MObject curve )
 
 /**  Write the RIB for this curve.
  */
-void liqRibNuCurveData::write()
+void liqRibNuCurveData::_write()
 {
   LIQDEBUGPRINTF( "-> writing nurbs curve\n" );
 

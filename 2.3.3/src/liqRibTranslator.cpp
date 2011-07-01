@@ -6767,6 +6767,7 @@ MStatus liqRibTranslator::objectBlock()
 				RtColor rColor,rOpacity;
 				if( m_shaderDebug ) 
 				{
+					liqRIBMsg("shader debug is turned on, so the object is red.");
 					// shader debug on !! everything goes red and opaque !!!
 					rColor[0] = 1.;
 					rColor[1] = 0.;
@@ -6819,6 +6820,7 @@ MStatus liqRibTranslator::objectBlock()
 					// and assign default shader to shader-less nodes.
 					//
 					if( m_shaderDebug ) {
+						liqRIBMsg("shader debug is turned on, so the surface is constant.");
 						RiSurface( "constant", RI_NULL );
 						LIQDEBUGPRINTF("add more constant parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorBlinn.sl as an example.(?)");
 					}
@@ -7117,14 +7119,7 @@ MStatus liqRibTranslator::objectBlock()
 
 						for ( unsigned msampleOn( 0 ); msampleOn < liqglo_motionSamples; msampleOn++ ){ 
 							MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+(int)liqglo_lframe+".m"+(int)msampleOn+".rib" );
-							//1)make a reference
-							RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
-							//2)write the data into a rib file.
-							RtContextHandle c = RiGetContext();//push context
-							RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
-							ribNode->object( msampleOn )->writeNextObjectGrain();
-							RiEnd();
-							RiContext(c);//pop context
+							ribNode->object( msampleOn )->writeNextObjectGrain(geometryRibFile);
 						}
 
 						RiMotionEnd();
@@ -7133,20 +7128,13 @@ MStatus liqRibTranslator::objectBlock()
 						RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
 
 						MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+(int)liqglo_lframe+".rib" );
-						//1)make a reference
-						RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
-						//2)write the data into a rib file.
-						RtContextHandle c = RiGetContext();//push context
-						RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
-						ribNode->object( 0 )->writeNextObjectGrain();
-						RiEnd();
-						RiContext(c);//pop context
+						ribNode->object( 0 )->writeNextObjectGrain(geometryRibFile);
 					}
 				}
 			} 
 			else {
 				//ribNode->object( 0 )->writeObject();
-				_writeObject(true, ribNode);
+				_writeObject(ribNode);
 			}
 
 			// Alf: postShapeMel
@@ -7209,7 +7197,7 @@ MStatus liqRibTranslator::worldPrologue()
 				matrix.get( ribMatrix );
 				RiConcatTransform( ribMatrix );
 
-				ribNode->object(0)->writeObject();
+				ribNode->object(0)->writeObject("");
 				ribNode->object(0)->written = 1;
 
 				RiTransformEnd();
@@ -7305,7 +7293,7 @@ MStatus liqRibTranslator::coordSysBlock()
 		else 
 			RiTransform( ribMatrix );
 
-		ribNode->object(0)->writeObject();
+		ribNode->object(0)->writeObject("");
 		ribNode->object(0)->written = 1;
 		RiAttributeEnd();
 	}
@@ -7362,7 +7350,7 @@ MStatus liqRibTranslator::lightBlock()
 				RtInt msdepth = ribNode->trace.maxSpecularDepth;
 				RiAttribute( "trace", (RtToken) "maxspeculardepth", &msdepth, RI_NULL );
 			}
-			ribNode->object(0)->writeObject();
+			ribNode->object(0)->writeObject("");
 			ribNode->object(0)->written = 1;
 			// The next line pops the light...
 			RiAttributeEnd();
@@ -7677,7 +7665,7 @@ MString liqRibTranslator::getHiderOptions( MString rendername, MString hidername
 	return options;
 }
 
-void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode)
+void liqRibTranslator::_writeObject(const liqRibNodePtr& ribNode)
 {
 	if(    ribNode->rib.hasGenerator()
 		|| ribNode->rib.hasReadArchive()  
@@ -7688,35 +7676,13 @@ void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode
 		return;
 	}
 
-	RtContextHandle c;
-	if(reference)
-	{
-		MString frame; 
-		frame.set(liqglo_lframe);
 
-		MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+frame+".rib" );
 
-		RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
+	MString frame; 
+	frame.set(liqglo_lframe);
 
-		c = RiGetContext();//push context
-
-		//_RiOption_format_compress(liqglo_doBinary, liqglo_doCompression);
-
-		liquidMessage("output geometry rib: "+ string(geometryRibFile.asChar()) , messageInfo);
-		RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
-	}
-	
-	{// write geometry data
-		ribNode->object( 0 )->writeObject();
-	}
-
-	if(reference)
-	{
-		RiEnd();
-		RiContext(c);//pop context
-
-	}
-	
+	MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+frame+".rib" );
+	ribNode->object( 0 )->writeObject(geometryRibFile);
 }
 RtToken g_typeAscii       = tokenCast("Ascii");
 RtToken g_typeBinary      = tokenCast("Binary");

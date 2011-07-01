@@ -222,7 +222,7 @@ liqRibCurvesData::liqRibCurvesData( MObject curveGroup )
 
 //  Write the RIB for this curve.
 
-void liqRibCurvesData::write()
+void liqRibCurvesData::_write()
 {
 	LIQDEBUGPRINTF( "-> writing nurbs curve group\n" );
 
