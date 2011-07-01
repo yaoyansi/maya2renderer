@@ -28,6 +28,8 @@
 #include "../renderermgr.h"
 #include "../log/mayacheck.h"
 #include "ercall.h"
+#include "MayaConnection.h"
+
 namespace elvishray
 {
 #define _s( _log_ ) dummy.get()<< _log_ <<std::endl;
@@ -450,15 +452,15 @@ namespace elvishray
 		_s("//### SCENE BEGIN ###");
 		_S( ei_scene() );
 
-		_s("ei_set_connection(MayaConnection::getInstance());");
+		_S( ei_set_connection(MayaConnection::getInstance()) );
 
 		//ei_verbose(	EI_VERBOSE_ALL );
-		_s("ei_link( \"dso\" );");
+		_S( ei_link( "dso" ) );
 		return MS::kSuccess;
 	}
 	MStatus Renderer::ribPrologue_end(const structJob& currentJob)
 	{ 
-		_s("ei_end_scene();");
+		_S( ei_end_scene() );
 		return MS::kSuccess;
 	}
 	//
