@@ -536,9 +536,7 @@ public:
 	MStatus postTransformMel(const MObject &transform__);
 	MStatus tRiIlluminate(const liqRibNodePtr ribNode__);
 	MStatus MaxtrixMotionBlur(const liqRibNodePtr ribNode__, MDagPath &path__, const bool bMotionBlur);
-	MStatus GeometryMotionBlur(
-		const liqRibNodePtr ribNode__, MDagPath &path__, const structJob &currentJob
-		);
+
 	MStatus preShapeMel(const MObject &transform__);
 	MStatus postShapeMel(const MObject &transform__);
 	MStatus checkSurfaceShader(

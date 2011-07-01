@@ -3756,49 +3756,6 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 	}
 }
 //
-MStatus liqRibTranslator::GeometryMotionBlur(
-	const liqRibNodePtr ribNode__, MDagPath &path__, const structJob &currentJob
-	)
-{
-#define GeometryMotionBlur_SimpleEdition
-#ifndef GeometryMotionBlur_SimpleEdition
-	// For each grain, open a new motion block...
-	for( unsigned i( 0 ); i < ribNode__->object( 0 )->granularity(); i++ ) //granularity() is always 1.
-	{
-		if( ribNode__->object( 0 )->isNextObjectGrainAnimated() ) //isNextObjectGrainAnimated() is always true.
-		{
-			if(liqglo.liqglo_relativeMotion)
-				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
-			else
-				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
-
-			for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
-			{ 
-				_writeObject(ribNode__, currentJob, true, msampleOn);
-			}
-			RiMotionEnd();
-		}else {
-			RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
-
-			_writeObject(ribNode__, currentJob, false, 0);
-		}
-	}
-#else
-			if(liqglo.liqglo_relativeMotion)
-				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
-			else
-				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
-
-			for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
-			{ 
-				_writeObject(ribNode__, currentJob, true, msampleOn);
-			}
-			RiMotionEnd();
-#endif
-#undef GeometryMotionBlur_SimpleEdition
-	return MS::kSuccess;
-}
-
 void liqRibTranslator::F1(
 						  const liqRibNodePtr &ribNode__,  liqShader &currentShader
 						  )
@@ -4102,15 +4059,49 @@ void liqRibTranslator::oneObjectBlock(
 
 			if( bGeometryMotion )
 			{
-				GeometryMotionBlur(ribNode, path, currentJob);
+#define GeometryMotionBlur_SimpleEdition
+#ifndef GeometryMotionBlur_SimpleEdition
+				// For each grain, open a new motion block...
+				for( unsigned i( 0 ); i < ribNode->object( 0 )->granularity(); i++ ) //granularity() is always 1.
+				{
+					if( ribNode->object( 0 )->isNextObjectGrainAnimated() ) //isNextObjectGrainAnimated() is always true.
+					{
+						if(liqglo.liqglo_relativeMotion)
+							RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
+						else
+							RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
+
+						for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
+						{ 
+							_writeObject(ribNode, currentJob, true, msampleOn);
+						}
+						RiMotionEnd();
+					}else {
+						RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
+
+						_writeObject(ribNode, currentJob, false, 0);
+					}
+				}
+#else
+				if(liqglo.liqglo_relativeMotion)
+					RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
+				else
+					RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
+
+				for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
+				{ 
+					_writeObject(ribNode, currentJob, true, msampleOn);
+				}
+				RiMotionEnd();
+#endif
 			}else{
 				if(    ribNode->rib.hasGenerator()
 					|| ribNode->rib.hasReadArchive()  
 					|| ribNode->rib.hasDelayedReadArchive() 
 					)
 				{
-					//if ribNode is tagged as readArchive or delayedReadArchive, we do not output its geometry data.
-					//return;
+					//if ribNode is tagged as readArchive or delayedReadArchive, 
+					//we do not output its geometry data.
 				}else{
 					//ribNode->object( 0 )->writeObject();
 					_writeObject(ribNode, currentJob, false, 0);
