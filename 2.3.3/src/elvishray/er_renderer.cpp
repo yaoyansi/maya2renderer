@@ -118,16 +118,16 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportShadowPassLight()");
-		_s("ei_shader( \"shadowlight\", \"intensity\", 10.0)");
+		_S( ei_shader( "shadowlight", "intensity", 10.0, ei_end) );
 
-		_s("ei_light("<<shadertype<<")");
-		_s("ei_lightsource(	\"shadowlight\", ei_end )");
+		_S( ei_light( shadertype.c_str() ) );
+		_S( ei_lightsource(	 "shadowlight", ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
-		_s("ei_end_light()");
+		_S( ei_end_light() );
 
-		_s("ei_instance( "<<shaderinstance<<" );");
-		_s("ei_element(	"<<shadertype<<" );");
-		_s("ei_end_instance();");
+		_S( ei_instance(  shaderinstance.c_str() ) );
+		_S( ei_element(	 shadertype.c_str() ) );
+		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
 	}
@@ -139,20 +139,18 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportAmbientLight()");
-		_s("ei_shader( \"ambientlight\", ");
-		_s("           \"intensity\", ToString<liqFloat>(intensity),");
-		_s("           \"lightcolor\", ToString<liqColor>(color)");
-		_s(");");
+		_S( ei_shader( "ambientlight", "intensity", 3.0, ei_end) );
 
-		_s("ei_light( "<<shadertype<<" );");
-		_s("ei_lightsource(	ambientlight, ei_end );");
+
+		_S( ei_light(  shadertype.c_str() ) );
+		_S( ei_lightsource(	"ambientlight", ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 
-		_s("ei_end_light();");
+		_S( ei_end_light() );
 
-		_s("ei_instance( "<<shaderinstance<<" );");
-		_s("ei_element(	"<<shadertype<<" );");
-		_s("ei_end_instance();");
+		_S( ei_instance(  shaderinstance.c_str()) );
+		_S( ei_element(	 shadertype.c_str()));
+		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
 	}
@@ -186,19 +184,16 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("// Renderer::exportDistantLight()");
-		_s("ei_shader( \"distantlight\", ");
-		_s("           \"intensity\", ToString<liqFloat>(intensity),");
-		_s("           \"lightcolor\", ToString<liqColor>(color)");
-		_s(");");
+		_S( ei_shader( "distantlight", "intensity", 3.0, ei_end) );
 
-		_s("ei_light( "<<shadertype<<" );");
-		_s("ei_lightsource(	distantlight, ei_end );");
+		_S( ei_light( shadertype.c_str()) );
+		_S( ei_lightsource(	"distantlight", ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
-		_s("ei_end_light();");
+		_S( ei_end_light() );
 
-		_s("ei_instance( "<<shaderinstance<<" );");
-		_s("ei_element(	"<<shadertype<<" );");
-		_s("ei_end_instance();");
+		_S( ei_instance( shaderinstance.c_str()) );
+		_S( ei_element(	shadertype.c_str()) );
+		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
 	}
@@ -230,19 +225,16 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportPointLight()");
-		_s("ei_shader( \"pointlight\", ");
-		_s("           \"intensity\", ToString<liqFloat>(intensity),");
-		_s("           \"lightcolor\", ToString<liqColor>(color)");
-		_s(");");
+		_S( ei_shader(  "pointlight", "intensity", 3.0, ei_end) );
 
-		_s("ei_light( "<<shadertype<<" );");
-		_s("ei_lightsource(	pointlight, ei_end );");
+		_S( ei_light(  shadertype.c_str() ) );
+		_S( ei_lightsource(	"pointlight", ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
-		_s("ei_end_light();");
+		_S( ei_end_light() );
 
-		_s("ei_instance( "<<shaderinstance<<" );");
-		_s("ei_element(	"<<shadertype<<" );");
-		_s("ei_end_instance();");
+		_S( ei_instance( shaderinstance.c_str() ) );
+		_S( ei_element( shadertype.c_str() ) );
+		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
 	}
@@ -297,19 +289,16 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportSpotLight()");
-		_s("ei_shader( \"spotlight\", ");
-		_s("           \"intensity\", ToString<liqFloat>(intensity),");
-		_s("           \"lightcolor\", ToString<liqColor>(color)");
-		_s(");");
+		_S( ei_shader( "spotlight", "intensity", 3.0, ei_end) );
 
-		_s("ei_light( "<<shadertype<<" );");
-		_s("ei_lightsource(	spotlight, ei_end );");
+		_S( ei_light( shadertype.c_str() ) );
+		_S( ei_lightsource(	"spotlight", ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
-		_s("ei_end_light();");
+		_S( ei_end_light() );
 
-		_s("ei_instance( "<<shaderinstance<<" );");
-		_s("ei_element(	"<<shadertype<<" );");
-		_s("ei_end_instance();");
+		_S( ei_instance( shaderinstance.c_str() ) );
+		_S( ei_element(	shadertype.c_str() ) );
+		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
 	}
@@ -339,19 +328,15 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportAreaLight()");
-		_s( "ei_shader( \"arealight\", ");
-		_s("           \"intensity\", ToString<liqFloat>(intensity),");
-		_s("           \"lightcolor\", ToString<liqColor>(color)");
-		_s(");");
-
-		_s("ei_light( "<<shadertype<<" );");
-		_s("ei_lightsource(	arealight, ei_end );");
+		_S( ei_shader( "arealight", "intensity", 3.0, ei_end) );
+		_S( ei_light(  shadertype.c_str() ) );
+		_S( ei_lightsource(	"arealight", ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
-		_s("ei_end_light();");
+		_S( ei_end_light() );
 
-		_s("ei_instance( "+shaderinstance+" );");
-		_s("ei_element(	"+shadertype+" );");
-		_s("ei_end_instance();");
+		_S( ei_instance( shaderinstance.c_str() ) );
+		_S( ei_element(	 shadertype.c_str() ) );
+		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
 	}
@@ -380,36 +365,32 @@ namespace elvishray
 		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));
 
 		// geometry data (shape)
-		_s("\n");
-		_s("ei_object(\""<< mesh->getName()<<"\")");
+		_s("\n//############################### mesh #");
+		_S( ei_object( mesh->getName() ) );
 		_s("//### vertex positions");
 		for(size_t i=0; i<position.length(); ++i)
 		{
-			_s("ei_vector("<<position[i][0]<<","<<position[i][1]<<","<<position[i][2]<<")");
+			_S( ei_vector( position[i][0],position[i][1],position[i][2] ) );
 		}
 		_s("//### vertex color");
 		for(int i=0; i<position.length(); i++)
 		{
-			_s("ei_vertex("<<i<<")");
-			_s("ei_variable( et_color, \"Cs\", color( 0.0f, 0.0f, 0.0f ) )");
+			_S( ei_vertex(i) );
+			_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
 		}
 		_s("//### triangles");
 		for(size_t i=0; i<triangleVertices.length(); i=i+3)
 		{
-			_s("ei_triangle("
-				<<0<<","
-				<<triangleVertices[i  ]<<","
-				<<triangleVertices[i+1]<<"," 
-				<<triangleVertices[i+2]<<")");
+			_S( ei_triangle( 0,triangleVertices[i],triangleVertices[i+1],triangleVertices[i+2] ) );
 		}
-		_s("ei_end_object()");
-
-		_s("ei_instance("<<"dummy"<<")");//transform
-// 		ei_visible( on );
+		_S( ei_end_object() );
+		_s("\n//--------------------------");
+		_S( ei_instance( mesh->getName() ) );//transform
+ 		_S( ei_visible( on ) );
 // 		ei_shadow( on );
 // 		ei_trace( on );
 //		ei_set_material( "mtl", ei_end );
-		_s("ei_element(\""<<mesh->getName()<<"\")");
+		_S( ei_element( mesh->getName() ) );
 // 		if( motion_transform )
 // 		{
 // 			ei_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
@@ -425,7 +406,9 @@ namespace elvishray
 // 		{
 // 			_s("ei_motion( on )");
 // 		}
-		_s("ei_end_instance();");
+		_S( ei_end_instance() );
+		_s("//");
+		_S( ei_init_instance( mesh->getName() ) );
 	}
 	//
 	void Renderer::ribPrologue_comment(const char* liqversion, 
@@ -447,7 +430,7 @@ namespace elvishray
 	{
 		if( true )
 		{
-			_s("ei_make_texture("<<currentJob.imageName<<","<<currentJob.texName<<", EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f );");
+			_S( ei_make_texture( currentJob.imageName.asChar(), currentJob.texName.asChar() , EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f ) );
 		}	
 		_s("//### SCENE BEGIN ###");
 		_S( ei_scene() );
@@ -456,18 +439,33 @@ namespace elvishray
 
 		//ei_verbose(	EI_VERBOSE_ALL );
 		_S( ei_link( "dso" ) );
+
+		m_root_group = currentJob.name.asChar();
+		_S( ei_instgroup( m_root_group.c_str() ) );
+
 		return MS::kSuccess;
 	}
 	MStatus Renderer::ribPrologue_end(const structJob& currentJob)
 	{ 
+		_S( ei_end_instgroup() );
+
+		assert(!m_root_group.empty());
+		assert(currentJob.camera[0].name.length());
+		assert(!m_option.empty());
+		_S( ei_render( m_root_group.c_str(), currentJob.camera[0].name.asChar(), m_option.c_str() ) );
+		//ei_render( "world",	"caminst1",	"opt" );
+
 		_S( ei_end_scene() );
 		return MS::kSuccess;
 	}
 	//
 	MStatus Renderer::ribPrologue_options(const structJob& currentJob)
 	{
-		_s("\n//###option");
-		_S( ei_options( "opt" ) );
+		_s("\n//############################### option #");
+		std::string tmp( currentJob.path.fullPathName().asChar() );//_s( (MString("// current job path = ")+).asChar() );
+
+		m_option = std::string(currentJob.name.asChar()) + "_option";
+		_S( ei_options( m_option.c_str() ) );
 		//ei_incremental_options( const char *name );
 
 		//	Sampling Quality:
@@ -513,11 +511,11 @@ namespace elvishray
 
 		//	Feature Disabling:
 // 		_S("ei_lens( int type );");
-// 		_S("ei_volume( int type );");
+// 		_S( ei_volume( name, ei_end );");
 // 		_S("ei_geometry( int type );");
-// 		_S("ei_displace( int type );");
-// 		_S("ei_imager( int type );");
-
+// 		_S( ei_displace( name, ei_end ) );
+// 		_S("ei_imager( name , ei_end);");
+// 		_S("ei_imager( type );");
 		//	Caustics:
 // 		_S("ei_caustic( int type );");
 // 		_S("ei_caustic_photons( int photons );");
@@ -565,7 +563,7 @@ namespace elvishray
 	}
 	MStatus Renderer::framePrologue_camera(long lframe, const structJob &currentJob)
 	{
-		_s("//### camera ###");
+		_s("\n//############################### camera #");
 		_S( ei_camera( currentJob.camera[0].name.asChar() ) );
 			_S( ei_frame( lframe, off ) );
 	// 		if(outputImageFullPath){
@@ -587,13 +585,16 @@ namespace elvishray
 				_S( ei_dof( currentJob.camera[0].fStop, currentJob.camera[0].focalLength /*, currentJob.camera[0].focalDistance*/ ) );
 			}
 		_S( ei_end_camera() );
-
+		_s("//----------------------------------");
 		_S( ei_instance( currentJob.camera[0].name.asChar()	) );
-			_S( ei_element(	"cam1" );
+			_S( ei_element(	currentJob.camera[0].name.asChar() );
 			RtMatrix m;
 			currentJob.camera[0].mat.get( m ) );
 			_S( ei_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
 		_S( ei_end_instance() );
+		_s("//");		
+		_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
+
 		return MStatus::kSuccess;
 	}
 	//

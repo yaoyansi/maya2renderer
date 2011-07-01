@@ -4511,6 +4511,7 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 				iter->camera[sample].focalLength    = fnCamera.focalLength();
 				iter->camera[sample].focalDistance  = fnCamera.focusDistance();
 				iter->camera[sample].fStop          = fnCamera.fStop();
+				iter->camera[sample].name           = fnCamera.fullPathName();
 
 				// film back offsets
 				double hSize, vSize, hOffset, vOffset;
@@ -4685,6 +4686,7 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 					iter->camera[sample].isOrtho     = fnCamera.isOrtho();
 					iter->camera[sample].orthoWidth  = fnCamera.orthoWidth();
 					iter->camera[sample].orthoHeight = fnCamera.orthoWidth();
+					iter->camera[sample].name        = fnCamera.fullPathName();
 				} 
 				else 
 				{
@@ -4758,6 +4760,7 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 				iter->camera[sample].focalLength = 0;
 				iter->camera[sample].focalDistance = 0;
 				iter->camera[sample].fStop = 0;
+				iter->camera[sample].name  = fnLight.fullPathName();
 				//doCameraMotion = 0;
 
 				iter->aspectRatio = 1.0;

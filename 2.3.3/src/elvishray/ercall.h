@@ -16,7 +16,7 @@ namespace elvishray
 	 void my_ei_set_connection( e_Connection *con );
 
 	//	Network Rendering:
-	 void my_ei_hosts( const char *host_name, const int port_number, const char *remote_params... );
+	 void my_ei_hosts( const char *host_name, const int port_number, const char *remote_params, ... );
 	 void my_ei_run_server( const int port_number, const int max_num_clients );
 
 	//	Scene Descriptions:
@@ -24,7 +24,7 @@ namespace elvishray
 	 void my_ei_end_scene();
 
 	//	Shader Definitions:
-	 void my_ei_shader( const char *instance_name,  ... );
+	 void my_ei_shader( const char *instance_name, int end=ei_end, ... );
 	// void my_ei_incremental_shader( const char *named_shader, ... );
 
 
@@ -123,8 +123,8 @@ namespace elvishray
 	// void my_ei_incremental_camera( const char *name );
 
 	//	Output Statements:
-	 void my_ei_output( const char *filename, int fileformat, int datatype, ... );
-	 void my_ei_imager( const char *shader_name, ... );
+	 void my_ei_output( const char *filename, int fileformat, int datatype, int end_=ei_end, ... );
+	 void my_ei_imager( const char *shader_name, int end_=ei_end, ... );
 
 	//	Other Camera Statements:
 	 void my_ei_focal( float distance );
@@ -134,9 +134,9 @@ namespace elvishray
 	 void my_ei_offset( int x, int y );
 	 void my_ei_window( float xmin, float xmax, float ymin, float ymax );
 	 void my_ei_clip( float hither, float yon );
-	 void my_ei_atmosphere( const char *shader_name, ... );
-	 void my_ei_ambience( const char *shader_name, ... );
-	 void my_ei_lens( const char *shader_name, ... );
+	 void my_ei_atmosphere( const char *shader_name, int end_=ei_end,... );
+	 void my_ei_ambience( const char *shader_name, int end_=ei_end,... );
+	 void my_ei_lens( const char *shader_name, int end_=ei_end,... );
 	 void my_ei_frame( int frame, int field );
 	 void my_ei_dof( int type );
 	 void my_ei_dof( float fstop, float fplane );
@@ -154,12 +154,12 @@ namespace elvishray
 	 void my_ei_incremental_material( const char *name );
 
 	 void my_ei_opaque( int type );
-	 void my_ei_surface( const char *shader_name, ... );
-	 void my_ei_displace( const char *shader_name, ... );
-	 void my_ei_shadow( const char *shader_name, ... );
-	 void my_ei_volume( const char *shader_name, ... );
-	 void my_ei_environment( const char *shader_name, ... );
-	 void my_ei_photon( const char *shader_name, ... );
+	 void my_ei_surface( const char *shader_name, int end, ... );
+	 void my_ei_displace( const char *shader_name, int end, ... );
+	 void my_ei_shadow( const char *shader_name,  int end,... );
+	 void my_ei_volume( const char *shader_name,  int end,... );
+	 void my_ei_environment( const char *shader_name,  int end,... );
+	 void my_ei_photon( const char *shader_name,  int end,... );
 
 	 void my_ei_end_material();
 
@@ -168,8 +168,8 @@ namespace elvishray
 	 void my_ei_light( const char *name );
 	// void my_ei_incremental_light( const char *name );
 
-	 void my_ei_lightsource( const char *shader_name, ... );
-	 void my_ei_photon_emitter( const char *shader_name, ... );
+	 void my_ei_lightsource( const char *shader_name, int end_=ei_end, ... );
+	 void my_ei_photon_emitter( const char *shader_name, int end_=ei_end, ... );
 	 void my_ei_origin( float x, float y, float z );
 	 void my_ei_direction( float dx, float dy, float dz );
 	 void my_ei_spread( float spread );
@@ -204,11 +204,12 @@ namespace elvishray
 	 void my_ei_motion_vertex( int index );
 	 void my_ei_bake_uv( int index );
 	 void my_ei_variable( int type, const char *name, ... );
+	 void my_ei_variable_color( const char *name, const color &c );
 
 	 void my_ei_triangle( int mtl, int v1, int v2, int v3 );
 	 void my_ei_polygon( int mtl, ... );
 
-	 void my_ei_approximate( int param, ... );
+	 void my_ei_approximate( int param, int end_=ei_end, ... );
 
 	 void my_ei_end_object();
 
@@ -251,7 +252,7 @@ namespace elvishray
 		 float t30,float t31,float t32,float t33
 		 );
 
-	 void my_ei_set_material( const char *material_name, ... );
+	 void my_ei_set_material( const char *material_name, int end_=ei_end, ... );
 
 	 void my_ei_end_instance();
 
@@ -265,7 +266,7 @@ namespace elvishray
 
 	 void my_ei_end_instgroup();
 //
-void my_ei_shader(const char* shadertype, const char* param0, const float v);
+void my_ei_shader(const char* shadertype, const char* param0, const float v, int end, ...);
 void my_ei_shading_rate(const float v);
 
 }

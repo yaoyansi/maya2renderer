@@ -772,6 +772,7 @@ void liqRibTranslator::getCameraData( vector<structJob>::iterator &iter__ , cons
 				iter__->camera[sample__].focalLength    = fnCamera.focalLength();
 				iter__->camera[sample__].focalDistance  = fnCamera.focusDistance();
 				iter__->camera[sample__].fStop          = fnCamera.fStop();
+				iter__->camera[sample__].name           = fnCamera.fullPathName();
 
 				// film back offsets
 				double hSize, vSize, hOffset, vOffset;
@@ -949,6 +950,8 @@ void liqRibTranslator::getLightData( vector<structJob>::iterator &iter__ , const
 		iter__->camera[sample__].isOrtho     = fnCamera.isOrtho();
 		iter__->camera[sample__].orthoWidth  = fnCamera.orthoWidth();
 		iter__->camera[sample__].orthoHeight = fnCamera.orthoWidth();
+		iter__->camera[sample__].name        = fnCamera.fullPathName();
+
 	} 
 	else 
 	{
@@ -974,6 +977,7 @@ void liqRibTranslator::getLightData( vector<structJob>::iterator &iter__ , const
 			if( iter__->pointDir == pNZ ) { double rotation[] = { 0, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
 		}
 		iter__->camera[sample__].mat = xform.asMatrixInverse();
+
 
 		MPlug shaderConnection( fnLight.findPlug( "liquidLightShaderNode", &status ) );
 		if( status == MS::kSuccess && shaderConnection.isConnected() ) 
@@ -1022,6 +1026,7 @@ void liqRibTranslator::getLightData( vector<structJob>::iterator &iter__ , const
 	iter__->camera[sample__].focalLength = 0;
 	iter__->camera[sample__].focalDistance = 0;
 	iter__->camera[sample__].fStop = 0;
+	iter__->camera[sample__].name= fnLight.fullPathName();
 	//doCameraMotion = 0;
 
 	iter__->aspectRatio = 1.0;

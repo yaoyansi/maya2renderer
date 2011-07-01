@@ -189,6 +189,8 @@ namespace elvishray
 		Renderer& operator=(const Renderer&);
 
  		liquid::LogMgr m_log;
+		std::string m_root_group;
+		std::string m_option;
 
  		void _Script(const std::string &data){ m_log.log___(data); }
 	};

@@ -1135,7 +1135,7 @@ void liqRibLightData::_write(const structJob &currentJob)
 			  }
 			  handle = liquid::RendererMgr::getInstancePtr()->
 				  getRenderer()->exportPointLight(
-				  "distantlight", 
+				  "pointlight", 
 				  lightName.asChar(),  
 				  i_intensity,
 				  i_lightcolor,
