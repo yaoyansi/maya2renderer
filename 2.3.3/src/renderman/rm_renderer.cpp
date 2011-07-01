@@ -563,5 +563,19 @@ namespace renderman
 			"color __arealightColor",		&o_arealightColor,
 			RI_NULL );
 	}
+	//
+	void Renderer::exportOneObject(
+		const liqRibNodePtr *object, 
+		const structJob &currentJob
+		)
+	{
 
+	}
+	void Renderer::exportOneGeometry_Mesh(
+		const liqRibNodePtr *object, 
+		const structJob &currentJob
+		)
+	{
+
+	}
 }

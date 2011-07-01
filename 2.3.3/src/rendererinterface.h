@@ -29,10 +29,11 @@ public:
 
 	virtual void openLog() = 0;
 	virtual void closeLog() = 0;
-
+	//
+	// Light
+	//
 	virtual MStatus exportLight(const liqRibNodePtr& light, const structJob &currentJob) = 0;
 	virtual MStatus liqRibLightData_write(const liqRibLightData *lightdata, const structJob &currentJob) = 0;
-
 	virtual liqLightHandle exportShadowPassLight(
 		const std::string &shadertype, 
 		const std::string &shaderinstance, 
@@ -160,6 +161,17 @@ public:
 		const liqColor &o_arealightColor,
 		const liqMatrix &transform) = 0;
 	virtual void transform_(const liqMatrix& transform) = 0;
+	//
+	// Object
+	//
+	virtual void exportOneObject(
+		const liqRibNodePtr *lightdata, 
+		const structJob &currentJob
+		) = 0;
+	virtual void exportOneGeometry_Mesh(
+		const liqRibNodePtr *lightdata, 
+		const structJob &currentJob
+		) = 0;
 
 protected:
 

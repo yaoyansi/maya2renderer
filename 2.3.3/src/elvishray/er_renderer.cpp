@@ -388,4 +388,19 @@ namespace elvishray
 										   );
 		return (liqLightHandle)(0);
 	}
+	//
+	void Renderer::exportOneObject(
+		const liqRibNodePtr *lightdata, 
+		const structJob &currentJob
+		)
+	{
+
+	}
+	void Renderer::exportOneGeometry_Mesh(
+		const liqRibNodePtr *object, 
+		const structJob &currentJob
+		)
+	{
+
+	}
 }

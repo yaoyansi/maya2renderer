@@ -154,7 +154,17 @@ namespace elvishray
 			const liqColor &o_arealightColor,
 			const liqMatrix &transform);
 		virtual void transform_(const liqMatrix& transform);
-
+		//
+		//
+		//
+		virtual void exportOneObject(
+			const liqRibNodePtr *lightdata, 
+			const structJob &currentJob
+			);
+		virtual void exportOneGeometry_Mesh(
+			const liqRibNodePtr *lightdata, 
+			const structJob &currentJob
+			);
 	protected:
 		Renderer(const Renderer&);
 		Renderer& operator=(const Renderer&);
