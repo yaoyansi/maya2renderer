@@ -2331,7 +2331,7 @@ global proc liquidDrawDisplayChannels()
 
 global proc liquidGlobalsFrameTab( string $prefix )
 {
-	liqlog("liquidGlobalsFrameTab(...)");
+	liqlog("liquidGlobalsFrameTab("+$prefix+")");
   ////setUITemplate -pushTemplate attributeEditorTemplate;
   string $previousParent = `setParent -q`;
 
