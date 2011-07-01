@@ -781,7 +781,7 @@ global proc liquidConvertShadingNetworkToRSL ()
 	string $sel[] = `ls -selection -dag -shapes`;
 	for( $node in $sel )
 	{
-		string $sgNodes[] = `listConnections -destination on ( $node + ".instObjGroups" )`;
+		string $sgNodes[] = `listConnections -type "shadingEngine" -destination on ( $node + ".instObjGroups" )`;//add -type "shadingEngine" for multy renderlayers
 		string $shaders[] = `listConnections ( $sgNodes[0] + ".surfaceShader" )`;
 		string $startingNode = $shaders[0];
 
