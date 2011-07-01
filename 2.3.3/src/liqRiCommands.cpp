@@ -524,14 +524,14 @@ MStatus RIClipping::doIt( const MArgList &args )
 		return MS::kSuccess;
 	}
 
-	double near, far;
-	status = argData.getCommandArgument( 0, near );
+	double near_, far_;
+	status = argData.getCommandArgument( 0, near_ );
 	if( status != MS::kSuccess )
 	{
 		MGlobal::displayWarning( MString( "RIClipping: no near specified" ) );
 		return MS::kSuccess;
 	}
-	status = argData.getCommandArgument( 1, far );
+	status = argData.getCommandArgument( 1, far_ );
 	if( status != MS::kSuccess )
 	{
 		MGlobal::displayWarning( MString( "RIClipping: no far specified" ) );
@@ -540,9 +540,9 @@ MStatus RIClipping::doIt( const MArgList &args )
 
 	bool isTest = argData.isFlagSet( testModeFlag );
 	if( isTest )
-		MGlobal::displayInfo( MString( "RIB output: Clipping " ) + near + " " + far );
+		MGlobal::displayInfo( MString( "RIB output: Clipping " ) + near_ + " " + far_ );
 	else
-		RiClipping( (RtFloat)near, (RtFloat)far );
+		RiClipping( (RtFloat)near_, (RtFloat)far_ );
 
 	return redoIt();
 }

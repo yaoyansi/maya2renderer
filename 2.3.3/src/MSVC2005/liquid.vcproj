@@ -2797,8 +2797,8 @@
 				AdditionalOptions="/Zm800 "
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="../../include;&quot;$(MAYA_PATH2009)/include&quot;;E:\dev\boost\1_39_tmp;E:\dev\tools\zlib\1.2.5;&quot;$(BOOST_ROOT)&quot;;../../../dependence\aqsis\1.6.0\build\include;../../../dependence\aqsis\1.6.0\src\include;../../../dependence\aqsis\1.6.0\src\libs\"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PRMAN;_DEBUG;WIN32;_WINDOWS;_USRDLL;_BOOL;_WIN32;REQUIRE_IOSTREAM;HAVE_ZLIB;_USE_MATH_DEFINES;BOOST_LIB_DIAGNOSTIC"
+				AdditionalIncludeDirectories="../../include;&quot;$(MAYA_PATH2009)/include&quot;;E:\dev\boost\1_39_tmp;E:\dev\tools\zlib\1.2.5;../../../dependence\aqsis\1.6.0\build\include;../../../dependence\aqsis\1.6.0\src\include;&quot;$(BOOST_ROOT)&quot;;&quot;$(ER_ROOT)&quot;"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PRMAN;_DEBUG;WIN32;_WINDOWS;_USRDLL;_BOOL;_WIN32;NT_PLUGIN;REQUIRE_IOSTREAM;HAVE_ZLIB;_USE_MATH_DEFINES;BOOST_LIB_DIAGNOSTIC"
 				StringPooling="true"
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
@@ -4072,6 +4072,14 @@
 				</File>
 				<File
 					RelativePath="..\elvishray\ercall.h"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\MayaConnection.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\MayaConnection.h"
 					>
 				</File>
 			</Filter>
