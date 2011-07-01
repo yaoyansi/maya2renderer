@@ -1354,16 +1354,19 @@ MStatus liqRibTranslator::checkSurfaceShader(
 	{ 
 		status.clear(); 
 		rmanShaderPlug = ribNode__->assignedShadingGroup.findPlug( MString( "liquidSurfaceShaderNode" ), &status ); 
+		MString plugname(rmanShaderPlug.name());
 	}
 	if( ( status != MS::kSuccess ) || ( !rmanShaderPlug.isConnected() ) ) 
 	{ 
 		status.clear(); 
 		rmanShaderPlug = ribNode__->assignedShader.findPlug( MString( "liquidSurfaceShaderNode" ), &status ); 
+		MString plugname(rmanShaderPlug.name());
 	}
 	if( ( status != MS::kSuccess ) || ( !rmanShaderPlug.isConnected() ) ) 
 	{ 
 		status.clear(); 
 		rmanShaderPlug = ribNode__->assignedShadingGroup.findPlug( MString( "surfaceShader" ), &status ); 
+		MString plugname(rmanShaderPlug.name());
 	}
 	if( status == MS::kSuccess && !rmanShaderPlug.isNull() ) 
 	{
@@ -3453,13 +3456,13 @@ MStatus liqRibTranslator::writeShader_(
 					RiSurface( "constant", RI_NULL );
 					LIQDEBUGPRINTF("add more constant parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorBlinn.sl as an example.(?)");
 				}
-				// 					else if( shader.apiType() == MFn::kLambert ){ 
-				// 						RiSurface( "matte", RI_NULL );
-				// 						LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
-				// 					}else if( shader.apiType() == MFn::kPhong ) {
-				// 						RiSurface( "plastic", RI_NULL );
-				// 						LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
-				// 					}
+				//else if( shader.apiType() == MFn::kLambert ){ 
+				//	RiSurface( "matte", RI_NULL );
+				//	LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
+				//}else if( shader.apiType() == MFn::kPhong ) {
+				//	RiSurface( "plastic", RI_NULL );
+				//	LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
+				//}
 				else if( path__.hasFn( MFn::kPfxHair ) ) 
 				{
 					// get some of the hair system parameters

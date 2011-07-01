@@ -371,6 +371,20 @@ namespace elvishray
 		)
 	{
 		_s("\n// Renderer::exportOneGeometry_Mesh("<<mesh->getName()<<")");
+		//
+		liqRibNodePtr ribNode = liqRibTranslator::getInstancePtr()->htable->find(
+			mesh->objDagPath.fullPathName(), 
+			mesh->objDagPath,
+			MRT_Unknown
+			);
+		assert( ribNode!=0 );
+		assert( ribNode->path().fullPathName() == mesh->objDagPath.fullPathName() );
+	
+		liqShader& shader = 
+			liqShaderFactory::instance().getShader( ribNode->assignedShader.object() );
+		//shader.name;//liquidSurface1
+		//shader.file;//"your_shader_dir/test_type2"
+		//
 		MStatus status;
 		MFnMesh fnMesh(mesh->objDagPath, &status);
 		IfMErrorWarn(status);
@@ -406,7 +420,7 @@ namespace elvishray
  		_S( ei_visible( on ) );
 // 		ei_shadow( on );
 // 		ei_trace( on );
-//		ei_set_material( "mtl", ei_end );
+		_S( ei_set_material( shader.name.c_str(), ei_end ) );
 		_S( ei_element( mesh->getName() ) );
 // 		if( motion_transform )
 // 		{
@@ -419,13 +433,15 @@ namespace elvishray
 // 			// 				0.0f, 0.0f, 1.0f, 0.0f, 
 // 			// 				2.3f, 2.0f, 3.1f, 1.0f );
 // 		}
-// 		if( motion_transform || motion_deform )
-// 		{
-// 			_s("ei_motion( on )");
-// 		}
+		int bMotion = (ribNode->doDef || ribNode->doMotion);
+		_S( ei_motion( bMotion ) );
+
 		_S( ei_end_instance() );
 		_s("//");
 		m_groupMgr->addLightLink(currentJob.name.asChar(), mesh->getName(), "pointLightShape2");//_S( ei_init_instance( mesh->getName() ) );
+	
+		//
+
 	}
 	//
 	void Renderer::ribPrologue_comment(const char* liqversion, 
@@ -745,7 +761,7 @@ namespace elvishray
 
 	}
 	void Renderer::shader_surface(
-		const liqString &shaderFileName, 
+		const liqString &shaderFileName, //e.g."your_shader_dir/test_type2"
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
@@ -773,17 +789,13 @@ namespace elvishray
 					_s("//     "<<v[0]);
 				}
 				break;
-			case rPoint:
-			case rVector:
-			case rNormal:
-			case rColor:
+			case rPoint: case rVector: case rNormal: case rColor:
 				{
 					const liqFloat *v = vp->getTokenFloatArray();
 					_s("//     "<<v[0]<<","<<v[1]<<","<<v[2]);
 				}
 				break;
-			case rString:
-			case rShader:
+			case rString: case rShader:
 				{
 					const std::string &v = vp->getTokenString();
 					_s("//     "<<v);
