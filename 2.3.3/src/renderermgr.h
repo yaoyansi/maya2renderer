@@ -20,6 +20,9 @@ public:
 	
 	void registerRenderer(const std::string &rendername, RendererInterface* renderer);
 	void test();
+	void prologue();
+	void epilogue();
+
 protected:
 	RendererMgr();
 	RendererMgr(const RendererMgr&);

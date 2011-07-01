@@ -129,6 +129,8 @@ struct liqGlobalVariable
 	MString m_preWorldRIB;
 	MString m_postWorldRIB;
 	bool m_outputComments;
+	bool m_illuminateByDefault;
+
 };
 
 extern struct liqGlobalVariable liqglo;

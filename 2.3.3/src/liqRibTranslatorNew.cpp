@@ -1961,50 +1961,15 @@ MStatus liqRibTranslator::lightBlock__(const structJob &currentJob)
 		int nbLight = 0;
 		for ( rniter = htable->RibNodeMap.begin(); rniter != htable->RibNodeMap.end(); rniter++ )
 		{
-			RtInt on( 1 );
 			LIQ_CHECK_CANCEL_REQUEST;
 			liqRibNodePtr   ribNode = (*rniter).second;
 
 			if( ribNode->object(0)->ignore || ribNode->object(0)->type != MRT_Light )
 				continue;
-			// We need to enclose lights in attribute blocks because of the
-			// new added attribute support
-			RiAttributeBegin();
 
-			// All this stuff below should be handled by a new attribute class
-			LIQDEBUGPRINTF( "-> RibNodeName " );
-			RtString RibNodeName = getLiquidRibName( ribNode->name.asChar() );
-			LIQDEBUGPRINTF( "= %s.\n", (char *)RibNodeName  );
-			RiAttribute( "identifier", "name", &RibNodeName, RI_NULL );
-			if( ribNode->trace.sampleMotion )
-				RiAttribute( "trace", (RtToken) "samplemotion", &on, RI_NULL );
-			if( ribNode->trace.displacements )
-				RiAttribute( "trace", (RtToken) "displacements", &on, RI_NULL );
-			if( ribNode->trace.bias != 0.01f )
-			{
-				RtFloat bias = ribNode->trace.bias;
-				RiAttribute( "trace", (RtToken) "bias", &bias, RI_NULL );
-			}
-			if( ribNode->trace.maxDiffuseDepth != 1 )
-			{
-				RtInt mddepth = ribNode->trace.maxDiffuseDepth;
-				RiAttribute( "trace", (RtToken) "maxdiffusedepth", &mddepth, RI_NULL );
-			}
-			if( ribNode->trace.maxSpecularDepth != 2 )
-			{
-				RtInt msdepth = ribNode->trace.maxSpecularDepth;
-				RiAttribute( "trace", (RtToken) "maxspeculardepth", &msdepth, RI_NULL );
-			}
-			ribNode->object(0)->writeObject("", currentJob);
-			ribNode->object(0)->written = 1;
-			// The next line pops the light...
-			RiAttributeEnd();
-			// ...so we have to switch it on again explicitly
-			// if exclusive Lightlinking is set
-			if( m_illuminateByDefault )
-				RiIlluminate( ribNode->object(0)->lightHandle(), 1 );
-			else
-				RiIlluminate( ribNode->object(0)->lightHandle(), 0 );
+			liquid::RendererMgr::getInstancePtr()->
+				getRenderer()->exportLight(ribNode, currentJob);
+		
 			nbLight++;
 		}
 	}
@@ -2126,7 +2091,7 @@ MStatus liqRibTranslator::tRiIlluminate(const liqRibNodePtr ribNode__)
 		if( m_liquidSetLightLinking )
 			ribNode__->getSetLights( linkLights );
 		else
-			ribNode__->getLinkLights( linkLights, m_illuminateByDefault );
+			ribNode__->getLinkLights( linkLights, liqglo.m_illuminateByDefault );
 
 		for( unsigned i( 0 ); i < linkLights.length(); i++ )
 		{
@@ -2140,7 +2105,7 @@ MStatus liqRibTranslator::tRiIlluminate(const liqRibNodePtr ribNode__)
 				liqRibNodePtr  ln( htable->find( lightFnDag.fullPathName(), nodeDagPath, MRT_Light ) );
 				if( NULL != ln )
 				{
-					if( m_illuminateByDefault )
+					if( liqglo.m_illuminateByDefault )
 						RiIlluminate( ln->object(0)->lightHandle(), RI_FALSE );
 					else
 						RiIlluminate( ln->object(0)->lightHandle(), RI_TRUE );

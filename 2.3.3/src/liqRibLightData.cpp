@@ -60,7 +60,7 @@
 #include <liqRenderer.h>
 #include <liqShaderFactory.h>
 #include <liqGlobalVariable.h>
-
+#include "renderermgr.h"
 
 
 using namespace std;
@@ -979,7 +979,7 @@ void liqRibLightData::_write(const structJob &currentJob)
   {
     LIQDEBUGPRINTF( "-> writing light %s \n", lightName.asChar());
 
-    RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
+	//RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
     if ( liqglo.liqglo_isShadowPass ) 
     {
       if ( usingShadow ) 
@@ -988,7 +988,8 @@ void liqRibLightData::_write(const structJob &currentJob)
         // Hmmmmm got to set a LIQUIDHOME env var and use it ...
         // May be set relative name shadowPassLight and resolve path with RIB searchpath
         // Moritz: solved through default shader searchpath in liqRibTranslator
-        handle = RiLightSource( "liquidshadowpasslight", "string shadowname", &sName, RI_NULL );
+		handle = liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->exportShadowPassLight("??", lightName.asChar(), sName, transformationMatrix);
       }
     } 
     else 
@@ -998,17 +999,15 @@ void liqRibLightData::_write(const structJob &currentJob)
       switch ( lightType ) 
       {
         case MRLT_Ambient:
-          handle = RiLightSource( "ambientlight",
-                                  "intensity",  &intensity,
-                                  "lightcolor", color,
-                                  RI_NULL );
+			handle = liquid::RendererMgr::getInstancePtr()->
+				getRenderer()->exportAmbientLight("???", lightName.asChar(), intensity, color, transformationMatrix);
           break;
         
         case MRLT_Distant:
           if ( liqglo.liqglo_doShadows && usingShadow ) 
           {
-
-            RtString shadowname = const_cast< char* >( shadowName.asChar() );
+			  RtString shadowname = const_cast< char* >( shadowName.asChar() );
+			  RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
             handle = RiLightSource( "liquiddistant",
                                     "intensity",              &intensity,
                                     "lightcolor",             color,
@@ -1026,6 +1025,7 @@ void liqRibLightData::_write(const structJob &currentJob)
           } 
           else 
           {
+			  RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
             handle = RiLightSource( "liquiddistant",
                                     "intensity",            &intensity,
                                     "lightcolor",           color,
@@ -1054,6 +1054,7 @@ void liqRibLightData::_write(const structJob &currentJob)
             RtString sfpz = const_cast<char*>( pz.asChar() );
             RtString sfnz = const_cast<char*>( nz.asChar() );
 
+			RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
             handle = RiLightSource( "liquidpoint",
                                     "intensity",                  &intensity,
                                     "lightcolor",                 color,
@@ -1077,6 +1078,7 @@ void liqRibLightData::_write(const structJob &currentJob)
           } 
           else 
           {
+			  RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
             handle = RiLightSource( "liquidpoint",
                                     "intensity",            &intensity,
                                     "lightcolor",           color,
@@ -1096,6 +1098,7 @@ void liqRibLightData::_write(const structJob &currentJob)
               shadowName = liqglo_texDir + autoShadowName();
             } */
             RtString shadowname = const_cast< char* >( shadowName.asChar() );
+			RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
             handle = RiLightSource( "liquidspot",
                                     "intensity",                    &intensity,
                                     "lightcolor",                   color,
@@ -1136,7 +1139,7 @@ void liqRibLightData::_write(const structJob &currentJob)
             else 
             {
               RtString shadowname = const_cast< char* >( shadowName.asChar() );
-            
+            RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
               handle = RiLightSource( "liquidspot",
                                     "intensity",                    &intensity,
                                     "lightcolor",                   color,
@@ -1187,6 +1190,7 @@ void liqRibLightData::_write(const structJob &currentJob)
           RtString shaderName = const_cast< RtString >( assignedRManShader.asChar() );
           handle = RiLightSourceV( shaderName, numTokens, tokenArray.get(), pointerArray.get() );
           */
+			RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
           rmanLightShader.write( liqglo.liqglo_shortShaderNames, 0 );
  		  #ifdef RIBLIB_AQSIS
  		  handle = reinterpret_cast<RtLightHandle>(static_cast<ptrdiff_t>(rmanLightShader.shaderHandler.asInt()));
@@ -1220,7 +1224,7 @@ void liqRibLightData::_write(const structJob &currentJob)
 
           // if raytraced shadows are off, we get a negative value, so we correct it here.
           RtString rt_lightmap( const_cast< char* >( lightMap.asChar() ) );
-
+		RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
           handle = RiLightSource( const_cast< char* >( areashader.asChar() ),
                                   "float intensity",            &intensity,
                                   "color lightcolor",           color,
@@ -1239,6 +1243,7 @@ void liqRibLightData::_write(const structJob &currentJob)
           break;
         }
         case MRLT_Unknown: {
+			RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
           break;
         }
       }

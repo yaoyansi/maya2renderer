@@ -4016,6 +4016,10 @@
 			Name="renderer"
 			>
 			<File
+				RelativePath="..\liqtypes.h"
+				>
+			</File>
+			<File
 				RelativePath="..\rendererinterface.h"
 				>
 			</File>

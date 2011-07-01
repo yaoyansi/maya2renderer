@@ -15,6 +15,24 @@ namespace renderman
 
 		virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress);
 		virtual MStatus worldPrologue(const structJob& currentJob);
+		virtual MStatus exportLight(const liqRibNodePtr& light, const structJob &currentJob);
+		virtual MStatus liqRibLightData_write(const liqRibLightData *lightdata, const structJob &currentJob);
+
+		virtual void openLog();
+		virtual void closeLog();
+
+		virtual liqLightHandle exportShadowPassLight(
+			const std::string &shadertype, 
+			const std::string &shaderinstance, 
+			const liqString & shadowname,
+			const liqMatrix &transform);
+		virtual liqLightHandle exportAmbientLight(
+			const std::string &shadertype, 
+			const std::string &shaderinstance, 
+			const liqFloat & intensity,
+			const liqColor & color,
+			const liqMatrix &transform);
+		virtual void transform_(const liqMatrix& transform);
 
 	protected:
 		Renderer(const Renderer&);

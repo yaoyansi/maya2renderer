@@ -48,4 +48,13 @@ namespace liquid
 		assert(m_renderer);
 		m_renderer->test();
 	}
+	void RendererMgr::prologue()
+	{
+		getRenderer()->openLog();
+	}
+	void RendererMgr::epilogue()
+	{
+		getRenderer()->closeLog();
+	}
+
 }

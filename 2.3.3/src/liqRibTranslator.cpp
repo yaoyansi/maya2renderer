@@ -280,7 +280,7 @@ liqRibTranslator::liqRibTranslator()
 	m_outputHeroPass = true;
 	m_useNewTranslator = true;
 	m_outputShadowPass = false;
-	m_illuminateByDefault = false;
+	liqglo.m_illuminateByDefault = false;
 	m_liquidSetLightLinking = false;
 	m_ignoreLights = false;
 	m_ignoreSurfaces = false;
@@ -1675,7 +1675,7 @@ void liqRibTranslator::liquidReadGlobals()
 	liquidGetPlugValue( rGlobalNode, "useRenderScript", useRenderScript, gStatus );
 	liquidGetPlugValue( rGlobalNode, "remoteRender", liqglo.remoteRender, gStatus );
 	liquidGetPlugValue( rGlobalNode, "renderAllCurves", m_renderAllCurves, gStatus );
-	liquidGetPlugValue( rGlobalNode, "illuminateByDefault", m_illuminateByDefault, gStatus );
+	liquidGetPlugValue( rGlobalNode, "illuminateByDefault", liqglo.m_illuminateByDefault, gStatus );
 	liquidGetPlugValue( rGlobalNode, "liquidSetLightLinking", m_liquidSetLightLinking, gStatus );
 	liquidGetPlugValue( rGlobalNode, "ignoreLights", m_ignoreLights, gStatus );
 	liquidGetPlugValue( rGlobalNode, "ignoreSurfaces", m_ignoreSurfaces, gStatus );
@@ -2192,6 +2192,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 		MString renderer;
 		liquidGetPlugValue( rGlobalNode, "renderer", renderer, status );
 		liquid::RendererMgr::getInstancePtr()->setRenderer(renderer.asChar());
+		liquid::RendererMgr::getInstancePtr()->prologue();
 	}
 
 	if(m_useNewTranslator){
@@ -2204,6 +2205,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 
 	{//
 		liquid::RendererMgr::getInstancePtr()->test();
+		liquid::RendererMgr::getInstancePtr()->epilogue();
 	}
 
 	return status;
@@ -5782,7 +5784,7 @@ MStatus liqRibTranslator::objectBlock()
 			if( m_liquidSetLightLinking )
 				ribNode->getSetLights( linkLights );
 			else
-				ribNode->getLinkLights( linkLights, m_illuminateByDefault );
+				ribNode->getLinkLights( linkLights, liqglo.m_illuminateByDefault );
 
 			for( unsigned i( 0 ); i < linkLights.length(); i++ )
 			{
@@ -5796,7 +5798,7 @@ MStatus liqRibTranslator::objectBlock()
 					liqRibNodePtr  ln( htable->find( lightFnDag.fullPathName(), nodeDagPath, MRT_Light ) );
 					if( NULL != ln )
 					{
-						if( m_illuminateByDefault )
+						if( liqglo.m_illuminateByDefault )
 							RiIlluminate( ln->object(0)->lightHandle(), RI_FALSE );
 						else
 							RiIlluminate( ln->object(0)->lightHandle(), RI_TRUE );
@@ -7183,7 +7185,7 @@ MStatus liqRibTranslator::lightBlock()
 			RiAttributeEnd();
 			// ...so we have to switch it on again explicitly
 			// if exclusive Lightlinking is set
-			if( m_illuminateByDefault )
+			if( liqglo.m_illuminateByDefault )
 				RiIlluminate( ribNode->object(0)->lightHandle(), 1 );
 			else
 				RiIlluminate( ribNode->object(0)->lightHandle(), 0 );
