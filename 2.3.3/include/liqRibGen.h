@@ -36,9 +36,9 @@
 ** ______________________________________________________________________
 */
 
-extern "C" {
+//extern "C" {
 	#include "ri_interface.h"
-}
+//}
 #include <liqRibStatus.h>
 #include <zlib.h>
 class liqRibGen;

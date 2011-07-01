@@ -33,9 +33,9 @@
 */
 
 // RenderMan jeaders
-extern "C" {
+//extern "C" {
 #include "ri_interface.h"
-}
+//}
 
 // Maya headers
 #include <maya/MDoubleArray.h>

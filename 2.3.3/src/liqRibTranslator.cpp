@@ -44,9 +44,9 @@
 
 
 // Renderman Headers
-extern "C" {
+//extern "C" {
 #include "ri_interface.h"
-}
+//}
 
 #ifdef _WIN32
 #include <process.h>
@@ -5418,8 +5418,12 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 #endif
 
 #if defined( DELIGHT )  || defined( PRMAN ) || defined( PIXIE )
+					#ifdef RIBLIB_AQSIS
+					assert(0&&"RiDisplayChannelV() is not supported in Aqsis1.6.0 !");
+					#else
 					//if( liquidRenderer.renderName == MString("PRMan") )
 					RiDisplayChannelV( ( RtToken )channel.asChar(), numTokens, tokens, values );
+					#endif
 #else
 					// || defined( GENERIC_RIBLIB )
 
@@ -7592,15 +7596,17 @@ void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode
 
 void liqRibTranslator::_RiOption_format_compress(bool bBinary, bool bCompress)
 {
-// 	LIQDEBUGPRINTF( "-> setting binary option\n" );
-// 	RtString binary[1] = {"binary"};
-// 	RtString ascii[1] = {"ascii"};
-// 	RiOption( "rib", "format", ( RtPointer )(bBinary?binary[0]:ascii[0]),        RI_NULL );
-// 
-// 	LIQDEBUGPRINTF( "-> setting compression option\n" );
-// 	RtString gzip[1] = {"gzip"};
-// 	RtString none[1] = {"none"};
-// 	RiOption( "rib", "compression", ( RtPointer )(bCompress?gzip[0]:none[0]), RI_NULL );
+ #ifdef RIBLIB_AQSIS
+  	LIQDEBUGPRINTF( "-> setting binary option\n" );
+  	RtString binary[1] = {"binary"};
+  	RtString ascii[1] = {"ascii"};
+  	RiOption( tokenCast("rib"), "format", ( RtPointer )(bBinary?binary[0]:ascii[0]),        RI_NULL );
+  
+  	LIQDEBUGPRINTF( "-> setting compression option\n" );
+  	RtString gzip[1] = {"gzip"};
+  	RtString none[1] = {"none"};
+  	RiOption( tokenCast("rib"), "compression", ( RtPointer )(bCompress?gzip[0]:none[0]), RI_NULL );
+ #else
 	LIQDEBUGPRINTF( "-> setting binary option\n" );
 	if( liqglo_doBinary ) 
 	{
@@ -7626,4 +7632,5 @@ void liqRibTranslator::_RiOption_format_compress(bool bBinary, bool bCompress)
 		RtString comp[ 1 ] = { "none" };
 		RiOption( "rib", "compression", ( RtPointer )comp, RI_NULL );
 	}
+#endif
 }

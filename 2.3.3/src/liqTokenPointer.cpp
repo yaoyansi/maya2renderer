@@ -30,9 +30,9 @@
 #include <string>
 #include <strstream>
 
-extern "C" {
+//extern "C" {
 #include "ri_interface.h"
-}
+//}
 #include <liqTokenPointer.h>
 #include <liquid.h>
 

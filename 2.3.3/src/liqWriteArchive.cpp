@@ -22,9 +22,9 @@
 **
 ** RenderMan (R) is a registered trademark of Pixar
 */
-
-#include <liquid.h>
 #include <liqWriteArchive.h>
+#include <liquid.h>
+
 #include <liqRibNode.h>
 #include <liqRibObj.h>
 #include <liqGlobalHelpers.h>
@@ -42,7 +42,7 @@
 #include <maya/MFnSet.h>
 #include <maya/MPlug.h>
 
-#include "ri_interface.h"
+
 
 
 // RI_VERBATIM is in the current RenderMan spec but

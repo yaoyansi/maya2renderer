@@ -38,9 +38,9 @@
 */
 
 //#include <zlib.h>
-extern "C" {
+//extern "C" {
 	#include "ri_interface.h"
-}
+//}
 #include <string>
 
 #include <maya/MGlobal.h>

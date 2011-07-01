@@ -24,6 +24,9 @@
 ** RenderMan (R) is a registered trademark of Pixar
 */
 
+
+#include <lights.h>
+#include <algorithm>
 #include <maya/MPlug.h>
 #include <maya/MDoubleArray.h>
 #include <maya/MFnDoubleArrayData.h>
@@ -38,6 +41,8 @@
 
 #include <boost/scoped_array.hpp>
 #include <boost/scoped_ptr.hpp>
+
+
 
 extern int debugMode;
 
@@ -680,7 +685,11 @@ void liqShader::write(bool shortShaderNames, unsigned int indentLevel)
     {  
       outputIndentation(indentLevel);
 		RtLightHandle ret = RiLightSourceV( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
-	    shaderHandler.set( ret );
+ #ifdef RIBLIB_AQSIS
+		shaderHandler.set( reinterpret_cast<ptrdiff_t>(static_cast<RtLightHandle>(ret)) );
+#else
+		shaderHandler.set( ret );
+#endif
 	  } break;
 	    
 	case SHADER_TYPE_SURFACE :
@@ -745,7 +754,11 @@ void liqShader::writeAsCoShader(bool shortShaderNames, unsigned int indentLevel)
 	case SHADER_TYPE_DISPLACEMENT :
 	case SHADER_TYPE_VOLUME :
 		outputIndentation(indentLevel);
+		#ifdef RIBLIB_AQSIS
+		assert(0&&"RiShaderV() is not supported in Aqsis1.6.0 !");
+		#else
 		RiShaderV(shaderFileName, shaderHandlerPtr, shaderParamCount, tokenArray.get(), pointerArray.get());
+		#endif
 		break;
 	default :
 		char errorMsg[512];

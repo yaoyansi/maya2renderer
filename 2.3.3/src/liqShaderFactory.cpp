@@ -26,6 +26,7 @@
 
 
 #include <liqShaderFactory.h>
+#include <liqShader.h>
 
 #include <maya/MFnDependencyNode.h>
 #include <maya/MPlug.h>

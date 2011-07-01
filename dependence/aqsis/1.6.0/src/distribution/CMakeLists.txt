@@ -1,0 +1,102 @@
+# Set some variables used in configuring various packaging stuff.
+SET(AQSIS_PROJECT_NAME "Aqsis Renderer")
+SET(AQSIS_PROJECT_NAME_SHORT "Aqsis")
+SET(AQSIS_PROJECT_NAME_BASIC "aqsis")
+SET(AQSIS_PROJECT_VENDOR "Aqsis Team")
+SET(AQSIS_PROJECT_COPYRIGHT "Copyright (C) 2009, ${AQSIS_PROJECT_VENDOR}.")
+SET(AQSIS_PROJECT_COPYRIGHT_OTHER "The RenderMan(R) Interface Procedures and Protocol are Copyright 1988, 1989, 2000, 2005 Pixar. All Rights Reserved.")
+
+if(WIN32)
+	# There is a bug in NSI that does not handle full unix paths properly. Make
+	# sure there is at least one set of four (4) backlasshes.
+	set(CPACK_PACKAGE_FILE_NAME "${AQSIS_PROJECT_NAME_BASIC}-setup-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}")
+	set(CPACK_PACKAGE_EXECUTABLES "eqsl;${AQSIS_PROJECT_NAME}")
+	set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/distribution/win\\\\header.bmp")
+	set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${AQSIS_PROJECT_NAME_SHORT} ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}")
+	set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\eqsl.exe")
+	set(CPACK_NSIS_DISPLAY_NAME "${AQSIS_PROJECT_NAME} ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}")
+	set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\community.aqsis.org")
+	set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.aqsis.org")
+	set(CPACK_NSIS_CONTACT "packages@aqsis.org")
+	set(CPACK_NSIS_MODIFY_PATH ON)
+	set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+		!addincludedir \\\"${CMAKE_SOURCE_DIR}/distribution/win/nsis\\\"
+		!include custom_install.nsi")
+	set(CPACK_ALL_INSTALL_TYPES Full Minimal)
+	set(CPACK_COMPONENT_MAIN_INSTALL_TYPES Full Minimal)
+	set(CPACK_COMPONENT_DEVELOPMENT_INSTALL_TYPES Full)
+	set(CPACK_COMPONENT_EXAMPLES_INSTALL_TYPES Full)
+	set(CPACK_COMPONENT_SHADERS_INSTALL_TYPES Full)
+	set(CPACK_COMPONENT_PLUGINS_INSTALL_TYPES Full)
+	set(CPACK_GENERATOR "NSIS")
+	set(CPACK_SOURCE_GENERATOR "ZIP")
+	# Cusotm Windows NSIS installer
+	#add_subdirectory(win/nsis)
+
+elseif(APPLE)
+	set(BUNDLEDIR "${CMAKE_BINARY_DIR}/bundle"
+		CACHE STRING "Staging location for bundles (relative to CMAKE_BINARY_DIR)"
+		)
+	set(CPACK_PACKAGE_FILE_NAME
+		"${AQSIS_PROJECT_NAME_SHORT}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}-${CMAKE_SYSTEM_NAME}")
+	#set(CPACK_PACKAGE_ICON "")
+	set(CPACK_BUNDLE_NAME "${AQSIS_PROJECT_NAME_SHORT}")
+	set(CPACK_BUNDLE_ICON "${BUNDLEDIR}/Aqsis.icns")
+	set(CPACK_BUNDLE_PLIST "${BUNDLEDIR}/Info.plist")
+	set(CPACK_BUNDLE_STARTUP_COMMAND "")
+	set(CPACK_GENERATOR "Bundle")
+	set(CPACK_SOURCE_GENERATOR "TGZ")
+	# Custom OS X Bundle
+	add_subdirectory(macosx/bundle)
+
+elseif(UNIX)
+	set(CPACK_SOURCE_PACKAGE_FILE_NAME
+		"${AQSIS_PROJECT_NAME_BASIC}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}")
+	set(CPACK_GENERATOR "TGZ")
+	set(CPACK_SOURCE_GENERATOR "TGZ")
+	# Cusotm Linux RPM
+	#add_subdirectory(linux/rpm)
+
+endif()
+
+
+#--------------------------------------------------
+# Generic Packaging setup
+include(InstallRequiredSystemLibraries)
+
+set(CPACK_PACKAGE_NAME "${AQSIS_PROJECT_NAME_SHORT}")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${AQSIS_PROJECT_NAME}")
+set(CPACK_PACKAGE_VENDOR "${AQSIS_PROJECT_VENDOR}")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README")
+set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/README")
+set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_BUILD}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${AQSIS_PROJECT_NAME_SHORT}")
+
+set(CPACK_COMPONENTS_ALL main examples shaders plugins development Unspecified)
+set(CPACK_COMPONENT_MAIN_REQUIRED TRUE)
+set(CPACK_COMPONENT_UNSPECIFIED_REQUIRED TRUE)
+set(CPACK_COMPONENT_UNSPECIFIED_HIDDEN TRUE)
+set(CPACK_COMPONENT_EXAMPLES_GROUP "content")
+set(CPACK_COMPONENT_SHADERS_GROUP "content")
+set(CPACK_COMPONENT_MAIN_DESCRIPTION
+	"Rendering application and essential files only")
+set(CPACK_COMPONENT_GROUP_CONTENT_DESCRIPTION
+	"Examples and shader source files")
+set(CPACK_COMPONENT_EXAMPLES_DESCRIPTION
+	"Example files (.rib)")
+set(CPACK_COMPONENT_SHADERS_DESCRIPTION
+	"Generic shader source files (.sl)")
+set(CPACK_COMPONENT_PLUGINS_DESCRIPTION
+	"Plugins for external applications")
+set(CPACK_COMPONENT_DEVELOPMENT_DESCRIPTION
+	"Include and library files for software development")
+
+set(CPACK_SOURCE_IGNORE_FILES
+	".*/\\\\.git/"
+	)
+
+include(CPack)

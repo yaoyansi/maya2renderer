@@ -1,0 +1,98 @@
+#!/bin/sh
+
+APPLICATION_NAME="${CMAKE_PROJECT_NAME}"
+VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}"
+BUNDLE_NAME="$APPLICATION_NAME.app"
+BUNDLE="${CMAKE_BINARY_DIR}/_CPack_Packages/${CMAKE_SYSTEM_NAME}/${CPACK_GENERATOR}/${CPACK_PACKAGE_FILE_NAME}/$BUNDLE_NAME"
+CONTENTS="$BUNDLE/Contents"
+RESOURCES="$CONTENTS/Resources"
+FRAMEWORKS="$CONTENTS/Frameworks"
+BINARIESDIR="$RESOURCES/bin"
+SCRATCH="${BUNDLEDIR}/scratch"
+SCRIPTS="$RESOURCES/scripts"
+SHADERDIR="$RESOURCES/shaders"
+INCLUDEDIR="$RESOURCES/include"
+CONTENTSRC="${CMAKE_SOURCE_DIR}/content"
+CONTENTDIR="$SCRATCH/content"
+DISK_IMAGE="${AQSIS_PACKAGE_NAME}"
+
+mkdir "$FRAMEWORKS"
+
+for file in $( ls -l ${CMAKE_BINARY_DIR}/tools | grep -v ^- | grep -v displays | grep -v procedurals | grep -v total | awk '{print $9}' ); do
+	if [ $VERBOSE ]; then
+		echo "Copying: ${CMAKE_BINARY_DIR}/tools/$file/$file to $BINARIESDIR/"
+	fi
+	/Developer/Tools/CpMac "${CMAKE_BINARY_DIR}/tools/$file/$file" "$BINARIESDIR/"
+done
+
+
+### Resolve external dependencies
+echo "CPack: - OS X Bundle: Resolving external dependencies..."
+for folder in "$BINARIESDIR/" $( ls -R $RESOURCES/lib | egrep '.+:$' | sed 's/\/\//\//' | sed 's/:/\//' ) "$RESOURCES/lib/" "$FRAMEWORKS/"; do
+    if [ $VERBOSE ]; then
+        echo "Resolving dependencies in $folder"
+	fi
+	for file in $( ls -l $folder | grep ^- | awk '{print $9}' ); do
+		if [ $VERBOSE ]; then
+			echo "Resolving dependencies for $file"
+		fi
+		for dep in $( otool -L $folder$file | grep ".dylib" | grep "/opt/" | grep -v $BUNDLE_NAME | sed s/\(.*\)// ) $( otool -L $folder$file | grep ".dylib" | grep -v "/usr/" | grep -v "/Developer/" | grep -v "/System/" | grep -v "libaqsis" | grep -v $BUNDLE_NAME | sed s/\(.*\)// ) $( otool -L $folder$file | grep ".a" | grep -v "/usr/" | grep -v "/Developer/" | grep -v "/System/" | grep -v "libaqsis" | grep -v $BUNDLE_NAME | sed s/\(.*\)// ) $( otool -L $folder$file | grep dylib | grep fltk | grep -v $BUNDLE_NAME | sed s/\(.*\)// ) $( otool -L $folder$file | grep dylib | grep libboost | grep -v $BUNDLE_NAME | sed s/\(.*\)// ); do
+			bn=`basename $dep`
+			if [ $VERBOSE ]; then
+				echo "  ==>>>  $file  needs  $bn  ( $dep )"
+			fi
+			if [ ! -e $FRAMEWORKS/$bn ]; then
+				if [ $VERBOSE ]; then
+					echo "Processing $bn"
+				fi
+				cp -R $dep "$FRAMEWORKS"
+				if [ -L $dep ]; then
+				   	link=`ls -l $dep | cut -d">" -f2 | sed s/\ //`
+				   	deref=`echo $dep | sed s/$bn/$link/`  		
+				   	cp -R $deref "$FRAMEWORKS"
+				fi
+			fi
+			install_name_tool -change $dep @executable_path/../../Frameworks/$bn $folder$file
+		done
+	done
+done
+
+### Update libs
+echo "CPack: - OS X Bundle: Updating lib names..."
+for m in $( ls $FRAMEWORKS | grep dylib ); do
+	if [ $VERBOSE ]; then
+		echo "Processing $m"
+	fi
+	install_name_tool -id @executable_path/../../Frameworks/$m $FRAMEWORKS/$m
+done
+
+for m in $( ls $RESOURCES/lib | grep dylib ); do
+	if [ $VERBOSE ]; then
+		echo "Processing $m"
+	fi
+	install_name_tool -id @executable_path/../../Resources/lib/$m $RESOURCES/lib/$m
+done
+
+### Resolving internal dependencies
+echo "CPack: - OS X Bundle: Resolving internal dependencies..."
+for folder in $( ls -R $RESOURCES/lib | egrep '.+:$' | sed 's/\/\//\//' | sed 's/:/\//' ) "$BINARIESDIR/" "$RESOURCES/lib/"; do
+	PWD='pwd'
+	for file in $( ls -l $folder | grep ^- | awk '{print $9}' ); do
+		if [ $VERBOSE ]; then
+			echo "Resolving dependencies for $folder$file"
+		fi
+		for dep in $( otool -L $folder$file | grep dylib | grep ${CMAKE_BINARY_DIR} | sed 's/(.*)//' ); do
+			bn=`basename $dep`
+			install_name_tool -change $dep @executable_path/../../Resources/lib/$bn $folder$file
+			if [ $VERBOSE ]; then
+				echo "$dep  ->  $bn" 
+			fi
+		done
+	done
+done
+
+### Display of content of frameworks folder
+if [ $VERBOSE ]; then
+	echo "Content of Frameworks/"
+	ls -l "$FRAMEWORKS"
+fi

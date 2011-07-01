@@ -33,9 +33,9 @@
 */
 
 // Renderman headers
-extern "C" {
+//extern "C" {
 #include "ri_interface.h"
-}
+//}
 
 // Maya headers
 #include <maya/MFnDependencyNode.h>
@@ -1208,8 +1208,11 @@ void liqRibLightData::write()
           handle = RiLightSourceV( shaderName, numTokens, tokenArray.get(), pointerArray.get() );
           */
           rmanLightShader.write( liqglo_shortShaderNames, 0 );
+ 		  #ifdef RIBLIB_AQSIS
+ 		  handle = reinterpret_cast<RtLightHandle>(static_cast<ptrdiff_t>(rmanLightShader.shaderHandler.asInt()));
+ 		  #else
           handle = rmanLightShader.shaderHandler.asInt();
-          
+          #endif
           break;
         }
         case MRLT_Area: 

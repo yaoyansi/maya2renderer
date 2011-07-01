@@ -38,9 +38,9 @@
   #pragma warning( disable : 4244 4305 4018 )
 #endif
 
-#include <math.h>
+#include <cmath>
 #include <string>
-#include <assert.h>
+#include <cassert>
 #include <stdio.h>
 
 

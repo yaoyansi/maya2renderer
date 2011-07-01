@@ -33,9 +33,9 @@
 */
 
 // Renderman Headers
-extern "C" {
+//extern "C" {
 #include "ri_interface.h"
-}
+//}
 
 // Boost headers
 #include <boost/scoped_array.hpp>

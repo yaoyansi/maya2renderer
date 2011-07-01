@@ -1,0 +1,8 @@
+# CMake generation dependency list for this directory.
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/core/CMakeLists.txt
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/core/api/project.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/core/ddmanager/project.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/core/geometry/project.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/core/raytrace/project.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/core/texturing_old/project.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/rib2ri/project.cmake

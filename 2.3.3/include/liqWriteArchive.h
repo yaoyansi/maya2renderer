@@ -32,12 +32,14 @@
 ** ______________________________________________________________________
 */
 
-
+#include "ri_interface.h"
 #include <maya/MStatus.h>
 #include <maya/MPxCommand.h>
 #include <maya/MStringArray.h>
 #include <maya/MDagPath.h>
 #include <maya/MSyntax.h>
+
+
 
 class liqRibNode;
 

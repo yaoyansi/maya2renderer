@@ -36,9 +36,9 @@
 
 // Renderman headers
 #include <liqRiCommands.h>
-extern "C" {
+//extern "C" {
 #include "ri_interface.h"
-}
+//}
 
 #include <fstream>
 #include <boost/scoped_array.hpp>

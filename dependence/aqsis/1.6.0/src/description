@@ -1,0 +1,5 @@
+Aqsis Renderer
+
+Aqsis is an open source 3D rendering solution adhering to the RenderMan(R)
+standard; see the README for details.  This file exists to let the git
+repository know about project name.

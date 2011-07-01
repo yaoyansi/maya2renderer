@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="PACKAGE"
+	ProjectGUID="{9AA67356-4EF1-4B2A-A8A0-C53A7DD17C07}"
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="PACKAGE.dir\Debug"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\include;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\include;E:\dev\boost\1_39;"
+				ExceptionHandling="0"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Debug\&quot;"
+				AssemblerListingLocation="Debug"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\include;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\include;E:\dev\boost\1_39;"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Debug\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Debug\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+CommandLine="cd E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build&#x0D;&#x0A;E:&#x0D;&#x0A;set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cpack.exe&quot; -C $(OutDir) --config ./CPackConfig.cmake&#x0D;&#x0A;if errorlevel 1 goto VCReportError"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="PACKAGE.dir\Release"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\include;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\include;E:\dev\boost\1_39;"
+				ExceptionHandling="0"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Release\&quot;"
+				AssemblerListingLocation="Release"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\include;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\include;E:\dev\boost\1_39;"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Release\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;Release\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+CommandLine="cd E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build&#x0D;&#x0A;E:&#x0D;&#x0A;set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cpack.exe&quot; -C $(OutDir) --config ./CPackConfig.cmake&#x0D;&#x0A;if errorlevel 1 goto VCReportError"/>
+		</Configuration>
+		<Configuration
+			Name="MinSizeRel|Win32"
+			OutputDirectory="MinSizeRel"
+			IntermediateDirectory="PACKAGE.dir\MinSizeRel"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\include;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\include;E:\dev\boost\1_39;"
+				ExceptionHandling="0"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
+				AssemblerListingLocation="MinSizeRel"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\include;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\include;E:\dev\boost\1_39;"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+CommandLine="cd E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build&#x0D;&#x0A;E:&#x0D;&#x0A;set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cpack.exe&quot; -C $(OutDir) --config ./CPackConfig.cmake&#x0D;&#x0A;if errorlevel 1 goto VCReportError"/>
+		</Configuration>
+		<Configuration
+			Name="RelWithDebInfo|Win32"
+			OutputDirectory="RelWithDebInfo"
+			IntermediateDirectory="PACKAGE.dir\RelWithDebInfo"
+			ConfigurationType="10"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\include;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\include;E:\dev\boost\1_39;"
+				ExceptionHandling="0"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
+				AssemblerListingLocation="RelWithDebInfo"
+				ObjectFile="$(IntDir)\"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\include;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\include;E:\dev\boost\1_39;"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NO_SYSLOG,_USE_MATH_DEFINES,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"
+CommandLine="cd E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build&#x0D;&#x0A;E:&#x0D;&#x0A;set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cpack.exe&quot; -C $(OutDir) --config ./CPackConfig.cmake&#x0D;&#x0A;if errorlevel 1 goto VCReportError"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+			<File
+				RelativePath="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\tools\teqser\CMakeLists.txt">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/tools/teqser/CMakeLists.txt"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cmake.exe&quot; -HE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src -BE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build --check-stamp-file E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto VCReportError"
+					AdditionalDependencies="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\tools\teqser\CMakeLists.txt;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\tools\teqser\CMakeLists.txt;"
+					Outputs="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/tools/teqser/CMakeLists.txt"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cmake.exe&quot; -HE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src -BE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build --check-stamp-file E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto VCReportError"
+					AdditionalDependencies="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\tools\teqser\CMakeLists.txt;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\tools\teqser\CMakeLists.txt;"
+					Outputs="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/tools/teqser/CMakeLists.txt"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cmake.exe&quot; -HE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src -BE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build --check-stamp-file E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto VCReportError"
+					AdditionalDependencies="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\tools\teqser\CMakeLists.txt;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\tools\teqser\CMakeLists.txt;"
+					Outputs="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/tools/teqser/CMakeLists.txt"
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;&quot;D:\Program Files\CMake\2.8\bin\cmake.exe&quot; -HE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src -BE:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/build --check-stamp-file E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\generate.stamp&#x0D;&#x0A;if errorlevel 1 goto VCReportError"
+					AdditionalDependencies="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\tools\teqser\CMakeLists.txt;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\src\tools\teqser\CMakeLists.txt;"
+					Outputs="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+			</File>
+		<Filter
+			Name="CMake Rules"
+			Filter="">
+			<File
+				RelativePath="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\PACKAGE_force.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description=" "
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;cd .&#x0D;&#x0A;if errorlevel 1 goto VCReportError"
+					AdditionalDependencies="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\PACKAGE_force.rule"
+					Outputs="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\PACKAGE_force"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description=" "
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;cd .&#x0D;&#x0A;if errorlevel 1 goto VCReportError"
+					AdditionalDependencies="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\PACKAGE_force.rule"
+					Outputs="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\PACKAGE_force"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description=" "
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;cd .&#x0D;&#x0A;if errorlevel 1 goto VCReportError"
+					AdditionalDependencies="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\PACKAGE_force.rule"
+					Outputs="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\PACKAGE_force"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description=" "
+					CommandLine="set PATH=;E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);E:\dev\tools\bison\2.4.1;E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\util\$(OutDir);E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\libs\slcomp\$(OutDir);%PATH%&#x0D;&#x0A;cd .&#x0D;&#x0A;if errorlevel 1 goto VCReportError"
+					AdditionalDependencies="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\PACKAGE_force.rule"
+					Outputs="E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0\build\tools\teqser\CMakeFiles\PACKAGE_force"/>
+				</FileConfiguration>
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

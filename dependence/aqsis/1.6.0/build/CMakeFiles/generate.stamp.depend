@@ -1,0 +1,39 @@
+# CMake generation dependency list for this directory.
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/CMakeLists.txt
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/build/CMakeFiles/CMakeSystem.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/build/CMakeFiles/CMakeCCompiler.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/build/CMakeFiles/CMakeCXXCompiler.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/CMakeSystemSpecificInformation.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/CMakeGenericSystem.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/Platform/Windows.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/Platform/WindowsPaths.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/CMakeCInformation.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/Platform/Windows-cl.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/build/CMakeFiles/CMakeCPlatform.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/build/CMakeFiles/CMakeCXXPlatform.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/Platform/cl.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/build/CMakeFiles/CMakeRCCompiler.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/CMakeRCInformation.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/CMakeCXXInformation.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/CMakeCommonLanguageInclude.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/UtilMacros.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/AqsisTesting.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FirstCMakeRun.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/XslTransform.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindTIFF.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindZLIB.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/FindBoost.cmake
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/FindBoost.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindFLTK.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindOpenEXR.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindXsltproc.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindFlexBison.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindNSIS.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindOsacompile.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindXcodebuild.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/modules/FindResource.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/cmake/platform/windows.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/distribution/win/info.rc.in.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/distribution/win/icon.rc.in.cmake
+E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/aqsisrc.in.cmake

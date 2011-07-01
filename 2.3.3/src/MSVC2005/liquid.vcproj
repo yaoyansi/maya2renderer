@@ -2622,8 +2622,8 @@
 				AdditionalOptions="/Zm800 "
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="../../include;&quot;$(MAYA_PATH2008)/include&quot;;E:\dev\tools\zlib\1.2.5"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PRMAN;_DEBUG;WIN32;_WINDOWS;_USRDLL;_BOOL;ulong=unsigned long;uint=unsigned int;_WIN32;REQUIRE_IOSTREAM;HAVE_ZLIB"
+				AdditionalIncludeDirectories="../../include;&quot;$(MAYA_PATH2008)/include&quot;;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\1.2.5;&quot;$(AQSISI_ROOT)\src\include&quot;;&quot;$(AQSISI_ROOT)\build\include&quot;;&quot;$(AQSISI_ROOT)\src\libs\core\api&quot;;&quot;$(AQSISI_ROOT)\build\libs\core\api&quot;;&quot;$(AQSISI_ROOT)\src\libs\core\ddmanager&quot;;&quot;$(AQSISI_ROOT)\src\libs\core\geometry&quot;;&quot;$(AQSISI_ROOT)\src\libs\core\raytrace&quot;;&quot;$(AQSISI_ROOT)\src\libs\core\texturing_old&quot;;&quot;$(AQSISI_ROOT)\src\libs\rib2ri&quot;;&quot;$(AQSISI_ROOT)\build\libs\rib2ri&quot;;&quot;$(AQSISI_ROOT)\src\libs\core&quot;"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PRMAN;_DEBUG;WIN32;_WINDOWS;_USRDLL;_BOOL;ulong=unsigned long;uint=unsigned int;_WIN32;REQUIRE_IOSTREAM;HAVE_ZLIB;_USE_MATH_DEFINES"
 				StringPooling="true"
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
@@ -2653,7 +2653,7 @@
 				OutputFile="../../bin/prman/win32/liquid_2008x32d.mll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2008)/lib&quot;;"
+				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2008)/lib&quot;;&quot;$(BOOST_ROOT)/stage/lib&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Debug/Objects/liquid2008x32d.pdb"
@@ -2999,6 +2999,10 @@
 			</File>
 			<File
 				RelativePath="..\liqWriteArchive.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\ri_interface.cpp"
 				>
 			</File>
 		</Filter>

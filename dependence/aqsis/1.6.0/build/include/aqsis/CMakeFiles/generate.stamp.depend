@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/include/aqsis/CMakeLists.txt
+D:/Program Files/CMake/2.8/share/cmake-2.8/Modules/CheckIncludeFiles.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/include/aqsis/config.h.in.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/include/aqsis/version.h.in.cmake

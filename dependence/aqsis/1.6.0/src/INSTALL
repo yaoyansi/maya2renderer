@@ -1,0 +1,105 @@
+Building Aqsis
+--------------
+
+As of version 1.3.0 Aqsis is using CMake as its build system on all platforms, so the following instructions apply to all systems.
+
+
+Requirements
+============
+
+Building Aqsis requires a C++ compiler and the following tools and libraries:
+
+    * CMake (v2.4+)
+    * Boost (v1.32.0+)
+    * libtiff.lib (v3.7.1+)
+    * flex (v2.5.4) (2.5.31 causes problems, see FAQ 2.2)
+    * bison (v1.35+)
+    * FLTK (v1.1.x) - optional, but required for framebuffer rendering
+    * libzlib (v1.1.4+)
+    * libjpeg (v6b+)
+    * xsltproc
+    * OpenEXR - if you want to read and write OpenEXR HDR image files
+
+Win32: For convenience most of the above dependencies are available via the '/win32libs' directory within our source repository. However, you still have to obtain Boost.
+
+
+Obtaining the sources
+=====================
+
+You can either obtain the source archive or get the latest source code via Git.
+
+To clone the Git repository, ensure you have a recent Git installed, see the Git website for details of how to install on your platform.
+
+$ git clone git://aqsis.git.sourceforge.net/gitroot/aqsis/aqsis aqsis
+
+This will clone the entire project history, so may take a little time depending on your connection speed. The project source will be checked out to the folder named in the last parameter in that command sequence, i.e. 'aqsis' in the example.
+
+
+Building
+========
+
+The CMake system requires that the project is built within a different folder to the source, to ensure nothing affects the source folder. So first create a new directory, for example 'build' in the same location as the source:
+
+mkdir build
+cd build
+
+Then from within that folder run the CMake interactive configuration tool, see system specifics, and check that all the necessary configuration variables are properly specified. If CMake cannot find any of the required libraries, it will report an error or warning about the effect of the missing libraries or tools.
+
+Once the variables are all properly set, select the option to generate the project files and exit. This will result in a set of system specific build configuration files in the build folder. See the system specific sections for what to do next.
+
+
+System Specific Details
+=======================
+
+Win32
+=====
+
+The CMake interactive configuration tool can be started via the 'Start' menu. Point the source location at your checked out source, and the build location to your newly made build folder. Then check the variables. Most important on Win32 is to point AQSIS_WIN32LIBS to point to the location of your checked out 'win32libs' SVN folder, this will resolve most of the required libraries and executables that are provided as part of the 'win32libs' folder.
+
+The other item that causes problems for the Win32 build is the location of the Boost headers and libraries. You should set the value of the CMake variable BOOST_ROOT to the install location of Boost. For reference, the folder you set it to should contain a folder called boost, under which you'll find all the main Boost headers.
+
+When you select to configure for the first time in a clean build folder CMake will ask you which target platform you wish to make for, we have tested with MicroSoft Visual Studio 9.
+
+Win32 - MSVC9
+=============
+
+CMake will generate vcproj and solution files for the project, load the solution into the VC9 IDE and build the ALL_BUILD target.
+
+Linux
+=====
+
+The interactive CMake configuration tool on Linux is 'ccmake', which is curses based.
+
+To create GNU 'make' files within the current folder enter:
+
+ccmake ../aqsis
+
+To build within the current directory enter:
+
+make
+
+To list the different build targets enter
+
+make help
+
+MacOSX
+======
+
+The interactive CMake configuration tool on MacOSX is 'ccmake', which is curses based. 
+
+To create GNU 'make' files within the current folder enter:
+
+ccmake ../aqsis
+
+To build within the current directory enter:
+
+make
+
+To list the different build targets enter
+
+make help
+
+
+Troubleshooting
+===============
+

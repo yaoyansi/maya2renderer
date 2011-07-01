@@ -27,9 +27,9 @@
 /* liquid command to export a shader ball with the selected shader */
 
 // Renderman headers
-extern "C" {
+//extern "C" {
 #include "ri_interface.h"
-}
+//}
 #ifdef _WIN32
   #include <process.h>
 #else

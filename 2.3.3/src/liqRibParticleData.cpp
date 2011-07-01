@@ -31,9 +31,9 @@
 */
 
 // Renderman Headers
-extern "C" {
+//extern "C" {
 #include "ri_interface.h"
-}
+//}
 
 #ifdef _WIN32
 #ifdef MSVC6

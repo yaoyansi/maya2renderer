@@ -1,0 +1,7 @@
+# CMake generation dependency list for this directory.
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/tex/CMakeLists.txt
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/tex/buffers/project.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/tex/filtering/project.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/tex/io/project.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/tex/maketexture/project.cmake
+E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/tex/pointcloud/project.cmake
