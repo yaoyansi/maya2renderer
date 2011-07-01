@@ -2722,29 +2722,29 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 						baseShadowName = liquidGetRelativePath( liqglo_relativeFileNames, baseShadowName, liqglo_ribDir );
 					}
 
-					{//export geometry objects to rib files.
-						MMatrix matrix;
-						MDagPath path;
-						MObject transform;
-						MFnDagNode dagFn;
-
-						for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
-						{
-							LIQ_CHECK_CANCEL_REQUEST;
-
-							liqRibNodePtr ribNode( rniter->second );
-							path = ribNode->path();
-							transform = path.transform();
-							
-							if( ( !ribNode ) || ( ribNode->object(0)->type == MRT_Light ) ) 
-								continue;
-							if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
-								continue;
-
-							_writeObject(false, ribNode);
-
-						}
-					}
+ 					{//export geometry objects to rib files.
+ 						MMatrix matrix;
+ 						MDagPath path;
+ 						MObject transform;
+ 						MFnDagNode dagFn;
+ 
+ 						for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
+ 						{
+ 							LIQ_CHECK_CANCEL_REQUEST;
+ 
+ 							liqRibNodePtr ribNode( rniter->second );
+ 							path = ribNode->path();
+ 							transform = path.transform();
+ 							
+ 							if( ( !ribNode ) || ( ribNode->object(0)->type == MRT_Light ) ) 
+ 								continue;
+ 							if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
+ 								continue;
+ 
+ 							_writeObject(false, ribNode);
+ 
+ 						}
+ 					}
 
 					LIQDEBUGPRINTF( "-> setting RiOptions\n" );
 
@@ -7026,12 +7026,12 @@ MStatus liqRibTranslator::objectBlock()
 							sSample.set(msampleOn);
 
 							MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+sFrame+".m"+sSample+".rib" );
-
+							//1)make a reference
 							RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
-
+							//2)write the data into a rib file.
 							RtContextHandle c = RiGetContext();//push context
 							RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
-							ribNode->object( msampleOn )->writeNextObjectGrain();//_writeObject(true, ribNode);
+							ribNode->object( msampleOn )->writeNextObjectGrain();
 							RiEnd();
 							RiContext(c);//pop context
 						}
@@ -7039,7 +7039,19 @@ MStatus liqRibTranslator::objectBlock()
 						RiMotionEnd();
 					} 
 					else {
-						ribNode->object( 0 )->writeNextObjectGrain();//_writeObject(true, ribNode);
+						RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
+						MString sFrame;
+						sFrame.set(liqglo_lframe);
+
+						MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+sFrame+".rib" );
+						//1)make a reference
+						RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
+						//2)write the data into a rib file.
+						RtContextHandle c = RiGetContext();//push context
+						RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
+						ribNode->object( 0 )->writeNextObjectGrain();
+						RiEnd();
+						RiContext(c);//pop context
 					}
 				}
 			} 
