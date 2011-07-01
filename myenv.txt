@@ -1,0 +1,112 @@
+yys---------------------------------
+APR_ICONV_PATH=D:\Program Files\Subversion\iconv
+AQSISI_ROOT=E:\dev\render\renderer\renderman.compliant\aqsis\1.6.0
+BOOST_LIB_PATH=E:\dev\boost\1_39\lib32
+BOOST_ROOT=E:\dev\boost\1_39
+CG_BIN64_PATH=E:\dev\nVidia\Cg\bin.x64
+CG_BIN_PATH=E:\dev\nVidia\Cg\bin
+CG_INC_PATH=E:\dev\nVidia\Cg\include
+CG_LIB64_PATH=E:\dev\nVidia\Cg\lib.x64
+CG_LIB_PATH=E:\dev\nVidia\Cg\lib
+-MAYA_LOCATION=D:\Program Files\Autodesk\Maya2008
+MAYA_PATH2008=D:\Program Files\Autodesk\Maya2008
+MAYA_PATH2009=D:\Program Files\Autodesk\Maya2009
+Path=D:\ProgramFiles\Python\25;C:\Program Files\CVSNT\;E:\dev\tools\openexr\1.6.1\Deploy\bin\Release-;E:\dev\Autodesk\maya\myplugin\project\liquid\displayDrivers\pixie\;E:\dev\render\renderer\renderman.compliant\pixie\displays;E:\dev\autodesk\maya\myplugin\project\liquid_\2.3.3\lib\plugins;%AQSISI_ROOT%\bin;E:\dev\tools\GnuWin32\bin
+PYTHONPATH=D:\Program Files\Autodesk\Maya2008\scripts;E:\dev\nVidia\mentalimage\OpenProjects\miparser;
+RMS_ROOT=D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008
+TEMP=%USERPROFILE%\Local Settings\Temp
+TMP=%USERPROFILE%\Local Settings\Temp
+XX_PROJ_ROOT=E:\dev\autodesk\maya\myplugin\project
+
+system------------------------------
+APR_ICONV_PATH=d:\Program Files\Subversion\iconv
+BSGP_BIN_PATH=D:\ProgramFiles\BSGP\bin
+BULLET_ROOT=E:\dev\physics\bullet\2.76
+CG_BIN64_PATH=E:\dev\nVidia\Cg\bin.x64
+CG_BIN_PATH=E:\dev\nVidia\Cg\bin
+CG_INC_PATH=E:\dev\nVidia\Cg\include
+CG_LIB64_PATH=E:\dev\nVidia\Cg\lib.x64
+CG_LIB_PATH=E:\dev\nVidia\Cg\lib
+CLASSPATH=.;C:\Program Files\QuickTime\QTSystem\QTJava.zip
+ComSpec=%SystemRoot%\system32\cmd.exe
+CUDA_BIN_PATH=E:\dev\nVidia\cuda\3.0\bin
+CUDA_INC_PATH=E:\dev\nVidia\cuda\3.0\include
+CUDA_LIB_PATH=E:\dev\nVidia\cuda\3.0\lib
+DXSDK_DIR=E:\dev\d3d\sdk\Mar2009\
+FP_NO_HOST_CHECK=NO
+I4GPU_BIN_PATH=D:\ProgramFiles\BSGP\bin
+MAYA_MODULE_PATH=D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008\etc
+MAYA_PLUG_IN_PATH=D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008\bin;
+-MI_LIBRARY_PATH=D:\Program Files\Autodesk\MentalRayStandalone3.5.6\lib;E:\dev\nVidia\mentalimage\OpenProjects\shaders_p\trunk\shaders_p_3.3\Release_Maya2009;E:\dev\nVidia\mentalimage\OpenProjects\shaders_p\trunk\shaders_p_3.3\mi\Maya;
+-MI_RAY_INCPATH=D:\Program Files\Autodesk\MentalRayStandalone3.5.6\include
+-MI_ROOT=D:\Program Files\Autodesk\MentalRayStandalone3.5.6
+NUMBER_OF_PROCESSORS=2
+NVSDK10D3D_ROOT=E:\dev\nVidia\sdk\10.5\d3d\
+NVSDK10OGL_ROOT=E:\dev\nVidia\sdk\10.5\ogl
+NVSDKCOMPUTE_ROOT=E:\dev\nVidia\NVIDIAGPUComputingSDK
+OS=Windows_NT
+Path=C:\Program Files\NVIDIA Corporation\PhysX\Common;D:\Program Files\Autodesk\Maya2009\bin;D:\Program Files\Autodesk\Maya2008\bin;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;D:\Program Files\TortoiseSVN\bin;D:\Program Files\Subversion\bin;D:\Program Files\Pixar\RenderManProServer-13.5.2\bin;C:\Program Files\Common Files\Thunder Network\KanKan\Codecs
+PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH
+PROCESSOR_ARCHITECTURE=x86
+PROCESSOR_IDENTIFIER=x86 Family 6 Model 15 Stepping 6, GenuineIntel
+PROCESSOR_LEVEL=6
+PROCESSOR_REVISION=0f06
+QMAKESPEC=win32-msvc2005
+Rav=C:\Documents and Settings\All Users\Application Data\Rising\Rav
+RMANTREE=D:\Program Files\Pixar\RenderManProServer-13.5.2
+RMSTREE=D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008
+SHADERS=%PIXIEHOME%\shaders
+SPM_HOST=localhost
+TEMP=%SystemRoot%\TEMP
+TMP=%SystemRoot%\TEMP
+VS80COMNTOOLS=D:\Program Files\Microsoft Visual Studio 8\Common7\Tools\
+windir=C:\WINDOWS
+XBMLANGPATH=%RATTREE%\lib\mtor\resources;
+
+else-------------------------------------
+ALLUSERSPROFILE=C:\Documents and Settings\All Users
+APPDATA=C:\Documents and Settings\yys\Application Data
+
+BSGP_BIN_PATH=D:\ProgramFiles\BSGP\bin
+BULLET_ROOT=E:\dev\physics\bullet\2.76
+CGAL_DIR=E:\dev\Modeling\cgal\3.5.1
+
+CommonProgramFiles=C:\Program Files\Common Files
+COMPUTERNAME=XXW075
+
+HOME=C:\Documents and Settings\yys
+HOMEDRIVE=C:
+HOMEPATH=\Documents and Settings\yys
+LOGONSERVER=\\XXW075
+
+ProgramFiles=C:\Program Files
+PROMPT=$P$G
+
+QTJAVA=C:\Program Files\QuickTime\QTSystem\QTJava.zip
+RATTREE=D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008
+
+SESSIONNAME=Console
+
+SystemDrive=C:
+SystemRoot=C:\WINDOWS
+TEMP=C:\DOCUME~1\yys\LOCALS~1\Temp
+TMP=C:\DOCUME~1\yys\LOCALS~1\Temp
+USERDOMAIN=XXW075
+USERNAME=yys
+USERPROFILE=C:\Documents and Settings\yys
+VS80COMNTOOLS=D:\Program Files\Microsoft Visual Studio 8\Common7\Tools\
+VS90COMNTOOLS=D:\Program Files\Microsoft Visual Studio 9.0\Common7\Tools\
+windir=C:\WINDOWS
+XBMLANGPATH=D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008\lib\mtor\resources;
+XX_PROJ_ROOT=E:\dev\autodesk\maya\myplugin\project
+__COMPAT_LAYER=EnableNXShowUI 
+
+
+
+network
+ip	192.168.1.105
+mask	255.25.255.0
+gate	192.168.1.254
+
+close unnessary services
+close 137 138 445 139 port
