@@ -731,12 +731,12 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 	string $outSLO = ($shaderdirpath + $startingNode + ".slo");
 	string $sourceSL = ($shaderdirpath + $startingNode + ".sl");
 
-	if ( !gmatch( $shaderdir, "/*") || !gmatch( $shaderdir, "?:*") )// or &&
+	if ( !gmatch( $shaderdir, "/*") && !gmatch( $shaderdir, "?:*") )// if $shaderdir is not a linux path or windows path format,
 		$shaderdirpath = ( workspace( "-q", "-rd" ) + $shaderdir );
 
 	//string $outSLO = $shaderFileName+".slo";
-	trace  ( $shaderComp + " -o "+ $outSLO +" " + $sourceSL );
-	system ( $shaderComp + " -o "+ $outSLO +" " + $sourceSL );
+	trace  ( $shaderComp + " -o \""+ $outSLO +"\" \"" + $sourceSL +"\"");
+	system ( $shaderComp + " -o \""+ $outSLO +"\" \"" + $sourceSL +"\"");//$outSLO or $sourceSL may contain white space
 
 	//record shader absolute full path
 	if(!`objExists($assingToNode + ".shaderFullPath")`)
