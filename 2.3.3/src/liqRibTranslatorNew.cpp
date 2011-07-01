@@ -375,25 +375,22 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 				structJob *frameJob = NULL;
 				structJob *shadowPassJob = NULL;
 				LIQDEBUGPRINTF( "-> setting hero pass.\n" );
-				if( m_outputHeroPass && !m_outputShadowPass ) 
+				if( m_outputHeroPass && !m_outputShadowPass ){
 					frameJob = &jobList[jobList.size() - 1];
+				}
 				else if( m_outputShadowPass && m_outputHeroPass ) 
 				{
 					frameJob = &jobList[jobList.size() - 1];
 					shadowPassJob = &jobList[jobList.size() - 2];
 				} 
-				else if( m_outputShadowPass && !m_outputHeroPass ) 
+				else if( m_outputShadowPass && !m_outputHeroPass ){
 					shadowPassJob = &jobList[jobList.size() - 1];
+				}
 
 				LIQDEBUGPRINTF( "-> hero pass set.\n" );
 				LIQDEBUGPRINTF( "-> writing out pre frame command information to render script file.\n" );
-				if( framePreFrameCommand != MString("") ) 
-				{
-					liqRenderScript::Cmd cmd(framePreFrameCommand.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
-					cmd.alfredServices = liqglo.m_alfredServices.asChar();
-					cmd.alfredTags     = liqglo.m_alfredTags.asChar();
-					frameScriptJob.commands.push_back(cmd);
-				}
+				frameScriptJobMgr.try_addPreFrameCommand(framePreFrameCommand.asChar());
+
 
 				if( m_outputHeroPass ) 
 				{

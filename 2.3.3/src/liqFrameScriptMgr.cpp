@@ -285,4 +285,15 @@ void tFrameScriptJobMgr::makeReflectionPass(
 	}
 
 }
+//
 
+void tFrameScriptJobMgr::try_addPreFrameCommand(const MString &framePreFrameCommand__)
+{
+	if( framePreFrameCommand__ != MString("") ) 
+	{
+		liqRenderScript::Cmd cmd(framePreFrameCommand__.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
+		cmd.alfredServices = liqglo.m_alfredServices.asChar();
+		cmd.alfredTags     = liqglo.m_alfredTags.asChar();
+		m_frameScriptJob.commands.push_back(cmd);
+	}
+}

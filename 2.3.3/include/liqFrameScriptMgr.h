@@ -57,6 +57,8 @@ public:
 		bool &alf_shadows__,
 		bool &alf_refmaps__
 		);
+	void try_addPreFrameCommand(const MString &framePreFrameCommand__);
+
 protected:
 	liqRenderScript::Job &m_frameScriptJob;
 
