@@ -49,6 +49,7 @@ class liqExpression {
   public:
 	  liqExpression( const std::string& str, const std::string& objName = std::string() );
   // liqExpression( char * str, char *objName = NULL );
+	  virtual ~liqExpression(){}
 
   MString	CalcValue( void );
 
@@ -68,6 +69,10 @@ class liqExpression {
   MString	options;
   MString source;
   MString dest;
+
+private:
+	liqExpression(const liqExpression&);
+	liqExpression& operator=(const liqExpression&);
 };
 
 #endif

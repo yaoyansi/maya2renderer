@@ -40,7 +40,8 @@
 class liqRibShaveData : public liqRibData {
 public: // Methods
 
-                        liqRibShaveData( MObject surface );
+          liqRibShaveData( MObject surface );
+  virtual ~liqRibShaveData(){}
 
   virtual void          _write();
   virtual unsigned      granularity() const;
@@ -70,6 +71,12 @@ private: // Data
 
   std::vector< RtInt >       ncurves, order, numCVs;
   std::vector< RtFloat >     knot, minKnot, maxKnot, u, v, w;
+
+
+private:
+	liqRibShaveData(const liqRibShaveData&);
+	liqRibShaveData& operator=(const liqRibShaveData&);
+
 };
 
 #endif//#ifndef liqRibShaveData_H

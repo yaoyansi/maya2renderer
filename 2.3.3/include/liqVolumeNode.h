@@ -105,7 +105,11 @@ class liqVolumeNode : public MPxNode
     static MObject aOutColor;
     static MObject aAssignedObjects;
 
-    bool    swatchInit;
+	bool    swatchInit;
+
+private:
+	liqVolumeNode(const liqVolumeNode&);
+	liqVolumeNode& operator=(const liqVolumeNode&);
 };
 
 

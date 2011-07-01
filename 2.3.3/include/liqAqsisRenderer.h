@@ -46,6 +46,9 @@ public:
 
     virtual bool	supports(e_capability capability) const;
     virtual bool	requires(e_requirement requirement) const;
+private:
+	liqAqsisRenderer(const liqAqsisRenderer&);
+	liqAqsisRenderer& operator=(const liqAqsisRenderer&);
 };
 
 #endif

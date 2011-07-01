@@ -64,6 +64,10 @@ private:
 	static liqShaderFactory *_instance;
 	int shaderHandlerId;
 	std::vector<liqShader*> m_shaders;
+
+private:
+	liqShaderFactory(const liqShaderFactory&);
+	liqShaderFactory& operator=(const liqShaderFactory&);
 };
 
 #endif

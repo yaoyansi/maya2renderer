@@ -98,6 +98,10 @@ public:
   MString dshImageMode;
 
   MString rifParams;
+
+private:
+	liqRenderer(const liqRenderer&);
+	liqRenderer& operator=(const liqRenderer&);
 };
 
 

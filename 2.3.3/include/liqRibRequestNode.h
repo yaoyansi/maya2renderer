@@ -40,6 +40,9 @@
 class liqRibRequestNode : public MPxNode
 {
 public:
+	liqRibRequestNode(){}
+	virtual ~liqRibRequestNode(){}
+
 	static  void *creator();
 	static  MStatus initialize();
 
@@ -50,4 +53,9 @@ private:
 	static MObject aPreWorld;
 	static MObject aPostWorld;
 	static MObject aPreGeom;
+
+private:
+	liqRibRequestNode(const liqRibRequestNode&);
+	liqRibRequestNode& operator=(const liqRibRequestNode&);
+
 };

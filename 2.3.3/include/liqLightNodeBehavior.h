@@ -57,6 +57,8 @@ public:
 protected:
 
 private:
+	liqLightNodeBehavior(const liqLightNodeBehavior&);
+	liqLightNodeBehavior& operator=(const liqLightNodeBehavior&);
 
 };
 

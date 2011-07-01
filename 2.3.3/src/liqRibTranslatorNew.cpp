@@ -54,7 +54,7 @@
 #endif
 #include <time.h>
 #include <algorithm>
-#include <strstream>
+#include <sstream>
 
 #include <boost/scoped_array.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -65,14 +65,6 @@
 //extern "C" {
 #include "ri_interface.h"
 //}
-
-#if defined(_WIN32) && !defined(DEFINED_LIQUIDVERSION)
-// unix build gets this from the Makefile
-static const char *LIQUIDVERSION =
-#include "../liquid.version"
-;
-#define DEFINED_LIQUIDVERSION
-#endif
 
 #ifdef _WIN32
 #  define RM_CMD "cmd.exe /c del"

@@ -59,6 +59,9 @@ public:
 private:
   void resetIt();
 
+private:
+	liqPreviewShader(const liqPreviewShader&);
+	liqPreviewShader& operator=(const liqPreviewShader&);
 };
 
 #endif

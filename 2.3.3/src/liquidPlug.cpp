@@ -83,7 +83,7 @@
 
 #if defined(_WIN32) /*&& !defined(DEFINED_LIQUIDVERSION)*/
 // unix build gets this from the Makefile
-static const char * LIQUIDVERSION =
+const char * LIQUIDVERSION =
 #include "../liquid.version"
 ;
 #define DEFINED_LIQUIDVERSION

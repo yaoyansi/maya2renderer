@@ -34,6 +34,7 @@ class liqRibClipPlaneData : public liqRibData {
 public: // Methods
 
     liqRibClipPlaneData( MObject locator );
+	virtual ~liqRibClipPlaneData(){}
 
     virtual void       _write();
     virtual bool       compare( const liqRibData & other ) const;
@@ -41,7 +42,11 @@ public: // Methods
 
 private: // Data
 
-    MString name;
+	MString name;
+
+private:
+	liqRibClipPlaneData(const liqRibClipPlaneData&);
+	liqRibClipPlaneData& operator=(const liqRibClipPlaneData&);
 };
 
 #endif

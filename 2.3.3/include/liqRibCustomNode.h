@@ -52,6 +52,7 @@ public:
   {
     LIQDEBUGPRINTF("-> creating custom node object\n");
   }
+  virtual ~liqRibCustomNode(){}
 
   virtual void _write()
   {
@@ -76,6 +77,11 @@ public:
 
 private:
   liqCustomNode *customNode;
+
+
+private:
+	liqRibCustomNode(const liqRibCustomNode&);
+	liqRibCustomNode& operator=(const liqRibCustomNode&);
 };
 
 

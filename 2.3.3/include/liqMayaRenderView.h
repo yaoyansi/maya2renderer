@@ -79,6 +79,10 @@ private:
 	double m_quantize[4];
 	unsigned int m_timeout;
 
+
+private:
+	liqMayaRenderCmd(const liqMayaRenderCmd&);
+	liqMayaRenderCmd& operator=(const liqMayaRenderCmd&);
 };
 
 MObject getNode(MString name,MStatus *returnStatus);

@@ -41,7 +41,8 @@
 class liqRibSurfaceData : public liqRibData {
 public: // Methods
 
-                        liqRibSurfaceData( MObject surface );
+          liqRibSurfaceData( MObject surface );
+  virtual ~liqRibSurfaceData(){}
 
   virtual void          _write();
   virtual unsigned      granularity() const;
@@ -70,6 +71,10 @@ private: // Data
 
   std::vector< RtInt >       ncurves, order, numCVs;
   std::vector< RtFloat >     knot, minKnot, maxKnot, u, v, w;
+
+private:
+	liqRibSurfaceData(const liqRibSurfaceData&);
+	liqRibSurfaceData& operator=(const liqRibSurfaceData&);
 };
 
 #endif

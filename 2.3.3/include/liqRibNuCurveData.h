@@ -43,6 +43,7 @@ class liqRibNuCurveData : public liqRibData {
 public: // Methods
 
             liqRibNuCurveData( MObject curve );
+	virtual ~liqRibNuCurveData(){}
 
     virtual void       _write();
     virtual bool       compare( const liqRibData & other ) const;
@@ -58,6 +59,10 @@ private: // Data
     //boost::shared_array< RtFloat > max;
     boost::shared_array< RtFloat > CVs;
     boost::shared_array< RtFloat > NuCurveWidth;
+
+private:
+	liqRibNuCurveData(const liqRibNuCurveData&);
+	liqRibNuCurveData& operator=(const liqRibNuCurveData&);
 };
 
 #endif

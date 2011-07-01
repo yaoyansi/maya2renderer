@@ -41,6 +41,7 @@ class liqRibParticleData : public liqRibData {
 public:
 
   liqRibParticleData( MObject curve );
+  virtual ~liqRibParticleData(){}
 
   virtual void	_write();
   virtual unsigned granularity() const;
@@ -85,6 +86,10 @@ private:
   unsigned  m_numParticles;
   unsigned  m_numValidParticles;
   short     m_multiCount;  // Support for multi-point and multi-streak.
+
+private:
+	liqRibParticleData(const liqRibParticleData&);
+	liqRibParticleData& operator=(const liqRibParticleData&);
 };
 
 #endif

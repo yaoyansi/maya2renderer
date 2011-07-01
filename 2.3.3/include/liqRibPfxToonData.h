@@ -42,6 +42,7 @@ class liqRibPfxToonData : public liqRibData {
 public: // Methods
 
             liqRibPfxToonData( MObject curve );
+	virtual ~liqRibPfxToonData(){}
 
     virtual void       _write();
     virtual bool       compare( const liqRibData & other ) const;
@@ -56,6 +57,9 @@ private: // Data
     boost::shared_array< RtFloat > cvColor;
     boost::shared_array< RtFloat > cvOpacity;
 
+private:
+	liqRibPfxToonData(const liqRibPfxToonData&);
+	liqRibPfxToonData& operator=(const liqRibPfxToonData&);
 };
 
 #endif

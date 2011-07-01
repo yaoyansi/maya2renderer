@@ -63,6 +63,7 @@ typedef struct tagMayaSbdExtraTag {
 class liqRibMayaSubdivisionData : public liqRibData {
 public: // Methods
   liqRibMayaSubdivisionData( MObject mesh );
+  virtual ~liqRibMayaSubdivisionData(){}
 
   virtual void       _write();
   virtual bool       compare( const liqRibData & other ) const;
@@ -92,6 +93,10 @@ private: // Data
   void checkExtraTags( MObject &mesh );
   //void addExtraTags( MObject &mesh, SBD_EXTRA_TAG extraTag );
   void addExtraTags( MObject &mesh, int extraTagValue, SBD_EXTRA_TAG extraTag );
+
+private:
+	liqRibMayaSubdivisionData(const liqRibMayaSubdivisionData&);
+	liqRibMayaSubdivisionData& operator=(const liqRibMayaSubdivisionData&);
 };
 
 #endif

@@ -41,12 +41,15 @@ class liqRibLocatorData : public liqRibData {
 public: // Methods
 
             liqRibLocatorData( MObject locator );
+	virtual ~liqRibLocatorData(){}
 
     virtual void       _write();
     virtual bool       compare( const liqRibData & other ) const;
     virtual ObjectType type() const;
 
 private: // Data
+	liqRibLocatorData(const liqRibLocatorData&);
+	liqRibLocatorData& operator=(const liqRibLocatorData&);
 };
 
 #endif

@@ -45,7 +45,11 @@ public:
     }
 
     virtual bool	supports(e_capability capability) const;
-    virtual bool	requires(e_requirement requirement) const;
+	virtual bool	requires(e_requirement requirement) const;
+
+private:
+	liqPixieRenderer(const liqPixieRenderer&);
+	liqPixieRenderer& operator=(const liqPixieRenderer&);
 };
 
 #endif

@@ -32,7 +32,11 @@ class liqRibboxNode : public MPxNode
     // Output attributes
     static MObject aOutColor;
 
-    bool    swatchInit;
+	bool    swatchInit;
+
+private:
+	liqRibboxNode(const liqRibboxNode&);
+	liqRibboxNode& operator=(const liqRibboxNode&);
 };
 
 

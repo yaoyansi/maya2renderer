@@ -138,7 +138,11 @@ class liqSurfaceNode : public MPxNode
     static MObject aOutTransparency;
     static MObject aAssignedObjects;
 
-    bool    swatchInit;
+	bool    swatchInit;
+
+private:
+	liqSurfaceNode(const liqSurfaceNode&);
+	liqSurfaceNode& operator=(const liqSurfaceNode&);
 };
 
 

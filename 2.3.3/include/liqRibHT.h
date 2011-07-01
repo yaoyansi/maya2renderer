@@ -64,7 +64,7 @@ class liqRibHT {
 
 public:
 	liqRibHT();
-	~liqRibHT();
+	virtual ~liqRibHT();
 
     int           insert( MDagPath &, double, int,
                           ObjectType objType,int CountID,
@@ -80,6 +80,10 @@ private:
 	RNMAP	RibNodeMap;
 	ulong	hash( const char*, int ID );
 	friend class liqRibTranslator;
+
+private:
+	liqRibHT(const liqRibHT&);
+	liqRibHT& operator=(const liqRibHT&);
 };
 
 static const uint MR_HASHSIZE = 65536;

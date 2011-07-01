@@ -63,7 +63,7 @@ class liqTokenPointer
     liqTokenPointer();
     liqTokenPointer(const liqTokenPointer& src);
     liqTokenPointer& operator=( const liqTokenPointer& src);
-    ~liqTokenPointer();
+    virtual ~liqTokenPointer();
     void           setTokenName( const std::string& name );
     bool           set( const std::string& name, ParameterType ptype );
     bool           set( const std::string& name, ParameterType ptype, unsigned int arraySize );
@@ -97,7 +97,7 @@ class liqTokenPointer
 
     typedef std::vector< liqTokenPointer > array;
   private:
-	  boost::shared_array< RtFloat > m_tokenFloats;
+	boost::shared_array< RtFloat > m_tokenFloats;
     std::vector< std::string > m_tokenString;
 	boost::shared_array< RtString > m_tokenStringArray; // Holds pointers for getRtPointer();
     ParameterType m_pType;

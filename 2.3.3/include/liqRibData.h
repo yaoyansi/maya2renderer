@@ -46,6 +46,7 @@ enum ObjectType;
 
 class liqRibData {
 public:
+	liqRibData(){}
     virtual           ~liqRibData();
 	// write() is replaced by write(ribFileFullPath) in order to pass the ribFileFullPath;
     virtual void       write(const MString &ribFileFullPath);
@@ -67,6 +68,9 @@ private:
     void               parseVectorAttributes( MFnDependencyNode &nodeFn, MStringArray & strArray, ParameterType pType );
     unsigned int       faceVaryingCount;
 
+private:
+	liqRibData(const liqRibData&);
+	liqRibData& operator=(const liqRibData&);
 };
 
 #endif

@@ -42,6 +42,7 @@ class liqRibLightData : public liqRibData {
 public:
 
   liqRibLightData( const MDagPath & light );
+  virtual ~liqRibLightData(){}
 
   virtual void       _write();
   virtual bool       compare( const liqRibData & other ) const;
@@ -129,6 +130,10 @@ private:
   int           hitmode;
   
   liqShader     rmanLightShader;
+
+private:
+	liqRibLightData(const liqRibLightData&);
+	liqRibLightData& operator=(const liqRibLightData&);
 };
 
 

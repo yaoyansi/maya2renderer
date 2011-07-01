@@ -43,7 +43,8 @@
 class liqRibPfxData : public liqRibData {
 public: // Methods
 
-                          liqRibPfxData( MObject pfxGeo, ObjectType pfxtype );
+  liqRibPfxData( MObject pfxGeo, ObjectType pfxtype );
+  virtual ~liqRibPfxData(){}
 
   virtual void            _write();
   virtual unsigned        granularity() const;
@@ -59,6 +60,10 @@ private: // Data
   std::vector< RtInt >         nverts[ 3 ];
   boost::shared_array< RtFloat > CVs;
   liqTokenPointer::array pfxTokenPointerArrays[ 3 ];
+
+private:
+	liqRibPfxData(const liqRibPfxData&);
+	liqRibPfxData& operator=(const liqRibPfxData&);
 };
 
 #endif // liqRibPfxData_H

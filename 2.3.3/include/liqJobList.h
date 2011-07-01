@@ -57,6 +57,10 @@ private:
   bool fullPath;
   bool debug;
   MStringArray result;
+
+private:
+	liqJobList(const liqJobList&);
+	liqJobList& operator=(const liqJobList&);
 };
 
 

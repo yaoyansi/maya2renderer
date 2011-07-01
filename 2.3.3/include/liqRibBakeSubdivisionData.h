@@ -58,6 +58,10 @@ private: // Data
   RtMatrix  transformationMatrix;
 
   bool interpBoundary;
+
+private:
+	liqRibBakeSubdivisionData(const liqRibBakeSubdivisionData&);
+	liqRibBakeSubdivisionData& operator=(const liqRibBakeSubdivisionData&);
 };
 
 #endif

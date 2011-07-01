@@ -3083,6 +3083,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqRenderScript.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\liqRibboxNode.cpp"
 				>
 			</File>

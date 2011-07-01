@@ -65,7 +65,7 @@ class liqRibNode {
 
     liqRibNode( liqRibNodePtr instanceOfNode = liqRibNodePtr(),
                 const MString instanceOfNodeStr = "" );
-    ~liqRibNode();
+    virtual ~liqRibNode();
 
     void set( const MDagPath &, int, ObjectType objType, int particleId = -1 );
 
@@ -329,6 +329,10 @@ private:
     bool        overrideColor;
     void        parseVectorAttributes( const MFnDependencyNode&, const MStringArray&, const ParameterType& );
 
+
+private:
+	liqRibNode(const liqRibNode&);
+	liqRibNode& operator=(const liqRibNode&);
 };
 
 #endif

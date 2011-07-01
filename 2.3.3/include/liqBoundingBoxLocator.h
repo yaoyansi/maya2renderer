@@ -37,6 +37,9 @@
 class liqBoundingBoxLocator : public MPxLocatorNode
 {
 public:
+	liqBoundingBoxLocator(){}
+	virtual ~liqBoundingBoxLocator(){}
+
 	virtual void draw( M3dView & view, const MDagPath & path, M3dView::DisplayStyle style, M3dView::DisplayStatus status );
 	static void *creator();
     static MStatus initialize();
@@ -47,6 +50,10 @@ public:
 	boost::shared_array< MPoint > pts;
 
 	static MObject aDrawBox;
+
+private:
+	liqBoundingBoxLocator(const liqBoundingBoxLocator&);
+	liqBoundingBoxLocator& operator=(const liqBoundingBoxLocator&);
 };
 
 #endif//liqBoundingBoxLocator_H

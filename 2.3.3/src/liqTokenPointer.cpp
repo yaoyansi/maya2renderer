@@ -29,7 +29,7 @@
 //#include <liquid.h>
 #include <stdio.h>
 #include <string>
-#include <strstream>
+#include <sstream>
 
 //extern "C" {
 #include "ri_interface.h"
@@ -467,17 +467,17 @@ string liqTokenPointer::getRiDeclare() const
 	{
 		if( m_isArray )
 		{
-			strstream declare;
-			declare << "[" << m_arraySize << "]" << ends;
+			stringstream declare;
+			declare << "[" << m_arraySize << "]";
 			type += declare.str();
 		}
 	}
 	else
 	{
 		if( m_isUArray )
-		{
-			strstream declare;
-			declare << "[" << m_uArraySize << "]" << ends;
+		{	
+			stringstream declare;
+			declare << "[" << m_uArraySize << "]";
 			type += declare.str();
 		}
 	}

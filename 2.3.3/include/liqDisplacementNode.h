@@ -90,6 +90,9 @@ class liqDisplacementNode : public MPxNode
     static MObject aAssignedObjects;
 
     bool    swatchInit;
+private:
+	liqDisplacementNode(const liqDisplacementNode&);
+	liqDisplacementNode& operator=(const liqDisplacementNode&);
 };
 
 

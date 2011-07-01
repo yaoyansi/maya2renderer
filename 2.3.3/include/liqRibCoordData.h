@@ -34,6 +34,7 @@ class liqRibCoordData : public liqRibData {
 public: // Methods
 
     liqRibCoordData( MObject locator );
+	virtual ~liqRibCoordData(){}
 
     virtual void       _write();
     virtual bool       compare( const liqRibData & other ) const;
@@ -41,7 +42,11 @@ public: // Methods
 
 private: // Data
 
-    MString name;
+	MString name;
+
+private:
+	liqRibCoordData(const liqRibCoordData&);
+	liqRibCoordData& operator=(const liqRibCoordData&);
 };
 
 #endif

@@ -76,6 +76,10 @@ private:
 	bool           m_exportDisplace;
 	bool           m_exportVolume;
 	bool           m_shortShaderNames;
+
+private:
+	liqWriteArchive(const liqWriteArchive&);
+	liqWriteArchive& operator=(const liqWriteArchive&);
 };
 
 

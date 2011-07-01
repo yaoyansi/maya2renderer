@@ -41,6 +41,7 @@ class liqRibImplicitSphereData : public liqRibData {
 public: // Methods
 
             liqRibImplicitSphereData( MObject sphere );
+	virtual ~liqRibImplicitSphereData(){}
 
     virtual void       _write();
     virtual bool       compare( const liqRibData & other ) const;
@@ -48,6 +49,10 @@ public: // Methods
 
 private: // Data
 	float radius;
+
+private:
+	liqRibImplicitSphereData(const liqRibImplicitSphereData&);
+	liqRibImplicitSphereData& operator=(const liqRibImplicitSphereData&);
 };
 
 #endif

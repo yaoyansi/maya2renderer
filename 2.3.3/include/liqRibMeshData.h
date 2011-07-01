@@ -44,6 +44,7 @@ class liqRibMeshData : public liqRibData {
 public: // Methods
 
           liqRibMeshData( MObject mesh );
+  virtual ~liqRibMeshData(){}
 
   virtual void       _write();
   virtual void       printMesh();
@@ -63,6 +64,10 @@ private: // Data
   MString 	name;
   RtMatrix	transformationMatrix;
   float   	areaIntensity;
+
+private:
+	liqRibMeshData(const liqRibMeshData&);
+	liqRibMeshData& operator=(const liqRibMeshData&);
 };
 
 #endif

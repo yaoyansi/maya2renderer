@@ -53,7 +53,8 @@ typedef boost::shared_ptr< liqRibData > liqRibDataPtr;
 
 class liqRibObj {
 public:
-             liqRibObj( const MDagPath &, ObjectType objType );
+            liqRibObj( const MDagPath &, ObjectType objType );
+	virtual ~liqRibObj(){}
 
     AnimType compareMatrix( const liqRibObjPtr, int instance ) const;
     AnimType compareBody( const liqRibObjPtr ) const;
@@ -84,6 +85,9 @@ private:
     RtObjectHandle    objectHandle;     // Handle used by RenderMan to refer to defined geometry
     int               referenceCount;   // Object's reference count
     liqRibDataPtr     data;             // Geometry or light data
+private:
+	liqRibObj(const liqRibObj&);
+	liqRibObj& operator=(const liqRibObj&);
 };
 
 #endif

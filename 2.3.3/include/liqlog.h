@@ -1,6 +1,8 @@
 #ifndef _LIQUID_LOG_H_
 #define _LIQUID_LOG_H_
 
+#include <liqGlobalHelpers.h>
+
 #define LOG_BUFFER_LEN 1024
 
 #define liquidMessage2(msgtype, msg,...) \

@@ -44,6 +44,7 @@ class liqRibPfxHairData : public liqRibData {
 public: // Methods
 
     liqRibPfxHairData( MObject curve );
+	virtual ~liqRibPfxHairData(){}
 
     virtual void       _write();
     virtual bool       compare( const liqRibData& other ) const;
@@ -57,7 +58,11 @@ private: // Data
     boost::shared_array< RtFloat > normals;
     boost::shared_array< RtFloat > curveWidth;
     boost::shared_array< RtFloat > cvColor;
-    boost::shared_array< RtFloat > cvOpacity;
+	boost::shared_array< RtFloat > cvOpacity;
+
+private:
+	liqRibPfxHairData(const liqRibPfxHairData&);
+	liqRibPfxHairData& operator=(const liqRibPfxHairData&);
 };
 
 #endif

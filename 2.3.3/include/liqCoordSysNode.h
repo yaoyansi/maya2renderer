@@ -35,6 +35,10 @@ class liqCoordSysNode : public MPxLocatorNode
     int     m_coordType;
     MColor  m_coordColor;
 
+private:
+	liqCoordSysNode(const liqCoordSysNode&);
+	liqCoordSysNode& operator=(const liqCoordSysNode&);
+
 };
 
 #endif//liqCoordSysNode_H

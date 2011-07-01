@@ -79,6 +79,10 @@ private:
 	static MObject aOutColor;
 	static MObject aAssignedObjects;
 	bool swatchInit;
+
+private:
+	liqCoShaderNode(const liqCoShaderNode&);
+	liqCoShaderNode& operator=(const liqCoShaderNode&);
 };
 
 #endif

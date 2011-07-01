@@ -55,7 +55,11 @@ class liqRibGenStatus: public liqRibStatus {
     //virtual MCommandResult * ExecuteHostCmd( const char *cmd, char** errstr );
     virtual RtVoid Comment( RtToken name );
     virtual RtVoid AttributeBegin();
-    virtual RtVoid AttributeEnd();
+	virtual RtVoid AttributeEnd();
+
+private:
+	liqRibGenStatus(const liqRibGenStatus&);
+	liqRibGenStatus& operator=(const liqRibGenStatus&);
   
 };
 

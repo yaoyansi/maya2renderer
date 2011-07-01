@@ -118,6 +118,10 @@ private:
   std::map<const MString, SHADER_TYPE, mstrcomp> shaderTypeMap;
   std::map<const MString, SHADER_DETAIL, mstrcomp> shaderDetailMap;
   std::vector<int> argIsOutput;
+
+private:
+	liqGetSloInfo(const liqGetSloInfo&);
+	liqGetSloInfo& operator=(const liqGetSloInfo&);
 };
 
 

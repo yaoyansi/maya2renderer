@@ -52,6 +52,9 @@ private:
   MStringArray  objectNames;
   bool          worldSpace;
   bool          exportN;
+private:
+	liqAttachPrefAttribute(const liqAttachPrefAttribute&);
+	liqAttachPrefAttribute& operator=(const liqAttachPrefAttribute&);
 };
 
 #endif

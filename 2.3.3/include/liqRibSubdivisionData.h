@@ -62,6 +62,7 @@ typedef struct tagSbdExtraTag {
 class liqRibSubdivisionData : public liqRibData {
 public: // Methods
   liqRibSubdivisionData( MObject mesh );
+  virtual ~liqRibSubdivisionData(){}
 
   virtual void       _write();
   virtual bool       compare( const liqRibData & other ) const;
@@ -91,6 +92,10 @@ private: // Data
   void checkExtraTags( MObject &mesh );
   void addExtraTags( MObject &mesh, SBD_EXTRA_TAG extraTag );
   void addExtraTags( MObject &mesh, float extraTagValue, SBD_EXTRA_TAG extraTag );
+
+private:
+	liqRibSubdivisionData(const liqRibSubdivisionData&);
+	liqRibSubdivisionData& operator=(const liqRibSubdivisionData&);
 };
 
 #endif

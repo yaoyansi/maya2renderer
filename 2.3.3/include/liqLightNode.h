@@ -100,7 +100,11 @@ class liqLightNode : public MPxNode
     static MObject aOutTransparency;
     static MObject aAssignedObjects;
 
-    bool   swatchInit;
+	bool   swatchInit;
+
+private:
+	liqLightNode(const liqLightNode&);
+	liqLightNode& operator=(const liqLightNode&);
 };
 
 

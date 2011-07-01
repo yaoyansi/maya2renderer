@@ -55,7 +55,8 @@ class liqRibLightData;
 class liqRibTranslator : public MPxCommand {
 public:
 	liqRibTranslator();
-	~liqRibTranslator();
+	virtual ~liqRibTranslator();
+
 	static void * creator();
 	static MSyntax syntax();
 
@@ -452,6 +453,10 @@ private :
 
 	void _writeObject( const liqRibNodePtr& ribNode);
 	void _RiOption_format_compress(bool bBinary, bool bCompress);
+
+private:
+	liqRibTranslator(const liqRibTranslator&);
+	liqRibTranslator& operator=(const liqRibTranslator&);
 };
 
 #endif

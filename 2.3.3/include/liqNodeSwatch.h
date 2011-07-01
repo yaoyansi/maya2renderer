@@ -60,7 +60,11 @@ class liqNodeSwatch : public MSwatchRenderBase
       return new liqNodeSwatch( swatchObj, renderObj,  resolution);
     };
 
-    MString previewPath;
+	MString previewPath;
+
+private:
+	liqNodeSwatch(const liqNodeSwatch&);
+	liqNodeSwatch& operator=(const liqNodeSwatch&);
 };
 
 

@@ -91,6 +91,10 @@ public:
     virtual RtVoid Comment( RtToken name ) = 0;
     virtual RtVoid AttributeBegin() = 0;
     virtual RtVoid AttributeEnd() = 0;
+
+private:
+	liqRibStatus(const liqRibStatus&);
+	liqRibStatus& operator=(const liqRibStatus&);
 };
 
 

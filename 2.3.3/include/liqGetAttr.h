@@ -43,6 +43,8 @@ public:
 			    
 	virtual MStatus	    doIt(const MArgList& args );
 private:
+	liqGetAttr(const liqGetAttr&);
+	liqGetAttr& operator=(const liqGetAttr&);
 };
 
 #endif

@@ -53,7 +53,7 @@
 #endif
 #include <time.h>
 #include <algorithm>
-#include <strstream>
+#include <sstream>
 
 #include <boost/scoped_array.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -65,12 +65,9 @@
 #include "ri_interface.h"
 //}
 
-#if defined(_WIN32) && !defined(DEFINED_LIQUIDVERSION)
+#if defined(_WIN32)/* && !defined(DEFINED_LIQUIDVERSION)*/
 // unix build gets this from the Makefile
-static const char *LIQUIDVERSION =
-#include "../liquid.version"
-;
-#define DEFINED_LIQUIDVERSION
+extern const char *LIQUIDVERSION;
 #endif
 
 #ifdef _WIN32
@@ -411,7 +408,7 @@ void liqRibTranslator::printProgress( unsigned stat, unsigned numFrames, unsigne
 		cout << "ALF_PROGRESS " << progress << "%" << endl << flush;
 	else 
 	{
-		strstream progressOutput;
+		stringstream progressOutput;
 		progressOutput << "Progress: frame "<< where <<", " << progress << "%" << ends;
 		liquidMessage( progressOutput.str(), messageInfo );
 	}
@@ -7512,9 +7509,9 @@ MString liqRibTranslator::getHiderOptions( MString rendername, MString hidername
 		if( hidername == "hidden" ) 
 		{
 			{
-				strstream tmp;
+				stringstream tmp;
 				tmp << "\"int jitter\" [" << m_hiddenJitter << "] " << ends;
-				options += tmp.str();
+				options += tmp.str().c_str();
 			}
 			// PRMAN 13 BEGIN
 			if( m_hiddenAperture[0] != 0.0 ||
