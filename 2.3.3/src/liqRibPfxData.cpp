@@ -327,7 +327,7 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
 						*cvPtr++ = pfxVerts[ 0 ].y;
 						*cvPtr++ = pfxVerts[ 0 ].z;
 					}
-				}
+				}//for( pOn )
 				// end vertex
 				// last vertex has already been pushed
 
@@ -337,9 +337,9 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
 				*cvPtr++ = tmpVertex.z;
 
 				// record number of vertices for this curve
-				nverts[ setOn ].push_back( pOn + 2 );
-			}
-		}
+				nverts[ setOn ].push_back( pfxVerts.length()+2 );//nverts[ setOn ].push_back( pOn + 2 );
+			}//if
+		}//for( lineOn )
 
 		LIQDEBUGPRINTF( "-> number of pfx curve CVs: %u\n", totalVertex );
 		LIQDEBUGPRINTF( "-> number of pfx curves: %u\n", nverts[ setOn ].size() );
