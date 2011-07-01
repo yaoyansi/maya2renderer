@@ -92,6 +92,7 @@ const CqPrimvarToken standardVarsInit[] = {
 	CqPrimvarToken(class_uniform,  type_integer, 2, "bucketsize"),
 	CqPrimvarToken(class_uniform,  type_integer, 1, "eyesplits"),
 	CqPrimvarToken(class_uniform,  type_color,   1, "zthreshold"),
+	CqPrimvarToken(class_uniform,  type_color,   1, "othreshold"),
 	// Option "searchpath"
 	CqPrimvarToken(class_uniform,  type_string,  1, "shader"),
 	CqPrimvarToken(class_uniform,  type_string,  1, "archive"),
@@ -131,10 +132,26 @@ const CqPrimvarToken standardVarsInit[] = {
 	CqPrimvarToken(class_uniform,  type_string,  1, "depthfilter"),
 	// Attribute "dice"
 	CqPrimvarToken(class_uniform,  type_integer, 1, "binary"),
+	CqPrimvarToken(class_uniform,  type_integer, 1, "rasterorient"),
 	// Attribute "mpdump"
 	CqPrimvarToken(class_uniform,  type_integer, 1, "enabled"),
 	// Attribute "derivatives"
 	CqPrimvarToken(class_uniform,  type_integer, 1, "centered"),
+	// Attribute "sides"
+	CqPrimvarToken(class_uniform,  type_integer, 1, "doubleshaded"),
+	// Attribute "trace"
+	CqPrimvarToken(class_uniform,  type_integer, 1, "maxdiffusedepth"),
+	CqPrimvarToken(class_uniform,  type_integer, 1, "maxspeculardepth"),
+	CqPrimvarToken(class_uniform,  type_integer, 1, "displacements"),
+	CqPrimvarToken(class_uniform,  type_integer, 1, "samplemotion"),
+	// Attribute "irradiance" (aqsis can export these two arributes, but where are they exist?)
+	//CqPrimvarToken(class_uniform,  type_float,   4, "quantize"),
+	//CqPrimvarToken(class_uniform,  type_float,   1, "dither"),
+	// Attribute "photon"
+	CqPrimvarToken(class_uniform,  type_integer, 1, "estimator"),
+	CqPrimvarToken(class_uniform,  type_string,  1, "causticmap"),
+	CqPrimvarToken(class_uniform,  type_string,  1, "globalmap"),
+	CqPrimvarToken(class_uniform,  type_string,  1, "shadingmodel"),
 
 	//--------------------------------------------------
 	// Aqsis-specific options / attributes

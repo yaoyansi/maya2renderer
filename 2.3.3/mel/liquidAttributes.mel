@@ -1438,6 +1438,7 @@ global proc liquidAddNoNormalizeNurbs()
 global proc liquidCreateTrimCurveAttribute()
 {
 	//print("liquidCreateTrimCurveAttribute()");
+	liquidCreateTrimCurveSenseAttribute();
 }
 
 global proc liquidCreateTrimCurveSenseAttribute()

@@ -371,7 +371,7 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
     menuItem -d true;
     menuItem -label "Create Stitch Group"    -command liquidCreateStitchAttribute -ann "Add Stitch to selected node";
     menuItem -label "Stitch Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostStitchAttribute "+$prefix);
-      menuItem -label "sense"       -command liquidCreateStitchEnableAttribute      ($prefix+"LiquidMenuItemStitchEnable");
+      menuItem -label "enable"       -command liquidCreateStitchEnableAttribute      ($prefix+"LiquidMenuItemStitchEnable");
       menuItem -label "traceenable" -command liquidCreateStitchTraceEnableAttribute ($prefix+"LiquidMenuItemStitchTraceEnable");
       menuItem -label "newgroup"    -command liquidCreateStitchNewGroupAttribute    ($prefix+"LiquidMenuItemStitchNewGroup");
 	setParent -menu ..;
