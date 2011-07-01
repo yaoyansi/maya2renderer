@@ -58,7 +58,7 @@ class AQSIS_TEX_SHARE CqTiffInputFile : public IqMultiTexInputFile
 		 * \param inStream - Stream to read from.  This is passed to the
 		 * underlying tiff (tiffxx) library.
 		 */
-		CqTiffInputFile(std::istream& inStream);
+		//CqTiffInputFile(std::istream& inStream);
 
 		// inherited
 		virtual boostfs::path fileName() const;

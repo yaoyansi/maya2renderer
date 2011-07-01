@@ -29,7 +29,7 @@
 #include <sstream>
 #include <cstring>  // for memcpy()
 
-#include <tiffio.hxx>
+#include <tiffio.h>//#include <tiffio.hxx>
 
 #include <aqsis/math/math.h>
 #include <aqsis/math/matrix.h>
@@ -736,29 +736,29 @@ CqTiffFileHandle::CqTiffFileHandle(const boostfs::path& fileName, const char* op
 			"Could not open tiff file \"" << fileName << "\"");
 }
 
-CqTiffFileHandle::CqTiffFileHandle(std::istream& inputStream)
-	: m_tiffPtr(TIFFStreamOpen("stream", &inputStream), safeTiffClose),
-	m_isInputFile(true),
-	m_currDir(0)
-{
-	if(!m_tiffPtr)
-	{
-		AQSIS_THROW_XQERROR(XqInternal, EqE_NoFile,
-			"Could not use input stream for tiff");
-	}
-}
-
-CqTiffFileHandle::CqTiffFileHandle(std::ostream& outputStream)
-	: m_tiffPtr(TIFFStreamOpen("stream", &outputStream), safeTiffClose),
-	m_isInputFile(false),
-	m_currDir(0)
-{
-	if(!m_tiffPtr)
-	{
-		AQSIS_THROW_XQERROR(XqInternal, EqE_NoFile,
-			"Could not use output stream for tiff");
-	}
-}
+// CqTiffFileHandle::CqTiffFileHandle(std::istream& inputStream)
+// 	: m_tiffPtr(TIFFStreamOpen("stream", &inputStream), safeTiffClose),
+// 	m_isInputFile(true),
+// 	m_currDir(0)
+// {
+// 	if(!m_tiffPtr)
+// 	{
+// 		AQSIS_THROW_XQERROR(XqInternal, EqE_NoFile,
+// 			"Could not use input stream for tiff");
+// 	}
+// }
+// 
+// CqTiffFileHandle::CqTiffFileHandle(std::ostream& outputStream)
+// 	: m_tiffPtr(TIFFStreamOpen("stream", &outputStream), safeTiffClose),
+// 	m_isInputFile(false),
+// 	m_currDir(0)
+// {
+// 	if(!m_tiffPtr)
+// 	{
+// 		AQSIS_THROW_XQERROR(XqInternal, EqE_NoFile,
+// 			"Could not use output stream for tiff");
+// 	}
+// }
 
 
 void CqTiffFileHandle::writeDirectory()

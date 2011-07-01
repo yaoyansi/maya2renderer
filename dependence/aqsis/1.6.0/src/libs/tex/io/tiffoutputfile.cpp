@@ -44,14 +44,14 @@ CqTiffOutputFile::CqTiffOutputFile(const boostfs::path& fileName,
 	initialize();
 }
 
-CqTiffOutputFile::CqTiffOutputFile(std::ostream& outStream,
-		const CqTexFileHeader& header)
-	: m_header(header),
-	m_currentLine(0),
-	m_fileHandle(new CqTiffFileHandle(outStream))
-{
-	initialize();
-}
+// CqTiffOutputFile::CqTiffOutputFile(std::ostream& outStream,
+// 		const CqTexFileHeader& header)
+// 	: m_header(header),
+// 	m_currentLine(0),
+// 	m_fileHandle(new CqTiffFileHandle(outStream))
+// {
+// 	initialize();
+// }
 
 boostfs::path CqTiffOutputFile::fileName() const
 {

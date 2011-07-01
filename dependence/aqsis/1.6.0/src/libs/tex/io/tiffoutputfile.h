@@ -51,7 +51,7 @@ class AQSIS_TEX_SHARE CqTiffOutputFile : public IqMultiTexOutputFile
 		CqTiffOutputFile(const boostfs::path& fileName, const CqTexFileHeader& header);
 		/** \brief Construct a tiff output file writing to the given stream.
 		 */
-		CqTiffOutputFile(std::ostream& outStream, const CqTexFileHeader& header);
+		//CqTiffOutputFile(std::ostream& outStream, const CqTexFileHeader& header);
 
 		// inherited
 		virtual boostfs::path fileName() const;

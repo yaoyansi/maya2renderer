@@ -258,14 +258,14 @@ class AQSIS_TEX_SHARE CqTiffFileHandle : boost::noncopyable
 		 *
 		 * \param inputStream - an input stream
 		 */
-		CqTiffFileHandle(std::istream& inputStream);
+		//CqTiffFileHandle(std::istream& inputStream);
 		/** \brief Construct a tiff file handle writing to a std::ostream
 		 *
 		 * \throw XqInternal if libtiff has a problem with the stream
 		 *
 		 * \param outputStream - the output stream
 		 */
-		CqTiffFileHandle(std::ostream& outputStream);
+		//CqTiffFileHandle(std::ostream& outputStream);
 
 		/// Return the file name
 		inline const boostfs::path& fileName() const;

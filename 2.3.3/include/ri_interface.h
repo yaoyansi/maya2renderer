@@ -9,8 +9,8 @@
 //typedef int RtLightHandle;
 #define INVALID_LIGHT_INDEX 0
 
-#	include "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/include/aqsis/ri/ri.h"
-//#	include "E:/dev/render/renderer/renderman.compliant/aqsis/1.6.0/src/libs/core/renderer.h"
+#	include "E:/dev/autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/include/aqsis/ri/ri.h"
+//#	include "E:/dev/autodesk/maya/myplugin/project/liquid_/dependence/aqsis/1.6.0/src/libs/core/renderer.h"
 
 //#elif defined()
 #else 

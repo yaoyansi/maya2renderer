@@ -1463,7 +1463,37 @@ void CqRenderer::parseRibStream(std::istream& inputStream, const std::string& na
 	}
 	m_ribParser->popInput();
 }
+//----------------------------------------------------------------------
+/** Get the basis matrix given a standard basis name.
+* \param b Storage for basis matrix.
+* \param strName Name of basis.
+* \return Boolean indicating the basis is valid.
+*/
+//copied from /core/api/ri.cpp
+RtBoolean	BasisFromName( RtBasis * b, const char * strName )
+{
+	RtBasis * pVals = 0;
+	if ( !strcmp( strName, "bezier" ) )
+		pVals = &RiBezierBasis;
+	else if ( !strcmp( strName, "bspline" ) )
+		pVals = &RiBSplineBasis;
+	else if ( !strcmp( strName, "catmull-rom" ) )
+		pVals = &RiCatmullRomBasis;
+	else if ( !strcmp( strName, "hermite" ) )
+		pVals = &RiHermiteBasis;
+	else if ( !strcmp( strName, "power" ) )
+		pVals = &RiPowerBasis;
 
+	if ( pVals )
+	{
+		TqInt i, j;
+		for ( i = 0; i < 4; ++i )
+			for ( j = 0; j < 4; ++j )
+				( *b ) [ i ][ j ] = ( *pVals ) [ i ][ j ];
+		return ( true );
+	}
+	return ( false );
+}
 bool	CqRenderer::GetBasisMatrix( CqMatrix& matBasis, const CqString& name )
 {
 	RtBasis basis;

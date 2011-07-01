@@ -44,13 +44,13 @@ CqTiffInputFile::CqTiffInputFile(const boostfs::path& fileName)
 	setDirectory(m_imageIndex);
 }
 
-CqTiffInputFile::CqTiffInputFile(std::istream& inStream)
-	: m_header(),
-	m_fileHandle(new CqTiffFileHandle(inStream)),
-	m_imageIndex(0)
-{
-	setDirectory(m_imageIndex);
-}
+// CqTiffInputFile::CqTiffInputFile(std::istream& inStream)
+// 	: m_header(),
+// 	m_fileHandle(new CqTiffFileHandle(inStream)),
+// 	m_imageIndex(0)
+// {
+// 	setDirectory(m_imageIndex);
+// }
 
 boostfs::path CqTiffInputFile::fileName() const
 {
