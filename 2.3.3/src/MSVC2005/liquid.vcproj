@@ -4059,6 +4059,22 @@
 				Name="elvishray"
 				>
 				<File
+					RelativePath="..\elvishray\er_group.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\er_group.h"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\er_groupmgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\er_groupmgr.h"
+					>
+				</File>
+				<File
 					RelativePath="..\elvishray\er_renderer.cpp"
 					>
 				</File>

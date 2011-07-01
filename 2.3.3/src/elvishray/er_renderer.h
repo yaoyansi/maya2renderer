@@ -10,6 +10,8 @@ namespace liquid{
 
 namespace elvishray
 {
+	class GroupMgr;
+
 	class Renderer : public liquid::RendererInterface
 	{
 	public:
@@ -197,7 +199,10 @@ namespace elvishray
 		std::string m_root_group;
 		std::string m_option;
 
+		GroupMgr *m_groupMgr;
+
  		void _Script(const std::string &data){ m_log.log___(data); }
+		void cookInstanceGroup();
 	};
 
 }

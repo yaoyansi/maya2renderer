@@ -29,6 +29,7 @@
 #include "../log/mayacheck.h"
 #include "ercall.h"
 #include "MayaConnection.h"
+#include "er_groupmgr.h"
 
 namespace elvishray
 {
@@ -50,6 +51,7 @@ namespace elvishray
 
 	Renderer::Renderer()
 	{
+		m_groupMgr = new GroupMgr(this);
 
 		liquid::RendererMgr::getInstancePtr()->registerRenderer(
 			RendererName, this
@@ -58,6 +60,8 @@ namespace elvishray
 	//
 	Renderer::~Renderer()
 	{
+		delete m_groupMgr; 
+		m_groupMgr = 0;
 
 	}
 	//
@@ -421,7 +425,7 @@ namespace elvishray
 // 		}
 		_S( ei_end_instance() );
 		_s("//");
-		_S( ei_init_instance( mesh->getName() ) );
+		m_groupMgr->addLightLink(currentJob.name.asChar(), mesh->getName(), "pointLightShape2");//_S( ei_init_instance( mesh->getName() ) );
 	}
 	//
 	void Renderer::ribPrologue_comment(const char* liqversion, 
@@ -441,9 +445,7 @@ namespace elvishray
 	//
 	MStatus Renderer::ribPrologue_begin(const structJob& currentJob)
 	{
-
-
-		if( true )
+		if( false )
 		{
 			_S( ei_make_texture( currentJob.imageName.asChar(), currentJob.texName.asChar() , EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f ) );
 		}	
@@ -456,13 +458,13 @@ namespace elvishray
 		_S( ei_link( "dso" ) );
 
 		m_root_group = currentJob.name.asChar();
-		_S( ei_instgroup( m_root_group.c_str() ) );
+		m_groupMgr->createGroup(m_root_group);//
 
 		return MS::kSuccess;
 	}
 	MStatus Renderer::ribPrologue_end(const structJob& currentJob)
 	{ 
-		_S( ei_end_instgroup() );
+		cookInstanceGroup();
 
 		assert(!m_root_group.empty());
 		assert(currentJob.camera[0].name.length());
@@ -511,7 +513,7 @@ namespace elvishray
 		}else{
 			_S( ei_samples(0,2) );//_S("ei_Samples("<< liqglo.pixelSamples<<","<<liqglo.pixelSamples<<");");//4,4
 			_S( ei_filter( EI_FILTER_GAUSSIAN, 3.0f ) );
-			_S( ei_shading_rate( liqglo.shadingRate ) );
+			//_S( ei_shading_rate( liqglo.shadingRate ) );
 		}
 //		_S("ei_bucket_Size( int size );");
 		
@@ -523,11 +525,11 @@ namespace elvishray
 
 		//	Motion Blur:
 //		_S("ei_Shutter( float open, float close );");
-		_S( ei_motion( (liqglo.liqglo_doMotion? 1:0) ) );
+		//_S( ei_motion( (liqglo.liqglo_doMotion? 1:0) ) );
 //		_S("ei_motion_Segments( int num );");
 
 		//	Trace Depth:
-		_S( ei_trace_depth(	2, 2, 2  ) );
+		_S( ei_trace_depth(	4,4,4  ) );
 
 		//	Shadow:
 //		_S("ei_Shadow( int type );");
@@ -623,10 +625,11 @@ namespace elvishray
 			_S( ei_element(	currentJob.camera[0].name.asChar() );
 			RtMatrix m;
 			currentJob.camera[0].mat.get( m ) );
-			_S( ei_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
+			//_S( ei_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
+			_S( ei_transform(  1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f,  -1.95384,-2.76373,16.1852, 1.0f ) );
 		_S( ei_end_instance() );
 		_s("//");		
-		_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
+		m_groupMgr->addObjectInstance(currentJob.name.asChar(), currentJob.camera[0].name.asChar());//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
 
 		return MStatus::kSuccess;
 	}
@@ -655,5 +658,46 @@ namespace elvishray
 	MStatus Renderer::renderAll_remote(const structJob& currentJob____)
 	{
 		return MStatus::kSuccess;
+	}
+	void Renderer::cookInstanceGroup()
+	{
+		std::map<GroupID, Group>::iterator group_i = m_groupMgr->groups.begin();
+		std::map<GroupID, Group>::iterator group_e = m_groupMgr->groups.end();
+		for(; group_i!=group_e; ++group_i)
+		{
+			//each group
+			_S( ei_instgroup( group_i->first.name.c_str() ) );// not id
+			
+			Group &group = group_i->second;
+
+			//ei_init_instance( all light )
+			LightNames lights = group.gatherLights();
+			LightNames::iterator light_i = lights.begin();
+			LightNames::iterator light_e = lights.end();
+			for(; light_i!=light_e; ++light_i)
+			{
+				_S( ei_init_instance( light_i->c_str()) );	
+			}
+
+			//
+			std::map<MeshName, LightNames>::iterator mesh_i 
+				= group.lightlink.begin();
+			std::map<MeshName, LightNames>::iterator mesh_e 
+				= group.lightlink.end();
+			for(; mesh_i!=mesh_e; ++mesh_i)
+			{
+				LightNames::iterator light_i = mesh_i->second.begin();
+				LightNames::iterator light_e = mesh_i->second.end();
+				for(; light_i!=light_e; ++light_i)// has light link
+				{
+					_S( ei_illuminate( light_i->c_str(), on ) );
+				}
+				// init object
+				_S( ei_init_instance( mesh_i->first.c_str() ) );
+			}
+
+			_S( ei_end_instgroup() );
+		}
+
 	}
 }//namespace
