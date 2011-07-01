@@ -452,43 +452,43 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 					frameScriptJob.commands.push_back(cmd);
 				}//if( m_outputShadowPass )
 
-				if( liqglo.cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
+//				if( liqglo.cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
+//				{
+				if( liqglo.cleanRib ) 
 				{
-					if( liqglo.cleanRib ) 
+					stringstream ss;
+					if( m_outputHeroPass  ) 
 					{
-						stringstream ss;
-						if( m_outputHeroPass  ) 
-						{
-		#ifdef _WIN32
-							ss << framePreCommand.asChar() << " " << RM_CMD << " \"" << frameJob->ribFileName.asChar() << "\"";
-		#else
-							ss << framePreCommand.asChar() << " " << RM_CMD << " " << frameJob->ribFileName.asChar();
-		#endif
-						}
-						if( m_outputShadowPass) 
-						{
-		#ifdef _WIN32
-							ss << framePreCommand.asChar() << " " << RM_CMD << " \"" << shadowPassJob->ribFileName.asChar() << "\"";
-		#else
-							ss << framePreCommand.asChar() << " " << RM_CMD << " " << shadowPassJob->ribFileName.asChar();
-		#endif
-						}
-						if( liqglo.m_alfShadowRibGen ) 
-						{
-		#ifdef _WIN32
-							ss << framePreCommand.asChar() << " " << RM_CMD << " \"" << baseShadowName.asChar() << "\"";
-		#else
-							ss << framePreCommand.asChar() << " " << RM_CMD << " " << baseShadowName.asChar();
-		#endif
-						}
-						frameScriptJob.cleanupCommands.push_back(liqRenderScript::Cmd(ss.str(), liqglo.remoteRender));
+#ifdef _WIN32
+						ss << framePreCommand.asChar() << " " << RM_CMD << " \"" << frameJob->ribFileName.asChar() << "\"";
+#else
+						ss << framePreCommand.asChar() << " " << RM_CMD << " " << frameJob->ribFileName.asChar();
+#endif
 					}
-					if( framePostFrameCommand != MString("") ) 
+					if( m_outputShadowPass) 
 					{
-						liqRenderScript::Cmd cmd(framePostFrameCommand.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
-						frameScriptJob.cleanupCommands.push_back(cmd);
+#ifdef _WIN32
+						ss << framePreCommand.asChar() << " " << RM_CMD << " \"" << shadowPassJob->ribFileName.asChar() << "\"";
+#else
+						ss << framePreCommand.asChar() << " " << RM_CMD << " " << shadowPassJob->ribFileName.asChar();
+#endif
 					}
-				}//if( cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
+					if( liqglo.m_alfShadowRibGen ) 
+					{
+#ifdef _WIN32
+						ss << framePreCommand.asChar() << " " << RM_CMD << " \"" << baseShadowName.asChar() << "\"";
+#else
+						ss << framePreCommand.asChar() << " " << RM_CMD << " " << baseShadowName.asChar();
+#endif
+					}
+					frameScriptJob.cleanupCommands.push_back(liqRenderScript::Cmd(ss.str(), liqglo.remoteRender));
+				}
+				if( framePostFrameCommand != MString("") ) 
+				{
+					liqRenderScript::Cmd cmd(framePostFrameCommand.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
+					frameScriptJob.cleanupCommands.push_back(cmd);
+				}
+				//}//if( cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
 				if( m_outputHeroPass ) 
 					frameScriptJob.chaserCommand = (string( "sho \"" ) + frameJob->imageName.asChar() + "\"" );
 				if( m_outputShadowPass ) 
