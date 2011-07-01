@@ -52,7 +52,7 @@ public:
 	// write() is replaced by write(ribFileFullPath) in order to pass the ribFileFullPath;
     virtual void       write(const MString &ribFileFullPath, const structJob &currentJob);
     virtual unsigned   granularity() const;
-    virtual void       writeNextGrain(const MString& ribFileFullPath, const structJob &currentJob);
+//    virtual void       writeNextGrain(const MString& ribFileFullPath, const structJob &currentJob);
     virtual bool       isNextGrainAnimated() const;
     virtual bool       compare( const liqRibData& other ) const = 0;
     virtual ObjectType type() const = 0;

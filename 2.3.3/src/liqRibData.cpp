@@ -64,11 +64,11 @@ inline unsigned liqRibData::granularity() const
   return 1;
 }
 
-inline void liqRibData::writeNextGrain(const MString& ribFileFullPath, const structJob &currentJob) 
-{
-  write(ribFileFullPath, currentJob);
-  //return false;
-}
+// inline void liqRibData::writeNextGrain(const MString& ribFileFullPath, const structJob &currentJob) 
+// {
+//   write(ribFileFullPath, currentJob);
+//   //return false;
+// }
 
 inline bool liqRibData::isNextGrainAnimated() const 
 {
