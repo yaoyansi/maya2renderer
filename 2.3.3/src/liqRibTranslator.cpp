@@ -7607,7 +7607,7 @@ void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode
 
 		c = RiGetContext();//push context
 
-		_RiOption_format_compress(liqglo_doBinary, liqglo_doCompression);
+		//_RiOption_format_compress(liqglo_doBinary, liqglo_doCompression);
 
 		liquidMessage("output geometry rib: "+ string(geometryRibFile.asChar()) , messageInfo);
 		RiBegin( const_cast< RtToken >( geometryRibFile.asChar() ) );
