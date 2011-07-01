@@ -769,12 +769,14 @@ namespace renderman
 			tHeroRibWriterMgr::framePrologue_display(currentJob);
 		}
 
-		tRibCameraMgr::framePrologue_camera(lframe, currentJob);
-			
+		this->framePrologue_camera(lframe, currentJob);
+
 		return MStatus::kSuccess;
 	}
 	MStatus Renderer::framePrologue_camera(long lframe, const structJob &currentJob)
 	{
+		tRibCameraMgr::framePrologue_camera(lframe, currentJob);
+
 		return MStatus::kSuccess;
 	}
 
