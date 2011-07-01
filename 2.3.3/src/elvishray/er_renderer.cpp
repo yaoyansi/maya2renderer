@@ -598,35 +598,71 @@ namespace elvishray
 	}
 	MStatus Renderer::framePrologue_camera(long lframe, const structJob &currentJob)
 	{
+		MStatus status;
+		MFnCamera fnCamera(currentJob.path, &status);
+		IfMErrorWarn(status);
+
+		//
+		float focal;
+		float aperture;
+		float aspect;
+		float width=currentJob.width, height=currentJob.height;
+
+// 		// use liquid settings
+// 		focal = currentJob.camera[0].focalLength;
+// 		aperture = 2.0 * focal * tan(currentJob.camera[0].hFOV/2.0);
+// 		aspect = currentJob.aspectRatio;
+// 		_s("// liquid settings: focal="<<focal <<", aperture = "<<aperture<<", aspect="<<aspect );
+// 		//e.g. focal=3.5, aperture = 2.7, aspect=1
+		// use maya settings
+		//NOTE: we will caculate these setting from structJob data.[yaoyansi]
+		focal = fnCamera.focalLength(&status);
+		IfMErrorWarn(status);
+		double horizontalFOV,verticalFOV;
+		fnCamera.getPortFieldOfView(width, height, horizontalFOV,verticalFOV);
+		aperture = 2.0f * focal * tan(horizontalFOV /2.0f);
+		aspect = aperture / (2.0f * focal * tan(verticalFOV / 2.0f));
+		_s("// maya settings: focal="<<focal <<", aperture = "<<aperture<<", aspect="<<aspect );
+		//e.g. focal=35, aperture = 36, aspect=1.33333.
+
+		//get camera transform matrix
+		//currentJob.camera[0].mat.get( m ) );
+		MObject transformNode = currentJob.path.transform(&status );
+		IfMErrorWarn(status);
+		MFnDagNode transform (transformNode, &status);
+		IfMErrorWarn(status);
+		MTransformationMatrix   m0(transform.transformationMatrix());
+		RtMatrix m;		
+		IfMErrorWarn(m0.asMatrix().get(m));
+
 		_s("\n//############################### camera #");
-		_S( ei_camera( currentJob.camera[0].name.asChar() ) );
+		std::string sCameraObjectName(std::string(currentJob.camera[0].name.asChar())+"_object");
+		_S( ei_camera( sCameraObjectName.c_str() ) );
 			_S( ei_frame( lframe, off ) );
 	 		if(currentJob.imageName.length()!=0){
 	 			_S( ei_output( currentJob.imageName.asChar(), EI_IMG_BMP, EI_IMG_DATA_RGB, "color" ) );
 	 		}
-			_S( ei_focal( currentJob.camera[0].focalLength ) );
-			_S( ei_aperture( 2.0*currentJob.camera[0].focalLength*tan(currentJob.camera[0].hFOV/2.0) ) );
-			_S( ei_aspect( currentJob.aspectRatio ) );
+			_S( ei_focal( focal ) );
+			_S( ei_aperture( aperture ) );
+			_S( ei_aspect( aspect ) );
 			if( currentJob.isShadow == false && liqglo.liqglo_rotateCamera  == true ) {
-				_S( ei_resolution(currentJob.height, currentJob.width) );
+				_S( ei_resolution(height, width) );
 			}else{ 
-				_S( ei_resolution(currentJob.width, currentJob.height) );
+				_S( ei_resolution(width, height) );
 			}
 
 			_S( ei_clip( currentJob.camera[0].neardb, currentJob.camera[0].fardb) );
 			if(  liqglo.doDof && !currentJob.isShadow  )
 			{
 				_S( ei_dof( on ) );
-				_S( ei_dof( currentJob.camera[0].fStop, currentJob.camera[0].focalLength /*, currentJob.camera[0].focalDistance*/ ) );
+				_S( ei_dof( currentJob.camera[0].fStop, focal ) );
 			}
 		_S( ei_end_camera() );
 		_s("//----------------------------------");
 		_S( ei_instance( currentJob.camera[0].name.asChar()	) );
-			_S( ei_element(	currentJob.camera[0].name.asChar() );
-			RtMatrix m;
-			currentJob.camera[0].mat.get( m ) );
-			//_S( ei_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
-			_S( ei_transform(  1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f,  -1.95384,-2.76373,16.1852, 1.0f ) );
+			_S( ei_element(	sCameraObjectName.c_str() ) );
+			_S( ei_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
+			//_S( ei_transform(  1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f,  -1.95384,-2.76373,16.1852, 1.0f ) );
 		_S( ei_end_instance() );
 		_s("//");		
 		m_groupMgr->addObjectInstance(currentJob.name.asChar(), currentJob.camera[0].name.asChar());//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
