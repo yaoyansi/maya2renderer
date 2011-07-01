@@ -156,7 +156,7 @@ private:
   int popNextJobID();
     
 private:
-  std::map<int, Job> jobs;
+  std::map<const int, Job> jobs;
   
   int nextJobID;
 

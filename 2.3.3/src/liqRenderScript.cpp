@@ -61,7 +61,7 @@ std::string liqRenderScript::getALF() const
 
 	if (!jobs.empty()) {
 		ss << " -subtasks { ";
-		for(std::map<int, Job>::const_iterator job=jobs.begin(); job!=jobs.end(); ++job) {
+		for(std::map<const int, Job>::const_iterator job=jobs.begin(); job!=jobs.end(); ++job) {
 			ss << std::endl << job->second.getALF(1);    
 		}
 		ss << std::endl << "}";
@@ -92,7 +92,7 @@ std::string liqRenderScript::getXML() const
 
 	if (!jobs.empty()) {
 		ss << "  <subtasks>" << std::endl;
-		for(std::map<int, Job>::const_iterator job=jobs.begin(); job!=jobs.end(); ++job) {
+		for(std::map<const int, Job>::const_iterator job=jobs.begin(); job!=jobs.end(); ++job) {
 			ss << job->second.getXML(1);    
 		}
 		ss << "  </subtasks>" << std::endl;
@@ -137,7 +137,7 @@ bool liqRenderScript::writeXML(const std::string &filename) const
 //
 void liqRenderScript::addLeafDependency(const Job &job)
 {
-	for(std::map<int, Job>::iterator j=jobs.begin(); j!=jobs.end(); ++j) {
+	for(std::map<const int, Job>::iterator j=jobs.begin(); j!=jobs.end(); ++j) {
 		if ((!j->second.isInstance) && (j->second.title != "liquid pre-job")) {
 			j->second.addLeafDependency(job);
 		}

@@ -315,7 +315,7 @@ class liqRibNode {
     bool    invisible;
     bool    ignoreShapes;
 
-	std::map< std::string, liqTokenPointer > tokenPointerMap;
+	std::map<const std::string, liqTokenPointer > tokenPointerMap;
 
 
 private:

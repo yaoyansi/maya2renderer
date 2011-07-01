@@ -199,7 +199,7 @@ private: // Data
 			return strcmp( a.asChar(), b.asChar() ) < 0;
 		}
 	};
-	std::map<MString, MString, MStringCmp> m_shadowRibFile;
+	//std::map<const MString, MString, MStringCmp> m_shadowRibFile;
 
 	// MString     outFormatString;                 // UN-USED GLOBAL
 	// liquidlong  outFormatControl;                // UN-USED GLOBAL
