@@ -417,13 +417,13 @@ unsigned liqRibObj::granularity() const {
 
 /** Write the next grain (component) of an object.
  */
-void liqRibObj::writeNextObjectGrain(const MString& ribFileFullPath,const structJob &currentJob) const {
-  if( data ) {
-    /*return */data->write(ribFileFullPath, currentJob);
-  } else {
-    /*return false;*/
-  }
-}
+// void liqRibObj::writeNextObjectGrain(const MString& ribFileFullPath,const structJob &currentJob) const {
+//   if( data ) {
+//     /*return */data->write(ribFileFullPath, currentJob);
+//   } else {
+//     /*return false;*/
+//   }
+// }
 
 bool liqRibObj::isNextObjectGrainAnimated() const {
   if( data ) {

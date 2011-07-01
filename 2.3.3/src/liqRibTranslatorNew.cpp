@@ -3794,16 +3794,29 @@ MStatus liqRibTranslator::GeometryMotionBlur(
 			else
 				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
 
-			for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ ){ 
-				MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode__->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".m"+(int)msampleOn+".rib" );
-				ribNode__->object( msampleOn )->writeNextObjectGrain(geometryRibFile, currentJob);
+			for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
+			{ 
+				MString geometryRibFile( 
+							liquidGetRelativePath( 
+								false, 
+								getLiquidRibName( ribNode__->name.asChar() ), 
+								liqglo.liqglo_ribDir 
+							) +"."+(int)liqglo.liqglo_lframe+".m"+(int)msampleOn+".rib" 
+						);
+				ribNode__->object( msampleOn )->writeObject(geometryRibFile, currentJob);
 			}
 			RiMotionEnd();
 		}else {
 			RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
 
-			MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode__->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".rib" );
-			ribNode__->object( 0 )->writeNextObjectGrain(geometryRibFile, currentJob);
+			MString geometryRibFile( 
+						liquidGetRelativePath( 
+							false, 
+							getLiquidRibName( ribNode__->name.asChar() ), 
+							liqglo.liqglo_ribDir 
+						) +"."+(int)liqglo.liqglo_lframe+".rib" 
+					);
+			ribNode__->object( 0 )->writeObject(geometryRibFile, currentJob);
 		}
 	}
 	return MS::kSuccess;
