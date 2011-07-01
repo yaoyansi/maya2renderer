@@ -57,6 +57,12 @@
 class liqRibLightData;
 class liqRenderScript;
 
+typedef enum {
+	liqRegularShaderNode = 0,     // A regular Liquid node, keep it 0 to evaluate to false in conditions
+	liqCustomPxShaderNode = 1,     // A custom MPxNode inheriting from liqCustomNode
+	liqRibBoxShader = 2          // A rib box attached to the shader
+} liqDetailShaderKind;
+
 class liqRibTranslator : public MPxCommand {
 public:
 	liqRibTranslator();
@@ -504,7 +510,52 @@ public:
 	MStatus worldPrologue__();
 	MStatus lightBlock__();
 	MStatus coordSysBlock__();
+
+	MStatus preGeometryMel();
+	MStatus postGeometryMel();
+	MObject getShadowSetObject();
+	MStatus preTransformMel(const MObject &transform__);
+	MStatus postTransformMel(const MObject &transform__);
+	MStatus tRiIlluminate(const liqRibNodePtr ribNode__);
+	MStatus tRiMotion(const liqRibNodePtr ribNode__, MDagPath &path__);
+	MStatus preShapeMel(const MObject &transform__);
+	MStatus postShapeMel(const MObject &transform__);
+	MStatus checkSurfaceShader(
+		const MDagPath &path__, 
+		const liqRibNodePtr &ribNode__,
+		bool &hasSurfaceShader__, 
+		liqDetailShaderKind &hasCustomSurfaceShader__,
+		MString &shaderRibBox__
+		);
+	MStatus checkDisplacementShader(
+		const MDagPath &path__, 
+		const liqRibNodePtr &ribNode__,
+		bool &hasDisplacementShader__ 
+		//liqDetailShaderKind &hasCustomSurfaceShader__,
+		//MString &shaderRibBox__
+		);
+	MStatus checkVolumeShader(
+		const MDagPath &path__, 
+		const liqRibNodePtr &ribNode__,
+		bool &hasDisplacementShader__ 
+		//liqDetailShaderKind &hasCustomSurfaceShader__,
+		//MString &shaderRibBox__
+		);
+	MStatus displacementBounds(const liqRibNodePtr &ribNode__);
+	MStatus objectNonShadowAttribute(const liqRibNodePtr &ribNode__);
+	MStatus objectShadowAttribute(const liqRibNodePtr &ribNode__);
+	MStatus writeShader(
+		const bool writeShaders__, 
+		const liqRibNodePtr &ribNode__,
+		const bool hasVolumeShader__,
+		const bool hasSurfaceShader__,
+		const bool hasCustomSurfaceShader__,
+		const bool hasDisplacementShader__,
+		const MString &shaderRibBox__,
+		const MDagPath &path__
+		);
 	MStatus objectBlock__();
+
 	MStatus worldEpilogue__();
 	MStatus frameEpilogue__( long );
 
