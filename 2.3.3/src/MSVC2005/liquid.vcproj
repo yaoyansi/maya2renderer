@@ -2623,7 +2623,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="../../include;&quot;$(MAYA_PATH2008)/include&quot;;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\1.2.5;..\..\..\dependence\aqsis\1.6.0\src\include;..\..\..\dependence\aqsis\1.6.0\build\include;..\..\..\dependence\aqsis\1.6.0\src\libs\core\api;..\..\..\dependence\aqsis\1.6.0\build\libs\core\api;..\..\..\dependence\aqsis\1.6.0\src\libs\core\ddmanager;..\..\..\dependence\aqsis\1.6.0\src\libs\core\geometry;..\..\..\dependence\aqsis\1.6.0\src\libs\core\raytrace;..\..\..\dependence\aqsis\1.6.0\src\libs\core\texturing_old;..\..\..\dependence\aqsis\1.6.0\src\libs\rib2ri;..\..\..\dependence\aqsis\1.6.0\build\libs\rib2ri;..\..\..\dependence\aqsis\1.6.0\src\libs\core"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PRMAN;_DEBUG;WIN32;_WINDOWS;_USRDLL;_BOOL;ulong=unsigned long;uint=unsigned int;_WIN32;REQUIRE_IOSTREAM;HAVE_ZLIB;_USE_MATH_DEFINES"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PRMAN;_DEBUG;WIN32;_WINDOWS;_USRDLL;_BOOL;ulong=unsigned long;uint=unsigned int;_WIN32;REQUIRE_IOSTREAM;HAVE_ZLIB;_USE_MATH_DEFINES;BOOST_LIB_DIAGNOSTIC"
 				StringPooling="true"
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
@@ -2721,20 +2721,21 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800 "
-				Optimization="2"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../../include;&quot;$(MAYA_LOCATION_X64)/include&quot;;&quot;$(RMANTREE_X64)/include&quot;"
-				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PRMAN;NDEBUG;WIN32;_WINDOWS;_USRDLL;_BOOL;ulong=unsigned long;uint=unsigned int;_WIN32;REQUIRE_IOSTREAM"
+				Optimization="0"
+				InlineFunctionExpansion="0"
+				AdditionalIncludeDirectories="../../include;&quot;$(MAYA_PATH2008)/include&quot;;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\1.2.5;..\..\..\dependence\aqsis\1.6.0\src\include;..\..\..\dependence\aqsis\1.6.0\build\include;..\..\..\dependence\aqsis\1.6.0\src\libs\core\api;..\..\..\dependence\aqsis\1.6.0\build\libs\core\api;..\..\..\dependence\aqsis\1.6.0\src\libs\core\ddmanager;..\..\..\dependence\aqsis\1.6.0\src\libs\core\geometry;..\..\..\dependence\aqsis\1.6.0\src\libs\core\raytrace;..\..\..\dependence\aqsis\1.6.0\src\libs\core\texturing_old;..\..\..\dependence\aqsis\1.6.0\src\libs\rib2ri;..\..\..\dependence\aqsis\1.6.0\build\libs\rib2ri;..\..\..\dependence\aqsis\1.6.0\src\libs\core"
+				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PRMAN;_DEBUG;WIN32;_WINDOWS;_USRDLL;_BOOL;ulong=unsigned long;uint=unsigned int;_WIN32;REQUIRE_IOSTREAM;HAVE_ZLIB;_USE_MATH_DEFINES;BOOST_LIB_DIAGNOSTIC"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
 				RuntimeTypeInfo="true"
-				PrecompiledHeaderFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pch"
-				AssemblerListingLocation=".\../../bin/3Delight/win32/Release/Objects/"
-				ObjectFile=".\../../bin/3Delight/win32/Release/Objects/"
-				ProgramDataBaseFileName=".\../../bin/3Delight/win32/Release/Objects/"
+				PrecompiledHeaderFile=""
+				AssemblerListingLocation=".\../../bin/Prman/win32/Debug/Objects/"
+				ObjectFile=".\../../bin/Prman/win32/Debug/Objects/"
+				ProgramDataBaseFileName=".\../../bin/Prman/win32/Debug/Objects/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -2749,13 +2750,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libprman.lib zdll.lib image.lib OpenMayaFX.lib Foundation.lib OpenMaya.lib OpenMayaRender.lib OpenMayaUI.lib OpenMayaAnim.lib glu32.lib opengl32.lib netapi32.lib ws2_32.lib"
-				OutputFile="../../bin/prman/win64/liquid.mll"
+				AdditionalDependencies="image.lib OpenMayaFX.lib Foundation.lib OpenMaya.lib OpenMayaRender.lib OpenMayaUI.lib OpenMayaAnim.lib glu32.lib opengl32.lib netapi32.lib ws2_32.lib"
+				OutputFile="../../bin/prman/win32/liquid_2008x64d.mll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(MAYA_LOCATION_X64)/lib&quot;;&quot;$(RMANTREE_X64)/lib&quot;"
-				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
-				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
+				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2008)/lib&quot;;&quot;$(BOOST_ROOT)/stage/lib&quot;"
+				GenerateDebugInformation="true"
+				AssemblyDebug="1"
+				ProgramDatabaseFile=".\../../bin/Prman/win64/Debug/Objects/liquid_2008x64.pdb"
+				ImportLibrary=""
 				TargetMachine="17"
 			/>
 			<Tool
@@ -3576,122 +3579,126 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
-		</Filter>
-		<Filter
-			Name="zlib"
-			>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\adler32.c"
+			<Filter
+				Name="zlib"
 				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\compress.c"
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\adler32.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\compress.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\crc32.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\crc32.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\deflate.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\deflate.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzclose.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzguts.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzlib.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzread.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzwrite.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\infback.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inffast.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inffast.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inffixed.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inflate.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inflate.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inftrees.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inftrees.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\minigzip.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\trees.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\trees.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\uncompr.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\zconf.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\zlib.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\zutil.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\zutil.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="boost"
 				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\crc32.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\crc32.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\deflate.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\deflate.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzclose.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzguts.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzlib.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzread.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\gzwrite.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\infback.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inffast.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inffast.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inffixed.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inflate.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inflate.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inftrees.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\inftrees.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\minigzip.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\trees.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\trees.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\uncompr.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\zconf.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\zlib.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\zutil.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\..\..\..\tools\zlib\1.2.5\zutil.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="rilib"
-			>
+				<File
+					RelativePath="..\..\..\..\..\..\..\..\boost\1_39\libs\system\src\error_code.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="xx"
