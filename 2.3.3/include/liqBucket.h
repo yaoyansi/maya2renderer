@@ -72,6 +72,10 @@ class bucket{
 	private:
 		BUCKETDATATYPE *m_pixels;
 		bucketInfo m_info;
+
+	private:
+		bucket(const bucket&);
+		bucket& operator=(const bucket&);
 };
 
 #endif

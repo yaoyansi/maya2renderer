@@ -80,7 +80,7 @@ public:
 		MDagPath dagPath;
 		RtFloat *sampleTimes;
 		long	   motionSamples;
-		void*    RiConnection;
+		//void*    RiConnection;
 
 		liqRibStatus() {};
 		virtual ~liqRibStatus() {};

@@ -73,8 +73,8 @@ liqRibMeshData::liqRibMeshData( MObject mesh )
   numNormals ( 0 ),
   nverts(),
   verts(),
-  vertexParam(),
-  normalParam()
+  vertexParam(NULL),
+  normalParam(NULL)
 {
   areaLight = false;
   LIQDEBUGPRINTF( "-> creating mesh\n" );
