@@ -3760,10 +3760,12 @@ MStatus liqRibTranslator::GeometryMotionBlur(
 	const liqRibNodePtr ribNode__, MDagPath &path__, const structJob &currentJob
 	)
 {
+#define GeometryMotionBlur_SimpleEdition
+#ifndef GeometryMotionBlur_SimpleEdition
 	// For each grain, open a new motion block...
-	for( unsigned i( 0 ); i < ribNode__->object( 0 )->granularity(); i++ ) 
+	for( unsigned i( 0 ); i < ribNode__->object( 0 )->granularity(); i++ ) //granularity() is always 1.
 	{
-		if( ribNode__->object( 0 )->isNextObjectGrainAnimated() ) 
+		if( ribNode__->object( 0 )->isNextObjectGrainAnimated() ) //isNextObjectGrainAnimated() is always true.
 		{
 			if(liqglo.liqglo_relativeMotion)
 				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
@@ -3781,6 +3783,19 @@ MStatus liqRibTranslator::GeometryMotionBlur(
 			_writeObject(ribNode__, currentJob, false, 0);
 		}
 	}
+#else
+			if(liqglo.liqglo_relativeMotion)
+				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
+			else
+				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
+
+			for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
+			{ 
+				_writeObject(ribNode__, currentJob, true, msampleOn);
+			}
+			RiMotionEnd();
+#endif
+#undef GeometryMotionBlur_SimpleEdition
 	return MS::kSuccess;
 }
 

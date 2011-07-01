@@ -6914,9 +6914,9 @@ MStatus liqRibTranslator::objectBlock()
 			if( doMotion )
 			{
 				// For each grain, open a new motion block...
-				for( unsigned i( 0 ); i < ribNode->object( 0 )->granularity(); i++ ) 
+				for( unsigned i( 0 ); i < ribNode->object( 0 )->granularity(); i++ ) //granularity() is always 1.
 				{
-					if( ribNode->object( 0 )->isNextObjectGrainAnimated() ) 
+					if( ribNode->object( 0 )->isNextObjectGrainAnimated() ) //isNextObjectGrainAnimated() is always true.
 					{
 						if(liqglo.liqglo_relativeMotion)
 							RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
