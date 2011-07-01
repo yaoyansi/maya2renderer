@@ -625,7 +625,7 @@ MStatus liqRibTranslator::buildJobs__()
 	shadowList.clear();
 	txtList.clear();
 
-	structJob thisJob;
+//	structJob thisJob;
 
 	MItDependencyNodes dependencyNodesIter(MFn::kDependencyNode, &returnStatus);
 	if(returnStatus==MS::kSuccess)
@@ -652,7 +652,7 @@ MStatus liqRibTranslator::buildJobs__()
 
 	if( liqglo.liqglo_doShadows ) 
 	{
-		returnStatus = buildShadowJobs__(thisJob);
+		returnStatus = buildShadowJobs__();
 	} // liqglo_doShadows
 
 	// Determine which cameras to render
@@ -672,6 +672,8 @@ MStatus liqRibTranslator::buildJobs__()
 		LIQDEBUGPRINTF( "-> getting current view\n" );
 		m_activeView.getCamera( cameraPath );
 	}
+
+	structJob thisJob;
 	MFnCamera fnCameraNode( cameraPath );
 	thisJob.renderFrame   = liqglo.liqglo_lframe;
 	thisJob.everyFrame    = true;
@@ -680,11 +682,12 @@ MStatus liqRibTranslator::buildJobs__()
 	thisJob.name          = fnCameraNode.name();
 	thisJob.isShadow      = false;
 	thisJob.skip          = false;
+	//for shadow pass
 	thisJob.name         += "SHADOWPASS";
 	thisJob.isShadowPass  = true;
 	if( m_outputShadowPass ) 
 		jobList.push_back( thisJob );
-
+	//for hero pass
 	thisJob.name          = fnCameraNode.name();
 	thisJob.isShadowPass  = false;
 	if( m_outputHeroPass ) 
@@ -1179,8 +1182,10 @@ void liqRibTranslator::postActions(const MString& originalLayer__)
 	}
 }
 //
-MStatus liqRibTranslator::buildShadowJobs__(structJob &thisJob__)
+MStatus liqRibTranslator::buildShadowJobs__()
 {
+	structJob thisJob__;
+
 	MStatus returnStatus__ = MS::kSuccess;
 	MStatus status__;
 	MDagPath lightPath__;
