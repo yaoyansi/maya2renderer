@@ -28,7 +28,7 @@ surface myLambert()
 
 	color __transparency = color ( 0.2, 0.2, 0.2 );
 	extern normal N;
-#include <lambert.h>
+#include <_3delight/lambert.h>
 	maya_lambert(
 		ambientColor,
 		_color,

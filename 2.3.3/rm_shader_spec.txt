@@ -1,0 +1,9 @@
+1.use system directory to include shader head files, e.g.
+#include <_3delight/lambert.h>
+(see LIQUID_ROOT\test\_3delightshader\myLambert.sl for more details)
+use -I to include shader directory when you compile the shader, e.g.
+shader -I"%LIQUID_ROOT%\lib\shaders" ...
+(see LIQUID_ROOT\test\_3delightshader\build.bat for more details)
+
+
+
