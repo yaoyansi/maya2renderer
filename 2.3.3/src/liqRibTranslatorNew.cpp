@@ -164,435 +164,12 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 		useRenderScript = false;
 	liquidMessage2(messageInfo,"useRenderScript=%d", useRenderScript);
 
-
-	MStatus status;
-#if (Refactoring == 0)
-	MString lastRibName;
-#endif
-	//bool hashTableInited = false;
-
-	if( !liqglo.liquidBin && !liqglo.m_deferredGen ) 
-		liquidMessage( "Creating RIB <Press ESC To Cancel> ...", messageInfo );
-
-	// Remember the frame the scene was at so we can restore it later.
-	originalTime = MAnimControl::currentTime();
-
-	// Set the frames-per-second global (we'll need this for
-	// streak particles)
-	//
-	MTime oneSecond( 1, MTime::kSeconds );
-	liqglo.liqglo_FPS = oneSecond.as( MTime::uiUnit() );
-
-	// check to see if the output camera, if specified, is available
-	if( liqglo.liquidBin && ( renderCamera == "" ) ) 
-	{
-		liquidMessage( "No render camera specified!", messageError );
-		return MS::kFailure;
-	}
-	if( renderCamera != "" ) 
-	{
-		MStatus selectionStatus;
-		MSelectionList camList;
-		selectionStatus = camList.add( renderCamera );
-		if( selectionStatus != MS::kSuccess ) 
-		{
-			liquidMessage( "Invalid render camera!", messageError );
-			return MS::kFailure;
-		}
+	if(useRenderScript){
+		return _doItNewWithRenderScript(args, originalLayer);
+	}else{
+		return _doItNewWithoutRenderScript(args, originalLayer);
 	}
 
-	// check to see if all the directories we are working with actually exist.
-	/*if( verifyOutputDirectories() ) {
-	MString err( "The output directories are not properly setup in the globals" );
-	throw err;
-	}*/
-	// This is bollocks! Liquid defaults to system temp folders if it can't setup shit. It should always work, not breaks
-	verifyOutputDirectories();
-
-	// setup the error handler
-#if( !defined (GENERIC_RIBLIB) ) && ( defined ( AQSIS ) || ( _WIN32 && DELIGHT ) )
-#  ifdef _WIN32
-	if( m_errorMode ) RiErrorHandler( (void(__cdecl*)(int,int,char*))liqRibTranslatorErrorHandler );
-#  else
-	if( m_errorMode ) RiErrorHandler( (void(*)(int,int,char*))liqRibTranslatorErrorHandler );
-#  endif
-#else
-	if( m_errorMode ) RiErrorHandler( liqRibTranslatorErrorHandler );
-#endif
-	// Setup helper variables for alfred
-	// 	MString alfredCleanUpCommand;// not used. [9/15/2010 yys]
-	// 	if( remoteRender ) 
-	// 		alfredCleanUpCommand = MString( "RemoteCmd" );
-	// 	else 
-	// 		alfredCleanUpCommand = MString( "Cmd" );
-
-	// 	MString alfredRemoteTagsAndServices;// not used. [9/15/2010 yys]
-	// 	if( remoteRender || useNetRman ) 
-	// 	{
-	// 		alfredRemoteTagsAndServices  = MString( "-service { " );
-	// 		alfredRemoteTagsAndServices += m_alfredServices.asChar();
-	// 		alfredRemoteTagsAndServices += MString( " } -tags { " );
-	// 		alfredRemoteTagsAndServices += m_alfredTags.asChar();
-	// 		alfredRemoteTagsAndServices += MString( " } " );
-	// 	}
-	// A seperate one for cleanup as it doesn't need a tag!
-	// 	MString alfredCleanupRemoteTagsAndServices;// not used. [9/15/2010 yys]
-	// 	if( remoteRender || useNetRman ) 
-	// 	{
-	// 		alfredCleanupRemoteTagsAndServices  = MString( "-service { " );
-	// 		alfredCleanupRemoteTagsAndServices += m_alfredServices.asChar();
-	// 		alfredCleanupRemoteTagsAndServices += MString( " } " );
-	// 	}
-
-	// exception handling block, this tracks liquid for any possible errors and tries to catch them
-	// to avoid crashing
-	try 
-	{
-		m_escHandler.beginComputation();
-
-		MString preFrameMel = parseString( m_preFrameMel );
-		MString postFrameMel = parseString( m_postFrameMel );
-
-		if( ( preFrameMel  != "" ) && !fileExists( preFrameMel ) ) 
-			liquidMessage( "Cannot find pre frame MEL script file! Assuming local.", messageWarning );
-
-		if( ( m_postFrameMel != "" ) && !fileExists( postFrameMel ) ) 
-			liquidMessage( "Cannot find post frame MEL script file! Assuming local.", messageWarning );
-
-		// build temp file names
-		MString renderScriptName = generateRenderScriptName();
-		liqglo.tempDefname    = generateTempMayaSceneName();
-
-		if( liqglo.m_deferredGen ) 
-		{
-			MString currentFileType = MFileIO::fileType();
-			MFileIO::exportAll( liqglo.tempDefname, currentFileType.asChar() );
-		}
-
-
-		liqRenderScript jobScript;
-		// 		liqRenderScript::Job preJobInstance;
-		// 		preJobInstance.title = "liquid pre-job";
-		// 		preJobInstance.isInstance = true;
-		tJobScriptMgr jobScriptMgr(jobScript);
-
-		if( useRenderScript ) 
-		{
-			if( renderJobName == "" ) 
-				renderJobName = liqglo.liqglo_sceneName;
-
-			jobScriptMgr.setCommonParameters(
-				renderJobName.asChar(), liqglo.useNetRman, m_minCPU, m_maxCPU, liqglo.m_dirmaps 
-			);
-			if( m_preJobCommand != MString( "" ) ) 
-			{
-				jobScriptMgr.addJob("liquid pre-job", 
-					m_preJobCommand.asChar(), liqglo.remoteRender && !liqglo.useNetRman);
-			}
-		}
-		// build the frame array
-		//
-		if( m_renderView ) 
-		{
-			// if we are in renderView mode,
-			// just ignore the animation range
-			// and render the current frame.
-			liqglo.frameNumbers.clear();
-			liqglo.frameNumbers.push_back( ( int ) originalTime.as( MTime::uiUnit() ) );
-		}
-		//
-		// start looping through the frames  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//
-		liquidMessage( "Starting to loop through frames", messageInfo );
-
-
-		unsigned frameIndex( 0 );
-		for ( ; frameIndex < liqglo.frameNumbers.size(); frameIndex++ ) 
-		{
-			int currentBlock( 0 );
-			const MString framePreCommand(parseString( liqglo.m_preCommand, false));
-			const MString frameRibgenCommand(parseString( m_ribgenCommand, false ));
-			const MString frameRenderCommand( parseString( liqglo.liquidRenderer.renderCommand + " " + liqglo.liquidRenderer.renderCmdFlags, false ));
-			const MString framePreFrameCommand(parseString( m_preFrameCommand, false ));
-			const MString framePostFrameCommand(parseString( m_postFrameCommand, false ));
-
-			liqRenderScript::Job frameScriptJob;
-			tFrameScriptJobMgr frameScriptJobMgr(frameScriptJob);
-
-			stringstream titleStream;
-			titleStream << liqglo.liqglo_sceneName.asChar() << "Frame" << liqglo.liqglo_lframe;
- 			frameScriptJobMgr.setCommonParameters( titleStream.str() );
-
-			if( useRenderScript ) 
-			{
-				if( liqglo.m_deferredGen ) 
-				{
-					if( ( frameIndex % liqglo.m_deferredBlockSize ) == 0 ) 
-					{
-						if( liqglo.m_deferredBlockSize == 1 ) 
-							currentBlock = liqglo.liqglo_lframe;
-						else 
-							currentBlock++;
-
-						jobScriptMgr.addDefferedJob(currentBlock, frameIndex,
-							framePreCommand, frameRibgenCommand
-						);
-					}
-				}//if( m_deferredGen )
-			}
-			if(useRenderScript && !m_justRib)
-			{
-				if( liqglo.m_deferredGen ) 
-				{
-					stringstream ss;
-					ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
-					frameScriptJobMgr.addInstanceJob(true, ss.str() );
-				}
-			}//if( useRenderScript ) 
-			///////////////////////////////////////////////////
-			TempControlBreak tcb = 
-				processOneFrame(frameIndex, liqglo);
-			PROCESS_TEMP_CONTROL_BREAK_CONTINUE_RETURN(tcb)
-			///////////////////////////////////////////////////
-			// now we re-iterate through the job list to write out the alfred file if we are using it
-			if( useRenderScript && !m_justRib ) 
-			{
-				bool alf_textures = false;
-				bool alf_shadows = false;
-				bool alf_refmaps = false;
-
-				// write out make texture pass
-				LIQDEBUGPRINTF( "-> Generating job for MakeTexture pass\n");
-				frameScriptJobMgr.makeTexture(txtList, 
-					alf_textures, alf_shadows, alf_refmaps);
-
-				// write out shadows
-				if( liqglo.liqglo_doShadows ) 
-				{
-					LIQDEBUGPRINTF( "-> writing out shadow information to alfred file.\n" );
-					frameScriptJobMgr.makeShadow(shadowList, 
-						alf_textures, alf_shadows, alf_refmaps, currentBlock);
-
-				}//if( liqglo__.liqglo_doShadows ) 
-				LIQDEBUGPRINTF( "-> finished writing out shadow information to render script file.\n" );
-
-				// write out make reflection pass
-				frameScriptJobMgr.makeReflection(refList,
-					alf_textures, alf_shadows, alf_refmaps
-				);
-
-				LIQDEBUGPRINTF( "-> initiating hero pass information.\n" );
-				structJob *frameJob = NULL;
-				structJob *shadowPassJob = NULL;
-				LIQDEBUGPRINTF( "-> setting hero pass.\n" );
-				if( m_outputHeroPass && !m_outputShadowPass ){
-					frameJob = &jobList[jobList.size() - 1];
-				}
-				else if( m_outputShadowPass && m_outputHeroPass ) 
-				{
-					frameJob = &jobList[jobList.size() - 1];
-					shadowPassJob = &jobList[jobList.size() - 2];
-				} 
-				else if( m_outputShadowPass && !m_outputHeroPass ){
-					shadowPassJob = &jobList[jobList.size() - 1];
-				}
-
-				LIQDEBUGPRINTF( "-> hero pass set.\n" );
-				LIQDEBUGPRINTF( "-> writing out pre frame command information to render script file.\n" );
-				frameScriptJobMgr.try_addPreFrameCommand(framePreFrameCommand.asChar());
-
-
-				if( m_outputHeroPass ) 
-				{
-					frameScriptJobMgr.addHeroPass(frameJob->ribFileName, framePreCommand, frameRenderCommand);
-				}//if( m_outputHeroPass ) 
-				LIQDEBUGPRINTF( "-> finished writing out hero information to alfred file.\n" );
-				if( m_outputShadowPass ) 
-				{
-					frameScriptJobMgr.addShadowPass(shadowPassJob->ribFileName, framePreCommand, frameRenderCommand);
-				}//if( m_outputShadowPass )
-
-//				if( liqglo.cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
-//				{
-				if( liqglo.cleanRib ) 
-				{
-					if( m_outputHeroPass  ) 
-					{
-						frameScriptJobMgr.cleanHeroPass(framePreCommand, frameJob->ribFileName);
-					}
-					if( m_outputShadowPass) 
-					{
-						frameScriptJobMgr.cleanShadowPass(framePreCommand, shadowPassJob->ribFileName);
-					}
-					if( liqglo.m_alfShadowRibGen ) 
-					{
-						MString     baseShadowName(getBaseShadowName(liqglo.liqglo_currentJob));
-						frameScriptJobMgr.cleanShadowRibGen(framePreCommand, baseShadowName);
-					}
-				}
-				// try to add post frame command
-				frameScriptJobMgr.try_addPostFrameCommand(framePostFrameCommand);
-
-				//}//if( cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
-				if( m_outputHeroPass ){
-					frameScriptJobMgr.viewHeroPassImage(frameJob->imageName);
-				}
-				if( m_outputShadowPass ){
-					frameScriptJobMgr.viewShadowPassImage(shadowPassJob->imageName);
-				}
-#if (Refactoring == 0)
-				if( m_outputShadowPass && !m_outputHeroPass ) 
-					lastRibName = liquidGetRelativePath( liqglo__.liqglo_relativeFileNames, shadowPassJob->ribFileName, liqglo__.liqglo_projectDir );
-				else 
-					lastRibName = liquidGetRelativePath( liqglo__.liqglo_relativeFileNames, frameJob->ribFileName, liqglo__.liqglo_projectDir );
-#endif		
-			}//if( useRenderScript && !m_justRib ) 
-
-			jobScript.addJob( frameScriptJob );
-
-
-			if( ( ribStatus != kRibOK ) && !liqglo.m_deferredGen ) 
-				break;
-
-		} // frame for-loop
-
-		if( useRenderScript ) 
-		{
-			if( m_preJobCommand != MString( "" ) ) 
-			{
-				liqRenderScript::Job preJobInstance;
-				preJobInstance.title = "liquid pre-job";
-				preJobInstance.isInstance = true;
-				jobScript.addLeafDependency( preJobInstance );
-			}
-		}
-		if(useRenderScript && !m_justRib)
-		{
-			// clean up the alfred file in the future
-			if( liqglo.m_deferredGen ) 
-			{
-				jobScriptMgr.cleanupDefferedJob();
-			}
-			if( cleanRenderScript ) 
-			{
-				jobScriptMgr.cleanupRenderScript(renderScriptName);
-			}
-			if( m_postJobCommand != MString("") )
-			{
-				jobScriptMgr.cleanupPostJob(m_postJobCommand);
-			}
-			jobScriptMgr.writeRenderScript(m_renderScriptFormat, renderScriptName);
-		}
-		LIQDEBUGPRINTF( "-> ending escape handler.\n" );
-		m_escHandler.endComputation();
-
-		if( !liqglo.m_deferredGen ) 
-			liquidMessage( "Finished creating RIB", messageInfo );
-		LIQDEBUGPRINTF( "-> clearing job list.\n" );
-		jobList.clear();
-		jobScript.clear();
-
-		// set the attributes on the liquidGlobals for the last rib file and last alfred script name
-		LIQDEBUGPRINTF( "-> setting lastAlfredScript and lastRibFile.\n" );
-		MGlobal::executeCommand("if(!attributeExists(\"lastRenderScript\",\"liquidGlobals\")) { addAttr -ln \"lastRenderScript\" -dt \"string\" liquidGlobals; }");
-		MFnDependencyNode rGlobalNode( rGlobalObj );
-		MPlug nPlug;
-		nPlug = rGlobalNode.findPlug( "lastRenderScript" );
-		nPlug.setValue( renderScriptName );
-#if (Refactoring == 0)
-		nPlug = rGlobalNode.findPlug( "lastRibFile" );
-		nPlug.setValue( lastRibName );
-#endif
-		LIQDEBUGPRINTF( "-> spawning command.\n" );
-		if( launchRender ) 
-		{
-			if( useRenderScript ) 
-			{
-				if( m_renderScriptCommand == "" ) 
-					m_renderScriptCommand = "alfred";
-
-				if( m_renderScriptFormat == NONE ) 
-					liquidMessage( "No render script format specified to Liquid, and direct render execution not selected.", messageWarning );
-
-#ifdef _WIN32
-				// Moritz: Added quotes to render script name as it may contain spaces in bloody Windoze
-				// Note: also adding quotes to the path (aka project dir) breaks ShellExecute() -- cost me one hour to trace this!!!
-				// Bloody, damn, asinine Windoze!!!
-				liqProcessLauncher::execute( m_renderScriptCommand, "\"" + renderScriptName + "\"", liqglo.liqglo_projectDir, false );
-#else
-				liqProcessLauncher::execute( m_renderScriptCommand, renderScriptName, liqglo.liqglo_projectDir, false );
-#endif
-				if( m_renderView ) 
-				{
-					doRenderView();
-				}
-			} 
-			else 
-			{
-				// launch renders directly
-				liquidMessage( string(), messageInfo ); // emit a '\n'
-				//int exitstat = 0;
-
-				// write out make texture pass
-				doTextures();
-
-				if( liqglo.liqglo_doShadows ) 
-				{
-					doShadows();
-				}
-
-				//if( !exitstat ){
-				liquidMessage( "Rendering hero pass... ", messageInfo );
-				cout << "[!] Rendering hero pass..." << endl;
-				if( liqglo.liqglo_currentJob.skip ) 
-				{
-					cout << "    - skipping '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
-					liquidMessage( "    - skipping '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
-				} 
-				else 
-				{
-					cout << "    + '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
-					liquidMessage( "    + '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
-
-#ifdef _WIN32
-					liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + liqglo.liqglo_currentJob.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
-#else
-					liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + liqglo.liqglo_currentJob.ribFileName, liqglo.liqglo_projectDir, false );
-#endif
-					/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
-					to display buckets in the renderview.
-					*/
-					if( m_renderView ) 
-					{
-						doRenderView();
-					}
-				}
-				//}//if( !exitstat )
- 
-			}//if( useRenderScript ) else
-		} // if( launchRender )
-
-		postActions(originalLayer);
-
-		return ( (ribStatus == kRibOK || liqglo.m_deferredGen) ? MS::kSuccess : MS::kFailure);
-
-	} 
-	catch ( MString errorMessage ) 
-	{
-		liquidMessage( errorMessage.asChar(), messageError );
-		/*if( htable && hashTableInited ) delete htable;
-		freeShaders();*/
-		m_escHandler.endComputation();
-		return MS::kFailure;
-	} 
-	catch ( ... ) 
-	{
-		liquidMessage( "Unknown exception thrown", messageError );
-		/*if( htable && hashTableInited ) delete htable;
-		freeShaders();*/
-		m_escHandler.endComputation();
-		return MS::kFailure;
-	}
 }
 //
 void liqRibTranslator::calaculateSamplingTime(const long scanTime__)
@@ -4011,4 +3588,647 @@ MStatus liqRibTranslator::worldEpilogue__()
 MStatus liqRibTranslator::frameEpilogue__( long scanTime)
 {
 	return frameEpilogue(scanTime);
+}
+//
+MStatus liqRibTranslator::_doItNewWithoutRenderScript(
+	const MArgList& args , const MString& originalLayer )
+{
+	MStatus status;
+#if (Refactoring == 0)
+	MString lastRibName;
+#endif
+	//bool hashTableInited = false;
+
+	if( !liqglo.liquidBin && !liqglo.m_deferredGen ) 
+		liquidMessage( "Creating RIB <Press ESC To Cancel> ...", messageInfo );
+
+	// Remember the frame the scene was at so we can restore it later.
+	originalTime = MAnimControl::currentTime();
+
+	// Set the frames-per-second global (we'll need this for
+	// streak particles)
+	//
+	MTime oneSecond( 1, MTime::kSeconds );
+	liqglo.liqglo_FPS = oneSecond.as( MTime::uiUnit() );
+
+	// check to see if the output camera, if specified, is available
+	if( liqglo.liquidBin && ( renderCamera == "" ) ) 
+	{
+		liquidMessage( "No render camera specified!", messageError );
+		return MS::kFailure;
+	}
+	if( renderCamera != "" ) 
+	{
+		MStatus selectionStatus;
+		MSelectionList camList;
+		selectionStatus = camList.add( renderCamera );
+		if( selectionStatus != MS::kSuccess ) 
+		{
+			liquidMessage( "Invalid render camera!", messageError );
+			return MS::kFailure;
+		}
+	}
+
+	// check to see if all the directories we are working with actually exist.
+	/*if( verifyOutputDirectories() ) {
+	MString err( "The output directories are not properly setup in the globals" );
+	throw err;
+	}*/
+	// This is bollocks! Liquid defaults to system temp folders if it can't setup shit. It should always work, not breaks
+	verifyOutputDirectories();
+
+	// setup the error handler
+#if( !defined (GENERIC_RIBLIB) ) && ( defined ( AQSIS ) || ( _WIN32 && DELIGHT ) )
+#  ifdef _WIN32
+	if( m_errorMode ) RiErrorHandler( (void(__cdecl*)(int,int,char*))liqRibTranslatorErrorHandler );
+#  else
+	if( m_errorMode ) RiErrorHandler( (void(*)(int,int,char*))liqRibTranslatorErrorHandler );
+#  endif
+#else
+	if( m_errorMode ) RiErrorHandler( liqRibTranslatorErrorHandler );
+#endif
+	// Setup helper variables for alfred
+	// 	MString alfredCleanUpCommand;// not used. [9/15/2010 yys]
+	// 	if( remoteRender ) 
+	// 		alfredCleanUpCommand = MString( "RemoteCmd" );
+	// 	else 
+	// 		alfredCleanUpCommand = MString( "Cmd" );
+
+	// 	MString alfredRemoteTagsAndServices;// not used. [9/15/2010 yys]
+	// 	if( remoteRender || useNetRman ) 
+	// 	{
+	// 		alfredRemoteTagsAndServices  = MString( "-service { " );
+	// 		alfredRemoteTagsAndServices += m_alfredServices.asChar();
+	// 		alfredRemoteTagsAndServices += MString( " } -tags { " );
+	// 		alfredRemoteTagsAndServices += m_alfredTags.asChar();
+	// 		alfredRemoteTagsAndServices += MString( " } " );
+	// 	}
+	// A seperate one for cleanup as it doesn't need a tag!
+	// 	MString alfredCleanupRemoteTagsAndServices;// not used. [9/15/2010 yys]
+	// 	if( remoteRender || useNetRman ) 
+	// 	{
+	// 		alfredCleanupRemoteTagsAndServices  = MString( "-service { " );
+	// 		alfredCleanupRemoteTagsAndServices += m_alfredServices.asChar();
+	// 		alfredCleanupRemoteTagsAndServices += MString( " } " );
+	// 	}
+
+	// exception handling block, this tracks liquid for any possible errors and tries to catch them
+	// to avoid crashing
+	try 
+	{
+		m_escHandler.beginComputation();
+
+		MString preFrameMel = parseString( m_preFrameMel );
+		MString postFrameMel = parseString( m_postFrameMel );
+
+		if( ( preFrameMel  != "" ) && !fileExists( preFrameMel ) ) 
+			liquidMessage( "Cannot find pre frame MEL script file! Assuming local.", messageWarning );
+
+		if( ( m_postFrameMel != "" ) && !fileExists( postFrameMel ) ) 
+			liquidMessage( "Cannot find post frame MEL script file! Assuming local.", messageWarning );
+
+		// build temp file names
+		MString renderScriptName = generateRenderScriptName();
+		liqglo.tempDefname    = generateTempMayaSceneName();
+
+		if( liqglo.m_deferredGen ) 
+		{
+			MString currentFileType = MFileIO::fileType();
+			MFileIO::exportAll( liqglo.tempDefname, currentFileType.asChar() );
+		}
+
+
+		liqRenderScript jobScript;
+		// 		liqRenderScript::Job preJobInstance;
+		// 		preJobInstance.title = "liquid pre-job";
+		// 		preJobInstance.isInstance = true;
+		tJobScriptMgr jobScriptMgr(jobScript);
+
+
+		// build the frame array
+		//
+		if( m_renderView ) 
+		{
+			// if we are in renderView mode,
+			// just ignore the animation range
+			// and render the current frame.
+			liqglo.frameNumbers.clear();
+			liqglo.frameNumbers.push_back( ( int ) originalTime.as( MTime::uiUnit() ) );
+		}
+		//
+		// start looping through the frames  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//
+		liquidMessage( "Starting to loop through frames", messageInfo );
+
+
+		unsigned frameIndex( 0 );
+		for ( ; frameIndex < liqglo.frameNumbers.size(); frameIndex++ ) 
+		{
+			int currentBlock( 0 );
+			const MString framePreCommand(parseString( liqglo.m_preCommand, false));
+			const MString frameRibgenCommand(parseString( m_ribgenCommand, false ));
+			const MString frameRenderCommand( parseString( liqglo.liquidRenderer.renderCommand + " " + liqglo.liquidRenderer.renderCmdFlags, false ));
+			const MString framePreFrameCommand(parseString( m_preFrameCommand, false ));
+			const MString framePostFrameCommand(parseString( m_postFrameCommand, false ));
+
+			liqRenderScript::Job frameScriptJob;
+			tFrameScriptJobMgr frameScriptJobMgr(frameScriptJob);
+
+			stringstream titleStream;
+			titleStream << liqglo.liqglo_sceneName.asChar() << "Frame" << liqglo.liqglo_lframe;
+			frameScriptJobMgr.setCommonParameters( titleStream.str() );
+
+			///////////////////////////////////////////////////
+			TempControlBreak tcb = 
+				processOneFrame(frameIndex, liqglo);
+			PROCESS_TEMP_CONTROL_BREAK_CONTINUE_RETURN(tcb)
+			///////////////////////////////////////////////////
+
+			jobScript.addJob( frameScriptJob );
+
+
+			if( ( ribStatus != kRibOK ) && !liqglo.m_deferredGen ) 
+				break;
+
+		} // frame for-loop
+
+		LIQDEBUGPRINTF( "-> ending escape handler.\n" );
+		m_escHandler.endComputation();
+
+		if( !liqglo.m_deferredGen ) 
+			liquidMessage( "Finished creating RIB", messageInfo );
+		LIQDEBUGPRINTF( "-> clearing job list.\n" );
+		jobList.clear();
+		jobScript.clear();
+
+		// set the attributes on the liquidGlobals for the last rib file and last alfred script name
+		LIQDEBUGPRINTF( "-> setting lastAlfredScript and lastRibFile.\n" );
+		MGlobal::executeCommand("if(!attributeExists(\"lastRenderScript\",\"liquidGlobals\")) { addAttr -ln \"lastRenderScript\" -dt \"string\" liquidGlobals; }");
+		MFnDependencyNode rGlobalNode( rGlobalObj );
+		MPlug nPlug;
+		nPlug = rGlobalNode.findPlug( "lastRenderScript" );
+		nPlug.setValue( renderScriptName );
+#if (Refactoring == 0)
+		nPlug = rGlobalNode.findPlug( "lastRibFile" );
+		nPlug.setValue( lastRibName );
+#endif
+		LIQDEBUGPRINTF( "-> spawning command.\n" );
+		if( launchRender ) 
+		{
+			{
+				// launch renders directly
+				liquidMessage( string(), messageInfo ); // emit a '\n'
+				//int exitstat = 0;
+
+				// write out make texture pass
+				doTextures();
+
+				if( liqglo.liqglo_doShadows ) 
+				{
+					doShadows();
+				}
+
+				//if( !exitstat ){
+				liquidMessage( "Rendering hero pass... ", messageInfo );
+				cout << "[!] Rendering hero pass..." << endl;
+				if( liqglo.liqglo_currentJob.skip ) 
+				{
+					cout << "    - skipping '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
+					liquidMessage( "    - skipping '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
+				} 
+				else 
+				{
+					cout << "    + '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
+					liquidMessage( "    + '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
+
+#ifdef _WIN32
+					liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + liqglo.liqglo_currentJob.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
+#else
+					liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + liqglo.liqglo_currentJob.ribFileName, liqglo.liqglo_projectDir, false );
+#endif
+					/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
+					to display buckets in the renderview.
+					*/
+					if( m_renderView ) 
+					{
+						doRenderView();
+					}
+				}
+				//}//if( !exitstat )
+
+			}//if( useRenderScript ) else
+		} // if( launchRender )
+
+		postActions(originalLayer);
+
+		return ( (ribStatus == kRibOK || liqglo.m_deferredGen) ? MS::kSuccess : MS::kFailure);
+
+	} 
+	catch ( MString errorMessage ) 
+	{
+		liquidMessage( errorMessage.asChar(), messageError );
+		/*if( htable && hashTableInited ) delete htable;
+		freeShaders();*/
+		m_escHandler.endComputation();
+		return MS::kFailure;
+	} 
+	catch ( ... ) 
+	{
+		liquidMessage( "Unknown exception thrown", messageError );
+		/*if( htable && hashTableInited ) delete htable;
+		freeShaders();*/
+		m_escHandler.endComputation();
+		return MS::kFailure;
+	}
+}
+//
+MStatus liqRibTranslator::_doItNewWithRenderScript(
+	const MArgList& args , const MString& originalLayer )
+{
+
+	MStatus status;
+#if (Refactoring == 0)
+	MString lastRibName;
+#endif
+	//bool hashTableInited = false;
+
+	if( !liqglo.liquidBin && !liqglo.m_deferredGen ) 
+		liquidMessage( "Creating RIB <Press ESC To Cancel> ...", messageInfo );
+
+	// Remember the frame the scene was at so we can restore it later.
+	originalTime = MAnimControl::currentTime();
+
+	// Set the frames-per-second global (we'll need this for
+	// streak particles)
+	//
+	MTime oneSecond( 1, MTime::kSeconds );
+	liqglo.liqglo_FPS = oneSecond.as( MTime::uiUnit() );
+
+	// check to see if the output camera, if specified, is available
+	if( liqglo.liquidBin && ( renderCamera == "" ) ) 
+	{
+		liquidMessage( "No render camera specified!", messageError );
+		return MS::kFailure;
+	}
+	if( renderCamera != "" ) 
+	{
+		MStatus selectionStatus;
+		MSelectionList camList;
+		selectionStatus = camList.add( renderCamera );
+		if( selectionStatus != MS::kSuccess ) 
+		{
+			liquidMessage( "Invalid render camera!", messageError );
+			return MS::kFailure;
+		}
+	}
+
+	// check to see if all the directories we are working with actually exist.
+	/*if( verifyOutputDirectories() ) {
+	MString err( "The output directories are not properly setup in the globals" );
+	throw err;
+	}*/
+	// This is bollocks! Liquid defaults to system temp folders if it can't setup shit. It should always work, not breaks
+	verifyOutputDirectories();
+
+	// setup the error handler
+#if( !defined (GENERIC_RIBLIB) ) && ( defined ( AQSIS ) || ( _WIN32 && DELIGHT ) )
+#  ifdef _WIN32
+	if( m_errorMode ) RiErrorHandler( (void(__cdecl*)(int,int,char*))liqRibTranslatorErrorHandler );
+#  else
+	if( m_errorMode ) RiErrorHandler( (void(*)(int,int,char*))liqRibTranslatorErrorHandler );
+#  endif
+#else
+	if( m_errorMode ) RiErrorHandler( liqRibTranslatorErrorHandler );
+#endif
+	// Setup helper variables for alfred
+	// 	MString alfredCleanUpCommand;// not used. [9/15/2010 yys]
+	// 	if( remoteRender ) 
+	// 		alfredCleanUpCommand = MString( "RemoteCmd" );
+	// 	else 
+	// 		alfredCleanUpCommand = MString( "Cmd" );
+
+	// 	MString alfredRemoteTagsAndServices;// not used. [9/15/2010 yys]
+	// 	if( remoteRender || useNetRman ) 
+	// 	{
+	// 		alfredRemoteTagsAndServices  = MString( "-service { " );
+	// 		alfredRemoteTagsAndServices += m_alfredServices.asChar();
+	// 		alfredRemoteTagsAndServices += MString( " } -tags { " );
+	// 		alfredRemoteTagsAndServices += m_alfredTags.asChar();
+	// 		alfredRemoteTagsAndServices += MString( " } " );
+	// 	}
+	// A seperate one for cleanup as it doesn't need a tag!
+	// 	MString alfredCleanupRemoteTagsAndServices;// not used. [9/15/2010 yys]
+	// 	if( remoteRender || useNetRman ) 
+	// 	{
+	// 		alfredCleanupRemoteTagsAndServices  = MString( "-service { " );
+	// 		alfredCleanupRemoteTagsAndServices += m_alfredServices.asChar();
+	// 		alfredCleanupRemoteTagsAndServices += MString( " } " );
+	// 	}
+
+	// exception handling block, this tracks liquid for any possible errors and tries to catch them
+	// to avoid crashing
+	try 
+	{
+		m_escHandler.beginComputation();
+
+		MString preFrameMel = parseString( m_preFrameMel );
+		MString postFrameMel = parseString( m_postFrameMel );
+
+		if( ( preFrameMel  != "" ) && !fileExists( preFrameMel ) ) 
+			liquidMessage( "Cannot find pre frame MEL script file! Assuming local.", messageWarning );
+
+		if( ( m_postFrameMel != "" ) && !fileExists( postFrameMel ) ) 
+			liquidMessage( "Cannot find post frame MEL script file! Assuming local.", messageWarning );
+
+		// build temp file names
+		MString renderScriptName = generateRenderScriptName();
+		liqglo.tempDefname    = generateTempMayaSceneName();
+
+		if( liqglo.m_deferredGen ) 
+		{
+			MString currentFileType = MFileIO::fileType();
+			MFileIO::exportAll( liqglo.tempDefname, currentFileType.asChar() );
+		}
+
+
+		liqRenderScript jobScript;
+		// 		liqRenderScript::Job preJobInstance;
+		// 		preJobInstance.title = "liquid pre-job";
+		// 		preJobInstance.isInstance = true;
+		tJobScriptMgr jobScriptMgr(jobScript);
+
+		if( true/*useRenderScript*/ ) 
+		{
+			if( renderJobName == "" ) 
+				renderJobName = liqglo.liqglo_sceneName;
+
+			jobScriptMgr.setCommonParameters(
+				renderJobName.asChar(), liqglo.useNetRman, m_minCPU, m_maxCPU, liqglo.m_dirmaps 
+				);
+			if( m_preJobCommand != MString( "" ) ) 
+			{
+				jobScriptMgr.addJob("liquid pre-job", 
+					m_preJobCommand.asChar(), liqglo.remoteRender && !liqglo.useNetRman);
+			}
+		}
+		// build the frame array
+		//
+		if( m_renderView ) 
+		{
+			// if we are in renderView mode,
+			// just ignore the animation range
+			// and render the current frame.
+			liqglo.frameNumbers.clear();
+			liqglo.frameNumbers.push_back( ( int ) originalTime.as( MTime::uiUnit() ) );
+		}
+		//
+		// start looping through the frames  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//
+		liquidMessage( "Starting to loop through frames", messageInfo );
+
+
+		unsigned frameIndex( 0 );
+		for ( ; frameIndex < liqglo.frameNumbers.size(); frameIndex++ ) 
+		{
+			int currentBlock( 0 );
+			const MString framePreCommand(parseString( liqglo.m_preCommand, false));
+			const MString frameRibgenCommand(parseString( m_ribgenCommand, false ));
+			const MString frameRenderCommand( parseString( liqglo.liquidRenderer.renderCommand + " " + liqglo.liquidRenderer.renderCmdFlags, false ));
+			const MString framePreFrameCommand(parseString( m_preFrameCommand, false ));
+			const MString framePostFrameCommand(parseString( m_postFrameCommand, false ));
+
+			liqRenderScript::Job frameScriptJob;
+			tFrameScriptJobMgr frameScriptJobMgr(frameScriptJob);
+
+			stringstream titleStream;
+			titleStream << liqglo.liqglo_sceneName.asChar() << "Frame" << liqglo.liqglo_lframe;
+			frameScriptJobMgr.setCommonParameters( titleStream.str() );
+
+			if( true/*useRenderScript*/ ) 
+			{
+				if( liqglo.m_deferredGen ) 
+				{
+					if( ( frameIndex % liqglo.m_deferredBlockSize ) == 0 ) 
+					{
+						if( liqglo.m_deferredBlockSize == 1 ) 
+							currentBlock = liqglo.liqglo_lframe;
+						else 
+							currentBlock++;
+
+						jobScriptMgr.addDefferedJob(currentBlock, frameIndex,
+							framePreCommand, frameRibgenCommand
+							);
+					}
+				}//if( m_deferredGen )
+			}
+			if(true/*useRenderScript*/ && !m_justRib)
+			{
+				if( liqglo.m_deferredGen ) 
+				{
+					stringstream ss;
+					ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
+					frameScriptJobMgr.addInstanceJob(true, ss.str() );
+				}
+			}//if( useRenderScript ) 
+			///////////////////////////////////////////////////
+			TempControlBreak tcb = 
+				processOneFrame(frameIndex, liqglo);
+			PROCESS_TEMP_CONTROL_BREAK_CONTINUE_RETURN(tcb)
+			///////////////////////////////////////////////////
+			// now we re-iterate through the job list to write out the alfred file if we are using it
+			if( true/*useRenderScript*/ && !m_justRib ) 
+			{
+				bool alf_textures = false;
+				bool alf_shadows = false;
+				bool alf_refmaps = false;
+
+				// write out make texture pass
+				LIQDEBUGPRINTF( "-> Generating job for MakeTexture pass\n");
+				frameScriptJobMgr.makeTexture(txtList, 
+					alf_textures, alf_shadows, alf_refmaps);
+
+				// write out shadows
+				if( liqglo.liqglo_doShadows ) 
+				{
+					LIQDEBUGPRINTF( "-> writing out shadow information to alfred file.\n" );
+					frameScriptJobMgr.makeShadow(shadowList, 
+						alf_textures, alf_shadows, alf_refmaps, currentBlock);
+
+				}//if( liqglo__.liqglo_doShadows ) 
+				LIQDEBUGPRINTF( "-> finished writing out shadow information to render script file.\n" );
+
+				// write out make reflection pass
+				frameScriptJobMgr.makeReflection(refList,
+					alf_textures, alf_shadows, alf_refmaps
+					);
+
+				LIQDEBUGPRINTF( "-> initiating hero pass information.\n" );
+				structJob *frameJob = NULL;
+				structJob *shadowPassJob = NULL;
+				LIQDEBUGPRINTF( "-> setting hero pass.\n" );
+				if( m_outputHeroPass && !m_outputShadowPass ){
+					frameJob = &jobList[jobList.size() - 1];
+				}
+				else if( m_outputShadowPass && m_outputHeroPass ) 
+				{
+					frameJob = &jobList[jobList.size() - 1];
+					shadowPassJob = &jobList[jobList.size() - 2];
+				} 
+				else if( m_outputShadowPass && !m_outputHeroPass ){
+					shadowPassJob = &jobList[jobList.size() - 1];
+				}
+
+				LIQDEBUGPRINTF( "-> hero pass set.\n" );
+				LIQDEBUGPRINTF( "-> writing out pre frame command information to render script file.\n" );
+				frameScriptJobMgr.try_addPreFrameCommand(framePreFrameCommand.asChar());
+
+
+				if( m_outputHeroPass ) 
+				{
+					frameScriptJobMgr.addHeroPass(frameJob->ribFileName, framePreCommand, frameRenderCommand);
+				}//if( m_outputHeroPass ) 
+				LIQDEBUGPRINTF( "-> finished writing out hero information to alfred file.\n" );
+				if( m_outputShadowPass ) 
+				{
+					frameScriptJobMgr.addShadowPass(shadowPassJob->ribFileName, framePreCommand, frameRenderCommand);
+				}//if( m_outputShadowPass )
+
+				//				if( liqglo.cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
+				//				{
+				if( liqglo.cleanRib ) 
+				{
+					if( m_outputHeroPass  ) 
+					{
+						frameScriptJobMgr.cleanHeroPass(framePreCommand, frameJob->ribFileName);
+					}
+					if( m_outputShadowPass) 
+					{
+						frameScriptJobMgr.cleanShadowPass(framePreCommand, shadowPassJob->ribFileName);
+					}
+					if( liqglo.m_alfShadowRibGen ) 
+					{
+						MString     baseShadowName(getBaseShadowName(liqglo.liqglo_currentJob));
+						frameScriptJobMgr.cleanShadowRibGen(framePreCommand, baseShadowName);
+					}
+				}
+				// try to add post frame command
+				frameScriptJobMgr.try_addPostFrameCommand(framePostFrameCommand);
+
+				//}//if( cleanRib || ( framePostFrameCommand != MString( "" ) ) ) 
+				if( m_outputHeroPass ){
+					frameScriptJobMgr.viewHeroPassImage(frameJob->imageName);
+				}
+				if( m_outputShadowPass ){
+					frameScriptJobMgr.viewShadowPassImage(shadowPassJob->imageName);
+				}
+#if (Refactoring == 0)
+				if( m_outputShadowPass && !m_outputHeroPass ) 
+					lastRibName = liquidGetRelativePath( liqglo__.liqglo_relativeFileNames, shadowPassJob->ribFileName, liqglo__.liqglo_projectDir );
+				else 
+					lastRibName = liquidGetRelativePath( liqglo__.liqglo_relativeFileNames, frameJob->ribFileName, liqglo__.liqglo_projectDir );
+#endif		
+			}//if( useRenderScript && !m_justRib ) 
+
+			jobScript.addJob( frameScriptJob );
+
+
+			if( ( ribStatus != kRibOK ) && !liqglo.m_deferredGen ) 
+				break;
+
+		} // frame for-loop
+
+		if( true/*useRenderScript*/ ) 
+		{
+			if( m_preJobCommand != MString( "" ) ) 
+			{
+				liqRenderScript::Job preJobInstance;
+				preJobInstance.title = "liquid pre-job";
+				preJobInstance.isInstance = true;
+				jobScript.addLeafDependency( preJobInstance );
+			}
+		}
+		if(true/*useRenderScript*/ && !m_justRib)
+		{
+			// clean up the alfred file in the future
+			if( liqglo.m_deferredGen ) 
+			{
+				jobScriptMgr.cleanupDefferedJob();
+			}
+			if( cleanRenderScript ) 
+			{
+				jobScriptMgr.cleanupRenderScript(renderScriptName);
+			}
+			if( m_postJobCommand != MString("") )
+			{
+				jobScriptMgr.cleanupPostJob(m_postJobCommand);
+			}
+			jobScriptMgr.writeRenderScript(m_renderScriptFormat, renderScriptName);
+		}
+		LIQDEBUGPRINTF( "-> ending escape handler.\n" );
+		m_escHandler.endComputation();
+
+		if( !liqglo.m_deferredGen ) 
+			liquidMessage( "Finished creating RIB", messageInfo );
+		LIQDEBUGPRINTF( "-> clearing job list.\n" );
+		jobList.clear();
+		jobScript.clear();
+
+		// set the attributes on the liquidGlobals for the last rib file and last alfred script name
+		LIQDEBUGPRINTF( "-> setting lastAlfredScript and lastRibFile.\n" );
+		MGlobal::executeCommand("if(!attributeExists(\"lastRenderScript\",\"liquidGlobals\")) { addAttr -ln \"lastRenderScript\" -dt \"string\" liquidGlobals; }");
+		MFnDependencyNode rGlobalNode( rGlobalObj );
+		MPlug nPlug;
+		nPlug = rGlobalNode.findPlug( "lastRenderScript" );
+		nPlug.setValue( renderScriptName );
+#if (Refactoring == 0)
+		nPlug = rGlobalNode.findPlug( "lastRibFile" );
+		nPlug.setValue( lastRibName );
+#endif
+		LIQDEBUGPRINTF( "-> spawning command.\n" );
+		if( launchRender ) 
+		{
+			if( true/*useRenderScript*/ ) 
+			{
+				if( m_renderScriptCommand == "" ) 
+					m_renderScriptCommand = "alfred";
+
+				if( m_renderScriptFormat == NONE ) 
+					liquidMessage( "No render script format specified to Liquid, and direct render execution not selected.", messageWarning );
+
+#ifdef _WIN32
+				// Moritz: Added quotes to render script name as it may contain spaces in bloody Windoze
+				// Note: also adding quotes to the path (aka project dir) breaks ShellExecute() -- cost me one hour to trace this!!!
+				// Bloody, damn, asinine Windoze!!!
+				liqProcessLauncher::execute( m_renderScriptCommand, "\"" + renderScriptName + "\"", liqglo.liqglo_projectDir, false );
+#else
+				liqProcessLauncher::execute( m_renderScriptCommand, renderScriptName, liqglo.liqglo_projectDir, false );
+#endif
+				if( m_renderView ) 
+				{
+					doRenderView();
+				}
+			}
+		} // if( launchRender )
+
+		postActions(originalLayer);
+
+		return ( (ribStatus == kRibOK || liqglo.m_deferredGen) ? MS::kSuccess : MS::kFailure);
+
+	} 
+	catch ( MString errorMessage ) 
+	{
+		liquidMessage( errorMessage.asChar(), messageError );
+		/*if( htable && hashTableInited ) delete htable;
+		freeShaders();*/
+		m_escHandler.endComputation();
+		return MS::kFailure;
+	} 
+	catch ( ... ) 
+	{
+		liquidMessage( "Unknown exception thrown", messageError );
+		/*if( htable && hashTableInited ) delete htable;
+		freeShaders();*/
+		m_escHandler.endComputation();
+		return MS::kFailure;
+	}
 }

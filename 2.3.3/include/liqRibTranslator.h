@@ -559,6 +559,10 @@ public:
 	MStatus worldEpilogue__();
 	MStatus frameEpilogue__( long );
 
+	//
+	MStatus _doItNewWithoutRenderScript(const MArgList& args , const MString& originalLayer );
+	MStatus _doItNewWithRenderScript(const MArgList& args , const MString& originalLayer );
+
 private:
 	liqRibTranslator(const liqRibTranslator&);
 	liqRibTranslator& operator=(const liqRibTranslator&);
