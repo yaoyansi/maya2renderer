@@ -8,6 +8,8 @@
  */
 source xxliquidutility.mel;
 
+global  string $renderer[] = {"renderman", "elvishray", "luxrender"};
+
 global proc int liquidmayaHasCommonGlobalValue( string $global )
 {
   liqPushIdent();

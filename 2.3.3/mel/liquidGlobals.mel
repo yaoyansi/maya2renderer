@@ -744,6 +744,7 @@ global proc liquidInitGlobalVals()
     ,"verbosity",                   "long",       1
 
 	,"rif",							"string",	  ""
+    ,"renderer",					"string",	  ""
   };
 
 
@@ -1546,7 +1547,21 @@ global proc liquidBuildRenderCameraMenu( string $prefix )
   liqPopIdent();
 }
 
+global proc liquidBuildRendererMenu( string $prefix )
+{
+  global string $renderer[];
 
+  liqPushIdent();
+	liqlog("liquidBuildRendererMenu()");
+  popupMenu -e -deleteAllItems ($prefix + "LG_RendererMenuCtl");
+  int $i;
+
+  for ( $i=0; $i<size($renderer); $i++ ) {
+    menuItem -parent ($prefix+"LG_RendererMenuCtl") -label $renderer[$i] 
+	         -c ("{setAttr -type \"string\" liquidGlobals.renderer "+$renderer[$i]+";}");
+  }
+  liqPopIdent();
+}
 
 /* Crop Window --------------------------------------------------------------------------------- */
 
@@ -2597,6 +2612,21 @@ global proc liquidGlobalsFrameTab( string $prefix )
     frameLayout -bs "etchedIn" -l "Debug" -cll true -cl false;
       columnLayout -adj true ;
         liquidShowBoolGlobal "useNewTranslator" "UseNewTranslator(refactoring)" $prefix;
+      setParent ..;
+    setParent ..;
+
+    frameLayout -bs "etchedIn" -l "Renderer" -cll true -cl false;
+      columnLayout -adj true ;
+        rowLayout -nc 2 -cw2 362 20 -ct2 left left -cl2 left center LG_renderer;
+          liquidShowStringGlobal "renderer" "Renderer" $prefix;
+          iconTextButton -style "iconOnly" -w 19 -h 18 -mw 0 -mh 0 
+			  -image (liquidGetHome()+"/icons/liquidMenuButton.xpm") 
+			  ($prefix + "LG_RendererButtonCtl");
+          setParent ..;
+          popupMenu 
+			  -parent ($prefix + "LG_RendererButtonCtl") -b 1 
+			  -pmc ( "liquidBuildRendererMenu \""+$prefix+"\"" ) 
+			  ($prefix+"LG_RendererMenuCtl");
       setParent ..;
     setParent ..;
 

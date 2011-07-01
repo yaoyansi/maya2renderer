@@ -352,6 +352,7 @@ MObject liqGlobalsNode::aShadersMaxCachedAELayouts;
 
 MObject liqGlobalsNode::aVerbosity;
 MObject liqGlobalsNode::aCurrentLayerRifParameters;
+MObject liqGlobalsNode::aRenderer;
 
 #define CREATE_BOOL(attr, obj, name, shortName, default)    \
     obj = attr.create( name, shortName, MFnNumericData::kBoolean, default, &status); \
@@ -830,7 +831,7 @@ MStatus liqGlobalsNode::initialize()
 	CREATE_STRING( tAttr,  aShotVersion,                "shotVersion",                  "sv",     ""    );
 
 	CREATE_STRING( tAttr,  aCurrentLayerRifParameters,  "currentLayerRifParameters",    "lrp",     ""    );
-
+	CREATE_STRING( tAttr,  aRenderer,              "renderer",                "rnd",   "" );
 
 	return MS::kSuccess;
 }
