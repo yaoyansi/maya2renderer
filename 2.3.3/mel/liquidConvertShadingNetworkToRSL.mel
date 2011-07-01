@@ -744,17 +744,17 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 
 	// omitted by yaoyansi [2010-09-26]
 	//duran and mesh use this section(test needed), but xx will ommit this section.
-	string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
-
-	string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
-
-	if ( $SLShaderNode == "" ) {
-		string $shader = `liquidNewShaderNode ( $shaderFileName + "." + $shaderExt )`;
-		liquidAssignShaderNode_old( $assingToNode, $shader );
-	} else {
-		setAttr -type "string" ($SLShaderNode+".rmanShaderLong")  ($shaderFileName+"."+$shaderExt);
-		liquidShaderNodes_initParams( $SLShaderNode );
-	}
+// 	string $shaderExt = `getAttr "liquidGlobals.shaderExt"`;
+// 
+// 	string $SLShaderNode = getSLShaderNodeFor( $assingToNode );
+// 
+// 	if ( $SLShaderNode == "" ) {
+// 		string $shader = `liquidNewShaderNode ( $shaderFileName + "." + $shaderExt )`;
+// 		liquidAssignShaderNode_old( $assingToNode, $shader );
+// 	} else {
+// 		setAttr -type "string" ($SLShaderNode+".rmanShaderLong")  ($shaderFileName+"."+$shaderExt);
+// 		liquidShaderNodes_initParams( $SLShaderNode );
+// 	}
 	liqPopIdent();
 }
 
@@ -785,24 +785,32 @@ global proc liquidConvertShadingNetworkToRSL ()
 		string $shaders[] = `listConnections ( $sgNodes[0] + ".surfaceShader" )`;
 		string $startingNode = $shaders[0];
 
-		convertShadingNetworkToRSL $startingNode $node;
+		string $type = `nodeType $startingNode`;
+		if( $type =="liquidSurface" || $type=="liquidVolume" || $type=="liquidDisplacement" )
+		{
+			liqlog( $startingNode+"'type is "+$type+", no need to convert.");
+		}else{
+			convertShadingNetworkToRSL $startingNode $node;
+		}
+
 	}
 
-	// ShadingGroup selections get converted to shaders attached to the group
-	string $sel[] = `ls -selection -type "shadingEngine"`;
-	for( $node in $sel )
-	{
-		string $shaders[] = `listConnections ( $node + ".surfaceShader" )`;
-		string $startingNode = $shaders[0];
+// 	// ShadingGroup selections get converted to shaders attached to the group
+// 	string $sel[] = `ls -selection -type "shadingEngine"`;
+// 	for( $node in $sel )
+// 	{
+// 		string $shaders[] = `listConnections ( $node + ".surfaceShader" )`;
+// 		string $startingNode = $shaders[0];
+// 
+// 		convertShadingNetworkToRSL $startingNode $node;
+// 	}
+// 
+// 	// Shading Node selections get converted to shaders attached to the material
+// 	string $sel[] = `ls -selection -mat`;
+// 	for( $node in $sel )
+// 	{
+// 		convertShadingNetworkToRSL $node $node;
+// 	}
 
-		convertShadingNetworkToRSL $startingNode $node;
-	}
-
-	// Shading Node selections get converted to shaders attached to the material
-	string $sel[] = `ls -selection -mat`;
-	for( $node in $sel )
-	{
-		convertShadingNetworkToRSL $node $node;
-	}
 	liqPopIdent();
 }
