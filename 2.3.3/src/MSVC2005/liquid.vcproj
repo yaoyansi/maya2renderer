@@ -4051,6 +4051,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="log"
+				>
+				<File
+					RelativePath="..\log\logmgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\log\logmgr.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
