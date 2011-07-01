@@ -1252,7 +1252,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy /f /y &quot;$(LIQUID_ROOT)\displayDrivers\Aqsis\win32\liqmaya.dll&quot; &quot;$(RMANTREE)\etc\d_liqmaya.dll&quot;"
+				CommandLine="xcopy /f /y &quot;..\..\..\displayDrivers\Aqsis\win32\liqmaya.dll&quot; &quot;$(RMANTREE)\etc\d_liqmaya.dll&quot;"
 			/>
 		</Configuration>
 		<Configuration
