@@ -169,15 +169,7 @@ public:
 
 
 
-	bool doDof;                 // do camera depth of field
-	bool doCameraMotion;        // Motion blur for moving cameras
-	bool liqglo_rotateCamera;   // rotates the camera for sideways renderings
-	enum shutterConfig {
-		OPEN_ON_FRAME         = 0,
-		CENTER_ON_FRAME       = 1,
-		CENTER_BETWEEN_FRAMES = 2,
-		CLOSE_ON_NEXT_FRAME   = 3
-	} shutterConfig;
+
 
 	bool        cleanShadows;                // UN-USED GLOBAL
 	bool        cleanTextures;               // UN-USED GLOBAL
@@ -185,11 +177,7 @@ public:
 
 	// bool        renderAllCameras;   // Render all cameras, or only active ones     UN-USED GLOBAL
 	bool        ignoreFilmGate;
-	double      fov_ratio;
-	int         cam_width,
-		cam_height;
-	float       aspectRatio;
-	liquidlong  quantValue;
+
 
 	MString     baseShadowName;
 	bool        createOutputDirectories;
@@ -198,7 +186,7 @@ public:
 
 	// Data used to construct output file names
 
-	MString       outExt;
+
 //	MString       extension;
 	MString       imageName;
 
@@ -217,7 +205,7 @@ public:
 
 	// Data used for choosing output method
 	// MString riboutput;                           // UN-USED GLOBAL
-	bool launchRender;
+
 
 #ifdef Refactoring 
 public: 
@@ -235,7 +223,7 @@ private :
 	// Old global values
 	int           m_errorMode;
 //	M3dView       m_activeView;
-	MString       m_pixDir;
+
 	MString       m_tmpDir;
 	bool          m_noDirCheck;
 	bool          m_animation;
@@ -246,16 +234,12 @@ private :
 public: 
 #endif
 	static MComputation  m_escHandler;
-	float         m_rgain,
-		m_rgamma;
+
 	bool          m_justRib;
 	liquidlong    m_minCPU;
 	liquidlong    m_maxCPU;
 
-	double        m_cropX1,
-		m_cropX2,
-		m_cropY1,
-		m_cropY2;
+
 
 #ifdef _WIN32
 	int RiNColorSamples;
@@ -373,53 +357,13 @@ public:
 
 	MString m_preGeomRIB;
 
-	// Display Driver Variables
-	typedef struct structDDParam {
-		liquidlong    num;
-		MStringArray  names;
-		MStringArray  data;
-		MIntArray     type;
-	} structDDParam;
 
-	bool          m_ignoreAOVDisplays;
 
-	typedef struct structDisplay {
-		MString         name;
-		MString         type;
-		MString         mode;
-		bool            enabled;
-		bool            doQuantize;
-		int             bitDepth;
-		float           dither;
-		bool            doFilter;
-		int             filter;
-		float           filterX;
-		float           filterY;
-		structDDParam   xtraParams;
-	} structDisplay;
-	std::vector<structDisplay> m_displays;
-
-	typedef struct structChannel {
-		MString     name;
-		int         type;
-		int         arraySize;
-		bool        quantize;
-		int         bitDepth;
-		float       dither;
-		bool        filter;
-		int         pixelFilter;
-		float       pixelFilterX;
-		float       pixelFilterY;
-	} structChannel;
-	std::vector<structChannel> m_channels;
 
 	// MStringArray  m_pixelFilterNames;
 
 
-	bool          m_renderViewCrop;
-	bool          m_renderViewLocal;
-	liquidlong    m_renderViewPort;
-	liquidlong    m_renderViewTimeOut;
+
 
 
 

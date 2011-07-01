@@ -165,7 +165,7 @@ void liqRibTranslator::calaculateSamplingTime(const long scanTime__)
 	for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ ) 
 	{
 		float subframe;
-		switch( shutterConfig ) 
+		switch( liqglo.shutterConfig ) 
 		{
 		case OPEN_ON_FRAME:
 		default:
@@ -427,7 +427,7 @@ TempControlBreak liqRibTranslator::processOneFrame(
 				//cout <<"about to scan... "<<endl;
 				// scan the scene
 				//
-				if( doCameraMotion || liqglo__.liqglo_doMotion || liqglo__.liqglo_doDef ) 
+				if( liqglo.doCameraMotion || liqglo__.liqglo_doMotion || liqglo__.liqglo_doDef ) 
 				{
 					for ( int msampleOn = 0; msampleOn < liqglo__.liqglo_motionSamples; msampleOn++ ) 
 						scanScene__( liqglo__.liqglo_sampleTimes[ msampleOn ] , msampleOn );
@@ -506,14 +506,14 @@ TempControlBreak liqRibTranslator::processOneFrame(
 //
 void liqRibTranslator::doRenderView()
 {
-	MString local = (m_renderViewLocal)? "1":"0";
+	MString local = (liqglo.m_renderViewLocal)? "1":"0";
 	stringstream tmp;
-	tmp << m_renderViewTimeOut;
+	tmp << liqglo.m_renderViewTimeOut;
 	//=============
 	cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
 	MString timeout( tmp.str().c_str() );
-	MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
-	if( m_renderViewCrop ) 
+	MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + liqglo.m_renderViewPort + " -timeout " + timeout ;
+	if( liqglo.m_renderViewCrop ) 
 		displayCmd = displayCmd + " -doRegion";
 	displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
 	//============= 
@@ -757,8 +757,8 @@ void liqRibTranslator::getCameraData( vector<structJob>::iterator &iter__ , cons
 					iter__->gotJobOptions = true;
 				}
 				getCameraInfo( fnCamera );
-				iter__->width = cam_width;
-				iter__->height = cam_height;
+				iter__->width = liqglo.cam_width;
+				iter__->height = liqglo.cam_height;
 				// scanScene: Renderman specifies shutter by time open
 				// so we need to convert shutterAngle to time.
 				// To do this convert shutterAngle to degrees and
@@ -767,7 +767,7 @@ void liqRibTranslator::getCameraData( vector<structJob>::iterator &iter__ , cons
 				iter__->camera[sample__].shutter = fnCamera.shutterAngle() * 0.5 / M_PI;
 				liqglo.liqglo_shutterTime = iter__->camera[sample__].shutter;
 				iter__->camera[sample__].orthoWidth     = fnCamera.orthoWidth();
-				iter__->camera[sample__].orthoHeight    = fnCamera.orthoWidth() * ((float)cam_height / (float)cam_width);
+				iter__->camera[sample__].orthoHeight    = fnCamera.orthoWidth() * ((float)liqglo.cam_height / (float)liqglo.cam_width);
 				iter__->camera[sample__].motionBlur     = fnCamera.isMotionBlur();
 				iter__->camera[sample__].focalLength    = fnCamera.focalLength();
 				iter__->camera[sample__].focalDistance  = fnCamera.focusDistance();
@@ -777,7 +777,7 @@ void liqRibTranslator::getCameraData( vector<structJob>::iterator &iter__ , cons
 				double hSize, vSize, hOffset, vOffset;
 				fnCamera.getFilmFrustum( fnCamera.focalLength(), hSize, vSize, hOffset, vOffset );
 
-				double imr = ((float)cam_width / (float)cam_height);
+				double imr = ((float)liqglo.cam_width / (float)liqglo.cam_height);
 				double fbr = hSize / vSize;
 				double ho, vo;
 
@@ -843,7 +843,7 @@ void liqRibTranslator::getCameraData( vector<structJob>::iterator &iter__ , cons
 				// philippe : rotate the main camera 90 degrees around Z-axis if necessary
 				// ( only in main camera )
 				MMatrix camRotMatrix;
-				if( liqglo_rotateCamera == true ) 
+				if( liqglo.liqglo_rotateCamera == true ) 
 				{
 					float crm[4][4] = {  {  0.0,  1.0,  0.0,  0.0 },
 					{ -1.0,  0.0,  0.0,  0.0 },
@@ -869,8 +869,8 @@ void liqRibTranslator::getCameraData( vector<structJob>::iterator &iter__ , cons
 				// if a film-fit is used. 'fov_ratio' is used to account for
 				// this.
 				//
-				iter__->camera[sample__].hFOV = fnCamera.horizontalFieldOfView()/fov_ratio;
-				iter__->aspectRatio = aspectRatio;
+				iter__->camera[sample__].hFOV = fnCamera.horizontalFieldOfView()/liqglo.fov_ratio;
+				iter__->aspectRatio = liqglo.aspectRatio;
 
 				// scanScene: Determine what information to write out (RGB, alpha, zbuffer)
 				//
@@ -1140,551 +1140,24 @@ MStatus liqRibTranslator::framePrologue__( long lframe, const structJob &current
 	LIQDEBUGPRINTF( "-> Beginning Frame Prologue__\n" );
 	ribStatus = kRibFrame;
 
-	if( !liqglo.m_exportReadArchive )
+	if( liqglo.m_exportReadArchive )
 	{
+		return MS::kSuccess;
+	}
+
 		RiFrameBegin( lframe );
 
-		if( /*liqglo.liqglo_*/currentJob.isShadow )
+		if( currentJob.isShadow )
 		{
-			if( !/*liqglo.liqglo_*/currentJob.deepShadows || /*liqglo.liqglo_*/currentJob.shadowPixelSamples == 1)
-			{
-				if( liqglo.liquidRenderer.renderName == MString("Pixie") )
-				{
-					RtFloat zero = 0;
-					RiHider( "hidden", "jitter", &zero, RI_NULL );
-				}
-				else
-				{
-					RtInt zero = 0;
-					RiHider( "hidden", "int jitter", &zero, RI_NULL );
-				}
-			}
-			if( /*liqglo.liqglo_*/currentJob.isMidPointShadow && !/*liqglo.liqglo_*/currentJob.deepShadows )
-			{
-				RtString midPoint = "midpoint";
-				RtFloat midRatio = /*liqglo.liqglo_*/currentJob.midPointRatio;
-
-				RiHider( "hidden", "depthfilter", &midPoint, RI_NULL );
-
-				if ( /*liqglo.liqglo_*/currentJob.midPointRatio != 0 )
-					RiHider( "hidden", "midpointratio", &midRatio, RI_NULL ); // Output to rib jami
-			}
-			//-----------------------------------------------------
-			LIQDEBUGPRINTF( "-> Setting Display Options\n" );
-			//MString relativeShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, liqglo_currentJob.imageName, liqglo_projectDir ) ) );
-			if( !/*liqglo.liqglo_*/currentJob.isMinMaxShadow )
-			{
-				if( /*liqglo.liqglo_*/currentJob.deepShadows )
-				{
-					// RiDeclare( "volumeinterpretation", "string" );
-					RtString viContinuous = "continuous";
-					RtString viDiscrete   = "discrete";
-
-					if( liqglo.liquidRenderer.renderName == MString("3Delight") )
-					{
-						liqRIBMsg("Display 1");
-						RiDisplay( const_cast< char* >( /*liqglo.liqglo_*/currentJob.imageName.asChar()),
-							const_cast< char* >( /*liqglo.liqglo_*/currentJob.format.asChar() ),
-							(RtToken)/*liqglo.liqglo_*/currentJob.imageMode.asChar(),
-							"string volumeinterpretation",
-							( /*liqglo.liqglo_*/currentJob.shadowVolumeInterpretation == 1 ? &viContinuous : &viDiscrete ),
-							RI_NULL );
-					}
-					else
-					{
-						// Deep shadows cannot be the primary output driver in PRMan & co.
-						// We need to create a null output zfile first, and use the deep
-						// shadows as a secondary output.
-						//
-						if( liqglo.liquidRenderer.renderName != MString("Pixie") )
-						{
-							liqRIBMsg("Display 2");
-							RiDisplay( "null", "null", "z", RI_NULL );
-						}
-
-						MString deepFileImageName = "+" + /*liqglo.liqglo_*/currentJob.imageName;
-
-						liqRIBMsg("Display 3");
-						RiDisplay( const_cast< char* >( deepFileImageName.asChar() ),
-							const_cast< char* >( /*liqglo.liqglo_*/currentJob.format.asChar() ),
-							(RtToken)/*liqglo.liqglo_*/currentJob.imageMode.asChar(),
-							"string volumeinterpretation",
-							( /*liqglo.liqglo_*/currentJob.shadowVolumeInterpretation == 1 ? &viContinuous : &viDiscrete ),
-							RI_NULL );
-					}
-				}//if( liqglo.liqglo_currentJob.deepShadows )
-				else
-				{
-					liqRIBMsg("Display 4");
-					RtInt aggregate( /*liqglo.liqglo_*/currentJob.shadowAggregation );
-					RiDisplay( const_cast< char* >( /*liqglo.liqglo_*/currentJob.imageName.asChar() ),
-						const_cast< char* >( /*liqglo.liqglo_*/currentJob.format.asChar() ),
-						(RtToken)/*liqglo.liqglo_*/currentJob.imageMode.asChar(),
-						"int aggregate", &aggregate,
-						RI_NULL );
-				}
-			}//if( !liqglo.liqglo_currentJob.isMinMaxShadow )
-			else
-			{
-				liqRIBMsg("Display 5");
-				RiArchiveRecord( RI_COMMENT, "Display Driver:" );
-				RtInt minmax = 1;
-				RiDisplay( const_cast< char* >( (/*liqglo.liqglo_*/currentJob.imageName+(int)liqglo.liqglo_lframe).asChar() ),//const_cast< char* >( parseString(liqglo_currentJob.imageName).asChar() ),
-					const_cast< char* >(/*liqglo.liqglo_*/currentJob.format.asChar()),
-					(RtToken)/*liqglo.liqglo_*/currentJob.imageMode.asChar(),
-					"minmax", &minmax,
-					RI_NULL );
-			}
+			tShadowRibWriterMgr::framePrologue_display(currentJob);
 		}//if( liqglo.liqglo_currentJob.isShadow )
 		else
 		{
-			// Smooth Shading
-			RiShadingInterpolation( "smooth" );
-			// Quantization
-			// overriden to floats when in rendering to Maya's renderView
-			if( !liqglo.m_renderView && quantValue != 0 )
-			{
-				int whiteValue = (int) pow( 2.0, quantValue ) - 1;
-				RiQuantize( RI_RGBA, whiteValue, 0, whiteValue, 0.5 );
-			}
-			else
-			{
-				RiQuantize( RI_RGBA, 0, 0, 0, 0 );
-			}
-			if( m_rgain != 1.0 || m_rgamma != 1.0 )
-			{
-				RiExposure( m_rgain, m_rgamma );
-			}
-
-			LIQDEBUGPRINTF( "-> Setting Display Options\n" );
-			if( ( m_cropX1 != 0.0 ) || ( m_cropY1 != 0.0 ) || ( m_cropX2 != 1.0 ) || ( m_cropY2 != 1.0 ) ) 
-			{
-				// philippe : handle the rotated camera case
-				if( liqglo_rotateCamera == true ) 
-					RiCropWindow( m_cropY2, m_cropY1, 1 - m_cropX1, 1 - m_cropX2 );
-				else 
-					RiCropWindow( m_cropX1, m_cropX2, m_cropY1, m_cropY2 );
-			}
-			// display channels
-			if( liqglo.liquidRenderer.supports_DISPLAY_CHANNELS ) 
-			{
-				RiArchiveRecord( RI_COMMENT, "Display Channels:" );
-				// philippe -> to do : move this to higher scope ?
-				MStringArray channeltype;
-				channeltype.append( "float" );
-				channeltype.append( "color" );
-				channeltype.append( "point" );
-				channeltype.append( "normal" );
-				channeltype.append( "vector" );
-
-				vector<structChannel>::iterator m_channels_iterator;
-				m_channels_iterator = m_channels.begin();
-
-				while ( m_channels_iterator != m_channels.end() ) 
-				{
-					int       numTokens = 0;
-					RtToken   tokens[5];
-					RtPointer values[5];
-
-					MString channel;
-					char* filter;
-					int quantize[4];
-					float filterwidth[2];
-					float dither;
-
-					// #if defined( GENERIC_RIBLIB )          
-					MString quantize_str;
-					MString dither_str;
-					MString filter_str;
-					// #endif
-					channel = channeltype[m_channels_iterator->type];
-					char theArraySize[8];
-					sprintf( theArraySize, "%d", m_channels_iterator->arraySize );
-					if( m_channels_iterator->arraySize > 0 ) 
-						channel += "[" + (MString)theArraySize + "]";
-					channel += " " + m_channels_iterator->name ;
-
-					if( m_channels_iterator->quantize ) 
-					{
-						int max = ( int )pow( 2., m_channels_iterator->bitDepth ) - 1;
-						dither = m_channels_iterator->dither;
-						quantize[0] = quantize[2] = 0;
-						quantize[1] = quantize[3] = max;
-						tokens[ numTokens ] = "int[4] quantize";
-						values[ numTokens ] = (RtPointer)quantize;
-						numTokens++;
-#if !defined( GENERIC_RIBLIB )               
-					}
-#else
-						MString maxStr, dStr;
-						maxStr.set( max );
-						quantize_str = "\"int[4] quantize\" [ 0 " + maxStr + " 0 " + maxStr + " ]";
-
-						dStr.set( dither, 4 );
-						dither_str = "\"float dither\" ["+ dStr +"]";
-					}
-					else
-					{
-						quantize_str = "\"int[4] quantize\" [ 0 0 0 0 ]"; 
-						dither_str.clear();
-					}
-#endif
-
-					if( m_channels_iterator->filter ) 
-					{
-						MString pixFilter( liqglo.liquidRenderer.pixelFilterNames[ m_channels_iterator->pixelFilter ] );
-						filter = ( char* )pixFilter.asChar();
-
-						liquidMessage2(messageInfo, ">>  m_channels_iterator->pixelFilter = %s\n", liqglo.liquidRenderer.pixelFilterNames[ m_channels_iterator->pixelFilter ].asChar() );
-						liquidMessage2(messageInfo, ">>  pixFilter.asChar() = %s\n", pixFilter.asChar() );
-
-						tokens[ numTokens ] = "string filter";
-						values[ numTokens ] = ( RtPointer )&filter;
-						numTokens++;
-
-						filterwidth[0] = m_channels_iterator->pixelFilterX;
-						filterwidth[1] = m_channels_iterator->pixelFilterY;
-						tokens[ numTokens ] = "float filterwidth[2]";
-						values[ numTokens ] = ( RtPointer )filterwidth;
-						numTokens++;
-#if !defined( GENERIC_RIBLIB )               
-					}
-#else
-						MString pixFilterX, pixFilterY;
-						pixFilterX.set( filterwidth[0], 4 );
-						pixFilterY.set( filterwidth[1], 4 );
-						filter_str = "\"string filter\" [\"" + pixFilter +"\"] \"float filterwidth[2]\" [" + pixFilterX + " " + pixFilterY +"]";
-					} 
-					else
-						filter_str.clear();
-#endif
-
-#if defined( DELIGHT )  || defined( PRMAN ) || defined( PIXIE )
-					//if( liquidRenderer.renderName == MString("PRMan") )
-					RiDisplayChannelV( ( RtToken )channel.asChar(), numTokens, tokens, values );
-#else
-					// || defined( GENERIC_RIBLIB )
-
-					RiArchiveRecord( RI_VERBATIM, "DisplayChannel \"%s\" %s %s %s", const_cast< char* >( channel.asChar() ),  quantize_str.asChar(), dither_str.asChar(), filter_str.asChar() );
-
-#endif
-					m_channels_iterator++;
-				}//while ( m_channels_iterator != m_channels.end() ) 
-			}//if( liqglo.liquidRenderer.supports_DISPLAY_CHANNELS ) 
-			// output display drivers
-			RiArchiveRecord( RI_COMMENT, "Display Drivers:" );
-			liqRIBMsg("Display 6");
-
-			vector<structDisplay>::iterator m_displays_iterator;
-			m_displays_iterator = m_displays.begin();
-
-			MString parameterString;
-			MString imageName;
-			MString imageType;
-			MString imageMode;
-			MString quantizer;
-			MString dither;
-			MString filter;
-			MStringArray paramType;
-			paramType.append( "string " );
-			paramType.append( "float " );
-			paramType.append( "int " );
-
-			while ( m_displays_iterator != m_displays.end() ) 
-			{
-				// check if additionnal displays are enabled
-				// if not, call it off after the 1st iteration.
-				if( m_ignoreAOVDisplays && m_displays_iterator > m_displays.begin() ) 
-					break;
-
-				// This is the override for the primary DD
-				// when you render to maya's renderview.
-				if( m_displays_iterator == m_displays.begin() && liqglo.m_renderView ) 
-				{
-					MString imageName( m_pixDir );
-					imageName += parseString( liqglo.liqglo_DDimageName[ 0 ], false );
-					//imageName = liquidGetRelativePath( liqglo_relativeFileNames, imageName, liqglo_projectDir );
-
-					MString formatType = "liqmaya";
-					MString imageMode = "rgba";
-
-					// char tmp[20];
-					// sprintf( tmp, "%i", m_renderViewPort);
-					// MString port = ( char* )tmp;
-					MString port;
-					port.set( m_renderViewPort );
-
-					MString host = "localhost";
-					if( !m_renderViewLocal ) 
-						MGlobal::executeCommand( "strip(system(\"echo $HOST\"));", host );
-
-					liqRIBMsg("Display 7");
-					RiArchiveRecord( RI_COMMENT, "Render To Maya renderView :" );
-					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" \"int merge\" [0] \"int mayaDisplayPort\" [%s] \"string host\" [\"%s\"]\n", const_cast< char* >( imageName.asChar() ), formatType.asChar(), imageMode.asChar(), port.asChar(), host.asChar() );
-
-					// in this case, override the launch render settings
-					if( launchRender == false ) 
-						launchRender = true;
-				} 
-				else 
-				{
-					// check if display is enabled
-					if( !(*m_displays_iterator).enabled ) 
-					{
-						m_displays_iterator++;
-						continue;
-					}
-					// get display name
-					// defaults to scenename.0001.tif if left empty
-					imageName = (*m_displays_iterator).name;
-					if( imageName == "" ) 
-						imageName = liqglo.liqglo_sceneName + ".#." + outExt;
-					imageName = m_pixDir + parseString( imageName, false );
-					// we test for an absolute path before converting from rel to abs path in case the picture dir was overriden through the command line.
-					//if( m_pixDir.index( '/' ) != 0 ) imageName = liquidGetRelativePath( liqglo_relativeFileNames, imageName, liqglo_projectDir );
-					if( m_displays_iterator > m_displays.begin() ) 
-						imageName = "+" + imageName;
-					// get display type ( tiff, openexr, etc )
-					imageType = (*m_displays_iterator).type;
-					if( imageType == "" ) 
-						imageType = "framebuffer";
-					// get display mode ( rgb, z or defined display channel )
-					imageMode = (*m_displays_iterator).mode;
-					if( imageMode == "" ) 
-						imageMode = "rgba";
-					// get quantization params
-					if( (*m_displays_iterator).doQuantize && m_displays_iterator > m_displays.begin() ) 
-					{
-						if( (*m_displays_iterator).bitDepth != 0 ) 
-						{
-							MString maxStr;
-							int max = (int) pow( 2.0, (*m_displays_iterator).bitDepth ) - 1;
-
-							maxStr.set( (double)max );
-							quantizer = "\"float quantize[4]\" [ 0 " + maxStr + " 0 " + maxStr + " ]";
-
-						} 
-						else 
-							quantizer = "\"float quantize[4]\" [ 0 0 0 0 ]";
-						// char tmp[20];
-						//sprintf( tmp, "%.1f", (*m_displays_iterator).dither );
-						//  MString dStr = ( char* )tmp;
-						MString dStr; 
-						dStr.set( (*m_displays_iterator).dither, 3 );
-						dither = "\"float dither\" ["+ dStr +"]";
-
-					} 
-					else 
-					{
-						quantizer.clear();
-						dither.clear();
-					}
-
-					// get filter params
-					if( (*m_displays_iterator).doFilter && m_displays_iterator > m_displays.begin() )
-					{
-
-						MString pixFilter( liqglo.liquidRenderer.pixelFilterNames[(*m_displays_iterator).filter] );
-
-						MString pixFilterX;  
-						MString pixFilterY;
-						pixFilterX.set( (*m_displays_iterator).filterX, 4 );
-						pixFilterY.set( (*m_displays_iterator).filterY, 4 );
-
-						filter = "\"string filter\" [\"" + pixFilter +"\"] \"float filterwidth[2]\" [" + pixFilterX + " " + pixFilterY +"]";
-					} 
-					else 
-						filter.clear();
-
-					// display driver specific arguments
-					parameterString.clear();
-					for ( int p = 0; p < (*m_displays_iterator).xtraParams.num; p++ ) 
-					{
-						parameterString += "\"";
-						parameterString += paramType[ (*m_displays_iterator).xtraParams.type[p] ];
-						parameterString += (*m_displays_iterator).xtraParams.names[p].asChar();
-						parameterString += "\" [";
-						parameterString += ((*m_displays_iterator).xtraParams.type[p] > 0)? "":"\"";
-						parameterString += (*m_displays_iterator).xtraParams.data[p].asChar();
-						parameterString += ((*m_displays_iterator).xtraParams.type[p] > 0)? "] ":"\"] ";
-					}
-
-					liqRIBMsg("Display 8");
-					// output call
-					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" %s %s %s %s\n", const_cast< char* >( imageName.asChar() ), 
-						imageType.asChar(), 
-						imageMode.asChar(), 
-						( quantizer.length() )? quantizer.asChar() : "", 
-						( dither.length() )? dither.asChar() : "", 
-						( filter.length() )? filter.asChar() : "", 
-						( parameterString.length() )? parameterString.asChar() : "" );
-				}
-				m_displays_iterator++;
-			}//while ( m_displays_iterator != m_displays.end() )
+			tHeroRibWriterMgr::framePrologue_display(currentJob);
 		}
 
-		LIQDEBUGPRINTF( "-> Setting Resolution\n" );
-		// philippe : Rotated Camera Case
-		if( /*liqglo.liqglo_*/currentJob.isShadow == false && liqglo_rotateCamera  == true ) 
-			RiFormat( /*liqglo.liqglo_*/currentJob.height, /*liqglo.liqglo_*/currentJob.width, /*liqglo.liqglo_*/currentJob.aspectRatio );
-		else 
-			RiFormat( /*liqglo.liqglo_*/currentJob.width, /*liqglo.liqglo_*/currentJob.height, /*liqglo.liqglo_*/currentJob.aspectRatio );
+		tRibCameraMgr::framePrologue_camera(lframe, currentJob);
 
-		if( /*liqglo.liqglo_*/currentJob.camera[0].isOrtho )
-		{
-			RtFloat frameWidth, frameHeight;
-			// the whole frame width has to be scaled according to the UI Unit
-			frameWidth  = /*liqglo.liqglo_*/currentJob.camera[0].orthoWidth  * 0.5 ;
-			frameHeight = /*liqglo.liqglo_*/currentJob.camera[0].orthoHeight * 0.5 ;
-			RiProjection( "orthographic", RI_NULL );
-
-			// if we are describing a shadow map camera,
-			// we need to set the screenwindow to the default,
-			// as shadow maps are always square.
-			if( /*liqglo.liqglo_*/currentJob.isShadow == true )
-				RiScreenWindow( -frameWidth, frameWidth, -frameHeight, frameHeight );
-			else
-				RiScreenWindow( -frameWidth, frameWidth, -frameHeight, frameHeight );
-		} 
-		else 
-		{
-			RtFloat fieldOfView = /*liqglo.liqglo_*/currentJob.camera[0].hFOV * 180.0 / M_PI ;
-			if( /*liqglo.liqglo_*/currentJob.isShadow && /*liqglo.liqglo_*/currentJob.isPoint ) 
-				fieldOfView = /*liqglo.liqglo_*/currentJob.camera[0].hFOV;
-
-			RiProjection( "perspective", RI_FOV, &fieldOfView, RI_NULL );
-
-			// if we are describing a shadow map camera,
-			// we need to set the screenwindow to the default,
-			// as shadow maps are always square.
-			if( /*liqglo.liqglo_*/currentJob.isShadow == false )
-			{
-				double ratio = (double)/*liqglo.liqglo_*/currentJob.width / (double)/*liqglo.liqglo_*/currentJob.height;
-				double left, right, bottom, top;
-				if( ratio <= 0 ) 
-				{
-					left    = -1 + currentJob.camera[0].horizontalFilmOffset;
-					right   =  1 + currentJob.camera[0].horizontalFilmOffset;
-					bottom  = -1 / ratio + currentJob.camera[0].verticalFilmOffset;
-					top     =  1 / ratio + currentJob.camera[0].verticalFilmOffset;
-				} 
-				else 
-				{
-					left    = -ratio + currentJob.camera[0].horizontalFilmOffset;
-					right   =  ratio + currentJob.camera[0].horizontalFilmOffset;
-					bottom  = -1 + currentJob.camera[0].verticalFilmOffset;
-					top     =  1 + currentJob.camera[0].verticalFilmOffset;
-				}
-				RiScreenWindow( left, right, bottom, top );
-			} else 
-				RiScreenWindow( -1.0, 1.0, -1.0, 1.0 );
-		}
-
-		RiClipping( currentJob.camera[0].neardb, currentJob.camera[0].fardb );
-		if( doDof && !currentJob.isShadow ) 
-			RiDepthOfField( currentJob.camera[0].fStop, currentJob.camera[0].focalLength, currentJob.camera[0].focalDistance );
-
-		// Set up for camera motion blur
-		/* doCameraMotion = liqglo_currentJob.camera[0].motionBlur && liqglo_doMotion; */
-		float frameOffset = 0;
-		if( doCameraMotion || liqglo.liqglo_doMotion || liqglo.liqglo_doDef ) 
-		{
-			switch( shutterConfig ) 
-			{
-			case OPEN_ON_FRAME:
-			default:
-				if(liqglo.liqglo_relativeMotion)
-					RiShutter( 0, currentJob.camera[0].shutter );
-				else
-					RiShutter( lframe, lframe + currentJob.camera[0].shutter );
-				frameOffset = lframe;
-				break;
-			case CENTER_ON_FRAME:
-				if(liqglo.liqglo_relativeMotion)
-					RiShutter(  - ( currentJob.camera[0].shutter * 0.5 ),  ( currentJob.camera[0].shutter * 0.5 ) );
-				else
-					RiShutter( ( lframe - ( currentJob.camera[0].shutter * 0.5 ) ), ( lframe + ( currentJob.camera[0].shutter * 0.5 ) ) );
-				frameOffset = lframe - ( currentJob.camera[0].shutter * 0.5 );
-				break;
-			case CENTER_BETWEEN_FRAMES:
-				if(liqglo.liqglo_relativeMotion)
-					RiShutter( + ( 0.5 * ( 1 - currentJob.camera[0].shutter ) ), + currentJob.camera[0].shutter + ( 0.5 * ( 1 - currentJob.camera[0].shutter ) ) );
-				else
-					RiShutter( lframe + ( 0.5 * ( 1 - currentJob.camera[0].shutter ) ), lframe + currentJob.camera[0].shutter + ( 0.5 * ( 1 -currentJob.camera[0].shutter ) ) );
-				frameOffset = lframe + ( 0.5 * ( 1 - currentJob.camera[0].shutter ) );
-				break;
-			case CLOSE_ON_NEXT_FRAME:
-				if(liqglo.liqglo_relativeMotion)
-					RiShutter( + ( 1 - currentJob.camera[0].shutter ),  1 );
-				else
-					RiShutter( lframe + ( 1 - currentJob.camera[0].shutter ), lframe + 1 );
-				frameOffset = lframe + ( 1 - currentJob.camera[0].shutter );
-				break;
-			}
-		} 
-		else 
-		{
-			if(liqglo.liqglo_relativeMotion)
-				RiShutter( 0, 0);
-			else
-				RiShutter( lframe, lframe );
-			frameOffset = lframe;
-		}
-		// relative motion
-		if(liqglo.liqglo_relativeMotion)    
-			RiOption( "shutter", "offset", &frameOffset, RI_NULL);
-
-#ifdef DELIGHT
-		RiOption( "shutter", "efficiency", &liqglo.liqglo_shutterEfficiency, RI_NULL );
-#endif
-		if( currentJob.gotJobOptions ) 
-			RiArchiveRecord( RI_COMMENT, "jobOptions: \n%s", currentJob.jobOptions.asChar() );
-
-		if( ( liqglo.liqglo_preRibBox.length() > 0 ) && !currentJob.isShadow ) 
-			for ( unsigned ii(0); ii < liqglo.liqglo_preRibBox.length(); ii++ ) 
-				RiArchiveRecord( RI_COMMENT, "Additional Rib:\n%s", liqglo.liqglo_preRibBox[ii].asChar() );
-
-		if( ( liqglo.liqglo_preReadArchive.length() > 0 ) && !currentJob.isShadow ) 
-			for ( unsigned ii(0); ii < liqglo.liqglo_preReadArchive.length(); ii++ ) 
-				RiArchiveRecord( RI_COMMENT, "Read Archive Data: \nReadArchive \"%s\"", liqglo.liqglo_preReadArchive[ii].asChar() );
-
-		if( ( liqglo.liqglo_preRibBoxShadow.length() > 0 ) && !currentJob.isShadow ) 
-			for ( unsigned ii(0); ii < liqglo.liqglo_preRibBoxShadow.length(); ii++ ) 
-				RiArchiveRecord( RI_COMMENT, "Additional Rib:\n%s", liqglo.liqglo_preRibBoxShadow[ii].asChar() );
-
-		if( ( liqglo.liqglo_preReadArchiveShadow.length() > 0 ) && currentJob.isShadow ) 
-			for ( unsigned ii(0); ii < liqglo.liqglo_preReadArchiveShadow.length(); ii++ ) 
-				RiArchiveRecord( RI_COMMENT, "Read Archive Data: \nReadArchive \"%s\"", liqglo.liqglo_preReadArchiveShadow[ii].asChar() );
-
-		// if we motion-blur the cam, open the motion block
-		//
-		if( doCameraMotion && ( !currentJob.isShadow || currentJob.deepShadows) ) 
-			if(liqglo.liqglo_relativeMotion)
-				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
-			else
-				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
-
-		// write the camera transform
-		//
-		RtMatrix cameraMatrix;
-		currentJob.camera[0].mat.get( cameraMatrix );
-		RiTransform( cameraMatrix );
-
-		// if we motion-blur the cam, write the subsequent motion samples and close the motion block
-		//
-		if( doCameraMotion && ( !currentJob.isShadow || currentJob.deepShadows ) ) 
-		{
-			int mm = 1;
-			while ( mm < liqglo.liqglo_motionSamples ) 
-			{
-				currentJob.camera[mm].mat.get( cameraMatrix );
-				RiTransform( cameraMatrix );
-				++mm;
-			}
-			RiMotionEnd();
-		}
-
-	}
 	return MS::kSuccess;
 }
 //
@@ -3059,7 +2532,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 		nPlug.setValue( lastRibName );
 #endif
 		LIQDEBUGPRINTF( "-> spawning command.\n" );
-		if( launchRender ) 
+		if( liqglo.launchRender ) 
 		{
 			{
 				// launch renders directly
@@ -3475,7 +2948,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 		nPlug.setValue( lastRibName );
 #endif
 		LIQDEBUGPRINTF( "-> spawning command.\n" );
-		if( launchRender ) 
+		if( liqglo.launchRender ) 
 		{
 			if( true/*useRenderScript*/ ) 
 			{

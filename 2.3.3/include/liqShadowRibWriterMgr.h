@@ -25,6 +25,8 @@ public:
 		RtFloat m_rFilterX, RtFloat m_rFilterY);
 	static void ribPrologue_pass(RtString pass);
 
+	static void framePrologue_display(const structJob &currentJob);
+
 protected:
 	tShadowRibWriterMgr(const tShadowRibWriterMgr&);
 	tShadowRibWriterMgr& operator=(const tShadowRibWriterMgr&);

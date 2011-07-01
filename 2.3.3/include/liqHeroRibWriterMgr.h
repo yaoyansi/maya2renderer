@@ -28,6 +28,8 @@ public:
 	static void ribPrologue_hider(HiderType hidertype);
 	static void ribPrologue_pass(RtString pass);
 
+	static void framePrologue_display(const structJob &currentJob);
+
 protected:
 	tHeroRibWriterMgr(const tHeroRibWriterMgr&);
 	tHeroRibWriterMgr& operator=(const tHeroRibWriterMgr&);

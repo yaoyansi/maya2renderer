@@ -185,3 +185,97 @@ void tShadowRibWriterMgr::ribPrologue_pass(RtString pass)
 {
 	RiOption( "user", "string pass", ( RtPointer )&pass, RI_NULL );	
 }
+//
+void tShadowRibWriterMgr::framePrologue_display(const structJob &currentJob)
+{
+			if( !/*liqglo.liqglo_*/currentJob.deepShadows || /*liqglo.liqglo_*/currentJob.shadowPixelSamples == 1)
+			{
+				if( liqglo.liquidRenderer.renderName == MString("Pixie") )
+				{
+					RtFloat zero = 0;
+					RiHider( "hidden", "jitter", &zero, RI_NULL );
+				}
+				else
+				{
+					RtInt zero = 0;
+					RiHider( "hidden", "int jitter", &zero, RI_NULL );
+				}
+			}
+			if( /*liqglo.liqglo_*/currentJob.isMidPointShadow && !/*liqglo.liqglo_*/currentJob.deepShadows )
+			{
+				RtString midPoint = "midpoint";
+				RtFloat midRatio = /*liqglo.liqglo_*/currentJob.midPointRatio;
+
+				RiHider( "hidden", "depthfilter", &midPoint, RI_NULL );
+
+				if ( /*liqglo.liqglo_*/currentJob.midPointRatio != 0 )
+					RiHider( "hidden", "midpointratio", &midRatio, RI_NULL ); // Output to rib jami
+			}
+			//-----------------------------------------------------
+			LIQDEBUGPRINTF( "-> Setting Display Options\n" );
+			//MString relativeShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, liqglo_currentJob.imageName, liqglo_projectDir ) ) );
+			if( !/*liqglo.liqglo_*/currentJob.isMinMaxShadow )
+			{
+				if( /*liqglo.liqglo_*/currentJob.deepShadows )
+				{
+					// RiDeclare( "volumeinterpretation", "string" );
+					RtString viContinuous = "continuous";
+					RtString viDiscrete   = "discrete";
+
+					if( liqglo.liquidRenderer.renderName == MString("3Delight") )
+					{
+						liqRIBMsg("Display 1");
+						RiDisplay( const_cast< char* >( /*liqglo.liqglo_*/currentJob.imageName.asChar()),
+							const_cast< char* >( /*liqglo.liqglo_*/currentJob.format.asChar() ),
+							(RtToken)/*liqglo.liqglo_*/currentJob.imageMode.asChar(),
+							"string volumeinterpretation",
+							( /*liqglo.liqglo_*/currentJob.shadowVolumeInterpretation == 1 ? &viContinuous : &viDiscrete ),
+							RI_NULL );
+					}
+					else
+					{
+						// Deep shadows cannot be the primary output driver in PRMan & co.
+						// We need to create a null output zfile first, and use the deep
+						// shadows as a secondary output.
+						//
+						if( liqglo.liquidRenderer.renderName != MString("Pixie") )
+						{
+							liqRIBMsg("Display 2");
+							RiDisplay( "null", "null", "z", RI_NULL );
+						}
+
+						MString deepFileImageName = "+" + /*liqglo.liqglo_*/currentJob.imageName;
+
+						liqRIBMsg("Display 3");
+						RiDisplay( const_cast< char* >( deepFileImageName.asChar() ),
+							const_cast< char* >( /*liqglo.liqglo_*/currentJob.format.asChar() ),
+							(RtToken)/*liqglo.liqglo_*/currentJob.imageMode.asChar(),
+							"string volumeinterpretation",
+							( /*liqglo.liqglo_*/currentJob.shadowVolumeInterpretation == 1 ? &viContinuous : &viDiscrete ),
+							RI_NULL );
+					}
+				}//if( liqglo.liqglo_currentJob.deepShadows )
+				else
+				{
+					liqRIBMsg("Display 4");
+					RtInt aggregate( /*liqglo.liqglo_*/currentJob.shadowAggregation );
+					RiDisplay( const_cast< char* >( /*liqglo.liqglo_*/currentJob.imageName.asChar() ),
+						const_cast< char* >( /*liqglo.liqglo_*/currentJob.format.asChar() ),
+						(RtToken)/*liqglo.liqglo_*/currentJob.imageMode.asChar(),
+						"int aggregate", &aggregate,
+						RI_NULL );
+				}
+			}//if( !liqglo.liqglo_currentJob.isMinMaxShadow )
+			else
+			{
+				liqRIBMsg("Display 5");
+				RiArchiveRecord( RI_COMMENT, "Display Driver:" );
+				RtInt minmax = 1;
+				RiDisplay( const_cast< char* >( (/*liqglo.liqglo_*/currentJob.imageName+(int)liqglo.liqglo_lframe).asChar() ),//const_cast< char* >( parseString(liqglo_currentJob.imageName).asChar() ),
+					const_cast< char* >(/*liqglo.liqglo_*/currentJob.format.asChar()),
+					(RtToken)/*liqglo.liqglo_*/currentJob.imageMode.asChar(),
+					"minmax", &minmax,
+					RI_NULL );
+			}
+}
+//

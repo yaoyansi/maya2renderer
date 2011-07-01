@@ -222,8 +222,7 @@ liqRibTranslator::liqRibTranslator()
 	m_showProgress = false;
 	liqglo.m_deferredBlockSize = 1;
 	liqglo.m_deferredGen = false;
-	m_rgain = 1.0;
-	m_rgamma = 1.0;
+
 	m_outputHeroPass = true;
 	m_useNewTranslator = true;
 	m_outputShadowPass = false;
@@ -243,13 +242,13 @@ liqRibTranslator::liqRibTranslator()
 	cleanRenderScript = false;
 	liqglo.liqglo_doBinary = false;
 	liqglo.liqglo_doCompression = false;
-	doDof = false;
-	launchRender = false;
+	initCameraParameters();
+
+
 	liqglo.liqglo_doMotion = false;          // matrix motion blocks
 	liqglo.liqglo_doDef = false;             // geometry motion blocks
 	liqglo.liqglo_relativeMotion = false;
-	doCameraMotion = false;           // camera motion blocks
-	liqglo_rotateCamera = false;      // rotate the camera 90 degrees around Z axis
+
 	liqglo.liqglo_doExtensionPadding = false;       // pad the frame number in the rib file names
 	liqglo.liqglo_doShadows = true;          // render shadows
 	liqglo.liqglo_shapeOnlyInShadowNames = false;
@@ -265,12 +264,12 @@ liqRibTranslator::liqRibTranslator()
 
 	m_animation = false;
 	m_useFrameExt = true;  // Use frame extensions
-	outExt = "tif";
+
 	liqglo.liqglo_motionSamples = 2;
 	liqglo.liqglo_FPS = 24.0;
 	width = 360;
 	height = 243;
-	aspectRatio = 1.0;
+
 	liqglo.liqglo_outPadding = 0;
 	ignoreFilmGate = true;
 	m_lazyCompute = false;
@@ -290,13 +289,13 @@ liqRibTranslator::liqRibTranslator()
 
 	liqglo.liqglo_shutterTime = 0.5;
 	liqglo.liqglo_shutterEfficiency = 1.0;
-	shutterConfig = OPEN_ON_FRAME;
+
 	m_blurTime = 1.0;
 	liqglo.fullShadowRib = false;
 	baseShadowName = "";
-	quantValue = 8;
+
 	liqglo.liqglo_projectDir = m_systemTempDirectory;
-	m_pixDir = "rmanpix/";
+
 	m_tmpDir = "rmantmp/";
 	liqglo.liqglo_preReadArchive.clear();
 	liqglo.liqglo_preRibBox.clear();
@@ -350,30 +349,20 @@ liqRibTranslator::liqRibTranslator()
 	m_renderCommand = "render";
 #endif
 #endif
+	
+	 m_minCPU =  m_maxCPU = 1;
 
 	m_ribgenCommand = "liquid";
 	createOutputDirectories = true;
 	liqglo.liqglo_expandShaderArrays = false;
 
-	// display channels defaults
-	m_channels.clear();
 
-	// Display Driver Defaults
-	m_displays.clear();
-
-
-	m_renderViewCrop    = false;
-	m_renderViewLocal   = true;
-	m_renderViewPort    = 6667;
-	m_renderViewTimeOut = 10;
 
 	initStatisticsParameters();
 
 	initHinderParameters();
 
-	m_minCPU = m_maxCPU = 1;
-	m_cropX1 = m_cropY1 = 0.0;
-	m_cropX2 = m_cropY2 = 1.0;
+
 	liqglo.liqglo_isShadowPass = false;
 
 
@@ -570,12 +559,12 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		if((arg == "-lr") || (arg == "-launchRender")) 
 		{
 			LIQCHECKSTATUS(status, "error in -launchRender parameter");
-			launchRender = true;
+			liqglo.launchRender = true;
 		} 
 		else if((arg == "-nolr") || (arg == "-noLaunchRender")) 
 		{
 			LIQCHECKSTATUS(status, "error in -noLaunchRender parameter");
-			launchRender = false;
+			liqglo.launchRender = false;
 		} 
 		else if((arg == "-GL") || (arg == "-useGlobals")) 
 		{
@@ -609,7 +598,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		else if((arg == "-dof") || (arg == "-dofOn")) 
 		{
 			LIQCHECKSTATUS(status, "error in -dofOn parameter");
-			doDof = true;
+			liqglo.doDof = true;
 		} 
 		else if((arg == "-bin") || (arg == "-doBinary")) 
 		{
@@ -759,7 +748,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		else if((arg == "-rcam") || (arg == "-rotateCamera")) 
 		{
 			LIQCHECKSTATUS(status, "error in -rotateCamera parameter");
-			liqglo_rotateCamera = true;
+			liqglo.liqglo_rotateCamera = true;
 		} 
 		else if((arg == "-s") || (arg == "-samples")) 
 		{
@@ -840,7 +829,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		{
 			LIQCHECKSTATUS(status, "error in -picdir parameter");  i++;
 			MString parsingString = args.asString( i, &status );
-			m_pixDir = parseString( parsingString, false );
+			liqglo.m_pixDir = parseString( parsingString, false );
 			LIQCHECKSTATUS(status, "error in -picdir parameter");
 		} 
 		else if((arg == "-pec") || (arg == "-preCommand")) 
@@ -942,7 +931,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		{
 			LIQCHECKSTATUS(status, "error in -aspect parameter");  i++;
 			argValue = args.asString( i, &status );
-			aspectRatio = argValue.asDouble();
+			liqglo.aspectRatio = argValue.asDouble();
 			LIQCHECKSTATUS(status, "error in -aspect parameter");
 		} 
 		else if((arg == "-x") || (arg == "-width")) 
@@ -989,31 +978,31 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		else if((arg == "-rvl") || (arg == "-renderViewLocal")) 
 		{
 			LIQCHECKSTATUS(status, "error in -renderViewLocal parameter");
-			m_renderViewLocal = true;
+			liqglo.m_renderViewLocal = true;
 		} 
 		else if((arg == "-rvp") || (arg == "-renderViewPort")) 
 		{
 			LIQCHECKSTATUS(status, "error in -renderViewPort parameter");  i++;
 			argValue = args.asString( i, &status );
-			m_renderViewPort = argValue.asInt();
+			liqglo.m_renderViewPort = argValue.asInt();
 		} 
 		else if((arg == "-cw") || (arg == "-cropWindow")) 
 		{
 			LIQCHECKSTATUS(status, "error in -cropWindow parameter");  i++;
 			argValue = args.asString( i, &status );
-			m_cropX1 = argValue.asDouble();
+			liqglo.m_cropX1 = argValue.asDouble();
 			LIQCHECKSTATUS(status, "error in -cropWindow parameter 1");  i++;
 			argValue = args.asString( i, &status );
-			m_cropX2 = argValue.asDouble();
+			liqglo.m_cropX2 = argValue.asDouble();
 			LIQCHECKSTATUS(status, "error in -cropWindow parameter 2");  i++;
 			argValue = args.asString( i, &status );
-			m_cropY1 = argValue.asDouble();
+			liqglo.m_cropY1 = argValue.asDouble();
 			LIQCHECKSTATUS(status, "error in -cropWindow parameter 3");  i++;
 			argValue = args.asString( i, &status );
-			m_cropY2 = argValue.asDouble();
+			liqglo.m_cropY2 = argValue.asDouble();
 			LIQCHECKSTATUS(status, "error in -cropWindow parameter 4");
 			if( liqglo.m_renderView ) 
-				m_renderViewCrop = true;
+				liqglo.m_renderViewCrop = true;
 		} 
 		else if((arg == "-nsfs") || (arg == "-noSingleFrameShadows")) 
 		{
@@ -1056,12 +1045,12 @@ void liqRibTranslator::liquidReadGlobals()
 	{
 		if( liqglo.liquidRenderer.supports_DISPLAY_CHANNELS ) 
 		{
-			m_channels.clear();
+			liqglo.m_channels.clear();
 			unsigned int nChannels = liquidGetPlugNumElements( rGlobalNode, "channelName", &gStatus );
 
 			for ( unsigned i( 0 ); i < nChannels; i++ ) 
 			{
-				structChannel theChannel;
+				StructChannel theChannel;
 				gStatus.clear();
 				gPlug = rGlobalNode.findPlug( "channelName", &gStatus );
 				if( gStatus == MS::kSuccess ) 
@@ -1202,19 +1191,19 @@ void liqRibTranslator::liquidReadGlobals()
 						theChannel.pixelFilterY = val;
 					}
 				}
-				m_channels.push_back( theChannel );
+				liqglo.m_channels.push_back( theChannel );
 			}
 		}
 	}
 	// Display Driver Globals - Read 'em and store 'em !
-	liquidGetPlugValue( rGlobalNode, "ignoreAOVDisplays", m_ignoreAOVDisplays, gStatus );
+	liquidGetPlugValue( rGlobalNode, "ignoreAOVDisplays", liqglo.m_ignoreAOVDisplays, gStatus );
 	{
-		m_displays.clear();
+		liqglo.m_displays.clear();
 		unsigned int nDisplays = liquidGetPlugNumElements( rGlobalNode, "ddImageName", &gStatus );
 		//cout <<"  DD : we have "<<nDisplays<<" displays..."<<endl;
 		for ( unsigned int i(0); i<nDisplays; i++ ) 
 		{
-			structDisplay theDisplay;
+			StructDisplay theDisplay;
 			gStatus.clear();
 			gPlug = rGlobalNode.findPlug( "ddImageName", &gStatus );
 			if( gStatus == MS::kSuccess ) 
@@ -1452,15 +1441,15 @@ void liqRibTranslator::liquidReadGlobals()
 			{ // copy filter params from display 0
 				liqglo.m_rFilterX = theDisplay.filterX;
 				liqglo.m_rFilterY = theDisplay.filterY;
-				quantValue = theDisplay.bitDepth;
+				liqglo.quantValue = theDisplay.bitDepth;
 			}
-			structDDParam xtraDDParams;
+			StructDDParam xtraDDParams;
 			xtraDDParams.num   = xtraParamsNames.length();
 			xtraDDParams.names = xtraParamsNames;
 			xtraDDParams.data  = xtraParamsDatas;
 			xtraDDParams.type  = xtraParamsTypes;
 			theDisplay.xtraParams = xtraDDParams;
-			m_displays.push_back( theDisplay );
+			liqglo.m_displays.push_back( theDisplay );
 		}
 	}
 	liquidGetPlugValue( rGlobalNode, "shotName", liqglo.liqglo_shotName, gStatus ); // no substitution here
@@ -1483,14 +1472,14 @@ void liqRibTranslator::liquidReadGlobals()
 	liquidGetPlugValue( rGlobalNode, "postFrameCommand", m_postFrameCommand, gStatus );
 	liquidGetPlugValue( rGlobalNode, "preFrameCommand", m_preFrameCommand, gStatus );
 
-	liquidGetPlugValue( rGlobalNode, "launchRender", launchRender, gStatus );
+
 
 	if ( liquidGetPlugValue( rGlobalNode, "renderCamera", varVal, gStatus ) == MS::kSuccess ) 
 	{
 		liqglo.renderCamera = parseString( varVal );
 		liqglo.liqglo_renderCamera = liqglo.renderCamera;
 	}
-	liquidGetPlugValue( rGlobalNode, "rotateCamera", liqglo_rotateCamera, gStatus );
+	getCameraParameters(rGlobalNode);
 
 	if ( liquidGetPlugValue( rGlobalNode, "ribName", varVal, gStatus ) == MS::kSuccess ) 
 		liqglo.liqglo_sceneName = parseString( varVal );
@@ -1520,10 +1509,6 @@ void liqRibTranslator::liquidReadGlobals()
 	getHinderParameters(rGlobalNode);
 
 
-	liquidGetPlugValue( rGlobalNode, "cropX1", m_cropX1, gStatus );
-	liquidGetPlugValue( rGlobalNode, "cropX2", m_cropX2, gStatus );
-	liquidGetPlugValue( rGlobalNode, "cropY1", m_cropY1, gStatus );
-	liquidGetPlugValue( rGlobalNode, "cropY2", m_cropY2, gStatus );
 
 	// RAYTRACING OPTIONS:BEGIN
 	liquidGetPlugValue( rGlobalNode, "useRayTracing", liqglo.rt_useRayTracing, gStatus );
@@ -1606,20 +1591,18 @@ void liqRibTranslator::liquidReadGlobals()
 		if( gHeight > 0 ) 
 			height = gHeight;
 	}
-	liquidGetPlugValue( rGlobalNode, "pixelAspectRatio", aspectRatio, gStatus );
+
 
 	liquidGetPlugValue( rGlobalNode, "transformationBlur", liqglo.liqglo_doMotion, gStatus );
-	liquidGetPlugValue( rGlobalNode, "cameraBlur", doCameraMotion, gStatus );
+
 	liquidGetPlugValue( rGlobalNode, "deformationBlur", liqglo.liqglo_doDef, gStatus );
-	liquidGetPlugValue( rGlobalNode, "shutterConfig", var, gStatus );
-	if( gStatus == MS::kSuccess ) 
-		shutterConfig = ( enum shutterConfig ) var;
+
 	liquidGetPlugValue( rGlobalNode, "shutterEfficiency", liqglo.liqglo_shutterEfficiency, gStatus );
 	liquidGetPlugValue( rGlobalNode, "motionBlurSamples", liqglo.liqglo_motionSamples, gStatus );
 	if( liqglo.liqglo_motionSamples > LIQMAXMOTIONSAMPLES )
 		liqglo.liqglo_motionSamples = LIQMAXMOTIONSAMPLES;
 	liquidGetPlugValue( rGlobalNode, "relativeMotion", liqglo.liqglo_relativeMotion, gStatus );
-	liquidGetPlugValue( rGlobalNode, "depthOfField", doDof, gStatus );
+
 
 	getOtherParameters(rGlobalNode);	
 	getLimitsParameters(rGlobalNode);
@@ -1629,11 +1612,7 @@ void liqRibTranslator::liquidReadGlobals()
 	liquidGetPlugValue( rGlobalNode, "cleanTex", cleanTextures, gStatus );
 	liquidGetPlugValue( rGlobalNode, "cleanShad", cleanShadows, gStatus );
 	liquidGetPlugValue( rGlobalNode, "justRib", m_justRib, gStatus );
-	liquidGetPlugValue( rGlobalNode, "gain", m_rgain, gStatus );
-	liquidGetPlugValue( rGlobalNode, "gamma", m_rgamma, gStatus );
-	liquidGetPlugValue( rGlobalNode, "renderViewLocal", m_renderViewLocal, gStatus );
-	liquidGetPlugValue( rGlobalNode, "renderViewPort", m_renderViewPort, gStatus );
-	liquidGetPlugValue( rGlobalNode, "renderViewTimeOut", m_renderViewTimeOut, gStatus );
+
 
 	getStatisticsParameters(rGlobalNode);
 
@@ -1755,8 +1734,8 @@ bool liqRibTranslator::verifyOutputDirectories()
 	else 
 		liqglo.liqglo_textureDir = tmp_path;
 
-	LIQ_ADD_SLASH_IF_NEEDED( m_pixDir );
-	tmp_path = liquidSanitizePath( liquidGetRelativePath( liqglo.liqglo_relativeFileNames, m_pixDir, liqglo.liqglo_projectDir ) );
+	LIQ_ADD_SLASH_IF_NEEDED( liqglo.m_pixDir );
+	tmp_path = liquidSanitizePath( liquidGetRelativePath( liqglo.liqglo_relativeFileNames, liqglo.m_pixDir, liqglo.liqglo_projectDir ) );
 	if( !fileFullyAccessible( tmp_path ) ) 
 	{
 		if( createOutputDirectories ) 
@@ -1764,19 +1743,19 @@ bool liqRibTranslator::verifyOutputDirectories()
 			if( !makeFullPath( tmp_path.asChar(), mkdirMode ) ) 
 			{
 				DIR_CREATION_WARNING( "Picture", tmp_path.asChar() );
-				m_pixDir = m_systemTempDirectory;
+				liqglo.m_pixDir = m_systemTempDirectory;
 				problem = true;
 			}
 		} 
 		else 
 		{
 			DIR_MISSING_WARNING( "Picture", tmp_path.asChar() );
-			m_pixDir = m_systemTempDirectory;
+			liqglo.m_pixDir = m_systemTempDirectory;
 			problem = true;
 		}
 	} 
 	else 
-		m_pixDir = tmp_path;
+		liqglo.m_pixDir = tmp_path;
 
 	LIQ_ADD_SLASH_IF_NEEDED( m_tmpDir );
 	tmp_path = liquidSanitizePath( liquidGetRelativePath( liqglo.liqglo_relativeFileNames, m_tmpDir, liqglo.liqglo_projectDir ) );
@@ -1975,7 +1954,7 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 
 	case fgm_image:
 		debug = "fgm_image";
-		filename = m_pixDir;
+		filename = liqglo.m_pixDir;
 		filename += liqglo.liqglo_sceneName;
 		if( liqglo.liqglo_beautyRibHasCameraName )
 		{
@@ -1984,7 +1963,7 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 		}
 		if( m_animation || m_useFrameExt )
 			filename += LIQ_ANIM_EXT;
-		filename += "." + outExt;
+		filename += "." + liqglo.outExt;
 		break;
 
 	default:
@@ -2386,7 +2365,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 						for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ ) 
 						{
 							float subframe;
-							switch( shutterConfig ) 
+							switch( liqglo.shutterConfig ) 
 							{
 							case OPEN_ON_FRAME:
 							default:
@@ -2408,7 +2387,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 						//cout <<"about to scan... "<<endl;
 						// scan the scene
 						//
-						if( doCameraMotion || liqglo.liqglo_doMotion || liqglo.liqglo_doDef ) 
+						if( liqglo.doCameraMotion || liqglo.liqglo_doMotion || liqglo.liqglo_doDef ) 
 						{
 							for ( int msampleOn = 0; msampleOn < liqglo.liqglo_motionSamples; msampleOn++ ) 
 								scanScene( liqglo.liqglo_sampleTimes[ msampleOn ] , msampleOn );
@@ -2963,7 +2942,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 		nPlug = rGlobalNode.findPlug( "lastRibFile" );
 		nPlug.setValue( lastRibName );
 		LIQDEBUGPRINTF( "-> spawning command.\n" );
-		if( launchRender ) 
+		if( liqglo.launchRender ) 
 		{
 			if( useRenderScript ) 
 			{
@@ -2984,14 +2963,14 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 #endif
 				if( liqglo.m_renderView ) 
 				{
-					MString local = (m_renderViewLocal)? "1":"0";
+					MString local = (liqglo.m_renderViewLocal)? "1":"0";
 					stringstream tmp;
-					tmp << m_renderViewTimeOut;
+					tmp << liqglo.m_renderViewTimeOut;
 					//=============
 					cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
 					MString timeout( tmp.str().c_str() );
-					MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
-					if( m_renderViewCrop ) 
+					MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + liqglo.m_renderViewPort + " -timeout " + timeout ;
+					if( liqglo.m_renderViewCrop ) 
 						displayCmd = displayCmd + " -doRegion";
 					displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
 					//============= 
@@ -3076,14 +3055,14 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 						*/
 						if( liqglo.m_renderView ) 
 						{
-							MString local = (m_renderViewLocal)? "1":"0";
+							MString local = (liqglo.m_renderViewLocal)? "1":"0";
 							stringstream tmp;
-							tmp << m_renderViewTimeOut;
+							tmp << liqglo.m_renderViewTimeOut;
 							//=============
 							cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
 							MString timeout( tmp.str().c_str() );
-							MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
-							if( m_renderViewCrop ) 
+							MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + liqglo.m_renderViewPort + " -timeout " + timeout ;
+							if( liqglo.m_renderViewCrop ) 
 								displayCmd = displayCmd + " -doRegion";
 							displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
 							//============= 
@@ -3224,8 +3203,8 @@ void liqRibTranslator::getCameraInfo( MFnCamera& cam )
 	// so we must keep camera width/height separate from render
 	// globals width/height.
 	//
-	cam_width  = width;
-	cam_height = height;
+	liqglo.cam_width  = width;
+	liqglo.cam_height = height;
 
 	// If we are using a film-gate then we may need to
 	// adjust the resolution to simulate the 'letter-boxed'
@@ -3234,88 +3213,88 @@ void liqRibTranslator::getCameraInfo( MFnCamera& cam )
 	{
 		if( !ignoreFilmGate ) 
 		{
-			double new_height = cam_width / ( cam.horizontalFilmAperture() / cam.verticalFilmAperture() );
-			if( new_height < cam_height ) 
-				cam_height = ( int )new_height;
+			double new_height = liqglo.cam_width / ( cam.horizontalFilmAperture() / cam.verticalFilmAperture() );
+			if( new_height < liqglo.cam_height ) 
+				liqglo.cam_height = ( int )new_height;
 		}
 
 		double hfov, vfov;
-		portFieldOfView( cam_width, cam_height, hfov, vfov, cam );
-		fov_ratio = hfov / vfov;
+		portFieldOfView( liqglo.cam_width, liqglo.cam_height, hfov, vfov, cam );
+		liqglo.fov_ratio = hfov / vfov;
 	}
 	else if( cam.filmFit() == MFnCamera::kVerticalFilmFit ) 
 	{
-		double new_width = cam_height / ( cam.verticalFilmAperture() / cam.horizontalFilmAperture() );
+		double new_width = liqglo.cam_height / ( cam.verticalFilmAperture() / cam.horizontalFilmAperture() );
 		double hfov, vfov;
 
 		// case 1 : film-gate smaller than resolution
 		//         film-gate on
-		if( ( new_width < cam_width ) && ( !ignoreFilmGate ) ) 
+		if( ( new_width < liqglo.cam_width ) && ( !ignoreFilmGate ) ) 
 		{
-			cam_width = ( int )new_width;
-			fov_ratio = 1.0;
+			liqglo.cam_width = ( int )new_width;
+			liqglo.fov_ratio = 1.0;
 		}
 		// case 2 : film-gate smaller than resolution
 		//         film-gate off
-		else if( ( new_width < cam_width ) && ( ignoreFilmGate ) ) 
+		else if( ( new_width < liqglo.cam_width ) && ( ignoreFilmGate ) ) 
 		{
-			portFieldOfView( ( int )new_width, cam_height, hfov, vfov, cam );
-			fov_ratio = hfov / vfov;
+			portFieldOfView( ( int )new_width, liqglo.cam_height, hfov, vfov, cam );
+			liqglo.fov_ratio = hfov / vfov;
 		}
 		// case 3 : film-gate larger than resolution
 		//         film-gate on
 		else if( !ignoreFilmGate ) 
 		{
-			portFieldOfView( ( int )new_width, cam_height, hfov, vfov, cam );
-			fov_ratio = hfov / vfov;
+			portFieldOfView( ( int )new_width, liqglo.cam_height, hfov, vfov, cam );
+			liqglo.fov_ratio = hfov / vfov;
 		}
 		// case 4 : film-gate larger than resolution
 		//         film-gate off
 		else if( ignoreFilmGate ) 
 		{
-			portFieldOfView( ( int )new_width, cam_height, hfov, vfov, cam );
-			fov_ratio = hfov / vfov;
+			portFieldOfView( ( int )new_width, liqglo.cam_height, hfov, vfov, cam );
+			liqglo.fov_ratio = hfov / vfov;
 		}
 	}
 	else if( cam.filmFit() == MFnCamera::kOverscanFilmFit ) 
 	{
-		double new_height = cam_width / ( cam.horizontalFilmAperture() / cam.verticalFilmAperture() );
-		double new_width = cam_height / ( cam.verticalFilmAperture() / cam.horizontalFilmAperture() );
+		double new_height = liqglo.cam_width / ( cam.horizontalFilmAperture() / cam.verticalFilmAperture() );
+		double new_width = liqglo.cam_height / ( cam.verticalFilmAperture() / cam.horizontalFilmAperture() );
 
-		if( new_width < cam_width ) 
+		if( new_width < liqglo.cam_width ) 
 		{
 			if( !ignoreFilmGate ) {
-				cam_width = ( int ) new_width;
-				fov_ratio = 1.0;
+				liqglo.cam_width = ( int ) new_width;
+				liqglo.fov_ratio = 1.0;
 			}
 			else 
 			{
 				double hfov, vfov;
-				portFieldOfView( ( int )new_width, cam_height, hfov, vfov, cam );
-				fov_ratio = hfov / vfov;
+				portFieldOfView( ( int )new_width, liqglo.cam_height, hfov, vfov, cam );
+				liqglo.fov_ratio = hfov / vfov;
 			}
 		}
 		else {
 			if( !ignoreFilmGate )
-				cam_height = ( int ) new_height;
+				liqglo.cam_height = ( int ) new_height;
 			double hfov, vfov;
-			portFieldOfView( cam_width, cam_height, hfov, vfov, cam );
-			fov_ratio = hfov / vfov;
+			portFieldOfView( liqglo.cam_width, liqglo.cam_height, hfov, vfov, cam );
+			liqglo.fov_ratio = hfov / vfov;
 		}
 	}
 	else if( cam.filmFit() == MFnCamera::kFillFilmFit ) 
 	{
-		double new_width = cam_height / ( cam.verticalFilmAperture() / cam.horizontalFilmAperture() );
+		double new_width = liqglo.cam_height / ( cam.verticalFilmAperture() / cam.horizontalFilmAperture() );
 		double hfov, vfov;
-		if( new_width >= cam_width ) 
+		if( new_width >= liqglo.cam_width ) 
 		{
-			portFieldOfView( ( int )new_width, cam_height, hfov, vfov, cam );
-			fov_ratio = hfov / vfov;
+			portFieldOfView( ( int )new_width, liqglo.cam_height, hfov, vfov, cam );
+			liqglo.fov_ratio = hfov / vfov;
 		}
 		else 
 		{
-			portFieldOfView( cam_width, cam_height, hfov, vfov, cam );
-			fov_ratio = hfov / vfov;
+			portFieldOfView( liqglo.cam_width, liqglo.cam_height, hfov, vfov, cam );
+			liqglo.fov_ratio = hfov / vfov;
 		}
 	}
 }
@@ -4517,8 +4496,8 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 					iter->gotJobOptions = true;
 				}
 				getCameraInfo( fnCamera );
-				iter->width = cam_width;
-				iter->height = cam_height;
+				iter->width = liqglo.cam_width;
+				iter->height = liqglo.cam_height;
 				// scanScene: Renderman specifies shutter by time open
 				// so we need to convert shutterAngle to time.
 				// To do this convert shutterAngle to degrees and
@@ -4527,7 +4506,7 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 				iter->camera[sample].shutter = fnCamera.shutterAngle() * 0.5 / M_PI;
 				liqglo.liqglo_shutterTime = iter->camera[sample].shutter;
 				iter->camera[sample].orthoWidth     = fnCamera.orthoWidth();
-				iter->camera[sample].orthoHeight    = fnCamera.orthoWidth() * ((float)cam_height / (float)cam_width);
+				iter->camera[sample].orthoHeight    = fnCamera.orthoWidth() * ((float)liqglo.cam_height / (float)liqglo.cam_width);
 				iter->camera[sample].motionBlur     = fnCamera.isMotionBlur();
 				iter->camera[sample].focalLength    = fnCamera.focalLength();
 				iter->camera[sample].focalDistance  = fnCamera.focusDistance();
@@ -4537,7 +4516,7 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 				double hSize, vSize, hOffset, vOffset;
 				fnCamera.getFilmFrustum( fnCamera.focalLength(), hSize, vSize, hOffset, vOffset );
 
-				double imr = ((float)cam_width / (float)cam_height);
+				double imr = ((float)liqglo.cam_width / (float)liqglo.cam_height);
 				double fbr = hSize / vSize;
 				double ho, vo;
 
@@ -4603,7 +4582,7 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 				// philippe : rotate the main camera 90 degrees around Z-axis if necessary
 				// ( only in main camera )
 				MMatrix camRotMatrix;
-				if( liqglo_rotateCamera == true ) 
+				if( liqglo.liqglo_rotateCamera == true ) 
 				{
 					float crm[4][4] = {  {  0.0,  1.0,  0.0,  0.0 },
 					{ -1.0,  0.0,  0.0,  0.0 },
@@ -4629,8 +4608,8 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 				// if a film-fit is used. 'fov_ratio' is used to account for
 				// this.
 				//
-				iter->camera[sample].hFOV = fnCamera.horizontalFieldOfView()/fov_ratio;
-				iter->aspectRatio = aspectRatio;
+				iter->camera[sample].hFOV = fnCamera.horizontalFieldOfView()/liqglo.fov_ratio;
+				iter->aspectRatio = liqglo.aspectRatio;
 
 				// scanScene: Determine what information to write out (RGB, alpha, zbuffer)
 				//
@@ -4930,18 +4909,18 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 			RiShadingInterpolation( "smooth" );
 			// Quantization
 			// overriden to floats when in rendering to Maya's renderView
-			if( !liqglo.m_renderView && quantValue != 0 )
+			if( !liqglo.m_renderView && liqglo.quantValue != 0 )
 			{
-				int whiteValue = (int) pow( 2.0, quantValue ) - 1;
+				int whiteValue = (int) pow( 2.0, liqglo.quantValue ) - 1;
 				RiQuantize( RI_RGBA, whiteValue, 0, whiteValue, 0.5 );
 			}
 			else
 			{
 				RiQuantize( RI_RGBA, 0, 0, 0, 0 );
 			}
-			if( m_rgain != 1.0 || m_rgamma != 1.0 )
+			if( liqglo.m_rgain != 1.0 || liqglo.m_rgamma != 1.0 )
 			{
-				RiExposure( m_rgain, m_rgamma );
+				RiExposure( liqglo.m_rgain, liqglo.m_rgamma );
 			}
 		}
 		if( liqglo_currentJob.isShadow &&
@@ -5040,13 +5019,13 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 		}
 		else
 		{
-			if( ( m_cropX1 != 0.0 ) || ( m_cropY1 != 0.0 ) || ( m_cropX2 != 1.0 ) || ( m_cropY2 != 1.0 ) ) 
+			if( ( liqglo.m_cropX1 != 0.0 ) || ( liqglo.m_cropY1 != 0.0 ) || ( liqglo.m_cropX2 != 1.0 ) || ( liqglo.m_cropY2 != 1.0 ) ) 
 			{
 				// philippe : handle the rotated camera case
-				if( liqglo_rotateCamera == true ) 
-					RiCropWindow( m_cropY2, m_cropY1, 1 - m_cropX1, 1 - m_cropX2 );
+				if( liqglo.liqglo_rotateCamera == true ) 
+					RiCropWindow( liqglo.m_cropY2, liqglo.m_cropY1, 1 - liqglo.m_cropX1, 1 - liqglo.m_cropX2 );
 				else 
-					RiCropWindow( m_cropX1, m_cropX2, m_cropY1, m_cropY2 );
+					RiCropWindow( liqglo.m_cropX1, liqglo.m_cropX2, liqglo.m_cropY1, liqglo.m_cropY2 );
 			}
 			// display channels
 			if( liqglo.liquidRenderer.supports_DISPLAY_CHANNELS ) 
@@ -5060,10 +5039,10 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 				channeltype.append( "normal" );
 				channeltype.append( "vector" );
 
-				vector<structChannel>::iterator m_channels_iterator;
-				m_channels_iterator = m_channels.begin();
+				std::vector<StructChannel>::iterator m_channels_iterator;
+				m_channels_iterator = liqglo.m_channels.begin();
 
-				while ( m_channels_iterator != m_channels.end() ) 
+				while ( m_channels_iterator != liqglo.m_channels.end() ) 
 				{
 					int       numTokens = 0;
 					RtToken   tokens[5];
@@ -5158,8 +5137,8 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 			RiArchiveRecord( RI_COMMENT, "Display Drivers:" );
 			liqRIBMsg("Display 6");
 
-			vector<structDisplay>::iterator m_displays_iterator;
-			m_displays_iterator = m_displays.begin();
+			std::vector<StructDisplay>::iterator m_displays_iterator;
+			m_displays_iterator = liqglo.m_displays.begin();
 
 			MString parameterString;
 			MString imageName;
@@ -5173,18 +5152,18 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 			paramType.append( "float " );
 			paramType.append( "int " );
 
-			while ( m_displays_iterator != m_displays.end() ) 
+			while ( m_displays_iterator != liqglo.m_displays.end() ) 
 			{
 				// check if additionnal displays are enabled
 				// if not, call it off after the 1st iteration.
-				if( m_ignoreAOVDisplays && m_displays_iterator > m_displays.begin() ) 
+				if( liqglo.m_ignoreAOVDisplays && m_displays_iterator > liqglo.m_displays.begin() ) 
 					break;
 
 				// This is the override for the primary DD
 				// when you render to maya's renderview.
-				if( m_displays_iterator == m_displays.begin() && liqglo.m_renderView ) 
+				if( m_displays_iterator == liqglo.m_displays.begin() && liqglo.m_renderView ) 
 				{
-					MString imageName( m_pixDir );
+					MString imageName( liqglo.m_pixDir );
 					imageName += parseString( liqglo.liqglo_DDimageName[ 0 ], false );
 					//imageName = liquidGetRelativePath( liqglo_relativeFileNames, imageName, liqglo_projectDir );
 
@@ -5195,10 +5174,10 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 					// sprintf( tmp, "%i", m_renderViewPort);
 					// MString port = ( char* )tmp;
 					MString port;
-					port.set( m_renderViewPort );
+					port.set( liqglo.m_renderViewPort );
 
 					MString host = "localhost";
-					if( !m_renderViewLocal ) 
+					if( !liqglo.m_renderViewLocal ) 
 						MGlobal::executeCommand( "strip(system(\"echo $HOST\"));", host );
 
 					liqRIBMsg("Display 7");
@@ -5206,8 +5185,8 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" \"int merge\" [0] \"int mayaDisplayPort\" [%s] \"string host\" [\"%s\"]\n", const_cast< char* >( imageName.asChar() ), formatType.asChar(), imageMode.asChar(), port.asChar(), host.asChar() );
 
 					// in this case, override the launch render settings
-					if( launchRender == false ) 
-						launchRender = true;
+					if( liqglo.launchRender == false ) 
+						liqglo.launchRender = true;
 				} 
 				else 
 				{
@@ -5221,11 +5200,11 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 					// defaults to scenename.0001.tif if left empty
 					imageName = (*m_displays_iterator).name;
 					if( imageName == "" ) 
-						imageName = liqglo.liqglo_sceneName + ".#." + outExt;
-					imageName = m_pixDir + parseString( imageName, false );
+						imageName = liqglo.liqglo_sceneName + ".#." + liqglo.outExt;
+					imageName = liqglo.m_pixDir + parseString( imageName, false );
 					// we test for an absolute path before converting from rel to abs path in case the picture dir was overriden through the command line.
-					//if( m_pixDir.index( '/' ) != 0 ) imageName = liquidGetRelativePath( liqglo_relativeFileNames, imageName, liqglo_projectDir );
-					if( m_displays_iterator > m_displays.begin() ) 
+					//if( liqglo.m_pixDir.index( '/' ) != 0 ) imageName = liquidGetRelativePath( liqglo_relativeFileNames, imageName, liqglo_projectDir );
+					if( m_displays_iterator > liqglo.m_displays.begin() ) 
 						imageName = "+" + imageName;
 					// get display type ( tiff, openexr, etc )
 					imageType = (*m_displays_iterator).type;
@@ -5236,7 +5215,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 					if( imageMode == "" ) 
 						imageMode = "rgba";
 					// get quantization params
-					if( (*m_displays_iterator).doQuantize && m_displays_iterator > m_displays.begin() ) 
+					if( (*m_displays_iterator).doQuantize && m_displays_iterator > liqglo.m_displays.begin() ) 
 					{
 						if( (*m_displays_iterator).bitDepth != 0 ) 
 						{
@@ -5264,7 +5243,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 					}
 
 					// get filter params
-					if( (*m_displays_iterator).doFilter && m_displays_iterator > m_displays.begin() )
+					if( (*m_displays_iterator).doFilter && m_displays_iterator > liqglo.m_displays.begin() )
 					{
 
 						MString pixFilter( liqglo.liquidRenderer.pixelFilterNames[(*m_displays_iterator).filter] );
@@ -5308,7 +5287,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 
 		LIQDEBUGPRINTF( "-> Setting Resolution\n" );
 		// philippe : Rotated Camera Case
-		if( liqglo_currentJob.isShadow == false && liqglo_rotateCamera  == true ) 
+		if( liqglo_currentJob.isShadow == false && liqglo.liqglo_rotateCamera  == true ) 
 			RiFormat( liqglo_currentJob.height, liqglo_currentJob.width, liqglo_currentJob.aspectRatio );
 		else 
 			RiFormat( liqglo_currentJob.width, liqglo_currentJob.height, liqglo_currentJob.aspectRatio );
@@ -5364,15 +5343,15 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 		}
 
 		RiClipping( liqglo_currentJob.camera[0].neardb, liqglo_currentJob.camera[0].fardb );
-		if( doDof && !liqglo_currentJob.isShadow ) 
+		if( liqglo.doDof && !liqglo_currentJob.isShadow ) 
 			RiDepthOfField( liqglo_currentJob.camera[0].fStop, liqglo_currentJob.camera[0].focalLength, liqglo_currentJob.camera[0].focalDistance );
 
 		// Set up for camera motion blur
 		/* doCameraMotion = liqglo_currentJob.camera[0].motionBlur && liqglo_doMotion; */
 		float frameOffset = 0;
-		if( doCameraMotion || liqglo.liqglo_doMotion || liqglo.liqglo_doDef ) 
+		if( liqglo.doCameraMotion || liqglo.liqglo_doMotion || liqglo.liqglo_doDef ) 
 		{
-			switch( shutterConfig ) 
+			switch( liqglo.shutterConfig ) 
 			{
 			case OPEN_ON_FRAME:
 			default:
@@ -5441,7 +5420,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 
 		// if we motion-blur the cam, open the motion block
 		//
-		if( doCameraMotion && ( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows) ) 
+		if( liqglo.doCameraMotion && ( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows) ) 
 			if(liqglo.liqglo_relativeMotion)
 				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
 			else
@@ -5455,7 +5434,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 
 		// if we motion-blur the cam, write the subsequent motion samples and close the motion block
 		//
-		if( doCameraMotion && ( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows ) ) 
+		if( liqglo.doCameraMotion && ( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows ) ) 
 		{
 			int mm = 1;
 			while ( mm < liqglo.liqglo_motionSamples ) 
@@ -7051,7 +7030,7 @@ void liqRibTranslator::setOutDirs()
 			gPlug.getValue( varVal );
 		gStatus.clear();
 		if( varVal != "" ) 
-			m_pixDir = removeEscapes( parseString( varVal, false ) );
+			liqglo.m_pixDir = removeEscapes( parseString( varVal, false ) );
 	}
 }
 

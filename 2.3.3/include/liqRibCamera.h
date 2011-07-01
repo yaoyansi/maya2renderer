@@ -7,6 +7,8 @@
 
 struct liqGlobalVariable;
 
+
+
 class tRibCameraMgr
 {
 public:
@@ -20,6 +22,8 @@ public:
 		const bool m_outputShadowPass_,
 		const bool m_outputHeroPass_
 	);
+
+	static void framePrologue_camera(long lframe, const structJob &currentJob);
 
 protected:
 	tRibCameraMgr(const tRibCameraMgr&);

@@ -5,11 +5,57 @@
 
 #include <maya/MString.h>
 #include <maya/MStringArray.h>
+#include <maya/MIntArray.h>
 
 #include "ri_interface.h"
 
 #include <liquid.h>
 #include <liqRenderer.h>
+
+enum ShutterConfig {
+	OPEN_ON_FRAME         = 0,
+	CENTER_ON_FRAME       = 1,
+	CENTER_BETWEEN_FRAMES = 2,
+	CLOSE_ON_NEXT_FRAME   = 3
+};
+
+// Display Driver Variables
+typedef struct StructDDParam {
+	liquidlong    num;
+	MStringArray  names;
+	MStringArray  data;
+	MIntArray     type;
+} StructDDParam;
+
+typedef struct StructDisplay {
+	MString         name;
+	MString         type;
+	MString         mode;
+	bool            enabled;
+	bool            doQuantize;
+	int             bitDepth;
+	float           dither;
+	bool            doFilter;
+	int             filter;
+	float           filterX;
+	float           filterY;
+	StructDDParam   xtraParams;
+} StructDisplay;
+
+typedef struct StructChannel {
+	MString     name;
+	int         type;
+	int         arraySize;
+	bool        quantize;
+	int         bitDepth;
+	float       dither;
+	bool        filter;
+	int         pixelFilter;
+	float       pixelFilterX;
+	float       pixelFilterY;
+} StructChannel;
+
+
 
 struct liqGlobalVariable
 {
@@ -177,9 +223,34 @@ struct liqGlobalVariable
 	bool	  m_bakeNoCullHidden;
 
 	MString       outFormat;
-
+	MString       outExt;
+		MString       m_pixDir;
 
 	MString m_preFrameRIB;
+
+	bool doDof;                 // do camera depth of field
+	bool doCameraMotion;        // Motion blur for moving cameras
+	bool liqglo_rotateCamera;   // rotates the camera for sideways renderings
+	enum ShutterConfig shutterConfig;
+	double      fov_ratio;
+	int         cam_width;
+	int			cam_height;
+	float       aspectRatio;
+	liquidlong  quantValue;
+	float		m_rgain;
+	float		m_rgamma;
+	double        m_cropX1;
+	double        m_cropX2;
+	double        m_cropY1;
+	double        m_cropY2;
+	std::vector<StructDisplay> m_displays;
+	std::vector<StructChannel> m_channels;
+	bool          m_ignoreAOVDisplays;
+	bool          m_renderViewCrop;
+	bool          m_renderViewLocal;
+	liquidlong    m_renderViewPort;
+	liquidlong    m_renderViewTimeOut;
+		bool launchRender;
 };
 
 extern struct liqGlobalVariable liqglo;
@@ -199,6 +270,10 @@ void writeStatisticsOptions();
 
 void initOtherParameters();
 void getOtherParameters(const MFnDependencyNode& rGlobalNode);
+
+void initCameraParameters();
+void getCameraParameters(const MFnDependencyNode& rGlobalNode);
+
  
 
 #endif//_liqGlobalVariable_H

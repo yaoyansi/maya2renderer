@@ -345,7 +345,9 @@ void initOtherParameters()
 	liqglo.outFormat = "it";
 
 	liqglo.m_preFrameRIB.clear();
-
+	liqglo.launchRender = false;
+	liqglo.outExt = "tif";
+	liqglo.m_pixDir = "rmanpix/";
 }
 void getOtherParameters(const MFnDependencyNode& rGlobalNode)
 {
@@ -362,5 +364,59 @@ void getOtherParameters(const MFnDependencyNode& rGlobalNode)
 		liqglo.m_bakeNoCullBackface = !liqglo.m_bakeNoCullBackface;
 	if ( liquidGetPlugValue( rGlobalNode, "bakeCullHidden", liqglo.m_bakeNoCullHidden, gStatus )== MS::kSuccess )
 		liqglo.m_bakeNoCullHidden = !liqglo.m_bakeNoCullHidden;
+
+	liquidGetPlugValue( rGlobalNode, "launchRender", liqglo.launchRender, gStatus );
+}
+//
+void initCameraParameters()
+{
+	liqglo.doDof = false;
+	liqglo.doCameraMotion = false;           // camera motion blocks
+	liqglo.liqglo_rotateCamera = false;      // rotate the camera 90 degrees around Z axis
+	liqglo.shutterConfig = OPEN_ON_FRAME;
+	liqglo.aspectRatio = 1.0;
+	liqglo.quantValue = 8;
+	liqglo.m_rgain = 1.0;
+	liqglo.m_rgamma = 1.0;
+	// display channels defaults
+	liqglo.m_channels.clear();
+
+	// Display Driver Defaults
+	liqglo.m_displays.clear();
+
+
+	liqglo.m_renderViewCrop    = false;
+	liqglo.m_renderViewLocal   = true;
+	liqglo.m_renderViewPort    = 6667;
+	liqglo.m_renderViewTimeOut = 10;
+
+
+	liqglo.m_cropX1 = liqglo.m_cropY1 = 0.0;
+	liqglo.m_cropX2 = liqglo.m_cropY2 = 1.0;
+}
+void getCameraParameters(const MFnDependencyNode& rGlobalNode)
+{
+	MStatus gStatus;
+	MString varVal;
+	int var;
+	liquidGetPlugValue( rGlobalNode, "rotateCamera", liqglo.liqglo_rotateCamera, gStatus );
+	liquidGetPlugValue( rGlobalNode, "cameraBlur",   liqglo.doCameraMotion, gStatus );
+	liquidGetPlugValue( rGlobalNode, "depthOfField", liqglo.doDof, gStatus );
+	liquidGetPlugValue( rGlobalNode, "shutterConfig", var, gStatus );
+	if( gStatus == MS::kSuccess ) 
+		liqglo.shutterConfig = ( enum ShutterConfig ) var;
+	liquidGetPlugValue( rGlobalNode, "pixelAspectRatio", liqglo.aspectRatio, gStatus );
+
+
+	liquidGetPlugValue( rGlobalNode, "cropX1", liqglo.m_cropX1, gStatus );
+	liquidGetPlugValue( rGlobalNode, "cropX2", liqglo.m_cropX2, gStatus );
+	liquidGetPlugValue( rGlobalNode, "cropY1", liqglo.m_cropY1, gStatus );
+	liquidGetPlugValue( rGlobalNode, "cropY2", liqglo.m_cropY2, gStatus );
+
+	liquidGetPlugValue( rGlobalNode, "gain", liqglo.m_rgain, gStatus );
+	liquidGetPlugValue( rGlobalNode, "gamma", liqglo.m_rgamma, gStatus );
+	liquidGetPlugValue( rGlobalNode, "renderViewLocal", liqglo.m_renderViewLocal, gStatus );
+	liquidGetPlugValue( rGlobalNode, "renderViewPort", liqglo.m_renderViewPort, gStatus );
+	liquidGetPlugValue( rGlobalNode, "renderViewTimeOut", liqglo.m_renderViewTimeOut, gStatus );
 }
  
