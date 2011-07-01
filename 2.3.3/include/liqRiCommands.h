@@ -33,6 +33,8 @@
 ** ______________________________________________________________________
 ** 
 */
+#ifndef liqRiCommands_H
+#define liqRiCommands_H
 
 #include <maya/MDGModifier.h>
 #include <maya/MPxCommand.h>
@@ -786,3 +788,5 @@ public:
 private:
 	MDGModifier dgMod;
 };
+
+#endif//liqRiCommands_H

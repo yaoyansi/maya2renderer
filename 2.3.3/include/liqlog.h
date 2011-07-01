@@ -1,5 +1,5 @@
-#ifndef _LIQUID_LOG_H_
-#define _LIQUID_LOG_H_
+#ifndef liqLog_H
+#define liqLog_H
 
 #include <liqGlobalHelpers.h>
 
@@ -20,4 +20,4 @@
 
 extern char gLogBuffer[LOG_BUFFER_LEN];
 
-#endif//_LIQUID_LOG_H_
+#endif//liqLog_H

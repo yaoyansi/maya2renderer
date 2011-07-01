@@ -32,8 +32,8 @@
 ** ______________________________________________________________________
 */
 
-#ifndef _liqLightNodeBehavior_H_
-#define _liqLightNodeBehavior_H_
+#ifndef liqLightNodeBehavior_H
+#define liqLightNodeBehavior_H
 
 #include <maya/MPxDragAndDropBehavior.h>
 
@@ -62,5 +62,5 @@ private:
 
 };
 
-#endif
+#endif//liqLightNodeBehavior_H
 

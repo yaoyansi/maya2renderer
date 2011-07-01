@@ -23,8 +23,9 @@
 **
 ** RenderMan (R) is a registered trademark of Pixar
 */
-#ifndef __LIQ_MAYA_NODE_IDS_H__
-#define __LIQ_MAYA_NODE_IDS_H__
+#ifndef liqMayaNodeIds_H
+#define liqMayaNodeIds_H
+
 #if LIQ_OLD_MAYA_IDS == 1
 // THESE ARE THE OLD IDs
 #define liqSurfaceNodeId		0x00103511
@@ -48,4 +49,4 @@
 #define liqCoShaderNodeId       0x0010F6D9
 #endif
 
-#endif // __LIQ_MAYA_NODE_IDS_H__
+#endif //liqMayaNodeIds_H

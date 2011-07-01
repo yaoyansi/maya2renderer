@@ -33,8 +33,8 @@
 */
 
 
-#ifndef __LIQ_CO_SHADER_NODE_H__
-#define __LIQ_CO_SHADER_NODE_H__
+#ifndef liqCoShaderNode_H
+#define liqCoShaderNode_H
 
 #include <maya/MPxNode.h>
 
@@ -85,4 +85,4 @@ private:
 	liqCoShaderNode& operator=(const liqCoShaderNode&);
 };
 
-#endif
+#endif//liqCoShaderNode_H

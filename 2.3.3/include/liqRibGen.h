@@ -27,8 +27,8 @@
 **
 */
 
-#ifndef _H_liqRibGen
-#define _H_liqRibGen
+#ifndef liqRibGen_H
+#define liqRibGen_H
 
 /* ______________________________________________________________________
 ** 
@@ -36,11 +36,14 @@
 ** ______________________________________________________________________
 */
 
+
+#include <liqRibStatus.h>
+#include <zlib.h>
+
 //extern "C" {
 	#include "ri_interface.h"
 //}
-#include <liqRibStatus.h>
-#include <zlib.h>
+
 class liqRibGen;
 
 /*
@@ -128,4 +131,4 @@ public:
 	}
 };
 
-#endif
+#endif//liqRibGen_H

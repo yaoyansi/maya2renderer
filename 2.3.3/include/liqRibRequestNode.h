@@ -35,6 +35,9 @@
 ** alternatively to store them in the Globals - Alf
 */
 
+#ifndef liqRibRequestNode_H
+#define liqRibRequestNode_H
+
 #include <maya/MPxNode.h>
 
 class liqRibRequestNode : public MPxNode
@@ -59,3 +62,5 @@ private:
 	liqRibRequestNode& operator=(const liqRibRequestNode&);
 
 };
+
+#endif//liqRibRequestNode_H

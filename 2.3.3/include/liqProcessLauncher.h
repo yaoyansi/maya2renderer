@@ -16,8 +16,8 @@
 ** RenderMan (R) is a registered trademark of Pixar
 */
 
-#ifndef liqProcessLauncher_H_
-#define liqProcessLauncher_H_
+#ifndef liqProcessLauncher_H
+#define liqProcessLauncher_H
 
 
 class MString;
@@ -33,4 +33,4 @@ public:
 };
 
 
-#endif // liqProcessLauncher_H_
+#endif // liqProcessLauncher_H

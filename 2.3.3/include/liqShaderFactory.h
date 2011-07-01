@@ -24,8 +24,8 @@
 ** RenderMan (R) is a registered trademark of Pixar
 */
 
-#ifndef __LIQ_SHADER_FACTORY_H__
-#define __LIQ_SHADER_FACTORY_H__
+#ifndef liqShaderFactory_H
+#define liqShaderFactory_H
 
 
 #include <vector>
@@ -70,4 +70,4 @@ private:
 	liqShaderFactory& operator=(const liqShaderFactory&);
 };
 
-#endif
+#endif//liqShaderFactory_H

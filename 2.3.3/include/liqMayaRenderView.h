@@ -33,8 +33,8 @@
 */
 
 
-#if !defined(__LIQMAYARENDERVIEW_H__)
-#define __LIQMAYARENDERVIEW_H__
+#ifndef liqMayaRenderView_H
+#define liqMayaRenderView_H
 
 #include <vector>
 #include <deque>
@@ -100,5 +100,5 @@ MObject getNode(MString name,MStatus *returnStatus);
 
 #define CHECKERRNO(STATUS,MSG,ACTION){ if(STATUS == -1){perror(MSG); ACTION; return MS::kFailure;}}
 
-#endif        //  #if !defined(__LIQMAYARENDERVIEW_H__)
+#endif// liqMayaRenderView_H
 

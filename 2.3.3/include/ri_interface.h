@@ -1,5 +1,5 @@
-#ifndef _RI_INTERFACE_H_
-#define _RI_INTERFACE_H_
+#ifndef liqRiInterface_H
+#define liqRiInterface_H
 
 #define RIBLIB_AQSIS
 
@@ -20,4 +20,4 @@
 
 
 
-#endif
+#endif//liqRiInterface_H

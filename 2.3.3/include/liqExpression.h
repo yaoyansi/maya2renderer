@@ -26,7 +26,8 @@
 */
 #ifndef liqExpression_H
 #define liqExpression_H
-#include <string.h>
+
+#include <string>
 
 #include <maya/MString.h>
 #include <maya/MStringArray.h>

@@ -27,8 +27,9 @@
 **
 */
 
-#ifndef _H_liqRibStatus
-#define _H_liqRibStatus
+#ifndef liqRibStatus_H
+#define liqRibStatus_H
+
 #include <string>
 #include <vector>
 /* ______________________________________________________________________
@@ -38,14 +39,15 @@
 */
 
 //#include <zlib.h>
-//extern "C" {
-	#include "ri_interface.h"
-//}
 #include <string>
 
 //#include <maya/MGlobal.h>
 #include <maya/MCommandResult.h>
 //#include <maya/MDagPath.h>
+
+//extern "C" {
+	#include "ri_interface.h"
+//}
 
 class liqRibContextResult;
 class liqRibStatus {
@@ -98,4 +100,4 @@ private:
 };
 
 
-#endif
+#endif//liqRibStatus_H

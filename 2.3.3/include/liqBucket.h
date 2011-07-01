@@ -32,8 +32,8 @@
 ** ______________________________________________________________________
 */
 
-#if !defined(__BUCKET_H__)
-#define __BUCKET_H__
+#ifndef liqBucket_H
+#define liqBucket_H
 
 #include <vector>
 
@@ -78,4 +78,4 @@ class bucket{
 		bucket& operator=(const bucket&);
 };
 
-#endif
+#endif//liqBucket_H_
