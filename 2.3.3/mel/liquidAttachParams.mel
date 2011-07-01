@@ -106,7 +106,7 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
           break;
 
 
-
+		case "shader":
         case "string":
 
           if ( $argArrayLen > 0 ) {

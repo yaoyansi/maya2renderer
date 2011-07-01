@@ -175,6 +175,7 @@ global proc int liquidParseSlShader ( string $shaderNode, string $fileName )
     $liqShaderTypes =
                     {
                 "unknown",
+				"shader",
                 "surface",
                 "displacement",
                 "volume",
@@ -189,6 +190,7 @@ global proc int liquidParseSlShader ( string $shaderNode, string $fileName )
                 "vector",
                 "color",
                 "string",
+				"shader",
                 "matrix"
                     };
 

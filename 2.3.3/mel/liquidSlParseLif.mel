@@ -308,6 +308,12 @@ global proc liquidSlBuildLifCmdList()
           //trace ("Lif skip : "+$paramName+" ( \""+$outputFilter+"\" )");
         } else $gLifCmdList[$i] = ("liquidAE_LifString2( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$channelBox+" );");
         break;
+	  
+	  case "shader":
+		if( $filterOutputParams && liquidLifParamIsOutput($i) && match( $outputFilter, $paramName) == ""){
+			trace ("Lif skip : "+$paramName+" ( \""+$outputFilter+"\" )");
+		}else $gLifCmdList[$i] = ("liquidAE_LifShader( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$channelBox+" );");
+		break;
 
       case "color":
         if ( $filterOutputParams && liquidLifParamIsOutput($i) && match( $outputFilter, $paramName) == "" ) {
@@ -413,7 +419,7 @@ global proc liquidSlParseLif( string $shaderFile )
     $key = `substituteAllString $key "\t" ""`;
 
       switch( $key ) {
-
+	//case "shader":
       case "surface":
       case "displacement":
       case "light":

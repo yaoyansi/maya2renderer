@@ -36,6 +36,8 @@
 //
 //          global string $gLiquidSlShaderName;
 //          global string $gLiquidSlShaderType;
+//          global int    $gLiquidSlNumMethods;
+//          global string $gLiquidSlMethods[];
 //          global int    $gLiquidSlNumParams;
 //          global string $gLiquidSlParamNames[];
 //          global string $gLiquidSlParamDetails[];
@@ -129,6 +131,7 @@ proc string liquidSl_getParamType( string $line )
     string $prefix = "\"[^\"]*parameter *[uniformvaryg]+ *";
 
     if      ( `match ($prefix+"string") $line` != "" ) return "string";
+    else if ( `match ($prefix+"shader") $line` != "" ) return "shader";
     else if ( `match ($prefix+"float")  $line` != "" ) return "float";
     else if ( `match ($prefix+"color")  $line` != "" ) return "color";
     else if ( `match ($prefix+"point")  $line` != "" ) return "point";
@@ -143,150 +146,163 @@ proc int liquidSl_getParamArraySize( string $line )
 {
 	liqlog("liquidSl_getParamArraySize(...)");
     string $strip = `substitute "^.*[a-z]\\[" $line ""`;
-    if ( $strip == $line ) return 0;
+    if ( $strip == $line ) return -1;
 
     string $sizeStr = `substitute "\\].*$" $strip ""`;
-    if ( $sizeStr == $strip ) return 0;
+    if ( $sizeStr == $strip ) return -1;
+
+	if ($sizeStr == "") return 0;
 
     int $sizeInt = $sizeStr;
     return $sizeInt;
 }
 
-proc string liquidSl_getParamDefaultF( int $fid )
+proc string liquidSl_getParamDefaultF( string $value)
 {
 	liqlog("liquidSl_getParamDefaultF(...)");
-    string $default = "0.0";
-    string $line = strip( `fgetline $fid` );
+    string $result = "0.0";
 
-    // First check for "Unknown"
-    if ( `match "Unknown" $line` != "" )
-        return $default;
+    // First check for "Unknown" or null for shaders
+    if ( ($value == "") || ($value == "Unknown") ) {
+        return $result;
+    }
 
-    // Strip everything ahead of the default
-    string $strip = `substitute "^.*[Dd]efault value: *" $line ""`;
-    if ( $strip != $line )
-        $default = $strip;
-
-    // Check we don't have a 1e20 value
-    $default = float($default);
-
-    // Make sure we have somethings that looks like a float
-    if ( match( "[e\.]", $default) == "" ) $default += ".0";
-
-    return $default;
+    // Check we don't have an overflow value
+    $result = float($value);
+    if ( size(match("inf", $result)) ) {
+    	warning( "[liquidSlParseSdl.liquidSl_getParamDefaultF] float overflow value \""+$value+"\" was set to 0.0");
+    	$result = "0.0";
+    } else if ( !size(match( "[e\.]", $result)) ) {
+    	$result += ".0";
+	}
+	
+    return $result;
 }
 
-proc string liquidSl_getParamDefaultS( int $fid )
+proc string liquidSl_getParamDefaultS( string $value )
 {
 	liqlog("liquidSl_getParamDefaultS(...)");
-    string $default = "";
-    string $line = strip( `fgetline $fid` );
+    string $result = "\"\"";
 
-    // First check for "Unknown"
-    if ( `match "Unknown" $line` != "" )
-        return $default;
+    // First check for "Unknown" or null for shaders
+    if ( ($value == "") || ($value == "Unknown") || ($value == "null") || ($value == "(nil)") ) {
+          return $result;
+    }
+    
+    // Leave the enclosing quotes, add them if needed
+    $result = match ("\".*\"", $value);
+    if ($result == "") {
+        $result = ("\""+$value+"\"");
+    }
 
-    // Strip everything ahead of the default
-    // (leaving the double-quotes around it)
-    string $strip = `substitute "^.*[Dd]efault value: *" $line ""`;
-    if ( $strip != $line )
-        $default = $strip;
-
-    return $default;
+    return $result;
 }
 
-proc string liquidSl_getParamDefaultM( int $fid )
+proc string liquidSl_getParamDefaultM( string $value )
 {
 	liqlog("liquidSl_getParamDefaultM(...)");
-    string $default = ( "<<0, 0, 0, 0; " +
+    string $result = ( "<<0, 0, 0, 0; " +
                         "0, 0, 0, 0;" +
                         "0, 0, 0, 0;" +
                         "0, 0, 0, 0>>" );
 
-    string $line = `fgetline $fid`;
-
     // First check for "Unknown"
-    if ( `match "Unknown" $line` != "" )
-        return $default;
+    if ( ($value == "") || ($value == "Unknown") ) {
+        return $result;
+	}
 
-    // Matrix defaults span multiple lines
-    $line = `strip $line` + `fgetline $fid`;
-    $line = `strip $line` + `fgetline $fid`;
-    $line = `strip $line` + `fgetline $fid`;
-
-    // Strip everything ahead of the default
-    string $strip1 = `substitute "^.*[Dd]efault value:.*\\[" $line ""`;
-    if ( $strip1 == $line ) return $default;
-
-    // Strip the trailing "]" plus anything after it
-    string $strip2 = `substitute "\\].*$" $strip1 ""`;
-    if ( $strip2 == $strip1 ) return $default;
-
-    string $t[16];
-    tokenize $strip2 $t;
-    $default = ( "<<"+$t[0 ]+", "+$t[1 ]+", "+$t[2 ]+", "+$t[3 ]+"; "+
+    // Strip everything out the leading and trailing brackets, included
+	if (size(match("\\[.*\\]", $value))) {
+    	$result = `substitute "^.*\\[" $value ""`;
+    	$result = `substitute "\\].*$" $result ""`;
+		string $t[] = stringToStringArray($result, " \t\n");
+    	$result = ( "<<"+$t[0 ]+", "+$t[1 ]+", "+$t[2 ]+", "+$t[3 ]+"; "+
                       $t[4 ]+", "+$t[5 ]+", "+$t[6 ]+", "+$t[7 ]+"; "+
                       $t[8 ]+", "+$t[9 ]+", "+$t[10]+", "+$t[11]+"; "+
                       $t[12]+", "+$t[13]+", "+$t[14]+", "+$t[15]+">>" );
+	}
 
-    return $default;
+    return $result;
 }
 
-proc string liquidSl_getParamDefaultV( int $fid )
+// TODO : parse the space string too? ("rgb", "current")
+proc string liquidSl_getParamDefaultV( string $value )
 {
-	liqlog("liquidSl_getParamDefaultV(...)");
-    string $default = "<<0, 0, 0>>";
-    string $line = `fgetline $fid`;
+    string $result = "<<0,0,0>>";
 
     // First check for "Unknown"
-    if ( `match "Unknown" $line` != "" )
-        return $default;
+    if ( ($value == "") || ($value == "Unknown") ) {
+        return $result;
+	}
 
-    // Strip everything ahead of the default
-    string $strip1 = `substitute "^.*[Dd]efault value:.*\\[" $line ""`;
-    if ( $strip1 == $line ) return $default;
+    // Strip everything out the leading and trailing brackets, included
+	if (size(match("\\[.*\\]", $value))) {
+    	$result = `substitute "^.*\\[" $value ""`;
+    	$result = `substitute "\\].*$" $result ""`;
+		$result = stringArrayToString(stringToStringArray($result, " \t"), ",");
+		$result = ("<<"+$result+">>");
+	}
 
-    // Strip the trailing "]" plus anything after it
-    string $strip2 = `substitute "\\].*$" $strip1 ""`;
-    if ( $strip2 == $strip1 ) return $default;
-
-    string $tokens[];
-    tokenize $strip2 $tokens;
-    $default = ( "<<" + $tokens[0] + ", " +
-                 $tokens[1] + ", " +
-                 $tokens[2] + ">>" );
-
-    return $default;
+    return $result;
 }
 
-proc string liquidSl_getParamDefault( int $fid, string $paramType )
+proc string liquidSl_getParamDefault( string $line, string $paramType )
 {
 	liqlog("liquidSl_getParamDefault(...)");
-    string $default = "";
+    string $value = "";
+	
+	if (size(match("[Dd]efault value", $line))) {
+		$value = strip(substitute ("^.*[Dd]efault value:[ \t]*", $line, ""));
 
-    switch ( $paramType )
-    {
-    case "string":
-        $default = liquidSl_getParamDefaultS( $fid );
-        break;
-    case "float":
-        $default = liquidSl_getParamDefaultF( $fid );
-        break;
-    case "matrix":
-        $default = liquidSl_getParamDefaultM( $fid );
-        break;
-    case "color":
-    case "point":
-    case "vector":
-    case "normal":
-        $default = liquidSl_getParamDefaultV( $fid );
-        break;
-    default:
-        // This should never be reached
-        error( "unknown parameter type \"" + $paramType + "\"" );
-    }
+    	switch ( $paramType )
+    	{
+    		case "string":
+    		case "shader":
+        		$value = liquidSl_getParamDefaultS( $value );
+        		break;
+    		case "float":
+        		$value = liquidSl_getParamDefaultF( $value );
+        		break;
+    		case "matrix":
+        		$value = liquidSl_getParamDefaultM( $value );
+        		break;
+    		case "color":
+    		case "point":
+    		case "vector":
+    		case "normal":
+        		$value = liquidSl_getParamDefaultV( $value );
+        	break;
+    		default:
+        		// This should never be reached
+        		error( "unknown parameter type \"" + $paramType + "\"" );
+    	}
+	}
+    return $value;
+}
 
-    return $default;
+// Consolidated / coherent line from a sloFile
+proc string getSloLine (int $fid)
+{
+	string $line = "";
+
+	// get a non empty line
+	while ( (!`feof $fid`) && (substitute ("^[ \t\r\n]*$",$line,"") == "") ) {
+		$line = `fgetline $fid`;
+	}
+
+	int $brackLevel = size(substituteAllString($line, "]", "")) - size(substituteAllString($line, "[", ""));
+
+    while ( (!`feof $fid`) && ($brackLevel > 0) ) {
+		string $addline = `fgetline $fid`;
+		$brackLevel += size(substituteAllString($addline, "]", "")) - size(substituteAllString($addline, "[", ""));
+		$line += $addline;
+	}
+
+	if ($brackLevel != 0) {
+		error( "mismatched opening and closing brackets in line:\n"+$line );
+	}
+
+	return $line;
 }
 
 
@@ -313,6 +329,8 @@ global proc liquidSlParseSlo( string $sloFile )
     global string $gLiquidSlShaderFile;
     global string $gLiquidSlShaderName;
     global string $gLiquidSlShaderType;
+    global int    $gLiquidSlNumMethods;
+    global string $gLiquidSlMethods[];
     global int    $gLiquidSlNumParams;
     global string $gLiquidSlParamNames[];
     global string $gLiquidSlParamDetails[];
@@ -324,7 +342,9 @@ global proc liquidSlParseSlo( string $sloFile )
     $gLiquidSlShaderFile = $sloFile;
     $gLiquidSlShaderName = "";
     $gLiquidSlShaderType = "";
+    $gLiquidSlNumMethods = -1;
     $gLiquidSlNumParams = -1;
+    clear( $gLiquidSlMethods );
     clear( $gLiquidSlParamNames );
     clear( $gLiquidSlParamDetails );
     clear( $gLiquidSlParamTypes );
@@ -334,6 +354,8 @@ global proc liquidSlParseSlo( string $sloFile )
 
     // Strip the extension otherwise sloinfo will barf
     $sloFile = `substitute "\\.slo$" $sloFile ""`;
+
+	//trace ("[liquidSlParseSlo] on file: "+$sloFile);
 
     // Build and run the sloinfo command
     string $slInfo = `getAttr liquidGlobals.shaderInfo`;
@@ -347,7 +369,9 @@ global proc liquidSlParseSlo( string $sloFile )
     if ( $shaderType != "surface"       &&
          $shaderType != "displacement"  &&
          $shaderType != "volume"        &&
-         $shaderType != "light"            )
+         $shaderType != "light"         &&
+         $shaderType != "shader" 
+		)
     {
         pclose $fid;
         error( "unknown shader type \"" + $shaderType +
@@ -356,24 +380,49 @@ global proc liquidSlParseSlo( string $sloFile )
     }
 
     // Store the shader type
-    $gLiquidSlShaderType = $shaderType;
+	// TODO : temporary fix until Liquid internal code supports SL 2.0
+	// shaders of type "shader"
 
+    $cmd = $slInfo + " --methods \"" + $sloFile + "\"";
+	int $fmid = `popen $cmd "r"`;
+	//int $m = 0;
+	clear($gLiquidSlMethods);
+    while (!`feof $fmid`) {
+		string $line = strip(`fgetline $fmid`);
+		if($line!="")
+		{
+			$gLiquidSlMethods[size($gLiquidSlMethods)] = $line;
+		}
+    }
+
+    $gLiquidSlNumMethods = size($gLiquidSlMethods);
+
+    if ($shaderType == "shader" ) {
+        if (stringArrayContains("surface", $gLiquidSlMethods)) {
+            $shaderType = "surface";
+        } else if (stringArrayContains("lighting", $gLiquidSlMethods)) {
+            $shaderType = "surface";
+        } else if (stringArrayContains("volume", $gLiquidSlMethods)) {
+            $shaderType = "volume";
+        } else if (stringArrayContains("light", $gLiquidSlMethods)) {
+            $shaderType = "light";
+        } else if (stringArrayContains("displacement", $gLiquidSlMethods)) {
+            $shaderType = "displacement";
+        }
+    }
+
+
+    $gLiquidSlShaderType = $shaderType;
+    
 
     //
     // Now for each parameter...
     //
-
-    string $line = `fgetline $fid`;
     int $paramNum = 0;
+	$line = getSloLine ($fid);
+    while ( size($line) ) {
 
-    while ( ! `feof $fid` )
-    {
-        // Skip empty lines
-        if ( `substitute "^[ \t\r\n]*$" $line ""` == "" )
-        {
-            $line = `fgetline $fid`;
-            continue;
-        }
+		//trace ("[liquidSlParseSlo] parsing line: "+substitute("\n", $line, ""));
 
         string $paramName = liquidSl_getParamName( $line );
         if ( $paramName == "" )
@@ -405,20 +454,32 @@ global proc liquidSlParseSlo( string $sloFile )
         }
 
         int $paramArraySize = liquidSl_getParamArraySize( $line );
+		int $isArrayParam;
+		if ($paramArraySize < 0) {
+			$isArrayParam = 0;
+		} else {
+			$isArrayParam = 1;
+		}
 
-        string $paramDefault = liquidSl_getParamDefault( $fid, $paramType );
-
-        if ( $paramArraySize > 0 )
-        {
-            int $i = 1;
-            for ( ; $i < $paramArraySize; $i++ )
-            {
-                string $this = liquidSl_getParamDefault( $fid, $paramType );
-                $paramDefault += ", " + $this;
-            }
-            $paramDefault = "{" + $paramDefault + "}";
+		// Modified as sloinfo can now output param info without a Default line
+		// for resizable arrays, this caused the parser to "eat" the next parameter line
+	
+		string $defaultValues[];
+        clear $defaultValues;
+        while (size(match("^.*[Dd]efault value:", $line = getSloLine ($fid)))) {
+            //trace ("[liquidSlParseSdl] parsing line: "+substitute("\n", $line, ""));
+            $defaultValues[size($defaultValues)] = liquidSl_getParamDefault( $line, $paramType );
         }
+		
+		// Format default values if more than one
+		string $paramDefault = stringArrayToString($defaultValues, ",");
+		// Format for array if need
+		if ($isArrayParam) {
+			$paramDefault = "{" + $paramDefault + "}";
+		}
 
+		string $arrayNotation = ($paramArraySize > 0) ? ("["+$paramArraySize+"]") : (($paramArraySize == 0) ? "[]" : "");
+		//trace ("[liquidSlParseSlo] got param: "+$paramDetail+" "+$paramType+" "+$paramName+$arrayNotation+" = "+$paramDefault);
 
         // Store the results for this parameter
         $gLiquidSlParamNames[ $paramNum ] = $paramName;
@@ -428,8 +489,9 @@ global proc liquidSlParseSlo( string $sloFile )
         $gLiquidSlParamDefaults[ $paramNum ] = $paramDefault;
         $gLiquidSlParamArraySizes[ $paramNum ] = $paramArraySize;
 
-        $line = `fgetline $fid`;
-        $paramNum += 1;
+		// Default declarations are over, we go on to next parameter
+		// We don't need to get a new line, we must still parse the current one
+		$paramNum += 1;
     }
 
     // Store the total number of shader parameters

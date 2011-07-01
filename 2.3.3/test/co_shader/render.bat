@@ -1,0 +1,4 @@
+
+prman ./test.rib
+
+pause

@@ -53,6 +53,24 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
 
   setAttr -type "string" ( $node + ".rmanShader" ) (liquidSlShaderName());
 
+  // store the output values
+  //
+  string $cmd = ( "setAttr -type Int32Array " + $node + ".rmanIsOutput " + liquidSlNumParams() + " " );
+  for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
+      $cmd += ( "" + liquidSlParamIsOutput($i) + " " );
+  }
+  //trace $cmd;
+  eval $cmd;
+
+  // store the method names
+  //
+  string $cmd = ( "setAttr -type stringArray " + $node + ".rmanMethods " + liquidSlNumMethods() + " " );
+  for ( $i = 0; $i < liquidSlNumMethods(); $i++ ) {
+      $cmd += ( "\"" + liquidSlMethodName($i) + "\" " );
+  }
+  //trace $cmd;
+  eval $cmd;
+
   // store the param names
   //
   string $cmd = ( "setAttr -type stringArray " + $node + ".rmanParams " + liquidSlNumParams() + " " );
@@ -134,6 +152,7 @@ global proc removeObsoleteParams( string $node )
           $at == "rmanDefaults"   ||
           $at == "rmanArraySizes" ||
           $at == "rmanLifCmds" ||
+          $at == "rmanMethods"    ||
           gmatch( $at, "liquid*ShaderNode")  ||
           gmatch( $at, "*Lif") ) continue;
 
@@ -168,14 +187,16 @@ proc checkParamsDefinition( string $node )
     string $argName      = liquidSlParamName($i);
     string $argType      = liquidSlParamType($i);
     int    $argArrayLen  = liquidSlParamArraySize($i);
+ 		string	$plug			= ($node + "." + $argName );
 
-    if ( objExists( ($node + "." + $argName ) ) ) {
+    if ( objExists( $plug ) ) {
 
       string $mayaType;
       switch( $argType ) {
         case "float":
           $mayaType = "double";
           break;
+        case "shader":
         case "string":
           $mayaType = "string";
           break;
@@ -192,15 +213,33 @@ proc checkParamsDefinition( string $node )
       }
 
       int $deleteAttr = 0;
-      string $attrType = `getAttr -type ($node + "." + $argName )`;
-      int $attrSize    = `getAttr -size ($node + "." + $argName )`;
+      string $attrType = `getAttr -type $plug`;
+      int $attrSize    = `getAttr -size $plug`;
 
-      $attrSize = ( $attrSize = 1 )?  0 : $attrSize;
+			int $isArray = ($argArrayLen >= 0);
+			int $resizable = ($argArrayLen == 0);
+			// Non arrays have size of 1 in Maya
 
-      if ( $argArrayLen != $attrSize ) {
-        //trace ("size : we must delete "+$node + "." + $argName + " ( "+$argArrayLen+" != "+$attrSize+" )");
-        $deleteAttr = 1;
-      }
+			int $definedSize = ($argArrayLen >= 0) ? $argArrayLen : 1;
+	
+			if ( !$resizable && ($definedSize != $attrSize) ) {
+				//trace ("size : we must delete "+ $plug + " ( "+$argArrayLen+" != "+$attrSize+" )");
+				$deleteAttr = 1;
+			}
+
+			string $attrType;
+			if (!$isArray) {
+			 	$attrType = `getAttr -type $plug`;
+			} else {
+				int $existingIndices[] = `getAttr -multiIndices  $plug`;
+				if (size($existingIndices)) {
+					$attrType = `getAttr -type ($plug+"["+$existingIndices[0]+"]")`;
+				} else {
+					$attrType = `getAttr -type ($plug+"[0]")`;
+					// the above creates the multi instance so we need to remove it... Hopefully there is a cleanier way to this
+					removeMultiInstance ($plug+"[0]");
+				}	
+			}
 
       if ( $mayaType != $attrType ) {
         //trace ("type : we must delete "+$node + "." + $argName + " ( "+$mayaType+" != "+$attrType+" )");
@@ -252,11 +291,16 @@ global proc liquidShaderNodes_initParams( string $nodeAttr )
   string $shadertype = liquidSlShaderType();
   string $nodeType = nodeType( $node );
   $nodeType = tolower( $nodeType );
-  if ( !gmatch( $nodeType, ("*"+$shadertype+"*") ) ) {
-    string $short = basenameEx($shaderPath);
-    string $typ = substitute("liquid", $nodeType, "" );
-    warning ("[liquid] "+$short+" is not a "+$typ+"shader !");
-    return;
+  //print("nodeType = " + $nodeType + "\n");
+  //print("shadertype = " + $shadertype + "\n");
+  if( $nodeType != "liquidcoshader" )  // accept everything
+  {
+	  if ( !gmatch( $nodeType, ("*"+$shadertype+"*") ) ) {
+		string $short = basenameEx($shaderPath);
+		string $typ = substitute("liquid", $nodeType, "" );
+		warning ("[liquidShaderNodes_initParams] "+$short+" is not a "+$typ+" shader !");
+		return;
+	  }
   }
 
   // here we check for false-positives : parameters with the same name
@@ -282,6 +326,7 @@ global proc liquidShaderNodes_initParams( string $nodeAttr )
 
     // if we have a well-known attr, skip it.
     if (  $at == "rmanParams"     ||
+		  $at == "rmanMethods"    ||
           $at == "rmanDetails"    ||
           $at == "rmanTypes"      ||
           $at == "rmanDefaults"   ||
@@ -628,6 +673,7 @@ global proc liquidShaderNodesParamsReplace ( string $msg )
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAEShader;
   global string $gLiquid_currentAENode;
+  global int	$gLiquid_maxDisplayElements = 20;
 
   $gLiquid_currentAENode = $theNode;
   if ( $gLiquid_currentAENode == "" ) error ("[liquid] liquidShaderNodesParamsReplace : undefined current AE node !");
@@ -655,7 +701,7 @@ global proc liquidShaderNodesParamsReplace ( string $msg )
     string $shaderLong = `getAttr ($theNode+".rmanShaderLong")`;
     if ( $shaderLong != "" ) {
       // eventually re-parse the lif and generate the commands
-      error( "[liquid]" + $msg + "-> no rmanLifCmds attr" );
+      error( "[liquidShaderNodesParamsReplace]" + $msg + "-> no rmanLifCmds attr" );
     }
   }
 
@@ -665,7 +711,7 @@ global proc liquidShaderNodesParamsReplace ( string $msg )
   setParent $topParent;
 
   string $time = `timerX -st $st`;
-  //trace ("   replace DONE !  ( "+$time+" sec. )");
+  //trace ("[liquidShaderNodesParamsReplace] DONE !  ( "+$time+" sec. )");
 
 }
 

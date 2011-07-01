@@ -3288,6 +3288,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\mel\AEliquidCoShaderTemplate.mel"
+				>
+			</File>
+			<File
 				RelativePath="..\..\mel\AEliquidDisplacementTemplate.mel"
 				>
 			</File>

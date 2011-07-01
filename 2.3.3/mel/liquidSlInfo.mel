@@ -105,6 +105,8 @@ global proc liquidSlSetShaderNode( string $node )
     global string $gLiquidSlShaderFile;
     global string $gLiquidSlShaderName;
     global string $gLiquidSlShaderType;
+	global int		$gLiquidSlNumShaderMethods;
+	global string	$gLiquidSlShaderMethods[];
     global int    $gLiquidSlNumParams;
     global string $gLiquidSlParamNames[];
     global int    $gLiquidSlParamIsOutput[];
@@ -124,6 +126,8 @@ global proc liquidSlSetShaderNode( string $node )
     $gLiquidSlShaderFile      = `getAttr ($node+".rmanShaderLong")`;
     $gLiquidSlShaderName      =  basenameEx( $gLiquidSlShaderFile );
     $gLiquidSlShaderType      =  tolower( substitute( "liquid", nodeType( $node ), "" ) );
+	// $gLiquidSlShaderMethods   = `getAttr ($node+".rmanMethods")`;
+    // $gLiquidSlNumShaderMethods       =  size( $gLiquidSlShaderMethods );
     $gLiquidSlParamNames      = `getAttr ($node+".rmanParams")`;
     $gLiquidSlNumParams       =  size( $gLiquidSlParamNames );
     $gLiquidSlParamTypes      = `getAttr ($node+".rmanTypes")`;
@@ -137,6 +141,8 @@ global proc liquidSlInfoReset()
   global string $gLiquidSlShaderFile;
   global string $gLiquidSlShaderName;
   global string $gLiquidSlShaderType;
+  global int	$gLiquidSlNumMethods;
+  global string	$gLiquidSlMethods[];
   global int    $gLiquidSlNumParams;
   global string $gLiquidSlParamNames[];
   global int    $gLiquidSlParamIsOutput[];
@@ -186,6 +192,37 @@ global proc string liquidSlShaderType()
     if ( $gLiquidSlShaderType == "" )
         error( "no shader set" );
     return $gLiquidSlShaderType;
+}
+
+global proc int liquidSlNumMethods()
+{
+    global int $gLiquidSlNumMethods;
+    if ( $gLiquidSlNumMethods == -1 )
+        error( "[liquidSlNumMethods] no shader set" );
+    return $gLiquidSlNumMethods;
+}
+
+global proc string[] liquidSlMethods()
+{
+    global int $gLiquidSlNumMethods;
+    if ( $gLiquidSlNumMethods == -1 )
+        error( "[liquidSlMethods] no shader set" );
+	global string	$gLiquidSlMethods[];
+    return $gLiquidSlMethods;
+}
+
+global proc string liquidSlMethodName( int $index )
+{
+    global int $gLiquidSlNumMethods;
+    if ( $gLiquidSlNumMethods == -1 )
+        error( "[liquidSlMethodName] no shader set" );
+
+    if ( $index < 0 ||
+         $index >= $gLiquidSlNumMethods )
+        error( "[liquidSlMethodName] liquidSlMethodName( "+$index+" ): parameter index out of range" );
+
+    global string $gLiquidSlMethods[];
+    return $gLiquidSlMethods[$index];
 }
 
 global proc int liquidSlNumParams()
@@ -470,6 +507,7 @@ global proc liquidSlInfo( string $shaderFile )
         {
             switch ( $paramType )
             {
+			case "shader":
             case "string":
                 string $s = liquidSlDefaultToString( $paramDefault );
                 break;

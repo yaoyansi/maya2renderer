@@ -64,7 +64,7 @@ global proc string liquidGetPluginName()
 
 global proc liquidLoadScripts()
 {
-	liqlog("liquidLoadScripts(...)");
+	liqlog("liquidLoadScripts()");
   string $mel_files[] = {
     "AEdagNodeInclude.mel",
     "AEliquidFGGIOverrideFlags.mel",
@@ -82,6 +82,7 @@ global proc liquidLoadScripts()
     "AEliquidVolumeTemplate.mel",
     "AEliquidLightTemplate.mel",
     "AEliquidRibBoxTemplate.mel",
+    "AEliquidCoShaderTemplate.mel",
     //"AEliquidSLTemplate.mel",
     "AEliquidCoordSysTemplate.mel",
     "liquidBuildHypergraphNodePopupMenuItems.mel",
