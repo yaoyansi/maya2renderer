@@ -52,6 +52,7 @@ public :
     virtual ~liqShader();
     MStatus liqShaderParseVectorAttr( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType );
     MStatus liqShaderParseVectorArrayAttr( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType, unsigned int arraySize );
+	MStatus liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType );
 
 	void appendCoShader(MObject coshader, MPlug plug);
 	void write(bool shortShaderNames, unsigned int indentLevel);

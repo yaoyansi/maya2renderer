@@ -805,6 +805,7 @@ global proc liquidSlBuildLifCmdList()
 	string $lifCmd;
 	
 	while ( $i < $guiSize ) {
+		//liqlog("$i="+$i+"  ---------------------------");
 		string	$argType		= liquidLifParamType($i);
 
 		string	$argSubType		= liquidLifParamGuiType($i);
@@ -862,6 +863,11 @@ global proc liquidSlBuildLifCmdList()
 					$gLifCmdList[$i] = $lifCmd;
 					break;
 					
+				case "matrix":
+					$lifCmd = ( "liquidAE_LifMatrix( \""+$paramName+"\", "+$argArrayLen+", \""+$argSubType+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$state+" );");
+					//trace ("\t[liquidSlBuildLifCmdList] matrix: "+$lifCmd);
+					$gLifCmdList[$i] = $lifCmd;
+					break;
 				default:
 					warning ("[liquidSlBuildLifCmdList] >\""+$argType+"\" not handled yet !");
 					break;
@@ -925,6 +931,7 @@ global proc liquidSlParseLif( string $shaderFile )
 
     // check its existence
     // and mark the existence of the lif file
+	//liqlog("$lifFile="+$lifFile);
     if ( ! `filetest -r $lifFile` ) {
         liquidSlBuildLifCmdList();
         //trace ( "[liquidSlParseLif] no lif file for shader: " + $shaderFile );

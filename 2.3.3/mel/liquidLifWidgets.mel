@@ -1049,7 +1049,7 @@ global proc liquidAE_LifVector( string $paramName, int $arraySize, string $subty
 
 
   if ( ! objExists( ($gLiquid_currentAENode+"."+$paramName) ) ) {
-    warning ("[liquid] liquidAE_LifVector2 : "+$gLiquid_currentAENode+"."+$paramName+" does not exist ! Your Lif file might be obsolete...");
+    warning ("[liquid] liquidAE_LifVector : "+$gLiquid_currentAENode+"."+$paramName+" does not exist ! Your Lif file might be obsolete...");
     liqPopIdent();
     return;
   }
@@ -1081,6 +1081,12 @@ global proc liquidAE_LifVector( string $paramName, int $arraySize, string $subty
     string $plabel    = ( $arraySize )? ( $label + "[" + $i + "]" ) : $label;
 
     if ( !`control -q -ex $pnameCtl` ) {
+//		liqlog("attrFieldGrp   -p "+$gLiquid_currentAEParent );
+//		liqlog("               -label "+$plabel );	
+//		liqlog("               -cc (liquidParamAU "+$gLiquid_currentAENode );
+//		liqlog("               -attribute "+$pname );
+//		liqlog("               "+$pnameCtl );
+
       attrFieldGrp  -p $gLiquid_currentAEParent
                     -label $plabel
                     -cc ( "liquidParamAU " + $gLiquid_currentAENode )
@@ -1519,4 +1525,111 @@ global proc liquidAE_LifStringOverrideDisplayAll()
     }
   }
   liqPopIdent();
+}
+/********************************************************************
+	Matrix
+********************************************************************/
+proc _liquidAE_LifMatrix( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
+{
+  liqPushIdent();
+	liqlog("liquidAE_LifMatrix(\""+$paramName+"\", "+$arraySize+", \""+$subtype+"\", \""+$label+"\", {\""+stringArrayToString( $range, "\", \"")+"\"}, \""+$description+"\", "+$channelBox+" )");
+
+	if( $arraySize == -1 )
+	{
+		$arraySize = 0;
+	}
+  global string $gLiquid_currentAEParent;
+  global string $gLiquid_currentAENode;
+  global string $gLiquid_currentAEShader;
+
+
+  if ( ! objExists( ($gLiquid_currentAENode+"."+$paramName) ) ) {
+    warning ("[liquid] liquidAE_LifMatrix : "+$gLiquid_currentAENode+"."+$paramName+" does not exist ! Your Lif file might be obsolete...");
+    liqPopIdent();
+    return;
+  }
+
+  setParent $gLiquid_currentAEParent;
+  setUITemplate -pst attributeEditorTemplate;
+
+  int $i;
+  int $nValues = ($arraySize)? $arraySize : 1;
+  int $skip    = `control -q -ex ( ( $arraySize )? ( $gLiquid_currentAEShader + "_" + $paramName + "_0_LIF" ) : ( $gLiquid_currentAEShader + "_" + $paramName+"_LIF" ) )`;
+
+  liqlog("$arraySize="+$arraySize+", $skip="+$skip);
+  if ( $arraySize && !$skip ) {
+
+    $gLiquid_currentAEParent = `frameLayout -p $gLiquid_currentAEParent
+                                            -label ( $paramName + "[" + $arraySize + "]" )
+                                            -borderVisible false
+                                            -labelIndent 10
+                                            -font "smallPlainLabelFont"`;
+    $gLiquid_currentAEParent = `columnLayout -p $gLiquid_currentAEParent`;
+
+  }
+
+  setAttr -k $channelBox ($gLiquid_currentAENode+"."+$paramName);
+
+  for ( $i=0; $i<$nValues; $i++ ) {
+
+    string $pname     = ( $arraySize )? ( $gLiquid_currentAENode + "." + $paramName + "[" + $i + "]" ) : ( $gLiquid_currentAENode + "." + $paramName );
+    string $pnameCtl  = ( $arraySize )? ( $gLiquid_currentAEShader + "_" + $paramName + "_" + $i + "_LIF" ) : ( $gLiquid_currentAEShader + "_" + $paramName + "_LIF" );
+    string $plabel    = ( $arraySize )? ( $label + "[" + $i + "]" ) : $label;
+
+	liqlog("$pnameCtl="+$pnameCtl+", $pname="+$pname);
+   if ( !`control -q -ex $pnameCtl` ) {
+//		liqlog("attrFieldGrp   -p \""+$gLiquid_currentAEParent +"\"");
+//		liqlog("               -label \""+$plabel +"\"");	
+//		liqlog("               -cc \"liquidParamAU "+$gLiquid_currentAENode+"\"" );
+//		liqlog("               -attribute \""+$pname+"\"" );
+//		liqlog("               \""+$pnameCtl +"\"");	
+
+      attrFieldGrp  -p $gLiquid_currentAEParent
+                    -label $plabel
+                    -cc ( "liquidParamAU " + $gLiquid_currentAENode )
+                    -attribute $pname
+                    $pnameCtl;
+   } else attrFieldGrp -e -attribute $pname -ann $description $pnameCtl;
+
+     string $subPname = ( $arraySize )? ($pname+"."+$paramName) : ($pname);
+     setAttr -k $channelBox $pname;
+//     setAttr -k $channelBox ($subPname+"_00");
+//     setAttr -k $channelBox ($subPname+"_01");
+//     setAttr -k $channelBox ($subPname+"_02");
+//     setAttr -k $channelBox ($subPname+"_03");
+//     setAttr -k $channelBox ($subPname+"_10");
+//     setAttr -k $channelBox ($subPname+"_11");
+//     setAttr -k $channelBox ($subPname+"_12");
+//     setAttr -k $channelBox ($subPname+"_13");
+//     setAttr -k $channelBox ($subPname+"_20");
+//     setAttr -k $channelBox ($subPname+"_21");
+//     setAttr -k $channelBox ($subPname+"_22");
+//     setAttr -k $channelBox ($subPname+"_23");
+//     setAttr -k $channelBox ($subPname+"_30");
+//     setAttr -k $channelBox ($subPname+"_31");
+//     setAttr -k $channelBox ($subPname+"_32");
+//     setAttr -k $channelBox ($subPname+"_33");
+  }
+
+
+  if ( $arraySize && !$skip ) {
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    $gLiquid_currentAEParent = substitute("|[A-Za-z0-9_]+$", $gLiquid_currentAEParent, "" );
+    setParent $gLiquid_currentAEParent;
+  }
+
+  setUITemplate -ppt;
+
+  setParent $gLiquid_currentAEParent;
+
+  liqPopIdent();
+}
+
+global proc liquidAE_LifMatrix( string $paramName, int $arraySize, string $subtype, string $label, string $range[], string $description, int $channelBox )
+{
+	if(true){
+		//_liquidAE_LifMatrix( $paramName, $arraySize, $subtype, $label, $range, $description, $channelBox );
+	}else{
+		liquidAE_LifFloat( $paramName, $arraySize, $subtype, $label, $range, $description, $channelBox );
+	}
 }

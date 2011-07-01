@@ -32,6 +32,7 @@
 #include <maya/MFnDoubleArrayData.h>
 #include <maya/MGlobal.h>
 #include <maya/MPlugArray.h>
+#include <maya/MFnMatrixData.h>
 
 #include <liquid.h>
 #include <liqShader.h>
@@ -408,8 +409,18 @@ liqShader::liqShader( MObject shaderObj )
 				}
 				case SHADER_TYPE_MATRIX:
 				{
-					liquidMessage( "WHAT IS THE MATRIX!", messageError );
-					skipToken = true;
+					liquidMessage2(messageInfo,  "[liqShader]  %s.%s arraySize=%d", shaderNode.name().asChar(), paramName.asChar(), arraySize );
+					if ( arraySize > 0 )
+					{
+ 						liquidMessage2(messageError, "[liqShader] matrix array is not supported. %s.%s ...\n", shaderNode.name().asChar(), paramName.asChar() );
+					} else {
+						status = liqShaderParseMatrixAttr( shaderNode, paramName.asChar(), rMatrix );
+						if( status != MS::kSuccess )
+						{
+							skipToken = true;
+							liquidMessage2(messageError, "[liqShader] error while building matrix. %s.%s ...\n", shaderNode.name().asChar() , paramName.asChar());
+						}
+					}
 					break;
 				}
 				case SHADER_TYPE_SHADER:
@@ -777,4 +788,42 @@ void liqShader::outputIndentation(unsigned int indentLevel)
 	}
 }
 
+MStatus liqShader::liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType )
+{
+	MStatus status( MS::kSuccess );
 
+	MPlug matrixPlug( shaderNode.findPlug( argName.c_str(), &status ) );
+
+	if ( MS::kSuccess == status )
+	{
+ 		tokenPointerArray.rbegin()->set( argName.c_str(), pType );
+		
+		RtFloat matrixBuff[16];
+
+		//get matrix value
+		MObject oMatrix;
+		matrixPlug.getValue(oMatrix);
+		MFnMatrixData fndMatrix(oMatrix, &status);
+		LIQCHECKSTATUS(status,"liqShader::liqShaderParseMatrixAttr(...) fndMatrix");
+		MMatrix matrix(fndMatrix.matrix(&status));
+		LIQCHECKSTATUS(status,"liqShader::liqShaderParseMatrixAttr(...) mmatrix");
+		RtFloat mmatrixBuff[4][4];
+		matrix.get(mmatrixBuff);
+		matrixBuff[0 ] = mmatrixBuff[0][0];  matrixBuff[1 ] = mmatrixBuff[0][1];  matrixBuff[2 ] = mmatrixBuff[0][2];  matrixBuff[3 ] = mmatrixBuff[0][3];
+		matrixBuff[4 ] = mmatrixBuff[1][0];  matrixBuff[5 ] = mmatrixBuff[1][1];  matrixBuff[6 ] = mmatrixBuff[1][2];  matrixBuff[7 ] = mmatrixBuff[1][3];
+		matrixBuff[8 ] = mmatrixBuff[2][0];  matrixBuff[9 ] = mmatrixBuff[2][1];  matrixBuff[10] = mmatrixBuff[2][2];  matrixBuff[11] = mmatrixBuff[2][3];
+		matrixBuff[12] = mmatrixBuff[3][0];  matrixBuff[13] = mmatrixBuff[3][1];  matrixBuff[14] = mmatrixBuff[3][2];  matrixBuff[15] = mmatrixBuff[3][3];
+      
+		//you can alose get the matrix value by mel
+// 		MDoubleArray matrix;
+// 		MString cmd;
+// 		cmd += "getAttr "+shaderNode.name()+"."+(MString)(argName.c_str());
+// 		MGlobal::executeCommand(cmd, matrix);
+// 		liquidMessage2(messageInfo, "m[][]={%f, %f, %f, %f, ...}",matrix[0] , matrix[1], matrix[2], matrix[3]);
+//		matrix.get(matrixBuff);
+
+		tokenPointerArray.rbegin()->setTokenFloats( matrixBuff );			
+		//tokenPointerArray.push_back( liqTokenPointer() );
+	}
+	return status;
+}

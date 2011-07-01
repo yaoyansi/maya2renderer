@@ -619,34 +619,47 @@ int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
           break;
         }
 
-        //case SHADER_TYPE_MATRIX: {
-        //  printf("\"%s\" [%f %f %f %f\n",
-        //          arg->svd_spacename,
-        //          (double) (arg->svd_default.matrixval[0]),
-        //          (double) (arg->svd_default.matrixval[1]),
-        //          (double) (arg->svd_default.matrixval[2]),
-        //          (double) (arg->svd_default.matrixval[3]));
-        //  printf("\t\t\t%f %f %f %f\n",
-        //          (double) (arg->svd_default.matrixval[4]),
-        //          (double) (arg->svd_default.matrixval[5]),
-        //          (double) (arg->svd_default.matrixval[6]),
-        //          (double) (arg->svd_default.matrixval[7]));
-        //  printf("\t\t\t%f %f %f %f\n",
-        //          (double) (arg->svd_default.matrixval[8]),
-        //          (double) (arg->svd_default.matrixval[9]),
-        //          (double) (arg->svd_default.matrixval[10]),
-        //          (double) (arg->svd_default.matrixval[11]));
-        //  printf("\t\t\t%f %f %f %f]\n",
-        //          (double) (arg->svd_default.matrixval[12]),
-        //          (double) (arg->svd_default.matrixval[13]),
-        //          (double) (arg->svd_default.matrixval[14]),
-        //          (double) (arg->svd_default.matrixval[15]));
-        //  break;
-        //}
+        case SHADER_TYPE_MATRIX: {
+			liquidMessage2(messageWarning,"[liqGetloInfo] type %s is not supported. size %d", shaderTypes[k].asChar(), (int)shaderArraySizes[k] );
 
-        case SHADER_TYPE_SHADER:
+			//argDefault.push_back( NULL );
+			if( shaderArraySizes[k] > 0  ) {
+				liquidMessage2(messageWarning,"[liqGetloInfo] type %s array is not supported.", shaderTypes[k].asChar() );
+			} else {
+				float *floats = ( float *)lmalloc( sizeof( float ) * 16 );
+				MStringArray tmp;
+				shaderDefaults[k].split( ':', tmp );
+				liquidMessage2(messageWarning,"[liqGetloInfo] type %s array's size: %d.", shaderTypes[k].asChar(), tmp.length() );
+
+				floats[0] = tmp[0].asFloat();
+				floats[1] = tmp[1].asFloat();
+				floats[2] = tmp[2].asFloat();
+				floats[3] = tmp[3].asFloat();
+				floats[4] = tmp[4].asFloat();
+				floats[5] = tmp[5].asFloat();
+				floats[6] = tmp[6].asFloat();
+				floats[7] = tmp[7].asFloat();
+				floats[8] = tmp[8].asFloat();
+				floats[9] = tmp[9].asFloat();
+				floats[10] = tmp[10].asFloat();
+				floats[11] = tmp[11].asFloat();
+				floats[12] = tmp[12].asFloat();
+				floats[13] = tmp[13].asFloat();
+				floats[14] = tmp[14].asFloat();
+				floats[15] = tmp[15].asFloat();
+				argDefault.push_back( ( void * )floats );
+			}
+			break;
+        }
+
+		case SHADER_TYPE_SHADER:{
+			liquidMessage2(messageError,"[liqGetloInfo] type %s is not supported.", shaderTypes[k].asChar() );
+			argDefault.push_back( NULL );
+			break;
+		}
         default: {
           //cout <<"setShaderNode:     + DEFAULT CASE REACHED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+			liquidMessage2(messageError,"[liqGetloInfo] type %s is not supported.", shaderTypes[k].asChar() );
           argDefault.push_back( NULL );
           break;
         }

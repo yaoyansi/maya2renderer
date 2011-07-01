@@ -3731,6 +3731,13 @@
 			<File
 				RelativePath="..\..\mel\liquidSlParseSdl.mel"
 				>
+				<FileConfiguration
+					Name="Prman2008Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\mel\liquidSlParseSdr.mel"

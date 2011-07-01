@@ -988,7 +988,19 @@ global proc matrix liquidSlDefaultToMatrix( string $default )
   liqPopIdent();
     return $_tmpMatrix;
 }
-
+global proc matrix liquidSlDefaultToMatrixArray( string $default )
+{
+  liqPushIdent();
+	liqlog("liquidSlDefaultToMatrixArray(...)");
+	liqError("matrix array is not supported yet.");
+//     // Hack since the assign-eval trick
+//     // doesn't work for matrices
+     global matrix $_tmpMatrix[4][4];
+     eval( "global matrix $_tmpMatrix[4][4];" +
+           "$_tmpMatrix = " + $default );
+  liqPopIdent();
+    return $_tmpMatrix;
+}
 // Depending on type, so we can build setAttr commands
 global proc string liquidSlDefaultToType( string $type, int $array, string $default )
 {

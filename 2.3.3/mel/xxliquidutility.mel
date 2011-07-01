@@ -5,14 +5,14 @@ proc log2(string $prefix, string $log)
 	string $indent;
 	int $i=0;
 	for(; $i<$g_IndentNum; ++$i){
-		$indent +="  ";
+		$indent +="    ";
 	}
 	print($indent + $prefix +">"+ $log +"\n");
 }
 
 global proc liqlog(string $log)
 {
-	log2("liq", $log);
+	log2("", $log);
 }
 
 global proc liqDebug(string $log)
