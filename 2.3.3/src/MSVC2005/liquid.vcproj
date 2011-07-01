@@ -3086,6 +3086,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqRibCamera.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\liqRibCamera.h"
+				>
+			</File>
+			<File
 				RelativePath="..\liqRibClipPlaneData.cpp"
 				>
 			</File>

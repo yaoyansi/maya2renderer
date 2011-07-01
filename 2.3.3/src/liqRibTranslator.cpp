@@ -619,9 +619,8 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		return MS::kFailure;
 	}
 	// find the activeView for previews;
-	m_activeView = M3dView::active3dView();
-	width        = m_activeView.portWidth();
-	height       = m_activeView.portHeight();
+	width        = M3dView::active3dView().portWidth();
+	height       = M3dView::active3dView().portHeight();
 
 	// get the current project directory
 	MString MELCommand = "workspace -q -rd";
@@ -837,8 +836,8 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		else if((arg == "-cam") || (arg == "-camera")) 
 		{
 			LIQCHECKSTATUS(status, "error in -camera parameter");   i++;
-			renderCamera = args.asString( i, &status );
-			liqglo.liqglo_renderCamera = renderCamera;
+			liqglo.renderCamera = args.asString( i, &status );
+			liqglo.liqglo_renderCamera = liqglo.renderCamera;
 			LIQCHECKSTATUS(status, "error in -camera parameter");
 		} 
 		else if((arg == "-rcam") || (arg == "-rotateCamera")) 
@@ -1572,8 +1571,8 @@ void liqRibTranslator::liquidReadGlobals()
 
 	if ( liquidGetPlugValue( rGlobalNode, "renderCamera", varVal, gStatus ) == MS::kSuccess ) 
 	{
-		renderCamera = parseString( varVal );
-		liqglo.liqglo_renderCamera = renderCamera;
+		liqglo.renderCamera = parseString( varVal );
+		liqglo.liqglo_renderCamera = liqglo.renderCamera;
 	}
 	liquidGetPlugValue( rGlobalNode, "rotateCamera", liqglo_rotateCamera, gStatus );
 
@@ -2217,16 +2216,16 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 			m_renderCommand = m_renderCommand + " -Progress";
 
 	// check to see if the output camera, if specified, is available
-	if( liqglo.liquidBin && ( renderCamera == "" ) ) 
+	if( liqglo.liquidBin && ( liqglo.renderCamera == "" ) ) 
 	{
 		liquidMessage( "No render camera specified!", messageError );
 		return MS::kFailure;
 	}
-	if( renderCamera != "" ) 
+	if( liqglo.renderCamera != "" ) 
 	{
 		MStatus selectionStatus;
 		MSelectionList camList;
-		selectionStatus = camList.add( renderCamera );
+		selectionStatus = camList.add( liqglo.renderCamera );
 		if( selectionStatus != MS::kSuccess ) 
 		{
 			liquidMessage( "Invalid render camera!", messageError );
@@ -3129,7 +3128,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 					//=============
 					cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
 					MString timeout( tmp.str().c_str() );
-					MString displayCmd = "liquidRenderView "+( (renderCamera=="")?"":("-c "+renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
+					MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
 					if( m_renderViewCrop ) 
 						displayCmd = displayCmd + " -doRegion";
 					displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
@@ -3219,7 +3218,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 							//=============
 							cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
 							MString timeout( tmp.str().c_str() );
-							MString displayCmd = "liquidRenderView "+( (renderCamera=="")?"":("-c "+renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
+							MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
 							if( m_renderViewCrop ) 
 								displayCmd = displayCmd + " -doRegion";
 							displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
@@ -3867,17 +3866,17 @@ MStatus liqRibTranslator::buildJobs()
 	// grab the current view and render that as a camera - both get added to the
 	// end of the renderable camera array
 	MDagPath cameraPath;
-	if( renderCamera != "" ) 
+	if( liqglo.renderCamera != "" ) 
 	{
 		MSelectionList camList;
-		camList.add( renderCamera );
+		camList.add( liqglo.renderCamera );
 		camList.getDagPath( 0, cameraPath );
 		MFnCamera fnCameraNode( cameraPath );
 	} 
 	else 
 	{
 		LIQDEBUGPRINTF( "-> getting current view\n" );
-		m_activeView.getCamera( cameraPath );
+		M3dView::active3dView().getCamera( cameraPath );
 	}
 	MFnCamera fnCameraNode( cameraPath );
 	thisJob.renderFrame   = liqglo.liqglo_lframe;

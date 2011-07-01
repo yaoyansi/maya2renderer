@@ -114,6 +114,7 @@
 #include <liqLocatorMgr.h>
 #include <liqShadowRibWriterMgr.h>
 #include <liqHeroRibWriterMgr.h>
+#include <liqRibCamera.h>
 
 using namespace boost;
 using namespace std;
@@ -244,46 +245,13 @@ MStatus liqRibTranslator::buildJobs__()
 		returnStatus = buildShadowJobs__();
 	} // liqglo_doShadows
 
-	// Determine which cameras to render
-	// it will either traverse the dag and find all the renderable cameras or
-	// grab the current view and render that as a camera - both get added to the
-	// end of the renderable camera array
-	MDagPath cameraPath;
-	if( renderCamera != "" ) 
-	{
-		MSelectionList camList;
-		camList.add( renderCamera );
-		camList.getDagPath( 0, cameraPath );
-		MFnCamera fnCameraNode( cameraPath );
-	} 
-	else 
-	{
-		LIQDEBUGPRINTF( "-> getting current view\n" );
-		m_activeView.getCamera( cameraPath );
-	}
-
 	structJob thisJob;
-	MFnCamera fnCameraNode( cameraPath );
-	thisJob.renderFrame   = liqglo.liqglo_lframe;
-	thisJob.everyFrame    = true;
-	thisJob.isPoint       = false;
-	thisJob.path          = cameraPath;
-	thisJob.name          = fnCameraNode.name();
-	thisJob.isShadow      = false;
-	thisJob.skip          = false;
-	//for shadow pass
-	thisJob.name         += "SHADOWPASS";
-	thisJob.isShadowPass  = true;
-	if( m_outputShadowPass ) 
-		jobList.push_back( thisJob );
-	//for hero pass
-	thisJob.name          = fnCameraNode.name();
-	thisJob.isShadowPass  = false;
-	if( m_outputHeroPass ) 
-		jobList.push_back( thisJob );
-
-	liqglo.liqglo_shutterTime    = fnCameraNode.shutterAngle() * 0.5 / M_PI;
-
+	{
+		tRibCameraMgr::gatherDataForJob(
+			liqglo, thisJob, jobList,
+			m_outputShadowPass, m_outputHeroPass
+		);
+	}
 
 	// If we didn't find a renderable camera then give up
 	if( jobList.size() == 0 ) 
@@ -585,7 +553,7 @@ void liqRibTranslator::doRenderView()
 	//=============
 	cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
 	MString timeout( tmp.str().c_str() );
-	MString displayCmd = "liquidRenderView "+( (renderCamera=="")?"":("-c "+renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
+	MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
 	if( m_renderViewCrop ) 
 		displayCmd = displayCmd + " -doRegion";
 	displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
@@ -3251,16 +3219,16 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 	liqglo.liqglo_FPS = oneSecond.as( MTime::uiUnit() );
 
 	// check to see if the output camera, if specified, is available
-	if( liqglo.liquidBin && ( renderCamera == "" ) ) 
+	if( liqglo.liquidBin && ( liqglo.renderCamera == "" ) ) 
 	{
 		liquidMessage( "No render camera specified!", messageError );
 		return MS::kFailure;
 	}
-	if( renderCamera != "" ) 
+	if( liqglo.renderCamera != "" ) 
 	{
 		MStatus selectionStatus;
 		MSelectionList camList;
-		selectionStatus = camList.add( renderCamera );
+		selectionStatus = camList.add( liqglo.renderCamera );
 		if( selectionStatus != MS::kSuccess ) 
 		{
 			liquidMessage( "Invalid render camera!", messageError );
@@ -3504,16 +3472,16 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 	liqglo.liqglo_FPS = oneSecond.as( MTime::uiUnit() );
 
 	// check to see if the output camera, if specified, is available
-	if( liqglo.liquidBin && ( renderCamera == "" ) ) 
+	if( liqglo.liquidBin && ( liqglo.renderCamera == "" ) ) 
 	{
 		liquidMessage( "No render camera specified!", messageError );
 		return MS::kFailure;
 	}
-	if( renderCamera != "" ) 
+	if( liqglo.renderCamera != "" ) 
 	{
 		MStatus selectionStatus;
 		MSelectionList camList;
-		selectionStatus = camList.add( renderCamera );
+		selectionStatus = camList.add( liqglo.renderCamera );
 		if( selectionStatus != MS::kSuccess ) 
 		{
 			liquidMessage( "Invalid render camera!", messageError );

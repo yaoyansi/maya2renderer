@@ -197,7 +197,7 @@ public:
 		cam_height;
 	float       aspectRatio;
 	liquidlong  quantValue;
-	MString     renderCamera;
+
 	MString     baseShadowName;
 	bool        createOutputDirectories;
 
@@ -238,7 +238,7 @@ private :
 
 	// Old global values
 	int           m_errorMode;
-	M3dView       m_activeView;
+//	M3dView       m_activeView;
 	MString       m_pixDir;
 	MString       m_tmpDir;
 	bool          m_noDirCheck;

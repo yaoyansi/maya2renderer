@@ -123,6 +123,7 @@ struct liqGlobalVariable
 #endif
 
 	MString tempDefname;
+	MString renderCamera;
 };
 
 extern struct liqGlobalVariable liqglo;
