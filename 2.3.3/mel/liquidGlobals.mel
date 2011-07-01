@@ -2632,7 +2632,7 @@ global proc liquidGlobalsFrameTab( string $prefix )
     frameLayout -bs "etchedIn" -l "Animation" -cll true -cl false;
       columnLayout -adj true ;
         liquidShowBoolGlobal "doAnimation" "Animation" $prefix;
-        liquidShowStringGlobal "frameSequence" "Frame Sequence" $prefix;
+        liquidShowStringGlobalPlus "frameSequence" "Frame Sequence" "e.g. 1,2,3-4,5-8@2,10-14x3" $prefix;
       setParent ..;
     setParent ..;
 
@@ -3075,7 +3075,7 @@ global proc liquidGlobalsDisplaysTab_buildIt( string $prefix )
     tabLayout -cr false liquidGlobalsDisplaysSubTabs;
 
       columnLayout -adj true liquidGlobalsDisplaysSetPrimary;
-        liquidShowStringGlobal( "ddImageName[0]", "Display Name", $prefix );
+        liquidShowStringGlobalPlus( "ddImageName[0]", "Display Name", "e.g. img_$LYR_$F.tif", $prefix );
         liquidShowStringGlobal( "ddImageType[0]", "Display Driver", $prefix );
         liquidShowStringGlobal( "ddImageMode[0]", "Channel(s)", $prefix );
         liquidShowStringGlobal( "ddParamType[0]", "Parameter Type", $prefix );

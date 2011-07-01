@@ -945,7 +945,7 @@ global proc liquidmayaBatchRenderOptions()
 global proc string liquidmayaBatchRenderOptionsString()
 {
 	liqPushIdent();
-	liqlog("elvishrayBatchRenderOptionsString()");
+	liqlog("liquidmayaBatchRenderOptionsString()");
 
 	liqPopIdent();
 	return " -r liquid ";

@@ -3916,6 +3916,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="rendererDesc"
+				>
+				<File
+					RelativePath="..\..\rendererDesc\liquidRenderer.xml"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="xx"

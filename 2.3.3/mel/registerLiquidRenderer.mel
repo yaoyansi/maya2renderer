@@ -193,45 +193,74 @@ global proc registerLiquidRenderer()
 	liqlog("registerLiquidRenderer()");
   //eval "source createMayaSoftwareCommonGlobalsTab.mel";
 
-  if ( !`renderer -q -ex liquid` ) {
-
+  if ( !`renderer -q -ex liquid` ) 
+  {
     string $icon = ( liquidGetHome() + "/icons/liquidIcon2.xpm" );
 
-    if (getApplicationVersionAsFloat() >= 8.0) {
-      eval  (
-        "renderer  -rendererUIName                        \"Liquid\" "                    +
-                  "-addGlobalsNode                        \"liquidGlobals\" "             +
-                  "-renderProcedure                       \"liquidmayaRender\" "          +
-                  "-commandRenderProcedure                \"liquidmayaCmdlineRender\" "   +
-                  "-batchRenderProcedure                  \"liquidmayaBatchRender\" "     +
+	float $version = getApplicationVersionAsFloat();
+	switch( $version )
+	{
+	case 1.0:
+	case 1.5:
+	case 2.0:
+	case 2.5:
+	case 3.0:
+	case 4.0:
+	case 4.5:
+	case 5.0:
+	case 6.0:
+	case 6.5:
+	case 7.0:
+	case 7.01:
+		eval (
+		"renderer  -rendererUIName                      \"Liquid\" "                          +
+				  "-renderProcedure                     \"liquidmayaRender\" "                +
+				  "-commandRenderProcedure              \"liquidmayaCmdlineRender\" "         +
+				  "-batchRenderProcedure                \"liquidmayaBatchRender\" "           +
+				  "-renderRegionProcedure               \"liquidmayaRenderRegion\" "          +
+				  "-hasCommonGlobalValueProcedure       \"liquidmayaHasCommonGlobalValue\" "  +
+				  "-getCommonGlobalValueProcedure       \"liquidmayaGetCommonGlobalValue\" "  +
+				  "-setCommonGlobalValueProcedure       \"liquidmayaSetCommonGlobalValue\" "  +
+				  "-logoImageName                       \"" + $icon + "\" "                   +
+				  "-logoCallbackProcedure               \"liquidRenderLogoCallback\" "        +
+				  "liquid;");
+		break;
+	case 8.0:
+	case 8.5:
+	case 2008.0:
+		eval  (
+		"renderer  -rendererUIName                        \"Liquid\" "                    +
+				  "-addGlobalsNode                        \"liquidGlobals\" "             +
+				  "-renderProcedure                       \"liquidmayaRender\" "          +
+				  "-commandRenderProcedure                \"liquidmayaCmdlineRender\" "   +
+				  "-batchRenderProcedure                  \"liquidmayaBatchRender\" "     +
+				  "-batchRenderOptionsProcedure           \"liquidmayaBatchRenderOptions\" "+
+				  "-renderRegionProcedure                 \"liquidmayaRenderRegion\" "    +
+				  "-logoImageName                         \"" + $icon + "\" "             +
+				  "-logoCallbackProcedure                 \"liquidRenderLogoCallback\" "  +
+				  "liquid;");
+		break;
+	case 2009.0:
+		eval  (
+		"renderer  -rendererUIName                        \"Liquid\" "                    +
+				  "-addGlobalsNode                        \"liquidGlobals\" "             +
+				  "-renderProcedure                       \"liquidmayaRender\" "          +
+				  "-commandRenderProcedure                \"liquidmayaCmdlineRender\" "   +
+				  "-batchRenderProcedure                  \"liquidmayaBatchRender\" "     +
 				  "-batchRenderOptionsProcedure           \"liquidmayaBatchRenderOptions\" "      +
-                  //"-batchRenderOptionsStringProcedure     \"liquidmayaBatchRenderOptionsString\" "+//if not setted, it will be rendered in mayasoftware mode.
-                  "-renderRegionProcedure                 \"liquidmayaRenderRegion\" "    +
-                  "-logoImageName                         \"" + $icon + "\" "             +
-                  "-logoCallbackProcedure                 \"liquidRenderLogoCallback\" "  +
-                  "liquid;"
-      );
+				  "-batchRenderOptionsStringProcedure     \"liquidmayaBatchRenderOptionsString\" "+//if not setted, it will be rendered in mayasoftware mode.
+				  "-renderRegionProcedure                 \"liquidmayaRenderRegion\" "    +
+				  "-logoImageName                         \"" + $icon + "\" "             +
+				  "-logoCallbackProcedure                 \"liquidRenderLogoCallback\" "  +
+				  "liquid;");
+		break;
+	default:
+		error ("Liquid is not tested for Maya "+$version+"\n");
+	}
 
+	evalDeferred liquidAddTabs;
 
-    } else {
-      eval (
-        "renderer  -rendererUIName                      \"Liquid\" "                          +
-                  "-renderProcedure                     \"liquidmayaRender\" "                +
-                  "-commandRenderProcedure              \"liquidmayaCmdlineRender\" "         +
-                  "-batchRenderProcedure                \"liquidmayaBatchRender\" "           +
-                  "-renderRegionProcedure               \"liquidmayaRenderRegion\" "          +
-                  "-hasCommonGlobalValueProcedure       \"liquidmayaHasCommonGlobalValue\" "  +
-                  "-getCommonGlobalValueProcedure       \"liquidmayaGetCommonGlobalValue\" "  +
-                  "-setCommonGlobalValueProcedure       \"liquidmayaSetCommonGlobalValue\" "  +
-                  "-logoImageName                       \"" + $icon + "\" "                   +
-                  "-logoCallbackProcedure               \"liquidRenderLogoCallback\" "        +
-                  "liquid;"
-      );
-    }
-
-      evalDeferred liquidAddTabs;
-
-      renderer -edit -addGlobalsNode "liquidGlobals" liquid;
+	renderer -edit -addGlobalsNode "liquidGlobals" liquid;
   }
 
   // can't override maya original mayaBatchRenderProcedure(). Strange!

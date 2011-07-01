@@ -5264,6 +5264,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 
 					if( liquidRenderer.renderName == MString("3Delight") )
 					{
+						liqRIBMsg("Display 1");
 						RiDisplay( const_cast< char* >( liqglo_currentJob.imageName.asChar()),
 							const_cast< char* >( liqglo_currentJob.format.asChar() ),
 							(RtToken)liqglo_currentJob.imageMode.asChar(),
@@ -5279,11 +5280,13 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 						//
 						if( liquidRenderer.renderName != MString("Pixie") )
 						{
+							liqRIBMsg("Display 2");
 							RiDisplay( "null", "null", "z", RI_NULL );
 						}
 
 						MString deepFileImageName = "+" + liqglo_currentJob.imageName;
 
+						liqRIBMsg("Display 3");
 						RiDisplay( const_cast< char* >( deepFileImageName.asChar() ),
 							const_cast< char* >( liqglo_currentJob.format.asChar() ),
 							(RtToken)liqglo_currentJob.imageMode.asChar(),
@@ -5294,6 +5297,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 				}
 				else
 				{
+					liqRIBMsg("Display 4");
 					RtInt aggregate( liqglo_currentJob.shadowAggregation );
 					RiDisplay( const_cast< char* >( liqglo_currentJob.imageName.asChar() ),
 						const_cast< char* >( liqglo_currentJob.format.asChar() ),
@@ -5304,9 +5308,10 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 			}
 			else
 			{
+				liqRIBMsg("Display 5");
 				RiArchiveRecord( RI_COMMENT, "Display Driver:" );
 				RtInt minmax = 1;
-				RiDisplay( const_cast< char* >( liqglo_currentJob.imageName.asChar() ),
+				RiDisplay( const_cast< char* >( (liqglo_currentJob.imageName+(int)liqglo_lframe).asChar() ),//const_cast< char* >( parseString(liqglo_currentJob.imageName).asChar() ),
 					const_cast< char* >(liqglo_currentJob.format.asChar()),
 					(RtToken)liqglo_currentJob.imageMode.asChar(),
 					"minmax", &minmax,
@@ -5431,6 +5436,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 			}
 			// output display drivers
 			RiArchiveRecord( RI_COMMENT, "Display Drivers:" );
+			liqRIBMsg("Display 6");
 
 			vector<structDisplay>::iterator m_displays_iterator;
 			m_displays_iterator = m_displays.begin();
@@ -5475,6 +5481,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 					if( !m_renderViewLocal ) 
 						MGlobal::executeCommand( "strip(system(\"echo $HOST\"));", host );
 
+					liqRIBMsg("Display 7");
 					RiArchiveRecord( RI_COMMENT, "Render To Maya renderView :" );
 					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" \"int merge\" [0] \"int mayaDisplayPort\" [%s] \"string host\" [\"%s\"]\n", const_cast< char* >( imageName.asChar() ), formatType.asChar(), imageMode.asChar(), port.asChar(), host.asChar() );
 
@@ -5565,6 +5572,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 						parameterString += ((*m_displays_iterator).xtraParams.type[p] > 0)? "] ":"\"] ";
 					}
 
+					liqRIBMsg("Display 8");
 					// output call
 					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" %s %s %s %s\n", const_cast< char* >( imageName.asChar() ), 
 						imageType.asChar(), 
@@ -7037,11 +7045,7 @@ MStatus liqRibTranslator::objectBlock()
 							RiMotionBeginV( liqglo_motionSamples, liqglo_sampleTimes );
 
 						for ( unsigned msampleOn( 0 ); msampleOn < liqglo_motionSamples; msampleOn++ ){ 
-							MString sFrame, sSample;
-							sFrame.set(liqglo_lframe);
-							sSample.set(msampleOn);
-
-							MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+sFrame+".m"+sSample+".rib" );
+							MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+(int)liqglo_lframe+".m"+(int)msampleOn+".rib" );
 							//1)make a reference
 							RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
 							//2)write the data into a rib file.
@@ -7056,10 +7060,8 @@ MStatus liqRibTranslator::objectBlock()
 					} 
 					else {
 						RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
-						MString sFrame;
-						sFrame.set(liqglo_lframe);
 
-						MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+sFrame+".rib" );
+						MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo_ribDir ) +"."+(int)liqglo_lframe+".rib" );
 						//1)make a reference
 						RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
 						//2)write the data into a rib file.
