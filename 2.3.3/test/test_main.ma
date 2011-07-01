@@ -1,6 +1,6 @@
 //Maya ASCII 2008 scene
 //Name: test_main.ma
-//Last modified: Fri, Nov 05, 2010 10:26:24 AM
+//Last modified: Fri, Nov 05, 2010 12:02:05 PM
 //Codeset: 936
 requires maya "2008";
 requires "liquid_2008x32d" "2.3.5";
@@ -14,14 +14,14 @@ fileInfo "cutIdentifier" "200802250025-718075";
 fileInfo "osv" "Microsoft Windows XP Service Pack 2 (Build 2600)\n";
 createNode transform -s -n "persp";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -30.318049690115068 17.184727812191369 -2.6671766300453004 ;
-	setAttr ".r" -type "double3" -29.738352729567357 -88.599999999983737 1.3017892475874891e-013 ;
+	setAttr ".t" -type "double3" -38.495771787611936 30.62748616387028 -0.88434493643325596 ;
+	setAttr ".r" -type "double3" -38.738352729568533 -86.199999999980946 4.7991059259394143e-014 ;
 createNode camera -s -n "perspShape" -p "persp";
 	setAttr -k off ".v" no;
 	setAttr ".fl" 34.999999999999993;
 	setAttr ".fs" 10.372;
 	setAttr ".fd" 35;
-	setAttr ".coi" 34.018745240656749;
+	setAttr ".coi" 48.44857196603396;
 	setAttr ".imn" -type "string" "persp";
 	setAttr ".den" -type "string" "persp_depth";
 	setAttr ".man" -type "string" "persp_mask";
@@ -145,8 +145,8 @@ createNode mesh -n "pPlaneShape2" -p "pPlane2";
 	setAttr ".covm[0]"  0 1 1;
 	setAttr ".cdvm[0]"  0 1 1;
 createNode transform -n "pointLight2";
-	setAttr -s 2 ".rlio";
-	setAttr -s 2 ".rlio";
+	setAttr -s 3 ".rlio";
+	setAttr -s 3 ".rlio";
 	setAttr ".t" -type "double3" -8.5314394239962112 15.734825479065391 7.1039934537166367 ;
 createNode pointLight -n "pointLightShape2" -p "pointLight2";
 	addAttr -ci true -sn "liquidLightShaderNode" -ln "liquidLightShaderNode" -at "message";
@@ -862,8 +862,13 @@ createNode transform -n "pCube31";
 	addAttr -ci true -sn "liqRIBDelayedReadArchive" -ln "liqRIBDelayedReadArchive" -dt "string";
 	addAttr -ci true -sn "liqRIBDelayedReadArchiveBBoxScale" -ln "liqRIBDelayedReadArchiveBBoxScale" 
 		-dv 1 -smn 0 -smx 2 -at "double";
-	setAttr ".t" -type "double3" 7.1637636670456075 0 -15.890565206165606 ;
+	setAttr ".t" -type "double3" 7.191622188880558 -3.5171865420124959e-013 -18.007542263444485 ;
+	setAttr ".liqRIBBox" -type "string" "\\# print(\"\\#++++++++++ In RIBBox\"); \\n\r\n\\# ReadArchive \"E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/test/_ribbox.rib\"";
 createNode mesh -n "pCubeShape31" -p "pCube31";
+	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
+	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -max 12 -smx 8 -at "float";
+	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
+	addAttr -ci true -sn "mmd" -ln "miMaxDisplace" -min 0 -smx 1 -at "float";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
 	setAttr ".vif" yes;
@@ -880,10 +885,10 @@ createNode transform -n "pCube32";
 	addAttr -ci true -sn "liqRIBDelayedReadArchiveBBoxScale" -ln "liqRIBDelayedReadArchiveBBoxScale" 
 		-dv 1 -smn 0 -smx 2 -at "double";
 	setAttr ".t" -type "double3" 7.7140144230148664 0 -13.290760010823027 ;
-	setAttr ".liqRIBBox" -type "string" "\\# print(\"#++++++++++ In RIBBox\");";
-	setAttr ".liqRIBGenerator" -type "string" "c.rib";
-	setAttr ".liqRIBReadArchive" -type "string" "a.rib";
-	setAttr ".liqRIBDelayedReadArchive" -type "string" "b.rib";
+	setAttr ".liqRIBBox" -type "string" "";
+	setAttr ".liqRIBGenerator" -type "string" "eval(\"source test_generator.mel\"); test_subdsphere(\"pCube50\");";
+	setAttr ".liqRIBReadArchive" -type "string" "";
+	setAttr ".liqRIBDelayedReadArchive" -type "string" "";
 createNode mesh -n "pCubeShape32" -p "pCube32";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -893,6 +898,9 @@ createNode mesh -n "pCubeShape32" -p "pCube32";
 	setAttr ".dcc" -type "string" "Ambient+Diffuse";
 	setAttr ".covm[0]"  0 1 1;
 	setAttr ".cdvm[0]"  0 1 1;
+	setAttr -s 8 ".pt[0:7]" -type "float3"  0 4.1594481 0 0 4.1594481 
+		0 0 4.1594481 0 0 4.1594481 0 0 4.1594481 0 0 4.1594481 0 0 4.1594481 0 0 4.1594481 
+		0;
 createNode transform -n "pCube33";
 	addAttr -ci true -sn "liqShdRIBBox" -ln "liqShdRIBBox" -dt "string";
 	addAttr -ci true -sn "liqShdRIBGenerator" -ln "liqShdRIBGenerator" -dt "string";
@@ -1389,62 +1397,61 @@ createNode particle -n "particleShape1" -p "particle1";
 	setAttr ".irbx" -type "string" "";
 	setAttr ".irax" -type "string" "";
 	setAttr ".icx" -type "string" ".O[0] = <<0.5, 0.5, 0.5>>+sphrand(5);\r\n\r\nvector $pos = .O[0];\r\n\r\n.O[1] = <<$pos.x, $pos.y, $pos.z>>;";
-	setAttr ".cts" 111;
-	setAttr ".cst" 111;
+	setAttr ".cts" 1;
 	setAttr ".chw" 480;
-	setAttr ".lifespanPP0" -type "doubleArray" 210 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038
-		 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 3.4028234663852886e+038 ;
+	setAttr ".lifespanPP0" -type "doubleArray" 210 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038
+		 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 3.4028234600000001e+038 ;
 	setAttr -k on ".lifespan" 1;
 	setAttr ".rgbPP0" -type "vectorArray" 210 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 		 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -1470,13 +1477,75 @@ createNode turbulenceField -n "turbulenceField1";
 	setAttr ".mag" 12.396;
 	setAttr ".att" 0.74384000000000006;
 	setAttr ".fc[0]"  0 1 1;
+createNode transform -n "pCube50";
+	addAttr -ci true -sn "liqRIBBox" -ln "liqRIBBox" -dt "string";
+	addAttr -ci true -sn "liqRIBGenerator" -ln "liqRIBGenerator" -dt "string";
+	addAttr -ci true -sn "liqRIBReadArchive" -ln "liqRIBReadArchive" -dt "string";
+	addAttr -ci true -sn "liqRIBDelayedReadArchive" -ln "liqRIBDelayedReadArchive" -dt "string";
+	addAttr -ci true -sn "liqRIBDelayedReadArchiveBBoxScale" -ln "liqRIBDelayedReadArchiveBBoxScale" 
+		-dv 1 -smn 0 -smx 2 -at "double";
+	setAttr ".t" -type "double3" 6.974926368013211 2.5415872480661972 -9.742775385235559 ;
+	setAttr ".liqRIBGenerator" -type "string" "";
+	setAttr ".liqRIBReadArchive" -type "string" "E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/test/_readArchive.rib";
+createNode mesh -n "pCubeShape50" -p "pCube50";
+	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
+	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -max 12 -smx 8 -at "float";
+	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
+	addAttr -ci true -sn "mmd" -ln "miMaxDisplace" -min 0 -smx 1 -at "float";
+	setAttr -k off ".v";
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".uvst[0].uvsn" -type "string" "map1";
+	setAttr ".cuvs" -type "string" "map1";
+	setAttr ".dcc" -type "string" "Ambient+Diffuse";
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
+	setAttr -s 8 ".pt[0:7]" -type "float3"  0 8.4364843 0 0 8.4364843 
+		0 0 8.4364843 0 0 8.4364843 0 0 8.4364843 0 0 8.4364843 0 0 8.4364843 0 0 8.4364843 
+		0;
+createNode transform -n "pCube51";
+	addAttr -ci true -sn "liqRIBBox" -ln "liqRIBBox" -dt "string";
+	addAttr -ci true -sn "liqRIBGenerator" -ln "liqRIBGenerator" -dt "string";
+	addAttr -ci true -sn "liqRIBReadArchive" -ln "liqRIBReadArchive" -dt "string";
+	addAttr -ci true -sn "liqRIBDelayedReadArchive" -ln "liqRIBDelayedReadArchive" -dt "string";
+	addAttr -ci true -sn "liqRIBDelayedReadArchiveBBoxScale" -ln "liqRIBDelayedReadArchiveBBoxScale" 
+		-dv 1 -smn 0 -smx 2 -at "double";
+	setAttr ".t" -type "double3" 7.9614843312847015 0 -2.7547934859596737 ;
+	setAttr ".liqRIBDelayedReadArchive" -type "string" "E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/test/_delayReadArchive.rib";
+createNode mesh -n "pCubeShape51" -p "pCube51";
+	setAttr -k off ".v";
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".uvst[0].uvsn" -type "string" "map1";
+	setAttr ".cuvs" -type "string" "map1";
+	setAttr ".dcc" -type "string" "Ambient+Diffuse";
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
+createNode transform -n "pCube52";
+	addAttr -ci true -sn "liqRIBBox" -ln "liqRIBBox" -dt "string";
+	addAttr -ci true -sn "liqRIBGenerator" -ln "liqRIBGenerator" -dt "string";
+	addAttr -ci true -sn "liqRIBReadArchive" -ln "liqRIBReadArchive" -dt "string";
+	addAttr -ci true -sn "liqRIBDelayedReadArchive" -ln "liqRIBDelayedReadArchive" -dt "string";
+	addAttr -ci true -sn "liqRIBDelayedReadArchiveBBoxScale" -ln "liqRIBDelayedReadArchiveBBoxScale" 
+		-dv 1 -smn 0 -smx 2 -at "double";
+	setAttr ".t" -type "double3" 8.8827584352808771 0 2.3198304213888505 ;
+	setAttr ".liqRIBBox" -type "string" "";
+createNode mesh -n "pCubeShape52" -p "pCube52";
+	setAttr -k off ".v";
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".uvst[0].uvsn" -type "string" "map1";
+	setAttr ".cuvs" -type "string" "map1";
+	setAttr ".dcc" -type "string" "Ambient+Diffuse";
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
 createNode lightLinker -n "lightLinker1";
 	setAttr -s 18 ".lnk";
 	setAttr -s 18 ".slnk";
 createNode displayLayerManager -n "layerManager";
 createNode displayLayer -n "defaultLayer";
 createNode renderLayerManager -n "renderLayerManager";
-	setAttr ".crl" 20;
+	setAttr ".crl" 10;
 	setAttr -s 21 ".rlmi[1:20]"  1 2 3 4 5 6 7 8 
 		9 10 11 12 13 14 15 16 17 18 19 20;
 	setAttr -s 21 ".rlmi";
@@ -1609,7 +1678,7 @@ createNode liquidGlobals -n "liquidGlobals";
 	setAttr ".rdc" -type "string" "prman";
 	setAttr ".prv" -type "string" "prman";
 	setAttr ".lrs" -type "string" "E:/MyDocuments/maya/projects/default/rmantmp/.xml";
-	setAttr ".lrf" -type "string" "E:/MyDocuments/maya/projects/default/rib/_perspShape.0111.rib";
+	setAttr ".lrf" -type "string" "E:/MyDocuments/maya/projects/default/rib/_perspShape.0001.rib";
 	setAttr ".shi" -type "string" "sloinfo";
 	setAttr ".shcp" -type "string" "shader";
 	setAttr ".she" -type "string" "slo";
@@ -1627,7 +1696,6 @@ createNode liquidGlobals -n "liquidGlobals";
 	setAttr ".Points" yes;
 	setAttr ".Raytracing" yes;
 	setAttr ".AdvancedVisibility" yes;
-	setAttr ".lrp" -type "string" "-rif pointToDSO.dll";
 createNode polyPlane -n "polyPlane2";
 	setAttr ".w" 15.771994101298208;
 	setAttr ".h" 26.795076755234533;
@@ -3164,8 +3232,17 @@ createNode polyCube -n "polyCube49";
 createNode renderLayer -n "rif";
 	setAttr ".adjs[0].val" -type "string" "-rif pointToDSO.dll";
 	setAttr ".do" 20;
+createNode polyCube -n "polyCube50";
+	setAttr ".w" 4.5037032436088253;
+	setAttr ".h" 5.0831744961323944;
+	setAttr ".d" 4.6538574595671385;
+	setAttr ".cuv" 4;
+createNode polyCube -n "polyCube51";
+	setAttr ".cuv" 4;
+createNode polyCube -n "polyCube52";
+	setAttr ".cuv" 4;
 select -ne :time1;
-	setAttr ".o" 111;
+	setAttr ".o" 1;
 select -ne :renderPartition;
 	setAttr -s 18 ".st";
 select -ne :renderGlobalsList1;
@@ -3180,7 +3257,7 @@ select -ne :lightList1;
 select -ne :defaultTextureList1;
 select -ne :lambert1;
 select -ne :initialShadingGroup;
-	setAttr -s 53 ".dsm";
+	setAttr -s 56 ".dsm";
 	setAttr ".ro" yes;
 select -ne :initialParticleSE;
 	setAttr ".ro" yes;
@@ -3217,6 +3294,7 @@ connectAttr "LightShader.ri" "pPlane2.rlio[2]";
 connectAttr "polyPlane2.out" "pPlaneShape2.i";
 connectAttr "DepthOfField.ri" "pointLight2.rlio[0]";
 connectAttr "MotionBlur.ri" "pointLight2.rlio[1]";
+connectAttr "Attr_RIBGroup.ri" "pointLight2.rlio[2]";
 connectAttr "DepthOfField.ri" "pointLight3.rlio[0]";
 connectAttr "MotionBlur.ri" "pointLight3.rlio[1]";
 connectAttr "DepthOfField.ri" "pSphere2.rlio[0]";
@@ -3387,11 +3465,17 @@ connectAttr "polyCube49.out" "pCubeShape49.i";
 connectAttr "rif.ri" "particle1.rlio[0]";
 connectAttr ":time1.o" "particleShape1.cti";
 connectAttr "particleShape1.xo[0]" "particleShape1.pos";
-connectAttr "particleShape1.xo[1]" "particleShape1.rgbPP";
 connectAttr "turbulenceField1.of[0]" "particleShape1.ifc[0]";
+connectAttr "particleShape1.xo[1]" "particleShape1.rgbPP";
 connectAttr "rif.ri" "turbulenceField1.rlio[0]";
 connectAttr "particleShape1.fd" "turbulenceField1.ind[0]";
 connectAttr "particleShape1.ppfd[0]" "turbulenceField1.ppda[0]";
+connectAttr "Attr_RIBGroup.ri" "pCube50.rlio[0]";
+connectAttr "polyCube50.out" "pCubeShape50.i";
+connectAttr "Attr_RIBGroup.ri" "pCube51.rlio[0]";
+connectAttr "polyCube51.out" "pCubeShape51.i";
+connectAttr "Attr_RIBGroup.ri" "pCube52.rlio[0]";
+connectAttr "polyCube52.out" "pCubeShape52.i";
 connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[0].llnk";
 connectAttr ":initialShadingGroup.msg" "lightLinker1.lnk[0].olnk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[1].llnk";
@@ -3701,6 +3785,9 @@ connectAttr "pCubeShape46.iog" ":initialShadingGroup.dsm" -na;
 connectAttr "pCubeShape47.iog" ":initialShadingGroup.dsm" -na;
 connectAttr "pCubeShape48.iog" ":initialShadingGroup.dsm" -na;
 connectAttr "pCubeShape49.iog" ":initialShadingGroup.dsm" -na;
+connectAttr "pCubeShape50.iog" ":initialShadingGroup.dsm" -na;
+connectAttr "pCubeShape51.iog" ":initialShadingGroup.dsm" -na;
+connectAttr "pCubeShape52.iog" ":initialShadingGroup.dsm" -na;
 connectAttr "particleShape1.iog" ":initialParticleSE.dsm" -na;
 connectAttr "file1.msg" ":initialMaterialInfo.t" -na;
 connectAttr "pointLight1.iog" ":defaultLightSet.dsm" -na;

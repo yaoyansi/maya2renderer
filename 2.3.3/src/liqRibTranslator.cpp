@@ -7590,7 +7590,11 @@ MString liqRibTranslator::getHiderOptions( MString rendername, MString hidername
 
 void liqRibTranslator::_writeObject(bool reference, const liqRibNodePtr& ribNode)
 {
-	if( ribNode->rib.hasReadArchive()  || ribNode->rib.hasDelayedReadArchive() ){
+	if(    ribNode->rib.hasGenerator()
+		|| ribNode->rib.hasReadArchive()  
+		|| ribNode->rib.hasDelayedReadArchive() 
+		)
+	{
 		//if ribNode is tagged as readArchive or delayedReadArchive, we do not output its geometry data.
 		return;
 	}
