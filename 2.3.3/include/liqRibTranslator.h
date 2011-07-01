@@ -586,7 +586,10 @@ public:
 	//
 	MStatus _doItNewWithoutRenderScript(const MArgList& args , const MString& originalLayer );
 	MStatus _doItNewWithRenderScript(const MArgList& args , const MString& originalLayer );
-
+	void oneObjectBlock(
+		const liqRibNodePtr &ribNode,
+		const structJob&currentJob
+		);
 private:
 	liqRibTranslator(const liqRibTranslator&);
 	liqRibTranslator& operator=(const liqRibTranslator&);

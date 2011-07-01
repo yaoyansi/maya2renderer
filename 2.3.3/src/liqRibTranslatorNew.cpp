@@ -3084,17 +3084,11 @@ MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
 	MFnSet shadowSet( shadowSetObj, &status );
 
 	//MMatrix matrix;
-	MDagPath path;
-	MObject transform;
-	MFnDagNode dagFn;
-
 	for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
 	{
 		LIQ_CHECK_CANCEL_REQUEST;
 
 		liqRibNodePtr ribNode( rniter->second );
-		path = ribNode->path();
-		transform = path.transform();
 
 		if( ( !ribNode ) || ( ribNode->object(0)->type == MRT_Light ) ) 
 			continue;
@@ -3108,191 +3102,14 @@ MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
 		if( ( currentJob.isShadow ) 
 			&& ( currentJob.shadowObjectSet != "" ) 
 			&& ( !shadowSetObj.isNull() ) 
-			&& ( !shadowSet.isMember( transform, &status ) ) ) 
+			&& ( !shadowSet.isMember( ribNode->path().transform(), &status ) ) ) 
 		{
 			//cout <<"SET FILTER : object "<<ribNode->name.asChar()<<" is NOT in "<<liqglo_currentJob.shadowObjectSet.asChar()<<endl;
 			continue;
 		}
+		//
+		oneObjectBlock(ribNode, currentJob );
 
-		if( liqglo.m_outputComments ) 
-			RiArchiveRecord( RI_COMMENT, "Name: %s", ribNode->name.asChar(), RI_NULL );
-
-		RiAttributeBegin();
-		RiAttribute( "identifier", "name", &getLiquidRibName( ribNode->name.asChar() ), RI_NULL );
-
-		// Alf: preTransformMel
-		preTransformMel(transform);
-
-		if( !ribNode->grouping.membership.empty() ) 
-		{
-			RtString members( const_cast< char* >( ribNode->grouping.membership.c_str() ) );
-			RiAttribute( "grouping", "membership", &members, RI_NULL );
-		}
-
-		if( ribNode->shading.matte || ribNode->mayaMatteMode ) 
-			RiMatte( RI_TRUE );
-
-		// If this is a single sided object, then turn that on (RMan default is Sides 2)
-		if( !ribNode->doubleSided ) 
-			RiSides( 1 );
-
-		if( ribNode->reversedNormals ) 
-			RiReverseOrientation();
-
-		LIQDEBUGPRINTF( "-> object name: %s\n", ribNode->name.asChar() );
-		MObject object;
-
-		// Moritz: only write out light linking if we're not in a shadow pass
-		if( !  currentJob.isShadow 
-			|| (currentJob.deepShadows && m_outputLightsInDeepShadows && !m_ignoreLights) )
-		{
-			tRiIlluminate(ribNode);
-		}
-		bool bMotionBlur =
-			ribNode->motion.transformationBlur &&
-			( ribNode->object( 1 ) ) &&
-			//( ribNode->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
-			( !currentJob.isShadow || currentJob.deepShadows );
-
-		bool bMatrixMotionBlur = 
-			liqglo.liqglo_doMotion 
-			&& bMotionBlur;
-
-		MaxtrixMotionBlur(ribNode, path, bMatrixMotionBlur);
-
-		// Alf: postTransformMel
-		postTransformMel(transform);
-
-		bool hasSurfaceShader( false );
-		liqDetailShaderKind hasCustomSurfaceShader( liqRegularShaderNode );
-		MString shaderRibBox( "" );
-		bool hasDisplacementShader( false );
-		bool hasVolumeShader( false );
-
-		// Check for surface shader
-		checkSurfaceShader(path, ribNode, hasSurfaceShader, hasCustomSurfaceShader, shaderRibBox);
-		// Check for displacement shader
-		checkDisplacementShader(path, ribNode, hasDisplacementShader);
-		// Check for volume shader
-		checkVolumeShader(path, ribNode, hasVolumeShader);
-		// displacement bounds
-		displacementBounds(ribNode);
-
-		LIQDEBUGPRINTF( "-> writing node attributes\n" );
-		// if the node's shading rate == -1,
-		// it means it hasn't been overriden by a liqShadingRate attribute.
-		// No need to output it then.
-		if( ribNode->shading.shadingRate > 0 )
-			RiShadingRate ( ribNode->shading.shadingRate );
-
-		if( currentJob.isShadow ) 
-		{
-			objectShadowAttribute(ribNode);
-		}else{
-			objectNonShadowAttribute(ribNode);
-		}
-
-		bool writeShaders( true );
-
-		if( currentJob.isShadow &&
-			(    ( !currentJob.deepShadows && !m_outputShadersInShadows ) 
-			  || (  currentJob.deepShadows && !m_outputShadersInDeepShadows ) 
-			)
-		  )
-		{
-			writeShaders = false;
-		}
-
-		liqRIBMsg("[6] writeShaders=%d=%d && ((!%d&&!%d)||(%d&&!%d) ", writeShaders, 
-			currentJob.isShadow, 
-			currentJob.deepShadows, m_outputShadersInShadows, currentJob.deepShadows, m_outputShadersInDeepShadows );
-		writeShader(
-			writeShaders,
-			ribNode,
-			hasVolumeShader,
-			hasSurfaceShader,
-			hasCustomSurfaceShader,
-			hasDisplacementShader,
-			shaderRibBox,
-			path,
-			currentJob.isShadow, 
-			currentJob.deepShadows
-		);
-
-		//////////////////////////////////////////////////////////////////////////
-		if( ribNode->rib.hasBox() ) 
-			RiArchiveRecord( RI_COMMENT, " RIB Box:\n%s", ribNode->rib.box.asChar() );
-		if( ribNode->rib.hasGenerator() ){
-			MGlobal::executeCommand( ribNode->rib.generator, false, false );
-		}
-		if( ribNode->rib.hasReadArchive() ) 
-			RiArchiveRecord( RI_VERBATIM, " ReadArchive \"%s\" \n", ribNode->rib.readArchive.asChar() );
-		if( ribNode->rib.hasDelayedReadArchive() ) 
-		{
-			RiArchiveRecord( RI_VERBATIM, " Procedural \"DelayedReadArchive\" [ \"%s\" ] [ %f %f %f %f %f %f ] \n", ribNode->rib.delayedReadArchive.asChar(), ribNode->bound[0],ribNode->bound[3],ribNode->bound[1],ribNode->bound[4],ribNode->bound[2],ribNode->bound[5] );
-			// should be using the bounding box node - Alf
-			/* {
-			// this is a visual display of the archive's bounding box
-			RiAttributeBegin();
-			RtColor debug;
-			debug[0] = debug[1] = 1;
-			debug[2] = 0;
-			RiColor( debug );
-			debug[0] = debug[1] = debug[2] = 0.250;
-			RiOpacity( debug );
-			RiSurface( "defaultsurface", RI_NULL );
-			RiArchiveRecord( RI_VERBATIM, "Attribute \"visibility\" \"int diffuse\" [0]\n" );
-			RiArchiveRecord( RI_VERBATIM, "Attribute \"visibility\" \"int specular\" [0]\n" );
-			RiArchiveRecord( RI_VERBATIM, "Attribute \"visibility\" \"int transmission\" [0]\n" );
-			float xmin = ribNode->bound[0];
-			float ymin = ribNode->bound[1];
-			float zmin = ribNode->bound[2];
-			float xmax = ribNode->bound[3];
-			float ymax = ribNode->bound[4];
-			float zmax = ribNode->bound[5];
-			RiSides( 2 );
-			RiArchiveRecord( RI_VERBATIM, "Polygon \"P\" [ %f %f %f  %f %f %f  %f %f %f  %f %f %f ]\n", xmin,ymax,zmin, xmax,ymax,zmin, xmax,ymax,zmax, xmin,ymax,zmax );
-			RiArchiveRecord( RI_VERBATIM, "Polygon \"P\" [ %f %f %f  %f %f %f  %f %f %f  %f %f %f ]\n", xmin,ymin,zmin, xmax,ymin,zmin, xmax,ymin,zmax, xmin,ymin,zmax );
-			RiArchiveRecord( RI_VERBATIM, "Polygon \"P\" [ %f %f %f  %f %f %f  %f %f %f  %f %f %f ]\n", xmin,ymax,zmax, xmax,ymax,zmax, xmax,ymin,zmax, xmin,ymin,zmax );
-			RiArchiveRecord( RI_VERBATIM, "Polygon \"P\" [ %f %f %f  %f %f %f  %f %f %f  %f %f %f ]\n", xmin,ymax,zmin, xmax,ymax,zmin, xmax,ymin,zmin, xmin,ymin,zmin );
-			RiAttributeEnd();
-			} */
-		}
-		//////////////////////////////////////////////////////////////////////////
-		
-		// Alf: preShapeMel
-		preShapeMel(transform);
-
-		if( !ribNode->ignoreShapes ) 
-		{
-			liqRIBMsg("ribNode->object(0)->type= %d, path=%s",ribNode->object(0)->type, ribNode->path().fullPathName().asChar() );
-			// check to see if we are writing a curve to set the proper basis
-			if( ribNode->object(0)->type == MRT_NuCurve
-				|| ribNode->object(0)->type == MRT_PfxHair
-				|| ribNode->object(0)->type == MRT_PfxTube
-				|| ribNode->object(0)->type == MRT_PfxLeaf
-				|| ribNode->object(0)->type == MRT_PfxPetal 
-				|| ribNode->object(0)->type == MRT_Curves )
-			{
-				RiBasis( RiBSplineBasis, 1, RiBSplineBasis, 1 );
-			} 
-
-			bool bGeometryMotion = 
-				liqglo.liqglo_doDef 
-				&& bMotionBlur
-				&& ( ribNode->object(0)->type != MRT_RibGen );
-
-			if( bGeometryMotion )
-			{
-				GeometryMotionBlur(ribNode, path, currentJob);
-			}else{
-				//ribNode->object( 0 )->writeObject();
-				_writeObject(ribNode, currentJob);
-			}
-			// Alf: postShapeMel
-			postShapeMel(transform);
-		} // else RiArchiveRecord( RI_COMMENT, " Shapes Ignored !!" );
-		RiAttributeEnd();
 	}//for ( RNMAP::iterator rniter(...
 	while ( attributeDepth > 0 ) 
 	{
@@ -4114,4 +3931,194 @@ void liqRibTranslator::getPfxHairData(const MDagPath &path__,
 		if( status == MS::kSuccess ) 
 			paramPlug.getValue( specularPower );
 	}
+}
+//
+void liqRibTranslator::oneObjectBlock(
+	const liqRibNodePtr &ribNode,
+	const structJob &currentJob
+	)
+{
+	MDagPath path = ribNode->path();
+	MObject transform = path.transform();
+	MFnDagNode dagFn;
+
+		if( liqglo.m_outputComments ) 
+			RiArchiveRecord( RI_COMMENT, "Name: %s", ribNode->name.asChar(), RI_NULL );
+
+		RiAttributeBegin();
+		RiAttribute( "identifier", "name", &getLiquidRibName( ribNode->name.asChar() ), RI_NULL );
+
+		// Alf: preTransformMel
+		preTransformMel(transform);
+
+		if( !ribNode->grouping.membership.empty() ) 
+		{
+			RtString members( const_cast< char* >( ribNode->grouping.membership.c_str() ) );
+			RiAttribute( "grouping", "membership", &members, RI_NULL );
+		}
+
+		if( ribNode->shading.matte || ribNode->mayaMatteMode ) 
+			RiMatte( RI_TRUE );
+
+		// If this is a single sided object, then turn that on (RMan default is Sides 2)
+		if( !ribNode->doubleSided ) 
+			RiSides( 1 );
+
+		if( ribNode->reversedNormals ) 
+			RiReverseOrientation();
+
+		LIQDEBUGPRINTF( "-> object name: %s\n", ribNode->name.asChar() );
+		MObject object;
+
+		// Moritz: only write out light linking if we're not in a shadow pass
+		if( !  currentJob.isShadow 
+			|| (currentJob.deepShadows && m_outputLightsInDeepShadows && !m_ignoreLights) )
+		{
+			tRiIlluminate(ribNode);
+		}
+		bool bMotionBlur =
+			ribNode->motion.transformationBlur &&
+			( ribNode->object( 1 ) ) &&
+			//( ribNode->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
+			( !currentJob.isShadow || currentJob.deepShadows );
+
+		bool bMatrixMotionBlur = 
+			liqglo.liqglo_doMotion 
+			&& bMotionBlur;
+
+		MaxtrixMotionBlur(ribNode, path, bMatrixMotionBlur);
+
+		// Alf: postTransformMel
+		postTransformMel(transform);
+
+		bool hasSurfaceShader( false );
+		liqDetailShaderKind hasCustomSurfaceShader( liqRegularShaderNode );
+		MString shaderRibBox( "" );
+		bool hasDisplacementShader( false );
+		bool hasVolumeShader( false );
+
+		// Check for surface shader
+		checkSurfaceShader(path, ribNode, hasSurfaceShader, hasCustomSurfaceShader, shaderRibBox);
+		// Check for displacement shader
+		checkDisplacementShader(path, ribNode, hasDisplacementShader);
+		// Check for volume shader
+		checkVolumeShader(path, ribNode, hasVolumeShader);
+		// displacement bounds
+		displacementBounds(ribNode);
+
+		LIQDEBUGPRINTF( "-> writing node attributes\n" );
+		// if the node's shading rate == -1,
+		// it means it hasn't been overriden by a liqShadingRate attribute.
+		// No need to output it then.
+		if( ribNode->shading.shadingRate > 0 )
+			RiShadingRate ( ribNode->shading.shadingRate );
+
+		if( currentJob.isShadow ) 
+		{
+			objectShadowAttribute(ribNode);
+		}else{
+			objectNonShadowAttribute(ribNode);
+		}
+
+		bool writeShaders( true );
+
+		if( currentJob.isShadow &&
+			(    ( !currentJob.deepShadows && !m_outputShadersInShadows ) 
+			  || (  currentJob.deepShadows && !m_outputShadersInDeepShadows ) 
+			)
+		  )
+		{
+			writeShaders = false;
+		}
+
+		liqRIBMsg("[6] writeShaders=%d=%d && ((!%d&&!%d)||(%d&&!%d) ", writeShaders, 
+			currentJob.isShadow, 
+			currentJob.deepShadows, m_outputShadersInShadows, currentJob.deepShadows, m_outputShadersInDeepShadows );
+		writeShader(
+			writeShaders,
+			ribNode,
+			hasVolumeShader,
+			hasSurfaceShader,
+			hasCustomSurfaceShader,
+			hasDisplacementShader,
+			shaderRibBox,
+			path,
+			currentJob.isShadow, 
+			currentJob.deepShadows
+		);
+
+		//////////////////////////////////////////////////////////////////////////
+		if( ribNode->rib.hasBox() ) 
+			RiArchiveRecord( RI_COMMENT, " RIB Box:\n%s", ribNode->rib.box.asChar() );
+		if( ribNode->rib.hasGenerator() ){
+			MGlobal::executeCommand( ribNode->rib.generator, false, false );
+		}
+		if( ribNode->rib.hasReadArchive() ) 
+			RiArchiveRecord( RI_VERBATIM, " ReadArchive \"%s\" \n", ribNode->rib.readArchive.asChar() );
+		if( ribNode->rib.hasDelayedReadArchive() ) 
+		{
+			RiArchiveRecord( RI_VERBATIM, " Procedural \"DelayedReadArchive\" [ \"%s\" ] [ %f %f %f %f %f %f ] \n", ribNode->rib.delayedReadArchive.asChar(), ribNode->bound[0],ribNode->bound[3],ribNode->bound[1],ribNode->bound[4],ribNode->bound[2],ribNode->bound[5] );
+			// should be using the bounding box node - Alf
+			/* {
+			// this is a visual display of the archive's bounding box
+			RiAttributeBegin();
+			RtColor debug;
+			debug[0] = debug[1] = 1;
+			debug[2] = 0;
+			RiColor( debug );
+			debug[0] = debug[1] = debug[2] = 0.250;
+			RiOpacity( debug );
+			RiSurface( "defaultsurface", RI_NULL );
+			RiArchiveRecord( RI_VERBATIM, "Attribute \"visibility\" \"int diffuse\" [0]\n" );
+			RiArchiveRecord( RI_VERBATIM, "Attribute \"visibility\" \"int specular\" [0]\n" );
+			RiArchiveRecord( RI_VERBATIM, "Attribute \"visibility\" \"int transmission\" [0]\n" );
+			float xmin = ribNode->bound[0];
+			float ymin = ribNode->bound[1];
+			float zmin = ribNode->bound[2];
+			float xmax = ribNode->bound[3];
+			float ymax = ribNode->bound[4];
+			float zmax = ribNode->bound[5];
+			RiSides( 2 );
+			RiArchiveRecord( RI_VERBATIM, "Polygon \"P\" [ %f %f %f  %f %f %f  %f %f %f  %f %f %f ]\n", xmin,ymax,zmin, xmax,ymax,zmin, xmax,ymax,zmax, xmin,ymax,zmax );
+			RiArchiveRecord( RI_VERBATIM, "Polygon \"P\" [ %f %f %f  %f %f %f  %f %f %f  %f %f %f ]\n", xmin,ymin,zmin, xmax,ymin,zmin, xmax,ymin,zmax, xmin,ymin,zmax );
+			RiArchiveRecord( RI_VERBATIM, "Polygon \"P\" [ %f %f %f  %f %f %f  %f %f %f  %f %f %f ]\n", xmin,ymax,zmax, xmax,ymax,zmax, xmax,ymin,zmax, xmin,ymin,zmax );
+			RiArchiveRecord( RI_VERBATIM, "Polygon \"P\" [ %f %f %f  %f %f %f  %f %f %f  %f %f %f ]\n", xmin,ymax,zmin, xmax,ymax,zmin, xmax,ymin,zmin, xmin,ymin,zmin );
+			RiAttributeEnd();
+			} */
+		}
+		//////////////////////////////////////////////////////////////////////////
+		
+		// Alf: preShapeMel
+		preShapeMel(transform);
+
+		if( !ribNode->ignoreShapes ) 
+		{
+			liqRIBMsg("ribNode->object(0)->type= %d, path=%s",ribNode->object(0)->type, ribNode->path().fullPathName().asChar() );
+			// check to see if we are writing a curve to set the proper basis
+			if( ribNode->object(0)->type == MRT_NuCurve
+				|| ribNode->object(0)->type == MRT_PfxHair
+				|| ribNode->object(0)->type == MRT_PfxTube
+				|| ribNode->object(0)->type == MRT_PfxLeaf
+				|| ribNode->object(0)->type == MRT_PfxPetal 
+				|| ribNode->object(0)->type == MRT_Curves )
+			{
+				RiBasis( RiBSplineBasis, 1, RiBSplineBasis, 1 );
+			} 
+
+			bool bGeometryMotion = 
+				liqglo.liqglo_doDef 
+				&& bMotionBlur
+				&& ( ribNode->object(0)->type != MRT_RibGen );
+
+			if( bGeometryMotion )
+			{
+				GeometryMotionBlur(ribNode, path, currentJob);
+			}else{
+				//ribNode->object( 0 )->writeObject();
+				_writeObject(ribNode, currentJob);
+			}
+			// Alf: postShapeMel
+			postShapeMel(transform);
+		} // else RiArchiveRecord( RI_COMMENT, " Shapes Ignored !!" );
+		RiAttributeEnd();
 }
