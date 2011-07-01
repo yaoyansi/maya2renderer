@@ -111,7 +111,6 @@ extern const char *LIQUIDVERSION;
 #include <liqCustomNode.h>
 #include <liqShaderFactory.h>
 #include <liqExpression.h>
-#include <liqRenderScript.h>
 #include <liqGlobalVariable.h>
 
 using namespace boost;
@@ -2474,12 +2473,13 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 			liqglo.liqglo_preRibBoxShadow.clear();
 
 			// make sure all the global strings are parsed for this frame
+
 			MString frameRenderCommand    = parseString( liqglo.liquidRenderer.renderCommand + " " + liqglo.liquidRenderer.renderCmdFlags, false );
 			MString frameRibgenCommand    = parseString( m_ribgenCommand, false );
 			MString framePreCommand       = parseString( m_preCommand, false );
 			MString framePreFrameCommand  = parseString( m_preFrameCommand, false );
 			MString framePostFrameCommand = parseString( m_postFrameCommand, false );
-
+			
 			if( useRenderScript ) 
 			{
 				if( m_deferredGen ) 

@@ -49,6 +49,7 @@
 #include <liquid.h>
 #include <liqRibHT.h>
 #include <liqShader.h>
+#include <liqRenderScript.h>
 
 class liqRibLightData;
 
@@ -456,6 +457,39 @@ private :
 
 	void _writeObject( const liqRibNodePtr& ribNode);
 	void _RiOption_format_compress(bool bBinary, bool bCompress);
+	void makeReflectionPass(
+		std::vector<structJob> &refList__, 
+		liqRenderScript::Job &reflectJob__,
+		const bool alf_textures__,
+		const bool alf_shadows__,
+		      bool &alf_refmaps__
+	);
+	void makeShadowPass(
+		std::vector<structJob> &shadowList__, 
+		liqRenderScript::Job &shadowJob__,
+		const bool alf_textures__,
+		bool &alf_shadows__,
+		const bool alf_refmaps__,
+		const MString &framePreCommand__,
+		const MString &frameRenderCommand__,
+		const int currentBlock__
+		);
+	void makeTexturePass(
+		std::vector<structJob> &shadowList__, 
+		liqRenderScript::Job &shadowJob__,
+		      bool &alf_textures__,
+		const bool alf_shadows__,
+		const bool alf_refmaps__
+		);
+	void addDefferedJob(
+		liqRenderScript::Job &deferredJob__,
+		const int currentBlock__,
+		const unsigned int frameIndex__,
+		const MString &framePreCommand__,
+		const MString &frameRibgenCommand__,
+		const MString &tempDefname__
+		);
+	void calaculateSamplingTime(const long scanTime__);
 
 private:
 	liqRibTranslator(const liqRibTranslator&);
