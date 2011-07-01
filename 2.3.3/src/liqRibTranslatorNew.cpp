@@ -952,95 +952,91 @@ TempControlBreak liqRibTranslator::processOneFrame(
 #if defined(PRMAN) || defined(DELIGHT)
 			/* THERE IS A RIBLIB BUG WHICH PREVENTS THIS WORKING */
 			_RiOption_format_compress(liqglo__.liqglo_doBinary, liqglo__.liqglo_doCompression);
-
 #endif // PRMAN || DELIGHT
 
 			// world RiReadArchives and Rib Boxes ************************************************
 			//
-			if( liqglo__.liqglo_currentJob.isShadow && !liqglo__.liqglo_currentJob.shadowArchiveRibDone && !liqglo.fullShadowRib ) 
+			if( liqglo__.liqglo_currentJob.isShadow &&!liqglo.fullShadowRib )
 			{
-				//
-				//  create the read-archive shadow files
-				//
+				if(!liqglo__.liqglo_currentJob.shadowArchiveRibDone) 
+				{
+					//
+					//  create the read-archive shadow files
+					//
 #ifndef RENDER_PIPE
-				liquidMessage( "Beginning RIB output to '" + string( baseShadowName.asChar() ) + "'", messageInfo );
-				RiBegin( const_cast< RtToken >( baseShadowName.asChar() ) );
+					liquidMessage( "Beginning RIB output to '" + string( baseShadowName.asChar() ) + "'", messageInfo );
+					RiBegin( const_cast< RtToken >( baseShadowName.asChar() ) );
 #else
-				liqglo__.liqglo_ribFP = fopen( baseShadowName.asChar(), "w" );
-				if( liqglo__.liqglo_ribFP ) {
-					LIQDEBUGPRINTF( "-> setting pipe option\n" );
-					RtInt ribFD( fileno( liqglo__.liqglo_ribFP ) );
-					RiOption( "rib", "pipe", &ribFD, RI_NULL );
+					liqglo__.liqglo_ribFP = fopen( baseShadowName.asChar(), "w" );
+					if( liqglo__.liqglo_ribFP ) {
+						LIQDEBUGPRINTF( "-> setting pipe option\n" );
+						RtInt ribFD( fileno( liqglo__.liqglo_ribFP ) );
+						RiOption( "rib", "pipe", &ribFD, RI_NULL );
+					}
+					else
+					{
+						liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
+					}
+					liquidMessage( "Beginning RI output directly to renderer", messageInfo );
+					RiBegin( RI_NULL );
+#endif
+					if( worldPrologue() != MS::kSuccess ) 
+						break;
+					if( liqglo__.liqglo_currentJob.isShadow && liqglo__.liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows ) 
+						if( lightBlock() != MS::kSuccess ) 
+							break;
+					if( coordSysBlock() != MS::kSuccess ) 
+						break;
+					if( objectBlock() != MS::kSuccess ) 
+						break;
+					if( worldEpilogue() != MS::kSuccess ) 
+						break;
+					RiEnd();
+#ifdef RENDER_PIPE  
+					fclose( liqglo__.liqglo_ribFP );
+#endif
+					liqglo__.liqglo_ribFP = NULL;
+
+					// mark all other jobs with the same set as done
+					vector<structJob>::iterator iterCheck = jobList.begin();
+					while ( iterCheck != jobList.end() ) 
+					{
+						if( iterCheck->shadowObjectSet == liqglo__.liqglo_currentJob.shadowObjectSet &&
+							iterCheck->everyFrame == liqglo__.liqglo_currentJob.everyFrame &&
+							iterCheck->renderFrame == liqglo__.liqglo_currentJob.renderFrame
+							)
+							iterCheck->shadowArchiveRibDone = true;
+						++iterCheck;
+					}
+
+					liqglo__.m_alfShadowRibGen = true;
+				}//  !liqglo_currentJob.shadowArchiveRibDone  
+				else{
+					//todo....
 				}
+			}//if( liqglo_currentJob.isShadow && !fullShadowRib ) 
+
+
+			if( liqglo__.liqglo_currentJob.isShadow && !liqglo.fullShadowRib ) 
+			{
+#ifndef RENDER_PIPE
+				liquidMessage( "Beginning RIB output to '" + string( liqglo__.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
+				RiBegin( const_cast< RtToken >( liqglo__.liqglo_currentJob.ribFileName.asChar() ) );
+#else//RENDER_PIPE
+				liqglo__.liqglo_ribFP = fopen( liqglo__.liqglo_currentJob.ribFileName.asChar(), "w" );
+				if( liqglo__.liqglo_ribFP ) 
+				{
+					RtInt ribFD = fileno( liqglo__.liqglo_ribFP );
+					RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
+				} 
 				else
 				{
 					liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
 				}
+
 				liquidMessage( "Beginning RI output directly to renderer", messageInfo );
 				RiBegin( RI_NULL );
-#endif
-				if( worldPrologue() != MS::kSuccess ) 
-					break;
-				if( liqglo__.liqglo_currentJob.isShadow && liqglo__.liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows ) 
-					if( lightBlock() != MS::kSuccess ) 
-						break;
-				if( coordSysBlock() != MS::kSuccess ) 
-					break;
-				if( objectBlock() != MS::kSuccess ) 
-					break;
-				if( worldEpilogue() != MS::kSuccess ) 
-					break;
-				RiEnd();
-#ifdef RENDER_PIPE  
-				fclose( liqglo__.liqglo_ribFP );
-#endif
-				liqglo__.liqglo_ribFP = NULL;
-
-				// mark all other jobs with the same set as done
-				vector<structJob>::iterator iterCheck = jobList.begin();
-				while ( iterCheck != jobList.end() ) 
-				{
-					if( iterCheck->shadowObjectSet == liqglo__.liqglo_currentJob.shadowObjectSet &&
-						iterCheck->everyFrame == liqglo__.liqglo_currentJob.everyFrame &&
-						iterCheck->renderFrame == liqglo__.liqglo_currentJob.renderFrame
-						)
-						iterCheck->shadowArchiveRibDone = true;
-					++iterCheck;
-				}
-
-				liqglo__.m_alfShadowRibGen = true;
-			}//if( liqglo_currentJob.isShadow && !liqglo_currentJob.shadowArchiveRibDone && !fullShadowRib ) 
-
-#ifndef RENDER_PIPE
-			liquidMessage( "Beginning RIB output to '" + string( liqglo__.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
-			RiBegin( const_cast< RtToken >( liqglo__.liqglo_currentJob.ribFileName.asChar() ) );
-
-#ifdef DELIGHT
-			LIQDEBUGPRINTF( "-> setting binary option\n" );
-			{
-				RtString format[1] = {"ascii"};
-				if( liqglo__.liqglo_doBinary ) 
-					format[0] = "binary";
-				RiOption( "rib", "format", ( RtPointer )&format, RI_NULL);
-			}
-#endif
-#else
-			liqglo__.liqglo_ribFP = fopen( liqglo__.liqglo_currentJob.ribFileName.asChar(), "w" );
-			if( liqglo__.liqglo_ribFP ) 
-			{
-				RtInt ribFD = fileno( liqglo__.liqglo_ribFP );
-				RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
-			} 
-			else
-			{
-				liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
-			}
-
-			liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-			RiBegin( RI_NULL );
-#endif
-			if( liqglo__.liqglo_currentJob.isShadow && !liqglo.fullShadowRib ) 
-			{
+#endif//RENDER_PIPE
 				// reference the correct shadow archive
 				//
 				/* cout <<"  * referencing shadow archive "<<baseShadowName.asChar()<<endl; */
@@ -1055,9 +1051,28 @@ TempControlBreak liqRibTranslator::processOneFrame(
 						break;
 					ribEpilogue();
 				}
+				RiEnd();
 			} 
 			else 
 			{
+#ifndef RENDER_PIPE
+				liquidMessage( "Beginning RIB output to '" + string( liqglo__.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
+				RiBegin( const_cast< RtToken >( liqglo__.liqglo_currentJob.ribFileName.asChar() ) );
+#else//RENDER_PIPE
+				liqglo__.liqglo_ribFP = fopen( liqglo__.liqglo_currentJob.ribFileName.asChar(), "w" );
+				if( liqglo__.liqglo_ribFP ) 
+				{
+					RtInt ribFD = fileno( liqglo__.liqglo_ribFP );
+					RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
+				} 
+				else
+				{
+					liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
+				}
+
+				liquidMessage( "Beginning RI output directly to renderer", messageInfo );
+				RiBegin( RI_NULL );
+#endif//RENDER_PIPE
 				// full beauty/shadow rib generation
 				//
 				/* cout <<"  * build full rib"<<endl; */
@@ -1082,8 +1097,9 @@ TempControlBreak liqRibTranslator::processOneFrame(
 					// output info when done with the rib - Alf
 					cout <<"Finished RIB generation "<<liqglo__.liqglo_currentJob.ribFileName.asChar()<<endl;
 				}
+				RiEnd();
 			}
-			RiEnd();
+
 #ifdef RENDER_PIPE
 			fclose( liqglo_ribFP );
 #endif
