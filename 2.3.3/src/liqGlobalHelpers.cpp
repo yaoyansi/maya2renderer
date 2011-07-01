@@ -399,13 +399,18 @@ bool fileFullyAccessible( const MString& path )
  */
 MString getFullPathFromRelative( const MString& filename ) 
 {
-  MString ret;
-  extern MString liqglo_projectDir;
-  if( filename.index( 0 ) != '/' ) // relative path, add prefix project folder
-    ret = liqglo_projectDir + "/" + filename;
-  else
-    ret = filename;
-  return ret;
+	MString ret;
+	extern MString liqglo_projectDir;
+#if defined(_WIN32)||defined(_WIN64)
+	if( filename.index( 0 ) == '/' ){ // relative path, add prefix project folder
+#else//LINUX
+	if( filename.index( 0 ) != '/' ){ // relative path, add prefix project folder
+#endif
+		ret = liqglo_projectDir + "/" + filename;
+	}else{
+		ret = filename;
+	}
+	return ret;
 }
 
 MString getFileName( const MString& fullpath ) 
