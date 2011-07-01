@@ -59,7 +59,7 @@
 #include <liqGetAttr.h>
 #include <liqAttachPrefAttribute.h>
 #include <liqPreviewShader.h>
-#include <liqWriteArchive.h>
+//#include <liqWriteArchive.h>
 #include <liqNodeSwatch.h>
 #include <liqSurfaceNode.h>
 #include <liqDisplacementNode.h>
@@ -72,7 +72,7 @@
 #include <liqGlobalHelpers.h>
 #include <liqMayaRenderView.h>
 #include <liqGlobalsNode.h>
-#include <liqJobList.h>
+//#include <liqJobList.h>
 #include <liqRiCommands.h>
 #include <liqBoundingBoxLocator.h>
 #include <liqCoShaderNode.h>
@@ -133,8 +133,8 @@ LIQUID_EXPORT MStatus initializePlugin(MObject obj)
   LIQCHECKSTATUS( status, "Can't register liquidRenderView command" );
 
   // register the liquidJobList command
-  status = plugin.registerCommand( "liquidJobList", liqJobList::creator ,liqJobList::syntax);
-  LIQCHECKSTATUS( status, "Can't register liquidJobList command" );
+//   status = plugin.registerCommand( "liquidJobList", liqJobList::creator ,liqJobList::syntax);
+//   LIQCHECKSTATUS( status, "Can't register liquidJobList command" );
 
 #ifndef NO_RICMD
   // register the RIArchiveBegin command
@@ -514,8 +514,8 @@ LIQUID_EXPORT MStatus uninitializePlugin(MObject obj)
   status = plugin.deregisterCommand("liquidRenderView");
   LIQCHECKSTATUS( status, "Can't deregister liquidRenderView command" );
 
-  status = plugin.deregisterCommand("liquidJobList");
-  LIQCHECKSTATUS( status, "Can't deregister liquidJobList command" );
+//   status = plugin.deregisterCommand("liquidJobList");
+//   LIQCHECKSTATUS( status, "Can't deregister liquidJobList command" );
 
 #ifndef NO_RICMD
   status = plugin.deregisterCommand("RIArchiveBegin");

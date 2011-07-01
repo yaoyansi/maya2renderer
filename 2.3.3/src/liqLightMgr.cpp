@@ -209,210 +209,77 @@ MStatus tLightMgr::buildShadowJob(
 				liquidGetPlugValue( fnLightNode, "geometrySet", thisJob___.shadowObjectSet, status__ );  
 				liquidGetPlugValue( fnLightNode, "shadingRateFactor", thisJob___.shadingRateFactor, status__ ); 
 			}
+
+
 			// this will store the shadow camera path and the test's result
-			bool lightHasShadowCam = false;
+			//bool lightHasShadowCam = false;
 			MDagPathArray shadowCamPath;
 
 			if( lightPath__.hasFn( MFn::kSpotLight ) || lightPath__.hasFn( MFn::kDirectionalLight ) ) 
-			{
-				bool computeShadow = true;
-				thisJob___.hasShadowCam = false;
-				MPlug liquidLightShaderNodeConnection;
-				MStatus liquidLightShaderStatus;
-				liquidLightShaderNodeConnection = fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus );
-
-				if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() ) 
-				{
-					// a shader is connected to the light !
-					MPlugArray liquidLightShaderNodePlugArray;
-					liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
-					MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
-
-					// has the main shadow been disabled ?
-					liquidGetPlugValue( fnLightShaderNode, "generateMainShadow", computeShadow, status__ ); 
-
-					// look for shadow cameras...
-					MStatus stat;
-					MPlug shadowCamPlug = fnLightShaderNode.findPlug( "shadowCameras", &stat );
-					// find the multi message attribute...
-					if( stat == MS::kSuccess ) 
-					{
-						int numShadowCams = shadowCamPlug.numElements();
-						//cout <<">> got "<<numShadowCams<<" shadow cameras"<<endl;
-						// iterate through existing array elements
-						for ( unsigned int i=0; i<numShadowCams; i++ ) 
-						{
-							stat.clear();
-							MPlug camPlug = shadowCamPlug.elementByPhysicalIndex( i, &stat );
-							if( stat != MS::kSuccess ) 
-								continue;
-							MPlugArray shadowCamPlugArray;
-
-							// if the element is connected, keep going...
-							if( camPlug.connectedTo( shadowCamPlugArray, true, false ) ) 
-							{
-								MFnDependencyNode shadowCamDepNode = shadowCamPlugArray[0].node();
-								//cout <<"shadow camera plug "<<i<<" is connected to "<<shadowCamDepNode.name()<<endl;
-
-								MDagPath cameraPath;
-								cameraPath.getAPathTo( shadowCamPlugArray[0].node(), cameraPath);
-								//cout <<"cameraPath : "<<cameraPath.fullPathName()<<endl;
-								shadowCamPath.append( cameraPath );
-								lightHasShadowCam = true;
-							}
-						}
-					}
-				}
-				thisJob___.path = lightPath__;
-				thisJob___.name = fnLightNode.name();
-				thisJob___.texName = "";
-				thisJob___.isShadow = true;
-				thisJob___.isPoint = false;
-				thisJob___.isShadowPass = false;
-
-				// check to see if the minmax shadow option is used
-				thisJob___.isMinMaxShadow = false;
-				liquidGetPlugValue( fnLightNode, "liquidMinMaxShadow", thisJob___.isMinMaxShadow, status__ ); 
-				// check to see if the midpoint shadow option is used
-				thisJob___.isMidPointShadow = false;
-				liquidGetPlugValue( fnLightNode, "useMidDistDmap", thisJob___.isMidPointShadow, status__ ); 
-				// in lazy compute mode, we check if the map is already on disk first.
-				if( m_lazyCompute__ && computeShadow ) 
-				{
-					MString fileName( liqRibTranslator::getInstancePtr()->generateFileName( (fileGenMode) fgm_shadow_tex, thisJob___ ) );
-					if( fileExists( fileName ) ) 
-						computeShadow = false;
-				}
-				//
-				// store the main shadow map    *****************************
-				//
-				if( computeShadow )
-					liqRibTranslator::getInstancePtr()->jobList.push_back( thisJob___ );
-				// We have to handle point lights differently as they need 6 shadow maps!
+			{	
+				tLightMgr::buildShadowJob_SpotAndDirectionLight(
+					thisJob___, shadowCamPath, fnLightNode, lightPath__,
+					m_lazyCompute__
+					);
 			} 
 			else if( lightPath__.hasFn(MFn::kPointLight) ) 
 			{
-				for ( unsigned dirOn( 0 ); dirOn < 6; dirOn++ ) 
-				{
-					thisJob___.hasShadowCam = false;
-					thisJob___.path = lightPath__;
-					thisJob___.name = fnLightNode.name();
-					thisJob___.isShadow = true;
-					thisJob___.isShadowPass = false;
-					thisJob___.isPoint = true;
-					thisJob___.pointDir = ( PointLightDirection )dirOn;
-
-					// check to see if the midpoint shadow option is used
-					thisJob___.isMidPointShadow = false;
-					liquidGetPlugValue( fnLightNode, "useMidDistDmap", thisJob___.isMidPointShadow, status__ );
-
-					bool computeShadow = true;
-					MStatus liquidLightShaderStatus;
-					MPlug liquidLightShaderNodeConnection( fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus ) );
-
-					if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() ) 
-					{
-						// a shader is connected to the light !
-						MPlugArray liquidLightShaderNodePlugArray;
-						liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
-						MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
-
-						// has the main shadow been disabled ?
-						liquidGetPlugValue( fnLightShaderNode, "generateMainShadow", computeShadow, status__ );
-
-						// look for shadow cameras...
-						MStatus stat;
-						MPlug shadowCamPlug( fnLightShaderNode.findPlug( "shadowCameras", &stat ) );
-
-						// find the multi message attribute...
-						if( stat == MS::kSuccess ) 
-						{
-							int numShadowCams = shadowCamPlug.numElements();
-							//cout <<">> got "<<numShadowCams<<" shadow cameras"<<endl;
-							// iterate through existing array elements
-							for ( unsigned i( 0 ); i < numShadowCams; i++ ) 
-							{
-								stat.clear();
-								MPlug camPlug = shadowCamPlug.elementByPhysicalIndex( i, &stat );
-								if( stat != MS::kSuccess ) 
-									continue;
-								MPlugArray shadowCamPlugArray;
-
-								// if the element is connected, keep going...
-								if( camPlug.connectedTo( shadowCamPlugArray, true, false ) ) 
-								{
-									MFnDependencyNode shadowCamDepNode = shadowCamPlugArray[0].node();
-									//cout <<"shadow camera plug "<<i<<" is connected to "<<shadowCamDepNode.name()<<endl;
-
-									MDagPath cameraPath;
-									cameraPath.getAPathTo( shadowCamPlugArray[0].node(), cameraPath);
-									//cout <<"cameraPath : "<<cameraPath.fullPathName()<<endl;
-									shadowCamPath.append( cameraPath );
-									lightHasShadowCam = true;
-								}
-							}
-						}
-					}
-					MString fileName( liqRibTranslator::getInstancePtr()->generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob___ ) );
-					if( m_lazyCompute__ ) 
-						if( fileExists( fileName ) ) 
-							computeShadow = false;
-					if( computeShadow ) 
-						liqRibTranslator::getInstancePtr()->jobList.push_back( thisJob___ );
-				}//for ( unsigned dirOn( 0 ); dirOn < 6; dirOn++ )  
+				tLightMgr::buildShadowJob_PointLight(
+					thisJob___, shadowCamPath, fnLightNode, lightPath__,
+					m_lazyCompute__
+					);
 			}//else if( lightPath__.hasFn(MFn::kPointLight) )  
 
+			//================= jobs for shadow cameras ==================
 			// if the job has shadow cameras, we will store them here
 			//
-			if( lightHasShadowCam )
+			int isAggregate = thisJob___.shadowAggregation;
+			for( unsigned i( 0 ); i < shadowCamPath.length(); i++ )
 			{
-				int isAggregate = thisJob___.shadowAggregation;
-				for( unsigned i( 0 ); i < shadowCamPath.length(); i++ )
-				{
-					if( !i && isAggregate )
-						thisJob___.shadowAggregation = 0;
-					else if ( isAggregate )
-						thisJob___.shadowAggregation = 1;
-					else
-						thisJob___.shadowAggregation = 0;
-					thisJob___.shadowCamPath = shadowCamPath[ i ];
-					thisJob___.hasShadowCam = true;
+				if( !i && isAggregate )
+					thisJob___.shadowAggregation = 0;
+				else if ( isAggregate )
+					thisJob___.shadowAggregation = 1;
+				else
+					thisJob___.shadowAggregation = 0;
+				thisJob___.shadowCamPath = shadowCamPath[ i ];
+				thisJob___.hasShadowCam = true;
 
-					MFnDependencyNode shadowCamDepNode( shadowCamPath[ i ].node() );
-					thisJob___.name = shadowCamDepNode.name();
-					if( isAggregate )
-						thisJob___.texName = fnLightNode.name(); //MFnDependencyNode( shadowCamPath[ i ].node() ).name();
-					//					else
-					//						thisJob.texName = "";
-					//						thisJob.name = shadowCamDepNode.name();
-					if( liquidGetPlugValue( shadowCamDepNode, "liqShadowResolution", thisJob___.width, status__ ) == MS::kSuccess )
-						thisJob___.height = thisJob___.width;
-					liquidGetPlugValue( shadowCamDepNode, "liqMidPointShadow", thisJob___.isMidPointShadow, status__ );
-					thisJob___.midPointRatio = 0;
-					liquidGetPlugValue( shadowCamDepNode, "liqMidPointRatio", thisJob___.midPointRatio, status__ );
-					liquidGetPlugValue( shadowCamDepNode, "liqDeepShadows", thisJob___.deepShadows, status__ );
-					liquidGetPlugValue( shadowCamDepNode, "liqPixelSamples", thisJob___.shadowPixelSamples, status__ );
-					liquidGetPlugValue( shadowCamDepNode, "liqVolumeInterpretation", thisJob___.shadowVolumeInterpretation, status__ );
-					liquidGetPlugValue( shadowCamDepNode, "liqEveryFrame", thisJob___.everyFrame, status__ );
-					// as previously : this is important as thisJob.renderFrame corresponds to the
-					// scene scanning time.
-					if( thisJob___.everyFrame )
-						thisJob___.renderFrame = liqglo.liqglo_lframe;
-					else
-						liquidGetPlugValue( shadowCamDepNode, "liqRenderAtFrame", thisJob___.renderFrame, status__ );
-					liquidGetPlugValue( shadowCamDepNode, "liqGeometrySet", thisJob___.shadowObjectSet, status__ );
-					liquidGetPlugValue( shadowCamDepNode, "liqShadingRateFactor", thisJob___.shadingRateFactor, status__ );
-					// test if the file is already on disk...
-					if( m_lazyCompute__ )
-					{
-						MString fileName( liqRibTranslator::getInstancePtr()->generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob___ ) );
-						if( fileExists( fileName ) )
-							continue;
-					}
-					liqRibTranslator::getInstancePtr()->jobList.push_back( thisJob___ );
+				MFnDependencyNode shadowCamDepNode( shadowCamPath[ i ].node() );
+				thisJob___.name = shadowCamDepNode.name();
+				if( isAggregate )
+					thisJob___.texName = fnLightNode.name(); //MFnDependencyNode( shadowCamPath[ i ].node() ).name();
+				//					else
+				//						thisJob.texName = "";
+				//						thisJob.name = shadowCamDepNode.name();
+				if( liquidGetPlugValue( shadowCamDepNode, "liqShadowResolution", thisJob___.width, status__ ) == MS::kSuccess )
+					thisJob___.height = thisJob___.width;
+				liquidGetPlugValue( shadowCamDepNode, "liqMidPointShadow", thisJob___.isMidPointShadow, status__ );
+				thisJob___.midPointRatio = 0;
+				liquidGetPlugValue( shadowCamDepNode, "liqMidPointRatio", thisJob___.midPointRatio, status__ );
+				liquidGetPlugValue( shadowCamDepNode, "liqDeepShadows", thisJob___.deepShadows, status__ );
+				liquidGetPlugValue( shadowCamDepNode, "liqPixelSamples", thisJob___.shadowPixelSamples, status__ );
+				liquidGetPlugValue( shadowCamDepNode, "liqVolumeInterpretation", thisJob___.shadowVolumeInterpretation, status__ );
+				liquidGetPlugValue( shadowCamDepNode, "liqEveryFrame", thisJob___.everyFrame, status__ );
+				// as previously : this is important as thisJob.renderFrame corresponds to the
+				// scene scanning time.
+				if( thisJob___.everyFrame )
+					thisJob___.renderFrame = liqglo.liqglo_lframe;
+				else
+					liquidGetPlugValue( shadowCamDepNode, "liqRenderAtFrame", thisJob___.renderFrame, status__ );
+				liquidGetPlugValue( shadowCamDepNode, "liqGeometrySet", thisJob___.shadowObjectSet, status__ );
+				liquidGetPlugValue( shadowCamDepNode, "liqShadingRateFactor", thisJob___.shadingRateFactor, status__ );
+				// test if the file is already on disk...
+				if( m_lazyCompute__ )
+				{
+					MString fileName( liqRibTranslator::getInstancePtr()->generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob___ ) );
+					if( fileExists( fileName ) )
+						continue;
 				}
-			}
-		} // useDepthMap
+				liqRibTranslator::getInstancePtr()->jobList.push_back( thisJob___ );
+			}//for( unsigned i( 0 ); i < shadowCamPath.length(); i++ )
+
+		} // if( usesDepthMap && areObjectAndParentsVisible( lightPath__ ) ) 
 		//cout <<thisJob.name.asChar()<<" -> shd:"<<thisJob.isShadow<<" ef:"<<thisJob.everyFrame<<" raf:"<<thisJob.renderFrame<<" set:"<<thisJob.shadowObjectSet.asChar()<<endl;
 	} // light dagIterator
 	return returnStatus__;
@@ -488,4 +355,167 @@ MStatus tLightMgr::buildShadowCameraJob(
 	} // camera dagIterator
 
 	return returnStatus__;
+}
+//
+void tLightMgr::buildShadowJob_SpotAndDirectionLight(
+	structJob &thisJob___, MDagPathArray &shadowCamPath, 
+	const MFnLight &fnLightNode, const MDagPath &lightPath__,
+	const bool m_lazyCompute__
+	)
+{
+	MStatus status__;
+
+	bool computeShadow = true;
+	thisJob___.hasShadowCam = false;
+	MPlug liquidLightShaderNodeConnection;
+	MStatus liquidLightShaderStatus;
+	liquidLightShaderNodeConnection = fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus );
+
+	if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() ) 
+	{
+		// a shader is connected to the light !
+		MPlugArray liquidLightShaderNodePlugArray;
+		liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
+		MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
+
+		// has the main shadow been disabled ?
+		liquidGetPlugValue( fnLightShaderNode, "generateMainShadow", computeShadow, status__ ); 
+
+		// look for shadow cameras...
+		MStatus stat;
+		MPlug shadowCamPlug = fnLightShaderNode.findPlug( "shadowCameras", &stat );
+		// find the multi message attribute...
+		if( stat == MS::kSuccess ) 
+		{
+			int numShadowCams = shadowCamPlug.numElements();
+			//cout <<">> got "<<numShadowCams<<" shadow cameras"<<endl;
+			// iterate through existing array elements
+			for ( unsigned int i=0; i<numShadowCams; i++ ) 
+			{
+				stat.clear();
+				MPlug camPlug = shadowCamPlug.elementByPhysicalIndex( i, &stat );
+				if( stat != MS::kSuccess ) 
+					continue;
+				MPlugArray shadowCamPlugArray;
+
+				// if the element is connected, keep going...
+				if( camPlug.connectedTo( shadowCamPlugArray, true, false ) ) 
+				{
+					MFnDependencyNode shadowCamDepNode = shadowCamPlugArray[0].node();
+					//cout <<"shadow camera plug "<<i<<" is connected to "<<shadowCamDepNode.name()<<endl;
+
+					MDagPath cameraPath;
+					cameraPath.getAPathTo( shadowCamPlugArray[0].node(), cameraPath);
+					//cout <<"cameraPath : "<<cameraPath.fullPathName()<<endl;
+					shadowCamPath.append( cameraPath );
+					//lightHasShadowCam = true;
+				}
+			}
+		}
+	}
+	thisJob___.path = lightPath__;
+	thisJob___.name = fnLightNode.name();
+	thisJob___.texName = "";
+	thisJob___.isShadow = true;
+	thisJob___.isPoint = false;
+	thisJob___.isShadowPass = false;
+
+	// check to see if the minmax shadow option is used
+	thisJob___.isMinMaxShadow = false;
+	liquidGetPlugValue( fnLightNode, "liquidMinMaxShadow", thisJob___.isMinMaxShadow, status__ ); 
+	// check to see if the midpoint shadow option is used
+	thisJob___.isMidPointShadow = false;
+	liquidGetPlugValue( fnLightNode, "useMidDistDmap", thisJob___.isMidPointShadow, status__ ); 
+	// in lazy compute mode, we check if the map is already on disk first.
+	if( m_lazyCompute__ && computeShadow ) 
+	{
+		MString fileName( liqRibTranslator::getInstancePtr()->generateFileName( (fileGenMode) fgm_shadow_tex, thisJob___ ) );
+		if( fileExists( fileName ) ) 
+			computeShadow = false;
+	}
+	//
+	// store the main shadow map    *****************************
+	//
+	if( computeShadow )
+		liqRibTranslator::getInstancePtr()->jobList.push_back( thisJob___ );
+	// We have to handle point lights differently as they need 6 shadow maps!
+}
+//
+void tLightMgr::buildShadowJob_PointLight(
+	structJob &thisJob___, MDagPathArray &shadowCamPath, 
+	const MFnLight &fnLightNode, 
+	const MDagPath &lightPath__,
+	const bool m_lazyCompute__
+	)
+{
+	MStatus status__;
+
+	for ( unsigned dirOn( 0 ); dirOn < 6; dirOn++ ) 
+	{
+		thisJob___.hasShadowCam = false;
+		thisJob___.path = lightPath__;
+		thisJob___.name = fnLightNode.name();
+		thisJob___.isShadow = true;
+		thisJob___.isShadowPass = false;
+		thisJob___.isPoint = true;
+		thisJob___.pointDir = ( PointLightDirection )dirOn;
+
+		// check to see if the midpoint shadow option is used
+		thisJob___.isMidPointShadow = false;
+		liquidGetPlugValue( fnLightNode, "useMidDistDmap", thisJob___.isMidPointShadow, status__ );
+
+		bool computeShadow = true;
+		MStatus liquidLightShaderStatus;
+		MPlug liquidLightShaderNodeConnection( fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus ) );
+
+		if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() ) 
+		{
+			// a shader is connected to the light !
+			MPlugArray liquidLightShaderNodePlugArray;
+			liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
+			MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
+
+			// has the main shadow been disabled ?
+			liquidGetPlugValue( fnLightShaderNode, "generateMainShadow", computeShadow, status__ );
+
+			// look for shadow cameras...
+			MStatus stat;
+			MPlug shadowCamPlug( fnLightShaderNode.findPlug( "shadowCameras", &stat ) );
+
+			// find the multi message attribute...
+			if( stat == MS::kSuccess ) 
+			{
+				int numShadowCams = shadowCamPlug.numElements();
+				//cout <<">> got "<<numShadowCams<<" shadow cameras"<<endl;
+				// iterate through existing array elements
+				for ( unsigned i( 0 ); i < numShadowCams; i++ ) 
+				{
+					stat.clear();
+					MPlug camPlug = shadowCamPlug.elementByPhysicalIndex( i, &stat );
+					if( stat != MS::kSuccess ) 
+						continue;
+					MPlugArray shadowCamPlugArray;
+
+					// if the element is connected, keep going...
+					if( camPlug.connectedTo( shadowCamPlugArray, true, false ) ) 
+					{
+						MFnDependencyNode shadowCamDepNode = shadowCamPlugArray[0].node();
+						//cout <<"shadow camera plug "<<i<<" is connected to "<<shadowCamDepNode.name()<<endl;
+
+						MDagPath cameraPath;
+						cameraPath.getAPathTo( shadowCamPlugArray[0].node(), cameraPath);
+						//cout <<"cameraPath : "<<cameraPath.fullPathName()<<endl;
+						shadowCamPath.append( cameraPath );
+						//lightHasShadowCam = true;
+					}
+				}
+			}
+		}
+		MString fileName( liqRibTranslator::getInstancePtr()->generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob___ ) );
+		if( m_lazyCompute__ ) 
+			if( fileExists( fileName ) ) 
+				computeShadow = false;
+		if( computeShadow ) 
+			liqRibTranslator::getInstancePtr()->jobList.push_back( thisJob___ );
+	}//for ( unsigned dirOn( 0 ); dirOn < 6; dirOn++ )  
 }

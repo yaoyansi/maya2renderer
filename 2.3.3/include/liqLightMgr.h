@@ -5,6 +5,8 @@
 #include <maya/MStatus.h>
 #include <liqRibHT.h>
 
+class MFnLight;
+class MDagPath;
 
 class tLightMgr
 {
@@ -21,6 +23,17 @@ public:
 		);
 	static MStatus tLightMgr::buildShadowCameraJob( 
 		structJob &thisJob___, bool m_lazyCompute__
+		);
+	static void buildShadowJob_SpotAndDirectionLight(
+		structJob &thisJob____, MDagPathArray &shadowCamPath, 
+		const MFnLight &fnLightNode, const MDagPath &lightPath__,
+		const bool m_lazyCompute__
+		);
+	static void buildShadowJob_PointLight(
+		structJob &thisJob____, MDagPathArray &shadowCamPath, 
+		const MFnLight &fnLightNode, 
+		const MDagPath &lightPath__,
+		const bool m_lazyCompute__
 		);
 private:
 	tLightMgr(const tLightMgr&);

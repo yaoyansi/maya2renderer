@@ -3028,6 +3028,14 @@
 			<File
 				RelativePath="..\liqJobList.cpp"
 				>
+				<FileConfiguration
+					Name="Prman2009Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\liqJobScriptMgr.cpp"
@@ -3325,6 +3333,14 @@
 			<File
 				RelativePath="..\..\include\liqJobList.h"
 				>
+				<FileConfiguration
+					Name="Prman2009Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\include\liqJobScriptMgr.h"
