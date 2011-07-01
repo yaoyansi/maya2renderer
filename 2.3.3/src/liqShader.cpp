@@ -295,6 +295,15 @@ liqShader::liqShader( MObject shaderObj )
 						{
 							MString stringPlugVal;
 							stringPlug.getValue( stringPlugVal );
+							MStringArray textureTokensString;
+							MStatus stat = stringPlugVal.split('.', textureTokensString);
+							if(stat == MS::kSuccess)
+							{
+								MString textureExten(textureTokensString[textureTokensString.length()-1]);
+								if(MString("tex")!=textureExten.toLowerCase()){
+									stringPlugVal += ".tex";
+								}
+							}
 							MString stringDefault( shaderInfo.getArgStringDefault( i, 0 ) );
 							if( stringPlugVal == stringDefault )
 							{

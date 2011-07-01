@@ -102,6 +102,8 @@ static const char *LIQUIDVERSION =
 #include <maya/MDagModifier.h>
 #include <maya/MPxNode.h>
 #include <maya/MRenderLineArray.h>
+#include <maya/MItDependencyNodes.h>
+#include <maya/MFnDependencyNode.h>
 
 // Liquid headers
 #include <liquid.h>
@@ -266,8 +268,17 @@ void liqRibTranslator::processExpression( liqTokenPointer *token, liqRibLightDat
 {
 	if( token != NULL ) 
 	{
-		const string strValue( token->getTokenString() );
-		LIQDEBUGPRINTF( "-> Expression: %s\n", token->getTokenName().c_str() );
+		string strValue( token->getTokenString() );
+		LIQDEBUGPRINTF( "-> Expression:(%s)\n", token->getTokenName().c_str() );
+		// NOTE:
+		// For convenience, we use the image path instead of [MakeTexture ...],
+		// e.g. we use c:/test.bmp for  [MakeTexture c:/test.bmp]
+		if( !IS_EXPRESSION(strValue.c_str()) )
+		{
+			LIQDEBUGPRINTF("texturePathPoint=%s, strValue=%s\n", strValue.c_str(), strValue.c_str());
+			strValue = "[MakeTexture "+strValue+"]";
+		}
+
 		liqExpression expr( strValue );
 		if( expr.type != exp_None && expr.isValid ) 
 		{ // we've got expression here
@@ -292,6 +303,19 @@ void liqRibTranslator::processExpression( liqTokenPointer *token, liqRibLightDat
 						thisJob.ribFileName = expr.GetCmd();
 						thisJob.imageName = expr.GetValue(); // destination file name
 
+						//skip
+						std::size_t loc = strValue.find_last_of('.');
+						if( loc == std::string::npos )
+							liquidMessage2(messageError,"%s has no extention!", strValue.c_str());
+						string extention;
+						if( *(strValue.rbegin())==']' ){//if the strValue end with ']', extention should exclude the ']'
+							extention = strValue.substr(loc+1, strValue.size()-loc-2);
+							cout << "extention = "<<extention<<endl;
+						}else{
+							extention = strValue.substr(loc+1);
+						}
+						thisJob.skip = ("tex"==extention);
+						
 						vector<structJob>::iterator iter = txtList.begin();
 						while ( iter != txtList.end() ) {
 							if( iter->imageName == thisJob.imageName )
@@ -3314,12 +3338,19 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 				vector<structJob>::iterator iter = txtList.begin();
 				while ( iter != txtList.end() ) 
 				{
+					if(iter->skip)
+					{
+						cout << "    - skipping '"<< iter->ribFileName <<"'"<<endl;
+						liquidMessage("     - skipping '"+string(iter->ribFileName.asChar())+"'", messageInfo);
+						++iter;
+						continue;
+					}
 					liquidMessage( "Making textures '" + string( iter->imageName.asChar() ) + "'", messageInfo );
 					cout << "[!] Making textures '" << iter->imageName.asChar() << "'" << endl;
 #ifdef _WIN32
-					liqProcessLauncher::execute( iter->renderName, " -progress \"" + iter->ribFileName + "\"", liqglo_projectDir, true );
+					liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo_projectDir, true );
 #else
-					liqProcessLauncher::execute( iter->renderName, " -progress " + iter->ribFileName, liqglo_projectDir, true );
+					liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo_projectDir, true );
 #endif
 					++iter;
 				}
@@ -3628,8 +3659,28 @@ MStatus liqRibTranslator::buildJobs()
 	MDagPath lightPath;
 	jobList.clear();
 	shadowList.clear();
+	txtList.clear();
 	structJob thisJob;
 
+	MItDependencyNodes dependencyNodesIter(MFn::kDependencyNode, &returnStatus);
+	if(returnStatus==MS::kSuccess)
+	{
+		//char *currentName = NULL;
+		for(; !dependencyNodesIter.isDone(); dependencyNodesIter.next())
+		{
+			MFnDependencyNode dependencyNodeFn(dependencyNodesIter.thisNode());
+			if( dependencyNodeFn.typeName()=="liquidSurface"
+				|| dependencyNodeFn.typeName()=="liquidDisplacement"
+				|| dependencyNodeFn.typeName()=="liquidVolume"
+				|| dependencyNodeFn.typeName()=="liquidLight"
+				)
+			{
+				MString name(dependencyNodeFn.name());
+				liqShader currentShader(dependencyNodesIter.thisNode());
+				scanExpressions(currentShader);
+			}
+		}
+	}
 	// what we do here is make all of the lights with depth shadows turned on into
 	// cameras and add them to the renderable camera list *before* the main camera
 	// so all the automatic depth map shadows are complete before the main pass
@@ -4129,9 +4180,11 @@ MStatus liqRibTranslator::buildJobs()
 #ifndef _WIN32
 	sort( jobList.begin(), jobList.end(), renderFrameSort );
 	sort( shadowList.begin(), shadowList.end(), renderFrameSort );
+	sort( txtList.begin(), txtList.end(), renderFrameSort );
 #else
 	sort( jobList.begin(), jobList.end(), renderFrameSort );
 	sort( shadowList.begin(), shadowList.end(), renderFrameSort );
+	sort( txtList.begin(), txtList.end(), renderFrameSort );
 #endif
 	ribStatus = kRibBegin;
 	return MS::kSuccess;

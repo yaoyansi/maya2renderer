@@ -190,7 +190,7 @@ MString	liqExpression::GetCmd( void )
   switch( type ) 
   {
     case exp_MakeTexture:
-      cmd = options + " " + source + " " + dest;
+      cmd = options + " \"" + source + "\" \"" + dest +"\"";
       break;
 
     case exp_CoordSys:
