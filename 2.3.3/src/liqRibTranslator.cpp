@@ -2573,29 +2573,6 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 						baseShadowName = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, baseShadowName, liqglo.liqglo_ribDir );
 					}
 
- 					{//export geometry objects to rib files.
-//  						MMatrix matrix;
-//  						MDagPath path;
-//  						MObject transform;
-//  						MFnDagNode dagFn;
-//
-//  						for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
-//  						{
-//  							LIQ_CHECK_CANCEL_REQUEST;
-//  
-//  							liqRibNodePtr ribNode( rniter->second );
-//  							path = ribNode->path();
-//  							transform = path.transform();
-//  							
-//  							if( ( !ribNode ) || ( ribNode->object(0)->type == MRT_Light ) ) 
-//  								continue;
-//  							if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
-//  								continue;
-//  
-//  							_writeObject(false, ribNode);
-//  
-//  						}
- 					}
 
 					LIQDEBUGPRINTF( "-> setting RiOptions\n" );
 
@@ -6962,8 +6939,18 @@ MStatus liqRibTranslator::objectBlock()
 				}
 			} 
 			else {
-				//ribNode->object( 0 )->writeObject();
-				_writeObject(ribNode, liqglo_currentJob);
+				if(    ribNode->rib.hasGenerator()
+					|| ribNode->rib.hasReadArchive()  
+					|| ribNode->rib.hasDelayedReadArchive() 
+					)
+				{
+					//if ribNode is tagged as readArchive or delayedReadArchive, we do not output its geometry data.
+					//return;
+				}else{
+					//ribNode->object( 0 )->writeObject();
+					_writeObject(ribNode, liqglo_currentJob);
+				}
+
 			}
 
 			// Alf: postShapeMel
@@ -7491,17 +7478,6 @@ MString liqRibTranslator::getHiderOptions( MString rendername, MString hidername
 
 void liqRibTranslator::_writeObject(const liqRibNodePtr& ribNode, const structJob &currentJob)
 {
-	if(    ribNode->rib.hasGenerator()
-		|| ribNode->rib.hasReadArchive()  
-		|| ribNode->rib.hasDelayedReadArchive() 
-		)
-	{
-		//if ribNode is tagged as readArchive or delayedReadArchive, we do not output its geometry data.
-		return;
-	}
-
-
-
 // 	MString frame; 
 // 	frame.set(liqglo.liqglo_lframe);
 

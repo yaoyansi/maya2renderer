@@ -472,30 +472,6 @@ TempControlBreak liqRibTranslator::processOneFrame(
 				liqglo__.liqglo_isShadowPass = false;
 
 
-
-			{//export geometry objects to rib files.
-				//  						MMatrix matrix;
-				//  						MDagPath path;
-				//  						MObject transform;
-				//  						MFnDagNode dagFn;
-				//
-				//  						for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
-				//  						{
-				//  							LIQ_CHECK_CANCEL_REQUEST;
-				//  
-				//  							liqRibNodePtr ribNode( rniter->second );
-				//  							path = ribNode->path();
-				//  							transform = path.transform();
-				//  							
-				//  							if( ( !ribNode ) || ( ribNode->object(0)->type == MRT_Light ) ) 
-				//  								continue;
-				//  							if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
-				//  								continue;
-				//  
-				//  							_writeObject(false, ribNode);
-				//  
-				//  						}
-			}
 			//************************************************************************************
 			LIQDEBUGPRINTF( "-> setting RiOptions\n" );
 			//************************************************************************************
@@ -4127,8 +4103,17 @@ void liqRibTranslator::oneObjectBlock(
 			{
 				GeometryMotionBlur(ribNode, path, currentJob);
 			}else{
-				//ribNode->object( 0 )->writeObject();
-				_writeObject(ribNode, currentJob);
+				if(    ribNode->rib.hasGenerator()
+					|| ribNode->rib.hasReadArchive()  
+					|| ribNode->rib.hasDelayedReadArchive() 
+					)
+				{
+					//if ribNode is tagged as readArchive or delayedReadArchive, we do not output its geometry data.
+					//return;
+				}else{
+					//ribNode->object( 0 )->writeObject();
+					_writeObject(ribNode, currentJob);
+				}
 			}
 			// Alf: postShapeMel
 			postShapeMel(transform);
