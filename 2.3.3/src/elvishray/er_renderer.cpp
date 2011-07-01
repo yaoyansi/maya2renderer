@@ -236,7 +236,7 @@ namespace elvishray
 	{
 		_s("\n// Renderer::exportPointLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "pointlight", "intensity", 3.0, ei_end) );
+		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "pointlight", "lightcolor", color( 1.0f, 1.0f, 1.0f ), "intensity", i_intensity, ei_end) );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light(  sLightObjectName.c_str() ) );
@@ -302,7 +302,7 @@ namespace elvishray
 	{
 		_s("\n// Renderer::exportSpotLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "spotlight", "intensity", 3, ei_end ) );
+		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "spotlight", "lightcolor",color( 1.0f, 1.0f, 1.0f ), "intensity", i_intensity, ei_end ) );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light( sLightObjectName.c_str() ) );
@@ -439,6 +439,8 @@ namespace elvishray
 		_S( ei_end_instance() );
 		_s("//");
 		m_groupMgr->addLightLink(currentJob.name.asChar(), mesh->getName(), "pointLightShape2");//_S( ei_init_instance( mesh->getName() ) );
+		m_groupMgr->addLightLink(currentJob.name.asChar(), mesh->getName(), "spotLightShape8");//_S( ei_init_instance( mesh->getName() ) );
+		m_groupMgr->addLightLink(currentJob.name.asChar(), mesh->getName(), "pointLightShape9");//_S( ei_init_instance( mesh->getName() ) );
 	
 		//
 
@@ -765,7 +767,10 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
-		_s( "// shader_surface("<<shader.getShaderFileName()<<","<<", ...)" );//e.g."your_shader_dir/test_type2"
+		//_s( "// shader_surface("<<shader.getShaderFileName()<<","<<", ...)" );//e.g."your_shader_dir/test_type2"
+		_s( "// shader_surface("<<shader.getName()<<","<<", ...)" );//e.g."lambert1", or "liquidSurface1"
+
+		
 		size_t parameterNum =  tokenPointerArray.size() - 1;
 		for(size_t i=0; i<parameterNum; ++i)
 		{
@@ -821,13 +826,27 @@ namespace elvishray
 			default :
 				assert(0);
 			}
-		}		 
+		}//for
+		const std::string shaderobject(shader.getName()+"_object");
+		_S( ei_shader( shaderobject.c_str(),
+			"shadername", "plastic",
+			"Ka", color( 1.0f, 1.0f, 1.0f ) , 
+			"Kd", color( 0.7f, 1.0f, 1.0f ) , 
+			"Ks", 1.0f, 
+			"roughness", 0.2f , ei_end )
+			);
+		_S( ei_material( shader.getName().c_str() ) );
+		_S( ei_opaque( on ) );
+		_S( ei_surface(	shaderobject.c_str(), ei_end ) );
+		//_S( ei_shadow( "opaque_shadow", ei_end ) );
+		_S( ei_end_material() );
 	}
 	liqLightHandle Renderer::shader_light(
 		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
+		_s( "// shader_light("<<shader.getName()<<","<<", ...)" );
 
 		return (liqLightHandle)0;	
 	}
@@ -836,13 +855,13 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
-		 
+		_s( "// shader_displacement("<<shader.getName()<<","<<", ...)" );	 
 	}
 	void Renderer::shader_volume(
 		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
-		 
+		_s( "// shader_volume("<<shader.getName()<<","<<", ...)" );	
 	}
 }//namespace

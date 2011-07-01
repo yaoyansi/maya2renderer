@@ -506,8 +506,8 @@ namespace elvishray
 
 	void my_ei_opaque( int type )
 	{
-		_s("ei_caustic("<<type<<")");
-		_e(ei_caustic(type));
+		_s("ei_opaque("<<type<<")");
+		_e(ei_opaque(type));
 	}
 	void my_ei_surface( const char *shader_name, int end, ... )
 	{
@@ -867,5 +867,38 @@ namespace elvishray
 		_s("ei_shader(\""<<shaderInstanceName<<"\",\""<<shadername<<"\",\""<<shadertype<<"\", \""<<param0<<"\",ei_var("<<v<<"), "<< end_<<")");
 		_e( ei_shader(shaderInstanceName, shadername, shadertype, param0, ei_var(v),  end_) );
 	}
- 
+	void my_ei_shader(
+		const char* shaderInstanceName, 
+		const char* shadername, const char* shadertype,
+		const char* param0, const color v0, 
+		const char* param1, const color v1, 
+		const char* param2, const float v2, 
+		const char* param3, const float v3, 
+		int end_, ...)
+	{
+		_s("ei_shader(\""<<shaderInstanceName<<"\","
+			<<"\""<<shadername<<"\",\""<<shadertype<<"\", "
+			<<"\""<<param0<<"\",ei_var( color("<<v0.r<<","<<v0.g<<","<<v0.b<<") ), "
+			<<"\""<<param1<<"\",ei_var( color("<<v1.r<<","<<v1.g<<","<<v1.b<<") ), "
+			<<"\""<<param2<<"\",ei_var("<<v2<<"), "
+			<<"\""<<param3<<"\",ei_var("<<v3<<"), "
+			<< end_<<")");
+		_e( ei_shader(shaderInstanceName, shadername, shadertype, param0, ei_var(color(v0.r, v0.g, v0.b)), param1,ei_var(color(v1.r, v1.g, v1.b)), param2,ei_var(v2), param3, ei_var(v3), end_) );
+
+	}
+	void my_ei_shader(
+		const char* shaderInstanceName, 
+		const char* shadername, const char* shadertype,
+		const char* param0, const color v0,
+		const char* param1, const float v1, 
+		int end_, ...)
+	{
+		_s("ei_shader(\""<<shaderInstanceName<<"\","
+			<<"\""<<shadername<<"\",\""<<shadertype<<"\", "
+			<<"\""<<param0<<"\",ei_var( color("<<v0.r<<","<<v0.g<<","<<v0.b<<") ), "
+			<<"\""<<param1<<"\",ei_var("<<v1<<"), "
+			<< end_<<")");
+		_e( ei_shader(shaderInstanceName, shadername, shadertype, param0, ei_var(color(v0.r, v0.g, v0.b)), param1, ei_var(v1), end_) );
+
+	}
 }

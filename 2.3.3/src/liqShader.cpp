@@ -970,11 +970,12 @@ void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *ligh
 	}
 }
 
-const std::string liqShader::getName() const
+std::string liqShader::getName() const
 {
 	return name;
 }
-const std::string liqShader::getShaderFileName() const
+
+std::string liqShader::getShaderFileName() const
 {
 	return liqglo.liqglo_shortShaderNames ? 
 		basename( file.c_str() ) : file.c_str();

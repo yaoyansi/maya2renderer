@@ -271,7 +271,21 @@ void my_ei_shader(
 				  const char* shaderInstanceName, 
 				  const char* shadername, const char* shadertype,
 				  const char* param0, const float v, 
-				  int end, ...);
+				  int end_, ...);
+void my_ei_shader(
+				  const char* shaderInstanceName, 
+				  const char* shadername, const char* shadertype,
+				  const char* param0, const color v0, 
+				  const char* param1, const color v1, 
+				  const char* param2, const float v2, 
+				  const char* param3, const float v3, 
+				  int end_, ...);
+void my_ei_shader(
+				  const char* shaderInstanceName, 
+				  const char* shadername, const char* shadertype,
+				  const char* param0, const color v0,
+				  const char* param1, const float v1, 
+				  int end_, ...);
 void my_ei_shading_rate(const float v);
 
 }
