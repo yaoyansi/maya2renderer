@@ -252,10 +252,8 @@ liqRenderScript::Job::Job(const liqRenderScript::Job& o)
 //
 liqRenderScript::Job& liqRenderScript::Job::operator=(const liqRenderScript::Job& o)
 {
-	if( this != &o ){// Job contains std::vector variables, so we check the self-assignment for the performance
-		Job tmp(o);
-		Swap(tmp);
-	}
+	Job tmp(o);
+	Swap(tmp);
 	return *this;
 }
 //
