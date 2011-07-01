@@ -155,6 +155,16 @@ liqRibTranslator* liqRibTranslator::mInstance = NULL;
 */
 MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& originalLayer )
 {
+	// append the progress flag for render job feedback
+	if( useRenderScript ) 
+		if( ( m_renderCommand == MString( "render" ) ) || ( m_renderCommand == MString( "prman" ) ) || ( m_renderCommand == MString( "renderdl" ) ) ) 
+			m_renderCommand = m_renderCommand + " -Progress";
+
+	if( !liqglo.m_deferredGen && m_justRib ) 
+		useRenderScript = false;
+	liquidMessage2(messageInfo,"useRenderScript=%d", useRenderScript);
+
+
 	MStatus status;
 #if (Refactoring == 0)
 	MString lastRibName;
@@ -172,16 +182,6 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 	//
 	MTime oneSecond( 1, MTime::kSeconds );
 	liqglo.liqglo_FPS = oneSecond.as( MTime::uiUnit() );
-
-	// append the progress flag for render job feedback
-	if( useRenderScript ) 
-		if( ( m_renderCommand == MString( "render" ) ) || ( m_renderCommand == MString( "prman" ) ) || ( m_renderCommand == MString( "renderdl" ) ) ) 
-			m_renderCommand = m_renderCommand + " -Progress";
-
-	if( !liqglo.m_deferredGen && m_justRib ) 
-		useRenderScript = false;
-	liquidMessage2(messageInfo,"useRenderScript=%d", useRenderScript);
-
 
 	// check to see if the output camera, if specified, is available
 	if( liqglo.liquidBin && ( renderCamera == "" ) ) 
