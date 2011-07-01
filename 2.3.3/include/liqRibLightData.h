@@ -53,7 +53,7 @@ public:
   MString       assignedRManShader;
 
   MString       autoShadowName( int PointLightDir = -1 ) const;
-
+  const char* getName()const{ return lightName.asChar(); }
 private:
 
   MString       extraShadowName( const MFnDependencyNode & lightShaderNode, const int & index ) const;

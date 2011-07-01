@@ -745,6 +745,7 @@ namespace elvishray
 				}
 				// init object
 				_S( ei_init_instance( mesh_i->first.c_str() ) );
+				_s("\n");
 			}
 
 			_S( ei_end_instgroup() );
@@ -868,18 +869,9 @@ namespace elvishray
 		const liqRibNodePtr light,
 		const bool bIlluminateByDefault)
 	{
-		const liqRibDataPtr meshdata = mesh->object(0)->getDataPtr();
-		const liqRibData *pmeshdata = meshdata.get();
-		const liqRibMeshData *ppmeshdata = dynamic_cast<const liqRibMeshData *>(pmeshdata);
-		assert(ppmeshdata);
-		
-		const liqRibDataPtr lightdata = light->object(0)->getDataPtr();
-		const liqRibData *plightdata = lightdata.get();
-		const liqRibMeshData *pplightdata = dynamic_cast<const liqRibMeshData *>(plightdata);
-		assert(pplightdata);
-		
-		m_groupMgr->addLightLink(currentJob__.name.asChar(), ppmeshdata->getName(), pplightdata->getName());//_S( ei_init_instance( mesh->getName() ) );
-
-
+		m_groupMgr->addLightLink(currentJob__.name.asChar(), 
+			mesh->object(0)->getDataPtr()->getName(),
+			light->object(0)->getDataPtr()->getName()
+			);//_S( ei_init_instance( mesh->getName() ) );
 	}
 }//namespace

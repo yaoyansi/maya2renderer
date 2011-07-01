@@ -60,6 +60,7 @@ public:
 
     liqTokenPointer::array tokenPointerArray;
     MDagPath	       objDagPath;
+	const char* getName() const;
 
 protected:
 	MString			   m_ribFileFullPath;

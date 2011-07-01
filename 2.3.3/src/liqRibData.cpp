@@ -299,3 +299,9 @@ void liqRibData::write(const MString &fileName, const structJob &currentJob)
 		RiContext(c);//pop context
 	}
 }
+
+const char* liqRibData::getName() const
+{
+	MFnDagNode fnDepNode(objDagPath);
+	return fnDepNode.name().asChar();
+}

@@ -59,7 +59,7 @@ public: // Methods
   {
 	  return verts;
   }
-  const char* getName()const{ return name.asChar(); }
+
 
 private: // Data
   RtInt     numFaces;
