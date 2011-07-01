@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="displayDriverAir"
 	ProjectGUID="{BAED7037-8C31-41AB-897C-49A07BED17A5}"
 	RootNamespace="displayDriverAir"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -82,6 +83,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -104,9 +107,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -177,6 +177,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -199,9 +201,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -272,6 +271,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -294,9 +295,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -367,6 +365,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -389,9 +389,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -462,6 +459,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -484,9 +483,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -557,6 +553,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -579,9 +577,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -652,6 +647,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -674,9 +671,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -747,6 +741,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -769,9 +765,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -842,6 +835,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -864,9 +859,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -937,6 +929,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -959,9 +953,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1032,6 +1023,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -1054,9 +1047,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1127,6 +1117,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -1149,9 +1141,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1222,6 +1211,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -1244,9 +1235,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1317,6 +1305,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Air/win32/Release/Objects/d_liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -1339,9 +1329,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RILIB", "RILIB\RILIB.vcproj", "{2C342CB8-4207-4594-8C09-74201C27A23C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "displayDriver3delight", "displayDriver3delight\displayDriver3delight.vcproj", "{C819AC2D-82DD-4A79-A777-DE415CE09E11}"

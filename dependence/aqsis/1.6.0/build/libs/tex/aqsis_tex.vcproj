@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="aqsis_tex"
 	ProjectGUID="{5DDD4F14-F498-4592-A2C1-08679C3612BF}"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -53,7 +54,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture"
 				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_TEX_EXPORTS,CMAKE_INTDIR=\&quot;Debug\&quot;,aqsis_tex_EXPORTS"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
@@ -88,6 +89,8 @@
 				AdditionalLibraryDirectories="E:\dev\boost\1_39\stage\lib\$(OutDir),E:\dev\boost\1_39\stage\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\..\build\libs\tex\Debug\aqsis_tex.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\..\..\build\libs\tex\Debug\aqsis_tex.lib"
 			/>
 			<Tool
@@ -107,9 +110,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -154,7 +154,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="2"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture"
 				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_TEX_EXPORTS,CMAKE_INTDIR=\&quot;Release\&quot;,aqsis_tex_EXPORTS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -186,6 +186,8 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="E:\dev\boost\1_39\stage\lib\$(OutDir),E:\dev\boost\1_39\stage\lib"
 				ProgramDatabaseFile="..\..\..\build\libs\tex\Release\aqsis_tex.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\..\..\build\libs\tex\Release\aqsis_tex.lib"
 			/>
 			<Tool
@@ -205,9 +207,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -252,7 +251,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture"
 				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_TEX_EXPORTS,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;,aqsis_tex_EXPORTS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -284,6 +283,8 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="E:\dev\boost\1_39\stage\lib\$(OutDir),E:\dev\boost\1_39\stage\lib"
 				ProgramDatabaseFile="..\..\..\build\libs\tex\MinSizeRel\aqsis_tex.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\..\..\build\libs\tex\MinSizeRel\aqsis_tex.lib"
 			/>
 			<Tool
@@ -303,9 +304,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -350,7 +348,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture"
 				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_TEX_EXPORTS,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;,aqsis_tex_EXPORTS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -384,6 +382,8 @@
 				AdditionalLibraryDirectories="E:\dev\boost\1_39\stage\lib\$(OutDir),E:\dev\boost\1_39\stage\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\..\build\libs\tex\RelWithDebInfo\aqsis_tex.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\..\..\build\libs\tex\RelWithDebInfo\aqsis_tex.lib"
 			/>
 			<Tool
@@ -403,9 +403,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -450,7 +447,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="2"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_SYSLOG;_USE_MATH_DEFINES;AQSIS_TEX_EXPORTS;CMAKE_INTDIR=\&quot;Release\&quot;;aqsis_tex_EXPORTS;AQSIS_STATIC_LINK"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -531,7 +528,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="0"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture"
 				PreprocessorDefinitions="WIN32;_WINDOWS;DEBUG;_DEBUG;NO_SYSLOG;_USE_MATH_DEFINES;AQSIS_TEX_EXPORTS;CMAKE_INTDIR=\&quot;Release\&quot;;aqsis_tex_EXPORTS;AQSIS_STATIC_LINK"
 				ExceptionHandling="1"
 				RuntimeLibrary="3"
@@ -613,7 +610,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="0"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;..\..\..\src\libs\tex\filtering;..\..\..\src\libs\tex\io;E:\dev\tools\libtiff\3.8.2\include;..\..\..\src\libs\tex\maketexture"
 				PreprocessorDefinitions="WIN32;_WINDOWS;DEBUG;_DEBUG;NO_SYSLOG;_USE_MATH_DEFINES;AQSIS_TEX_EXPORTS;CMAKE_INTDIR=\&quot;Release\&quot;;aqsis_tex_EXPORTS;AQSIS_STATIC_LINK"
 				ExceptionHandling="1"
 				RuntimeLibrary="3"

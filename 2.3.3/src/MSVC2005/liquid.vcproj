@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="liquid"
 	ProjectGUID="{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}"
 	RootNamespace="liquid"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -86,6 +87,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION)/lib,../../bin/win32lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Aqsis/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Aqsis/win32/Release/Objects/liquid.lib"
 				TargetMachine="1"
 			/>
@@ -108,9 +111,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -185,6 +185,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION_X64)/lib,../../bin/win64lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Aqsis/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Aqsis/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -207,9 +209,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -284,6 +283,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION)/lib,../../bin/win32lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Pixie/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Pixie/win32/Release/Objects/liquid.lib"
 				TargetMachine="1"
 			/>
@@ -306,9 +307,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -383,6 +381,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION_X64)/lib,../../bin/win64lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Pixie/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Pixie/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -405,9 +405,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -481,6 +478,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(MAYA_LOCATION)/lib,$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="1"
 			/>
@@ -503,9 +502,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -579,6 +575,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(MAYA_LOCATION_X64)/lib,$(DELIGHT_X64)/lib"
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -601,9 +599,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -678,6 +673,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION)/lib,../../bin/win32lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="1"
 			/>
@@ -700,9 +697,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -777,6 +771,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION)/lib,../../bin/win32lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -799,9 +795,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -875,6 +868,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(MAYA_LOCATION)/lib,$(PIXIEHOME)/lib"
 				ProgramDatabaseFile=".\../../bin/Pixie/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Pixie/win32/Release/Objects/liquid.lib"
 				TargetMachine="1"
 			/>
@@ -897,9 +892,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -973,6 +965,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(MAYA_LOCATION)/lib,$(PIXIEHOME)/lib"
 				ProgramDatabaseFile=".\../../bin/Pixie/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Pixie/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -995,9 +989,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1072,6 +1063,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION)/lib,$(AQSISHOME)/lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Aqsis/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Aqsis/win32/Release/Objects/liquid.lib"
 				TargetMachine="1"
 			/>
@@ -1094,9 +1087,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1171,6 +1161,8 @@
 				AdditionalLibraryDirectories="&quot;$(MAYA_LOCATION_X64)/lib&quot;,&quot;$(AQSISHOME)/lib&quot;"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Aqsis/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Aqsis/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -1193,9 +1185,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1270,6 +1259,8 @@
 				AdditionalLibraryDirectories="&quot;$(MAYA_LOCATION)/lib&quot;;../../bin/win32lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Pixie/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Pixie/win32/Release/Objects/liquid.lib"
 				TargetMachine="1"
 			/>
@@ -1292,9 +1283,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1369,6 +1357,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION_X64)/lib,../../bin/win64lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Pixie/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Pixie/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -1391,9 +1381,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1468,6 +1455,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION)/lib,../../bin/win32lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Pixie/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Pixie/win32/Release/Objects/liquid.lib"
 				TargetMachine="1"
 			/>
@@ -1490,9 +1479,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1567,6 +1553,8 @@
 				AdditionalLibraryDirectories="$(MAYA_LOCATION_X64)/lib,../../bin/win64lib"
 				IgnoreDefaultLibraryNames=""
 				ProgramDatabaseFile=".\../../bin/Generic/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/Generic/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -1589,9 +1577,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1665,6 +1650,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2009)/lib&quot;;&quot;$(RMANTREE)/lib&quot;;E:\dev\Autodesk\maya\myplugin\project\liquid_\2.3.3\bin\win32lib"
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="1"
 			/>
@@ -1687,9 +1674,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1763,6 +1747,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(MAYA_LOCATION_X64)/lib&quot;;&quot;$(RMANTREE_X64)/lib&quot;"
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -1785,9 +1771,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1861,6 +1844,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2008)/lib&quot;;&quot;$(RMANTREE)/lib&quot;;&quot;E:\dev\Autodesk\maya\myplugin\project\liquid_\2.3.3\bin\win32lib&#65293;&quot;;../../bin/win32lib"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Release/Objects/liquid2008x32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="1"
 			/>
@@ -1883,9 +1868,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1959,6 +1941,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(MAYA_LOCATION_X64)/lib&quot;;&quot;$(RMANTREE_X64)/lib&quot;"
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -1981,9 +1965,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2060,6 +2041,8 @@
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Debug/Objects/liquid_2008x32d.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="1"
 			/>
@@ -2082,9 +2065,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2158,6 +2138,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(MAYA_LOCATION_X64)/lib&quot;;&quot;$(RMANTREE_X64)/lib&quot;"
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -2180,9 +2162,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2259,6 +2238,8 @@
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Debug/Objects/liquid2008x32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="1"
 			/>
@@ -2281,9 +2262,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2357,6 +2335,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(MAYA_LOCATION_X64)/lib&quot;;&quot;$(RMANTREE_X64)/lib&quot;"
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -2379,9 +2359,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2458,6 +2435,8 @@
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Debug/Objects/liquid2008x32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="1"
 			/>
@@ -2480,9 +2459,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2556,6 +2532,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(MAYA_LOCATION_X64)/lib&quot;;&quot;$(RMANTREE_X64)/lib&quot;"
 				ProgramDatabaseFile=".\../../bin/3Delight/win32/Release/Objects/liquid.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../bin/3Delight/win32/Release/Objects/liquid.lib"
 				TargetMachine="17"
 			/>
@@ -2578,9 +2556,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2657,6 +2632,8 @@
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Debug/Objects/liquid2008x32d.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="1"
 			/>
@@ -2679,9 +2656,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2758,6 +2732,8 @@
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win64/Debug/Objects/liquid_2008x64.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="17"
 			/>
@@ -2780,9 +2756,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2859,6 +2832,8 @@
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Debug/Objects/liquid2009x32d.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="1"
 			/>
@@ -2881,9 +2856,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -2960,6 +2932,8 @@
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win64/Debug/Objects/liquid_2008x64.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="17"
 			/>
@@ -2982,9 +2956,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -3216,6 +3187,10 @@
 			</File>
 			<File
 				RelativePath="..\liqShaderFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\liqShadowRibWriterMgr.cpp"
 				>
 			</File>
 			<File
@@ -3513,6 +3488,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\liqShaderFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\liqShadowRibWriterMgr.h"
 				>
 			</File>
 			<File
@@ -3963,10 +3942,6 @@
 			<Filter
 				Name="boost"
 				>
-				<File
-					RelativePath="..\..\..\..\..\..\..\..\boost\1_39\libs\system\src\error_code.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="rendererDesc"

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="aqsis_ri2rib"
 	ProjectGUID="{855D52D3-E0AF-4717-A895-1821876A6B18}"
 	RootNamespace="aqsis_ri2rib"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -54,7 +55,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;E:\dev\tools\zlib;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\zlib"
 				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_RI_EXPORTS,CMAKE_INTDIR=\&quot;Debug\&quot;,aqsis_ri2rib_EXPORTS"
 				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
@@ -89,6 +90,8 @@
 				AdditionalLibraryDirectories="E:\dev\boost\1_39\stage\lib\$(OutDir),E:\dev\boost\1_39\stage\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\..\build\libs\ri2rib\Debug\aqsis_ri2rib.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\..\..\build\libs\ri2rib\Debug\aqsis_ri2rib.lib"
 			/>
 			<Tool
@@ -108,9 +111,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -155,7 +155,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="2"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;E:\dev\tools\zlib\zlib"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\zlib"
 				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_RI_EXPORTS,CMAKE_INTDIR=\&quot;Release\&quot;,aqsis_ri2rib_EXPORTS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -187,6 +187,8 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;E:\dev\boost\1_39\stage\lib\$(OutDir)&quot;;E:\dev\boost\1_39\stage\lib;E:\dev\tools\zlib"
 				ProgramDatabaseFile="..\..\..\build\libs\ri2rib\Release\aqsis_ri2rib.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\..\..\build\libs\ri2rib\Release\aqsis_ri2rib.lib"
 			/>
 			<Tool
@@ -206,9 +208,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -253,7 +252,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;E:\dev\tools\zlib;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\zlib"
 				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_RI_EXPORTS,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;,aqsis_ri2rib_EXPORTS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -285,6 +284,8 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="E:\dev\boost\1_39\stage\lib\$(OutDir),E:\dev\boost\1_39\stage\lib"
 				ProgramDatabaseFile="..\..\..\build\libs\ri2rib\MinSizeRel\aqsis_ri2rib.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\..\..\build\libs\ri2rib\MinSizeRel\aqsis_ri2rib.lib"
 			/>
 			<Tool
@@ -304,9 +305,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -351,7 +349,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;E:\dev\tools\zlib;"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\zlib"
 				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,NO_SYSLOG,_USE_MATH_DEFINES,AQSIS_RI_EXPORTS,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;,aqsis_ri2rib_EXPORTS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -385,6 +383,8 @@
 				AdditionalLibraryDirectories="E:\dev\boost\1_39\stage\lib\$(OutDir),E:\dev\boost\1_39\stage\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="..\..\..\build\libs\ri2rib\RelWithDebInfo\aqsis_ri2rib.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary="..\..\..\build\libs\ri2rib\RelWithDebInfo\aqsis_ri2rib.lib"
 			/>
 			<Tool
@@ -404,9 +404,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -451,7 +448,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="2"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;E:\dev\tools\zlib\zlib"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\zlib"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;NO_SYSLOG;_USE_MATH_DEFINES;CMAKE_INTDIR=\&quot;Release\&quot;"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -533,7 +530,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="0"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;E:\dev\tools\zlib\zlib"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\zlib"
 				PreprocessorDefinitions="WIN32;_WINDOWS;DEBUG;_DEBUG;NO_SYSLOG;_USE_MATH_DEFINES;CMAKE_INTDIR=\&quot;Release\&quot;"
 				ExceptionHandling="1"
 				RuntimeLibrary="3"
@@ -616,7 +613,7 @@
 				AdditionalOptions=" /Zm1000"
 				Optimization="0"
 				InlineFunctionExpansion="2"
-				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;E:\dev\boost\1_39;E:\dev\tools\zlib\1.2.5"
+				AdditionalIncludeDirectories="..\..\..\src\include;..\..\..\build\include;&quot;$(BOOST_ROOT)&quot;;E:\dev\tools\zlib\zlib"
 				PreprocessorDefinitions="WIN32;_WINDOWS;DEBUG;_DEBUG;NO_SYSLOG;_USE_MATH_DEFINES;CMAKE_INTDIR=\&quot;Release\&quot;"
 				ExceptionHandling="1"
 				RuntimeLibrary="3"

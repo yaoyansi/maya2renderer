@@ -392,7 +392,7 @@ class blobby_vm_assembler
 							try
 							{
 								CqString fullName = QGetRenderContext()->poptCurrent()
-									->findRiFile(dboName, "procedural").file_string();
+									->findRiFile(dboName, "procedural").string<std::string>();
 								DBO_handle = DBO.SimpleDLOpen(&fullName);
 							}
 							catch(XqInvalidFile& /*e*/)

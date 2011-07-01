@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="displayDriver3delight"
 	ProjectGUID="{C819AC2D-82DD-4A79-A777-DE415CE09E11}"
 	RootNamespace="displayDriver3delight"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -83,6 +84,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -105,9 +108,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -179,6 +179,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -201,9 +203,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -275,6 +274,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -297,9 +298,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -371,6 +369,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -393,9 +393,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -467,6 +464,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -489,9 +488,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -563,6 +559,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -585,9 +583,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -659,6 +654,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -681,9 +678,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -755,6 +749,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -777,9 +773,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -851,6 +844,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -873,9 +868,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -947,6 +939,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -969,9 +963,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1043,6 +1034,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -1065,9 +1058,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1139,6 +1129,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -1161,9 +1153,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1235,6 +1224,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -1257,9 +1248,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1331,6 +1319,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(DELIGHT)/lib"
 				ProgramDatabaseFile=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/3Delight/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -1353,9 +1343,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

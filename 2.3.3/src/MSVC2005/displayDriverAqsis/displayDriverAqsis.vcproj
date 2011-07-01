@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="displayDriverAqsis"
 	ProjectGUID="{74E7C4B8-B607-43A9-8CE3-21209CF2DA67}"
 	RootNamespace="displayDriverAqsis"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -83,6 +84,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSISHOME)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -105,9 +108,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -179,6 +179,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSIS)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -201,9 +203,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -275,6 +274,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSISHOME)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -297,9 +298,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -371,6 +369,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSIS)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -393,9 +393,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -467,6 +464,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSISHOME)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -489,9 +488,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -563,6 +559,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSIS)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -585,9 +583,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -659,6 +654,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSISHOME)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -681,9 +678,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -755,6 +749,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSIS)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -777,9 +773,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -851,6 +844,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSISHOME)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -873,9 +868,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -947,6 +939,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSIS)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -969,9 +963,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1043,6 +1034,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSISHOME)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -1065,9 +1058,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1140,6 +1130,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSIS)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya_x32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -1162,9 +1154,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1236,6 +1225,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSISI_ROOT)\build\DebugLib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="1"
 			/>
@@ -1258,9 +1249,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -1333,6 +1321,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(AQSIS)/lib"
 				ProgramDatabaseFile=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya_x32.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../../bin/Aqsis/win32/Release/Objects/liqmaya.lib"
 				TargetMachine="17"
 			/>
@@ -1355,9 +1345,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

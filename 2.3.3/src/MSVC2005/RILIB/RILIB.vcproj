@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="RILIB"
 	ProjectGUID="{2C342CB8-4207-4594-8C09-74201C27A23C}"
 	RootNamespace="RILIB"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform

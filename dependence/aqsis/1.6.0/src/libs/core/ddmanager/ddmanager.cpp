@@ -349,7 +349,7 @@ void CqDisplayRequest::LoadDisplayLibrary( SqDDMemberData& ddMemberData, CqSimpl
 		}
 		
 		// Load the dynamic object and locate the relevant symbols.
-		CqString strDriverPathAndFile = displayPath.file_string();
+		CqString strDriverPathAndFile = displayPath.string<std::string>();
 		m_DriverHandle = dspyPlugin.SimpleDLOpen( &strDriverPathAndFile );
 		if ( m_DriverHandle != NULL )
 		{
