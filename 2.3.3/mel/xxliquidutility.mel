@@ -13,3 +13,8 @@ global proc liqDebug(string $log)
 {
 	log2("DEBUG", $log);
 }
+
+global proc liqTrace(string $log)
+{
+	trace($log);
+}

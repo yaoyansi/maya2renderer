@@ -272,6 +272,7 @@ global proc liquidSlBuildLifCmdList()
   if ( $outputFilter == "" ) $outputFilter = "^_*";
 
   string $tmpList[];
+	string $lifCmd;
 
   while ( $i < $guiSize ) {
 
@@ -391,7 +392,7 @@ global proc liquidSlParseLif( string $shaderFile )
   // and mark the existence of the lif file
   if ( ! `filetest -r $lifFile` ) {
     liquidSlBuildLifCmdList();
-    //trace ( "no lif file for shader: " + $shaderFile );
+    liqTrace ( "no lif file for shader: " + $shaderFile );
     return;
   } else {
     $gLiquidSlLifExists = 1;
