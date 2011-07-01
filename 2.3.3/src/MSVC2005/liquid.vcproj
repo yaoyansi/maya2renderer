@@ -3059,6 +3059,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqLightMgr.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\liqLightNode.cpp"
 				>
 			</File>
@@ -3321,6 +3325,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\liqJobScriptMgr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\liqLightMgr.h"
 				>
 			</File>
 			<File

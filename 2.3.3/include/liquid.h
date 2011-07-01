@@ -353,4 +353,6 @@ typedef enum {
 #  define RM_CMD "/bin/rm"
 #endif
 
+#define Refactoring 1
+
 #endif

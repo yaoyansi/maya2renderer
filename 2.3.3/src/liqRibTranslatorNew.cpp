@@ -110,6 +110,7 @@
 #include <liqGlobalVariable.h>
 #include <liqJobScriptMgr.h>
 #include <liqFrameScriptMgr.h>
+#include <liqLightMgr.h>
 
 using namespace boost;
 using namespace std;
@@ -150,8 +151,9 @@ extern void liqRibTranslatorErrorHandler( RtInt code, RtInt severity, const char
 MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& originalLayer )
 {
 	MStatus status;
-	//- omitted temporarily
-//	MString lastRibName;
+#if (Refactoring == 0)
+	MString lastRibName;
+#endif
 	//bool hashTableInited = false;
 
 	if( !liqglo.liquidBin && !liqglo.m_deferredGen ) 
@@ -429,11 +431,12 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 				if( m_outputShadowPass ){
 					frameScriptJobMgr.viewShadowPassImage(shadowPassJob->imageName);
 				}
-				//- omitted temporarily
-				//if( m_outputShadowPass && !m_outputHeroPass ) 
-				//	lastRibName = liquidGetRelativePath( liqglo__.liqglo_relativeFileNames, shadowPassJob->ribFileName, liqglo__.liqglo_projectDir );
-				//else 
-				//	lastRibName = liquidGetRelativePath( liqglo__.liqglo_relativeFileNames, frameJob->ribFileName, liqglo__.liqglo_projectDir );
+#if (Refactoring == 0)
+				if( m_outputShadowPass && !m_outputHeroPass ) 
+					lastRibName = liquidGetRelativePath( liqglo__.liqglo_relativeFileNames, shadowPassJob->ribFileName, liqglo__.liqglo_projectDir );
+				else 
+					lastRibName = liquidGetRelativePath( liqglo__.liqglo_relativeFileNames, frameJob->ribFileName, liqglo__.liqglo_projectDir );
+#endif		
 			}//if( useRenderScript && !m_justRib ) 
 
 			jobScript.addJob( frameScriptJob );
@@ -488,9 +491,10 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 		MPlug nPlug;
 		nPlug = rGlobalNode.findPlug( "lastRenderScript" );
 		nPlug.setValue( renderScriptName );
-		//- omitted temporarily
-		//nPlug = rGlobalNode.findPlug( "lastRibFile" );
-		//nPlug.setValue( lastRibName );
+#if (Refactoring == 0)
+		nPlug = rGlobalNode.findPlug( "lastRibFile" );
+		nPlug.setValue( lastRibName );
+#endif
 		LIQDEBUGPRINTF( "-> spawning command.\n" );
 		if( launchRender ) 
 		{
@@ -887,11 +891,11 @@ TempControlBreak liqRibTranslator::processOneFrame(
 				if( doCameraMotion || liqglo__.liqglo_doMotion || liqglo__.liqglo_doDef ) 
 				{
 					for ( int msampleOn = 0; msampleOn < liqglo__.liqglo_motionSamples; msampleOn++ ) 
-						scanScene( liqglo__.liqglo_sampleTimes[ msampleOn ] , msampleOn );
+						scanScene__( liqglo__.liqglo_sampleTimes[ msampleOn ] , msampleOn );
 				} else {
 					liqglo__.liqglo_sampleTimes[ 0 ] = scanTime;
 					liqglo__.liqglo_sampleTimesOffsets[ 0 ] = 0;
-					scanScene( scanTime, 0 );
+					scanScene__( scanTime, 0 );
 				}
 				//cout <<"    + scene scan done !"<<endl;
 
@@ -1090,10 +1094,10 @@ TempControlBreak liqRibTranslator::processOneFrame(
 
 	// set the rib file for the 'view last rib' menu command
 	// NOTE: this may be overridden later on in certain code paths
-	//- omitted temporarily
-	//if( !m_deferredGen )
-	//	lastRibName = liqglo__.liqglo_currentJob.ribFileName;
-
+#if (Refactoring == 0)
+	if( !m_deferredGen )
+		lastRibName = liqglo__.liqglo_currentJob.ribFileName;
+#endif
 	return TCB_OK;
 }
 //
@@ -1556,3 +1560,506 @@ MStatus liqRibTranslator::buildShadowJobs__()
 
 	return returnStatus__;
 }
+//
+MStatus liqRibTranslator::scanScene__(float lframe, int sample )
+{
+	int count =0;
+
+	MTime mt( ( double )lframe, MTime::uiUnit() );
+	if( MGlobal::viewFrame(mt) == MS::kSuccess ) 
+	{
+		// scanScene: execute pre-frame command
+		if( m_preFrameMel != "" ) 
+		{
+			MString preFrameMel( parseString( m_preFrameMel, false ) );
+			if( fileExists( preFrameMel  ) ) 
+				MGlobal::sourceFile( preFrameMel );
+			else 
+			{
+				if( MS::kSuccess == MGlobal::executeCommand( preFrameMel, false, false ) ) 
+					cout <<"Liquid -> pre-frame script executed successfully."<<endl<<flush;
+				else 
+					cout <<"Liquid -> ERROR :pre-frame script failed."<<endl<<flush;
+			}
+		}
+
+		MStatus returnStatus;
+		// scanScene: Scan the scene for lights
+		{
+			tLightMgr lightMgr;
+			lightMgr.scanScene(lframe, sample,htable, count, returnStatus);
+		}
+		{
+			MItDag dagCoordSysIterator( MItDag::kDepthFirst, MFn::kLocator, &returnStatus);
+
+			for (; !dagCoordSysIterator.isDone(); dagCoordSysIterator.next()) 
+			{
+				LIQ_CHECK_CANCEL_REQUEST;
+				MDagPath path;
+				MObject currentNode;
+				currentNode = dagCoordSysIterator.item();
+				MFnDagNode dagNode;
+				dagCoordSysIterator.getPath( path );
+				if(MS::kSuccess != returnStatus) 
+					continue;
+				if(!currentNode.hasFn(MFn::kDagNode)) 
+					continue;
+				returnStatus = dagNode.setObject( currentNode );
+				if(MS::kSuccess != returnStatus) 
+					continue;
+
+				// scanScene: if it's a coordinate system then insert it into the hash table
+				if( dagNode.typeName() == "liquidCoordSys" ) 
+				{
+					int coordType = 0;
+					MPlug typePlug = dagNode.findPlug( "type", &returnStatus );
+					if( MS::kSuccess == returnStatus ) 
+						typePlug.getValue( coordType );
+
+					if( ( sample > 0 ) && isObjectMotionBlur( path )) 
+					{
+						// philippe : should I store a motion-blurred clipping plane ?
+						if( coordType == 5 ) 
+							htable->insert(path, lframe, sample, MRT_ClipPlane,count++ );
+						else 
+							htable->insert(path, lframe, sample, MRT_Coord,count++ );
+					} 
+					else 
+					{
+						if( coordType == 5 ) 
+							htable->insert(path, lframe, 0, MRT_ClipPlane,count++ );
+						htable->insert(path, lframe, 0, MRT_Coord,count++ );
+					}
+					continue;
+				}
+			}
+		}
+
+		if( !m_renderSelected )
+		{
+			MItDag dagIterator( MItDag::kDepthFirst, MFn::kInvalid, &returnStatus);
+			for (; !dagIterator.isDone(); dagIterator.next())
+			{
+				MDagPath path;
+				dagIterator.getPath( path );
+				MObject currentNode = dagIterator.item();
+				if(!currentNode.hasFn(MFn::kDagNode))
+					continue;
+				returnStatus = scanSceneNodes( currentNode, path, lframe, sample, count, returnStatus );
+				if( MS::kSuccess != returnStatus )
+					continue;
+			}
+			// scanScene: Now deal with all the particle-instanced objects (where a
+			// particle is replaced by an object or group of objects).
+			//
+			MItInstancer instancerIter;
+			while( !instancerIter.isDone() )
+			{
+				MDagPath path( instancerIter.path() );
+				MString instanceStr( ( MString )"|INSTANCE_" +
+					instancerIter.instancerId() + (MString)"_" +
+					instancerIter.particleId() + (MString)"_" +
+					instancerIter.pathId() );
+				MMatrix instanceMatrix( instancerIter.matrix() );
+				if( ( sample > 0 ) && isObjectMotionBlur( path ) )
+					htable->insert( path, lframe, sample, MRT_Unknown,count++, &instanceMatrix, instanceStr, instancerIter.particleId() );
+				else
+					htable->insert( path, lframe, 0, MRT_Unknown,count++, &instanceMatrix, instanceStr, instancerIter.particleId() );
+				instancerIter.next();
+			}
+
+		}
+		else
+		{
+			// scanScene: find out the current selection for possible selected object output
+			MSelectionList currentSelection;
+			MGlobal::getActiveSelectionList( currentSelection );
+			MItSelectionList selIterator( currentSelection );
+			MItDag dagIterator( MItDag::kDepthFirst, MFn::kInvalid, &returnStatus);
+			for( ; !selIterator.isDone(); selIterator.next() )
+			{
+				MDagPath objectPath;
+				selIterator.getDagPath( objectPath );
+				dagIterator.reset (objectPath.node(), MItDag::kDepthFirst, MFn::kInvalid );
+				for (; !dagIterator.isDone(); dagIterator.next())
+				{
+					MDagPath path;
+					dagIterator.getPath( path );
+					MObject currentNode = dagIterator.item();
+					if(!currentNode.hasFn(MFn::kDagNode))
+						continue;
+					returnStatus = scanSceneNodes( currentNode, path, lframe, sample, count, returnStatus );
+					if( MS::kSuccess != returnStatus )
+						continue;
+				}
+			}
+			// scanScene: Now deal with all the particle-instanced objects (where a
+			// particle is replaced by an object or group of objects).
+			//
+			MItInstancer instancerIter;
+			while( !instancerIter.isDone() )
+			{
+				MDagPath path( instancerIter.path() );
+				MString instanceStr( ( MString )"|INSTANCE_" +
+					instancerIter.instancerId() + (MString)"_" +
+					instancerIter.particleId() + (MString)"_" +
+					instancerIter.pathId() );
+
+				MMatrix instanceMatrix( instancerIter.matrix() );
+
+				if( ( sample > 0 ) && isObjectMotionBlur( path ))
+					htable->insert( path, lframe, sample, MRT_Unknown,count++, &instanceMatrix, instanceStr, instancerIter.particleId() );
+				else
+					htable->insert( path, lframe, 0, MRT_Unknown,count++, &instanceMatrix, instanceStr, instancerIter.particleId() );
+				instancerIter.next();
+			}
+		}
+
+		vector<structJob>::iterator iter = jobList.begin();
+		while ( iter != jobList.end() ) 
+		{
+			LIQ_CHECK_CANCEL_REQUEST;
+			// scanScene: Get the camera/light info for this job at this frame
+			MStatus status;
+
+			if( !iter->isShadow ) 
+			{
+				MDagPath path;
+				MFnCamera   fnCamera( iter->path );
+				iter->gotJobOptions = false;
+				status.clear();
+				MPlug cPlug = fnCamera.findPlug( MString( "ribOptions" ), &status );
+				if( status == MS::kSuccess ) 
+				{
+					cPlug.getValue( iter->jobOptions );
+					iter->gotJobOptions = true;
+				}
+				getCameraInfo( fnCamera );
+				iter->width = cam_width;
+				iter->height = cam_height;
+				// scanScene: Renderman specifies shutter by time open
+				// so we need to convert shutterAngle to time.
+				// To do this convert shutterAngle to degrees and
+				// divide by 360.
+				//
+				iter->camera[sample].shutter = fnCamera.shutterAngle() * 0.5 / M_PI;
+				liqglo.liqglo_shutterTime = iter->camera[sample].shutter;
+				iter->camera[sample].orthoWidth     = fnCamera.orthoWidth();
+				iter->camera[sample].orthoHeight    = fnCamera.orthoWidth() * ((float)cam_height / (float)cam_width);
+				iter->camera[sample].motionBlur     = fnCamera.isMotionBlur();
+				iter->camera[sample].focalLength    = fnCamera.focalLength();
+				iter->camera[sample].focalDistance  = fnCamera.focusDistance();
+				iter->camera[sample].fStop          = fnCamera.fStop();
+
+				// film back offsets
+				double hSize, vSize, hOffset, vOffset;
+				fnCamera.getFilmFrustum( fnCamera.focalLength(), hSize, vSize, hOffset, vOffset );
+
+				double imr = ((float)cam_width / (float)cam_height);
+				double fbr = hSize / vSize;
+				double ho, vo;
+
+				if( imr >= 1 ) 
+				{
+					switch ( fnCamera.filmFit() ) 
+					{
+					case MFnCamera::kVerticalFilmFit:
+					case MFnCamera::kOverscanFilmFit:
+						ho = hOffset / vSize * 2.0;
+						vo = vOffset / vSize * 2.0;
+						break;
+
+					case MFnCamera::kHorizontalFilmFit:
+					case MFnCamera::kFillFilmFit:
+						ho = hOffset / ( vSize * fbr / imr ) * 2.0;
+						vo = vOffset / ( vSize * fbr / imr ) * 2.0;
+						break;
+
+					default:
+						ho = 0;
+						vo = 0;
+						break;
+					}
+				} 
+				else 
+				{
+					switch ( fnCamera.filmFit() ) 
+					{
+					case MFnCamera::kFillFilmFit:
+					case MFnCamera::kVerticalFilmFit:
+						ho = hOffset / vSize * 2.0;
+						vo = vOffset / vSize * 2.0;
+						break;
+
+					case MFnCamera::kHorizontalFilmFit:
+					case MFnCamera::kOverscanFilmFit:
+						ho = hOffset / ( vSize * fbr / imr ) * 2.0;
+						vo = vOffset / ( vSize * fbr / imr ) * 2.0;
+						break;
+
+					default:
+						ho = 0;
+						vo = 0;
+						break;
+					}
+				}
+				iter->camera[sample].horizontalFilmOffset = ho;
+				iter->camera[sample].verticalFilmOffset   = vo;
+
+				// convert focal length to scene units
+				MDistance flenDist(iter->camera[sample].focalLength,MDistance::kMillimeters);
+				iter->camera[sample].focalLength = flenDist.as(MDistance::uiUnit());
+
+				fnCamera.getPath(path);
+				MTransformationMatrix xform( path.inclusiveMatrix() );
+
+				// the camera is pointing toward negative Z
+				double scale[] = { 1, 1, -1 };
+				xform.setScale( scale, MSpace::kTransform );
+
+				// scanScene:
+				// philippe : rotate the main camera 90 degrees around Z-axis if necessary
+				// ( only in main camera )
+				MMatrix camRotMatrix;
+				if( liqglo_rotateCamera == true ) 
+				{
+					float crm[4][4] = {  {  0.0,  1.0,  0.0,  0.0 },
+					{ -1.0,  0.0,  0.0,  0.0 },
+					{  0.0,  0.0,  1.0,  0.0 },
+					{  0.0,  0.0,  0.0,  1.0 }};
+					camRotMatrix = crm;
+				}
+				iter->camera[sample].mat = xform.asMatrixInverse() * camRotMatrix;
+
+				if( fnCamera.isClippingPlanes() ) 
+				{
+					iter->camera[sample].neardb    = fnCamera.nearClippingPlane();
+					iter->camera[sample].fardb    = fnCamera.farClippingPlane();
+				} 
+				else 
+				{
+					iter->camera[sample].neardb    = 0.001;    // TODO: these values are duplicated elsewhere in this file
+					iter->camera[sample].fardb    = 250000.0; // TODO: these values are duplicated elsewhere in this file
+				}
+				iter->camera[sample].isOrtho = fnCamera.isOrtho();
+
+				// scanScene: The camera's fov may not match the rendered image in Maya
+				// if a film-fit is used. 'fov_ratio' is used to account for
+				// this.
+				//
+				iter->camera[sample].hFOV = fnCamera.horizontalFieldOfView()/fov_ratio;
+				iter->aspectRatio = aspectRatio;
+
+				// scanScene: Determine what information to write out (RGB, alpha, zbuffer)
+				//
+				iter->imageMode.clear();
+
+				bool isOn;
+				MPlug boolPlug;
+				boolPlug = fnCamera.findPlug( "image" );
+
+				boolPlug.getValue( isOn );
+				if( isOn ) 
+				{
+					// We are writing RGB info
+					//
+					iter->imageMode = "rgb";
+					iter->format = outFormat;
+				}
+				boolPlug = fnCamera.findPlug( "mask" );
+				boolPlug.getValue( isOn );
+				if( isOn ) 
+				{
+					// We are writing alpha channel info
+					//
+					iter->imageMode += "a";
+					iter->format = outFormat;
+				}
+				boolPlug = fnCamera.findPlug( "depth" );
+				boolPlug.getValue( isOn );
+				if( isOn ) {
+					// We are writing z-buffer info
+					//
+					iter->imageMode = "z";
+					iter->format = "zfile";
+				}
+			} 
+			else 
+			{
+				// scanScene: doing shadow render
+				//
+				MDagPath path;
+				MFnLight   fnLight( iter->path );
+				status.clear();
+
+				iter->gotJobOptions = false;
+				MPlug cPlug = fnLight.findPlug( MString( "ribOptions" ), &status );
+				if( status == MS::kSuccess ) {
+					cPlug.getValue( iter->jobOptions );
+					iter->gotJobOptions = true;
+				}
+
+				// philippe: this block is obsolete as we now get the resolution when building the job list
+				//
+				/* MPlug lightPlug = fnLight.findPlug( "dmapResolution" );
+				float dmapSize;
+				lightPlug.getValue( dmapSize );
+				iter->height = iter->width = (int)dmapSize; */
+
+				if( iter->hasShadowCam ) 
+				{
+					// scanScene: the light uses a shadow cam
+					//
+					MFnCamera fnCamera( iter->shadowCamPath );
+					fnCamera.getPath(path);
+					MTransformationMatrix xform( path.inclusiveMatrix() );
+
+					// the camera is pointing toward negative Z
+					double scale[] = { 1, 1, -1 };
+					xform.setScale( scale, MSpace::kTransform );
+
+					iter->camera[sample].mat         = xform.asMatrixInverse();
+					iter->camera[sample].neardb      = fnCamera.nearClippingPlane();
+					iter->camera[sample].fardb       = fnCamera.farClippingPlane();
+					iter->camera[sample].isOrtho     = fnCamera.isOrtho();
+					iter->camera[sample].orthoWidth  = fnCamera.orthoWidth();
+					iter->camera[sample].orthoHeight = fnCamera.orthoWidth();
+				} 
+				else 
+				{
+					// scanScene: the light does not use a shadow cam
+					//
+
+					// get the camera world matrix
+					fnLight.getPath(path);
+					MTransformationMatrix xform( path.inclusiveMatrix() );
+
+					// the camera is pointing toward negative Z
+					double scale[] = { 1, 1, -1 };
+					xform.setScale( scale, MSpace::kTransform );
+
+					if( iter->isPoint ) 
+					{
+						double ninty = M_PI/2;
+						if( iter->pointDir == pPX ) { double rotation[] = { 0, -ninty, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+						if( iter->pointDir == pNX ) { double rotation[] = { 0, ninty, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+						if( iter->pointDir == pPY ) { double rotation[] = { ninty, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+						if( iter->pointDir == pNY ) { double rotation[] = { -ninty, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+						if( iter->pointDir == pPZ ) { double rotation[] = { 0, M_PI, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+						if( iter->pointDir == pNZ ) { double rotation[] = { 0, 0, 0 }; xform.setRotation( rotation, MTransformationMatrix::kXYZ ); }
+					}
+					iter->camera[sample].mat = xform.asMatrixInverse();
+
+					MPlug shaderConnection( fnLight.findPlug( "liquidLightShaderNode", &status ) );
+					if( status == MS::kSuccess && shaderConnection.isConnected() ) 
+					{
+						MPlugArray LightShaderPlugArray;
+						shaderConnection.connectedTo( LightShaderPlugArray, true, true );
+						MFnDependencyNode fnLightShaderNode( LightShaderPlugArray[0].node() );
+						fnLightShaderNode.findPlug( "nearClipPlane" ).getValue( iter->camera[sample].neardb );
+						fnLightShaderNode.findPlug( "farClipPlane" ).getValue( iter->camera[sample].fardb );
+					} 
+					else 
+					{
+						iter->camera[sample].neardb   = 0.001;    // TODO: these values are duplicated elsewhere in this file
+						iter->camera[sample].fardb    = 250000.0; // TODO: these values are duplicated elsewhere in this file
+						MPlug nearPlug = fnLight.findPlug( "nearClipPlane", &status );
+						if( status == MS::kSuccess ) 
+							nearPlug.getValue( iter->camera[sample].neardb );
+						MPlug farPlug = fnLight.findPlug( "farClipPlane", &status );
+						if( status == MS::kSuccess ) 
+							farPlug.getValue( iter->camera[sample].fardb );
+					}
+
+					if( fnLight.dagPath().hasFn( MFn::kDirectionalLight ) ) 
+					{
+						iter->camera[sample].isOrtho = true;
+						fnLight.findPlug( "dmapWidthFocus" ).getValue( iter->camera[sample].orthoWidth );
+						fnLight.findPlug( "dmapWidthFocus" ).getValue( iter->camera[sample].orthoHeight );
+					} 
+					else 
+					{
+						iter->camera[sample].isOrtho = false;
+						iter->camera[sample].orthoWidth = 0.0;
+					}
+				}
+
+				if( iter->deepShadows )
+				{
+					iter->camera[sample].shutter = liqglo.liqglo_shutterTime;
+					iter->camera[sample].motionBlur = true;
+				}
+				else
+				{
+					iter->camera[sample].shutter = 0;
+					iter->camera[sample].motionBlur = false;
+				}
+				iter->camera[sample].focalLength = 0;
+				iter->camera[sample].focalDistance = 0;
+				iter->camera[sample].fStop = 0;
+				//doCameraMotion = 0;
+
+				iter->aspectRatio = 1.0;
+
+				// The camera's fov may not match the rendered image in Maya
+				// if a film-fit is used. 'fov_ratio' is used to account for
+				// this.
+				//
+				if( iter->hasShadowCam ) 
+				{
+					MFnCamera fnCamera( iter->shadowCamPath );
+					float camFov = fnCamera.horizontalFieldOfView();
+					iter->camera[sample].hFOV = camFov;
+				} 
+				else 
+				{
+					MStatus coneStatus;
+					MPlug lightPlug = fnLight.findPlug( "coneAngle", &coneStatus );
+					if( coneStatus == MS::kSuccess ) 
+					{
+						// philippe : if we have a penumbra > 0, we must add it to the coneangle
+						// to cover correctly the penumbra area.
+						float angle = 0, penumbra = 0;
+						lightPlug.getValue( angle );
+						lightPlug = fnLight.findPlug( "penumbraAngle", &coneStatus );
+						if( coneStatus == MS::kSuccess ) lightPlug.getValue( penumbra );
+						if( penumbra > 0 ) angle += penumbra * 2;
+						iter->camera[sample].hFOV = angle;
+					} 
+					else 
+						iter->camera[sample].hFOV = 95;
+				}
+
+				// Determine what information to write out ( depth map or deep shadow )
+				//
+				iter->imageMode.clear();
+				if( iter->deepShadows )
+				{
+					iter->imageMode    += liqglo.liquidRenderer.dshImageMode;        //"deepopacity";
+					iter->format        =  liqglo.liquidRenderer.dshDisplayName;    //"deepshad";
+				}
+				else
+				{
+					iter->imageMode += "z";
+					iter->format = "shadow";
+				}
+			}
+			++iter;
+		}
+		// post-frame script execution
+		if( m_postFrameMel != "" ) 
+		{
+			MString postFrameMel( parseString( m_postFrameMel, false ) );
+			if( fileExists( postFrameMel  ) ) 
+				MGlobal::sourceFile( postFrameMel );
+			else 
+				if( MS::kSuccess == MGlobal::executeCommand( postFrameMel, false, false ) ) 
+					cout <<"Liquid -> post-frame script executed successfully."<<endl<<flush;
+				else 
+					cout <<"Liquid -> ERROR :post-frame script failed."<<endl<<flush;
+		}
+		return MS::kSuccess;
+	}
+	return MS::kFailure;
+}
+

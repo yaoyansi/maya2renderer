@@ -505,6 +505,7 @@ private :
 	void doShadows();
 	void postActions(const MString& originalLayer__);
 	MStatus buildShadowJobs__();
+	MStatus scanScene__(float lframe, int sample );
 
 	MTime originalTime;
 
