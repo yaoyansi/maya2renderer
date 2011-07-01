@@ -779,5 +779,13 @@ namespace renderman
 
 		return MStatus::kSuccess;
 	}
+	//
+	MStatus Renderer::frameEpilogue(const long scanTime)
+	{
+		if( !liqglo.m_exportReadArchive ) 
+			RiFrameEnd();
+		
+		return MStatus::kSuccess;
+	}
 
 }//namespace

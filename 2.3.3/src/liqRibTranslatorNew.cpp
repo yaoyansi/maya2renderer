@@ -2333,7 +2333,13 @@ MStatus liqRibTranslator::worldEpilogue__()
 //
 MStatus liqRibTranslator::frameEpilogue__( long scanTime)
 {
-	return frameEpilogue(scanTime);
+	if( ribStatus == kRibFrame) 
+	{
+		ribStatus = kRibBegin;
+		liquid::RendererMgr::getInstancePtr()->getRenderer()->frameEpilogue(scanTime);
+	}
+	return (ribStatus == kRibBegin ? MS::kSuccess : MS::kFailure);
+
 }
 //
 MStatus liqRibTranslator::_doItNewWithoutRenderScript(

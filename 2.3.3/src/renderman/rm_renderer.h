@@ -28,7 +28,7 @@ namespace renderman
 //		virtual MStatus coordSysBlock(const structJob& currentJob);
 //		virtual MStatus objectBlock(const structJob& currentJob);
 		virtual MStatus worldEpilogue();
-//		virtual MStatus frameEpilogue(const long scanTime);
+		virtual MStatus frameEpilogue(const long scanTime);
 		virtual MStatus ribPrologue_end(const structJob& currentJob);
 //		virtual MStatus ribEpilogue();
 

@@ -38,7 +38,7 @@ public:
 //	virtual MStatus coordSysBlock(const structJob& currentJob) = 0;
 //	virtual MStatus objectBlock(const structJob& currentJob) = 0;
 	virtual MStatus worldEpilogue() = 0;
-//	virtual MStatus frameEpilogue(const long scanTime) = 0;
+	virtual MStatus frameEpilogue(const long scanTime) = 0;
 	virtual MStatus ribPrologue_end(const structJob& currentJob) = 0;
 //	virtual MStatus ribEpilogue() = 0;
 

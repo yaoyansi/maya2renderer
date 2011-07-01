@@ -596,4 +596,9 @@ namespace elvishray
 		_S( ei_end_instance() );
 		return MStatus::kSuccess;
 	}
+	//
+	MStatus Renderer::frameEpilogue(const long scanTime)
+	{
+		return MStatus::kSuccess;
+	}
 }//namespace
