@@ -158,7 +158,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 		liquidMessage( "Creating RIB <Press ESC To Cancel> ...", messageInfo );
 
 	// Remember the frame the scene was at so we can restore it later.
-	MTime originalTime = MAnimControl::currentTime();
+	originalTime = MAnimControl::currentTime();
 
 	// Set the frames-per-second global (we'll need this for
 	// streak particles)
@@ -522,50 +522,13 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 				//int exitstat = 0;
 
 				// write out make texture pass
-				vector<structJob>::iterator iter = txtList.begin();
-				while ( iter != txtList.end() ) 
-				{
-					if(iter->skip)
-					{
-						cout << "    - skipping '"<< iter->ribFileName <<"'"<<endl;
-						liquidMessage("     - skipping '"+string(iter->ribFileName.asChar())+"'", messageInfo);
-						++iter;
-						continue;
-					}
-					liquidMessage( "Making textures '" + string( iter->imageName.asChar() ) + "'", messageInfo );
-					cout << "[!] Making textures '" << iter->imageName.asChar() << "'" << endl;
-#ifdef _WIN32
-					liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
-#else
-					liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
-#endif
-					++iter;
-				}
+				doTextures();
+
 				if( liqglo.liqglo_doShadows ) 
 				{
-					liquidMessage( "Rendering shadow maps... ", messageInfo );
-					cout << endl << "[!] Rendering shadow maps... " << endl;
-					vector<structJob>::iterator iter = shadowList.begin();
-					while ( iter != shadowList.end() ) 
-					{
-						if( iter->skip ) 
-						{
-							cout <<"    - skipping '" << iter->ribFileName.asChar() << "'" << endl;
-							liquidMessage( "    - skipping '" + string( iter->ribFileName.asChar() ) + "'", messageInfo );
-							++iter;
-							continue;
-						}
-						cout << "    + '" << iter->ribFileName.asChar() << "'" << endl;
-						liquidMessage( "    + '" + string( iter->ribFileName.asChar() ) + "'", messageInfo );
-#ifdef _WIN32
-						if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " \"" + iter->ribFileName + "\"", liqglo.liqglo_projectDir, true ) )
-#else
-						if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " " + iter->ribFileName, liqglo.liqglo_projectDir, true ) )
-#endif
-							break;
-						++iter;
-					} // while ( iter != shadowList.end() )
+					doShadows();
 				}
+
 				//if( !exitstat ){
 				liquidMessage( "Rendering hero pass... ", messageInfo );
 				cout << "[!] Rendering hero pass..." << endl;
@@ -592,25 +555,12 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 						doRenderView();
 					}
 				}
-				//}//if( !exitstat ) 
+				//}//if( !exitstat )
+ 
 			}//if( useRenderScript ) else
 		} // if( launchRender )
 
-		// return to the frame we were at before we ran the animation
-		LIQDEBUGPRINTF( "-> setting frame to current frame.\n" );
-		MGlobal::viewFrame (originalTime);
-
-		if( originalLayer != "" ) 
-		{
-			MString cmd;
-			cmd = "if( `editRenderLayerGlobals -q -currentRenderLayer` != \"" + originalLayer + "\" ) editRenderLayerGlobals -currentRenderLayer \"" + originalLayer + "\";";
-			if(  MGlobal::executeCommand( cmd, false, false ) == MS::kFailure ) 
-			{
-				MString err;
-				err = "Liquid : could not switch back to render layer \"" + originalLayer + "\" !";
-				throw err;
-			}
-		}
+		postActions(originalLayer);
 
 		return ( (ribStatus == kRibOK || liqglo.m_deferredGen) ? MS::kSuccess : MS::kFailure);
 
@@ -1521,4 +1471,72 @@ void liqRibTranslator::doRenderView()
 	//============= 
 	cout << ">> m_renderView: m_displayCmd = " <<  displayCmd.asChar() << endl;
 	MGlobal::executeCommand( displayCmd );
+}
+//
+void liqRibTranslator::doTextures()
+{
+	vector<structJob>::iterator iter = txtList.begin();
+	while ( iter != txtList.end() ) 
+	{
+		if(iter->skip)
+		{
+			cout << "    - skipping '"<< iter->ribFileName <<"'"<<endl;
+			liquidMessage("     - skipping '"+string(iter->ribFileName.asChar())+"'", messageInfo);
+			++iter;
+			continue;
+		}
+		liquidMessage( "Making textures '" + string( iter->imageName.asChar() ) + "'", messageInfo );
+		cout << "[!] Making textures '" << iter->imageName.asChar() << "'" << endl;
+#ifdef _WIN32
+		liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
+#else
+		liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
+#endif
+		++iter;
+	}
+}
+//
+void liqRibTranslator::doShadows()
+{
+	liquidMessage( "Rendering shadow maps... ", messageInfo );
+	cout << endl << "[!] Rendering shadow maps... " << endl;
+	vector<structJob>::iterator iter = shadowList.begin();
+	while ( iter != shadowList.end() ) 
+	{
+		if( iter->skip ) 
+		{
+			cout <<"    - skipping '" << iter->ribFileName.asChar() << "'" << endl;
+			liquidMessage( "    - skipping '" + string( iter->ribFileName.asChar() ) + "'", messageInfo );
+			++iter;
+			continue;
+		}
+		cout << "    + '" << iter->ribFileName.asChar() << "'" << endl;
+		liquidMessage( "    + '" + string( iter->ribFileName.asChar() ) + "'", messageInfo );
+#ifdef _WIN32
+		if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " \"" + iter->ribFileName + "\"", liqglo.liqglo_projectDir, true ) )
+#else
+		if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " " + iter->ribFileName, liqglo.liqglo_projectDir, true ) )
+#endif
+			break;
+		++iter;
+	} // while ( iter != shadowList.end() )
+}
+//
+void liqRibTranslator::postActions(const MString& originalLayer__)
+{
+	// return to the frame we were at before we ran the animation
+	LIQDEBUGPRINTF( "-> setting frame to current frame.\n" );
+	MGlobal::viewFrame (originalTime);
+
+	if( originalLayer__ != "" ) 
+	{
+		MString cmd;
+		cmd = "if( `editRenderLayerGlobals -q -currentRenderLayer` != \"" + originalLayer__ + "\" ) editRenderLayerGlobals -currentRenderLayer \"" + originalLayer__ + "\";";
+		if(  MGlobal::executeCommand( cmd, false, false ) == MS::kFailure ) 
+		{
+			MString err;
+			err = "Liquid : could not switch back to render layer \"" + originalLayer__ + "\" !";
+			throw err;
+		}
+	}
 }

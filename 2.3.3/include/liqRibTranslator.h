@@ -45,6 +45,7 @@
 #include <maya/MArgList.h>
 #include <maya/MIntArray.h>
 #include <maya/MStringArray.h>
+#include <maya/MTime.h>
 
 #include <liquid.h>
 #include <liqRibHT.h>
@@ -500,6 +501,11 @@ private :
 		struct liqGlobalVariable &liqglo__
 		);
 	void doRenderView();
+	void doTextures();
+	void doShadows();
+	void postActions(const MString& originalLayer__);
+
+	MTime originalTime;
 
 private:
 	liqRibTranslator(const liqRibTranslator&);
