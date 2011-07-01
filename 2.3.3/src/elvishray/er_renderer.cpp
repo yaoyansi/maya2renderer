@@ -4,7 +4,9 @@
 
 namespace elvishray
 {
-	static Renderer locator;
+	static const Renderer dummy;
+	// the only goal to define a Renderer variable is 
+	// to run the constructor to register this renderer.
 
 	static const char *RendererName="elvishray";
 
