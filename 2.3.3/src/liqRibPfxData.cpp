@@ -67,8 +67,6 @@ using namespace boost;
 // For debug purposes: set to 1, 2, 3 to see only mainLines, also leafLines and also flowerLines
 #define MAX_DETAIL 3
 
-extern int debugMode;
-
 /** Create a RIB compatible representation of a Maya Paint Effectrs object.
  */
 liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )

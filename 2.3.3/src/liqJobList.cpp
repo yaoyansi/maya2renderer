@@ -37,6 +37,7 @@
 #include <liqIOStream.h>
 #include <liqRibTranslator.h>
 #include "ri_interface.h"
+#include <liqGlobalVariable.h>
 
 // RI_VERBATIM is in the current RenderMan spec but
 // some RIB libraries don't know about it
@@ -44,12 +45,6 @@
   #define RI_VERBATIM "verbatim"
 #endif
 
-
-extern MString  liqglo_ribDir;
-extern MString  liqglo_textureDir;
-extern MString  liqglo_projectDir;
-extern MString  liqglo_sceneName;
-extern long     liqglo_lframe;
 
 
 
@@ -141,17 +136,17 @@ MStatus liqJobList::redoIt()
     MString MELCommand = "workspace -q -rd";
     MString MELReturn;
     MGlobal::executeCommand( MELCommand, MELReturn );
-    liqglo_projectDir = MELReturn;
+    liqglo.liqglo_projectDir = MELReturn;
 
 
     // set the current scene name
     //
-    liqglo_sceneName = liquidTransGetSceneName();
+    liqglo.liqglo_sceneName = liquidTransGetSceneName();
 
 
     // set the frame
     //
-    liqglo_lframe = ( int ) MAnimControl::currentTime().as( MTime::uiUnit() );
+    liqglo.liqglo_lframe = ( int ) MAnimControl::currentTime().as( MTime::uiUnit() );
 
 
     // read the globals
@@ -191,9 +186,9 @@ MStatus liqJobList::redoIt()
       if ( debug ) cout <<"  do shadows..."<<flush;
 
       while ( iterShad != ribTranslator.jobList.end() ) {
-        if ( doShadows && iterShad->isShadow && iterShad->everyFrame ) result.append( liquidGetRelativePath(fullPath, iterShad->ribFileName, liqglo_projectDir) );
+        if ( doShadows && iterShad->isShadow && iterShad->everyFrame ) result.append( liquidGetRelativePath(fullPath, iterShad->ribFileName, liqglo.liqglo_projectDir) );
         if ( doSingleShadows && iterShad->isShadow && !iterShad->everyFrame ) {
-          result.append( liquidGetRelativePath(fullPath, iterShad->ribFileName, liqglo_projectDir) );
+          result.append( liquidGetRelativePath(fullPath, iterShad->ribFileName, liqglo.liqglo_projectDir) );
         }
         ++iterShad;
       }
@@ -208,7 +203,7 @@ MStatus liqJobList::redoIt()
       if ( debug ) cout <<"  do camera..."<<flush;
       iterShad = ribTranslator.jobList.end();
       --iterShad;
-      result.append( liquidGetRelativePath(fullPath, iterShad->ribFileName, liqglo_projectDir) );
+      result.append( liquidGetRelativePath(fullPath, iterShad->ribFileName, liqglo.liqglo_projectDir) );
       if ( debug ) cout <<"done !"<<endl;
     }
 

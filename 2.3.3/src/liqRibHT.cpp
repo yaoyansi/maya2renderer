@@ -54,8 +54,7 @@
 
 using namespace boost;
 using namespace std;
-
-extern int debugMode;
+ 
 
 /**
  * Class constructor.

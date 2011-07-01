@@ -65,17 +65,10 @@ using namespace __gnu_cxx;
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
+#include <liqGlobalVariable.h>
 
 using namespace std;
 using namespace boost;
-
-extern int debugMode;
-
-extern RtFloat liqglo_sampleTimes[5];
-extern liquidlong liqglo_motionSamples;
-extern bool liqglo_doDef;
-extern bool liqglo_doMotion;
-extern structJob liqglo_currentJob;
 
 
 // these classes are needed to produce a list of particles sorted by their ids
@@ -156,10 +149,10 @@ liqRibParticleData::liqRibParticleData( MObject partobj )
   // need to go to the shutterOpen and shutterClose timepoints, find the particles
   // common to both, and then use the position for those particles.
   //
-  if ( liqglo_doMotion || liqglo_doDef )
+  if ( liqglo.liqglo_doMotion || liqglo.liqglo_doDef )
   {
-    MTime shutterOpen ( (double)liqglo_sampleTimes[0], MTime::uiUnit() );
-    MTime shutterClose ( (double)liqglo_sampleTimes[liqglo_motionSamples - 1], MTime::uiUnit() );
+    MTime shutterOpen ( (double)liqglo.liqglo_sampleTimes[0], MTime::uiUnit() );
+    MTime shutterClose ( (double)liqglo.liqglo_sampleTimes[liqglo.liqglo_motionSamples - 1], MTime::uiUnit() );
     MTime exportTime = MAnimControl::currentTime();
 
 
@@ -618,16 +611,15 @@ liqRibParticleData::liqRibParticleData( MObject partobj )
             zDir /= vLen;
             rad = rand() / (float) RAND_MAX * multiRadius / 2.0;
           }
-          extern double liqglo_FPS;
           // Tail (the formula below is a bit of a guess as to how Maya places the tail).
           //
           Pparameter.setTokenFloat( part_num*m_multiCount + multiNum,
                         posArray[ m_validParticles[ part_num ] ].x + rad * xDir -
-                        velArray[ m_validParticles[ part_num ] ].x * tailSize / liqglo_FPS,
+                        velArray[ m_validParticles[ part_num ] ].x * tailSize / liqglo.liqglo_FPS,
                         posArray[ m_validParticles[ part_num ] ].y + rad * yDir -
-                        velArray[ m_validParticles[ part_num ] ].y * tailSize / liqglo_FPS,
+                        velArray[ m_validParticles[ part_num ] ].y * tailSize / liqglo.liqglo_FPS,
                         posArray[ m_validParticles[ part_num ] ].z + rad * zDir -
-                        velArray[ m_validParticles[ part_num ] ].z * tailSize / liqglo_FPS );
+                        velArray[ m_validParticles[ part_num ] ].z * tailSize / liqglo.liqglo_FPS );
 
           // Head
           //
@@ -1236,9 +1228,9 @@ void liqRibParticleData::_write()
         MVector camRight( 1, 0, 0 );
         MVector camEye( 0, 0, 1 );
 
-        camUp    *= liqglo_currentJob.camera[0].mat.inverse();
-        camRight *= liqglo_currentJob.camera[0].mat.inverse();
-        camEye   *= liqglo_currentJob.camera[0].mat.inverse();
+        camUp    *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
+        camRight *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
+        camEye   *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
 
         for( unsigned ui( 0 ); ui < m_numValidParticles; ui++ ) 
         {
@@ -1475,9 +1467,9 @@ bool liqRibParticleData::writeNextGrain()
           MVector camRight( 1, 0, 0 );
           MVector camEye( 0, 0, 1 );
 
-          camUp    *= liqglo_currentJob.camera[0].mat.inverse();
-          camRight *= liqglo_currentJob.camera[0].mat.inverse();
-          camEye   *= liqglo_currentJob.camera[0].mat.inverse();
+          camUp    *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
+          camRight *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
+          camEye   *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
 
           //MGlobal::displayInfo( MString( "I: " ) + ( ( double ) grain ) );
           MVector up( camUp );

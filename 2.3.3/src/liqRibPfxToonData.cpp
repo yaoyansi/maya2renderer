@@ -32,11 +32,12 @@
 ** ______________________________________________________________________
 */
 #include <liqRibPfxToonData.h>
+// Boost headers
+#include <boost/scoped_array.hpp>
 // RenderMan jeaders
 //extern "C" {
 #include "ri_interface.h"
 //}
-
 // Maya headers
 #include <maya/MDoubleArray.h>
 #include <maya/MItCurveCV.h>
@@ -57,14 +58,12 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
+#include <liqGlobalVariable.h>
 
 
-// Boost headers
-#include <boost/scoped_array.hpp>
+
 using namespace boost;
 
-extern int debugMode;
-extern MString liqglo_renderCamera;
 
 
 /** Create a RIB compatible representation of a Maya pfxToon node as RiCurves.
@@ -83,7 +82,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
   // otherwise the resulting outline might be incorrect
   MDagPath cameraPath;
   MSelectionList camList;
-  camList.add( liqglo_renderCamera );
+  camList.add( liqglo.liqglo_renderCamera );
   camList.getDagPath( 0, cameraPath );
   MMatrix cam_mat( cameraPath.inclusiveMatrix() );
   MFnDependencyNode pfxToonNode( pfxToon );

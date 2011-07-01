@@ -72,8 +72,6 @@
 
 
 
-extern int debugMode;
-
 // Entropy to PRman type conversion : numbering has a break between
 // string ( 7 -> 4 ) and surface ( 16 -> 5 )
 //int SLEtoSLOMAP[21] = { 0, 3, 2, 1, 11, 12, 13, 4, 5, 7, 6, 8, 10, 0, 0, 0, 5, 7, 6, 8, 10 };

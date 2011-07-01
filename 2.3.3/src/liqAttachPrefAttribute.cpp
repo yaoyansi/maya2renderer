@@ -51,9 +51,9 @@
 #include <maya/MDagPath.h>
 
 #include <liqRenderer.h>
+#include <liqGlobalVariable.h>
 
-
-extern liqRenderer liquidRenderer;
+//extern liqRenderer liquidRenderer;
 
 
 liqAttachPrefAttribute::~liqAttachPrefAttribute()
@@ -126,13 +126,13 @@ MStatus	liqAttachPrefAttribute::redoIt()
     MString attrName, varName;
 
     // make sure the renderer description is up to date
-    liquidRenderer.setRenderer();
+    liqglo.liquidRenderer.setRenderer();
 
     // build the name of the attribute
     varName = ( ( exportN && depNodeObj.hasFn( MFn::kMesh ) )? "N":"P" );
     attrName = "rman";
     attrName += varName;
-    attrName += ( ( liquidRenderer.requires__PREF )? "__":"" );
+    attrName += ( ( liqglo.liquidRenderer.requires__PREF )? "__":"" );
     attrName += varName + "ref";
 
     // create the attribute
@@ -143,7 +143,7 @@ MStatus	liqAttachPrefAttribute::redoIt()
     {
       MFnNurbsSurface nodeFn( depNodeObj );
       MPointArray nodePArray;
-      MItSurfaceCV cvs( dagNode, MObject::kNullObj, liquidRenderer.requires_SWAPPED_UVS == false, &status );
+      MItSurfaceCV cvs( dagNode, MObject::kNullObj, liqglo.liquidRenderer.requires_SWAPPED_UVS == false, &status );
 
       while( !cvs.isDone() ) 
       {

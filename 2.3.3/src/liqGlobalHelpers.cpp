@@ -55,8 +55,8 @@
 
 
 
-#include <liqShader.h>
 
+#include <liqShader.h>
 
 #endif
 
@@ -69,24 +69,7 @@
 
 
 #include <liqMayaNodeIds.h>
-
-extern int debugMode;
-extern bool liquidBin;
-
-extern long   liqglo_lframe;
-extern MString liqglo_sceneName;
-extern MString liqglo_ribDir;
-extern MString liqglo_projectDir;
-extern MString liqglo_textureDir;
-extern MStringArray liqglo_DDimageName;
-
-extern MString liqglo_currentNodeName;
-extern MString liqglo_currentNodeShortName;
-extern MString liqglo_shotName;
-extern MString liqglo_shotVersion;
-extern MString liqglo_layer;
-
-extern liquidVerbosityType liqglo_verbosity;
+#include <liqGlobalVariable.h>
 
 using namespace std;
 using namespace boost;
@@ -406,13 +389,13 @@ bool fileFullyAccessible( const MString& path )
 MString getFullPathFromRelative( const MString& filename ) 
 {
 	MString ret;
-	extern MString liqglo_projectDir;
+
 #if defined(_WIN32)||defined(_WIN64)
 	if( filename.index( 0 ) == '/' ){ // relative path, add prefix project folder
 #else//LINUX
 	if( filename.index( 0 ) != '/' ){ // relative path, add prefix project folder
 #endif
-		ret = liqglo_projectDir + "/" + filename;
+		ret = liqglo.liqglo_projectDir + "/" + filename;
 	}else{
 		ret = filename;
 	}
@@ -460,74 +443,74 @@ MString parseString( const MString& inString, bool doEscaped )
       tokenString += str;
       if( tokenString == "F" ) 
       {
-        constructedString += (int)liqglo_lframe;
+        constructedString += (int)liqglo.liqglo_lframe;
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "SCN" ) 
       {
-        constructedString += liqglo_sceneName;
+        constructedString += liqglo.liqglo_sceneName;
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "IMG" ) 
       {
-        constructedString += liqglo_DDimageName[0];
+        constructedString += liqglo.liqglo_DDimageName[0];
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "PDIR" || tokenString == "PROJDIR" ) 
       {
-        constructedString += liqglo_projectDir;
+        constructedString += liqglo.liqglo_projectDir;
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "RDIR" || tokenString == "RIBDIR" ) 
       {
-        constructedString += liqglo_ribDir;
+        constructedString += liqglo.liqglo_ribDir;
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "TDIR" || tokenString == "TEXDIR" ) 
       {
-        constructedString += liqglo_textureDir;
+        constructedString += liqglo.liqglo_textureDir;
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "OBJ" && inputString.substring(i+1, i+4) != "PATH" ) 
       {
-        constructedString += liqglo_currentNodeShortName;
+        constructedString += liqglo.liqglo_currentNodeShortName;
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "OBJPATH" ) 
       {
-        constructedString += liqglo_currentNodeName;
+        constructedString += liqglo.liqglo_currentNodeName;
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "SHOT" ) 
       {
-        constructedString += liqglo_shotName;
+        constructedString += liqglo.liqglo_shotName;
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "VER" ) 
       {
-        constructedString += liqglo_shotVersion;
+        constructedString += liqglo.liqglo_shotVersion;
         inToken = false;
         tokenString.clear();
       } 
       else if( tokenString == "LYR" || tokenString == "LAYER" ) 
       {
-        constructedString += liqglo_layer;
+        constructedString += liqglo.liqglo_layer;
         inToken = false;
         tokenString.clear();
       }
     } 
     else if( str == "@" && str_dec != "\\" ) 
     {
-      constructedString += (int)liqglo_lframe;
+      constructedString += (int)liqglo.liqglo_lframe;
     } 
     else if( str == "#" && str_dec != "\\" ) 
     {
@@ -545,7 +528,7 @@ MString parseString( const MString& inString, bool doEscaped )
         paddingSize = 20;
       
       char paddedFrame[20];
-      sprintf( paddedFrame, "%0*ld", paddingSize, liqglo_lframe );
+      sprintf( paddedFrame, "%0*ld", paddingSize, liqglo.liqglo_lframe );
       constructedString += paddedFrame;
     } 
     else if( str_inc == "%" ) 
@@ -1144,9 +1127,9 @@ RtString& getLiquidRibName( const string& name ) {
  */
 void liquidMessage( const string& msg, liquidVerbosityType type ) 
 {
-  if( liqglo_verbosity >= type || liquidBin ) 
+  if( liqglo_verbosity >= type || liqglo.liquidBin ) 
   {
-    if( !liquidBin ) 
+    if( !liqglo.liquidBin ) 
     {
       MString infoOutput( "[Liquid] " );
       infoOutput += msg.c_str();

@@ -54,8 +54,6 @@
 
 using namespace boost;
 
-extern int debugMode;
-
 
 /** Create a RIB compatible representation of a Maya pfxHair node as RiCurves.
  */

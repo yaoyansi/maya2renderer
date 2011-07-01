@@ -42,11 +42,9 @@
 #include <liqMayaNodeIds.h>
 #include <liqShaderFactory.h>
 
-
 using namespace std;
 using namespace boost;
 
-extern int debugMode;
 
 liqShader::liqShader()
 {

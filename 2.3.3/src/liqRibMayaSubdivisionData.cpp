@@ -57,15 +57,13 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-
+#include <liqGlobalVariable.h>
 
 
 
 
 using namespace boost;
 
-extern int debugMode;
-extern bool liqglo_outputMeshUVs;
 
 /** Create a RIB compatible subdivision surface representation using a Maya polygon mesh.
  */
@@ -117,7 +115,7 @@ liqRibMayaSubdivisionData::liqRibMayaSubdivisionData( MObject subd )
 
 	UVSetsArray.push_back( pFaceVertexPointerPair );
 
-	if( liqglo_outputMeshUVs )
+	if( liqglo.liqglo_outputMeshUVs )
 	{
 		// Match MTOR, which also outputs face-varying STs as well for some reason - Paul
 		// not anymore - Philippe
@@ -160,7 +158,7 @@ liqRibMayaSubdivisionData::liqRibMayaSubdivisionData( MObject subd )
 				UVSetsArray[0].setTokenFloat( faceVertex, 0, S[i] );
 				UVSetsArray[0].setTokenFloat( faceVertex, 1, T[i] );
 
-				if( liqglo_outputMeshUVs )
+				if( liqglo.liqglo_outputMeshUVs )
 				{
 					// Match MTOR, which always outputs face-varying STs as well for some reason - Paul
 					pFaceVertexSPointer.setTokenFloat( faceVertex, S[i] );
@@ -181,7 +179,7 @@ liqRibMayaSubdivisionData::liqRibMayaSubdivisionData( MObject subd )
 	if( UVSetsArray.size() )
 		tokenPointerArray.insert( tokenPointerArray.end(), UVSetsArray.begin(), UVSetsArray.end() );
 	
-	if( liqglo_outputMeshUVs )
+	if( liqglo.liqglo_outputMeshUVs )
 	{
 		assert( !pFaceVertexSPointer );
 		tokenPointerArray.push_back( pFaceVertexSPointer );

@@ -47,16 +47,14 @@
 #include <liqProcessLauncher.h>
 #include <liqGlobalHelpers.h>
 #include <liqShader.h>
-
+#include <liqGlobalVariable.h>
 // Standard/Boost headers
 #include <boost/scoped_array.hpp>
 
 using namespace std;
 using namespace boost;
 
-extern int debugMode;
 //#ifndef DELIGHT
-extern liqRenderer liquidRenderer;
 //#endif
 
 #ifdef DELIGHT
@@ -218,8 +216,8 @@ MStatus	liqPreviewShader::doIt( const MArgList& args )
 
   string renderCommand;
 #ifndef DELIGHT
-  liquidRenderer.setRenderer();
-  renderCommand = liquidRenderer.renderPreview.asChar();
+  liqglo.liquidRenderer.setRenderer();
+  renderCommand = liqglo.liquidRenderer.renderPreview.asChar();
 #endif
 
   for ( unsigned i( 0 ); i < args.length(); i++ ) {
@@ -297,7 +295,7 @@ MStatus	liqPreviewShader::doIt( const MArgList& args )
   }
 #endif
   string last3letters( shaderNodeName.substr( shaderNodeName.length()-3 ) );
-  if ( string( liquidRenderer.shaderExtension.asChar() ) == last3letters ) 
+  if ( string( liqglo.liquidRenderer.shaderExtension.asChar() ) == last3letters ) 
     preview.fullShaderPath = true;
 
   preview.shaderNodeName = shaderNodeName;
@@ -445,10 +443,10 @@ int liquidOutputPreviewShader( const string& fileName, const liqPreviewShaderOpt
   RiPixelSamples( options.pixelSamples, options.pixelSamples );
 
 #ifdef PRMAN
-  if ( MString( "PRMan" ) == liquidRenderer.renderName )
+  if ( MString( "PRMan" ) == liqglo.liquidRenderer.renderName )
 	RiPixelFilter( RiCatmullRomFilter, 4., 4. );
 #elif defined( DELIGHT )
-  if ( MString( "3Delight" ) == liquidRenderer.renderName )
+  if ( MString( "3Delight" ) == liqglo.liquidRenderer.renderName )
     RiPixelFilter( RiSeparableCatmullRomFilter, 4., 4. );
 //    RiPixelFilter( RiMitchellFilter, 4., 4.);
 #else

@@ -54,13 +54,9 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
+#include <liqGlobalVariable.h>
 
 using namespace boost;
-
-extern int debugMode;
-extern bool liqglo_outputMeshUVs;
-extern bool liqglo_outputMayaPolyCreases;  // use maya poly creases instead of liquid crease sets
-extern bool liqglo_useMtorSubdiv;  // interpret mtor subdiv attributes
 
 /** Create a RIB compatible subdivision surface representation using a Maya polygon mesh.
  */
@@ -139,7 +135,7 @@ liqRibSubdivisionData::liqRibSubdivisionData( MObject mesh )
       UVSetsArray.push_back( pFaceVertexPointerPair );
     }
 
-    if( liqglo_outputMeshUVs ) 
+    if( liqglo.liqglo_outputMeshUVs ) 
     {
       // Match MTOR, which also outputs face-varying STs as well for some reason - Paul
       // not anymore - Philippe
@@ -183,7 +179,7 @@ liqRibSubdivisionData::liqRibSubdivisionData( MObject mesh )
           UVSetsArray[j].setTokenFloat( faceVertex, 1, 1 - T );
         }
 
-        if( liqglo_outputMeshUVs ) 
+        if( liqglo.liqglo_outputMeshUVs ) 
         {
           // Match MTOR, which always outputs face-varying STs as well for some reason - Paul
           pFaceVertexSPointer.setTokenFloat( faceVertex, S );
@@ -204,7 +200,7 @@ liqRibSubdivisionData::liqRibSubdivisionData( MObject mesh )
     tokenPointerArray.insert( tokenPointerArray.end(), UVSetsArray.begin(), UVSetsArray.end() );
   
 
-  if( liqglo_outputMeshUVs ) 
+  if( liqglo.liqglo_outputMeshUVs ) 
   {
     assert( !pFaceVertexSPointer );
     tokenPointerArray.push_back( pFaceVertexSPointer );
@@ -299,7 +295,7 @@ void liqRibSubdivisionData::checkExtraTags( MObject &mesh ) {
 	// this is a temporary solution - the maya2008 polycreases are a bit crap in
 	// that they cannot be removed and there is no way at the moment to tag
 	// faces as holes in Maya to we keep the "set" way of doing it - Alf
-	if( liqglo_outputMayaPolyCreases )
+	if( liqglo.liqglo_outputMayaPolyCreases )
 	{
 		// this looks redundant but there is no other way to determine
 		// if the object has creases at all
@@ -337,13 +333,13 @@ void liqRibSubdivisionData::checkExtraTags( MObject &mesh ) {
 					continue;
 				if ( liquidGetPlugValue( setNode, "liqSubdivCrease", extraTagValue, status ) == MS::kSuccess )
         { 
-          if( extraTagValue && !liqglo_outputMayaPolyCreases ) // skip zero values
+          if( extraTagValue && !liqglo.liqglo_outputMayaPolyCreases ) // skip zero values
             addExtraTags( dstNode, extraTagValue, TAG_CREASE );
         } 
         else 
         if ( liquidGetPlugValue( setNode, "liqSubdivCorner", extraTagValue, status ) == MS::kSuccess )
         { 
-          if( extraTagValue && !liqglo_outputMayaPolyCreases ) // skip zero values
+          if( extraTagValue && !liqglo.liqglo_outputMayaPolyCreases ) // skip zero values
             addExtraTags( dstNode, extraTagValue, TAG_CORNER );
         }
         else
@@ -359,17 +355,17 @@ void liqRibSubdivisionData::checkExtraTags( MObject &mesh ) {
             addExtraTags( dstNode, extraTagValue, TAG_STITCH );
         }
         
-				if( liqglo_useMtorSubdiv ) // check mtor subdivisions extra tag
+				if( liqglo.liqglo_useMtorSubdiv ) // check mtor subdivisions extra tag
 				{
 					if ( liquidGetPlugValue( setNode, "mtorSubdivCrease", extraTagValue, status ) == MS::kSuccess )
           { 
-            if( extraTagValue && !liqglo_outputMayaPolyCreases ) // skip zero values
+            if( extraTagValue && !liqglo.liqglo_outputMayaPolyCreases ) // skip zero values
               addExtraTags( dstNode, extraTagValue, TAG_CREASE );
           } 
           else 
 					if ( liquidGetPlugValue( setNode, "mtorSubdivCorner", extraTagValue, status ) == MS::kSuccess )
           { 
-            if( extraTagValue && !liqglo_outputMayaPolyCreases ) // skip zero values
+            if( extraTagValue && !liqglo.liqglo_outputMayaPolyCreases ) // skip zero values
               addExtraTags( dstNode, extraTagValue, TAG_CORNER );
           } 
           else 
@@ -388,7 +384,7 @@ void liqRibSubdivisionData::checkExtraTags( MObject &mesh ) {
   liquidGetPlugValue( fnMesh, "liqSubdivInterpolateBoundary", interpolateBoundary, status );
   liquidGetPlugValue( fnMesh, "interpBoundary", interpolateBoundaryOld, status );
 	
-	if( liqglo_useMtorSubdiv )
+	if( liqglo.liqglo_useMtorSubdiv )
     liquidGetPlugValue( fnMesh, "mtorSubdivInterp", mtor_interpolateBoundary, status );
  
   if ( liquidGetPlugValue( fnMesh, "liqSubdivUVInterpolation", liqSubdivUVInterpolation, status ) == MS::kSuccess )

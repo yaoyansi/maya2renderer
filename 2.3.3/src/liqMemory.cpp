@@ -47,13 +47,12 @@
 // maya headers
 #include <maya/MString.h>
 #include <maya/MGlobal.h>
-
+#include <liqGlobalVariable.h>
 
 
 // Error Messages 
 MString errorGettingMemoryMessage = "Liquid -> Error Allocating Memory!\n";
 
-extern int debugMode;
 
 struct ALLOC_INFO {
 	long     address;

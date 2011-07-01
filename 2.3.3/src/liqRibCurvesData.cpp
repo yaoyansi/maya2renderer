@@ -54,13 +54,11 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-
+#include <liqGlobalVariable.h>
 
 
 
 using namespace boost;
-extern int debugMode;
-extern bool liqglo_renderAllCurves;
 
 // Create a RIB compatible representation of a Maya nurbs curve group.
 
@@ -104,7 +102,7 @@ liqRibCurvesData::liqRibCurvesData( MObject curveGroup )
 		}
 	}
 
-	if( liqglo_renderAllCurves )
+	if( liqglo.liqglo_renderAllCurves )
 	  ncurves = curveObj.length();
 	else
 		ncurves = 0;  

@@ -66,13 +66,12 @@
 
 #include <liqMemory.h>
 #include <liqIOStream.h>
-
 ////////////////////////
 // Macros and Defines //
 ////////////////////////
-#ifndef debugMode
-extern int debugMode;
-#endif
+// #ifndef debugMode
+// extern int debugMode;
+// #endif
 
 #define HERE  cout<<"at line "<<__LINE__<<" in "<<__FUNCTION__<<endl<<flush;
 
@@ -81,6 +80,7 @@ extern int debugMode;
 
 #define STDERR stdout
 
+extern int  debugMode;
 #if !defined(LINUX) && !defined(OSX)
 #  ifndef LIQDEBUGPRINTF
 #    define LIQDEBUGPRINTF(msg,...) if( debugMode ) printf((msg),__VA_ARGS__); 

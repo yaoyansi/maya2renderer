@@ -77,7 +77,7 @@
 #include <liqBoundingBoxLocator.h>
 #include <liqCoShaderNode.h>
 #include <liqShaderFactory.h>
-
+#include <liqGlobalVariable.h>
 
 #define LIQVENDOR "http://liquidmaya.sourceforge.net/"
 
@@ -89,7 +89,6 @@ const char * LIQUIDVERSION =
 #define DEFINED_LIQUIDVERSION
 #endif
 
-extern bool liquidBin;
 
 
 ////////////////////// EXPORTS /////////////////////////////////////////////////////////
@@ -97,7 +96,7 @@ LIQUID_EXPORT MStatus initializePlugin(MObject obj)
 //  Description:
 //      Register the command when the plug-in is loaded
 {
-  liquidBin = false;
+  liqglo.liquidBin = false;
 
   MStatus status;
 

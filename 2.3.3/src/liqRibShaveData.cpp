@@ -52,13 +52,9 @@
 // Liquid headers
 #include <liqGlobalHelpers.h>
 #include <liqRenderer.h>
-
-
+#include <liqGlobalVariable.h>
 
 using namespace boost;
-
-extern int debugMode;
-extern liqRenderer liquidRenderer;
 
 #pragma comment(lib,"libShaveAPI.lib")
 
@@ -105,7 +101,7 @@ liqRibShaveData::liqRibShaveData( MObject surface )
 
     MDoubleArray uKnots, vKnots;
 
-    if ( liquidRenderer.requires_SWAPPED_UVS ) 
+    if ( liqglo.liquidRenderer.requires_SWAPPED_UVS ) 
     {
       LIQDEBUGPRINTF( "-> swapping uvs\n" );
 
@@ -197,7 +193,7 @@ liqRibShaveData::liqRibShaveData( MObject surface )
     uknot[ k+1 ] = uknot[ k ];
 
     
-    if ( liquidRenderer.requires_SWAPPED_UVS )
+    if ( liqglo.liquidRenderer.requires_SWAPPED_UVS )
     {
 			if ( normalizeNurbsUV ) 
 			{
@@ -229,10 +225,10 @@ liqRibShaveData::liqRibShaveData( MObject surface )
 
     // Read CV information
     //
-    MItSurfaceCV cvs( surface, liquidRenderer.requires_SWAPPED_UVS == false );
+    MItSurfaceCV cvs( surface, liqglo.liquidRenderer.requires_SWAPPED_UVS == false );
     
     
-    if ( liquidRenderer.requires_SWAPPED_UVS )
+    if ( liqglo.liquidRenderer.requires_SWAPPED_UVS )
     {
 			RtFloat* cvPtr( CVs.get() );
     	while( !cvs.isDone() ) 
@@ -326,7 +322,7 @@ liqRibShaveData::liqRibShaveData( MObject surface )
               {
                 curveFn.getCV( i, pnt );
                 //cvArray.push_back( pnt );
-                if ( liquidRenderer.requires_SWAPPED_UVS ) 
+                if ( liqglo.liquidRenderer.requires_SWAPPED_UVS ) 
                 {
                 	if ( normalizeNurbsUV )
                  {	
@@ -402,8 +398,6 @@ liqRibShaveData::liqRibShaveData( MObject surface )
 
 /** Write the RIB for this surface.
  */
-extern long   liqglo_lframe;
-extern MString liqglo_ribDir;
 void liqRibShaveData::_write()
 {
   LIQDEBUGPRINTF( "-> writing shave surface\n" );
@@ -415,9 +409,9 @@ void liqRibShaveData::_write()
   liqRIBMsg( "node name = %s", nodeName.asChar() );
 
   MString frame; 
-  frame.set(liqglo_lframe);
+  frame.set(liqglo.liqglo_lframe);
   MString prefix("shv_");
-  MString shv_RibFile( liquidGetRelativePath( false, getLiquidRibName( (prefix+nodeName).asChar() ), liqglo_ribDir ) +"."+frame+".rib" );
+  MString shv_RibFile( liquidGetRelativePath( false, getLiquidRibName( (prefix+nodeName).asChar() ), liqglo.liqglo_ribDir ) +"."+frame+".rib" );
 
   //1)make a reference
   RiReadArchive( const_cast< RtToken >( shv_RibFile.asChar() ), NULL, RI_NULL );

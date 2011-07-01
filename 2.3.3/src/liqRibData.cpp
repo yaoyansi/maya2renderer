@@ -50,8 +50,6 @@
 
 using namespace std;
 
-extern int debugMode;
-
 liqRibData::~liqRibData()
 {
   // clean up and additional data

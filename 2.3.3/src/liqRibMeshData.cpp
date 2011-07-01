@@ -55,15 +55,12 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-
+#include <liqGlobalVariable.h>
 
 
 
 using namespace boost;
 using namespace std;
-
-extern int debugMode;
-extern bool liqglo_outputMeshUVs;
 
 /** Create a RIB compatible representation of a Maya polygon mesh.
  */
@@ -177,7 +174,7 @@ liqRibMeshData::liqRibMeshData( MObject mesh )
       UVSetsArray.push_back( pFaceVertexPointerPair );
     }
 
-    if( liqglo_outputMeshUVs ) 
+    if( liqglo.liqglo_outputMeshUVs ) 
     {
       // Match MTOR, which also outputs face-varying STs as well for some reason - Paul
       // not anymore - Philippe
@@ -233,7 +230,7 @@ liqRibMeshData::liqRibMeshData( MObject mesh )
           UVSetsArray[j].setTokenFloat( faceVertex, 1, 1 - T );
         }
 
-        if( liqglo_outputMeshUVs ) 
+        if( liqglo.liqglo_outputMeshUVs ) 
         {
           // Match MTOR, which always outputs face-varying STs as well for some reason - Paul
           pFaceVertexSPointer.setTokenFloat( faceVertex, S );
@@ -253,7 +250,7 @@ liqRibMeshData::liqRibMeshData( MObject mesh )
   if( UVSetsArray.size() ) 
     tokenPointerArray.insert( tokenPointerArray.end(), UVSetsArray.begin(), UVSetsArray.end() );
   
-  if( liqglo_outputMeshUVs ) 
+  if( liqglo.liqglo_outputMeshUVs ) 
   {
     tokenPointerArray.push_back( pFaceVertexSPointer );
     tokenPointerArray.push_back( pFaceVertexTPointer );

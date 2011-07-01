@@ -63,6 +63,7 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
+#include <liqGlobalVariable.h>
 
 using namespace std;
 using namespace boost;
@@ -72,16 +73,6 @@ using namespace boost;
 #undef min
 #undef max
 #endif
-
-extern int debugMode;
-
-extern MStringArray liqglo_preGenerateArchive;
-extern MStringArray liqglo_preReadArchive;
-extern MStringArray liqglo_preRibBox;
-extern MStringArray liqglo_preReadArchiveShadow;
-extern MStringArray liqglo_preRibBoxShadow;
-extern MString      liqglo_currentNodeName;
-extern MString      liqglo_currentNodeShortName;
 
 
 /**
@@ -251,8 +242,8 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
   MSelectionList hierarchy; // needed to find objectSets later below
   MDagPath dagSearcher( path );
 
-  liqglo_currentNodeName      = path.fullPathName();
-  liqglo_currentNodeShortName = path.partialPathName();
+  liqglo.liqglo_currentNodeName      = path.fullPathName();
+  liqglo.liqglo_currentNodeShortName = path.partialPathName();
 
   do { // while( dagSearcher.length() > 0 )
     dagSearcher.pop(); // Go upwards (should be a transform node)
@@ -519,12 +510,12 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
           if( ribBoxValue.substring(0,2) == "*H*" ) 
           {
             MString parseThis = ribBoxValue.substring(3, ribBoxValue.length() - 1 );
-            liqglo_preRibBox.append( parseString( parseThis ) );
+            liqglo.liqglo_preRibBox.append( parseString( parseThis ) );
           } 
           else if( ribBoxValue.substring(0,3) == "*SH*" ) 
           {
             MString parseThis = ribBoxValue.substring(3, ribBoxValue.length() - 1 );
-            liqglo_preRibBoxShadow.append( parseString( parseThis ) );
+            liqglo.liqglo_preRibBoxShadow.append( parseString( parseThis ) );
           }
         }
         rib.box = (ribBoxValue == "")? "-" : parseString(ribBoxValue);
@@ -538,12 +529,12 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
 			  if( str.substring(0,2) == "*H*" ) 
 			  {
 				  MString parseThis = str.substring(3, str.length() - 1 );
-				  liqglo_preGenerateArchive.append( parseString( parseThis ) );
+				  liqglo.liqglo_preGenerateArchive.append( parseString( parseThis ) );
 			  } 
 			  else if( str.substring(0,3) == "*SH*" ) 
 			  {
 				  MString parseThis = str.substring(3, str.length() - 1 );
-				  liqglo_preGenerateArchive.append( parseString( parseThis ) );
+				  liqglo.liqglo_preGenerateArchive.append( parseString( parseThis ) );
 			  }
 		  }
 		  rib.generator = (str == "")? "-" : parseString(str);
@@ -557,11 +548,11 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
           if( archiveValue.substring(0,2) == "*H*" ) 
           {
             MString parseThis = archiveValue.substring(3, archiveValue.length() - 1 );
-            liqglo_preReadArchive.append( parseString( parseThis ) );
+            liqglo.liqglo_preReadArchive.append( parseString( parseThis ) );
           } else if( archiveValue.substring(0,3) == "*SH*" ) 
           {
             MString parseThis = archiveValue.substring(3, archiveValue.length() - 1 );
-            liqglo_preReadArchiveShadow.append( parseString( parseThis ) );
+            liqglo.liqglo_preReadArchiveShadow.append( parseString( parseThis ) );
           }
         }
         rib.readArchive = (archiveValue == "")? "-" : parseString(archiveValue);

@@ -62,12 +62,9 @@
 #include <liqRibImplicitSphereData.h>
 #include <liqRibShaveData.h>
 #include <liqRibData.h>
+#include <liqGlobalVariable.h>
 
 using namespace boost;
-
-extern int debugMode;
-extern bool liqglo_useMtorSubdiv;
-extern bool liqglo_renderAllCurves;
 
 /** Create a RIB representation of the given node in the DAG as a ribgen.
  */
@@ -240,7 +237,7 @@ liqRibObj::liqRibObj( const MDagPath &path, ObjectType objType )
 
         // make Liquid understand MTOR subdiv attribute
         bool usingSubdivMtor( false );
-        if( liqglo_useMtorSubdiv ) 
+        if( liqglo.liqglo_useMtorSubdiv ) 
         {
           MPlug mtorSubdivPlug( nodeFn.findPlug( "mtorSubdiv", &status ) );
           if( status == MS::kSuccess ) 
@@ -304,7 +301,7 @@ liqRibObj::liqRibObj( const MDagPath &path, ObjectType objType )
 					if( isCurveGroup )
 					{
 						type = MRT_Curves;
-						if( liqglo_renderAllCurves )
+						if( liqglo.liqglo_renderAllCurves )
 							data = liqRibDataPtr( new liqRibCurvesData( obj ) );
 						else
 							data = liqRibDataPtr( new liqRibCurvesData( skip ) );

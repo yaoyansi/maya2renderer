@@ -50,13 +50,10 @@
 // Liquid headers
 #include <liqGlobalHelpers.h>
 #include <liqRenderer.h>
-
+#include <liqGlobalVariable.h>
 
 
 using namespace boost;
-
-extern int debugMode;
-extern liqRenderer liquidRenderer;
 
 
 /** Ccreate a RIB compatible representation of a Maya nurbs surface.
@@ -96,7 +93,7 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
 
     MDoubleArray uKnots, vKnots;
 
-    if ( liquidRenderer.requires_SWAPPED_UVS ) 
+    if ( liqglo.liquidRenderer.requires_SWAPPED_UVS ) 
     {
       LIQDEBUGPRINTF( "-> swapping uvs\n" );
 
@@ -188,7 +185,7 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
     uknot[ k+1 ] = uknot[ k ];
 
     
-    if ( liquidRenderer.requires_SWAPPED_UVS )
+    if ( liqglo.liquidRenderer.requires_SWAPPED_UVS )
     {
 			if ( normalizeNurbsUV ) 
 			{
@@ -220,10 +217,10 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
 
     // Read CV information
     //
-    MItSurfaceCV cvs( surface, liquidRenderer.requires_SWAPPED_UVS == false );
+    MItSurfaceCV cvs( surface, liqglo.liquidRenderer.requires_SWAPPED_UVS == false );
     
     
-    if ( liquidRenderer.requires_SWAPPED_UVS )
+    if ( liqglo.liquidRenderer.requires_SWAPPED_UVS )
     {
 			RtFloat* cvPtr( CVs.get() );
     	while( !cvs.isDone() ) 
@@ -317,7 +314,7 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
               {
                 curveFn.getCV( i, pnt );
                 //cvArray.push_back( pnt );
-                if ( liquidRenderer.requires_SWAPPED_UVS ) 
+                if ( liqglo.liquidRenderer.requires_SWAPPED_UVS ) 
                 {
                 	if ( normalizeNurbsUV )
                  {	

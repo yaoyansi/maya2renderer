@@ -59,28 +59,9 @@
 #include <liqGetSloInfo.h>
 #include <liqRenderer.h>
 #include <liqShaderFactory.h>
+#include <liqGlobalVariable.h>
 
 
-
-extern int debugMode;
-
-extern long         liqglo_lframe;
-extern MString      liqglo_sceneName;
-extern MString      liqglo_textureDir;
-extern bool         liqglo_isShadowPass;
-extern bool         liqglo_expandShaderArrays;
-extern bool         liqglo_useBMRT;
-extern bool         liqglo_doShadows;
-extern bool         liqglo_shapeOnlyInShadowNames;
-extern bool         liqglo_shortShaderNames;
-extern MStringArray liqglo_DDimageName;
-extern bool         liqglo_doExtensionPadding;
-extern liquidlong   liqglo_outPadding;
-extern MString      liqglo_projectDir;
-extern bool         liqglo_relativeFileNames;
-extern MString      liqglo_textureDir;
-
-extern liqRenderer liquidRenderer;
 
 using namespace std;
 
@@ -183,7 +164,7 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
   //}
 
   // check to see if the light is using raytraced shadows
-  if ( liquidRenderer.supports_RAYTRACE ) 
+  if ( liqglo.liquidRenderer.supports_RAYTRACE ) 
   {
     rayTraced = fnLight.useRayTraceShadows();
     if( rayTraced ) 
@@ -694,7 +675,7 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
         MFnNonExtendedLight fnDistantLight( light );
         lightType = MRLT_Distant;
         
-        if ( liqglo_doShadows && usingShadow )
+        if ( liqglo.liqglo_doShadows && usingShadow )
         {
             if ( !rayTraced )
             {
@@ -753,7 +734,7 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
         lightType = MRLT_Point;
         decay = fnPointLight.decayRate();
         
-        if ( liqglo_doShadows && usingShadow )
+        if ( liqglo.liqglo_doShadows && usingShadow )
         {
             shadowFilterSize = fnPointLight.depthMapFilterSize( &status );
             shadowBias       = fnPointLight.depthMapBias( &status );
@@ -875,7 +856,7 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
             endDistanceIntensity3 = 1.0;
         }
 
-        if ( liqglo_doShadows && usingShadow )
+        if ( liqglo.liqglo_doShadows && usingShadow )
         {
             if ( !rayTraced )
             {
@@ -933,7 +914,7 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
       lightType      = MRLT_Area;
       decay          = fnAreaLight.decayRate();
       shadowSamples  = 64.0f;
-      if ( liqglo_doShadows && usingShadow ) {
+      if ( liqglo.liqglo_doShadows && usingShadow ) {
         if ( !rayTraced ) {
           if ( ( shadowName == "" ) || ( shadowName.substring( 0, 9 ).toLowerCase() == "autoshadow" ) ) {
             shadowName   = autoShadowName();
@@ -999,7 +980,7 @@ void liqRibLightData::_write()
     LIQDEBUGPRINTF( "-> writing light %s \n", lightName.asChar());
 
     RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-    if ( liqglo_isShadowPass ) 
+    if ( liqglo.liqglo_isShadowPass ) 
     {
       if ( usingShadow ) 
       {
@@ -1024,7 +1005,7 @@ void liqRibLightData::_write()
           break;
         
         case MRLT_Distant:
-          if ( liqglo_doShadows && usingShadow ) 
+          if ( liqglo.liqglo_doShadows && usingShadow ) 
           {
 
             RtString shadowname = const_cast< char* >( shadowName.asChar() );
@@ -1058,7 +1039,7 @@ void liqRibLightData::_write()
           break;
         
         case MRLT_Point:
-          if ( liqglo_doShadows && usingShadow ) 
+          if ( liqglo.liqglo_doShadows && usingShadow ) 
           {
             MString	px = rayTraced ? "raytrace" : autoShadowName( pPX );
             MString	nx = rayTraced ? "raytrace" : autoShadowName( pNX );
@@ -1109,7 +1090,7 @@ void liqRibLightData::_write()
           }
           break;
         case MRLT_Spot:
-          if (liqglo_doShadows && usingShadow) 
+          if (liqglo.liqglo_doShadows && usingShadow) 
           {
             /* if ( ( shadowName == "" ) || ( shadowName.substring( 0, 9 ) == "autoshadow" ) ) {
               shadowName = liqglo_texDir + autoShadowName();
@@ -1206,7 +1187,7 @@ void liqRibLightData::_write()
           RtString shaderName = const_cast< RtString >( assignedRManShader.asChar() );
           handle = RiLightSourceV( shaderName, numTokens, tokenArray.get(), pointerArray.get() );
           */
-          rmanLightShader.write( liqglo_shortShaderNames, 0 );
+          rmanLightShader.write( liqglo.liqglo_shortShaderNames, 0 );
  		  #ifdef RIBLIB_AQSIS
  		  handle = reinterpret_cast<RtLightHandle>(static_cast<ptrdiff_t>(rmanLightShader.shaderHandler.asInt()));
  		  #else
@@ -1297,10 +1278,10 @@ MString liqRibLightData::autoShadowName( int PointLightDir ) const
     shadowName = userShadowName;
   else 
   {
-    shadowName = liquidGetRelativePath( liqglo_relativeFileNames, liqglo_textureDir, liqglo_projectDir );
-    if ( !liqglo_shapeOnlyInShadowNames ) 
+    shadowName = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, liqglo.liqglo_textureDir, liqglo.liqglo_projectDir );
+    if ( !liqglo.liqglo_shapeOnlyInShadowNames ) 
     {
-      shadowName += liqglo_sceneName;
+      shadowName += liqglo.liqglo_sceneName;
       shadowName = parseString( shadowName, false );
       shadowName += "_";
     }
@@ -1338,13 +1319,13 @@ MString liqRibLightData::autoShadowName( int PointLightDir ) const
       shadowName += geometrySet + ".";
 
     if ( everyFrame ) 
-      frame += (int) liqglo_lframe;
+      frame += (int) liqglo.liqglo_lframe;
     else 
       frame += (int) renderAtFrame;
 
 
-    if ( liqglo_doExtensionPadding ) 
-      while( frame.length() < liqglo_outPadding ) 
+    if ( liqglo.liqglo_doExtensionPadding ) 
+      while( frame.length() < liqglo.liqglo_outPadding ) 
         frame = "0" + frame;
     
     shadowName += frame;
@@ -1390,7 +1371,7 @@ MString liqRibLightData::extraShadowName( const MFnDependencyNode & lightShaderN
       shadowCamParamPlug = shadowCamDepNode.findPlug( "liqGeometrySet", &status );
       if ( MS::kSuccess == status ) shadowCamParamPlug.getValue( shdCamGeometrySet );
 
-      shadowName += liqglo_sceneName;
+      shadowName += liqglo.liqglo_sceneName;
       shadowName =  parseString( shadowName, false );
       shadowName += "_";
       shadowName += sanitizeNodeName( shdCamName );
@@ -1401,11 +1382,11 @@ MString liqRibLightData::extraShadowName( const MFnDependencyNode & lightShaderN
         shadowName += shdCamGeometrySet + ".";
       }
       if ( shdCamEveryFrame ) 
-        frame += (int) liqglo_lframe;
+        frame += (int) liqglo.liqglo_lframe;
       else 
         frame += (int) shdCamRenderAtFrame;
-      if ( liqglo_doExtensionPadding ) 
-        while( frame.length() < liqglo_outPadding ) 
+      if ( liqglo.liqglo_doExtensionPadding ) 
+        while( frame.length() < liqglo.liqglo_outPadding ) 
           frame = "0" + frame;
       shadowName += frame;
       shadowName += ".tex";

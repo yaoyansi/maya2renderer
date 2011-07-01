@@ -28,19 +28,7 @@
 
 #include <liqIOStream.h>
 #include <liqGlobalHelpers.h>
-
-
-extern int debugMode;
-
-extern long liqglo_lframe;
-extern MString liqglo_sceneName;
-extern MString liqglo_textureDir;
-extern MString liqglo_projectDir;
-extern bool liqglo_isShadowPass;
-extern bool liqglo_expandShaderArrays;
-extern bool liqglo_doShadows;
-extern bool liqglo_shortShaderNames;
-extern MStringArray liqglo_DDimageName;
+#include <liqGlobalVariable.h>
 
 liqExpression::liqExpression( const std::string& str1, const std::string& objName ) :
 // liqExpression::liqExpression( char * str, char *objName ) :
@@ -116,7 +104,7 @@ MString	liqExpression::CalcValue( )
         options += " ";
       }
 
-      dest = liqglo_textureDir + value;
+      dest = liqglo.liqglo_textureDir + value;
       destExists = fileExists( dest );
       destIsNewer = fileIsNewer( dest, source );
       break;
@@ -125,20 +113,20 @@ MString	liqExpression::CalcValue( )
       object_name = tokens[1];
       if ( object_name.length() ) 
       {
-        if ( ( liqglo_DDimageName[0] == "" ) ) 
+        if ( ( liqglo.liqglo_DDimageName[0] == "" ) ) 
         {
-          value += liqglo_sceneName;
+          value += liqglo.liqglo_sceneName;
         } 
         else 
         {
-          int pointIndex = liqglo_DDimageName[0].index( '.' );
-          value += liqglo_DDimageName[0].substring(0, pointIndex-1).asChar();
+          int pointIndex = liqglo.liqglo_DDimageName[0].index( '.' );
+          value += liqglo.liqglo_DDimageName[0].substring(0, pointIndex-1).asChar();
         }
         value += "_";
         value += object_name;
         value += "REF";
         value += ".";
-        value += (int)liqglo_lframe;
+        value += (int)liqglo.liqglo_lframe;
         value += ".tex";
       }
       break;
@@ -147,14 +135,14 @@ MString	liqExpression::CalcValue( )
     case exp_PointShadow:
       if ( object_name.length() ) 
       {
-        if ( ( liqglo_DDimageName[0] == "" ) ) 
+        if ( ( liqglo.liqglo_DDimageName[0] == "" ) ) 
         {
-          value += liqglo_sceneName;
+          value += liqglo.liqglo_sceneName;
         } 
         else 
         {
-          int pointIndex = liqglo_DDimageName[0].index( '.' );
-          value += liqglo_DDimageName[0].substring(0, pointIndex-1).asChar();
+          int pointIndex = liqglo.liqglo_DDimageName[0].index( '.' );
+          value += liqglo.liqglo_DDimageName[0].substring(0, pointIndex-1).asChar();
         }
         value += "_";
         value += object_name;
@@ -165,7 +153,7 @@ MString	liqExpression::CalcValue( )
           value += tokens[1]; // assume that it must be PX|PY|PZ|NX|NY|NZ
         }
         value += ".";
-        value += (int)liqglo_lframe;
+        value += (int)liqglo.liqglo_lframe;
         value += ".tex";
       }
       break;

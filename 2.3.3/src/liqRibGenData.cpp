@@ -62,21 +62,10 @@
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
 #include <liqRibGen.h>
+#include <liqGlobalVariable.h>
 
 using namespace std;
 
-extern int debugMode;
-
-extern FILE *liqglo_ribFP;
-extern long liqglo_lframe;
-extern structJob liqglo_currentJob;
-extern bool liqglo_doMotion;
-extern bool liqglo_doDef;
-extern bool liqglo_doCompression;
-extern bool liqglo_doBinary;
-extern RtFloat liqglo_sampleTimes[LIQMAXMOTIONSAMPLES];
-extern liquidlong liqglo_motionSamples;
-extern float liqglo_shutterTime;
 
 
 /** Create a RIB Gen.
@@ -128,29 +117,29 @@ void liqRibGenData::_write()
 #endif
   char* dlStatus = NULL;
   // Hmmmmmm do not really understand what's going on here?
-  ribStatus.ribFP = liqglo_ribFP;
-  ribStatus.frame = liqglo_lframe;
-  if ( liqglo_currentJob.isShadow ) 
+  ribStatus.ribFP = liqglo.liqglo_ribFP;
+  ribStatus.frame = liqglo.liqglo_lframe;
+  if ( liqglo.liqglo_currentJob.isShadow ) 
     ribStatus.renderPass = liqRibStatus::rpShadow;
   else 
     ribStatus.renderPass = liqRibStatus::rpFinal;
   
-  ribStatus.transBlur = liqglo_doMotion;
-  ribStatus.defBlur = liqglo_doDef;
-  ribStatus.compressed = liqglo_doCompression;
-  ribStatus.binary = liqglo_doBinary;
-  liqglo_currentJob.camera[0].mat.get( ribStatus.cameraMatrix );
-  ribStatus.sampleTimes = liqglo_sampleTimes;
-  if ( liqglo_doMotion || liqglo_doDef ) 
+  ribStatus.transBlur = liqglo.liqglo_doMotion;
+  ribStatus.defBlur = liqglo.liqglo_doDef;
+  ribStatus.compressed = liqglo.liqglo_doCompression;
+  ribStatus.binary = liqglo.liqglo_doBinary;
+  liqglo.liqglo_currentJob.camera[0].mat.get( ribStatus.cameraMatrix );
+  ribStatus.sampleTimes = liqglo.liqglo_sampleTimes;
+  if ( liqglo.liqglo_doMotion || liqglo.liqglo_doDef ) 
   {
-    if ( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows ) 
-      ribStatus.motionSamples = liqglo_motionSamples;
+    if ( !liqglo.liqglo_currentJob.isShadow || liqglo.liqglo_currentJob.deepShadows ) 
+      ribStatus.motionSamples = liqglo.liqglo_motionSamples;
     else 
       ribStatus.motionSamples = 1;
   } 
   else 
     ribStatus.motionSamples = 1;
-  ribStatus.shutterAngle = liqglo_shutterTime;
+  ribStatus.shutterAngle = liqglo.liqglo_shutterTime;
   /*
   * rib stream connection call from the Affine toolkit.
   * until an equivalent is found in PRMan/3Delight leave commented out.

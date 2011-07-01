@@ -2653,7 +2653,7 @@
 				OutputFile="../../bin/prman/win32/liquid_2008x32d.mll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2008)/lib&quot;;&quot;$(BOOST_ROOT)/stage/lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2008)/lib&quot;;&quot;$(BOOST_ROOT)/stage/lib&quot;;&quot;$(AQSIS_LIB_X32)&quot;;&quot;$(LIBTIFF)&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Debug/Objects/liquid2008x32d.pdb"
@@ -2855,7 +2855,7 @@
 				OutputFile="../../bin/prman/win32/liquid_2009x32d.mll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2009)/lib&quot;;&quot;$(BOOST_ROOT)/stage/lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2009)/lib&quot;;&quot;$(BOOST_ROOT)/stage/lib&quot;;&quot;$(AQSIS_LIB_X32)&quot;;&quot;$(LIBTIFF)&quot;"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\../../bin/Prman/win32/Debug/Objects/liquid2009x32d.pdb"
@@ -3043,6 +3043,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqGlobalVariable.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\liqJobList.cpp"
 				>
 			</File>
@@ -3183,10 +3187,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\liqRibTranslatorNew.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\liqRiCommands.cpp"
 				>
 			</File>
@@ -3289,6 +3289,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\liqGlobalsNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\liqGlobalVariable.h"
 				>
 			</File>
 			<File
