@@ -370,7 +370,10 @@ string liqTokenPointer::getTokenString() const
 
 void liqTokenPointer::setTokenString( unsigned int i, const string& str )
 {
-  assert( i >= m_arraySize );
+	if( m_isArray ){//as for array, the array allocate memroy first, then fill the data. so 'i' will less than 'm_arraySize'.
+	}else{
+		assert( i >= m_arraySize );
+	}
 
   m_tokenString[ i ] = str;
 }
