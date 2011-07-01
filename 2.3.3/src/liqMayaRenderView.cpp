@@ -408,6 +408,7 @@ MStatus liqMayaRenderCmd::getBucket(const int socket,const unsigned int numChann
 	if( !stat )
 	{
 		perror("[liqMayaRenderView] read()");
+		delete[] data;
 		return MS::kFailure;
 	}
 	else
