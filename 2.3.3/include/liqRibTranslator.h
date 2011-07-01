@@ -504,6 +504,7 @@ private :
 	void doTextures();
 	void doShadows();
 	void postActions(const MString& originalLayer__);
+	MStatus buildShadowJobs__(structJob &thisJob__);
 
 	MTime originalTime;
 

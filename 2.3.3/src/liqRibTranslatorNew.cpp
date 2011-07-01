@@ -619,7 +619,7 @@ MStatus liqRibTranslator::buildJobs__()
 	MStatus returnStatus = MS::kSuccess;
 	MStatus status;
 	MObject cameraNode;
-	MDagPath lightPath;
+	//MDagPath lightPath;
 
 	jobList.clear();
 	shadowList.clear();
@@ -652,369 +652,7 @@ MStatus liqRibTranslator::buildJobs__()
 
 	if( liqglo.liqglo_doShadows ) 
 	{
-		MItDag dagIterator( MItDag::kDepthFirst, MFn::kLight, &returnStatus );
-		for (; !dagIterator.isDone(); dagIterator.next()) 
-		{
-			if( !dagIterator.getPath( lightPath ) ) 
-				continue;
-			bool usesDepthMap = false;
-			MFnLight fnLightNode( lightPath );
-			liquidGetPlugValue( fnLightNode, "useDepthMapShadows", usesDepthMap, status );
-			if( usesDepthMap && areObjectAndParentsVisible( lightPath ) ) 
-			{
-				// philippe : this is the default and can be overriden
-				// by the everyFrame/renderAtFrame attributes.
-				//
-				thisJob.renderFrame           = liqglo.liqglo_lframe;
-				thisJob.everyFrame            = true;
-				thisJob.shadowObjectSet       = "";
-				thisJob.shadowArchiveRibDone  = false;
-				thisJob.skip                  = false;
-				//
-				// We have a shadow job, so find out if we need to use deep shadows,
-				// and the pixel sample count
-				//
-				thisJob.deepShadows                 = false;
-				thisJob.shadowPixelSamples          = 1;
-				thisJob.shadowVolumeInterpretation  = 1;
-				thisJob.shadingRateFactor           = 1.0;
-				thisJob.shadowAggregation			= 0;
-
-				// philippe : we grab the job's resolution now instead of in the output phase
-				// that way , we can make sure one light can generate many shadow maps
-				// with different resolutions
-				thisJob.aspectRatio = 1.0;
-				liquidGetPlugValue( fnLightNode, "dmapResolution", thisJob.width, status );
-				thisJob.height = thisJob.width;
-
-				// Get to our shader node.
-				//
-				MPlug liquidLightShaderNodeConnection;
-				MStatus liquidLightShaderStatus;
-				liquidLightShaderNodeConnection = fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus );
-				if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() )
-				{
-					MPlugArray liquidLightShaderNodePlugArray;
-					liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
-					MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
-
-					// Now grab the parameters.
-					//
-					liquidGetPlugValue( fnLightShaderNode, "deepShadows", thisJob.deepShadows, status );
-
-					// Only use the pixel samples and volume interpretation with deep shadows.
-					//
-					if( thisJob.deepShadows )
-					{
-						liquidGetPlugValue( fnLightShaderNode, "pixelSamples", thisJob.shadowPixelSamples, status );
-						liquidGetPlugValue( fnLightShaderNode, "volumeInterpretation", thisJob.shadowVolumeInterpretation, status );
-					}
-
-					// philippe : check the shadow rendering frequency
-					//
-					liquidGetPlugValue( fnLightShaderNode, "everyFrame", thisJob.everyFrame, status );
-
-					// philippe : this is crucial, as we rely on the renderFrame to check
-					// which frame the scene should be scanned for that job.
-					// If the job is a shadow rendering once only at a given frame, we take the
-					// renderAtFrame attribute, otherwise, the current time.
-					//
-					if( !thisJob.everyFrame ) 
-						liquidGetPlugValue( fnLightShaderNode, "renderAtFrame", thisJob.renderFrame, status );  
-
-					// Check if the shadow aggregation option is used
-					liquidGetPlugValue( fnLightShaderNode, "aggregateShadowMaps", thisJob.shadowAggregation, status );  
-
-					// philippe : check the shadow geometry set
-					//
-					liquidGetPlugValue( fnLightShaderNode, "geometrySet", thisJob.shadowObjectSet, status );
-					liquidGetPlugValue( fnLightShaderNode, "shadingRateFactor", thisJob.shadingRateFactor, status );
-				} 
-				else 
-				{
-					/* Here we support the same options as those found on light shader nodes
-					but we look for dynamic attributes, so we need a bit more error checking.
-					*/
-					//MPlug paramPlug = fnLightNode.findPlug( "deepShadows", &status );
-					liquidGetPlugValue( fnLightNode, "deepShadows", thisJob.deepShadows, status );
-					if( thisJob.deepShadows ) 
-					{
-						liquidGetPlugValue( fnLightNode, "pixelSamples", thisJob.shadowPixelSamples, status );
-						liquidGetPlugValue( fnLightNode, "volumeInterpretation", thisJob.shadowVolumeInterpretation, status );
-					}
-					liquidGetPlugValue( fnLightNode, "everyFrame", thisJob.everyFrame, status );
-					if( !thisJob.everyFrame ) 
-						liquidGetPlugValue( fnLightNode, "renderAtFrame", thisJob.renderFrame, status );  
-
-					liquidGetPlugValue( fnLightNode, "geometrySet", thisJob.shadowObjectSet, status );  
-					liquidGetPlugValue( fnLightNode, "shadingRateFactor", thisJob.shadingRateFactor, status ); 
-				}
-				// this will store the shadow camera path and the test's result
-				bool lightHasShadowCam = false;
-				MDagPathArray shadowCamPath;
-
-				if( lightPath.hasFn( MFn::kSpotLight ) || lightPath.hasFn( MFn::kDirectionalLight ) ) 
-				{
-					bool computeShadow = true;
-					thisJob.hasShadowCam = false;
-					MPlug liquidLightShaderNodeConnection;
-					MStatus liquidLightShaderStatus;
-					liquidLightShaderNodeConnection = fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus );
-
-					if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() ) 
-					{
-						// a shader is connected to the light !
-						MPlugArray liquidLightShaderNodePlugArray;
-						liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
-						MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
-
-						// has the main shadow been disabled ?
-						liquidGetPlugValue( fnLightShaderNode, "generateMainShadow", computeShadow, status ); 
-
-						// look for shadow cameras...
-						MStatus stat;
-						MPlug shadowCamPlug = fnLightShaderNode.findPlug( "shadowCameras", &stat );
-						// find the multi message attribute...
-						if( stat == MS::kSuccess ) 
-						{
-							int numShadowCams = shadowCamPlug.numElements();
-							//cout <<">> got "<<numShadowCams<<" shadow cameras"<<endl;
-							// iterate through existing array elements
-							for ( unsigned int i=0; i<numShadowCams; i++ ) 
-							{
-								stat.clear();
-								MPlug camPlug = shadowCamPlug.elementByPhysicalIndex( i, &stat );
-								if( stat != MS::kSuccess ) 
-									continue;
-								MPlugArray shadowCamPlugArray;
-
-								// if the element is connected, keep going...
-								if( camPlug.connectedTo( shadowCamPlugArray, true, false ) ) 
-								{
-									MFnDependencyNode shadowCamDepNode = shadowCamPlugArray[0].node();
-									//cout <<"shadow camera plug "<<i<<" is connected to "<<shadowCamDepNode.name()<<endl;
-
-									MDagPath cameraPath;
-									cameraPath.getAPathTo( shadowCamPlugArray[0].node(), cameraPath);
-									//cout <<"cameraPath : "<<cameraPath.fullPathName()<<endl;
-									shadowCamPath.append( cameraPath );
-									lightHasShadowCam = true;
-								}
-							}
-						}
-					}
-					thisJob.path = lightPath;
-					thisJob.name = fnLightNode.name();
-					thisJob.texName = "";
-					thisJob.isShadow = true;
-					thisJob.isPoint = false;
-					thisJob.isShadowPass = false;
-
-					// check to see if the minmax shadow option is used
-					thisJob.isMinMaxShadow = false;
-					liquidGetPlugValue( fnLightNode, "liquidMinMaxShadow", thisJob.isMinMaxShadow, status ); 
-					// check to see if the midpoint shadow option is used
-					thisJob.isMidPointShadow = false;
-					liquidGetPlugValue( fnLightNode, "useMidDistDmap", thisJob.isMidPointShadow, status ); 
-					// in lazy compute mode, we check if the map is already on disk first.
-					if( m_lazyCompute && computeShadow ) 
-					{
-						MString fileName( generateFileName( (fileGenMode) fgm_shadow_tex, thisJob ) );
-						if( fileExists( fileName ) ) 
-							computeShadow = false;
-					}
-					//
-					// store the main shadow map    *****************************
-					//
-					if( computeShadow )
-						jobList.push_back( thisJob );
-					// We have to handle point lights differently as they need 6 shadow maps!
-				} 
-				else if( lightPath.hasFn(MFn::kPointLight) ) 
-				{
-					for ( unsigned dirOn( 0 ); dirOn < 6; dirOn++ ) 
-					{
-						thisJob.hasShadowCam = false;
-						thisJob.path = lightPath;
-						thisJob.name = fnLightNode.name();
-						thisJob.isShadow = true;
-						thisJob.isShadowPass = false;
-						thisJob.isPoint = true;
-						thisJob.pointDir = ( PointLightDirection )dirOn;
-
-						// check to see if the midpoint shadow option is used
-						thisJob.isMidPointShadow = false;
-						liquidGetPlugValue( fnLightNode, "useMidDistDmap", thisJob.isMidPointShadow, status );
-
-						bool computeShadow = true;
-						MStatus liquidLightShaderStatus;
-						MPlug liquidLightShaderNodeConnection( fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus ) );
-
-						if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() ) 
-						{
-							// a shader is connected to the light !
-							MPlugArray liquidLightShaderNodePlugArray;
-							liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
-							MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
-
-							// has the main shadow been disabled ?
-							liquidGetPlugValue( fnLightShaderNode, "generateMainShadow", computeShadow, status );
-
-							// look for shadow cameras...
-							MStatus stat;
-							MPlug shadowCamPlug( fnLightShaderNode.findPlug( "shadowCameras", &stat ) );
-
-							// find the multi message attribute...
-							if( stat == MS::kSuccess ) 
-							{
-								int numShadowCams = shadowCamPlug.numElements();
-								//cout <<">> got "<<numShadowCams<<" shadow cameras"<<endl;
-								// iterate through existing array elements
-								for ( unsigned i( 0 ); i < numShadowCams; i++ ) 
-								{
-									stat.clear();
-									MPlug camPlug = shadowCamPlug.elementByPhysicalIndex( i, &stat );
-									if( stat != MS::kSuccess ) 
-										continue;
-									MPlugArray shadowCamPlugArray;
-
-									// if the element is connected, keep going...
-									if( camPlug.connectedTo( shadowCamPlugArray, true, false ) ) 
-									{
-										MFnDependencyNode shadowCamDepNode = shadowCamPlugArray[0].node();
-										//cout <<"shadow camera plug "<<i<<" is connected to "<<shadowCamDepNode.name()<<endl;
-
-										MDagPath cameraPath;
-										cameraPath.getAPathTo( shadowCamPlugArray[0].node(), cameraPath);
-										//cout <<"cameraPath : "<<cameraPath.fullPathName()<<endl;
-										shadowCamPath.append( cameraPath );
-										lightHasShadowCam = true;
-									}
-								}
-							}
-						}
-						MString fileName( generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob ) );
-						if( m_lazyCompute ) 
-							if( fileExists( fileName ) ) 
-								computeShadow = false;
-						if( computeShadow ) 
-							jobList.push_back( thisJob );
-					}
-				}
-				// if the job has shadow cameras, we will store them here
-				//
-				if( lightHasShadowCam )
-				{
-					int isAggregate = thisJob.shadowAggregation;
-					for( unsigned i( 0 ); i < shadowCamPath.length(); i++ )
-					{
-						if( !i && isAggregate )
-							thisJob.shadowAggregation = 0;
-						else if ( isAggregate )
-							thisJob.shadowAggregation = 1;
-						else
-							thisJob.shadowAggregation = 0;
-						thisJob.shadowCamPath = shadowCamPath[ i ];
-						thisJob.hasShadowCam = true;
-
-						MFnDependencyNode shadowCamDepNode( shadowCamPath[ i ].node() );
-						thisJob.name = shadowCamDepNode.name();
-						if( isAggregate )
-							thisJob.texName = fnLightNode.name(); //MFnDependencyNode( shadowCamPath[ i ].node() ).name();
-						//					else
-						//						thisJob.texName = "";
-						//						thisJob.name = shadowCamDepNode.name();
-						if( liquidGetPlugValue( shadowCamDepNode, "liqShadowResolution", thisJob.width, status ) == MS::kSuccess )
-							thisJob.height = thisJob.width;
-						liquidGetPlugValue( shadowCamDepNode, "liqMidPointShadow", thisJob.isMidPointShadow, status );
-						thisJob.midPointRatio = 0;
-						liquidGetPlugValue( shadowCamDepNode, "liqMidPointRatio", thisJob.midPointRatio, status );
-						liquidGetPlugValue( shadowCamDepNode, "liqDeepShadows", thisJob.deepShadows, status );
-						liquidGetPlugValue( shadowCamDepNode, "liqPixelSamples", thisJob.shadowPixelSamples, status );
-						liquidGetPlugValue( shadowCamDepNode, "liqVolumeInterpretation", thisJob.shadowVolumeInterpretation, status );
-						liquidGetPlugValue( shadowCamDepNode, "liqEveryFrame", thisJob.everyFrame, status );
-						// as previously : this is important as thisJob.renderFrame corresponds to the
-						// scene scanning time.
-						if( thisJob.everyFrame )
-							thisJob.renderFrame = liqglo.liqglo_lframe;
-						else
-							liquidGetPlugValue( shadowCamDepNode, "liqRenderAtFrame", thisJob.renderFrame, status );
-						liquidGetPlugValue( shadowCamDepNode, "liqGeometrySet", thisJob.shadowObjectSet, status );
-						liquidGetPlugValue( shadowCamDepNode, "liqShadingRateFactor", thisJob.shadingRateFactor, status );
-						// test if the file is already on disk...
-						if( m_lazyCompute )
-						{
-							MString fileName( generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob ) );
-							if( fileExists( fileName ) )
-								continue;
-						}
-						jobList.push_back( thisJob );
-					}
-				}
-			} // useDepthMap
-			//cout <<thisJob.name.asChar()<<" -> shd:"<<thisJob.isShadow<<" ef:"<<thisJob.everyFrame<<" raf:"<<thisJob.renderFrame<<" set:"<<thisJob.shadowObjectSet.asChar()<<endl;
-		} // light dagIterator
-
-		MDagPath cameraPath;
-		MItDag dagCameraIterator( MItDag::kDepthFirst, MFn::kCamera, &returnStatus );
-		for ( ; !dagCameraIterator.isDone(); dagCameraIterator.next() ) 
-		{
-			if( !dagCameraIterator.getPath(cameraPath) ) 
-				continue;
-			bool usesDepthMap( false );
-			MFnCamera fnCameraNode( cameraPath );
-			liquidGetPlugValue( fnCameraNode, "useDepthMapShadows", usesDepthMap, status );
-			if( usesDepthMap && areObjectAndParentsVisible( cameraPath ) ) 
-			{
-				//
-				// We have a shadow job, so find out if we need to use deep shadows,
-				// and the pixel sample count
-				//
-				thisJob.deepShadows = false;
-				thisJob.shadowPixelSamples = 1;
-				thisJob.shadowVolumeInterpretation = 1;
-				fnCameraNode.findPlug( "deepShadows" ).getValue( thisJob.deepShadows );
-				// Only use the pixel samples and volume interpretation with deep shadows.
-				//
-				if( thisJob.deepShadows )
-				{
-					fnCameraNode.findPlug( "pixelSamples" ).getValue( thisJob.shadowPixelSamples );
-					fnCameraNode.findPlug( "volumeInterpretation" ).getValue( thisJob.shadowVolumeInterpretation );
-				}
-
-				thisJob.hasShadowCam = true;
-				thisJob.shadowCamPath = cameraPath;
-				thisJob.path = cameraPath;
-				thisJob.name = fnCameraNode.name();
-				thisJob.isShadow = true;
-				thisJob.isPoint = false;
-				thisJob.isShadowPass = false;
-
-				// check to see if the minmax shadow option is used
-				thisJob.isMinMaxShadow = false;
-				status.clear();
-				MPlug liquidMinMaxShadow = fnCameraNode.findPlug( "liquidMinMaxShadow", &status );
-				if( status == MS::kSuccess ) 
-					liquidMinMaxShadow.getValue( thisJob.isMinMaxShadow );
-
-				// check to see if the midpoint shadow option is used
-				thisJob.isMidPointShadow = false;
-				status.clear();
-				MPlug liquidMidPointShadow = fnCameraNode.findPlug( "useMidDistDmap", &status );
-				if( status == MS::kSuccess ) 
-					liquidMidPointShadow.getValue( thisJob.isMidPointShadow );
-
-				bool computeShadow( true );
-				if( m_lazyCompute ) 
-				{
-					MString fileName( generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob ) );
-					if( fileExists( fileName ) ) continue;
-				}
-
-				if( computeShadow ) 
-					jobList.push_back( thisJob );
-			}
-		} // camera dagIterator
+		returnStatus = buildShadowJobs__(thisJob);
 	} // liqglo_doShadows
 
 	// Determine which cameras to render
@@ -1139,7 +777,7 @@ MStatus liqRibTranslator::buildJobs__()
 			iter->imageName = outName;
 		}
 		++iter;
-	}
+	}//while ( iter != jobList.end() )
 
 	// sort the shadow jobs to put the reference frames first
 #ifndef _WIN32
@@ -1539,4 +1177,377 @@ void liqRibTranslator::postActions(const MString& originalLayer__)
 			throw err;
 		}
 	}
+}
+//
+MStatus liqRibTranslator::buildShadowJobs__(structJob &thisJob__)
+{
+	MStatus returnStatus__ = MS::kSuccess;
+	MStatus status__;
+	MDagPath lightPath__;
+
+	MItDag dagIterator( MItDag::kDepthFirst, MFn::kLight, &returnStatus__ );
+	for (; !dagIterator.isDone(); dagIterator.next()) 
+	{
+		if( !dagIterator.getPath( lightPath__ ) ) 
+			continue;
+		bool usesDepthMap = false;
+		MFnLight fnLightNode( lightPath__ );
+		liquidGetPlugValue( fnLightNode, "useDepthMapShadows", usesDepthMap, status__ );
+		if( usesDepthMap && areObjectAndParentsVisible( lightPath__ ) ) 
+		{
+			// philippe : this is the default and can be overriden
+			// by the everyFrame/renderAtFrame attributes.
+			//
+			thisJob__.renderFrame           = liqglo.liqglo_lframe;
+			thisJob__.everyFrame            = true;
+			thisJob__.shadowObjectSet       = "";
+			thisJob__.shadowArchiveRibDone  = false;
+			thisJob__.skip                  = false;
+			//
+			// We have a shadow job, so find out if we need to use deep shadows,
+			// and the pixel sample count
+			//
+			thisJob__.deepShadows                 = false;
+			thisJob__.shadowPixelSamples          = 1;
+			thisJob__.shadowVolumeInterpretation  = 1;
+			thisJob__.shadingRateFactor           = 1.0;
+			thisJob__.shadowAggregation			= 0;
+
+			// philippe : we grab the job's resolution now instead of in the output phase
+			// that way , we can make sure one light can generate many shadow maps
+			// with different resolutions
+			thisJob__.aspectRatio = 1.0;
+			liquidGetPlugValue( fnLightNode, "dmapResolution", thisJob__.width, status__ );
+			thisJob__.height = thisJob__.width;
+
+			// Get to our shader node.
+			//
+			MPlug liquidLightShaderNodeConnection;
+			MStatus liquidLightShaderStatus;
+			liquidLightShaderNodeConnection = fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus );
+			if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() )
+			{
+				MPlugArray liquidLightShaderNodePlugArray;
+				liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
+				MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
+
+				// Now grab the parameters.
+				//
+				liquidGetPlugValue( fnLightShaderNode, "deepShadows", thisJob__.deepShadows, status__ );
+
+				// Only use the pixel samples and volume interpretation with deep shadows.
+				//
+				if( thisJob__.deepShadows )
+				{
+					liquidGetPlugValue( fnLightShaderNode, "pixelSamples", thisJob__.shadowPixelSamples, status__ );
+					liquidGetPlugValue( fnLightShaderNode, "volumeInterpretation", thisJob__.shadowVolumeInterpretation, status__ );
+				}
+
+				// philippe : check the shadow rendering frequency
+				//
+				liquidGetPlugValue( fnLightShaderNode, "everyFrame", thisJob__.everyFrame, status__ );
+
+				// philippe : this is crucial, as we rely on the renderFrame to check
+				// which frame the scene should be scanned for that job.
+				// If the job is a shadow rendering once only at a given frame, we take the
+				// renderAtFrame attribute, otherwise, the current time.
+				//
+				if( !thisJob__.everyFrame ) 
+					liquidGetPlugValue( fnLightShaderNode, "renderAtFrame", thisJob__.renderFrame, status__ );  
+
+				// Check if the shadow aggregation option is used
+				liquidGetPlugValue( fnLightShaderNode, "aggregateShadowMaps", thisJob__.shadowAggregation, status__ );  
+
+				// philippe : check the shadow geometry set
+				//
+				liquidGetPlugValue( fnLightShaderNode, "geometrySet", thisJob__.shadowObjectSet, status__ );
+				liquidGetPlugValue( fnLightShaderNode, "shadingRateFactor", thisJob__.shadingRateFactor, status__ );
+			} 
+			else 
+			{
+				/* Here we support the same options as those found on light shader nodes
+				but we look for dynamic attributes, so we need a bit more error checking.
+				*/
+				//MPlug paramPlug = fnLightNode.findPlug( "deepShadows", &status );
+				liquidGetPlugValue( fnLightNode, "deepShadows", thisJob__.deepShadows, status__ );
+				if( thisJob__.deepShadows ) 
+				{
+					liquidGetPlugValue( fnLightNode, "pixelSamples", thisJob__.shadowPixelSamples, status__ );
+					liquidGetPlugValue( fnLightNode, "volumeInterpretation", thisJob__.shadowVolumeInterpretation, status__ );
+				}
+				liquidGetPlugValue( fnLightNode, "everyFrame", thisJob__.everyFrame, status__ );
+				if( !thisJob__.everyFrame ) 
+					liquidGetPlugValue( fnLightNode, "renderAtFrame", thisJob__.renderFrame, status__ );  
+
+				liquidGetPlugValue( fnLightNode, "geometrySet", thisJob__.shadowObjectSet, status__ );  
+				liquidGetPlugValue( fnLightNode, "shadingRateFactor", thisJob__.shadingRateFactor, status__ ); 
+			}
+			// this will store the shadow camera path and the test's result
+			bool lightHasShadowCam = false;
+			MDagPathArray shadowCamPath;
+
+			if( lightPath__.hasFn( MFn::kSpotLight ) || lightPath__.hasFn( MFn::kDirectionalLight ) ) 
+			{
+				bool computeShadow = true;
+				thisJob__.hasShadowCam = false;
+				MPlug liquidLightShaderNodeConnection;
+				MStatus liquidLightShaderStatus;
+				liquidLightShaderNodeConnection = fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus );
+
+				if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() ) 
+				{
+					// a shader is connected to the light !
+					MPlugArray liquidLightShaderNodePlugArray;
+					liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
+					MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
+
+					// has the main shadow been disabled ?
+					liquidGetPlugValue( fnLightShaderNode, "generateMainShadow", computeShadow, status__ ); 
+
+					// look for shadow cameras...
+					MStatus stat;
+					MPlug shadowCamPlug = fnLightShaderNode.findPlug( "shadowCameras", &stat );
+					// find the multi message attribute...
+					if( stat == MS::kSuccess ) 
+					{
+						int numShadowCams = shadowCamPlug.numElements();
+						//cout <<">> got "<<numShadowCams<<" shadow cameras"<<endl;
+						// iterate through existing array elements
+						for ( unsigned int i=0; i<numShadowCams; i++ ) 
+						{
+							stat.clear();
+							MPlug camPlug = shadowCamPlug.elementByPhysicalIndex( i, &stat );
+							if( stat != MS::kSuccess ) 
+								continue;
+							MPlugArray shadowCamPlugArray;
+
+							// if the element is connected, keep going...
+							if( camPlug.connectedTo( shadowCamPlugArray, true, false ) ) 
+							{
+								MFnDependencyNode shadowCamDepNode = shadowCamPlugArray[0].node();
+								//cout <<"shadow camera plug "<<i<<" is connected to "<<shadowCamDepNode.name()<<endl;
+
+								MDagPath cameraPath;
+								cameraPath.getAPathTo( shadowCamPlugArray[0].node(), cameraPath);
+								//cout <<"cameraPath : "<<cameraPath.fullPathName()<<endl;
+								shadowCamPath.append( cameraPath );
+								lightHasShadowCam = true;
+							}
+						}
+					}
+				}
+				thisJob__.path = lightPath__;
+				thisJob__.name = fnLightNode.name();
+				thisJob__.texName = "";
+				thisJob__.isShadow = true;
+				thisJob__.isPoint = false;
+				thisJob__.isShadowPass = false;
+
+				// check to see if the minmax shadow option is used
+				thisJob__.isMinMaxShadow = false;
+				liquidGetPlugValue( fnLightNode, "liquidMinMaxShadow", thisJob__.isMinMaxShadow, status__ ); 
+				// check to see if the midpoint shadow option is used
+				thisJob__.isMidPointShadow = false;
+				liquidGetPlugValue( fnLightNode, "useMidDistDmap", thisJob__.isMidPointShadow, status__ ); 
+				// in lazy compute mode, we check if the map is already on disk first.
+				if( m_lazyCompute && computeShadow ) 
+				{
+					MString fileName( generateFileName( (fileGenMode) fgm_shadow_tex, thisJob__ ) );
+					if( fileExists( fileName ) ) 
+						computeShadow = false;
+				}
+				//
+				// store the main shadow map    *****************************
+				//
+				if( computeShadow )
+					jobList.push_back( thisJob__ );
+				// We have to handle point lights differently as they need 6 shadow maps!
+			} 
+			else if( lightPath__.hasFn(MFn::kPointLight) ) 
+			{
+				for ( unsigned dirOn( 0 ); dirOn < 6; dirOn++ ) 
+				{
+					thisJob__.hasShadowCam = false;
+					thisJob__.path = lightPath__;
+					thisJob__.name = fnLightNode.name();
+					thisJob__.isShadow = true;
+					thisJob__.isShadowPass = false;
+					thisJob__.isPoint = true;
+					thisJob__.pointDir = ( PointLightDirection )dirOn;
+
+					// check to see if the midpoint shadow option is used
+					thisJob__.isMidPointShadow = false;
+					liquidGetPlugValue( fnLightNode, "useMidDistDmap", thisJob__.isMidPointShadow, status__ );
+
+					bool computeShadow = true;
+					MStatus liquidLightShaderStatus;
+					MPlug liquidLightShaderNodeConnection( fnLightNode.findPlug( "liquidLightShaderNode", &liquidLightShaderStatus ) );
+
+					if( liquidLightShaderStatus == MS::kSuccess && liquidLightShaderNodeConnection.isConnected() ) 
+					{
+						// a shader is connected to the light !
+						MPlugArray liquidLightShaderNodePlugArray;
+						liquidLightShaderNodeConnection.connectedTo( liquidLightShaderNodePlugArray, true, true );
+						MFnDependencyNode fnLightShaderNode( liquidLightShaderNodePlugArray[0].node() );
+
+						// has the main shadow been disabled ?
+						liquidGetPlugValue( fnLightShaderNode, "generateMainShadow", computeShadow, status__ );
+
+						// look for shadow cameras...
+						MStatus stat;
+						MPlug shadowCamPlug( fnLightShaderNode.findPlug( "shadowCameras", &stat ) );
+
+						// find the multi message attribute...
+						if( stat == MS::kSuccess ) 
+						{
+							int numShadowCams = shadowCamPlug.numElements();
+							//cout <<">> got "<<numShadowCams<<" shadow cameras"<<endl;
+							// iterate through existing array elements
+							for ( unsigned i( 0 ); i < numShadowCams; i++ ) 
+							{
+								stat.clear();
+								MPlug camPlug = shadowCamPlug.elementByPhysicalIndex( i, &stat );
+								if( stat != MS::kSuccess ) 
+									continue;
+								MPlugArray shadowCamPlugArray;
+
+								// if the element is connected, keep going...
+								if( camPlug.connectedTo( shadowCamPlugArray, true, false ) ) 
+								{
+									MFnDependencyNode shadowCamDepNode = shadowCamPlugArray[0].node();
+									//cout <<"shadow camera plug "<<i<<" is connected to "<<shadowCamDepNode.name()<<endl;
+
+									MDagPath cameraPath;
+									cameraPath.getAPathTo( shadowCamPlugArray[0].node(), cameraPath);
+									//cout <<"cameraPath : "<<cameraPath.fullPathName()<<endl;
+									shadowCamPath.append( cameraPath );
+									lightHasShadowCam = true;
+								}
+							}
+						}
+					}
+					MString fileName( generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob__ ) );
+					if( m_lazyCompute ) 
+						if( fileExists( fileName ) ) 
+							computeShadow = false;
+					if( computeShadow ) 
+						jobList.push_back( thisJob__ );
+				}
+			}
+			// if the job has shadow cameras, we will store them here
+			//
+			if( lightHasShadowCam )
+			{
+				int isAggregate = thisJob__.shadowAggregation;
+				for( unsigned i( 0 ); i < shadowCamPath.length(); i++ )
+				{
+					if( !i && isAggregate )
+						thisJob__.shadowAggregation = 0;
+					else if ( isAggregate )
+						thisJob__.shadowAggregation = 1;
+					else
+						thisJob__.shadowAggregation = 0;
+					thisJob__.shadowCamPath = shadowCamPath[ i ];
+					thisJob__.hasShadowCam = true;
+
+					MFnDependencyNode shadowCamDepNode( shadowCamPath[ i ].node() );
+					thisJob__.name = shadowCamDepNode.name();
+					if( isAggregate )
+						thisJob__.texName = fnLightNode.name(); //MFnDependencyNode( shadowCamPath[ i ].node() ).name();
+					//					else
+					//						thisJob.texName = "";
+					//						thisJob.name = shadowCamDepNode.name();
+					if( liquidGetPlugValue( shadowCamDepNode, "liqShadowResolution", thisJob__.width, status__ ) == MS::kSuccess )
+						thisJob__.height = thisJob__.width;
+					liquidGetPlugValue( shadowCamDepNode, "liqMidPointShadow", thisJob__.isMidPointShadow, status__ );
+					thisJob__.midPointRatio = 0;
+					liquidGetPlugValue( shadowCamDepNode, "liqMidPointRatio", thisJob__.midPointRatio, status__ );
+					liquidGetPlugValue( shadowCamDepNode, "liqDeepShadows", thisJob__.deepShadows, status__ );
+					liquidGetPlugValue( shadowCamDepNode, "liqPixelSamples", thisJob__.shadowPixelSamples, status__ );
+					liquidGetPlugValue( shadowCamDepNode, "liqVolumeInterpretation", thisJob__.shadowVolumeInterpretation, status__ );
+					liquidGetPlugValue( shadowCamDepNode, "liqEveryFrame", thisJob__.everyFrame, status__ );
+					// as previously : this is important as thisJob.renderFrame corresponds to the
+					// scene scanning time.
+					if( thisJob__.everyFrame )
+						thisJob__.renderFrame = liqglo.liqglo_lframe;
+					else
+						liquidGetPlugValue( shadowCamDepNode, "liqRenderAtFrame", thisJob__.renderFrame, status__ );
+					liquidGetPlugValue( shadowCamDepNode, "liqGeometrySet", thisJob__.shadowObjectSet, status__ );
+					liquidGetPlugValue( shadowCamDepNode, "liqShadingRateFactor", thisJob__.shadingRateFactor, status__ );
+					// test if the file is already on disk...
+					if( m_lazyCompute )
+					{
+						MString fileName( generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob__ ) );
+						if( fileExists( fileName ) )
+							continue;
+					}
+					jobList.push_back( thisJob__ );
+				}
+			}
+		} // useDepthMap
+		//cout <<thisJob.name.asChar()<<" -> shd:"<<thisJob.isShadow<<" ef:"<<thisJob.everyFrame<<" raf:"<<thisJob.renderFrame<<" set:"<<thisJob.shadowObjectSet.asChar()<<endl;
+	} // light dagIterator
+
+	MDagPath cameraPath;
+	MItDag dagCameraIterator( MItDag::kDepthFirst, MFn::kCamera, &returnStatus__ );
+	for ( ; !dagCameraIterator.isDone(); dagCameraIterator.next() ) 
+	{
+		if( !dagCameraIterator.getPath(cameraPath) ) 
+			continue;
+		bool usesDepthMap( false );
+		MFnCamera fnCameraNode( cameraPath );
+		liquidGetPlugValue( fnCameraNode, "useDepthMapShadows", usesDepthMap, status__ );
+		if( usesDepthMap && areObjectAndParentsVisible( cameraPath ) ) 
+		{
+			//
+			// We have a shadow job, so find out if we need to use deep shadows,
+			// and the pixel sample count
+			//
+			thisJob__.deepShadows = false;
+			thisJob__.shadowPixelSamples = 1;
+			thisJob__.shadowVolumeInterpretation = 1;
+			fnCameraNode.findPlug( "deepShadows" ).getValue( thisJob__.deepShadows );
+			// Only use the pixel samples and volume interpretation with deep shadows.
+			//
+			if( thisJob__.deepShadows )
+			{
+				fnCameraNode.findPlug( "pixelSamples" ).getValue( thisJob__.shadowPixelSamples );
+				fnCameraNode.findPlug( "volumeInterpretation" ).getValue( thisJob__.shadowVolumeInterpretation );
+			}
+
+			thisJob__.hasShadowCam = true;
+			thisJob__.shadowCamPath = cameraPath;
+			thisJob__.path = cameraPath;
+			thisJob__.name = fnCameraNode.name();
+			thisJob__.isShadow = true;
+			thisJob__.isPoint = false;
+			thisJob__.isShadowPass = false;
+
+			// check to see if the minmax shadow option is used
+			thisJob__.isMinMaxShadow = false;
+			status__.clear();
+			MPlug liquidMinMaxShadow = fnCameraNode.findPlug( "liquidMinMaxShadow", &status__ );
+			if( status__ == MS::kSuccess ) 
+				liquidMinMaxShadow.getValue( thisJob__.isMinMaxShadow );
+
+			// check to see if the midpoint shadow option is used
+			thisJob__.isMidPointShadow = false;
+			status__.clear();
+			MPlug liquidMidPointShadow = fnCameraNode.findPlug( "useMidDistDmap", &status__ );
+			if( status__ == MS::kSuccess ) 
+				liquidMidPointShadow.getValue( thisJob__.isMidPointShadow );
+
+			bool computeShadow( true );
+			if( m_lazyCompute ) 
+			{
+				MString fileName( generateFileName( ( fileGenMode )fgm_shadow_tex, thisJob__ ) );
+				if( fileExists( fileName ) ) continue;
+			}
+
+			if( computeShadow ) 
+				jobList.push_back( thisJob__ );
+		}
+	} // camera dagIterator
+
+	return returnStatus__;
 }
