@@ -266,6 +266,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 
 		if( !liqglo.m_deferredGen && m_justRib ) 
 			useRenderScript = false;
+		liquidMessage2(messageInfo,"useRenderScript=%d", useRenderScript);
 
 		liqRenderScript jobScript;
 		// 		liqRenderScript::Job preJobInstance;
@@ -336,14 +337,14 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 						);
 					}
 				}//if( m_deferredGen )
-				if( !m_justRib ) 
+			}
+			if(useRenderScript && !m_justRib)
+			{
+				if( liqglo.m_deferredGen ) 
 				{
-					if( liqglo.m_deferredGen ) 
-					{
-						stringstream ss;
-						ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
-						frameScriptJobMgr.addInstanceJob(true, ss.str() );
-					}
+					stringstream ss;
+					ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
+					frameScriptJobMgr.addInstanceJob(true, ss.str() );
 				}
 			}//if( useRenderScript ) 
 			///////////////////////////////////////////////////
@@ -462,24 +463,23 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 				preJobInstance.isInstance = true;
 				jobScript.addLeafDependency( preJobInstance );
 			}
+		}
+		if(useRenderScript && !m_justRib)
+		{
 			// clean up the alfred file in the future
-			if( !m_justRib ) 
+			if( liqglo.m_deferredGen ) 
 			{
-				if( liqglo.m_deferredGen ) 
-				{
-					jobScriptMgr.cleanupDefferedJob();
-				}
-				if( cleanRenderScript ) 
-				{
-					jobScriptMgr.cleanupRenderScript(renderScriptName);
-				}
-				if( m_postJobCommand != MString("") )
-				{
-					jobScriptMgr.cleanupPostJob(m_postJobCommand);
-				}
+				jobScriptMgr.cleanupDefferedJob();
+			}
+			if( cleanRenderScript ) 
+			{
+				jobScriptMgr.cleanupRenderScript(renderScriptName);
+			}
+			if( m_postJobCommand != MString("") )
+			{
+				jobScriptMgr.cleanupPostJob(m_postJobCommand);
 			}
 			jobScriptMgr.writeRenderScript(m_renderScriptFormat, renderScriptName);
-
 		}
 		LIQDEBUGPRINTF( "-> ending escape handler.\n" );
 		m_escHandler.endComputation();
