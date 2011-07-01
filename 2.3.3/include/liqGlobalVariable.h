@@ -20,7 +20,7 @@ struct liqGlobalVariable
 	// Kept global for liquidRigGenData and liquidRibParticleData
 	FILE        *liqglo_ribFP;
 	long         liqglo_lframe;
-	structJob    liqglo_currentJob;
+//	structJob    liqglo_currentJob;
 	bool         liqglo_doMotion;                         // Motion blur for transformations
 	bool         liqglo_doDef;                            // Motion blur for deforming objects
 	bool         liqglo_doCompression;                    // output compressed ribs

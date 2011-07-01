@@ -193,7 +193,7 @@ liqRibMayaSubdivisionData::liqRibMayaSubdivisionData( MObject subd )
 
 /** Write the RIB for this mesh.
  */
-void liqRibMayaSubdivisionData::_write()
+void liqRibMayaSubdivisionData::_write(const structJob &currentJob)
 {
 	LIQDEBUGPRINTF( "-> writing subdivision surface\n" );
 

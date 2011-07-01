@@ -221,7 +221,7 @@ liqRibCurvesData::liqRibCurvesData( MObject curveGroup )
 
 //  Write the RIB for this curve.
 
-void liqRibCurvesData::_write()
+void liqRibCurvesData::_write(const structJob &currentJob)
 {
 	LIQDEBUGPRINTF( "-> writing nurbs curve group\n" );
 

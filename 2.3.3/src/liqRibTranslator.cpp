@@ -125,6 +125,9 @@ typedef int RtError;
 // Hmmmmm should change magic to Liquid
 MString liqRibTranslator::magic("##Liquid");
 
+#if(Refactoring==1)
+static structJob liqglo_currentJob;
+#endif
 /**
 * Creates a new instance of the translator.
 */
@@ -2466,15 +2469,15 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				for (; iter != jobList.end(); ++iter ) 
 				{
 					m_currentMatteMode = false;
-					liqglo.liqglo_currentJob = *iter;
+					liqglo_currentJob = *iter;
 
-					if( liqglo.liqglo_currentJob.skip ) 
+					if( liqglo_currentJob.skip ) 
 						continue;
 
 					//cout <<">> outputing job ["<<liqglo_lframe<<"] ->"<<liqglo_currentJob.name.asChar()<<" -> "<<liqglo_currentJob.imageName.asChar()<<endl;
 					// set the scan time based on the job's render frame
 					//
-					scanTime = liqglo.liqglo_currentJob.renderFrame;
+					scanTime = liqglo_currentJob.renderFrame;
 					// if we changed the frame to calculate a shadow at a different time,
 					// we need to rescan the scene, otherwise not.
 					//
@@ -2535,21 +2538,21 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 
 						// mark the frame as already scanned
 						lastScannedFrame = scanTime;
-						liqglo.liqglo_currentJob = *iter;
+						liqglo_currentJob = *iter;
 					}
 					//
 					// start scene parsing ------------------------------------------------------------------
 					//
-					if( liqglo.liqglo_currentJob.isShadowPass ) 
+					if( liqglo_currentJob.isShadowPass ) 
 						liqglo.liqglo_isShadowPass = true;
 					else 
 						liqglo.liqglo_isShadowPass = false;
 
 					// build the shadow archive name for the job
 					{
-						bool renderAllFrames( liqglo.liqglo_currentJob.everyFrame );
-						long refFrame( liqglo.liqglo_currentJob.renderFrame );
-						MString geoSet( liqglo.liqglo_currentJob.shadowObjectSet );
+						bool renderAllFrames( liqglo_currentJob.everyFrame );
+						long refFrame( liqglo_currentJob.renderFrame );
+						MString geoSet( liqglo_currentJob.shadowObjectSet );
 						baseShadowName = generateShadowArchiveName( renderAllFrames, refFrame, geoSet );
 						baseShadowName = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, baseShadowName, liqglo.liqglo_ribDir );
 					}
@@ -2589,7 +2592,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 
 					// world RiReadArchives and Rib Boxes ************************************************
 					//
-					if( liqglo.liqglo_currentJob.isShadow && !liqglo.liqglo_currentJob.shadowArchiveRibDone && !liqglo.fullShadowRib ) 
+					if( liqglo_currentJob.isShadow && !liqglo_currentJob.shadowArchiveRibDone && !liqglo.fullShadowRib ) 
 					{
 						//
 						//  create the read-archive shadow files
@@ -2613,7 +2616,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 #endif
 						if( worldPrologue() != MS::kSuccess ) 
 							break;
-						if( liqglo.liqglo_currentJob.isShadow && liqglo.liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows ) 
+						if( liqglo_currentJob.isShadow && liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows ) 
 							if( lightBlock() != MS::kSuccess ) 
 								break;
 						if( coordSysBlock() != MS::kSuccess ) 
@@ -2632,9 +2635,9 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 						vector<structJob>::iterator iterCheck = jobList.begin();
 						while ( iterCheck != jobList.end() ) 
 						{
-							if( iterCheck->shadowObjectSet == liqglo.liqglo_currentJob.shadowObjectSet &&
-								iterCheck->everyFrame == liqglo.liqglo_currentJob.everyFrame &&
-								iterCheck->renderFrame == liqglo.liqglo_currentJob.renderFrame
+							if( iterCheck->shadowObjectSet == liqglo_currentJob.shadowObjectSet &&
+								iterCheck->everyFrame == liqglo_currentJob.everyFrame &&
+								iterCheck->renderFrame == liqglo_currentJob.renderFrame
 								)
 								iterCheck->shadowArchiveRibDone = true;
 							++iterCheck;
@@ -2644,8 +2647,8 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 					}//if( liqglo_currentJob.isShadow && !liqglo_currentJob.shadowArchiveRibDone && !fullShadowRib ) 
 
 #ifndef RENDER_PIPE
-					liquidMessage( "Beginning RIB output to '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
-					RiBegin( const_cast< RtToken >( liqglo.liqglo_currentJob.ribFileName.asChar() ) );
+					liquidMessage( "Beginning RIB output to '" + string( liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
+					RiBegin( const_cast< RtToken >( liqglo_currentJob.ribFileName.asChar() ) );
 
 #ifdef DELIGHT
 					LIQDEBUGPRINTF( "-> setting binary option\n" );
@@ -2657,7 +2660,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 					}
 #endif
 #else
-					liqglo.liqglo_ribFP = fopen( liqglo.liqglo_currentJob.ribFileName.asChar(), "w" );
+					liqglo.liqglo_ribFP = fopen( liqglo_currentJob.ribFileName.asChar(), "w" );
 					if( liqglo.liqglo_ribFP ) 
 					{
 						RtInt ribFD = fileno( liqglo.liqglo_ribFP );
@@ -2671,7 +2674,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 					liquidMessage( "Beginning RI output directly to renderer", messageInfo );
 					RiBegin( RI_NULL );
 #endif
-					if( liqglo.liqglo_currentJob.isShadow && !liqglo.fullShadowRib ) 
+					if( liqglo_currentJob.isShadow && !liqglo.fullShadowRib ) 
 					{
 						// reference the correct shadow archive
 						//
@@ -2699,7 +2702,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 								break;
 							if( worldPrologue() != MS::kSuccess ) 
 								break;
-							if( !liqglo.liqglo_currentJob.isShadow || ( liqglo.liqglo_currentJob.isShadow && liqglo.liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows) ) 
+							if( !liqglo_currentJob.isShadow || ( liqglo_currentJob.isShadow && liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows) ) 
 								if( lightBlock() != MS::kSuccess ) 
 									break;
 							if( coordSysBlock() != MS::kSuccess ) 
@@ -2712,7 +2715,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 								break;
 							ribEpilogue();
 							// output info when done with the rib - Alf
-							cout <<"Finished RIB generation "<<liqglo.liqglo_currentJob.ribFileName.asChar()<<endl;
+							cout <<"Finished RIB generation "<<liqglo_currentJob.ribFileName.asChar()<<endl;
 						}
 					}
 					RiEnd();
@@ -2735,7 +2738,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 			// set the rib file for the 'view last rib' menu command
 			// NOTE: this may be overridden later on in certain code paths
 			if( !liqglo.m_deferredGen ) 
-				lastRibName = liqglo.liqglo_currentJob.ribFileName;
+				lastRibName = liqglo_currentJob.ribFileName;
 			// now we re-iterate through the job list to write out the alfred file if we are using it
 			if( useRenderScript && !m_justRib ) 
 			{
@@ -3116,6 +3119,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				// Moritz: Added quotes to render script name as it may contain spaces in bloody Windoze
 				// Note: also adding quotes to the path (aka project dir) breaks ShellExecute() -- cost me one hour to trace this!!!
 				// Bloody, damn, asinine Windoze!!!
+				cout << "2.liqProcessLauncher::execute("<<m_renderScriptCommand<<","<<renderScriptName <<","<<liqglo.liqglo_projectDir<<","<< false <<")"<< endl;
 				liqProcessLauncher::execute( m_renderScriptCommand, "\"" + renderScriptName + "\"", liqglo.liqglo_projectDir, false );
 #else
 				liqProcessLauncher::execute( m_renderScriptCommand, renderScriptName, liqglo.liqglo_projectDir, false );
@@ -3180,6 +3184,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 						cout << "    + '" << iter->ribFileName.asChar() << "'" << endl;
 						liquidMessage( "    + '" + string( iter->ribFileName.asChar() ) + "'", messageInfo );
 #ifdef _WIN32
+						cout << "3.liqProcessLauncher::execute("<<liqglo.liquidRenderer.renderCommand<<", "<<" "+liqglo.liquidRenderer.renderCmdFlags+" \""+iter->ribFileName+"\""<<","<<liqglo.liqglo_projectDir<<","<< true <<")"<< endl;
 						if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " \"" + iter->ribFileName + "\"", liqglo.liqglo_projectDir, true ) )
 #else
 						if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " " + iter->ribFileName, liqglo.liqglo_projectDir, true ) )
@@ -3192,20 +3197,21 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				{
 					liquidMessage( "Rendering hero pass... ", messageInfo );
 					cout << "[!] Rendering hero pass..." << endl;
-					if( liqglo.liqglo_currentJob.skip ) 
+					if( liqglo_currentJob.skip ) 
 					{
-						cout << "    - skipping '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
-						liquidMessage( "    - skipping '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
+						cout << "    - skipping '" << liqglo_currentJob.ribFileName.asChar() << "'" << endl;
+						liquidMessage( "    - skipping '" + string( liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
 					} 
 					else 
 					{
-						cout << "    + '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
-						liquidMessage( "    + '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
+						cout << "    + '" << liqglo_currentJob.ribFileName.asChar() << "'" << endl;
+						liquidMessage( "    + '" + string( liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
 
 #ifdef _WIN32
-						liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + liqglo.liqglo_currentJob.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
+						cout << "4.liqProcessLauncher::execute("<<liqglo.liquidRenderer.renderCommand<<", "<<liqglo.liqglo_rifParams+" "+liqglo.liquidRenderer.renderCmdFlags+" \""+liqglo_currentJob.ribFileName+"\""<<","<<liqglo.liqglo_projectDir<<","<< false <<")"<< endl;
+						liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + liqglo_currentJob.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
 #else
-						liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + liqglo.liqglo_currentJob.ribFileName, liqglo.liqglo_projectDir, false );
+						liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + liqglo_currentJob.ribFileName, liqglo.liqglo_projectDir, false );
 #endif
 						/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
 						to display buckets in the renderview.
@@ -4111,14 +4117,14 @@ MStatus liqRibTranslator::ribPrologue()
 			RiArchiveRecord( RI_VERBATIM, "Option \"searchpath\" \"display\" [\"%s\"]\n", list );
 		}
 		//RiOrientation( RI_RH ); // Right-hand coordinates
-		if( liqglo.liqglo_currentJob.isShadow ) 
+		if( liqglo_currentJob.isShadow ) 
 		{
-			RiPixelSamples( liqglo.liqglo_currentJob.shadowPixelSamples, liqglo.liqglo_currentJob.shadowPixelSamples );
-			RiShadingRate( liqglo.liqglo_currentJob.shadingRateFactor );
+			RiPixelSamples( liqglo_currentJob.shadowPixelSamples, liqglo_currentJob.shadowPixelSamples );
+			RiShadingRate( liqglo_currentJob.shadingRateFactor );
 			// Need to use Box filter for deep shadows.
 			RiPixelFilter( RiBoxFilter, 1, 1 );
 			RtString option;
-			if( liqglo.liqglo_currentJob.deepShadows ) 
+			if( liqglo_currentJob.deepShadows ) 
 				option = "deepshadow";
 			else 
 				option = "shadow";
@@ -5083,7 +5089,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 	{
 		RiFrameBegin( lframe );
 
-		if( !liqglo.liqglo_currentJob.isShadow )
+		if( !liqglo_currentJob.isShadow )
 		{
 			// Smooth Shading
 			RiShadingInterpolation( "smooth" );
@@ -5103,9 +5109,9 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 				RiExposure( m_rgain, m_rgamma );
 			}
 		}
-		if( liqglo.liqglo_currentJob.isShadow &&
-			( !liqglo.liqglo_currentJob.deepShadows ||
-			liqglo.liqglo_currentJob.shadowPixelSamples == 1 ) )
+		if( liqglo_currentJob.isShadow &&
+			( !liqglo_currentJob.deepShadows ||
+			liqglo_currentJob.shadowPixelSamples == 1 ) )
 		{
 			if( liqglo.liquidRenderer.renderName == MString("Pixie") )
 			{
@@ -5118,24 +5124,24 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 				RiHider( "hidden", "int jitter", &zero, RI_NULL );
 			}
 		}
-		if( liqglo.liqglo_currentJob.isShadow && liqglo.liqglo_currentJob.isMidPointShadow && !liqglo.liqglo_currentJob.deepShadows )
+		if( liqglo_currentJob.isShadow && liqglo_currentJob.isMidPointShadow && !liqglo_currentJob.deepShadows )
 		{
 			RtString midPoint = "midpoint";
-			RtFloat midRatio = liqglo.liqglo_currentJob.midPointRatio;
+			RtFloat midRatio = liqglo_currentJob.midPointRatio;
 
 			RiHider( "hidden", "depthfilter", &midPoint, RI_NULL );
 
-			if ( liqglo.liqglo_currentJob.midPointRatio != 0 )
+			if ( liqglo_currentJob.midPointRatio != 0 )
 				RiHider( "hidden", "midpointratio", &midRatio, RI_NULL ); // Output to rib jami
 		}
 
 		LIQDEBUGPRINTF( "-> Setting Display Options\n" );
-		if( liqglo.liqglo_currentJob.isShadow )
+		if( liqglo_currentJob.isShadow )
 		{
 			//MString relativeShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, liqglo_currentJob.imageName, liqglo_projectDir ) ) );
-			if( !liqglo.liqglo_currentJob.isMinMaxShadow )
+			if( !liqglo_currentJob.isMinMaxShadow )
 			{
-				if( liqglo.liqglo_currentJob.deepShadows )
+				if( liqglo_currentJob.deepShadows )
 				{
 					// RiDeclare( "volumeinterpretation", "string" );
 					RtString viContinuous = "continuous";
@@ -5144,11 +5150,11 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 					if( liqglo.liquidRenderer.renderName == MString("3Delight") )
 					{
 						liqRIBMsg("Display 1");
-						RiDisplay( const_cast< char* >( liqglo.liqglo_currentJob.imageName.asChar()),
-							const_cast< char* >( liqglo.liqglo_currentJob.format.asChar() ),
-							(RtToken)liqglo.liqglo_currentJob.imageMode.asChar(),
+						RiDisplay( const_cast< char* >( liqglo_currentJob.imageName.asChar()),
+							const_cast< char* >( liqglo_currentJob.format.asChar() ),
+							(RtToken)liqglo_currentJob.imageMode.asChar(),
 							"string volumeinterpretation",
-							( liqglo.liqglo_currentJob.shadowVolumeInterpretation == 1 ? &viContinuous : &viDiscrete ),
+							( liqglo_currentJob.shadowVolumeInterpretation == 1 ? &viContinuous : &viDiscrete ),
 							RI_NULL );
 					}
 					else
@@ -5163,24 +5169,24 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 							RiDisplay( "null", "null", "z", RI_NULL );
 						}
 
-						MString deepFileImageName = "+" + liqglo.liqglo_currentJob.imageName;
+						MString deepFileImageName = "+" + liqglo_currentJob.imageName;
 
 						liqRIBMsg("Display 3");
 						RiDisplay( const_cast< char* >( deepFileImageName.asChar() ),
-							const_cast< char* >( liqglo.liqglo_currentJob.format.asChar() ),
-							(RtToken)liqglo.liqglo_currentJob.imageMode.asChar(),
+							const_cast< char* >( liqglo_currentJob.format.asChar() ),
+							(RtToken)liqglo_currentJob.imageMode.asChar(),
 							"string volumeinterpretation",
-							( liqglo.liqglo_currentJob.shadowVolumeInterpretation == 1 ? &viContinuous : &viDiscrete ),
+							( liqglo_currentJob.shadowVolumeInterpretation == 1 ? &viContinuous : &viDiscrete ),
 							RI_NULL );
 					}
 				}
 				else
 				{
 					liqRIBMsg("Display 4");
-					RtInt aggregate( liqglo.liqglo_currentJob.shadowAggregation );
-					RiDisplay( const_cast< char* >( liqglo.liqglo_currentJob.imageName.asChar() ),
-						const_cast< char* >( liqglo.liqglo_currentJob.format.asChar() ),
-						(RtToken)liqglo.liqglo_currentJob.imageMode.asChar(),
+					RtInt aggregate( liqglo_currentJob.shadowAggregation );
+					RiDisplay( const_cast< char* >( liqglo_currentJob.imageName.asChar() ),
+						const_cast< char* >( liqglo_currentJob.format.asChar() ),
+						(RtToken)liqglo_currentJob.imageMode.asChar(),
 						"int aggregate", &aggregate,
 						RI_NULL );
 				}
@@ -5190,9 +5196,9 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 				liqRIBMsg("Display 5");
 				RiArchiveRecord( RI_COMMENT, "Display Driver:" );
 				RtInt minmax = 1;
-				RiDisplay( const_cast< char* >( (liqglo.liqglo_currentJob.imageName+(int)liqglo.liqglo_lframe).asChar() ),//const_cast< char* >( parseString(liqglo_currentJob.imageName).asChar() ),
-					const_cast< char* >(liqglo.liqglo_currentJob.format.asChar()),
-					(RtToken)liqglo.liqglo_currentJob.imageMode.asChar(),
+				RiDisplay( const_cast< char* >( (liqglo_currentJob.imageName+(int)liqglo.liqglo_lframe).asChar() ),//const_cast< char* >( parseString(liqglo_currentJob.imageName).asChar() ),
+					const_cast< char* >(liqglo_currentJob.format.asChar()),
+					(RtToken)liqglo_currentJob.imageMode.asChar(),
 					"minmax", &minmax,
 					RI_NULL );
 			}
@@ -5467,64 +5473,64 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 
 		LIQDEBUGPRINTF( "-> Setting Resolution\n" );
 		// philippe : Rotated Camera Case
-		if( liqglo.liqglo_currentJob.isShadow == false && liqglo_rotateCamera  == true ) 
-			RiFormat( liqglo.liqglo_currentJob.height, liqglo.liqglo_currentJob.width, liqglo.liqglo_currentJob.aspectRatio );
+		if( liqglo_currentJob.isShadow == false && liqglo_rotateCamera  == true ) 
+			RiFormat( liqglo_currentJob.height, liqglo_currentJob.width, liqglo_currentJob.aspectRatio );
 		else 
-			RiFormat( liqglo.liqglo_currentJob.width, liqglo.liqglo_currentJob.height, liqglo.liqglo_currentJob.aspectRatio );
+			RiFormat( liqglo_currentJob.width, liqglo_currentJob.height, liqglo_currentJob.aspectRatio );
 
-		if( liqglo.liqglo_currentJob.camera[0].isOrtho )
+		if( liqglo_currentJob.camera[0].isOrtho )
 		{
 			RtFloat frameWidth, frameHeight;
 			// the whole frame width has to be scaled according to the UI Unit
-			frameWidth  = liqglo.liqglo_currentJob.camera[0].orthoWidth  * 0.5 ;
-			frameHeight = liqglo.liqglo_currentJob.camera[0].orthoHeight * 0.5 ;
+			frameWidth  = liqglo_currentJob.camera[0].orthoWidth  * 0.5 ;
+			frameHeight = liqglo_currentJob.camera[0].orthoHeight * 0.5 ;
 			RiProjection( "orthographic", RI_NULL );
 
 			// if we are describing a shadow map camera,
 			// we need to set the screenwindow to the default,
 			// as shadow maps are always square.
-			if( liqglo.liqglo_currentJob.isShadow == true )
+			if( liqglo_currentJob.isShadow == true )
 				RiScreenWindow( -frameWidth, frameWidth, -frameHeight, frameHeight );
 			else
 				RiScreenWindow( -frameWidth, frameWidth, -frameHeight, frameHeight );
 		} 
 		else 
 		{
-			RtFloat fieldOfView = liqglo.liqglo_currentJob.camera[0].hFOV * 180.0 / M_PI ;
-			if( liqglo.liqglo_currentJob.isShadow && liqglo.liqglo_currentJob.isPoint ) 
-				fieldOfView = liqglo.liqglo_currentJob.camera[0].hFOV;
+			RtFloat fieldOfView = liqglo_currentJob.camera[0].hFOV * 180.0 / M_PI ;
+			if( liqglo_currentJob.isShadow && liqglo_currentJob.isPoint ) 
+				fieldOfView = liqglo_currentJob.camera[0].hFOV;
 
 			RiProjection( "perspective", RI_FOV, &fieldOfView, RI_NULL );
 
 			// if we are describing a shadow map camera,
 			// we need to set the screenwindow to the default,
 			// as shadow maps are always square.
-			if( liqglo.liqglo_currentJob.isShadow == false )
+			if( liqglo_currentJob.isShadow == false )
 			{
-				double ratio = (double)liqglo.liqglo_currentJob.width / (double)liqglo.liqglo_currentJob.height;
+				double ratio = (double)liqglo_currentJob.width / (double)liqglo_currentJob.height;
 				double left, right, bottom, top;
 				if( ratio <= 0 ) 
 				{
-					left    = -1 + liqglo.liqglo_currentJob.camera[0].horizontalFilmOffset;
-					right   =  1 + liqglo.liqglo_currentJob.camera[0].horizontalFilmOffset;
-					bottom  = -1 / ratio + liqglo.liqglo_currentJob.camera[0].verticalFilmOffset;
-					top     =  1 / ratio + liqglo.liqglo_currentJob.camera[0].verticalFilmOffset;
+					left    = -1 + liqglo_currentJob.camera[0].horizontalFilmOffset;
+					right   =  1 + liqglo_currentJob.camera[0].horizontalFilmOffset;
+					bottom  = -1 / ratio + liqglo_currentJob.camera[0].verticalFilmOffset;
+					top     =  1 / ratio + liqglo_currentJob.camera[0].verticalFilmOffset;
 				} 
 				else 
 				{
-					left    = -ratio + liqglo.liqglo_currentJob.camera[0].horizontalFilmOffset;
-					right   =  ratio + liqglo.liqglo_currentJob.camera[0].horizontalFilmOffset;
-					bottom  = -1 + liqglo.liqglo_currentJob.camera[0].verticalFilmOffset;
-					top     =  1 + liqglo.liqglo_currentJob.camera[0].verticalFilmOffset;
+					left    = -ratio + liqglo_currentJob.camera[0].horizontalFilmOffset;
+					right   =  ratio + liqglo_currentJob.camera[0].horizontalFilmOffset;
+					bottom  = -1 + liqglo_currentJob.camera[0].verticalFilmOffset;
+					top     =  1 + liqglo_currentJob.camera[0].verticalFilmOffset;
 				}
 				RiScreenWindow( left, right, bottom, top );
 			} else 
 				RiScreenWindow( -1.0, 1.0, -1.0, 1.0 );
 		}
 
-		RiClipping( liqglo.liqglo_currentJob.camera[0].neardb, liqglo.liqglo_currentJob.camera[0].fardb );
-		if( doDof && !liqglo.liqglo_currentJob.isShadow ) 
-			RiDepthOfField( liqglo.liqglo_currentJob.camera[0].fStop, liqglo.liqglo_currentJob.camera[0].focalLength, liqglo.liqglo_currentJob.camera[0].focalDistance );
+		RiClipping( liqglo_currentJob.camera[0].neardb, liqglo_currentJob.camera[0].fardb );
+		if( doDof && !liqglo_currentJob.isShadow ) 
+			RiDepthOfField( liqglo_currentJob.camera[0].fStop, liqglo_currentJob.camera[0].focalLength, liqglo_currentJob.camera[0].focalDistance );
 
 		// Set up for camera motion blur
 		/* doCameraMotion = liqglo_currentJob.camera[0].motionBlur && liqglo_doMotion; */
@@ -5536,31 +5542,31 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 			case OPEN_ON_FRAME:
 			default:
 				if(liqglo.liqglo_relativeMotion)
-					RiShutter( 0, liqglo.liqglo_currentJob.camera[0].shutter );
+					RiShutter( 0, liqglo_currentJob.camera[0].shutter );
 				else
-					RiShutter( lframe, lframe + liqglo.liqglo_currentJob.camera[0].shutter );
+					RiShutter( lframe, lframe + liqglo_currentJob.camera[0].shutter );
 				frameOffset = lframe;
 				break;
 			case CENTER_ON_FRAME:
 				if(liqglo.liqglo_relativeMotion)
-					RiShutter(  - ( liqglo.liqglo_currentJob.camera[0].shutter * 0.5 ),  ( liqglo.liqglo_currentJob.camera[0].shutter * 0.5 ) );
+					RiShutter(  - ( liqglo_currentJob.camera[0].shutter * 0.5 ),  ( liqglo_currentJob.camera[0].shutter * 0.5 ) );
 				else
-					RiShutter( ( lframe - ( liqglo.liqglo_currentJob.camera[0].shutter * 0.5 ) ), ( lframe + ( liqglo.liqglo_currentJob.camera[0].shutter * 0.5 ) ) );
-				frameOffset = lframe - ( liqglo.liqglo_currentJob.camera[0].shutter * 0.5 );
+					RiShutter( ( lframe - ( liqglo_currentJob.camera[0].shutter * 0.5 ) ), ( lframe + ( liqglo_currentJob.camera[0].shutter * 0.5 ) ) );
+				frameOffset = lframe - ( liqglo_currentJob.camera[0].shutter * 0.5 );
 				break;
 			case CENTER_BETWEEN_FRAMES:
 				if(liqglo.liqglo_relativeMotion)
-					RiShutter( + ( 0.5 * ( 1 - liqglo.liqglo_currentJob.camera[0].shutter ) ), + liqglo.liqglo_currentJob.camera[0].shutter + ( 0.5 * ( 1 - liqglo.liqglo_currentJob.camera[0].shutter ) ) );
+					RiShutter( + ( 0.5 * ( 1 - liqglo_currentJob.camera[0].shutter ) ), + liqglo_currentJob.camera[0].shutter + ( 0.5 * ( 1 - liqglo_currentJob.camera[0].shutter ) ) );
 				else
-					RiShutter( lframe + ( 0.5 * ( 1 - liqglo.liqglo_currentJob.camera[0].shutter ) ), lframe + liqglo.liqglo_currentJob.camera[0].shutter + ( 0.5 * ( 1 -liqglo.liqglo_currentJob.camera[0].shutter ) ) );
-				frameOffset = lframe + ( 0.5 * ( 1 - liqglo.liqglo_currentJob.camera[0].shutter ) );
+					RiShutter( lframe + ( 0.5 * ( 1 - liqglo_currentJob.camera[0].shutter ) ), lframe + liqglo_currentJob.camera[0].shutter + ( 0.5 * ( 1 -liqglo_currentJob.camera[0].shutter ) ) );
+				frameOffset = lframe + ( 0.5 * ( 1 - liqglo_currentJob.camera[0].shutter ) );
 				break;
 			case CLOSE_ON_NEXT_FRAME:
 				if(liqglo.liqglo_relativeMotion)
-					RiShutter( + ( 1 - liqglo.liqglo_currentJob.camera[0].shutter ),  1 );
+					RiShutter( + ( 1 - liqglo_currentJob.camera[0].shutter ),  1 );
 				else
-					RiShutter( lframe + ( 1 - liqglo.liqglo_currentJob.camera[0].shutter ), lframe + 1 );
-				frameOffset = lframe + ( 1 - liqglo.liqglo_currentJob.camera[0].shutter );
+					RiShutter( lframe + ( 1 - liqglo_currentJob.camera[0].shutter ), lframe + 1 );
+				frameOffset = lframe + ( 1 - liqglo_currentJob.camera[0].shutter );
 				break;
 			}
 		} 
@@ -5579,28 +5585,28 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 #ifdef DELIGHT
 		RiOption( "shutter", "efficiency", &liqglo.liqglo_shutterEfficiency, RI_NULL );
 #endif
-		if( liqglo.liqglo_currentJob.gotJobOptions ) 
-			RiArchiveRecord( RI_COMMENT, "jobOptions: \n%s", liqglo.liqglo_currentJob.jobOptions.asChar() );
+		if( liqglo_currentJob.gotJobOptions ) 
+			RiArchiveRecord( RI_COMMENT, "jobOptions: \n%s", liqglo_currentJob.jobOptions.asChar() );
 
-		if( ( liqglo.liqglo_preRibBox.length() > 0 ) && !liqglo.liqglo_currentJob.isShadow ) 
+		if( ( liqglo.liqglo_preRibBox.length() > 0 ) && !liqglo_currentJob.isShadow ) 
 			for ( unsigned ii(0); ii < liqglo.liqglo_preRibBox.length(); ii++ ) 
 				RiArchiveRecord( RI_COMMENT, "Additional Rib:\n%s", liqglo.liqglo_preRibBox[ii].asChar() );
 
-		if( ( liqglo.liqglo_preReadArchive.length() > 0 ) && !liqglo.liqglo_currentJob.isShadow ) 
+		if( ( liqglo.liqglo_preReadArchive.length() > 0 ) && !liqglo_currentJob.isShadow ) 
 			for ( unsigned ii(0); ii < liqglo.liqglo_preReadArchive.length(); ii++ ) 
 				RiArchiveRecord( RI_COMMENT, "Read Archive Data: \nReadArchive \"%s\"", liqglo.liqglo_preReadArchive[ii].asChar() );
 
-		if( ( liqglo.liqglo_preRibBoxShadow.length() > 0 ) && !liqglo.liqglo_currentJob.isShadow ) 
+		if( ( liqglo.liqglo_preRibBoxShadow.length() > 0 ) && !liqglo_currentJob.isShadow ) 
 			for ( unsigned ii(0); ii < liqglo.liqglo_preRibBoxShadow.length(); ii++ ) 
 				RiArchiveRecord( RI_COMMENT, "Additional Rib:\n%s", liqglo.liqglo_preRibBoxShadow[ii].asChar() );
 
-		if( ( liqglo.liqglo_preReadArchiveShadow.length() > 0 ) && liqglo.liqglo_currentJob.isShadow ) 
+		if( ( liqglo.liqglo_preReadArchiveShadow.length() > 0 ) && liqglo_currentJob.isShadow ) 
 			for ( unsigned ii(0); ii < liqglo.liqglo_preReadArchiveShadow.length(); ii++ ) 
 				RiArchiveRecord( RI_COMMENT, "Read Archive Data: \nReadArchive \"%s\"", liqglo.liqglo_preReadArchiveShadow[ii].asChar() );
 
 		// if we motion-blur the cam, open the motion block
 		//
-		if( doCameraMotion && ( !liqglo.liqglo_currentJob.isShadow || liqglo.liqglo_currentJob.deepShadows) ) 
+		if( doCameraMotion && ( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows) ) 
 			if(liqglo.liqglo_relativeMotion)
 				RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
 			else
@@ -5609,17 +5615,17 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 		// write the camera transform
 		//
 		RtMatrix cameraMatrix;
-		liqglo.liqglo_currentJob.camera[0].mat.get( cameraMatrix );
+		liqglo_currentJob.camera[0].mat.get( cameraMatrix );
 		RiTransform( cameraMatrix );
 
 		// if we motion-blur the cam, write the subsequent motion samples and close the motion block
 		//
-		if( doCameraMotion && ( !liqglo.liqglo_currentJob.isShadow || liqglo.liqglo_currentJob.deepShadows ) ) 
+		if( doCameraMotion && ( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows ) ) 
 		{
 			int mm = 1;
 			while ( mm < liqglo.liqglo_motionSamples ) 
 			{
-				liqglo.liqglo_currentJob.camera[mm].mat.get( cameraMatrix );
+				liqglo_currentJob.camera[mm].mat.get( cameraMatrix );
 				RiTransform( cameraMatrix );
 				++mm;
 			}
@@ -5674,16 +5680,16 @@ MStatus liqRibTranslator::objectBlock()
 
 	// retrieve the shadow set object
 	MObject shadowSetObj;
-	if( liqglo.liqglo_currentJob.isShadow && liqglo.liqglo_currentJob.shadowObjectSet != "" ) 
+	if( liqglo_currentJob.isShadow && liqglo_currentJob.shadowObjectSet != "" ) 
 	{
 		MObject tmp;
-		tmp = getNodeByName( liqglo.liqglo_currentJob.shadowObjectSet, &status );
+		tmp = getNodeByName( liqglo_currentJob.shadowObjectSet, &status );
 		if( status == MS::kSuccess ) 
 			shadowSetObj = tmp;
 		else 
 		{
 			MString warn;
-			warn += "Liquid : set " + liqglo.liqglo_currentJob.shadowObjectSet + " in shadow " + liqglo.liqglo_currentJob.name + " does not exist !";
+			warn += "Liquid : set " + liqglo_currentJob.shadowObjectSet + " in shadow " + liqglo_currentJob.name + " does not exist !";
 			MGlobal:: displayWarning( warn );
 			cout << warn.asChar() << endl;
 		}
@@ -5708,12 +5714,12 @@ MStatus liqRibTranslator::objectBlock()
 			continue;
 		if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
 			continue;
-		if( ( !liqglo.liqglo_currentJob.isShadow ) && ( ribNode->object(0)->ignore ) ) 
+		if( ( !liqglo_currentJob.isShadow ) && ( ribNode->object(0)->ignore ) ) 
 			continue;
-		if( ( liqglo.liqglo_currentJob.isShadow ) && ( ribNode->object(0)->ignoreShadow ) ) 
+		if( ( liqglo_currentJob.isShadow ) && ( ribNode->object(0)->ignoreShadow ) ) 
 			continue;
 		// test against the set
-		if( ( liqglo.liqglo_currentJob.isShadow ) && ( liqglo.liqglo_currentJob.shadowObjectSet != "" ) && ( !shadowSetObj.isNull() ) && ( !shadowSet.isMember( transform, &status ) ) ) 
+		if( ( liqglo_currentJob.isShadow ) && ( liqglo_currentJob.shadowObjectSet != "" ) && ( !shadowSetObj.isNull() ) && ( !shadowSet.isMember( transform, &status ) ) ) 
 		{
 			//cout <<"SET FILTER : object "<<ribNode->name.asChar()<<" is NOT in "<<liqglo_currentJob.shadowObjectSet.asChar()<<endl;
 			continue;
@@ -5753,7 +5759,7 @@ MStatus liqRibTranslator::objectBlock()
 		MObject object;
 
 		// Moritz: only write out light linking if we're not in a shadow pass
-		if( !liqglo.liqglo_currentJob.isShadow || liqglo.liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows && !m_ignoreLights )
+		if( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows && m_outputLightsInDeepShadows && !m_ignoreLights )
 		{
 			MObjectArray linkLights;
 
@@ -5791,7 +5797,7 @@ MStatus liqRibTranslator::objectBlock()
 			ribNode->motion.transformationBlur &&
 			( ribNode->object( 1 ) ) &&
 			//( ribNode->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
-			( !liqglo.liqglo_currentJob.isShadow || liqglo.liqglo_currentJob.deepShadows ) )
+			( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows ) )
 		{
 			LIQDEBUGPRINTF( "-> writing matrix motion blur data\n" );
 			// Moritz: replaced RiMotionBegin call with ..V version to allow for more than five motion samples
@@ -5813,7 +5819,7 @@ MStatus liqRibTranslator::objectBlock()
 			ribNode->motion.transformationBlur &&
 			( ribNode->object( 1 ) ) &&
 			//( ribNode->object( 0 )->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
-			( !liqglo.liqglo_currentJob.isShadow || liqglo.liqglo_currentJob.deepShadows ) )
+			( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows ) )
 		{
 			path = ribNode->path();
 			RtMatrix ribMatrix;
@@ -6032,7 +6038,7 @@ MStatus liqRibTranslator::objectBlock()
 		// No need to output it then.
 		if( ribNode->shading.shadingRate > 0 )
 			RiShadingRate ( ribNode->shading.shadingRate );
-		if( !liqglo.liqglo_currentJob.isShadow ) 
+		if( !liqglo_currentJob.isShadow ) 
 		{
 			RtInt off( 0 );
 			RtInt on( 1 );
@@ -6470,14 +6476,14 @@ MStatus liqRibTranslator::objectBlock()
 
 		bool writeShaders( true );
 
-		if( liqglo.liqglo_currentJob.isShadow &&
-			( ( !liqglo.liqglo_currentJob.deepShadows && !m_outputShadersInShadows ) || ( liqglo.liqglo_currentJob.deepShadows && !m_outputShadersInDeepShadows ) )
+		if( liqglo_currentJob.isShadow &&
+			( ( !liqglo_currentJob.deepShadows && !m_outputShadersInShadows ) || ( liqglo_currentJob.deepShadows && !m_outputShadersInDeepShadows ) )
 			)
 			writeShaders = false;
 		
 		liqRIBMsg("[6] writeShaders=%d=%d && ((!%d&&!%d)||(%d&&!%d) ", writeShaders, 
-			liqglo.liqglo_currentJob.isShadow, 
-			liqglo.liqglo_currentJob.deepShadows, m_outputShadersInShadows, liqglo.liqglo_currentJob.deepShadows, m_outputShadersInDeepShadows );
+			liqglo_currentJob.isShadow, 
+			liqglo_currentJob.deepShadows, m_outputShadersInShadows, liqglo_currentJob.deepShadows, m_outputShadersInDeepShadows );
 		if( writeShaders ) 
 		{
 			liqRIBMsg("[5] hasVolumeShader=%d, m_ignoreVolumes=%d", hasVolumeShader, m_ignoreVolumes );
@@ -6485,9 +6491,9 @@ MStatus liqRibTranslator::objectBlock()
 			{
 				//liqShader& currentShader( liqGetShader( ribNode->assignedVolume.object() ) );
 				liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode->assignedVolume.object() );
-				liqRIBMsg("[1] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", liqglo.liqglo_currentJob.isShadow, currentShader.outputInShadow );
+				liqRIBMsg("[1] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", liqglo_currentJob.isShadow, currentShader.outputInShadow );
 				// per shader shadow pass override
-				if( !liqglo.liqglo_currentJob.isShadow || currentShader.outputInShadow )
+				if( !liqglo_currentJob.isShadow || currentShader.outputInShadow )
 				{
 					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
 				}
@@ -6540,9 +6546,9 @@ MStatus liqRibTranslator::objectBlock()
 					}
 					else
 						RiOpacity( currentShader.rmOpacity );
-					liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", liqglo.liqglo_currentJob.isShadow, currentShader.outputInShadow );
+					liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", liqglo_currentJob.isShadow, currentShader.outputInShadow );
 					// per shader shadow pass override
-					if( !liqglo.liqglo_currentJob.isShadow || currentShader.outputInShadow )
+					if( !liqglo_currentJob.isShadow || currentShader.outputInShadow )
 					{
 						currentShader.write(liqglo.liqglo_shortShaderNames, 0);
 					}
@@ -6694,10 +6700,10 @@ MStatus liqRibTranslator::objectBlock()
 				}
 			}//if( hasSurfaceShader && !m_ignoreSurfaces )else
 		} //if( writeShaders ) 
-		else if( liqglo.liqglo_currentJob.deepShadows ) 
+		else if( liqglo_currentJob.deepShadows ) 
 		{
 			liqRIBMsg("[7] liqglo_currentJob[.deepShadows=%d, .isShadow=%d ], hasSurfaceShader=%d, hasCustomSurfaceShader=%d",
-				liqglo.liqglo_currentJob.deepShadows, liqglo.liqglo_currentJob.isShadow, hasSurfaceShader, hasCustomSurfaceShader );
+				liqglo_currentJob.deepShadows, liqglo_currentJob.isShadow, hasSurfaceShader, hasCustomSurfaceShader );
 
 			// if the current job is a deep shadow,
 			// we still want to output primitive color and opacity and surface shader
@@ -6821,9 +6827,9 @@ MStatus liqRibTranslator::objectBlock()
 			//liqShader & currentShader = liqGetShader( ribNode->assignedDisp.object() );
 			liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode->assignedDisp.object() );
 			
-			liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", liqglo.liqglo_currentJob.isShadow, currentShader.outputInShadow );
+			liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", liqglo_currentJob.isShadow, currentShader.outputInShadow );
 			// per shader shadow pass override
-			if( !liqglo.liqglo_currentJob.isShadow || currentShader.outputInShadow )
+			if( !liqglo_currentJob.isShadow || currentShader.outputInShadow )
 			{
 				currentShader.write(liqglo.liqglo_shortShaderNames, 0);
 			}
@@ -6912,7 +6918,7 @@ MStatus liqRibTranslator::objectBlock()
 				( ribNode->object(1) ) &&
 				( ribNode->object(0)->type != MRT_RibGen ) &&
 				//( ribNode->object(0)->type != MRT_Locator ) &&
-				( !liqglo.liqglo_currentJob.isShadow || liqglo.liqglo_currentJob.deepShadows ) );
+				( !liqglo_currentJob.isShadow || liqglo_currentJob.deepShadows ) );
 
 			if( doMotion )
 			{
@@ -6928,7 +6934,7 @@ MStatus liqRibTranslator::objectBlock()
 
 						for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ ){ 
 							MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".m"+(int)msampleOn+".rib" );
-							ribNode->object( msampleOn )->writeNextObjectGrain(geometryRibFile);
+							ribNode->object( msampleOn )->writeNextObjectGrain(geometryRibFile, liqglo_currentJob);
 						}
 
 						RiMotionEnd();
@@ -6937,13 +6943,13 @@ MStatus liqRibTranslator::objectBlock()
 						RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
 
 						MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".rib" );
-						ribNode->object( 0 )->writeNextObjectGrain(geometryRibFile);
+						ribNode->object( 0 )->writeNextObjectGrain(geometryRibFile, liqglo_currentJob);
 					}
 				}
 			} 
 			else {
 				//ribNode->object( 0 )->writeObject();
-				_writeObject(ribNode);
+				_writeObject(ribNode, liqglo_currentJob);
 			}
 
 			// Alf: postShapeMel
@@ -7006,7 +7012,7 @@ MStatus liqRibTranslator::worldPrologue()
 				matrix.get( ribMatrix );
 				RiConcatTransform( ribMatrix );
 
-				ribNode->object(0)->writeObject("");
+				ribNode->object(0)->writeObject("", liqglo_currentJob);
 				ribNode->object(0)->written = 1;
 
 				RiTransformEnd();
@@ -7102,7 +7108,7 @@ MStatus liqRibTranslator::coordSysBlock()
 		else 
 			RiTransform( ribMatrix );
 
-		ribNode->object(0)->writeObject("");
+		ribNode->object(0)->writeObject("", liqglo_currentJob);
 		ribNode->object(0)->written = 1;
 		RiAttributeEnd();
 	}
@@ -7159,7 +7165,7 @@ MStatus liqRibTranslator::lightBlock()
 				RtInt msdepth = ribNode->trace.maxSpecularDepth;
 				RiAttribute( "trace", (RtToken) "maxspeculardepth", &msdepth, RI_NULL );
 			}
-			ribNode->object(0)->writeObject("");
+			ribNode->object(0)->writeObject("", liqglo_currentJob);
 			ribNode->object(0)->written = 1;
 			// The next line pops the light...
 			RiAttributeEnd();
@@ -7474,7 +7480,7 @@ MString liqRibTranslator::getHiderOptions( MString rendername, MString hidername
 	return options;
 }
 
-void liqRibTranslator::_writeObject(const liqRibNodePtr& ribNode)
+void liqRibTranslator::_writeObject(const liqRibNodePtr& ribNode, const structJob &currentJob)
 {
 	if(    ribNode->rib.hasGenerator()
 		|| ribNode->rib.hasReadArchive()  
@@ -7491,7 +7497,7 @@ void liqRibTranslator::_writeObject(const liqRibNodePtr& ribNode)
 	frame.set(liqglo.liqglo_lframe);
 
 	MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo.liqglo_ribDir ) +"."+frame+".rib" );
-	ribNode->object( 0 )->writeObject(geometryRibFile);
+	ribNode->object( 0 )->writeObject(geometryRibFile, currentJob);
 }
 RtToken g_typeAscii       = tokenCast("Ascii");
 RtToken g_typeBinary      = tokenCast("Binary");

@@ -54,7 +54,7 @@ public:
   }
   virtual ~liqRibCustomNode(){}
 
-  virtual void _write()
+  virtual void _write(const structJob &currentJob)
   {
     if (customNode) {
       customNode->liquidWrite();

@@ -43,9 +43,9 @@ public:
   explicit liqRibParticleData( MObject curve );
   virtual ~liqRibParticleData(){}
 
-  virtual void	_write();
+  virtual void	_write(const structJob &currentJob);
   virtual unsigned granularity() const;
-  virtual bool writeNextGrain();
+  virtual bool writeNextGrain(const structJob &currentJob);
   virtual bool	compare( const liqRibData & other ) const;
   virtual ObjectType	type() const;
 

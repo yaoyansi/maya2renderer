@@ -46,7 +46,7 @@ public: // Methods
   explicit liqRibMeshData( MObject mesh );
   virtual ~liqRibMeshData(){}
 
-  virtual void       _write();
+  virtual void       _write(const structJob &currentJob);
   virtual void       printMesh();
   virtual bool       compare( const liqRibData & other ) const;
   virtual ObjectType type() const;

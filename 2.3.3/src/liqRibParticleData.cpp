@@ -1076,7 +1076,7 @@ liqRibParticleData::liqRibParticleData( MObject partobj )
 
 /** Write the RIB for this surface.
  */
-void liqRibParticleData::_write()
+void liqRibParticleData::_write(const structJob &currentJob)
 {
   LIQDEBUGPRINTF( "-> writing particles\n");
 
@@ -1228,9 +1228,9 @@ void liqRibParticleData::_write()
         MVector camRight( 1, 0, 0 );
         MVector camEye( 0, 0, 1 );
 
-        camUp    *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
-        camRight *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
-        camEye   *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
+        camUp    *= currentJob.camera[0].mat.inverse();
+        camRight *= currentJob.camera[0].mat.inverse();
+        camEye   *= currentJob.camera[0].mat.inverse();
 
         for( unsigned ui( 0 ); ui < m_numValidParticles; ui++ ) 
         {
@@ -1332,7 +1332,7 @@ unsigned liqRibParticleData::granularity() const {
 
 /** Write the RIB for this surface -- grain by grain.
  */
-bool liqRibParticleData::writeNextGrain()
+bool liqRibParticleData::writeNextGrain(const structJob &currentJob)
 {
   LIQDEBUGPRINTF( "-> writing particles\n");
 
@@ -1467,9 +1467,9 @@ bool liqRibParticleData::writeNextGrain()
           MVector camRight( 1, 0, 0 );
           MVector camEye( 0, 0, 1 );
 
-          camUp    *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
-          camRight *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
-          camEye   *= liqglo.liqglo_currentJob.camera[0].mat.inverse();
+          camUp    *= currentJob.camera[0].mat.inverse();
+          camRight *= currentJob.camera[0].mat.inverse();
+          camEye   *= currentJob.camera[0].mat.inverse();
 
           //MGlobal::displayInfo( MString( "I: " ) + ( ( double ) grain ) );
           MVector up( camUp );

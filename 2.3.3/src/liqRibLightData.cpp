@@ -973,7 +973,7 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
 
 /** Write the RIB for this light.
  */
-void liqRibLightData::_write()
+void liqRibLightData::_write(const structJob &currentJob)
 {
   if ( !excludeFromRib ) 
   {

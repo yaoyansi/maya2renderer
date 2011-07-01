@@ -44,7 +44,7 @@ public:
   explicit liqRibLightData( const MDagPath & light );
   virtual ~liqRibLightData(){}
 
-  virtual void       _write();
+  virtual void       _write(const structJob &currentJob);
   virtual bool       compare( const liqRibData & other ) const;
   virtual ObjectType type() const;
 

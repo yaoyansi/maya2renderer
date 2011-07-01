@@ -390,7 +390,7 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
 
 /** Write the RIB for this surface.
  */
-void liqRibSurfaceData::_write()
+void liqRibSurfaceData::_write(const structJob &currentJob)
 {
   LIQDEBUGPRINTF( "-> writing nurbs surface\n" );
 

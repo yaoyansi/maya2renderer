@@ -447,7 +447,7 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
 /**
  *  Write the RIB for this paint effect.
  */
-void liqRibPfxData::_write()
+void liqRibPfxData::_write(const structJob &currentJob)
 {
 	LIQDEBUGPRINTF( "-> writing painteffects curves\n" );
 

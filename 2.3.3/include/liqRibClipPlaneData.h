@@ -36,7 +36,7 @@ public: // Methods
     explicit liqRibClipPlaneData( MObject locator );
 	virtual ~liqRibClipPlaneData(){}
 
-    virtual void       _write();
+    virtual void       _write(const structJob &currentJob);
     virtual bool       compare( const liqRibData & other ) const;
     virtual ObjectType type() const;
 

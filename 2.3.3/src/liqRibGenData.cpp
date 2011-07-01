@@ -106,7 +106,7 @@ liqRibGenData::liqRibGenData( MObject obj, MDagPath path )
   LIQDEBUGPRINTF( "-> ribgen name %s\n", fnNode.name().asChar() );
 }
 
-void liqRibGenData::_write()
+void liqRibGenData::_write(const structJob &currentJob)
 {
   LIQDEBUGPRINTF( "-> writing ribgen\n" ); // || defined( GENERIC_RIBLIB )
 #if defined( PRMAN ) || defined( DELIGHT ) || defined( GENERIC_RIBLIB )
@@ -119,7 +119,7 @@ void liqRibGenData::_write()
   // Hmmmmmm do not really understand what's going on here?
   ribStatus.ribFP = liqglo.liqglo_ribFP;
   ribStatus.frame = liqglo.liqglo_lframe;
-  if ( liqglo.liqglo_currentJob.isShadow ) 
+  if ( currentJob.isShadow ) 
     ribStatus.renderPass = liqRibStatus::rpShadow;
   else 
     ribStatus.renderPass = liqRibStatus::rpFinal;
@@ -128,11 +128,11 @@ void liqRibGenData::_write()
   ribStatus.defBlur = liqglo.liqglo_doDef;
   ribStatus.compressed = liqglo.liqglo_doCompression;
   ribStatus.binary = liqglo.liqglo_doBinary;
-  liqglo.liqglo_currentJob.camera[0].mat.get( ribStatus.cameraMatrix );
+  currentJob.camera[0].mat.get( ribStatus.cameraMatrix );
   ribStatus.sampleTimes = liqglo.liqglo_sampleTimes;
   if ( liqglo.liqglo_doMotion || liqglo.liqglo_doDef ) 
   {
-    if ( !liqglo.liqglo_currentJob.isShadow || liqglo.liqglo_currentJob.deepShadows ) 
+    if ( !currentJob.isShadow || currentJob.deepShadows ) 
       ribStatus.motionSamples = liqglo.liqglo_motionSamples;
     else 
       ribStatus.motionSamples = 1;

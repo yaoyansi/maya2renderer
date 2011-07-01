@@ -51,6 +51,8 @@ class liqRibData;
 typedef boost::shared_ptr< liqRibObj > liqRibObjPtr;
 typedef boost::shared_ptr< liqRibData > liqRibDataPtr;
 
+struct structJob;
+
 class liqRibObj {
 public:
     explicit liqRibObj( const MDagPath &, ObjectType objType );
@@ -58,9 +60,9 @@ public:
 
     AnimType compareMatrix( const liqRibObjPtr, int instance ) const;
     AnimType compareBody( const liqRibObjPtr ) const;
-    void     writeObject(const MString& ribFileFullPath) const; // write geometry directly
+    void     writeObject(const MString& ribFileFullPath, const structJob &currentJob) const; // write geometry directly
     unsigned granularity() const; // get granularity
-    bool     writeNextObjectGrain(const MString& ribFileFullPath) const; // write next geometry grain directly
+    bool     writeNextObjectGrain(const MString& ribFileFullPath, const structJob &currentJob) const; // write next geometry grain directly
     bool     isNextObjectGrainAnimated() const; // whether the next grain needs to be in a motion block
 
     int      type;

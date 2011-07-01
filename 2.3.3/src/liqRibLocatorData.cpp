@@ -58,7 +58,7 @@ liqRibLocatorData::liqRibLocatorData( MObject /*locator*/ )
 
 /** Write the RIB for this locator.
  */
-void liqRibLocatorData::_write()
+void liqRibLocatorData::_write(const structJob &currentJob)
 {
   RiTranslate( 0., 0., 0. );
   LIQDEBUGPRINTF( "-> writing locator" );

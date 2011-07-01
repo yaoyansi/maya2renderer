@@ -64,9 +64,9 @@ inline unsigned liqRibData::granularity() const
   return 1;
 }
 
-inline bool liqRibData::writeNextGrain(const MString& ribFileFullPath) 
+inline bool liqRibData::writeNextGrain(const MString& ribFileFullPath, const structJob &currentJob) 
 {
-  write(ribFileFullPath);
+  write(ribFileFullPath, currentJob);
   return false;
 }
 
@@ -277,7 +277,7 @@ void liqRibData::addAdditionalSurfaceParameters( MObject node )
   }
 }
 
-void liqRibData::write(const MString &fileName)
+void liqRibData::write(const MString &fileName, const structJob &currentJob)
 {
 	m_ribFileFullPath = fileName;
 
@@ -292,7 +292,7 @@ void liqRibData::write(const MString &fileName)
 		RiBegin( const_cast< RtToken >( m_ribFileFullPath.asChar() ) );
 	}
 
-	_write();
+	_write(currentJob);
 
 	if(m_ribFileFullPath!=""){
 		RiEnd();

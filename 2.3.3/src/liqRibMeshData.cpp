@@ -302,7 +302,7 @@ void liqRibMeshData::printMesh()
 
 /**      Write the RIB for this mesh.
  */
-void liqRibMeshData::_write()
+void liqRibMeshData::_write(const structJob &currentJob)
 {
   if ( numPoints > 1 ) 
   {

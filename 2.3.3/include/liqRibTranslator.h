@@ -466,7 +466,7 @@ private :
 
 //	void scanExpressions( liqRibLightData *light );
 
-	void _writeObject( const liqRibNodePtr& ribNode);
+	void _writeObject( const liqRibNodePtr& ribNode, const structJob &currentJob);
 	void _RiOption_format_compress(bool bBinary, bool bCompress);
 	void makeReflectionPass(
 		std::vector<structJob> &refList__, 
@@ -510,20 +510,23 @@ private :
 	MTime originalTime;
 
 public:
-	MStatus ribPrologue__();
+	MStatus ribPrologue__(const structJob &currentJob);
  	MStatus ribEpilogue__();
- 	MStatus framePrologue__( long );
-	MStatus worldPrologue__();
-	MStatus lightBlock__();
-	MStatus coordSysBlock__();
+ 	MStatus framePrologue__( long , const structJob &currentJob);
+	MStatus worldPrologue__(const structJob &currentJob);
+	MStatus lightBlock__(const structJob &currentJob);
+	MStatus coordSysBlock__(const structJob &currentJob);
+	MStatus objectBlock__(const structJob &currentJob);
+	MStatus worldEpilogue__();
+	MStatus frameEpilogue__( long );
 
 	MStatus preGeometryMel();
 	MStatus postGeometryMel();
-	MObject getShadowSetObject();
+	MObject getShadowSetObject(const structJob &currentJob);
 	MStatus preTransformMel(const MObject &transform__);
 	MStatus postTransformMel(const MObject &transform__);
 	MStatus tRiIlluminate(const liqRibNodePtr ribNode__);
-	MStatus tRiMotion(const liqRibNodePtr ribNode__, MDagPath &path__);
+	MStatus tRiMotion(const liqRibNodePtr ribNode__, MDagPath &path__, const bool bMotionBlur);
 	MStatus preShapeMel(const MObject &transform__);
 	MStatus postShapeMel(const MObject &transform__);
 	MStatus checkSurfaceShader(
@@ -558,12 +561,10 @@ public:
 		const bool hasCustomSurfaceShader__,
 		const bool hasDisplacementShader__,
 		const MString &shaderRibBox__,
-		const MDagPath &path__
+		const MDagPath &path__,
+		const bool isShadowJob, 
+		const bool isDeepShadowJob
 		);
-	MStatus objectBlock__();
-
-	MStatus worldEpilogue__();
-	MStatus frameEpilogue__( long );
 
 	//
 	MStatus _doItNewWithoutRenderScript(const MArgList& args , const MString& originalLayer );

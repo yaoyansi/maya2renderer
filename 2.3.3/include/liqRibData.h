@@ -41,6 +41,7 @@
 
 #include <liqTokenPointer.h>
 
+struct structJob;
 //typedef shared_ptr< liqRibData > liqRibDataPtr;
 enum ObjectType;
 
@@ -49,9 +50,9 @@ public:
 	liqRibData(){}
     virtual           ~liqRibData();
 	// write() is replaced by write(ribFileFullPath) in order to pass the ribFileFullPath;
-    virtual void       write(const MString &ribFileFullPath);
+    virtual void       write(const MString &ribFileFullPath, const structJob &currentJob);
     virtual unsigned   granularity() const;
-    virtual bool       writeNextGrain(const MString& ribFileFullPath);
+    virtual bool       writeNextGrain(const MString& ribFileFullPath, const structJob &currentJob);
     virtual bool       isNextGrainAnimated() const;
     virtual bool       compare( const liqRibData& other ) const = 0;
     virtual ObjectType type() const = 0;
@@ -64,7 +65,7 @@ protected:
 	MString			   m_ribFileFullPath;
 
 private:
-    virtual void       _write() = 0;
+    virtual void       _write(const structJob &currentJob) = 0;
     void               parseVectorAttributes( MFnDependencyNode &nodeFn, MStringArray & strArray, ParameterType pType );
     unsigned int       faceVaryingCount;
 

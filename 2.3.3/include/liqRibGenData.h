@@ -68,7 +68,7 @@ public: // Methods
     explicit liqRibGenData( MObject obj, MDagPath path );
 	virtual ~liqRibGenData(){}
 
-    virtual void       _write();
+    virtual void       _write(const structJob &currentJob);
     virtual bool       compare( const liqRibData & other ) const;
     virtual ObjectType type() const;
 

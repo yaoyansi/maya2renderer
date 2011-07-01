@@ -76,7 +76,7 @@ liqRibImplicitSphereData::liqRibImplicitSphereData( MObject daSphere )
 
 /** Write the RIB for this locator.
  */
-void liqRibImplicitSphereData::_write()
+void liqRibImplicitSphereData::_write(const structJob &currentJob)
 {
   unsigned numTokens( tokenPointerArray.size() );
   scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );

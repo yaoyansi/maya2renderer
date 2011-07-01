@@ -53,7 +53,7 @@ liqRibCoordData::liqRibCoordData( MObject coord )
 
 /** Write the RIB for this coordinate system.
  */
-void liqRibCoordData::_write()
+void liqRibCoordData::_write(const structJob &currentJob)
 {
   LIQDEBUGPRINTF("-> writing coord"); 
   RiCoordinateSystem( const_cast<char *> ( name.asChar() ) );

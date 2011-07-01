@@ -214,7 +214,7 @@ liqRibSubdivisionData::liqRibSubdivisionData( MObject mesh )
 
 /** Write the RIB for this mesh.
  */
-void liqRibSubdivisionData::_write()
+void liqRibSubdivisionData::_write(const structJob &currentJob)
 {
   LIQDEBUGPRINTF( "-> writing subdivision surface\n" );
 

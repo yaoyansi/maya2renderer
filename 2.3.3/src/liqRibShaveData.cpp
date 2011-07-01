@@ -398,7 +398,7 @@ liqRibShaveData::liqRibShaveData( MObject surface )
 
 /** Write the RIB for this surface.
  */
-void liqRibShaveData::_write()
+void liqRibShaveData::_write(const structJob &currentJob)
 {
   LIQDEBUGPRINTF( "-> writing shave surface\n" );
 

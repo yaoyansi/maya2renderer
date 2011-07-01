@@ -125,8 +125,8 @@ LIQUID_EXPORT MStatus initializePlugin(MObject obj)
   LIQCHECKSTATUS( status, "Can't register liquidGetAttr command" );
 
   // register the liquidWriteArchive command
-  status = plugin.registerCommand( "liquidWriteArchive", liqWriteArchive::creator, liqWriteArchive::syntax );
-  LIQCHECKSTATUS( status, "Can't register liquidWriteArchive command" );
+//   status = plugin.registerCommand( "liquidWriteArchive", liqWriteArchive::creator, liqWriteArchive::syntax );
+//   LIQCHECKSTATUS( status, "Can't register liquidWriteArchive command" );
 
   // register the liquidRenderView command
   status = plugin.registerCommand( "liquidRenderView", liqMayaRenderCmd::creator ,liqMayaRenderCmd::newSyntax);
@@ -508,8 +508,8 @@ LIQUID_EXPORT MStatus uninitializePlugin(MObject obj)
   status = plugin.deregisterCommand("liquidGetAttr");
   LIQCHECKSTATUS( status, "Can't deregister liquidGetAttr command" );
 
-  status = plugin.deregisterCommand("liquidWriteArchive");
-  LIQCHECKSTATUS( status, "Can't deregister liquidWriteArchive command" );
+//   status = plugin.deregisterCommand("liquidWriteArchive");
+//   LIQCHECKSTATUS( status, "Can't deregister liquidWriteArchive command" );
 
   status = plugin.deregisterCommand("liquidRenderView");
   LIQCHECKSTATUS( status, "Can't deregister liquidRenderView command" );

@@ -293,7 +293,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
 
 /** Write the RIB for this paint effects toon line.
  */
-void liqRibPfxToonData::_write()
+void liqRibPfxToonData::_write(const structJob &currentJob)
 {
   LIQDEBUGPRINTF( "-> writing pfxToon curve\n" );
 

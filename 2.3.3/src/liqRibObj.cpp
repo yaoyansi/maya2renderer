@@ -398,12 +398,12 @@ AnimType liqRibObj::compareBody( const liqRibObjPtr o ) const
  *
  *  We do not get a RIB handle in this case.
  */
-void liqRibObj::writeObject(const MString& ribFileFullPath) const
+void liqRibObj::writeObject(const MString& ribFileFullPath, const structJob &currentJob) const
 {
 	if( data ==NULL)
 		return;
 
-	data->write(ribFileFullPath);
+	data->write(ribFileFullPath, currentJob);
 }
 
 /** Return the granularity (number of components) the object is made of.
@@ -417,9 +417,9 @@ unsigned liqRibObj::granularity() const {
 
 /** Write the next grain (component) of an object.
  */
-bool liqRibObj::writeNextObjectGrain(const MString& ribFileFullPath) const {
+bool liqRibObj::writeNextObjectGrain(const MString& ribFileFullPath,const structJob &currentJob) const {
   if( data ) {
-    return data->writeNextGrain(ribFileFullPath);
+    return data->writeNextGrain(ribFileFullPath, currentJob);
   } else {
     return false;
   }
