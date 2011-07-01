@@ -56,7 +56,7 @@
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
 #include <liqGlobalVariable.h>
-
+#include "renderermgr.h"
 
 
 using namespace boost;
@@ -352,29 +352,8 @@ void liqRibMeshData::_write(const structJob &currentJob)
 			RiIlluminate( handle, 1 );
 		}
 	}else{
-		//
-		//mesh data begin
-		//
-		// Each loop has one polygon, so we just want an array of 1's of
-		// the correct size. Stack version.
-		//vector< RtInt > nloops( numFaces, 1 );
-		// Alternatively (heap version):
-		scoped_array< RtInt > nloops( new RtInt[ numFaces ] );
-		fill( nloops.get(), nloops.get() + numFaces, ( RtInt )1 );
-
-		unsigned numTokens( tokenPointerArray.size() );
-		scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-		scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-		assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
-
-		RiPointsGeneralPolygonsV( numFaces,
-			&nloops[ 0 ],
-			nverts.get(),
-			verts.get(),
-			numTokens,
-			tokenArray.get(),
-			pointerArray.get() );
-		//mesh data end
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->exportOneGeometry_Mesh(this, currentJob);
 	}
 
   } 

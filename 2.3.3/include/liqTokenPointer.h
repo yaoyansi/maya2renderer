@@ -35,7 +35,8 @@
 
 // token/pointer pairs structure
 
-enum ParameterType {
+enum ParameterType 
+{
   rFloat  = 0,
   rPoint  = 1,
   rVector = 2,
@@ -47,7 +48,8 @@ enum ParameterType {
   rShader = 8
 };
 
-enum DetailType {
+enum DetailType 
+{
   rUndefined    = -1,
   rUniform      =  0,
   rVarying      =  1,
@@ -63,7 +65,9 @@ class liqTokenPointer
     liqTokenPointer();
     liqTokenPointer(const liqTokenPointer& src);
     liqTokenPointer& operator=( const liqTokenPointer& src);
+	                 operator bool() const;
     virtual ~liqTokenPointer();
+
     void           setTokenName( const std::string& name );
     bool           set( const std::string& name, ParameterType ptype );
     bool           set( const std::string& name, ParameterType ptype, unsigned int arraySize );
@@ -80,16 +84,20 @@ class liqTokenPointer
 	void           setTokenFloats( const boost::shared_array< RtFloat > floatVals ); // Warning! This method assumes ownership of the pointer is transferred to the TokenPointer!!!
     void           setTokenFloats( const RtFloat* floatVals ); // Use this one to copy the data
     void           setTokenString( unsigned int i, const std::string& str );
-	std::string         getTokenName() const;
-    const std::string&  getDetailedTokenName();
-    DetailType     getDetailType() const;
-    const RtFloat* getTokenFloatArray() const;
-	const boost::shared_array< RtFloat > getTokenFloatSharedArray() const;
-    std::string         getTokenString() const;
-    ParameterType  getParameterType() const;
-    const RtPointer getRtPointer();
-    std::string         getRiDeclare() const;
-                   operator bool() const;
+
+    const std::string&						getDetailedTokenName();
+    DetailType								getDetailType() const;
+
+    const RtFloat*							getTokenFloatArray() const;
+	const boost::shared_array< RtFloat >	getTokenFloatSharedArray() const;
+    std::string								getTokenString() const;
+	std::string								getTokenName() const;
+
+    ParameterType							getParameterType() const;
+
+    const RtPointer							getRtPointer();
+    std::string								getRiDeclare() const;
+
     bool           empty() const;
     bool           isBasicST() const;
     void           resetTokenString();
@@ -97,13 +105,13 @@ class liqTokenPointer
 
     typedef std::vector< liqTokenPointer > array;
   private:
-	boost::shared_array< RtFloat > m_tokenFloats;
-    std::vector< std::string > m_tokenString;
+	boost::shared_array< RtFloat >	m_tokenFloats;
+    std::vector< std::string >		m_tokenString;
 	boost::shared_array< RtString > m_tokenStringArray; // Holds pointers for getRtPointer();
-    ParameterType m_pType;
-    DetailType m_dType;
-    std::string m_tokenName;
-    std::string detailedTokenName; // This needs to be a member or else the getTokenArrays...() stuff fails as it uses c_str() on a temporary string.
+    ParameterType	m_pType;
+    DetailType		m_dType;
+    std::string		m_tokenName;
+    std::string		detailedTokenName; // This needs to be a member or else the getTokenArrays...() stuff fails as it uses c_str() on a temporary string.
     unsigned m_arraySize;
     unsigned m_uArraySize;
     unsigned m_eltSize;

@@ -1,28 +1,9 @@
 #include "er_renderer.h"
+
+#include "boost/format.hpp"
+
 // Maya headers
-#include <maya/MAnimControl.h>
-#include <maya/MFileIO.h>
-#include <maya/MFnLight.h>
-#include <maya/MFnTransform.h>
-#include <maya/MGlobal.h>
-#include <maya/MItDag.h>
-#include <maya/MItInstancer.h>
-#include <maya/MItSelectionList.h>
-#include <maya/MPlug.h>
-#include <maya/MSelectionList.h>
-#include <maya/MSyntax.h>
-#include <maya/MDistance.h>
-#include <maya/MFnSet.h>
-#include <maya/MFnStringArrayData.h>
-#include <maya/MFnIntArrayData.h>
-#include <maya/MFnPfxGeometry.h>
-#include <maya/MDistance.h>
-#include <maya/MDagModifier.h>
-#include <maya/MPxNode.h>
-#include <maya/MRenderLineArray.h>
-#include <maya/MItDependencyNodes.h>
-#include <maya/MFnDependencyNode.h>
-#include <maya/MDagPathArray.h>
+#include "../log/prerequest_maya.h"
 // Liquid headers
 #include <liquid.h>
 #include <liqRibHT.h>
@@ -45,12 +26,14 @@
 #include <liqRibTranslator.h>
 
 #include "../renderermgr.h"
-
+#include "../log/mayacheck.h"
 
 namespace elvishray
 {
+	#define _s(_log_) dummy.get()<< _log_ <<std::endl;
+
 	//static const char *LogName="d:/script.er";
-	static const Renderer dummy; 
+	static /*const*/ Renderer dummy; 
 	// the only goal to define a Renderer variable is 
 	// to run the constructor to register this renderer.
 
@@ -83,11 +66,11 @@ namespace elvishray
 	MStatus Renderer::worldPrologue(const structJob& currentJob)
 	{
 
-		_Script("ready to go!");
+		_s("\n//worldPrologue");
 
 		if( true )
 		{
-			_Script("ei_make_texture(\"d:\\lunatexmap.bmp\", \"d:\\lunatexmap.tex\", EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f );");
+			_s("ei_make_texture(\"d:\\lunatexmap.bmp\", \"d:\\lunatexmap.tex\", EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f );");
 		}
 
 		return MS::kSuccess;
@@ -95,7 +78,7 @@ namespace elvishray
 	//
 	MStatus Renderer::worldEpilogue()
 	{
-		_Script("#Renderer::worldEpilogue()");
+		_s("\n//Renderer::worldEpilogue()");
 
 		return MS::kSuccess;
 	}
@@ -103,7 +86,7 @@ namespace elvishray
 	MStatus Renderer::exportLight(const liqRibNodePtr& ribNode, const structJob &currentJob)
 	{
 		RtString RibNodeName = getLiquidRibName( ribNode->name.asChar() );
-		_Script("# Renderer::exportLight(\""+std::string(RibNodeName)+"\");");
+		_s("\n// Renderer::exportLight(\""+std::string(RibNodeName)+"\");");
 		
 		ribNode->object(0)->writeObject("", currentJob);//call liqRibLightData::_write(...)
 		ribNode->object(0)->written = 1;
@@ -128,25 +111,25 @@ namespace elvishray
 		const liqString & shadowname,
 		const liqMatrix &transform)
 	{
-		_Script("# Renderer::exportShadowPassLight()");
-		_Script(
-				"ei_shader( \"shadowpasslight\", \
-					\"shadername\", "+std::string(shadowname)+",\
-					\"paramter0\", 1.0f,\
-					\"paramter1\", 1.0f);"
-		);
+		_s("\n// Renderer::exportShadowPassLight()");
+		_s("ei_shader( \"shadowlight\", ");
+		_s("           \"intensity\", ToString<liqFloat>(intensity),");
+		_s("           \"lightcolor\", ToString<liqColor>(color)");
+		_s(");");
 
-		_Script(
-				"ei_light( light1 );\
-					ei_lightsource(	shadowpasslight, ei_end );\
-					ei_transform( transform );\
-				ei_end_light();"
-		);
-		_Script(
-				"ei_instance( shaderinstance );\
-					ei_element(	light1 );\
-				ei_end_instance();"
-		);
+		_s("ei_light( "<<shadertype<<" );");
+		_s("ei_lightsource(	shadowlight, ei_end );");
+		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
+		_s(");");
+		_s("ei_end_light();");
+
+		_s("ei_instance( "<<shaderinstance<<" );");
+		_s("ei_element(	"<<shadertype<<" );");
+		_s("ei_end_instance();");
+
 		return (liqLightHandle)(0);
 	}
 	liqLightHandle Renderer::exportAmbientLight(
@@ -156,24 +139,25 @@ namespace elvishray
 		const liqColor & color,
 		const liqMatrix &transform)
 	{
-		_Script("# Renderer::exportAmbientLight()");
-		_Script(
-			"ei_shader( \"ambientlight\", \
-			\"intensity\", ToString<liqFloat>(intensity),\
-			\"lightcolor\", ToString<liqColor>(color);"
-			);
+		_s("\n// Renderer::exportAmbientLight()");
+		_s("ei_shader( \"ambientlight\", ");
+		_s("           \"intensity\", ToString<liqFloat>(intensity),");
+		_s("           \"lightcolor\", ToString<liqColor>(color)");
+		_s(");");
 
-		_Script(
-			"ei_light( light1 );\
-			ei_lightsource(	shadowpasslight, ei_end );\
-			ei_transform( transform );\
-			ei_end_light();"
-			);
-		_Script(
-			"ei_instance( shaderinstance );\
-			ei_element(	light1 );\
-			ei_end_instance();"
-			);
+		_s("ei_light( "<<shadertype<<" );");
+		_s("ei_lightsource(	ambientlight, ei_end );");
+		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
+		_s(");");
+		_s("ei_end_light();");
+
+		_s("ei_instance( "<<shaderinstance<<" );");
+		_s("ei_element(	"<<shadertype<<" );");
+		_s("ei_end_instance();");
+
 		return (liqLightHandle)(0);
 	}
 
@@ -205,24 +189,24 @@ namespace elvishray
 		const liqFloat &o_nonspecular,
 		const liqMatrix &transform)
 	{
-		_Script("# Renderer::exportDistantLight()");
-		_Script(
-			"ei_shader( \"distantlight\", \
-			\"intensity\", ToString<liqFloat>(intensity),\
-			\"lightcolor\", ToString<liqColor>(color);"
-			);
+		_s("// Renderer::exportDistantLight()");
+		_s("ei_shader( \"distantlight\", ");
+		_s("           \"intensity\", ToString<liqFloat>(intensity),");
+		_s("           \"lightcolor\", ToString<liqColor>(color)");
+		_s(");");
 
-		_Script(
-			"ei_light( "+shadertype+" );\
-			ei_lightsource(	distantlight, ei_end );\
-			ei_transform( transform );\
-			ei_end_light();"
-			);
-		_Script(
-			"ei_instance( "+shaderinstance+" );\
-			ei_element(	"+shadertype+" );\
-			ei_end_instance();"
-			);
+		_s("ei_light( "<<shadertype<<" );");
+		_s("ei_lightsource(	distantlight, ei_end );");
+		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
+		_s(");");
+		_s("ei_end_light();");
+
+		_s("ei_instance( "<<shaderinstance<<" );");
+		_s("ei_element(	"<<shadertype<<" );");
+		_s("ei_end_instance();");
 
 		return (liqLightHandle)(0);
 	}
@@ -253,24 +237,25 @@ namespace elvishray
 		const liqFloat &o_nonspecular,
 		const liqMatrix &transform)
 	{
-		_Script("# Renderer::exportPointLight()");
-		_Script(
-			"ei_shader( \"pointlight\", \
-			\"intensity\", ToString<liqFloat>(intensity),\
-			\"lightcolor\", ToString<liqColor>(color);"
-			);
+		_s("\n// Renderer::exportPointLight()");
+		_s("ei_shader( \"pointlight\", ");
+		_s("           \"intensity\", ToString<liqFloat>(intensity),");
+		_s("           \"lightcolor\", ToString<liqColor>(color)");
+		_s(");");
 
-		_Script(
-			"ei_light( "+shadertype+" );\
-				ei_lightsource(	pointlight, ei_end );\
-				ei_transform( transform );\
-			ei_end_light();"
-			);
-		_Script(
-			"ei_instance( "+shaderinstance+" );\
-				ei_element(	"+shadertype+" );\
-		   ei_end_instance();"
-		   );
+		_s("ei_light( "<<shadertype<<" );");
+		_s("ei_lightsource(	pointlight, ei_end );");
+		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
+		_s(");");
+		_s("ei_end_light();");
+
+		_s("ei_instance( "<<shaderinstance<<" );");
+		_s("ei_element(	"<<shadertype<<" );");
+		_s("ei_end_instance();");
+
 		return (liqLightHandle)(0);
 	}
 	//
@@ -323,24 +308,25 @@ namespace elvishray
 		const liqFloat &o_nonspecular,
 		const liqMatrix &transform)
 	{
-		_Script("# Renderer::exportSpotLight()");
-		_Script(
-			"ei_shader( \"spotlight\", \
-			\"intensity\", ToString<liqFloat>(intensity),\
-			\"lightcolor\", ToString<liqColor>(color);"
-			);
+		_s("\n// Renderer::exportSpotLight()");
+		_s("ei_shader( \"spotlight\", ");
+		_s("           \"intensity\", ToString<liqFloat>(intensity),");
+		_s("           \"lightcolor\", ToString<liqColor>(color)");
+		_s(");");
 
-		_Script(
-			"ei_light( "+shadertype+" );\
-									ei_lightsource(	spotlight, ei_end );\
-									ei_transform( transform );\
-									ei_end_light();"
-									);
-		_Script(
-			"ei_instance( "+shaderinstance+" );\
-										   ei_element(	"+shadertype+" );\
-										   ei_end_instance();"
-										   );
+		_s("ei_light( "<<shadertype<<" );");
+		_s("ei_lightsource(	spotlight, ei_end );");
+		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
+		_s(");");
+		_s("ei_end_light();");
+
+		_s("ei_instance( "<<shaderinstance<<" );");
+		_s("ei_element(	"<<shadertype<<" );");
+		_s("ei_end_instance();");
+
 		return (liqLightHandle)(0);
 	}
 	//
@@ -368,24 +354,25 @@ namespace elvishray
 		const liqColor &o_arealightColor,
 		const liqMatrix &transform)
 	{
-		_Script("# Renderer::exportAreaLight()");
-		_Script(
-			"ei_shader( \"arealight\", \
-			\"intensity\", ToString<liqFloat>(intensity),\
-			\"lightcolor\", ToString<liqColor>(color);"
-			);
+		_s("\n// Renderer::exportAreaLight()");
+		_s( "ei_shader( \"arealight\", ");
+		_s("           \"intensity\", ToString<liqFloat>(intensity),");
+		_s("           \"lightcolor\", ToString<liqColor>(color)");
+		_s(");");
 
-		_Script(
-			"ei_light( "+shadertype+" );\
-									ei_lightsource(	arealight, ei_end );\
-									ei_transform( transform );\
-									ei_end_light();"
-									);
-		_Script(
-			"ei_instance( "+shaderinstance+" );\
-										   ei_element(	"+shadertype+" );\
-										   ei_end_instance();"
-										   );
+		_s("ei_light( "<<shadertype<<" );");
+		_s("ei_lightsource(	arealight, ei_end );");
+		_s("ei_transform("<< boost::format("%f,%f,%f,%f,") %transform[0][0]%transform[0][1]%transform[0][2]%transform[0][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[1][0]%transform[1][1]%transform[1][2]%transform[1][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f,") %transform[2][0]%transform[2][1]%transform[2][2]%transform[2][3]);
+		_s("             "<< boost::format("%f,%f,%f,%f ") %transform[3][0]%transform[3][1]%transform[3][2]%transform[3][3]);
+		_s(");");
+		_s("ei_end_light();");
+
+		_s("ei_instance( "+shaderinstance+" );");
+		_s("ei_element(	"+shadertype+" );");
+		_s("ei_end_instance();");
+
 		return (liqLightHandle)(0);
 	}
 	//
@@ -397,10 +384,67 @@ namespace elvishray
 
 	}
 	void Renderer::exportOneGeometry_Mesh(
-		const liqRibNodePtr *object, 
+		const liqRibMeshData *mesh, 
 		const structJob &currentJob
 		)
 	{
+		_s("\n// Renderer::exportOneGeometry_Mesh("<<mesh->getName()<<")");
+		MStatus status;
+		MFnMesh fnMesh(mesh->objDagPath, &status);
+		IfMErrorWarn(status);
 
+		MFloatPointArray position;
+		IfMErrorWarn(fnMesh.getPoints (position, MSpace::kWorld));
+
+		MIntArray triangleCounts,triangleVertices;
+		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));
+
+		// geometry data (shape)
+		_s("\n");
+		_s("ei_object(\""<< mesh->getName()<<"\")");
+		_s("//### vertex positions");
+		for(size_t i=0; i<position.length(); ++i)
+		{
+			_s("ei_vector("<<position[i][0]<<","<<position[i][1]<<","<<position[i][2]<<")");
+		}
+		_s("//### vertex color");
+		for(int i=0; i<position.length(); i++)
+		{
+			_s("ei_vertex("<<i<<")");
+			_s("ei_variable( et_color, \"Cs\", color( 0.0f, 0.0f, 0.0f ) )");
+		}
+		_s("//### triangles");
+		for(size_t i=0; i<triangleVertices.length(); i=i+3)
+		{
+			_s("ei_triangle("
+				<<0<<","
+				<<triangleVertices[i  ]<<","
+				<<triangleVertices[i+1]<<"," 
+				<<triangleVertices[i+2]<<")");
+		}
+		_s("ei_end_object()");
+
+		_s("ei_instance("<<"dummy"<<")");//transform
+// 		ei_visible( on );
+// 		ei_shadow( on );
+// 		ei_trace( on );
+//		ei_set_material( "mtl", ei_end );
+		_s("ei_element(\""<<mesh->getName()<<"\")");
+// 		if( motion_transform )
+// 		{
+// 			ei_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
+// 				0.0f, 1.0f, 0.0f, 0.0f, 
+// 				0.0f, 0.0f, 1.0f, 0.0f, 
+// 				0.0f, 0.0f, 0.0f, 1.0f );
+// 			// 			ei_motion_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
+// 			// 				0.0f, 1.0f, 0.0f, 0.0f, 
+// 			// 				0.0f, 0.0f, 1.0f, 0.0f, 
+// 			// 				2.3f, 2.0f, 3.1f, 1.0f );
+// 		}
+// 		if( motion_transform || motion_deform )
+// 		{
+// 			_s("ei_motion( on )");
+// 		}
+		_s("ei_end_instance();");
 	}
 }

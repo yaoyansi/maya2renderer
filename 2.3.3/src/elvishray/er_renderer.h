@@ -162,9 +162,12 @@ namespace elvishray
 			const structJob &currentJob
 			);
 		virtual void exportOneGeometry_Mesh(
-			const liqRibNodePtr *lightdata, 
+			const liqRibMeshData *mesh, 
 			const structJob &currentJob
 			);
+
+		std::ofstream& get() { return m_log.get(); }
+
 	protected:
 		Renderer(const Renderer&);
 		Renderer& operator=(const Renderer&);
@@ -173,6 +176,7 @@ namespace elvishray
 
  		void _Script(const std::string &data){ m_log.log___(data); }
 	};
+
 }
 
 

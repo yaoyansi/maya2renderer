@@ -20,6 +20,8 @@ namespace liquid
 		{
 			m_logfile << data <<std::endl;
 		}
+		
+		std::ofstream& get() { return m_logfile; }
 
 	protected:
 		LogMgr(const LogMgr&);

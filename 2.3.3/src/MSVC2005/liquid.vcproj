@@ -4070,6 +4070,14 @@
 					RelativePath="..\log\logmgr.h"
 					>
 				</File>
+				<File
+					RelativePath="..\log\mayacheck.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\log\mayacheck.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

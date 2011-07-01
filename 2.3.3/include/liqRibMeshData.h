@@ -50,6 +50,16 @@ public: // Methods
   virtual void       printMesh();
   virtual bool       compare( const liqRibData & other ) const;
   virtual ObjectType type() const;
+  const RtInt getNumFaces()const{ return numFaces; }
+  const boost::shared_array< RtInt >& getNverts()const
+  {
+	  return nverts;
+  }
+  const boost::shared_array< RtInt >& getVerts()const
+  {
+	  return verts;
+  }
+  const char* getName()const{ return name.asChar(); }
 
 private: // Data
   RtInt     numFaces;

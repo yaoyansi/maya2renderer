@@ -157,7 +157,7 @@ namespace renderman
 			const structJob &currentJob
 			);
 		virtual void exportOneGeometry_Mesh(
-			const liqRibNodePtr *lightdata, 
+			const liqRibMeshData *mesh, 
 			const structJob &currentJob
 			);
 

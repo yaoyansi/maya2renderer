@@ -4,6 +4,7 @@
 #include <string>
 #include <maya/MStatus.h>
 #include <liqRibNode.h>
+#include <liqRibMeshData.h>
 #include "liqtypes.h"
 
 struct structJob;
@@ -169,7 +170,7 @@ public:
 		const structJob &currentJob
 		) = 0;
 	virtual void exportOneGeometry_Mesh(
-		const liqRibNodePtr *lightdata, 
+		const liqRibMeshData *mesh, 
 		const structJob &currentJob
 		) = 0;
 

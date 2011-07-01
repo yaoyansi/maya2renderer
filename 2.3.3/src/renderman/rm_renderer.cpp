@@ -1,5 +1,7 @@
 #include "rm_renderer.h"
 
+#include <boost/scoped_array.hpp>
+
 // Renderman Headers
 //extern "C" {
 #include "ri_interface.h"
@@ -572,10 +574,32 @@ namespace renderman
 
 	}
 	void Renderer::exportOneGeometry_Mesh(
-		const liqRibNodePtr *object, 
+		const liqRibMeshData *meshdata,  
 		const structJob &currentJob
 		)
 	{
+		//
+		//mesh data begin
+		//
+		// Each loop has one polygon, so we just want an array of 1's of
+		// the correct size. Stack version.
+		//vector< RtInt > nloops( numFaces, 1 );
+		// Alternatively (heap version):
+		boost::scoped_array< RtInt > nloops( new RtInt[ meshdata->getNumFaces() ] );
+		std::fill( nloops.get(), nloops.get() + meshdata->getNumFaces(), ( RtInt )1 );
 
+		unsigned numTokens( meshdata->tokenPointerArray.size() );
+		boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+		assignTokenArraysV( meshdata->tokenPointerArray, tokenArray.get(), pointerArray.get() );
+
+		RiPointsGeneralPolygonsV( meshdata->getNumFaces(),
+			&nloops[ 0 ],
+			meshdata->getNverts().get(),
+			meshdata->getVerts().get(),
+			numTokens,
+			tokenArray.get(),
+			pointerArray.get() );
+		//mesh data end
 	}
 }
