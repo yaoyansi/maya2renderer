@@ -2009,222 +2009,192 @@ MStatus liqRibTranslator::objectNonShadowAttribute(const liqRibNodePtr &ribNode_
 	return MS::kSuccess;
 }
 //
-MStatus liqRibTranslator::writeShader(
-	const bool writeShaders__, 
-	const liqRibNodePtr &ribNode__,
-	const bool hasVolumeShader__,
-	const bool hasSurfaceShader__,
-	const bool hasCustomSurfaceShader__,
-	const bool hasDisplacementShader__,
-	const MString &shaderRibBox__,
-	const MDagPath &path__,
-	const bool isShadowJob, 
-	const bool isDeepShadowJob
-	)
-{
-		MStatus status;
-
-		if( writeShaders__ ) 
-		{
-			liqRIBMsg("[5] hasVolumeShader=%d, m_ignoreVolumes=%d", hasVolumeShader__, m_ignoreVolumes );
-			if( hasVolumeShader__ && !m_ignoreVolumes ) 
-			{
-				//liqShader& currentShader( liqGetShader( ribNode__->assignedVolume.object() ) );
-				liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedVolume.object() );
-				liqRIBMsg("[1] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
-				// per shader shadow pass override
-				if( !isShadowJob || currentShader.outputInShadow )
-				{
-					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
-				}
-			}
-
-			if( hasSurfaceShader__ && !m_ignoreSurfaces )
-			{
-				if( hasCustomSurfaceShader__ )
-				{
-					if( hasCustomSurfaceShader__ == liqCustomPxShaderNode )
-					{  // Just call the write method of the custom shader
-						MFnDependencyNode customShaderDepNode( ribNode__->assignedShader.object() );
-						MPxNode *mpxNode = customShaderDepNode.userNode();
-						liqCustomNode *customNode( NULL );
-						if( mpxNode && ( customNode = dynamic_cast<liqCustomNode*>( mpxNode ) ) )
-							customNode->liquidWrite();
-						else
-							;// Should never happen in theory ... but what is the way to report a problem ???
-					}
-					else
-					{ 
-						// Default : just write the contents of the rib box
-						RiArchiveRecord( RI_VERBATIM, ( char* )shaderRibBox__.asChar() );
-						RiArchiveRecord( RI_VERBATIM, "\n" );
-					}
-				}
-				else
-				{
-					//liqShader& currentShader( liqGetShader( ribNode__->assignedShader.object() ) );
-					liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
-					
-					F1(ribNode__, currentShader);
-
-					liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
-					// per shader shadow pass override
-					if( !isShadowJob || currentShader.outputInShadow )
-					{
-						currentShader.write(liqglo.liqglo_shortShaderNames, 0);
-					}
-
-					//if( outputSurfaceShader )
-					//{
-					//	scoped_array< RtToken > tokenArray( new RtToken[ currentShader.tokenPointerArray.size() ] );
-					//	scoped_array< RtPointer > pointerArray( new RtPointer[ currentShader.tokenPointerArray.size() ] );
-					//	assignTokenArrays( currentShader.tokenPointerArray.size(), &currentShader.tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
-
-					//	char* shaderFileName;
-					//	LIQ_GET_SHADER_FILE_NAME( shaderFileName, liqglo_shortShaderNames, currentShader );
-
-					//	// check shader space transformation
-					//	if( currentShader.shaderSpace != "" )
-					//	{
-					//		RiTransformBegin();
-					//		RiCoordSysTransform( ( RtString )currentShader.shaderSpace.asChar() );
-					//	}
-					//	// output shader
-					//	// its one less as the tokenPointerArray has a preset size of 1 not 0
-					//	int shaderParamCount = currentShader.tokenPointerArray.size() - 1;
-					//	RiSurfaceV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
-					//	if( currentShader.shaderSpace != "" )
-					//		RiTransformEnd();
-					//}
-				}
-			}else{//if( hasSurfaceShader && !m_ignoreSurfaces )
-				F2(m_shaderDebug, ribNode__);
-
-				if( !m_ignoreSurfaces ) 
-				{
-					MObject shadingGroup = ribNode__->assignedShadingGroup.object();
-					MObject shader = ribNode__->findShader( shadingGroup );
-					//
-					// here we check for regular shader nodes first
-					// and assign default shader to shader-less nodes.
-					//
-					if( m_shaderDebug ) {
-						liqRIBMsg("shader debug is turned on, so the surface is constant.");
-						RiSurface( "constant", RI_NULL );
-						LIQDEBUGPRINTF("add more constant parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorBlinn.sl as an example.(?)");
-					}
-					// 					else if( shader.apiType() == MFn::kLambert ){ 
-					// 						RiSurface( "matte", RI_NULL );
-					// 						LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
-					// 					}else if( shader.apiType() == MFn::kPhong ) {
-					// 						RiSurface( "plastic", RI_NULL );
-					// 						LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
-					// 					}
-					else if( path__.hasFn( MFn::kPfxHair ) ) 
-					{
-						// get some of the hair system parameters
-						RtFloat translucence = 0, specularPower = 0;
-						RtColor specularColor;
-
-						getPfxHairData(path__, translucence, specularPower, specularColor);
-
-						RiSurface(  "liquidpfxhair",
-							"float specularpower", &specularPower,
-							"float translucence",  &translucence,
-							"color specularcolor", &specularColor,
-							RI_NULL );
-					} 
-					else if( path__.hasFn( MFn::kPfxToon ) ) {
-						RiSurface( "liquidpfxtoon", RI_NULL );
-					}else if( path__.hasFn( MFn::kPfxGeometry ) ){
-						RiSurface( "liquidpfx", RI_NULL );
-					}else {
-						//RiSurface( "plastic", RI_NULL );
-						MFnDependencyNode shaderFn(shader);
-						RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );
-					}
-				}
-			}//if( hasSurfaceShader && !m_ignoreSurfaces )else
-		} //if( writeShaders ) 
-		else if( isDeepShadowJob ) 
-		{
-			liqRIBMsg("[7] liqglo_currentJob[.deepShadows=%d, .isShadow=%d ], hasSurfaceShader=%d, hasCustomSurfaceShader=%d",
-				isDeepShadowJob, isShadowJob, hasSurfaceShader__, hasCustomSurfaceShader__ );
-
-			// if the current job is a deep shadow,
-			// we still want to output primitive color and opacity and surface shader
-			// In case of custom shaders, what should we do ? Stephane.
-			if( hasSurfaceShader__ && ! hasCustomSurfaceShader__ ) 
-			{
-				//liqShader & currentShader = liqGetShader( ribNode__->assignedShader.object());
-				liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
-
-				F1(ribNode__, currentShader);
-
-				liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.name.c_str(), currentShader.file.c_str(), currentShader.outputInShadow );
-				if(currentShader.outputInShadow){
-					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
-				}
-			} 
-			else 
-			{
-				F2(false, ribNode__ );
-
-				if( path__.hasFn( MFn::kPfxHair ) ) 
-				{
-					// get some of the hair system parameters
-					RtFloat translucence = 0, specularPower = 0;
-					RtColor specularColor;
-
-					getPfxHairData(path__, translucence, specularPower, specularColor);
-
-					RiSurface(  "liquidPfxHair",
-						"float specularPower", &specularPower,
-						"float translucence",  &translucence,
-						"color specularColor", &specularColor,
-						RI_NULL );
-				}
-			}
-		}else {
-			RiSurface( "null", RI_NULL );
-		}
-
-		liqRIBMsg("[4] hasDisplacementShader=%d, m_ignoreDisplacements=%d", hasDisplacementShader__, m_ignoreDisplacements );
-		if( hasDisplacementShader__ && !m_ignoreDisplacements ) 
-		{
-			//liqShader & currentShader = liqGetShader( ribNode__->assignedDisp.object() );
-			liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedDisp.object() );
-
-			liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
-			// per shader shadow pass override
-			if( !isShadowJob || currentShader.outputInShadow )
-			{
-				currentShader.write(liqglo.liqglo_shortShaderNames, 0);
-			}
-
-			//if( !currentShader.hasErrors && outputDispShader )
-			//{
-			//	scoped_array< RtToken > tokenArray( new RtToken[ currentShader.tokenPointerArray.size() ] );
-			//	scoped_array< RtPointer > pointerArray( new RtPointer[ currentShader.tokenPointerArray.size() ] );
-			//	assignTokenArrays( currentShader.tokenPointerArray.size(), &currentShader.tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
-
-			//	char *shaderFileName;
-			//	LIQ_GET_SHADER_FILE_NAME(shaderFileName, liqglo_shortShaderNames, currentShader );
-			//	// check shader space transformation
-			//	if( currentShader.shaderSpace != "" )
-			//	{
-			//		RiTransformBegin();
-			//		RiCoordSysTransform( ( RtString )currentShader.shaderSpace.asChar() );
-			//	}
-			//	// output shader
-			//	int shaderParamCount = currentShader.tokenPointerArray.size() - 1;
-			//	RiDisplacementV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
-			//	if( currentShader.shaderSpace != "" )
-			//		RiTransformEnd();
-			//}
-		}
-	return MS::kSuccess;
-}
+//MStatus liqRibTranslator::writeShader(
+//	const bool writeShaders__, 
+//	const liqRibNodePtr &ribNode__,
+//	const bool hasVolumeShader__,
+//	const bool hasSurfaceShader__,
+//	const bool hasCustomSurfaceShader__,
+//	//const bool hasDisplacementShader__,
+//	const MString &shaderRibBox__,
+//	const MDagPath &path__,
+//	const structJob &currentJob
+//	
+//	)
+//{
+//	const bool isShadowJob = currentJob.isShadow; 
+//	const bool isDeepShadowJob = currentJob.deepShadows;
+//
+//		MStatus status;
+//
+//		if( writeShaders__ ) 
+//		{
+//			liqRIBMsg("[5] hasVolumeShader=%d, m_ignoreVolumes=%d", hasVolumeShader__, m_ignoreVolumes );
+//			if( hasVolumeShader__ && !m_ignoreVolumes ) 
+//			{
+//				//liqShader& currentShader( liqGetShader( ribNode__->assignedVolume.object() ) );
+//				liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedVolume.object() );
+//				liqRIBMsg("[1] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
+//				// per shader shadow pass override
+//				if( !isShadowJob || currentShader.outputInShadow )
+//				{
+//					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+//				}
+//			}
+//
+//			if( hasSurfaceShader__ && !m_ignoreSurfaces )
+//			{
+//				if( hasCustomSurfaceShader__ )
+//				{
+//					if( hasCustomSurfaceShader__ == liqCustomPxShaderNode )
+//					{  // Just call the write method of the custom shader
+//						MFnDependencyNode customShaderDepNode( ribNode__->assignedShader.object() );
+//						MPxNode *mpxNode = customShaderDepNode.userNode();
+//						liqCustomNode *customNode( NULL );
+//						if( mpxNode && ( customNode = dynamic_cast<liqCustomNode*>( mpxNode ) ) )
+//							customNode->liquidWrite();
+//						else
+//							;// Should never happen in theory ... but what is the way to report a problem ???
+//					}
+//					else
+//					{ 
+//						// Default : just write the contents of the rib box
+//						RiArchiveRecord( RI_VERBATIM, ( char* )shaderRibBox__.asChar() );
+//						RiArchiveRecord( RI_VERBATIM, "\n" );
+//					}
+//				}
+//				else
+//				{
+//					//liqShader& currentShader( liqGetShader( ribNode__->assignedShader.object() ) );
+//					liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
+//					
+//					F1(ribNode__, currentShader);
+//
+//					liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
+//					// per shader shadow pass override
+//					if( !isShadowJob || currentShader.outputInShadow )
+//					{
+//						currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+//					}
+//
+//					//if( outputSurfaceShader )
+//					//{
+//					//	scoped_array< RtToken > tokenArray( new RtToken[ currentShader.tokenPointerArray.size() ] );
+//					//	scoped_array< RtPointer > pointerArray( new RtPointer[ currentShader.tokenPointerArray.size() ] );
+//					//	assignTokenArrays( currentShader.tokenPointerArray.size(), &currentShader.tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
+//
+//					//	char* shaderFileName;
+//					//	LIQ_GET_SHADER_FILE_NAME( shaderFileName, liqglo_shortShaderNames, currentShader );
+//
+//					//	// check shader space transformation
+//					//	if( currentShader.shaderSpace != "" )
+//					//	{
+//					//		RiTransformBegin();
+//					//		RiCoordSysTransform( ( RtString )currentShader.shaderSpace.asChar() );
+//					//	}
+//					//	// output shader
+//					//	// its one less as the tokenPointerArray has a preset size of 1 not 0
+//					//	int shaderParamCount = currentShader.tokenPointerArray.size() - 1;
+//					//	RiSurfaceV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
+//					//	if( currentShader.shaderSpace != "" )
+//					//		RiTransformEnd();
+//					//}
+//				}
+//			}else{//if( hasSurfaceShader && !m_ignoreSurfaces )
+//				F2(m_shaderDebug, ribNode__);
+//
+//				if( !m_ignoreSurfaces ) 
+//				{
+//					MObject shadingGroup = ribNode__->assignedShadingGroup.object();
+//					MObject shader = ribNode__->findShader( shadingGroup );
+//					//
+//					// here we check for regular shader nodes first
+//					// and assign default shader to shader-less nodes.
+//					//
+//					if( m_shaderDebug ) {
+//						liqRIBMsg("shader debug is turned on, so the surface is constant.");
+//						RiSurface( "constant", RI_NULL );
+//						LIQDEBUGPRINTF("add more constant parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorBlinn.sl as an example.(?)");
+//					}
+//					// 					else if( shader.apiType() == MFn::kLambert ){ 
+//					// 						RiSurface( "matte", RI_NULL );
+//					// 						LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
+//					// 					}else if( shader.apiType() == MFn::kPhong ) {
+//					// 						RiSurface( "plastic", RI_NULL );
+//					// 						LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
+//					// 					}
+//					else if( path__.hasFn( MFn::kPfxHair ) ) 
+//					{
+//						// get some of the hair system parameters
+//						RtFloat translucence = 0, specularPower = 0;
+//						RtColor specularColor;
+//
+//						getPfxHairData(path__, translucence, specularPower, specularColor);
+//
+//						RiSurface(  "liquidpfxhair",
+//							"float specularpower", &specularPower,
+//							"float translucence",  &translucence,
+//							"color specularcolor", &specularColor,
+//							RI_NULL );
+//					} 
+//					else if( path__.hasFn( MFn::kPfxToon ) ) {
+//						RiSurface( "liquidpfxtoon", RI_NULL );
+//					}else if( path__.hasFn( MFn::kPfxGeometry ) ){
+//						RiSurface( "liquidpfx", RI_NULL );
+//					}else {
+//						//RiSurface( "plastic", RI_NULL );
+//						MFnDependencyNode shaderFn(shader);
+//						RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );
+//					}
+//				}
+//			}//if( hasSurfaceShader && !m_ignoreSurfaces )else
+//		} //if( writeShaders ) 
+//		else if( isDeepShadowJob ) 
+//		{
+//			liqRIBMsg("[7] liqglo_currentJob[.deepShadows=%d, .isShadow=%d ], hasSurfaceShader=%d, hasCustomSurfaceShader=%d",
+//				isDeepShadowJob, isShadowJob, hasSurfaceShader__, hasCustomSurfaceShader__ );
+//
+//			// if the current job is a deep shadow,
+//			// we still want to output primitive color and opacity and surface shader
+//			// In case of custom shaders, what should we do ? Stephane.
+//			if( hasSurfaceShader__ && ! hasCustomSurfaceShader__ ) 
+//			{
+//				//liqShader & currentShader = liqGetShader( ribNode__->assignedShader.object());
+//				liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
+//
+//				F1(ribNode__, currentShader);
+//
+//				liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.name.c_str(), currentShader.file.c_str(), currentShader.outputInShadow );
+//				if(currentShader.outputInShadow){
+//					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+//				}
+//			} 
+//			else //if( hasSurfaceShader__ && ! hasCustomSurfaceShader__ ) 
+//			{
+//				F2(false, ribNode__ );
+//
+//				if( path__.hasFn( MFn::kPfxHair ) ) 
+//				{
+//					// get some of the hair system parameters
+//					RtFloat translucence = 0, specularPower = 0;
+//					RtColor specularColor;
+//
+//					getPfxHairData(path__, translucence, specularPower, specularColor);
+//
+//					RiSurface(  "liquidPfxHair",
+//						"float specularPower", &specularPower,
+//						"float translucence",  &translucence,
+//						"color specularColor", &specularColor,
+//						RI_NULL );
+//				}
+//			}
+//		}else {
+//			RiSurface( "null", RI_NULL );
+//		}
+//
+//
+//	return MS::kSuccess;
+//}
 //
 MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
 {
@@ -3144,31 +3114,116 @@ void liqRibTranslator::oneObjectBlock(
 		}
 
 		bool writeShaders( true );
+// 
+// 		if( currentJob.isShadow &&
+// 			(    ( !currentJob.deepShadows && !m_outputShadersInShadows ) 
+// 			  || (  currentJob.deepShadows && !m_outputShadersInDeepShadows ) 
+// 			)
+// 		  )
+// 		{
+// 			writeShaders = false;
+// 		} 
+// 		liqRIBMsg("[6] writeShaders=%d=%d && ((!%d&&!%d)||(%d&&!%d) ", writeShaders, 
+// 			currentJob.isShadow, 
+//			currentJob.deepShadows, m_outputShadersInShadows, currentJob.deepShadows, m_outputShadersInDeepShadows );
 
-		if( currentJob.isShadow &&
-			(    ( !currentJob.deepShadows && !m_outputShadersInShadows ) 
-			  || (  currentJob.deepShadows && !m_outputShadersInDeepShadows ) 
-			)
-		  )
+		if( !currentJob.isShadow )
 		{
-			writeShaders = false;
+			writeShader_(
+				true,//writeShaders
+				ribNode,
+				hasVolumeShader,
+				hasSurfaceShader,
+				hasCustomSurfaceShader,
+				//hasDisplacementShader,
+				shaderRibBox,
+				path,
+				currentJob
+				);
+			liqRIBMsg("[4] hasDisplacementShader=%d, m_ignoreDisplacements=%d", hasDisplacementShader, m_ignoreDisplacements );
+			if( hasDisplacementShader && !m_ignoreDisplacements ) 
+			{
+				//liqShader & currentShader = liqGetShader( ribNode__->assignedDisp.object() );
+				liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode->assignedDisp.object() );
+
+				liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", currentJob.isShadowJob, currentShader.outputInShadow );
+				// per shader shadow pass override
+				if( true/*!currentJob.isShadow || currentShader.outputInShadow*/ )
+				{
+					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+				}
+
+				//if( !currentShader.hasErrors && outputDispShader )
+				//{
+				//	scoped_array< RtToken > tokenArray( new RtToken[ currentShader.tokenPointerArray.size() ] );
+				//	scoped_array< RtPointer > pointerArray( new RtPointer[ currentShader.tokenPointerArray.size() ] );
+				//	assignTokenArrays( currentShader.tokenPointerArray.size(), &currentShader.tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
+
+				//	char *shaderFileName;
+				//	LIQ_GET_SHADER_FILE_NAME(shaderFileName, liqglo_shortShaderNames, currentShader );
+				//	// check shader space transformation
+				//	if( currentShader.shaderSpace != "" )
+				//	{
+				//		RiTransformBegin();
+				//		RiCoordSysTransform( ( RtString )currentShader.shaderSpace.asChar() );
+				//	}
+				//	// output shader
+				//	int shaderParamCount = currentShader.tokenPointerArray.size() - 1;
+				//	RiDisplacementV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
+				//	if( currentShader.shaderSpace != "" )
+				//		RiTransformEnd();
+				//}
+			}
+		}else{
+			//currentJob.isShadow==true
+
+			writeShader_forShadow(
+				true,//the value is changed  in the function.
+				ribNode,
+				hasVolumeShader,
+				hasSurfaceShader,
+				hasCustomSurfaceShader,
+				//hasDisplacementShader,
+				shaderRibBox,
+				path,
+				currentJob
+				);
+			liqRIBMsg("[4] hasDisplacementShader=%d, m_ignoreDisplacements=%d", hasDisplacementShader, m_ignoreDisplacements );
+			if( hasDisplacementShader && !m_ignoreDisplacements ) 
+			{
+				//liqShader & currentShader = liqGetShader( ribNode__->assignedDisp.object() );
+				liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode->assignedDisp.object() );
+
+				liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", currentJob.isShadowJob, currentShader.outputInShadow );
+				// per shader shadow pass override
+				if( /*!currentJob.isShadow || */currentShader.outputInShadow )
+				{
+					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+				}
+
+				//if( !currentShader.hasErrors && outputDispShader )
+				//{
+				//	scoped_array< RtToken > tokenArray( new RtToken[ currentShader.tokenPointerArray.size() ] );
+				//	scoped_array< RtPointer > pointerArray( new RtPointer[ currentShader.tokenPointerArray.size() ] );
+				//	assignTokenArrays( currentShader.tokenPointerArray.size(), &currentShader.tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
+
+				//	char *shaderFileName;
+				//	LIQ_GET_SHADER_FILE_NAME(shaderFileName, liqglo_shortShaderNames, currentShader );
+				//	// check shader space transformation
+				//	if( currentShader.shaderSpace != "" )
+				//	{
+				//		RiTransformBegin();
+				//		RiCoordSysTransform( ( RtString )currentShader.shaderSpace.asChar() );
+				//	}
+				//	// output shader
+				//	int shaderParamCount = currentShader.tokenPointerArray.size() - 1;
+				//	RiDisplacementV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
+				//	if( currentShader.shaderSpace != "" )
+				//		RiTransformEnd();
+				//}
+			}
 		}
 
-		liqRIBMsg("[6] writeShaders=%d=%d && ((!%d&&!%d)||(%d&&!%d) ", writeShaders, 
-			currentJob.isShadow, 
-			currentJob.deepShadows, m_outputShadersInShadows, currentJob.deepShadows, m_outputShadersInDeepShadows );
-		writeShader(
-			writeShaders,
-			ribNode,
-			hasVolumeShader,
-			hasSurfaceShader,
-			hasCustomSurfaceShader,
-			hasDisplacementShader,
-			shaderRibBox,
-			path,
-			currentJob.isShadow, 
-			currentJob.deepShadows
-		);
 
 		//////////////////////////////////////////////////////////////////////////
 		if( ribNode->rib.hasBox() ) 
@@ -3289,4 +3344,342 @@ void liqRibTranslator::oneObjectBlock(
 			postShapeMel(transform);
 		} // else RiArchiveRecord( RI_COMMENT, " Shapes Ignored !!" );
 		RiAttributeEnd();
+}
+//
+MStatus liqRibTranslator::writeShader_(
+									  const bool writeShaders__, 
+									  const liqRibNodePtr &ribNode__,
+									  const bool hasVolumeShader__,
+									  const bool hasSurfaceShader__,
+									  const bool hasCustomSurfaceShader__,
+									  //const bool hasDisplacementShader__,
+									  const MString &shaderRibBox__,
+									  const MDagPath &path__,
+									  const structJob &currentJob
+
+									  )
+{
+	const bool isShadowJob = currentJob.isShadow;//false 
+	const bool isDeepShadowJob = currentJob.deepShadows;//false
+
+	MStatus status;
+
+	if( true ) 
+	{
+		liqRIBMsg("[5] hasVolumeShader=%d, m_ignoreVolumes=%d", hasVolumeShader__, m_ignoreVolumes );
+		if( hasVolumeShader__ && !m_ignoreVolumes ) 
+		{
+			//liqShader& currentShader( liqGetShader( ribNode__->assignedVolume.object() ) );
+			liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedVolume.object() );
+			liqRIBMsg("[1] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
+			// per shader shadow pass override
+			if( !isShadowJob || currentShader.outputInShadow )
+			{
+				currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+			}
+		}
+
+		if( hasSurfaceShader__ && !m_ignoreSurfaces )
+		{
+			if( hasCustomSurfaceShader__ )
+			{
+				if( hasCustomSurfaceShader__ == liqCustomPxShaderNode )
+				{  // Just call the write method of the custom shader
+					MFnDependencyNode customShaderDepNode( ribNode__->assignedShader.object() );
+					MPxNode *mpxNode = customShaderDepNode.userNode();
+					liqCustomNode *customNode( NULL );
+					if( mpxNode && ( customNode = dynamic_cast<liqCustomNode*>( mpxNode ) ) )
+						customNode->liquidWrite();
+					else
+						;// Should never happen in theory ... but what is the way to report a problem ???
+				}
+				else
+				{ 
+					// Default : just write the contents of the rib box
+					RiArchiveRecord( RI_VERBATIM, ( char* )shaderRibBox__.asChar() );
+					RiArchiveRecord( RI_VERBATIM, "\n" );
+				}
+			}
+			else
+			{
+				//liqShader& currentShader( liqGetShader( ribNode__->assignedShader.object() ) );
+				liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
+
+				F1(ribNode__, currentShader);
+
+				liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
+				// per shader shadow pass override
+				if( !isShadowJob || currentShader.outputInShadow )
+				{
+					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+				}
+
+				//if( outputSurfaceShader )
+				//{
+				//	scoped_array< RtToken > tokenArray( new RtToken[ currentShader.tokenPointerArray.size() ] );
+				//	scoped_array< RtPointer > pointerArray( new RtPointer[ currentShader.tokenPointerArray.size() ] );
+				//	assignTokenArrays( currentShader.tokenPointerArray.size(), &currentShader.tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
+
+				//	char* shaderFileName;
+				//	LIQ_GET_SHADER_FILE_NAME( shaderFileName, liqglo_shortShaderNames, currentShader );
+
+				//	// check shader space transformation
+				//	if( currentShader.shaderSpace != "" )
+				//	{
+				//		RiTransformBegin();
+				//		RiCoordSysTransform( ( RtString )currentShader.shaderSpace.asChar() );
+				//	}
+				//	// output shader
+				//	// its one less as the tokenPointerArray has a preset size of 1 not 0
+				//	int shaderParamCount = currentShader.tokenPointerArray.size() - 1;
+				//	RiSurfaceV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
+				//	if( currentShader.shaderSpace != "" )
+				//		RiTransformEnd();
+				//}
+			}
+		}else{//if( hasSurfaceShader && !m_ignoreSurfaces )
+			F2(m_shaderDebug, ribNode__);
+
+			if( !m_ignoreSurfaces ) 
+			{
+				MObject shadingGroup = ribNode__->assignedShadingGroup.object();
+				MObject shader = ribNode__->findShader( shadingGroup );
+				//
+				// here we check for regular shader nodes first
+				// and assign default shader to shader-less nodes.
+				//
+				if( m_shaderDebug ) {
+					liqRIBMsg("shader debug is turned on, so the surface is constant.");
+					RiSurface( "constant", RI_NULL );
+					LIQDEBUGPRINTF("add more constant parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorBlinn.sl as an example.(?)");
+				}
+				// 					else if( shader.apiType() == MFn::kLambert ){ 
+				// 						RiSurface( "matte", RI_NULL );
+				// 						LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
+				// 					}else if( shader.apiType() == MFn::kPhong ) {
+				// 						RiSurface( "plastic", RI_NULL );
+				// 						LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
+				// 					}
+				else if( path__.hasFn( MFn::kPfxHair ) ) 
+				{
+					// get some of the hair system parameters
+					RtFloat translucence = 0, specularPower = 0;
+					RtColor specularColor;
+
+					getPfxHairData(path__, translucence, specularPower, specularColor);
+
+					RiSurface(  "liquidpfxhair",
+						"float specularpower", &specularPower,
+						"float translucence",  &translucence,
+						"color specularcolor", &specularColor,
+						RI_NULL );
+				} 
+				else if( path__.hasFn( MFn::kPfxToon ) ) {
+					RiSurface( "liquidpfxtoon", RI_NULL );
+				}else if( path__.hasFn( MFn::kPfxGeometry ) ){
+					RiSurface( "liquidpfx", RI_NULL );
+				}else {
+					//RiSurface( "plastic", RI_NULL );
+					MFnDependencyNode shaderFn(shader);
+					RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );
+				}
+			}
+		}//if( hasSurfaceShader && !m_ignoreSurfaces )else
+	} //if( writeShaders ) 
+ 
+
+
+	return MS::kSuccess;
+}
+MStatus liqRibTranslator::writeShader_forShadow(
+									  /*const*/ bool writeShaders__, 
+									  const liqRibNodePtr &ribNode__,
+									  const bool hasVolumeShader__,
+									  const bool hasSurfaceShader__,
+									  const bool hasCustomSurfaceShader__,
+									  //const bool hasDisplacementShader__,
+									  const MString &shaderRibBox__,
+									  const MDagPath &path__,
+									  const structJob &currentJob
+
+									  )
+{
+	const bool isShadowJob = currentJob.isShadow; 
+	const bool isDeepShadowJob = currentJob.deepShadows;
+	
+	if(    ( !currentJob.deepShadows && !m_outputShadersInShadows ) // shadow
+		|| (  currentJob.deepShadows && !m_outputShadersInDeepShadows ) )//deep shadow
+	{
+		writeShaders__ = false;
+	}
+
+	MStatus status;
+
+	if( writeShaders__ ) 
+	{
+		liqRIBMsg("[5] hasVolumeShader=%d, m_ignoreVolumes=%d", hasVolumeShader__, m_ignoreVolumes );
+		if( hasVolumeShader__ && !m_ignoreVolumes ) 
+		{
+			//liqShader& currentShader( liqGetShader( ribNode__->assignedVolume.object() ) );
+			liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedVolume.object() );
+			liqRIBMsg("[1] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
+			// per shader shadow pass override
+			if( !isShadowJob || currentShader.outputInShadow )
+			{
+				currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+			}
+		}
+
+		if( hasSurfaceShader__ && !m_ignoreSurfaces )
+		{
+			if( hasCustomSurfaceShader__ )
+			{
+				if( hasCustomSurfaceShader__ == liqCustomPxShaderNode )
+				{  // Just call the write method of the custom shader
+					MFnDependencyNode customShaderDepNode( ribNode__->assignedShader.object() );
+					MPxNode *mpxNode = customShaderDepNode.userNode();
+					liqCustomNode *customNode( NULL );
+					if( mpxNode && ( customNode = dynamic_cast<liqCustomNode*>( mpxNode ) ) )
+						customNode->liquidWrite();
+					else
+						;// Should never happen in theory ... but what is the way to report a problem ???
+				}
+				else
+				{ 
+					// Default : just write the contents of the rib box
+					RiArchiveRecord( RI_VERBATIM, ( char* )shaderRibBox__.asChar() );
+					RiArchiveRecord( RI_VERBATIM, "\n" );
+				}
+			}
+			else
+			{
+				//liqShader& currentShader( liqGetShader( ribNode__->assignedShader.object() ) );
+				liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
+
+				F1(ribNode__, currentShader);
+
+				liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", isShadowJob, currentShader.outputInShadow );
+				// per shader shadow pass override
+				if( !isShadowJob || currentShader.outputInShadow )
+				{
+					currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+				}
+
+				//if( outputSurfaceShader )
+				//{
+				//	scoped_array< RtToken > tokenArray( new RtToken[ currentShader.tokenPointerArray.size() ] );
+				//	scoped_array< RtPointer > pointerArray( new RtPointer[ currentShader.tokenPointerArray.size() ] );
+				//	assignTokenArrays( currentShader.tokenPointerArray.size(), &currentShader.tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
+
+				//	char* shaderFileName;
+				//	LIQ_GET_SHADER_FILE_NAME( shaderFileName, liqglo_shortShaderNames, currentShader );
+
+				//	// check shader space transformation
+				//	if( currentShader.shaderSpace != "" )
+				//	{
+				//		RiTransformBegin();
+				//		RiCoordSysTransform( ( RtString )currentShader.shaderSpace.asChar() );
+				//	}
+				//	// output shader
+				//	// its one less as the tokenPointerArray has a preset size of 1 not 0
+				//	int shaderParamCount = currentShader.tokenPointerArray.size() - 1;
+				//	RiSurfaceV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
+				//	if( currentShader.shaderSpace != "" )
+				//		RiTransformEnd();
+				//}
+			}
+		}else{//if( hasSurfaceShader && !m_ignoreSurfaces )
+			F2(m_shaderDebug, ribNode__);
+
+			if( !m_ignoreSurfaces ) 
+			{
+				MObject shadingGroup = ribNode__->assignedShadingGroup.object();
+				MObject shader = ribNode__->findShader( shadingGroup );
+				//
+				// here we check for regular shader nodes first
+				// and assign default shader to shader-less nodes.
+				//
+				if( m_shaderDebug ) {
+					liqRIBMsg("shader debug is turned on, so the surface is constant.");
+					RiSurface( "constant", RI_NULL );
+					LIQDEBUGPRINTF("add more constant parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorBlinn.sl as an example.(?)");
+				}
+				// 					else if( shader.apiType() == MFn::kLambert ){ 
+				// 						RiSurface( "matte", RI_NULL );
+				// 						LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
+				// 					}else if( shader.apiType() == MFn::kPhong ) {
+				// 						RiSurface( "plastic", RI_NULL );
+				// 						LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
+				// 					}
+				else if( path__.hasFn( MFn::kPfxHair ) ) 
+				{
+					// get some of the hair system parameters
+					RtFloat translucence = 0, specularPower = 0;
+					RtColor specularColor;
+
+					getPfxHairData(path__, translucence, specularPower, specularColor);
+
+					RiSurface(  "liquidpfxhair",
+						"float specularpower", &specularPower,
+						"float translucence",  &translucence,
+						"color specularcolor", &specularColor,
+						RI_NULL );
+				} 
+				else if( path__.hasFn( MFn::kPfxToon ) ) {
+					RiSurface( "liquidpfxtoon", RI_NULL );
+				}else if( path__.hasFn( MFn::kPfxGeometry ) ){
+					RiSurface( "liquidpfx", RI_NULL );
+				}else {
+					//RiSurface( "plastic", RI_NULL );
+					MFnDependencyNode shaderFn(shader);
+					RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );
+				}
+			}
+		}//if( hasSurfaceShader && !m_ignoreSurfaces )else
+	} //if( writeShaders ) 
+	else if( isDeepShadowJob ) 
+	{
+		liqRIBMsg("[7] liqglo_currentJob[.deepShadows=%d, .isShadow=%d ], hasSurfaceShader=%d, hasCustomSurfaceShader=%d",
+			isDeepShadowJob, isShadowJob, hasSurfaceShader__, hasCustomSurfaceShader__ );
+
+		// if the current job is a deep shadow,
+		// we still want to output primitive color and opacity and surface shader
+		// In case of custom shaders, what should we do ? Stephane.
+		if( hasSurfaceShader__ && ! hasCustomSurfaceShader__ ) 
+		{
+			//liqShader & currentShader = liqGetShader( ribNode__->assignedShader.object());
+			liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
+
+			F1(ribNode__, currentShader);
+
+			liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.name.c_str(), currentShader.file.c_str(), currentShader.outputInShadow );
+			if(currentShader.outputInShadow){
+				currentShader.write(liqglo.liqglo_shortShaderNames, 0);
+			}
+		} 
+		else //if( hasSurfaceShader__ && ! hasCustomSurfaceShader__ ) 
+		{
+			F2(false, ribNode__ );
+
+			if( path__.hasFn( MFn::kPfxHair ) ) 
+			{
+				// get some of the hair system parameters
+				RtFloat translucence = 0, specularPower = 0;
+				RtColor specularColor;
+
+				getPfxHairData(path__, translucence, specularPower, specularColor);
+
+				RiSurface(  "liquidPfxHair",
+					"float specularPower", &specularPower,
+					"float translucence",  &translucence,
+					"color specularColor", &specularColor,
+					RI_NULL );
+			}
+		}
+	}else {
+		RiSurface( "null", RI_NULL );
+	}
+
+
+	return MS::kSuccess;
 }

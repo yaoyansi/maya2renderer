@@ -471,19 +471,39 @@ public:
 	MStatus displacementBounds(const liqRibNodePtr &ribNode__);
 	MStatus objectNonShadowAttribute(const liqRibNodePtr &ribNode__);
 	MStatus objectShadowAttribute(const liqRibNodePtr &ribNode__);
-	MStatus writeShader(
+// 	MStatus writeShader(
+// 		const bool writeShaders__, 
+// 		const liqRibNodePtr &ribNode__,
+// 		const bool hasVolumeShader__,
+// 		const bool hasSurfaceShader__,
+// 		const bool hasCustomSurfaceShader__,
+// 		//const bool hasDisplacementShader__,
+// 		const MString &shaderRibBox__,
+// 		const MDagPath &path__,
+// 		const structJob &currentJob
+// 		);
+	MStatus writeShader_(
 		const bool writeShaders__, 
 		const liqRibNodePtr &ribNode__,
 		const bool hasVolumeShader__,
 		const bool hasSurfaceShader__,
 		const bool hasCustomSurfaceShader__,
-		const bool hasDisplacementShader__,
+		//const bool hasDisplacementShader__,
 		const MString &shaderRibBox__,
 		const MDagPath &path__,
-		const bool isShadowJob, 
-		const bool isDeepShadowJob
+		const structJob &currentJob
 		);
-
+	MStatus writeShader_forShadow(
+		/*const */bool writeShaders__, 
+		const liqRibNodePtr &ribNode__,
+		const bool hasVolumeShader__,
+		const bool hasSurfaceShader__,
+		const bool hasCustomSurfaceShader__,
+		//const bool hasDisplacementShader__,
+		const MString &shaderRibBox__,
+		const MDagPath &path__,
+		const structJob &currentJob
+		);
 	//
 	void F1(
 		const liqRibNodePtr &ribNode__, liqShader &currentShader
