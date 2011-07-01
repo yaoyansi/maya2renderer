@@ -7613,7 +7613,7 @@ void liqRibTranslator::_RiOption_format_compress(bool bBinary, bool bCompress)
 #ifdef PRMAN
 		RtString style = "indented";
 		RiOption( "rib", "string asciistyle", &style, RI_NULL );
-		std::cout <<"[liquid DEBUG] RiOption( rib, string asciistyle, &style, RI_NULL );"<<std::endl;
+		//std::cout <<"[liquid DEBUG] RiOption( rib, string asciistyle, &style, RI_NULL );"<<std::endl;
 #endif
 	}
 

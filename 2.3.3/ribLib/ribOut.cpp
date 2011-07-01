@@ -135,7 +135,7 @@ CRibOut::CRibOut(const char *n) : CRiInterface() {
 		if(outFile==NULL){
 			printf("[liquid]ERROR: open file fail: %s\n", outName);
 		}
-		printf("[liquid Debug] file=%s, mode=%d\n", outName, preferBinaryRibOut);
+		//printf("[liquid Debug] file=%s, mode=%d\n", outName, preferBinaryRibOut);
 
 		outputIsPipe		=	FALSE;
 	}

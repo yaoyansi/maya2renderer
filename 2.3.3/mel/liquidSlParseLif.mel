@@ -149,7 +149,7 @@ proc string getNextLine()
  */
 proc int getParamIndex( string $name )
 {
-	//liqlog("getParamIndex(...)");
+	liqlog("getParamIndex(...)");
  	global int    $gLiquidSlNumParams;
 	global string $gLiquidSlParamNames[];
 
@@ -1260,7 +1260,7 @@ global proc liquidSlParseLif( string $shaderFile )
  */
 global proc int liquidLifIsAvailable()
 {
-	//liqlog("liquidLifIsAvailable(...)");
+	liqlog("liquidLifIsAvailable(...)");
   global int    $gLiquidSlLifExists;
   return $gLiquidSlLifExists;
 }

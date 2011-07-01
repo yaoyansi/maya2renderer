@@ -789,7 +789,7 @@ global proc string[] liquidSlDefaultToStringArray( string $default )
 
 global proc int liquidSlDefaultToBool( string $default )
 {
-	//liqlog("liquidSlDefaultToBool(...)");
+	liqlog("liquidSlDefaultToBool(...)");
     int $val = $default;
     return ($val > 0);
 }
@@ -824,7 +824,7 @@ global proc vector liquidSlDefaultToVector( string $default )
 
 global proc vector[] liquidSlDefaultToVectorArray( string $default )
 {
-	liqlog("liquidSlDefaultToVectorArray(...)");
+	liqlog("liquidSlDefaultToVectorArray("+$default+")");
 	vector $val[] = eval("vector $foo_Varray[] =" + $default );
 	return $val;
 }

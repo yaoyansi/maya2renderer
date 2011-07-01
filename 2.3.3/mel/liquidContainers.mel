@@ -710,7 +710,7 @@ global proc liquidContainerWin_dropCB( string $dragControl, string $dropControl,
 
 global proc liquidContainerWin_iconToggle( string $container, string $shader )
 {
-  //liqlog ("* liquidContainerWin_iconToggle "+$container+" "+$shader+"\n");
+  liqlog ("* liquidContainerWin_iconToggle "+$container+" "+$shader+"\n");
 
   global float $gLiquidContainerSwatchTime;
   global string $gLiquidContainerSwatchLastSelection;
@@ -911,7 +911,7 @@ global proc liquidContainerWin_iconRename( string $shader, string $newShaderName
 
 global proc liquidContainerWin_iconNew( string $shader, string $shortContainerName, string $parent)
 {
-  //liqlog("liquidContainerWin_iconNew("+$shader+","+$shortContainerName+","+$parent+"\n");
+  liqlog("liquidContainerWin_iconNew("+$shader+","+$shortContainerName+","+$parent+"\n");
   if ( !objExists( ($shader+"_liqPreview") ) ) {
     shadingNode -asTexture file -n ($shader+"_liqPreview");
     setAttr ($shader+"_liqPreview.filterType") 0;

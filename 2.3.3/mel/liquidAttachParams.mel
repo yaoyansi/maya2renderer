@@ -41,7 +41,7 @@ source xxliquidutility.mel;
 
 global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFileName )
 {
-  //liqlog("liquidAttachShaderParams( "+$currentNodeName+", "+$shaderFileName+" )");
+  liqlog("liquidAttachShaderParams( "+$currentNodeName+", "+$shaderFileName+" )");
 
 	// parse the shader
 	// don't force a reload
@@ -186,7 +186,7 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 					$argDefaultV = liquidSlDefaultToVectorArray( $paramDefault );
 					// point, vector, normal array
 					int $size = size($argDefaultV);
-
+					liqDebug("[1]addAttr -hidden true -k true -ln "+$argName+" -at double3-multi "+$currentNodeName);
 					addAttr -hidden true -k true -longName $argName -at "double3"-multi $currentNodeName;
 					addAttr -hidden true -k true -longName ( $argName+"a" ) -at "double" -parent $argName $currentNodeName;
 					addAttr -hidden true -k true -longName ( $argName+"b" ) -at "double" -parent $argName $currentNodeName;
@@ -210,7 +210,7 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 				}
 				break;
 			case "matrix":
-				error ("[liquidAttachShaderParams] matrix parameter type unsupported yet");
+				liqError("[liquidAttachShaderParams] matrix parameter type unsupported yet");
 				break;
 			default:
 				error ("[liquidAttachShaderParams] unkown parameter type "+$argType+"\n");
