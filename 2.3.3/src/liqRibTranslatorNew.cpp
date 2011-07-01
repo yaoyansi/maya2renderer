@@ -597,7 +597,7 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 			{
 				// launch renders directly
 				liquidMessage( string(), messageInfo ); // emit a '\n'
-				int exitstat = 0;
+				//int exitstat = 0;
 
 				// write out make texture pass
 				vector<structJob>::iterator iter = txtList.begin();
@@ -644,46 +644,45 @@ MStatus liqRibTranslator::_doItNew( const MArgList& args , const MString& origin
 						++iter;
 					} // while ( iter != shadowList.end() )
 				}
-				if( !exitstat ) 
+				//if( !exitstat ){
+				liquidMessage( "Rendering hero pass... ", messageInfo );
+				cout << "[!] Rendering hero pass..." << endl;
+				if( liqglo.liqglo_currentJob.skip ) 
 				{
-					liquidMessage( "Rendering hero pass... ", messageInfo );
-					cout << "[!] Rendering hero pass..." << endl;
-					if( liqglo.liqglo_currentJob.skip ) 
-					{
-						cout << "    - skipping '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
-						liquidMessage( "    - skipping '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
-					} 
-					else 
-					{
-						cout << "    + '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
-						liquidMessage( "    + '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
+					cout << "    - skipping '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
+					liquidMessage( "    - skipping '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
+				} 
+				else 
+				{
+					cout << "    + '" << liqglo.liqglo_currentJob.ribFileName.asChar() << "'" << endl;
+					liquidMessage( "    + '" + string( liqglo.liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
 
 #ifdef _WIN32
-						liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + liqglo.liqglo_currentJob.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
+					liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + liqglo.liqglo_currentJob.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
 #else
-						liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + liqglo.liqglo_currentJob.ribFileName, liqglo.liqglo_projectDir, false );
+					liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + liqglo.liqglo_currentJob.ribFileName, liqglo.liqglo_projectDir, false );
 #endif
-						/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
-						to display buckets in the renderview.
-						*/
-						if( m_renderView ) 
-						{
-							MString local = (m_renderViewLocal)? "1":"0";
-							stringstream tmp;
-							tmp << m_renderViewTimeOut;
-							//=============
-							cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
-							MString timeout( tmp.str().c_str() );
-							MString displayCmd = "liquidRenderView "+( (renderCamera=="")?"":("-c "+renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
-							if( m_renderViewCrop ) 
-								displayCmd = displayCmd + " -doRegion";
-							displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
-							//============= 
-							cout << ">> m_renderView: m_displayCmd = " <<  displayCmd.asChar() << endl;
-							MGlobal::executeCommand( displayCmd );
-						}
+					/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
+					to display buckets in the renderview.
+					*/
+					if( m_renderView ) 
+					{
+						MString local = (m_renderViewLocal)? "1":"0";
+						stringstream tmp;
+						tmp << m_renderViewTimeOut;
+						//=============
+						cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
+						MString timeout( tmp.str().c_str() );
+						MString displayCmd = "liquidRenderView "+( (renderCamera=="")?"":("-c "+renderCamera) ) + " -l " + local + " -port " + m_renderViewPort + " -timeout " + timeout ;
+						if( m_renderViewCrop ) 
+							displayCmd = displayCmd + " -doRegion";
+						displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
+						//============= 
+						cout << ">> m_renderView: m_displayCmd = " <<  displayCmd.asChar() << endl;
+						MGlobal::executeCommand( displayCmd );
 					}
-				}//if( !exitstat ) 
+				}
+				//}//if( !exitstat ) 
 			}//if( useRenderScript ) else
 		} // if( launchRender )
 
