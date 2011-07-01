@@ -3891,10 +3891,10 @@ MStatus liqRibTranslator::ribPrologue()
 		RiArchiveRecord( RI_COMMENT, "    Time  : %s", theTime );
 		// set any rib options
 		//
-		getStatisticsOptions();
+		writeStatisticsOptions();
 
 		//limits options
-		getLimitsOptions();
+		writeLimitsOptions();
 
 		// set search paths
 		//

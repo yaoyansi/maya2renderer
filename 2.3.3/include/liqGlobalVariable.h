@@ -191,11 +191,11 @@ MString getHiderOptions( MString rendername, MString hidername );
 
 void initLimitsParameters();
 void getLimitsParameters(const MFnDependencyNode& rGlobalNode);
-void getLimitsOptions();
+void writeLimitsOptions();
 
 void initStatisticsParameters();
 void getStatisticsParameters(const MFnDependencyNode& rGlobalNode);
-void getStatisticsOptions();
+void writeStatisticsOptions();
 
 void initOtherParameters();
 void getOtherParameters(const MFnDependencyNode& rGlobalNode);

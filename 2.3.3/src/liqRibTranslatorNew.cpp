@@ -1097,6 +1097,26 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 		return MS::kSuccess;
 	}
 
+	//user
+	char* user = NULL;
+#ifndef _WIN32
+	uid_t userId = getuid();
+	struct passwd *userPwd = getpwuid( userId );
+	user = userPwd->pw_name;
+#else
+	user = getenv("USERNAME");
+#endif
+
+	//time
+	time_t now;
+	time( &now );
+
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->ribPrologue_comment(
+		LIQUIDVERSION,
+		(liqglo.liqglo_projectDir + liqglo.liqglo_sceneName).asChar(),
+		user, now
+		);
+
 	liquid::RendererMgr::getInstancePtr()->getRenderer()->ribPrologue_options(currentJob);
 
 	ribStatus = kRibBegin;

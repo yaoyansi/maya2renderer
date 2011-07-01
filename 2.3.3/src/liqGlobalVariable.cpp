@@ -277,7 +277,7 @@ void getLimitsParameters(const MFnDependencyNode& rGlobalNode)
 	liquidGetPlugValue( rGlobalNode, "limitsOThreshold", liqglo.othreshold, gStatus );
 	liquidGetPlugValue( rGlobalNode, "limitsZThreshold", liqglo.zthreshold, gStatus );
 }
-void getLimitsOptions()
+void writeLimitsOptions()
 {
 	if( liqglo.bucketSize != 0 )    
 		RiOption( "limits", "bucketsize", ( RtPointer ) &liqglo.bucketSize, RI_NULL );
@@ -314,7 +314,7 @@ void getStatisticsParameters(const MFnDependencyNode& rGlobalNode)
 	if( varVal != "" ) 
 		liqglo.m_statisticsFile = parseString( varVal, false );
 }
-void getStatisticsOptions()
+void writeStatisticsOptions()
 {
 		if( liqglo.m_statistics != 0 )  
 		{
