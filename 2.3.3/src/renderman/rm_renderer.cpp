@@ -787,5 +787,96 @@ namespace renderman
 		
 		return MStatus::kSuccess;
 	}
+	//
+	MStatus Renderer::doTextures(const std::vector<structJob> &txtList_)
+	{
+		std::vector<structJob>::const_iterator iter = txtList_.begin();
+		while ( iter != txtList_.end() ) 
+		{
+			if(iter->skip)
+			{
+				cout << "    - skipping '"<< iter->ribFileName <<"'"<<endl;
+				liquidMessage("     - skipping '"+std::string(iter->ribFileName.asChar())+"'", messageInfo);
+				++iter;
+				continue;
+			}
+			liquidMessage( "Making textures '" + std::string( iter->imageName.asChar() ) + "'", messageInfo );
+			cout << "[!] Making textures '" << iter->imageName.asChar() << "'" << endl;
+#ifdef _WIN32
+			liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
+#else
+			liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
+#endif
+			++iter;
+		}
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::doShadows(const std::vector<structJob> &shadowList_)
+	{
+		liquidMessage( "Rendering shadow maps... ", messageInfo );
+		liquidMessage( "[!] Rendering shadow maps... ", messageInfo );
+		std::vector<structJob>::const_iterator iter = shadowList_.begin();
+		while ( iter != shadowList_.end() ) 
+		{
+			if( iter->skip ) 
+			{
+				cout <<"    - skipping '" << iter->ribFileName.asChar() << "'" << endl;
+				liquidMessage( "    - skipping '" + std::string( iter->ribFileName.asChar() ) + "'", messageInfo );
+				++iter;
+				continue;
+			}
+			cout << "    + '" << iter->ribFileName.asChar() << "'" << endl;
+			liquidMessage( "    + '" + std::string( iter->ribFileName.asChar() ) + "'", messageInfo );
+#ifdef _WIN32
+			if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " \"" + iter->ribFileName + "\"", liqglo.liqglo_projectDir, true ) )
+#else
+			if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " " + iter->ribFileName, liqglo.liqglo_projectDir, true ) )
+#endif
+				break;
+			++iter;
+		} // while ( iter != shadowList_.end() )
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::doRenderView()
+	{
+		MString local = (liqglo.m_renderViewLocal)? "1":"0";
+		std::stringstream tmp;
+		tmp << liqglo.m_renderViewTimeOut;
+		//=============
+		cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
+		MString timeout( tmp.str().c_str() );
+		MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + liqglo.m_renderViewPort + " -timeout " + timeout ;
+		if( liqglo.m_renderViewCrop ) 
+			displayCmd = displayCmd + " -doRegion";
+		displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
+		//============= 
+		cout << ">> m_renderView: m_displayCmd = " <<  displayCmd.asChar() << endl;
+		MGlobal::executeCommand( displayCmd );
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::renderAll_local(const structJob& currentJob____)
+	{
+		cout << "    + '" << currentJob____.ribFileName.asChar() << "'" << endl;
+		liquidMessage( "    + '" + std::string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
 
+#ifdef _WIN32
+		cout << "1.liqProcessLauncher::execute("<<liqglo.liquidRenderer.renderCommand<<", "<<liqglo.liqglo_rifParams+" "+liqglo.liquidRenderer.renderCmdFlags+" \""+currentJob____.ribFileName+"\""<<","<<liqglo.liqglo_projectDir<<","<< false <<")"<< endl;
+		liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + currentJob____.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
+#else
+		liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + currentJob____.ribFileName, liqglo.liqglo_projectDir, false );
+#endif
+		/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
+		to display buckets in the renderview.
+		*/
+		if( liqglo.m_renderView ) 
+		{
+			doRenderView();
+		}
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::renderAll_remote(const structJob& currentJob____)
+	{
+
+		return MStatus::kSuccess;
+	}
 }//namespace

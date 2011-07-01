@@ -24,7 +24,7 @@ namespace elvishray
 	 void my_ei_end_scene();
 
 	//	Shader Definitions:
-	 void my_ei_shader( const char *instance_name, int end=ei_end, ... );
+	// void my_ei_shader( const char *instance_name, int end=ei_end, ... );
 	// void my_ei_incremental_shader( const char *named_shader, ... );
 
 
@@ -123,7 +123,8 @@ namespace elvishray
 	// void my_ei_incremental_camera( const char *name );
 
 	//	Output Statements:
-	 void my_ei_output( const char *filename, int fileformat, int datatype, int end_=ei_end, ... );
+	 void my_ei_output( const char *filename, int fileformat, int datatype, const char *datatypename, int end_=ei_end, ... );
+//	 void my_ei_output_color( const char *filename, int fileformat, int datatype, int end_, ... )
 	 void my_ei_imager( const char *shader_name, int end_=ei_end, ... );
 
 	//	Other Camera Statements:
@@ -266,7 +267,11 @@ namespace elvishray
 
 	 void my_ei_end_instgroup();
 //
-void my_ei_shader(const char* shadertype, const char* param0, const float v, int end, ...);
+void my_ei_shader(
+				  const char* shaderInstanceName, 
+				  const char* shadername, const char* shadertype,
+				  const char* param0, const float v, 
+				  int end, ...);
 void my_ei_shading_rate(const float v);
 
 }

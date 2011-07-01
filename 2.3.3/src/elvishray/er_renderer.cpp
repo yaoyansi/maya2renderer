@@ -118,15 +118,17 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportShadowPassLight()");
-		_S( ei_shader( "shadowlight", "intensity", 10.0, ei_end) );
+		std::string sShaderInstanceName(shaderinstance+"_shader");
+		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "shadowlight", "intensity", 3.0, ei_end) );
 
-		_S( ei_light( shadertype.c_str() ) );
-		_S( ei_lightsource(	 "shadowlight", ei_end ) );
+		std::string sLightObjectName(shaderinstance+"_object");
+		_S( ei_light( sLightObjectName.c_str() ) );
+		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 		_S( ei_end_light() );
 
 		_S( ei_instance(  shaderinstance.c_str() ) );
-		_S( ei_element(	 shadertype.c_str() ) );
+		_S( ei_element(	 sLightObjectName.c_str() ) );
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -139,17 +141,19 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportAmbientLight()");
-		_S( ei_shader( "ambientlight", "intensity", 3.0, ei_end) );
+		std::string sShaderInstanceName(shaderinstance+"_shader");
+		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "ambientlight", "intensity", 3.0, ei_end) );
 
 
-		_S( ei_light(  shadertype.c_str() ) );
-		_S( ei_lightsource(	"ambientlight", ei_end ) );
+		std::string sLightObjectName(shaderinstance+"_object");
+		_S( ei_light(  sLightObjectName.c_str() ) );
+		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 
 		_S( ei_end_light() );
 
 		_S( ei_instance(  shaderinstance.c_str()) );
-		_S( ei_element(	 shadertype.c_str()));
+		_S( ei_element(	 sLightObjectName.c_str()));
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -184,15 +188,17 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("// Renderer::exportDistantLight()");
-		_S( ei_shader( "distantlight", "intensity", 3.0, ei_end) );
+		std::string sShaderInstanceName(shaderinstance+"_shader");
+		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "distantlight", "intensity", 3.0, ei_end) );
 
-		_S( ei_light( shadertype.c_str()) );
-		_S( ei_lightsource(	"distantlight", ei_end ) );
+		std::string sLightObjectName(shaderinstance+"_object");
+		_S( ei_light( sLightObjectName.c_str()) );
+		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 		_S( ei_end_light() );
 
 		_S( ei_instance( shaderinstance.c_str()) );
-		_S( ei_element(	shadertype.c_str()) );
+		_S( ei_element(	sLightObjectName.c_str()) );
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -225,15 +231,17 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportPointLight()");
-		_S( ei_shader(  "pointlight", "intensity", 3.0, ei_end) );
+		std::string sShaderInstanceName(shaderinstance+"_shader");
+		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "pointlight", "intensity", 3.0, ei_end) );
 
-		_S( ei_light(  shadertype.c_str() ) );
-		_S( ei_lightsource(	"pointlight", ei_end ) );
+		std::string sLightObjectName(shaderinstance+"_object");
+		_S( ei_light(  sLightObjectName.c_str() ) );
+		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 		_S( ei_end_light() );
 
 		_S( ei_instance( shaderinstance.c_str() ) );
-		_S( ei_element( shadertype.c_str() ) );
+		_S( ei_element( sLightObjectName.c_str() ) );
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -289,15 +297,17 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportSpotLight()");
-		_S( ei_shader( "spotlight", "intensity", 3.0, ei_end) );
+		std::string sShaderInstanceName(shaderinstance+"_shader");
+		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "spotlight", "intensity", 3, ei_end ) );
 
-		_S( ei_light( shadertype.c_str() ) );
-		_S( ei_lightsource(	"spotlight", ei_end ) );
+		std::string sLightObjectName(shaderinstance+"_object");
+		_S( ei_light( sLightObjectName.c_str() ) );
+		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 		_S( ei_end_light() );
 
 		_S( ei_instance( shaderinstance.c_str() ) );
-		_S( ei_element(	shadertype.c_str() ) );
+		_S( ei_element(	sLightObjectName.c_str() ) );
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -328,14 +338,17 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportAreaLight()");
-		_S( ei_shader( "arealight", "intensity", 3.0, ei_end) );
-		_S( ei_light(  shadertype.c_str() ) );
-		_S( ei_lightsource(	"arealight", ei_end ) );
+		std::string sShaderInstanceName(shaderinstance+"_shader");
+		_S( ei_shader(sShaderInstanceName.c_str(), "shadername", "arealight", "intensity", 3.0, ei_end) );
+
+		std::string sLightObjectName(shaderinstance+"_object");
+		_S( ei_light(  sLightObjectName.c_str() ) );
+		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
 		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
 		_S( ei_end_light() );
 
 		_S( ei_instance( shaderinstance.c_str() ) );
-		_S( ei_element(	 shadertype.c_str() ) );
+		_S( ei_element(	 sLightObjectName.c_str() ) );
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -452,8 +465,22 @@ namespace elvishray
 		assert(!m_root_group.empty());
 		assert(currentJob.camera[0].name.length());
 		assert(!m_option.empty());
+
+		// start render
+		if (MayaConnection::getInstance()->startRender( currentJob.width, currentJob.height, false) != MS::kSuccess)
+		{
+			_s( "//MayaConnection: error occured in startRender." );
+			return MS::kFailure;
+		}
 		_S( ei_render( m_root_group.c_str(), currentJob.camera[0].name.asChar(), m_option.c_str() ) );
 		//ei_render( "world",	"caminst1",	"opt" );
+		
+		// end render
+		if (MayaConnection::getInstance()->endRender() != MS::kSuccess)
+		{
+			_s( "//MayaConnection: error occured in endRender." );
+			return MS::kFailure;
+		}
 
 		_S( ei_end_scene() );
 		return MS::kSuccess;
@@ -566,9 +593,9 @@ namespace elvishray
 		_s("\n//############################### camera #");
 		_S( ei_camera( currentJob.camera[0].name.asChar() ) );
 			_S( ei_frame( lframe, off ) );
-	// 		if(outputImageFullPath){
-	// 			ei_output( outputImageFullPath,EI_IMG_BMP, EI_IMG_DATA_RGB, "color" );
-	// 		}
+	 		if(currentJob.imageName.length()!=0){
+	 			_S( ei_output( currentJob.imageName.asChar(), EI_IMG_BMP, EI_IMG_DATA_RGB, "color" ) );
+	 		}
 			_S( ei_focal( currentJob.camera[0].focalLength ) );
 			_S( ei_aperture( 2.0*currentJob.camera[0].focalLength*tan(currentJob.camera[0].hFOV/2.0) ) );
 			_S( ei_aspect( currentJob.aspectRatio ) );
@@ -599,6 +626,27 @@ namespace elvishray
 	}
 	//
 	MStatus Renderer::frameEpilogue(const long scanTime)
+	{
+		return MStatus::kSuccess;
+	}
+	//
+	MStatus Renderer::doTextures(const std::vector<structJob> &txtList_)
+	{
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::doShadows(const std::vector<structJob> &shadowList_)
+	{
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::doRenderView()
+	{
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::renderAll_local(const structJob& currentJob____)
+	{
+		return MStatus::kSuccess;
+	}
+	MStatus Renderer::renderAll_remote(const structJob& currentJob____)
 	{
 		return MStatus::kSuccess;
 	}

@@ -506,68 +506,17 @@ TempControlBreak liqRibTranslator::processOneFrame(
 //
 void liqRibTranslator::doRenderView()
 {
-	MString local = (liqglo.m_renderViewLocal)? "1":"0";
-	stringstream tmp;
-	tmp << liqglo.m_renderViewTimeOut;
-	//=============
-	cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
-	MString timeout( tmp.str().c_str() );
-	MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + liqglo.m_renderViewPort + " -timeout " + timeout ;
-	if( liqglo.m_renderViewCrop ) 
-		displayCmd = displayCmd + " -doRegion";
-	displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
-	//============= 
-	cout << ">> m_renderView: m_displayCmd = " <<  displayCmd.asChar() << endl;
-	MGlobal::executeCommand( displayCmd );
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->doRenderView();
 }
 //
-void liqRibTranslator::doTextures()
+void liqRibTranslator::doTextures(const std::vector<structJob> &txtList_)
 {
-	vector<structJob>::iterator iter = txtList.begin();
-	while ( iter != txtList.end() ) 
-	{
-		if(iter->skip)
-		{
-			cout << "    - skipping '"<< iter->ribFileName <<"'"<<endl;
-			liquidMessage("     - skipping '"+string(iter->ribFileName.asChar())+"'", messageInfo);
-			++iter;
-			continue;
-		}
-		liquidMessage( "Making textures '" + string( iter->imageName.asChar() ) + "'", messageInfo );
-		cout << "[!] Making textures '" << iter->imageName.asChar() << "'" << endl;
-#ifdef _WIN32
-		liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
-#else
-		liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
-#endif
-		++iter;
-	}
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->doTextures(txtList_);
 }
 //
-void liqRibTranslator::doShadows()
+void liqRibTranslator::doShadows(const std::vector<structJob> &shadowList_)
 {
-	liquidMessage( "Rendering shadow maps... ", messageInfo );
-	cout << endl << "[!] Rendering shadow maps... " << endl;
-	vector<structJob>::iterator iter = shadowList.begin();
-	while ( iter != shadowList.end() ) 
-	{
-		if( iter->skip ) 
-		{
-			cout <<"    - skipping '" << iter->ribFileName.asChar() << "'" << endl;
-			liquidMessage( "    - skipping '" + string( iter->ribFileName.asChar() ) + "'", messageInfo );
-			++iter;
-			continue;
-		}
-		cout << "    + '" << iter->ribFileName.asChar() << "'" << endl;
-		liquidMessage( "    + '" + string( iter->ribFileName.asChar() ) + "'", messageInfo );
-#ifdef _WIN32
-		if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " \"" + iter->ribFileName + "\"", liqglo.liqglo_projectDir, true ) )
-#else
-		if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " " + iter->ribFileName, liqglo.liqglo_projectDir, true ) )
-#endif
-			break;
-		++iter;
-	} // while ( iter != shadowList.end() )
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->doShadows(shadowList_);
 }
 //
 void liqRibTranslator::postActions(const MString& originalLayer__)
@@ -2541,11 +2490,11 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 				//int exitstat = 0;
 
 				// write out make texture pass
-				doTextures();
+				doTextures(txtList);
 
 				if( liqglo.liqglo_doShadows ) 
 				{
-					doShadows();
+					doShadows(shadowList);
 				}
 
 				//if( !exitstat ){
@@ -2560,22 +2509,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 				} 
 				else 
 				{
-					cout << "    + '" << currentJob____.ribFileName.asChar() << "'" << endl;
-					liquidMessage( "    + '" + string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
-
-#ifdef _WIN32
-					cout << "1.liqProcessLauncher::execute("<<liqglo.liquidRenderer.renderCommand<<", "<<liqglo.liqglo_rifParams+" "+liqglo.liquidRenderer.renderCmdFlags+" \""+currentJob____.ribFileName+"\""<<","<<liqglo.liqglo_projectDir<<","<< false <<")"<< endl;
-					liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + currentJob____.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
-#else
-					liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + currentJob____.ribFileName, liqglo.liqglo_projectDir, false );
-#endif
-					/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
-					to display buckets in the renderview.
-					*/
-					if( liqglo.m_renderView ) 
-					{
-						doRenderView();
-					}
+					liquid::RendererMgr::getInstancePtr()->getRenderer()->renderAll_local(currentJob____);
 				}
 				//}//if( !exitstat )
 

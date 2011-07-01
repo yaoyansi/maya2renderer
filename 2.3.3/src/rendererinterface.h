@@ -41,7 +41,11 @@ public:
 	virtual MStatus frameEpilogue(const long scanTime) = 0;
 	virtual MStatus ribPrologue_end(const structJob& currentJob) = 0;
 //	virtual MStatus ribEpilogue() = 0;
-
+	virtual MStatus doRenderView() = 0;
+	virtual MStatus doTextures(const std::vector<structJob> &txtList_) = 0;
+	virtual MStatus doShadows(const std::vector<structJob> &shadowList_) = 0;
+	virtual MStatus renderAll_local(const structJob& currentJob____) = 0;
+	virtual MStatus renderAll_remote(const structJob& currentJob____) = 0;
 
 	virtual void openLog() = 0;
 	virtual void closeLog() = 0;

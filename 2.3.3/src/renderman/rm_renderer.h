@@ -31,8 +31,11 @@ namespace renderman
 		virtual MStatus frameEpilogue(const long scanTime);
 		virtual MStatus ribPrologue_end(const structJob& currentJob);
 //		virtual MStatus ribEpilogue();
-
-
+		virtual MStatus doRenderView();
+		virtual MStatus doTextures(const std::vector<structJob> &txtList_);
+		virtual MStatus doShadows(const std::vector<structJob> &shadowList_);
+		virtual MStatus renderAll_local(const structJob& currentJob____);
+		virtual MStatus renderAll_remote(const structJob& currentJob____);
 
 		virtual void openLog();
 		virtual void closeLog();

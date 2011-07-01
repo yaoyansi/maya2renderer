@@ -412,8 +412,8 @@ public:
 		struct liqGlobalVariable &liqglo__
 		);
 	void doRenderView();
-	void doTextures();
-	void doShadows();
+	void doTextures(const std::vector<structJob> &txtList_);
+	void doShadows(const std::vector<structJob> &shadowList_);
 	void postActions(const MString& originalLayer__);
 	MStatus buildShadowJobs__();
 	MStatus scanScene__(float lframe, int sample );

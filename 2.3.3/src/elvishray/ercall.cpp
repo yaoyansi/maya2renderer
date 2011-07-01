@@ -57,11 +57,11 @@ namespace elvishray
 	}
 
 	//	Shader Definitions:
-	void my_ei_shader( const char *instance_name, int end_,  ... )
-	{
-		_s("ei_shader(\""<<instance_name<<"\","<< end_<<")");
-		_e( ei_shader(instance_name, end_));
-	}
+// 	void my_ei_shader( const char *instance_name, int end_,  ... )
+// 	{
+// 		_s("ei_shader(\""<<instance_name<<"\","<< end_<<")");
+// 		_e( ei_shader(instance_name, end_));
+// 	}
 	// void my_ei_incremental_shader( const char *named_shader, ... ){}
 
 
@@ -395,11 +395,16 @@ namespace elvishray
 	// void my_ei_incremental_camera( const char *name ){}
 
 	//	Output Statements:
-	void my_ei_output( const char *filename, int fileformat, int datatype, int end_, ... )
+	void my_ei_output( const char *filename, int fileformat, int datatype, const char *datatypename, int end_, ... )
 	{
-		_s("ei_output(\""<< filename <<","<<fileformat<<","<<datatype<<"\", "<<end_<<")");
-		_e( ei_output(filename, fileformat, datatype, end_));
+		_s("ei_output(\""<< filename <<"\","<<fileformat<<","<<datatype<<", \""<<datatypename<<"\", "<<end_<<")");
+		_e( ei_output(filename, fileformat, datatype, datatypename, end_));
 	}
+// 	void my_ei_output_color( const char *filename, int fileformat, int datatype, int end_, ... )
+// 	{
+// 		_s("ei_output(\""<< filename <<","<<fileformat<<","<<datatype<<"\", \"color\", "<<end_<<")");
+// 		_e( ei_output(filename, fileformat, datatype, "color", end_));
+// 	}
 	void my_ei_imager( const char *shader_name, int end_,... )
 	{
 		_s("ei_imager(\""<< shader_name <<"\", "<<end_ <<")");
@@ -855,10 +860,14 @@ namespace elvishray
 	}
 	//
 	//
-	void my_ei_shader(const char* shadertype, const char* param0, const float v, int end_, ...)
+	void my_ei_shader(
+		const char* shaderInstanceName, 
+		const char* shadername, const char* shadertype,
+		const char* param0, const float v, 
+		int end_, ...)
 	{
-		_s("ei_shader(\""<<shadertype<<"\", \""<<param0<<"\","<<v<<", "<< end_<<")");
-		_e( ei_shader(shadertype, param0, v,  end_));
+		_s("ei_shader(\""<<shaderInstanceName<<"\",\""<<shadername<<"\",\""<<shadertype<<"\", \""<<param0<<"\",ei_var("<<v<<"), "<< end_<<")");
+		_e( ei_shader(shaderInstanceName, shadername, shadertype, param0, ei_var(v),  end_) );
 	}
  
 }
