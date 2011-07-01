@@ -703,8 +703,8 @@ namespace elvishray
 	}
 	void my_ei_variable_color( const char *name, const color &c )
 	{
-		_s("ei_variable( et_color, \""<<name<<"\","<<c.r<<","<<c.g<<","<<c.b<<")" ); 
-		_e( ei_variable(et_color, name, c.r, c.g, c.b));
+		_s("ei_variable( et_color, \""<<name<<"\", color("<<c.r<<","<<c.g<<","<<c.b<<") )" ); 
+		_e( ei_variable(et_color, name, c));
 	}
 	void my_ei_triangle( int mtl, int v1, int v2, int v3 )
 	{
