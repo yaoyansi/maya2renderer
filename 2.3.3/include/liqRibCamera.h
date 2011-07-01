@@ -16,7 +16,7 @@ public:
 	static void gatherDataForJob(
 		struct liqGlobalVariable &liqglo___, 
 		structJob &currentJob___,
-		std::vector<structJob>  jobList__,
+		std::vector<structJob>  &jobList__,
 		const bool m_outputShadowPass_,
 		const bool m_outputHeroPass_
 	);

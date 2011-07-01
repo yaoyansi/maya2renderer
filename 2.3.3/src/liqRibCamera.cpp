@@ -23,7 +23,7 @@ tRibCameraMgr::~tRibCameraMgr()
 void tRibCameraMgr::gatherDataForJob(
 	struct liqGlobalVariable &liqglo___, 
 	structJob &thisJob___,
-	std::vector<structJob>  jobList__,
+	std::vector<structJob>  &jobList__,
 	const bool m_outputShadowPass_,
 	const bool m_outputHeroPass_
 	)
