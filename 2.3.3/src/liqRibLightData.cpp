@@ -1004,177 +1004,335 @@ void liqRibLightData::_write(const structJob &currentJob)
           break;
         
         case MRLT_Distant:
-          if ( liqglo.liqglo_doShadows && usingShadow ) 
-          {
-			  RtString shadowname = const_cast< char* >( shadowName.asChar() );
-			  RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-            handle = RiLightSource( "liquiddistant",
-                                    "intensity",              &intensity,
-                                    "lightcolor",             color,
-                                    "string shadowname",      &shadowname,
-                                    "float shadowfiltersize", rayTraced ? &shadowRadius : &shadowFilterSize,
-                                    "float shadowbias",       &shadowBias,
-                                    "float shadowsamples",    &shadowSamples,
-                                    "float shadowblur",       &shadowBlur,
-                                    "color shadowcolor",      &shadowColor,
-                                    "float __nondiffuse",     &nonDiffuse,
-                                    "float __nonspecular",    &nonSpecular,
-                                    "string __category",      &cat,
-                                    "float lightID",          &lightID,
-                                    RI_NULL );
-          } 
-          else 
-          {
-			  RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-            handle = RiLightSource( "liquiddistant",
-                                    "intensity",            &intensity,
-                                    "lightcolor",           color,
-                                    "color shadowcolor",    &shadowColor,
-                                    "float __nondiffuse",   &nonDiffuse,
-                                    "float __nonspecular",  &nonSpecular,
-                                    "string __category",    &cat,
-                                    "float lightID",        &lightID,
-                                    RI_NULL );
-          }
+			{
+				liqFloat    i_intensity = 1;
+				liqColor i_lightcolor;	setColor(i_lightcolor, 1.0);
+				assert(i_lightcolor[0] == 1.0f);
+				assert(i_lightcolor[1] == 1.0f);
+				assert(i_lightcolor[2] == 1.0f);
+				liqString i_shadowname = "";  /* shadow map name or "raytrace" for traced shadows */
+				liqFloat i_shadowbias = 0.01;
+				liqFloat i_shadowblur = 0.0;
+				liqFloat i_shadowsamples = 16; /* samples or rays */
+				liqFloat i_shadowfiltersize = 1;
+				liqColor i_shadowcolor;	setColor(i_shadowcolor, 0.0);
+				liqFloat  i_lightID=0;
+				liqString o_category="";
+				liqFloat o_shadowF = 0;
+				liqColor o_shadowC;	setColor(o_shadowC, 0.0);
+				liqColor o_unshadowed_Cl;	setColor(o_unshadowed_Cl, 0.0);
+				liqFloat o_nondiffuse = 0;  /* set to 1 to exclude from diffuse light */
+				liqFloat o_nonspecular = 0; /* set to 1 to exclude from highlights */
+
+				if ( liqglo.liqglo_doShadows && usingShadow ) 
+				{
+					i_intensity = intensity;
+					setColor(i_lightcolor, color);
+					i_shadowname  = const_cast< char* >( shadowName.asChar() );
+					i_shadowfiltersize = rayTraced ? shadowRadius : shadowFilterSize;
+					i_shadowbias = shadowBias;
+					i_shadowsamples = shadowSamples;
+					i_shadowblur = shadowBlur;
+					setColor(i_shadowcolor, shadowColor);
+					o_nondiffuse = nonDiffuse;
+					o_nonspecular = nonSpecular;
+					o_category = cat;
+					i_lightID = lightID;
+				}else{
+					i_intensity = intensity;
+					setColor(i_lightcolor, color);
+					setColor(i_shadowcolor, shadowColor);
+					o_nondiffuse = nonDiffuse;
+					o_nonspecular = nonSpecular;
+					o_category = cat;
+					i_lightID = lightID;
+				}
+
+				RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
+				handle = RiLightSource( 
+					"liquiddistant",
+					"intensity",              &i_intensity,
+					"lightcolor",             &i_lightcolor,
+					"string shadowname",      &i_shadowname,
+					"float shadowbias",       &i_shadowbias,
+					"float shadowblur",       &i_shadowblur,
+					"float shadowsamples",    &i_shadowsamples,
+					"float shadowfiltersize", &i_shadowfiltersize,
+					"color shadowcolor",      &i_shadowcolor,
+					"float lightID",          &i_lightID,
+					"string __category",      &o_category,
+
+					"float __shadowF",			&o_shadowF,
+					"color __shadowC",			&o_shadowC,
+					"color __unshadowed_Cl",	&o_unshadowed_Cl,
+					"float __nondiffuse",		&o_nondiffuse,
+					"float __nonspecular",		&o_nonspecular,
+					RI_NULL 
+				);
+			}
           break;
         
         case MRLT_Point:
-          if ( liqglo.liqglo_doShadows && usingShadow ) 
-          {
-            MString	px = rayTraced ? "raytrace" : autoShadowName( pPX );
-            MString	nx = rayTraced ? "raytrace" : autoShadowName( pNX );
-            MString	py = rayTraced ? "raytrace" : autoShadowName( pPY );
-            MString	ny = rayTraced ? "raytrace" : autoShadowName( pNY );
-            MString	pz = rayTraced ? "raytrace" : autoShadowName( pPZ );
-            MString	nz = rayTraced ? "raytrace" : autoShadowName( pNZ );
-            RtString sfpx = const_cast<char*>( px.asChar() );
-            RtString sfnx = const_cast<char*>( nx.asChar() );
-            RtString sfpy = const_cast<char*>( py.asChar() );
-            RtString sfny = const_cast<char*>( ny.asChar() );
-            RtString sfpz = const_cast<char*>( pz.asChar() );
-            RtString sfnz = const_cast<char*>( nz.asChar() );
+			{
+					liqFloat    i_intensity = 1;
+					liqColor i_lightcolor;	setColor(i_lightcolor, 1);
+					liqFloat i_decay = 0;
+					liqString i_shadownamepx = "";
+					liqString i_shadownamenx = "";
+					liqString i_shadownamepy = "";
+					liqString i_shadownameny = "";
+					liqString i_shadownamepz = "";
+					liqString i_shadownamenz = "";
+					liqFloat i_shadowbias = 0.01;
+					liqFloat i_shadowblur = 0.0;
+					liqFloat i_shadowsamples = 16; /* samples or rays */
+					liqFloat i_shadowfiltersize = 1.0;
+					liqColor i_shadowcolor;	setColor(i_shadowcolor, 0.0);
+					liqFloat  i_lightID=0;
+					liqString o_category="";
+					liqFloat	o_shadowF = 0;
+					liqColor	o_shadowC;setColor(o_shadowC, 1.0);
+					liqColor	o_unshadowed_Cl;setColor(o_unshadowed_Cl, 0.0);
+					liqFloat o_nondiffuse = 0;  /* set to 1 to exclude from diffuse light */
+					liqFloat o_nonspecular = 0; /* set to 1 to exclude from highlights */
 
-			RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-            handle = RiLightSource( "liquidpoint",
-                                    "intensity",                  &intensity,
-                                    "lightcolor",                 color,
-                                    "float decay",                &decay,
-                                    "string shadownamepx",        &sfpx,
-                                    "string shadownamenx",        &sfnx,
-                                    "string shadownamepy",        &sfpy,
-                                    "string shadownameny",        &sfny,
-                                    "string shadownamepz",        &sfpz,
-                                    "string shadownamenz",        &sfnz,
-                                    "float shadowfiltersize",     rayTraced ? &shadowRadius : &shadowFilterSize,
-                                    "float shadowbias",           &shadowBias,
-                                    "float shadowsamples",        &shadowSamples,
-                                    "float shadowblur",           &shadowBlur,
-                                    "color shadowcolor",          &shadowColor,
-                                    "float __nondiffuse",         &nonDiffuse,
-                                    "float __nonspecular",        &nonSpecular,
-                                    "string __category",          &cat,
-                                    "float lightID",              &lightID,
-                                    RI_NULL );
-          } 
-          else 
-          {
+			  if ( liqglo.liqglo_doShadows && usingShadow ) 
+			  {
+				  liqFloat    i_intensity = intensity;
+				  setColor(i_lightcolor, color);
+				  i_decay = decay;
+				  {
+					  MString	px = rayTraced ? "raytrace" : autoShadowName( pPX );
+					  MString	nx = rayTraced ? "raytrace" : autoShadowName( pNX );
+					  MString	py = rayTraced ? "raytrace" : autoShadowName( pPY );
+					  MString	ny = rayTraced ? "raytrace" : autoShadowName( pNY );
+					  MString	pz = rayTraced ? "raytrace" : autoShadowName( pPZ );
+					  MString	nz = rayTraced ? "raytrace" : autoShadowName( pNZ );
+					  i_shadownamepx = const_cast<char*>( px.asChar() );
+					  i_shadownamenx = const_cast<char*>( nx.asChar() );
+					  i_shadownamepy = const_cast<char*>( py.asChar() );
+					  i_shadownameny = const_cast<char*>( ny.asChar() );
+					  i_shadownamepz = const_cast<char*>( pz.asChar() );
+					  i_shadownamenz = const_cast<char*>( nz.asChar() );
+				  }
+				  i_shadowbias = shadowBias;
+				  i_shadowblur = shadowBlur;
+				  i_shadowsamples = shadowSamples; /* samples or rays */
+				  i_shadowfiltersize = rayTraced ? shadowRadius : shadowFilterSize;
+				  setColor(i_shadowcolor, shadowColor);
+				  i_lightID = lightID;
+				  o_category=cat;
+				  o_nondiffuse = nonDiffuse;  /* set to 1 to exclude from diffuse light */
+				  o_nonspecular = nonSpecular; /* set to 1 to exclude from highlights */
+			  }else{
+					i_intensity = intensity;
+					setColor(i_lightcolor, color);
+					i_decay = decay;
+					setColor(i_shadowcolor, shadowColor);
+					i_lightID = lightID;					
+					o_category=cat;
+					o_nondiffuse = nonDiffuse;  /* set to 1 to exclude from diffuse light */
+					o_nonspecular = nonSpecular; /* set to 1 to exclude from highlights */
+			  }
 			  RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-            handle = RiLightSource( "liquidpoint",
-                                    "intensity",            &intensity,
-                                    "lightcolor",           color,
-                                    "color shadowcolor",    &shadowColor,
-                                    "float decay",          &decay,
-                                    "float __nondiffuse",   &nonDiffuse,
-                                    "float __nonspecular",  &nonSpecular,
-                                    "string __category",    &cat,
-                                    "float lightID",        &lightID,
-                                    RI_NULL );
-          }
+			  handle = RiLightSource( "liquidpoint",
+				  "intensity",                  &i_intensity,
+				  "lightcolor",                 &i_lightcolor,
+				  "float decay",                &i_decay,
+				  "string shadownamepx",        &i_shadownamepx,
+				  "string shadownamenx",        &i_shadownamenx,
+				  "string shadownamepy",        &i_shadownamepy,
+				  "string shadownameny",        &i_shadownameny,
+				  "string shadownamepz",        &i_shadownamepz,
+				  "string shadownamenz",        &i_shadownamenz,
+				  "float shadowbias",           &i_shadowbias,
+				  "float shadowblur",           &i_shadowblur,
+				  "float shadowsamples",        &i_shadowsamples,
+				  "float shadowfiltersize",     &i_shadowfiltersize,
+				  "color shadowcolor",          &i_shadowcolor,
+				  "float lightID",              &i_lightID,
+				  "string __category",          &o_category,
+				  "float __shadowF",			&o_shadowF,
+				  "color __shadowC",			&o_shadowC,
+				  "color __unshadowed_Cl",	    &o_unshadowed_Cl,
+				  "float __nondiffuse",         &o_nondiffuse,
+				  "float __nonspecular",        &o_nonspecular,
+				  RI_NULL );
+			}
           break;
         case MRLT_Spot:
-          if (liqglo.liqglo_doShadows && usingShadow) 
-          {
-            /* if ( ( shadowName == "" ) || ( shadowName.substring( 0, 9 ) == "autoshadow" ) ) {
-              shadowName = liqglo_texDir + autoShadowName();
-            } */
-            RtString shadowname = const_cast< char* >( shadowName.asChar() );
-			RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-            handle = RiLightSource( "liquidspot",
-                                    "intensity",                    &intensity,
-                                    "lightcolor",                   color,
-                                    "float coneangle",              &coneAngle,
-                                    "float penumbraangle",          &penumbraAngle,
-                                    "float dropoff",                &dropOff,
-                                    "float decay",                  &decay,
-                                    "float barndoors",              &barnDoors,
-                                    "float leftbarndoor",           &leftBarnDoor,
-                                    "float rightbarndoor",          &rightBarnDoor,
-                                    "float topbarndoor",            &topBarnDoor,
-                                    "float bottombarndoor",         &bottomBarnDoor,
-                                    "float decayRegions",           &decayRegions,
-                                    "float startDistance1",         &startDistance1,
-                                    "float endDistance1",           &endDistance1,
-                                    "float startDistance2",         &startDistance2,
-                                    "float endDistance2",           &endDistance2,
-                                    "float startDistance3",         &startDistance3,
-                                    "float endDistance3",           &endDistance3,
-                                    "float startDistanceIntensity1",&startDistanceIntensity1,
-                                    "float endDistanceIntensity1",  &endDistanceIntensity1,
-                                    "float startDistanceIntensity2",&startDistanceIntensity2,
-                                    "float endDistanceIntensity2",  &endDistanceIntensity2,
-                                    "float startDistanceIntensity3",&startDistanceIntensity3,
-                                    "float endDistanceIntensity3",  &endDistanceIntensity3,
-                                    "string shadowname",            &shadowname,
-                                    "float shadowfiltersize",       rayTraced ? &shadowRadius : &shadowFilterSize,
-                                    "float shadowbias",             &shadowBias,
-                                    "float shadowsamples",          &shadowSamples,
-                                    "float shadowblur",             &shadowBlur,
-                                    "color shadowcolor",            &shadowColor,
-                                    "float __nondiffuse",           &nonDiffuse,
-                                    "float __nonspecular",          &nonSpecular,
-                                    "string __category",            &cat,
-                                    "float lightID",                &lightID,
-                                    RI_NULL );
-            } 
-            else 
-            {
-              RtString shadowname = const_cast< char* >( shadowName.asChar() );
-            RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
-              handle = RiLightSource( "liquidspot",
-                                    "intensity",                    &intensity,
-                                    "lightcolor",                   color,
-                                    "color shadowcolor",            &shadowColor,
-                                    "float coneangle",              &coneAngle,
-                                    "float penumbraangle",          &penumbraAngle,
-                                    "float dropoff",                &dropOff,
-                                    "float decay",                  &decay,
-                                    "float barndoors",              &barnDoors,
-                                    "float leftbarndoor",           &leftBarnDoor,
-                                    "float rightbarndoor",          &rightBarnDoor,
-                                    "float topbarndoor",            &topBarnDoor,
-                                    "float bottombarndoor",         &bottomBarnDoor,
-                                    "float decayRegions",           &decayRegions,
-                                    "float startDistance1",         &startDistance1,
-                                    "float endDistance1",           &endDistance1,
-                                    "float startDistance2",         &startDistance2,
-                                    "float endDistance2",           &endDistance2,
-                                    "float startDistance3",         &startDistance3,
-                                    "float endDistance3",           &endDistance3,
-                                    "float startDistanceIntensity1",&startDistanceIntensity1,
-                                    "float endDistanceIntensity1",  &endDistanceIntensity1,
-                                    "float startDistanceIntensity2",&startDistanceIntensity2,
-                                    "float endDistanceIntensity2",  &endDistanceIntensity2,
-                                    "float startDistanceIntensity3",&startDistanceIntensity3,
-                                    "float endDistanceIntensity3",  &endDistanceIntensity3,
-                                    "string shadowname",            &shadowname,
-                                    "float shadowbias",             &shadowBias,
-                                    "float shadowsamples",          &shadowSamples,
-                                    "float __nondiffuse",           &nonDiffuse,
-                                    "float __nonspecular",          &nonSpecular,
-                                    "string __category",            &cat,
-                                    "float lightID",                &lightID,
-                                    RI_NULL );
-          }
+			{
+				liqFloat i_intensity = 1;
+				liqColor i_lightcolor;	setColor(i_lightcolor, 1.0);
+				liqFloat i_coneangle               = toRadians( 40 );
+				liqFloat i_penumbraangle           = toRadians( 0 );
+				liqFloat i_dropoff                 = 0;
+				liqFloat i_decay                   = 0;
+
+				liqFloat i_barndoors               = 0;
+				liqFloat i_leftbarndoor            = 10;
+				liqFloat i_rightbarndoor           = 10;
+				liqFloat i_topbarndoor             = 10;
+				liqFloat i_bottombarndoor          = 10;
+
+				liqFloat i_decayRegions            = 0;
+				liqFloat i_startDistance1          = 1.0;
+				liqFloat i_endDistance1            = 2.0;
+				liqFloat i_startDistance2          = 3.0;
+				liqFloat i_endDistance2            = 6.0;
+				liqFloat i_startDistance3          = 8.0;
+				liqFloat i_endDistance3            = 10.0;
+				liqFloat i_startDistanceIntensity1 = 1.0;
+				liqFloat i_endDistanceIntensity1   = 1.0;
+				liqFloat i_startDistanceIntensity2 = 1.0;
+				liqFloat i_endDistanceIntensity2   = 1.0;
+				liqFloat i_startDistanceIntensity3 = 1.0;
+				liqFloat i_endDistanceIntensity3   = 1.0;
+
+				liqString i_shadowname       = "";
+				liqFloat  i_shadowbias       = 0.01;
+				liqFloat  i_shadowblur       = 0.0;
+				liqFloat  i_shadowsamples    = 32;
+				liqFloat  i_shadowfiltersize = 1;
+				liqColor  i_shadowcolor;setColor(i_shadowcolor, 0.0f);
+				liqColor  i_shadowcolorsurf;setColor(i_shadowcolorsurf, 0.0f);
+				liqFloat  i_shadowcolormix  = -1;
+
+				liqFloat  i_lightID          = 0;
+				liqString i_category       = "";
+
+				liqColor o_shadowC;setColor(o_shadowC, 0.0f);
+				liqFloat o_shadowF        = 0;
+				liqFloat o_barn           = 0;
+				liqColor o_unshadowed_Cl;setColor(o_unshadowed_Cl, 0.0f);
+				liqFloat o_nondiffuse     = 0;
+				liqFloat o_nonspecular    = 0;
+
+				  if (liqglo.liqglo_doShadows && usingShadow) 
+				  {
+					/* if ( ( shadowName == "" ) || ( shadowName.substring( 0, 9 ) == "autoshadow" ) ) {
+					  shadowName = liqglo_texDir + autoShadowName();
+					} */
+					i_intensity = intensity;
+					setColor(i_lightcolor, color);
+					i_coneangle = coneAngle;
+					i_penumbraangle = penumbraAngle;
+					i_dropoff = dropOff;
+					i_decay = decay;
+					i_barndoors = barnDoors;
+					i_leftbarndoor = leftBarnDoor;
+					i_rightbarndoor = rightBarnDoor;
+					i_topbarndoor = topBarnDoor;
+					i_bottombarndoor = bottomBarnDoor;
+					i_decayRegions = decayRegions;
+					i_startDistance1 = startDistance1;
+					i_endDistance1   = endDistance1;
+					i_startDistance2 = startDistance2;
+					i_endDistance2   = endDistance2;
+					i_startDistance3 = startDistance3;
+					i_endDistance3   = endDistance3;
+					i_startDistanceIntensity1 = startDistanceIntensity1;
+					i_endDistanceIntensity1   = endDistanceIntensity1;
+					i_startDistanceIntensity2 = startDistanceIntensity2;
+					i_endDistanceIntensity2   = endDistanceIntensity2;
+					i_startDistanceIntensity3 = startDistanceIntensity3;
+					i_endDistanceIntensity3   = endDistanceIntensity3;
+					i_shadowname = const_cast< char* >( shadowName.asChar() );
+					i_shadowfiltersize = rayTraced ? shadowRadius : shadowFilterSize;
+					i_shadowbias = shadowBias;
+					i_shadowsamples = shadowSamples;
+					i_shadowblur = shadowBlur;
+					setColor(i_shadowcolor,shadowColor);
+					o_nondiffuse = nonDiffuse;
+					o_nonspecular = nonSpecular;
+					i_category = cat;
+					i_lightID = lightID;
+				} 
+				else 
+				{
+						i_intensity = intensity;
+						setColor(i_lightcolor, color);
+						setColor(i_shadowcolor, shadowColor);
+						i_coneangle = coneAngle;
+						i_penumbraangle = penumbraAngle;
+						i_dropoff = dropOff;
+						i_decay = decay;
+						i_barndoors = barnDoors;
+						i_leftbarndoor = leftBarnDoor;
+						i_rightbarndoor = rightBarnDoor;
+						i_topbarndoor = topBarnDoor;
+						i_bottombarndoor = bottomBarnDoor;
+						i_decayRegions = decayRegions;
+						i_startDistance1 = startDistance1;
+						i_endDistance1   = endDistance1;
+						i_startDistance2 = startDistance2;
+						i_endDistance2   = endDistance2;
+						i_startDistance3 = startDistance3;
+						i_endDistance3   = endDistance3;
+						i_startDistanceIntensity1 = startDistanceIntensity1;
+						i_endDistanceIntensity1   = endDistanceIntensity1;
+						i_startDistanceIntensity2 = startDistanceIntensity2;
+						i_endDistanceIntensity2   = endDistanceIntensity2;
+						i_startDistanceIntensity3 = startDistanceIntensity3;
+						i_endDistanceIntensity3   = endDistanceIntensity3;
+						i_shadowname = const_cast< char* >( shadowName.asChar() );
+						i_shadowbias = shadowBias;
+						i_shadowsamples = shadowSamples;
+						o_nondiffuse = nonDiffuse;
+						o_nonspecular = nonSpecular;
+						i_category = cat;
+						i_lightID = lightID;
+				  }
+
+				  RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
+				  handle = RiLightSource( "liquidspot",
+					  "intensity",                    &i_intensity,
+					  "lightcolor",                   &i_lightcolor,
+					  "float coneangle",              &i_coneangle,
+					  "float penumbraangle",          &i_penumbraangle,
+					  "float dropoff",                &i_dropoff,
+					  "float decay",                  &i_decay,
+
+					  "float barndoors",              &i_barndoors,
+					  "float leftbarndoor",           &i_leftbarndoor,
+					  "float rightbarndoor",          &i_rightbarndoor,
+					  "float topbarndoor",            &i_topbarndoor,
+					  "float bottombarndoor",         &i_bottombarndoor,
+
+					  "float decayRegions",           &i_decayRegions,
+					  "float startDistance1",         &i_startDistance1,
+					  "float endDistance1",           &i_endDistance1,
+					  "float startDistance2",         &i_startDistance2,
+					  "float endDistance2",           &i_endDistance2,
+					  "float startDistance3",         &i_startDistance3,
+					  "float endDistance3",           &i_endDistance3,
+					  "float startDistanceIntensity1",&i_startDistanceIntensity1,
+					  "float endDistanceIntensity1",  &i_endDistanceIntensity1,
+					  "float startDistanceIntensity2",&i_startDistanceIntensity2,
+					  "float endDistanceIntensity2",  &i_endDistanceIntensity2,
+					  "float startDistanceIntensity3",&i_startDistanceIntensity3,
+					  "float endDistanceIntensity3",  &i_endDistanceIntensity3,
+
+					  "string shadowname",            &i_shadowname,
+					  "float shadowbias",             &i_shadowbias,
+					  "float shadowblur",             &i_shadowblur,
+					  "float shadowsamples",          &i_shadowsamples,
+					  "float shadowfiltersize",       &i_shadowfiltersize,
+					  "color shadowcolor",            &i_shadowcolor,
+					  "color shadowcolorSurf",        &i_shadowcolorsurf,
+					  "float shadowcolorMix",         &i_shadowcolormix,
+
+					  "float lightID",                &i_lightID,
+					  "string __category",            &i_category,
+					  
+					  "color __shadowC",              &o_shadowC,
+					  "float __shadowF",              &o_shadowF,
+					  "float __barn",				  &o_barn,
+					  "color __unshadowed_Cl",        &o_unshadowed_Cl,
+					  "float __nondiffuse",           &o_nondiffuse,
+					  "float __nonspecular",          &o_nonspecular,
+					  RI_NULL );
+			}
           break;
         case MRLT_Rman: 
         {
@@ -1201,16 +1359,40 @@ void liqRibLightData::_write(const structJob &currentJob)
         }
         case MRLT_Area: 
         {
-          RtString shadowname = const_cast< char* >( shadowName.asChar() );
+			liqFloat   i_intensity     = 1.0;
+			liqColor   i_lightcolor;	setColor(i_lightcolor, 1.0);
+			liqFloat   i_decay         = 2;
+			liqString  i_coordsys      = "";
+			liqFloat   i_lightsamples  = 32;
+			liqFloat   i_doublesided   = 0;
+			liqString  i_shadowname    = "";
+			liqColor   i_shadowcolor;	setColor(i_lightcolor, 0.0);
+			liqString  i_hitmode       = "primitive";
 
-          MString coordsys = (lightName+"CoordSys");
-          RtString areacoordsys = const_cast< char* >( coordsys.asChar() );
+			liqString  i_lightmap      = "";
+			liqFloat   i_lightmapsaturation  = 2.0;
+
+			liqFloat  i_lightID        = 0;
+			liqString i_category       = "";
+
+			liqFloat o_nonspecular          = 1;
+			liqFloat o_shadowF              = 0;
+			liqColor o_shadowC;	setColor(o_shadowC, 0.0);
+			liqColor o_unshadowed_Cl;	setColor(o_unshadowed_Cl, 0.0);
+			liqFloat o_arealightIntensity   = 0;
+			liqColor o_arealightColor;	setColor(o_arealightColor, 0.0);
+
+
+
+		  i_coordsys = const_cast< char* >(MString(lightName+"CoordSys").asChar());
+          RtString areacoordsys = i_coordsys;
 
           MString areashader( getenv("LIQUIDHOME") );
           areashader += "/lib/shaders/liquidarea";
 
           RtString rt_hitmode;
-          switch( hitmode ) {
+          switch( hitmode ) 
+		  {
             case 1:
               rt_hitmode = const_cast< char* >( "primitive" );
               break;
@@ -1222,23 +1404,46 @@ void liqRibLightData::_write(const structJob &currentJob)
               break;
           }
 
+
           // if raytraced shadows are off, we get a negative value, so we correct it here.
           RtString rt_lightmap( const_cast< char* >( lightMap.asChar() ) );
+		 
+		  {
+			  i_intensity = intensity;
+			  setColor(i_lightcolor, color);
+			  i_decay = decay;
+			  i_coordsys = areacoordsys;
+			  i_lightsamples = shadowSamples;
+			  i_doublesided = bothSidesEmit;
+			  i_shadowname = const_cast< char* >( shadowName.asChar() );
+			  setColor(i_shadowcolor, shadowColor);
+			  i_lightmap = rt_lightmap;
+			  i_lightID = lightID;
+			  i_hitmode = rt_hitmode;
+			  i_category = cat;
+		  }
 		RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
           handle = RiLightSource( const_cast< char* >( areashader.asChar() ),
-                                  "float intensity",            &intensity,
-                                  "color lightcolor",           color,
-                                  "float decay",                &decay,
-                                  "string coordsys",            &areacoordsys,
-                                  "float lightsamples",         &shadowSamples,
-                                  "float doublesided",          &bothSidesEmit,
-                                  "string shadowname",          &shadowname,
-                                  "color shadowcolor",          &shadowColor,
-                                  "string lightmap",            &rt_lightmap,
-                                  "float lightmapsaturation",   &lightMapSaturation,
-                                  "float lightID",              &lightID,
-                                  "string hitmode",             &rt_hitmode,
-                                  "string __category",          &cat,
+									"float intensity",            &i_intensity,
+									"color lightcolor",           &i_lightcolor,
+									"float decay",                &i_decay,
+									"string coordsys",            &i_coordsys,
+									"float lightsamples",         &i_lightsamples,
+									"float doublesided",          &i_doublesided,
+									"string shadowname",          &i_shadowname,
+									"color shadowcolor",          &i_shadowcolor,
+									"string hitmode",             &i_hitmode,
+									"string lightmap",            &i_lightmap,
+									"float lightmapsaturation",   &i_lightmapsaturation,
+									"float lightID",              &i_lightID,
+									"string __category",          &i_category,
+
+									"float __nonspecular",  o_nonspecular,
+									"float __shadowF", o_shadowF, 
+									"color __shadowC", o_shadowC,
+									"color __unshadowed_Cl", o_unshadowed_Cl,
+									"float __arealightIntensity", o_arealightIntensity,
+									"color __arealightColor", o_arealightColor,
                                   RI_NULL );
           break;
         }
