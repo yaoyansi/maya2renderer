@@ -14,6 +14,10 @@ namespace elvishray
 		virtual void test();
 
 		virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress);
+		virtual MStatus worldPrologue(const structJob& currentJob);
+	
+	protected:
+	
 	};
 }
 

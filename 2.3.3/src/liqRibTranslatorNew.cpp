@@ -1136,7 +1136,7 @@ liqRibTranslator* liqRibTranslator::getInstancePtr()
 //
 MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 {
-	if( !m_exportReadArchive ) 
+	if( !liqglo.m_exportReadArchive ) 
 	{
 		LIQDEBUGPRINTF( "-> beginning to write prologue\n" );
 		// general info for traceability
@@ -1359,7 +1359,7 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 		}
 
 		// CUSTOM OPTIONS
-		MFnDependencyNode globalsNode( rGlobalObj );
+		MFnDependencyNode globalsNode( liqglo.rGlobalObj );
 		MPlug prePostplug( globalsNode.findPlug( "preFrameBeginMel" ) );
 		MString melcommand( prePostplug.asString() );
 		if( m_preFrameRIB != "" || melcommand.length() )
@@ -1396,7 +1396,7 @@ MStatus liqRibTranslator::framePrologue__( long lframe, const structJob &current
 	LIQDEBUGPRINTF( "-> Beginning Frame Prologue__\n" );
 	ribStatus = kRibFrame;
 
-	if( !m_exportReadArchive )
+	if( !liqglo.m_exportReadArchive )
 	{
 		RiFrameBegin( lframe );
 
@@ -1946,89 +1946,7 @@ MStatus liqRibTranslator::framePrologue__( long lframe, const structJob &current
 //
 MStatus liqRibTranslator::worldPrologue__(const structJob &currentJob)
 {
-	MStatus returnStatus = MS::kSuccess;
-	LIQDEBUGPRINTF( "-> Writing world prologue.\n" );
-	// if this is a readArchive that we are exporting then ingore this header information
-	if( !m_exportReadArchive )
-	{
-		MFnDependencyNode globalsNode( rGlobalObj );
-		MPlug prePostplug( globalsNode.findPlug( "preWorldMel" ) );
-		MString melcommand( prePostplug.asString() );
-		// put in pre-worldbegin statements
-		if(m_preWorldRIB != "" || melcommand.length() )
-		{
-			RiArchiveRecord(RI_COMMENT,  " Pre-WorldBegin RIB from liquid globals");
-			MGlobal::executeCommand( melcommand );
-			RiArchiveRecord(RI_VERBATIM, ( char* )m_preWorldRIB.asChar());
-			RiArchiveRecord(RI_VERBATIM, "\n");
-		}
-		// output the arbitrary clipping planes here /////////////
-		//
-		{
-			for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
-			{
-				LIQ_CHECK_CANCEL_REQUEST;
-				liqRibNodePtr   ribNode = (*rniter).second;
-				if( ribNode->object(0)->ignore || ribNode->object(0)->type != MRT_ClipPlane ) 
-					continue;
-				RiTransformBegin();
-				if( m_outputComments )
-					RiArchiveRecord( RI_COMMENT, "Clipping Plane: %s", ribNode->name.asChar(), RI_NULL );
-				RtMatrix ribMatrix;
-				MMatrix matrix;
-				MDagPath path;
-
-				matrix = ribNode->object(0)->matrix( path.instanceNumber() );
-				matrix.get( ribMatrix );
-				RiConcatTransform( ribMatrix );
-
-				ribNode->object(0)->writeObject("", currentJob);
-				ribNode->object(0)->written = 1;
-
-				RiTransformEnd();
-			}
-		}
-		RiWorldBegin();
-		// set attributes from the globals
-		if( liqglo.rt_useRayTracing )
-		{
-			RiArchiveRecord(RI_COMMENT,  " Ray-Tracing Attributes from liquid globals");
-			RtInt on( 1 );
-			RiAttribute("visibility", "int trace", &on, RI_NULL );
-			if( liqglo.rt_traceDisplacements )
-				RiAttribute("trace", "int displacements", &on, RI_NULL );
-			if( liqglo.rt_traceSampleMotion )
-				RiAttribute("trace", "int samplemotion", &on, RI_NULL );
-			if( liqglo.rt_traceBias != 0 )
-				RiAttribute("trace", "float bias", &liqglo.rt_traceBias, RI_NULL );
-			RiAttribute("trace", "int maxdiffusedepth", &liqglo.rt_traceMaxDiffuseDepth, RI_NULL);
-			RiAttribute("trace", "int maxspeculardepth", &liqglo.rt_traceMaxSpecularDepth, RI_NULL);
-			if( liqglo.rt_irradianceMaxError != -1.0 )
-				RiAttribute( "irradiance", (RtToken) "float maxerror", &liqglo.rt_irradianceMaxError, RI_NULL );
-			if( liqglo.rt_irradianceMaxPixelDist != -1.0 )
-				RiAttribute( "irradiance", (RtToken) "float maxpixeldist", &liqglo.rt_irradianceMaxPixelDist, RI_NULL );
-		}
-		// put in post-worldbegin statements
-		prePostplug = globalsNode.findPlug( "postWorldMel" );
-		melcommand = prePostplug.asString();
-		if(m_postWorldRIB != "" || melcommand.length() )
-		{
-			RiArchiveRecord( RI_COMMENT,  " Post-WorldBegin RIB from liquid globals" );
-			MGlobal::executeCommand( melcommand );
-			RiArchiveRecord( RI_VERBATIM, ( char* )m_postWorldRIB.asChar() );
-			RiArchiveRecord( RI_VERBATIM, "\n");
-		}
-		RiTransformBegin();
-		RiCoordinateSystem( "worldspace" );
-		RiTransformEnd();
-
-		RiTransformBegin();
-		RiRotate( -90., 1., 0., 0. );
-		RiCoordinateSystem( "_environment" );
-		RiTransformEnd();
-	}
-	RiReverseOrientation();
-	return returnStatus;
+	return liquid::RendererMgr::getInstancePtr()->getRenderer()->worldPrologue(currentJob);
 }
 
 //
@@ -2037,7 +1955,7 @@ MStatus liqRibTranslator::lightBlock__(const structJob &currentJob)
 	MStatus returnStatus = MS::kSuccess;
 	LIQDEBUGPRINTF( "-> Writing lights.\n" );
 	// If this is a readArchive that we are exporting then ignore this header information
-	if( !m_exportReadArchive )
+	if( !liqglo.m_exportReadArchive )
 	{
 		RNMAP::iterator rniter;
 		int nbLight = 0;
@@ -2105,7 +2023,7 @@ MStatus liqRibTranslator::coordSysBlock__(const structJob &currentJob)
 		liqRibNodePtr   ribNode = (*rniter).second;
 		if( ribNode->object(0)->ignore || ribNode->object(0)->type != MRT_Coord ) 
 			continue;
-		if( m_outputComments )
+		if( liqglo.m_outputComments )
 			RiArchiveRecord( RI_COMMENT, "Name: %s", ribNode->name.asChar(), RI_NULL );
 
 		RiAttributeBegin();
@@ -2134,7 +2052,7 @@ MStatus liqRibTranslator::coordSysBlock__(const structJob &currentJob)
 MStatus liqRibTranslator::preGeometryMel()
 {
 	// Moritz: Added Pre-Geometry RIB for insertion right before any primitives
-	MFnDependencyNode globalsNode( rGlobalObj );
+	MFnDependencyNode globalsNode( liqglo.rGlobalObj );
 	MPlug prePostplug( globalsNode.findPlug( "preGeomMel" ) );
 	MString melcommand( prePostplug.asString() );
 	if( m_preGeomRIB != "" || melcommand.length() )
@@ -3231,7 +3149,7 @@ MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
 			continue;
 		}
 
-		if( m_outputComments ) 
+		if( liqglo.m_outputComments ) 
 			RiArchiveRecord( RI_COMMENT, "Name: %s", ribNode->name.asChar(), RI_NULL );
 
 		RiAttributeBegin();
@@ -3515,7 +3433,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 	// to avoid crashing
 	try 
 	{
-		m_escHandler.beginComputation();
+		liqRibTranslator::m_escHandler.beginComputation();
 
 		MString preFrameMel = parseString( m_preFrameMel );
 		MString postFrameMel = parseString( m_postFrameMel );
@@ -3592,7 +3510,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 		} // frame for-loop
 
 		LIQDEBUGPRINTF( "-> ending escape handler.\n" );
-		m_escHandler.endComputation();
+		liqRibTranslator::m_escHandler.endComputation();
 
 		if( !liqglo.m_deferredGen ) 
 			liquidMessage( "Finished creating RIB", messageInfo );
@@ -3606,7 +3524,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 		// set the attributes on the liquidGlobals for the last rib file and last alfred script name
 		LIQDEBUGPRINTF( "-> setting lastAlfredScript and lastRibFile.\n" );
 		MGlobal::executeCommand("if(!attributeExists(\"lastRenderScript\",\"liquidGlobals\")) { addAttr -ln \"lastRenderScript\" -dt \"string\" liquidGlobals; }");
-		MFnDependencyNode rGlobalNode( rGlobalObj );
+		MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 		MPlug nPlug;
 		nPlug = rGlobalNode.findPlug( "lastRenderScript" );
 		nPlug.setValue( renderScriptName );
@@ -3674,7 +3592,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 		liquidMessage( errorMessage.asChar(), messageError );
 		/*if( htable && hashTableInited ) delete htable;
 		freeShaders();*/
-		m_escHandler.endComputation();
+		liqRibTranslator::m_escHandler.endComputation();
 		return MS::kFailure;
 	} 
 	catch ( ... ) 
@@ -3682,7 +3600,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 		liquidMessage( "Unknown exception thrown", messageError );
 		/*if( htable && hashTableInited ) delete htable;
 		freeShaders();*/
-		m_escHandler.endComputation();
+		liqRibTranslator::m_escHandler.endComputation();
 		return MS::kFailure;
 	}
 }
@@ -3774,7 +3692,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 	// to avoid crashing
 	try 
 	{
-		m_escHandler.beginComputation();
+		liqRibTranslator::m_escHandler.beginComputation();
 
 		MString preFrameMel = parseString( m_preFrameMel );
 		MString postFrameMel = parseString( m_postFrameMel );
@@ -4011,7 +3929,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 			jobScriptMgr.writeRenderScript(m_renderScriptFormat, renderScriptName);
 		}
 		LIQDEBUGPRINTF( "-> ending escape handler.\n" );
-		m_escHandler.endComputation();
+		liqRibTranslator::m_escHandler.endComputation();
 
 		if( !liqglo.m_deferredGen ) 
 			liquidMessage( "Finished creating RIB", messageInfo );
@@ -4022,7 +3940,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 		// set the attributes on the liquidGlobals for the last rib file and last alfred script name
 		LIQDEBUGPRINTF( "-> setting lastAlfredScript and lastRibFile.\n" );
 		MGlobal::executeCommand("if(!attributeExists(\"lastRenderScript\",\"liquidGlobals\")) { addAttr -ln \"lastRenderScript\" -dt \"string\" liquidGlobals; }");
-		MFnDependencyNode rGlobalNode( rGlobalObj );
+		MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 		MPlug nPlug;
 		nPlug = rGlobalNode.findPlug( "lastRenderScript" );
 		nPlug.setValue( renderScriptName );
@@ -4067,7 +3985,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 		liquidMessage( errorMessage.asChar(), messageError );
 		/*if( htable && hashTableInited ) delete htable;
 		freeShaders();*/
-		m_escHandler.endComputation();
+		liqRibTranslator::m_escHandler.endComputation();
 		return MS::kFailure;
 	} 
 	catch ( ... ) 
@@ -4075,7 +3993,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 		liquidMessage( "Unknown exception thrown", messageError );
 		/*if( htable && hashTableInited ) delete htable;
 		freeShaders();*/
-		m_escHandler.endComputation();
+		liqRibTranslator::m_escHandler.endComputation();
 		return MS::kFailure;
 	}
 }

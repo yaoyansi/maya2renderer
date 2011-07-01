@@ -1,6 +1,10 @@
 #ifndef _RendererInterface_H_
 #define _RendererInterface_H_
 
+#include <maya/MStatus.h>
+
+struct structJob;
+
 namespace liquid
 {
 
@@ -16,6 +20,7 @@ public:
 	// RenderScript means .rib files for renderman, and .er files for elvishray. and etc.
 	virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress) = 0;
 
+	virtual MStatus worldPrologue(const structJob& currentJob) = 0;
 
 protected:
 

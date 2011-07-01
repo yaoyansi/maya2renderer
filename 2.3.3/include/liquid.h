@@ -101,7 +101,7 @@ extern int  debugMode;
 #endif
 
 #define LIQ_CANCEL_FEEDBACK_MESSAGE MString( "Liquid -> RIB Generation Cancelled!\n" )
-#define LIQ_CHECK_CANCEL_REQUEST    if ( m_escHandler.isInterruptRequested() ) throw( LIQ_CANCEL_FEEDBACK_MESSAGE )
+#define LIQ_CHECK_CANCEL_REQUEST    if ( liqRibTranslator::m_escHandler.isInterruptRequested() ) throw( LIQ_CANCEL_FEEDBACK_MESSAGE )
 #define LIQ_ADD_SLASH_IF_NEEDED(a) if ( a.asChar()[a.length() - 1] != '/' ) a += "/"
 #define LIQ_ANIM_EXT MString( ".%0*d");
 #define LIQ_SET_EXT MString( ".%0*s");

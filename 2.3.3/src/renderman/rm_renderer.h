@@ -13,6 +13,7 @@ namespace renderman
 		virtual void test();
 
 		virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress);
+		virtual MStatus worldPrologue(const structJob& currentJob);
 
 	protected:
 		void _RiOption_format_compress(bool bBinary, bool bCompress);

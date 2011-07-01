@@ -32,4 +32,9 @@ namespace elvishray
 	{
 		//todo...
 	}
+	//
+	MStatus Renderer::worldPrologue(const structJob& currentJob)
+	{
+		return MS::kSuccess;
+	}
 }

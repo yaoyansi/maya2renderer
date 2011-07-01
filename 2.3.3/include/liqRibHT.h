@@ -77,6 +77,9 @@ public:
 private:
 	str_Vector RibHashVec;
 	type_Vector objTypeVec;
+#ifdef Refactoring 
+public: 
+#endif
 	RNMAP	RibNodeMap;
 	ulong	hash( const char*, int ID );
 	friend class liqRibTranslator;

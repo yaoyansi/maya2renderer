@@ -128,6 +128,7 @@ MString liqRibTranslator::magic("##Liquid");
 #if(Refactoring==1)
 static structJob liqglo_currentJob;
 #endif
+MComputation liqRibTranslator::m_escHandler;
 /**
 * Creates a new instance of the translator.
 */
@@ -230,7 +231,7 @@ bool liqRibTranslator::liquidInitGlobals()
 	if( rGlobalList.length() > 0 ) 
 	{
 		status.clear();
-		status = rGlobalList.getDependNode( 0, rGlobalObj );
+		status = rGlobalList.getDependNode( 0, liqglo.rGlobalObj );
 		if( status == MS::kSuccess ) 
 			return true;
 		else 
@@ -287,7 +288,7 @@ liqRibTranslator::liqRibTranslator()
 	m_ignoreVolumes = false;
 	m_renderAllCurves = false;
 	m_renderSelected = false;
-	m_exportReadArchive = false;
+	liqglo.m_exportReadArchive = false;
 	liqglo.useNetRman = false;
 	liqglo.remoteRender = false;
 	useRenderScript = true;
@@ -371,7 +372,7 @@ liqRibTranslator::liqRibTranslator()
 	m_postTransformMel.clear();
 	m_preShapeMel.clear();
 	m_postShapeMel.clear();
-	m_outputComments = false;
+	liqglo.m_outputComments = false;
 	m_shaderDebug = false;
 	// raytracing
 	liqglo.rt_useRayTracing = false;
@@ -465,8 +466,8 @@ liqRibTranslator::liqRibTranslator()
 	m_bakeNoCullHidden    = false;
 
 	m_preFrameRIB.clear();
-	m_preWorldRIB.clear();
-	m_postWorldRIB.clear();
+	liqglo.m_preWorldRIB.clear();
+	liqglo.m_postWorldRIB.clear();
 	m_preGeomRIB.clear();
 
 	m_renderScriptFormat = XML;
@@ -681,7 +682,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		else if((arg == "-ra") || (arg == "-readArchive")) 
 		{
 			LIQCHECKSTATUS(status, "error in -readArchive parameter");
-			m_exportReadArchive = true;
+			liqglo.m_exportReadArchive = true;
 		} 
 		else if((arg == "-acv") || (arg == "-allCurves")) 
 		{
@@ -1135,7 +1136,7 @@ void liqRibTranslator::liquidReadGlobals()
 {
 	MStatus gStatus;
 	MPlug gPlug;
-	MFnDependencyNode rGlobalNode( rGlobalObj );
+	MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 	MString varVal;
 	int var;
 	// Display Channels - Read and store 'em !
@@ -1667,7 +1668,7 @@ void liqRibTranslator::liquidReadGlobals()
 	liquidGetPlugValue( rGlobalNode, "maxCPU", m_maxCPU, gStatus );
 	liquidGetPlugValue( rGlobalNode, "showProgress", m_showProgress, gStatus );
 	liquidGetPlugValue( rGlobalNode, "expandShaderArrays", liqglo.liqglo_expandShaderArrays, gStatus );
-	liquidGetPlugValue( rGlobalNode, "outputComments", m_outputComments, gStatus );
+	liquidGetPlugValue( rGlobalNode, "outputComments", liqglo.m_outputComments, gStatus );
 	liquidGetPlugValue( rGlobalNode, "shaderDebug", m_shaderDebug, gStatus );
 	liquidGetPlugValue( rGlobalNode, "deferredGen", liqglo.m_deferredGen, gStatus );
 	liquidGetPlugValue( rGlobalNode, "deferredBlock", liqglo.m_deferredBlockSize, gStatus );
@@ -1700,7 +1701,7 @@ void liqRibTranslator::liquidReadGlobals()
 
 	liquidGetPlugValue( rGlobalNode, "outputMeshUVs", liqglo.liqglo_outputMeshUVs, gStatus );
 	liquidGetPlugValue( rGlobalNode, "compressedOutput", liqglo.liqglo_doCompression, gStatus );
-	liquidGetPlugValue( rGlobalNode, "exportReadArchive", m_exportReadArchive, gStatus );
+	liquidGetPlugValue( rGlobalNode, "exportReadArchive", liqglo.m_exportReadArchive, gStatus );
 	liquidGetPlugValue( rGlobalNode, "renderJobName", renderJobName, gStatus );
 	liquidGetPlugValue( rGlobalNode, "doAnimation", m_animation, gStatus );
 	if( m_animation ) 
@@ -1790,14 +1791,14 @@ void liqRibTranslator::liquidReadGlobals()
 			requestArray.append( request );
 		request = parseLiquidRibRequest( requestArray, "preWorld" );
 		if( request != "" )
-			m_preWorldRIB = parseString( request );
+			liqglo.m_preWorldRIB = parseString( request );
 
 		liquidGetPlugValue( rGlobalNode, "postWorld", request, gStatus );
 		if( request != "" )
 			requestArray.append( request );
 		request = parseLiquidRibRequest( requestArray, "postWorld" );
 		if( request != "" )
-			m_postWorldRIB = parseString( request );
+			liqglo.m_postWorldRIB = parseString( request );
 
 		liquidGetPlugValue( rGlobalNode, "preGeom", request, gStatus );
 		if( request != "" )
@@ -2187,7 +2188,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 		return MS::kFailure;
 
 	{//set renderer
-		MFnDependencyNode rGlobalNode( rGlobalObj );
+		MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 		MString renderer;
 		liquidGetPlugValue( rGlobalNode, "renderer", renderer, status );
 		liquid::RendererMgr::getInstancePtr()->setRenderer(renderer.asChar());
@@ -3109,7 +3110,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 		// set the attributes on the liquidGlobals for the last rib file and last alfred script name
 		LIQDEBUGPRINTF( "-> setting lastAlfredScript and lastRibFile.\n" );
 		MGlobal::executeCommand("if(!attributeExists(\"lastRenderScript\",\"liquidGlobals\")) { addAttr -ln \"lastRenderScript\" -dt \"string\" liquidGlobals; }");
-		MFnDependencyNode rGlobalNode( rGlobalObj );
+		MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 		MPlug nPlug;
 		nPlug = rGlobalNode.findPlug( "lastRenderScript" );
 		nPlug.setValue( renderScriptName );
@@ -4022,7 +4023,7 @@ MStatus liqRibTranslator::buildJobs()
 */
 MStatus liqRibTranslator::ribPrologue()
 {
-	if( !m_exportReadArchive ) 
+	if( !liqglo.m_exportReadArchive ) 
 	{
 		LIQDEBUGPRINTF( "-> beginning to write prologue\n" );
 		// general info for traceability
@@ -4245,7 +4246,7 @@ MStatus liqRibTranslator::ribPrologue()
 		}
 
 		// CUSTOM OPTIONS
-		MFnDependencyNode globalsNode( rGlobalObj );
+		MFnDependencyNode globalsNode( liqglo.rGlobalObj );
 		MPlug prePostplug( globalsNode.findPlug( "preFrameBeginMel" ) );
 		MString melcommand( prePostplug.asString() );
 		if( m_preFrameRIB != "" || melcommand.length() )
@@ -5096,7 +5097,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 	LIQDEBUGPRINTF( "-> Beginning Frame Prologue\n" );
 	ribStatus = kRibFrame;
 
-	if( !m_exportReadArchive )
+	if( !liqglo.m_exportReadArchive )
 	{
 		RiFrameBegin( lframe );
 
@@ -5656,7 +5657,7 @@ MStatus liqRibTranslator::frameEpilogue( long )
 	if(ribStatus == kRibFrame) 
 	{
 		ribStatus = kRibBegin;
-		if( !m_exportReadArchive ) 
+		if( !liqglo.m_exportReadArchive ) 
 			RiFrameEnd();
 	}
 	return (ribStatus == kRibBegin ? MS::kSuccess : MS::kFailure);
@@ -5678,7 +5679,7 @@ MStatus liqRibTranslator::objectBlock()
 		RiSurface( "matte", RI_NULL );
 
 	// Moritz: Added Pre-Geometry RIB for insertion right before any primitives
-	MFnDependencyNode globalsNode( rGlobalObj );
+	MFnDependencyNode globalsNode( liqglo.rGlobalObj );
 	MPlug prePostplug( globalsNode.findPlug( "preGeomMel" ) );
 	MString melcommand( prePostplug.asString() );
 	if( m_preGeomRIB != "" || melcommand.length() )
@@ -5736,7 +5737,7 @@ MStatus liqRibTranslator::objectBlock()
 			continue;
 		}
 
-		if( m_outputComments ) 
+		if( liqglo.m_outputComments ) 
 			RiArchiveRecord( RI_COMMENT, "Name: %s", ribNode->name.asChar(), RI_NULL );
 
 		RiAttributeBegin();
@@ -6990,17 +6991,17 @@ MStatus liqRibTranslator::worldPrologue()
 	MStatus returnStatus = MS::kSuccess;
 	LIQDEBUGPRINTF( "-> Writing world prologue.\n" );
 	// if this is a readArchive that we are exporting then ingore this header information
-	if( !m_exportReadArchive )
+	if( !liqglo.m_exportReadArchive )
 	{
-		MFnDependencyNode globalsNode( rGlobalObj );
+		MFnDependencyNode globalsNode( liqglo.rGlobalObj );
 		MPlug prePostplug( globalsNode.findPlug( "preWorldMel" ) );
 		MString melcommand( prePostplug.asString() );
 		// put in pre-worldbegin statements
-		if(m_preWorldRIB != "" || melcommand.length() )
+		if(liqglo.m_preWorldRIB != "" || melcommand.length() )
 		{
 			RiArchiveRecord(RI_COMMENT,  " Pre-WorldBegin RIB from liquid globals");
 			MGlobal::executeCommand( melcommand );
-			RiArchiveRecord(RI_VERBATIM, ( char* )m_preWorldRIB.asChar());
+			RiArchiveRecord(RI_VERBATIM, ( char* )liqglo.m_preWorldRIB.asChar());
 			RiArchiveRecord(RI_VERBATIM, "\n");
 		}
 		// output the arbitrary clipping planes here /////////////
@@ -7013,7 +7014,7 @@ MStatus liqRibTranslator::worldPrologue()
 				if( ribNode->object(0)->ignore || ribNode->object(0)->type != MRT_ClipPlane ) 
 					continue;
 				RiTransformBegin();
-				if( m_outputComments )
+				if( liqglo.m_outputComments )
 					RiArchiveRecord( RI_COMMENT, "Clipping Plane: %s", ribNode->name.asChar(), RI_NULL );
 				RtMatrix ribMatrix;
 				MMatrix matrix;
@@ -7052,11 +7053,11 @@ MStatus liqRibTranslator::worldPrologue()
 		// put in post-worldbegin statements
 		prePostplug = globalsNode.findPlug( "postWorldMel" );
 		melcommand = prePostplug.asString();
-		if(m_postWorldRIB != "" || melcommand.length() )
+		if(liqglo.m_postWorldRIB != "" || melcommand.length() )
 		{
 			RiArchiveRecord( RI_COMMENT,  " Post-WorldBegin RIB from liquid globals" );
 			MGlobal::executeCommand( melcommand );
-			RiArchiveRecord( RI_VERBATIM, ( char* )m_postWorldRIB.asChar() );
+			RiArchiveRecord( RI_VERBATIM, ( char* )liqglo.m_postWorldRIB.asChar() );
 			RiArchiveRecord( RI_VERBATIM, "\n");
 		}
 		RiTransformBegin();
@@ -7081,7 +7082,7 @@ MStatus liqRibTranslator::worldEpilogue()
 	MStatus returnStatus = MS::kSuccess;
 	LIQDEBUGPRINTF( "-> Writing world epilogue.\n" );
 	// If this is a readArchive that we are exporting there's no world block
-	if( !m_exportReadArchive ) 
+	if( !liqglo.m_exportReadArchive ) 
 		RiWorldEnd();
 	return returnStatus;
 }
@@ -7102,7 +7103,7 @@ MStatus liqRibTranslator::coordSysBlock()
 		liqRibNodePtr   ribNode = (*rniter).second;
 		if( ribNode->object(0)->ignore || ribNode->object(0)->type != MRT_Coord ) 
 			continue;
-		if( m_outputComments )
+		if( liqglo.m_outputComments )
 			RiArchiveRecord( RI_COMMENT, "Name: %s", ribNode->name.asChar(), RI_NULL );
 
 		RiAttributeBegin();
@@ -7136,7 +7137,7 @@ MStatus liqRibTranslator::lightBlock()
 	MStatus returnStatus = MS::kSuccess;
 	LIQDEBUGPRINTF( "-> Writing lights.\n" );
 	// If this is a readArchive that we are exporting then ignore this header information
-	if( !m_exportReadArchive )
+	if( !liqglo.m_exportReadArchive )
 	{
 		RNMAP::iterator rniter;
 		int nbLight = 0;
@@ -7196,7 +7197,7 @@ void liqRibTranslator::setOutDirs()
 {
 	MStatus gStatus;
 	MPlug gPlug;
-	MFnDependencyNode rGlobalNode( rGlobalObj );
+	MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 	{
 		MString varVal;
 		gPlug = rGlobalNode.findPlug( "ribDirectory", &gStatus );
@@ -7252,7 +7253,7 @@ void liqRibTranslator::setSearchPaths()
 
 	MStatus gStatus;
 	MPlug gPlug;
-	MFnDependencyNode rGlobalNode( rGlobalObj );
+	MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 
 	{
 		MString varVal;

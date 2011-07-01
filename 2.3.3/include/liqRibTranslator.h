@@ -79,7 +79,7 @@ public:
 	friend class liqJobList;
 
 private: // Methods
-	MObject rGlobalObj;
+//	MObject rGlobalObj;
 
 	MStatus scanSceneNodes( MObject&, MDagPath &, float, int, int &, MStatus& ); 
 	MStatus scanScene(float, int );
@@ -226,6 +226,9 @@ public:
 	// MString riboutput;                           // UN-USED GLOBAL
 	bool launchRender;
 
+#ifdef Refactoring 
+public: 
+#endif
 	// Hash table for scene
 	boost::shared_ptr< liqRibHT > htable;
 
@@ -246,7 +249,10 @@ private :
 	bool          m_useFrameExt;
 	// bool          m_shadowRibGen;                // UN-USED GLOBAL
 	double        m_blurTime;
-	MComputation  m_escHandler;
+#ifdef Refactoring 
+public: 
+#endif
+	static MComputation  m_escHandler;
 	float         m_rgain,
 		m_rgamma;
 	bool          m_justRib;
@@ -327,7 +333,7 @@ private :
 	bool m_showProgress;
 	bool m_currentMatteMode;
 	bool m_renderSelected;
-	bool m_exportReadArchive;
+
 	bool m_renderAllCurves;
 	bool m_illuminateByDefault;
 	bool m_liquidSetLightLinking;
@@ -344,7 +350,7 @@ private :
 	bool m_outputShadersInDeepShadows;
 	bool m_outputLightsInDeepShadows;
 //	liquidlong m_deferredBlockSize; //moved to liqGlobal
-	bool m_outputComments;
+
 	bool m_shaderDebug;
 
 	long m_currentLiquidJobNumber;
@@ -375,8 +381,8 @@ private :
 	bool	  m_bakeNoCullHidden;
 
 	MString m_preFrameRIB;
-	MString m_preWorldRIB;
-	MString m_postWorldRIB;
+
+
 
 	MString m_preGeomRIB;
 
@@ -467,7 +473,6 @@ private :
 //	void scanExpressions( liqRibLightData *light );
 
 	void _writeObject( const liqRibNodePtr& ribNode, const structJob &currentJob);
-	void _RiOption_format_compress(bool bBinary, bool bCompress);
 	void makeReflectionPass(
 		std::vector<structJob> &refList__, 
 		liqRenderScript::Job &reflectJob__,

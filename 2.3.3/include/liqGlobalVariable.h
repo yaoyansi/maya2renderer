@@ -124,6 +124,11 @@ struct liqGlobalVariable
 
 	MString tempDefname;
 	MString renderCamera;
+	bool m_exportReadArchive;
+	MObject rGlobalObj;
+	MString m_preWorldRIB;
+	MString m_postWorldRIB;
+	bool m_outputComments;
 };
 
 extern struct liqGlobalVariable liqglo;
