@@ -40,8 +40,6 @@
 
 #include <boost/shared_array.hpp>
 
-using namespace boost;
-
 class liqRibMeshData : public liqRibData {
 public: // Methods
 
@@ -56,8 +54,8 @@ private: // Data
   RtInt     numFaces;
   RtInt     numPoints;
   RtInt     numNormals;
-  shared_array< RtInt > nverts;
-  shared_array< RtInt > verts;
+  boost::shared_array< RtInt > nverts;
+  boost::shared_array< RtInt > verts;
   const RtFloat* vertexParam;
   const RtFloat* normalParam;
 

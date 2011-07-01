@@ -27,15 +27,13 @@
 #ifndef __LIQ_SHADER_FACTORY_H__
 #define __LIQ_SHADER_FACTORY_H__
 
-#include <string>
+
 #include <vector>
 
-#include <liquid.h>
-
+#include <maya/MObject.h>
 #include <maya/MString.h>
 
-class liqShader;
-using namespace std;
+class liqShader;//#include <liqShader.h>
 
 class liqShaderFactory
 {
@@ -65,7 +63,7 @@ private:
 	liqShaderFactory();
 	static liqShaderFactory *_instance;
 	int shaderHandlerId;
-	vector<liqShader*> m_shaders;
+	std::vector<liqShader*> m_shaders;
 };
 
 #endif

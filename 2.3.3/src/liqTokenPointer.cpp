@@ -24,6 +24,7 @@
 ** RenderMan (R) is a registered trademark of Pixar
 
 */
+#include <liqTokenPointer.h>
 
 //#include <liquid.h>
 #include <stdio.h>
@@ -33,7 +34,7 @@
 //extern "C" {
 #include "ri_interface.h"
 //}
-#include <liqTokenPointer.h>
+
 #include <liquid.h>
 
 #include <string>

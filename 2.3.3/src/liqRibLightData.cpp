@@ -31,7 +31,9 @@
 ** Liquid Rib Light Data Source
 ** ______________________________________________________________________
 */
-
+#include <liqRibLightData.h>
+// Standard/Boost headers
+#include <boost/scoped_array.hpp>
 // Renderman headers
 //extern "C" {
 #include "ri_interface.h"
@@ -53,15 +55,12 @@
 #include <maya/MStringArray.h>
 
 // Liquid headers
-#include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibLightData.h>
 #include <liqGetSloInfo.h>
 #include <liqRenderer.h>
 #include <liqShaderFactory.h>
 
-// Standard/Boost headers
-#include <boost/scoped_array.hpp>
+
 
 extern int debugMode;
 

@@ -26,11 +26,16 @@
 
 
 #include <liqShaderFactory.h>
-#include <liqShader.h>
+
+#include <string>
 
 #include <maya/MFnDependencyNode.h>
 #include <maya/MPlug.h>
 
+#include <liquid.h>
+#include <liqShader.h>
+
+using namespace std;
 
 liqShaderFactory * liqShaderFactory::_instance=NULL;
 

@@ -35,9 +35,6 @@
 */
 
 #include <maya/MPxCommand.h>
-#include <maya/MString.h>
-#include <maya/MStringArray.h>
-#include <maya/MIntArray.h>
 #include <maya/MSyntax.h>
 
 enum PrimitiveType {

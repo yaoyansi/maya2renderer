@@ -31,7 +31,7 @@
 ** Liquid Attach __Pref Attribute Source
 ** ______________________________________________________________________
 */
-
+#include <liqAttachPrefAttribute.h>
 // Maya's Headers
 #include <maya/MSelectionList.h>
 #include <maya/MFnTypedAttribute.h>
@@ -50,7 +50,6 @@
 #include <maya/MFnNurbsSurface.h>
 #include <maya/MDagPath.h>
 
-#include <liqAttachPrefAttribute.h>
 #include <liqRenderer.h>
 
 

@@ -39,11 +39,11 @@
 #include <maya/MString.h>
 #include <maya/MFnDependencyNode.h>
 #include <maya/MObject.h>
+#include <maya/MDagPath.h>
+#include <maya/MVector.h>
 
 #include <liquid.h>
 #include <liqTokenPointer.h>
-#include <liqShader.h>
-
 
 typedef enum {
   verbosityOff = 0,
@@ -76,7 +76,7 @@ bool isObjectMotionBlur( const MDagPath & path );
 bool areObjectAndParentsVisible( const MDagPath & path );
 bool areObjectAndParentsTemplated( const MDagPath & path );
 void assignTokenArrays( unsigned numTokens, const liqTokenPointer tokenPointerArray[], RtToken tokens[], RtPointer pointers[] );
-void assignTokenArraysV( const vector<liqTokenPointer>& tokenPointerArray, RtToken tokens[], RtPointer pointers[] );
+void assignTokenArraysV( const std::vector<liqTokenPointer>& tokenPointerArray, RtToken tokens[], RtPointer pointers[] );
 MObject findFacetShader( MObject mesh, int polygonIndex );
 bool fileExists( const MString & filename );
 bool fileIsNewer( const MString & file1, const MString & file2 );
@@ -90,24 +90,24 @@ MString liquidTransGetFullSceneName();
 void liquidGetGlobal( MString globalName, double &value, MStatus &returnStatus );
 liquidlong liquidHash( const char *str );
 MString liquidSanitizePath( const MString& inputString );
-string liquidSanitizePath( const string& inputString );
+std::string liquidSanitizePath( const std::string& inputString );
 MString liquidSanitizeSearchPath( const MString& inputString );
-string liquidSanitizeSearchPath( const string& inputString );
-string liquidGetRelativePath( bool relative, const string& name, const string& dir );
+std::string liquidSanitizeSearchPath( const std::string& inputString );
+std::string liquidGetRelativePath( bool relative, const std::string& name, const std::string& dir );
 MString liquidGetRelativePath( bool relative, const MString& name, const MString& dir );
 MString removeEscapes( const MString & inputString );
 MObject getNodeByName( MString name, MStatus *returnStatus );
-string getEnvironment( const string& envVar );
-vector< int > generateFrameNumbers( const string& mayaSeq );
-bool makeFullPath( const string& name, int mode );
-string sanitizeNodeName( const string& name );
+std::string getEnvironment( const std::string& envVar );
+std::vector< int > generateFrameNumbers( const std::string& mayaSeq );
+bool makeFullPath( const std::string& name, int mode );
+std::string sanitizeNodeName( const std::string& name );
 MString sanitizeNodeName( const MString& name );
-RtString& getLiquidRibName( const string& name );
-void liquidMessage( const string& msg, liquidVerbosityType type );
+RtString& getLiquidRibName( const std::string& name );
+void liquidMessage( const std::string& msg, liquidVerbosityType type );
 MString parseLiquidRibRequest( MStringArray requestArray, MString attr );
 
 void initalizeShaderHandlerGenerator();
-string getUniqueShaderHandler();
+std::string getUniqueShaderHandler();
 
 MStatus liquidGetPlugValue( MFnDependencyNode node, const char *name, bool &value, MStatus &status );
 MStatus liquidGetPlugValue( MFnDependencyNode node, const char *name, int &value, MStatus &status );

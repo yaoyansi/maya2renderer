@@ -33,13 +33,9 @@
 ** Liquid Rib Surface Data Header File
 ** ______________________________________________________________________
 */
-
-#include <liqRibData.h>
-
 #include <boost/shared_array.hpp>
 
-
-using namespace boost;
+#include <liqRibData.h>
 
 class liqRibShaveData : public liqRibData {
 public: // Methods
@@ -60,11 +56,11 @@ private: // Data
 
   RtInt                 nu, nv;
   RtInt                 uorder, vorder;
-  shared_array< RtFloat > uknot;
-  shared_array< RtFloat > vknot;
+  boost::shared_array< RtFloat > uknot;
+  boost::shared_array< RtFloat > vknot;
   RtFloat               umin, umax,
                         vmin, vmax;
-  shared_array< RtFloat > CVs;
+  boost::shared_array< RtFloat > CVs;
 
   // Trim information
 
@@ -72,8 +68,8 @@ private: // Data
   //shared_array< RtInt > ncurves, order, n;
   //shared_array< RtFloat > knot, minKnot, maxKnot, u, v, w;
 
-  vector< RtInt >       ncurves, order, numCVs;
-  vector< RtFloat >     knot, minKnot, maxKnot, u, v, w;
+  std::vector< RtInt >       ncurves, order, numCVs;
+  std::vector< RtFloat >     knot, minKnot, maxKnot, u, v, w;
 };
 
 #endif//#ifndef liqRibShaveData_H

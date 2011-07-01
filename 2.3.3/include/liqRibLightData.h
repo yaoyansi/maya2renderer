@@ -34,11 +34,9 @@
 ** Liquid Rib Light Data Header File
 ** ______________________________________________________________________
 */
-
+#include <liquid.h>
 #include <liqRibData.h>
 #include <liqShader.h>
-
-class liqShader;
 
 class liqRibLightData : public liqRibData {
 public:

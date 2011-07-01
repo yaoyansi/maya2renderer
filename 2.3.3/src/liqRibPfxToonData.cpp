@@ -31,7 +31,7 @@
 ** Liquid Rib pfxToon Curve Data Source
 ** ______________________________________________________________________
 */
-
+#include <liqRibPfxToonData.h>
 // RenderMan jeaders
 //extern "C" {
 #include "ri_interface.h"
@@ -43,7 +43,6 @@
 #include <maya/MPoint.h>
 #include <maya/MFnNurbsCurve.h>
 #include <maya/MPlug.h>
-
 #include <maya/MFnPfxGeometry.h>
 #include <maya/MRenderLineArray.h>
 #include <maya/MRenderLine.h>
@@ -58,12 +57,11 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibData.h>
-#include <liqRibPfxToonData.h>
+
 
 // Boost headers
 #include <boost/scoped_array.hpp>
-
+using namespace boost;
 
 extern int debugMode;
 extern MString liqglo_renderCamera;

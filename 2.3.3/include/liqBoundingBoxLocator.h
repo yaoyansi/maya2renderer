@@ -25,11 +25,14 @@
 **
 ** RenderMan (R) is a registered trademark of Pixar
 */
+#ifndef liqBoundingBoxLocator_H
+#define liqBoundingBoxLocator_H
+
 
 #include <maya/MPxLocatorNode.h> 
 #include <boost/shared_array.hpp>
 
-using namespace boost;
+
 
 class liqBoundingBoxLocator : public MPxLocatorNode
 {
@@ -41,7 +44,9 @@ public:
     static const MTypeId id;
     static const MString typeName;
 
-	shared_array< MPoint > pts;
+	boost::shared_array< MPoint > pts;
 
 	static MObject aDrawBox;
 };
+
+#endif//liqBoundingBoxLocator_H

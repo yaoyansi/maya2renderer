@@ -31,9 +31,7 @@
 #define liqRibCurvesData_H
 
 #include <boost/shared_array.hpp>
-
-using namespace boost;
-
+#include <liqRibData.h>
 class liqRibCurvesData : public liqRibData {
 public: // Methods
 
@@ -46,9 +44,9 @@ public: // Methods
 private: // Data
 
     RtInt                   ncurves;
-    shared_array< RtInt >   nverts;
-    shared_array< RtFloat > CVs;
-    shared_array< RtFloat > NuCurveWidth;
+	boost::shared_array< RtInt >   nverts;
+    boost::shared_array< RtFloat > CVs;
+    boost::shared_array< RtFloat > NuCurveWidth;
 };
 
 #endif

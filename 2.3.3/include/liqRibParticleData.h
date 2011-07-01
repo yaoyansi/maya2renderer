@@ -32,9 +32,10 @@
 ** Liquid Rib Nurbs Curve Data Header File
 ** ______________________________________________________________________
 */
-
+#include <vector>
 #include <liqRibData.h>
 #include <maya/MIntArray.h>
+#include <maya/MFnDependencyNode.h>
 
 class liqRibParticleData : public liqRibData {
 public:
@@ -51,7 +52,7 @@ public:
 
   void addAdditionalFloatParameters ( MFnDependencyNode nodeFn);
   //void addAdditionalPointParameters ( MFnDependencyNode nodeFn);
-  void addAdditionalVectorParameters( MFnDependencyNode nodeFn, const string& prefix, ParameterType type );
+  void addAdditionalVectorParameters( MFnDependencyNode nodeFn, const std::string& prefix, ParameterType type );
   //void addAdditionalColorParameters ( MFnDependencyNode nodeFn);
 
   // pType data type, these values corrospond to the types of
@@ -75,9 +76,9 @@ private:
   unsigned grain;
 
   // Data storage for blobby particles
-  vector< RtInt > codeArray;
-  vector< RtFloat > floatArray;
-  vector< RtString > stringArray;
+  std::vector< RtInt > codeArray;
+  std::vector< RtFloat > floatArray;
+  std::vector< RtString > stringArray;
 
   MIntArray m_validParticles;
 

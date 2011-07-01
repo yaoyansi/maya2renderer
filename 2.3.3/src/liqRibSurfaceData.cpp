@@ -31,8 +31,10 @@
 ** Liquid Rib Surface Data Source
 ** ______________________________________________________________________
 */
-
-
+#include <liqRibSurfaceData.h>
+// Boost headers
+#include <boost/scoped_array.hpp>
+#include <boost/shared_array.hpp>
 // RenderMan headers
 //extern "C" {
 #include "ri_interface.h"
@@ -47,12 +49,9 @@
 
 // Liquid headers
 #include <liqGlobalHelpers.h>
-#include <liqRibSurfaceData.h>
 #include <liqRenderer.h>
 
-// Boost headers
-#include <boost/scoped_array.hpp>
-#include <boost/shared_array.hpp>
+
 
 using namespace boost;
 

@@ -29,17 +29,7 @@
 ** Liquid Global Helpers
 ** ______________________________________________________________________
 */
-
-// Maya Headers
-#include <maya/MPlug.h>
-#include <maya/MFnAttribute.h>
-#include <maya/MFnMesh.h>
-#include <maya/MItSelectionList.h>
-#include <maya/MItDependencyNodes.h>
-#include <maya/MGlobal.h>
-#include <maya/MFnDoubleArrayData.h>
-#include <maya/MCommandResult.h>
-#include <maya/MFnRenderLayer.h>
+#include <liqGlobalHelpers.h>
 
 // Standard headers
 #include <set>
@@ -52,6 +42,22 @@
 //#include <process.h>
 #include <io.h>
 
+// Maya Headers
+#include <maya/MPlug.h>
+#include <maya/MFnAttribute.h>
+#include <maya/MFnMesh.h>
+#include <maya/MItSelectionList.h>
+#include <maya/MItDependencyNodes.h>
+#include <maya/MGlobal.h>
+#include <maya/MFnDoubleArrayData.h>
+#include <maya/MCommandResult.h>
+#include <maya/MFnRenderLayer.h>
+
+
+
+#include <liqShader.h>
+
+
 #endif
 
 // Boost headers
@@ -61,7 +67,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
-#include <liqGlobalHelpers.h>
+
 #include <liqMayaNodeIds.h>
 
 extern int debugMode;
@@ -1299,7 +1305,7 @@ unsigned int liquidGetPlugNumElements( MFnDependencyNode node, const char *name,
 {
   unsigned int num = 0;
   status->clear();
-  MPlug plug = node.findPlug( name, &status );
+  MPlug plug = node.findPlug( name, status );
   if( *status == MS::kSuccess )
   {
     status->clear();

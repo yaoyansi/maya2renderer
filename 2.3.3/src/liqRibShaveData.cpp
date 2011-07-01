@@ -31,8 +31,10 @@
 ** Liquid Rib Surface Data Source
 ** ______________________________________________________________________
 */
-
-
+#include <liqRibShaveData.h>
+// Boost headers
+#include <boost/scoped_array.hpp>
+#include <boost/shared_array.hpp>
 // RenderMan headers
 //extern "C" {
 #include "ri_interface.h"
@@ -46,15 +48,12 @@
 #include<maya/MFnNurbsSurface.h>
 #include<maya/shaveAPI.h>
 #include<maya/shaveItHair.h>
-#include <maya/MGlobal.h>
+#include<maya/MGlobal.h>
 // Liquid headers
 #include <liqGlobalHelpers.h>
-#include <liqRibShaveData.h>
 #include <liqRenderer.h>
 
-// Boost headers
-#include <boost/scoped_array.hpp>
-#include <boost/shared_array.hpp>
+
 
 using namespace boost;
 

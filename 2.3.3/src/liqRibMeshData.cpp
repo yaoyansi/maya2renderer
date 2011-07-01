@@ -31,8 +31,11 @@
 ** Liquid Rib Mesh Data Source
 ** ______________________________________________________________________
 */
-
-
+#include <liqRibMeshData.h>
+// Standard/Boost headers
+#include <vector>
+#include <iostream>
+#include <boost/scoped_array.hpp>
 // Renderman Headers
 //extern "C" {
 #include "ri_interface.h"
@@ -52,13 +55,9 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibMeshData.h>
 
-// Standard/Boost headers
-#include <vector>
-#include <iostream>
-#include <boost/scoped_array.hpp>
-#include <boost/shared_array.hpp>
+
+
 
 using namespace boost;
 using namespace std;

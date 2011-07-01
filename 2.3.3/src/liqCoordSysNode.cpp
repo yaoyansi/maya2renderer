@@ -20,6 +20,7 @@
 // ARISING OUT OF ACCESS TO, USE OF, OR RELIANCE UPON THE DATA.
 // ==========================================================================
 //+
+#include <liqCoordSysNode.h>
 
 #include <maya/MPxLocatorNode.h>
 #include <maya/MString.h>
@@ -28,12 +29,10 @@
 #include <maya/MVector.h>
 #include <maya/MDataBlock.h>
 #include <maya/MDataHandle.h>
-#include <maya/MColor.h>
 #include <maya/M3dView.h>
 #include <maya/MFnEnumAttribute.h>
 #include <maya/MFnNumericAttribute.h>
 
-#include <liqCoordSysNode.h>
 #include <liqMayaNodeIds.h>
 
 #if defined(OSMac_MachO_)

@@ -29,9 +29,8 @@
 ** Liquid Get Attribute Source
 ** ______________________________________________________________________
 */
-
+#include <liqGetAttr.h>
 // Maya's Headers
-#include <maya/MPxCommand.h>
 #include <maya/MCommandResult.h>
 #include <maya/MDoubleArray.h>
 #include <maya/MFnDoubleArrayData.h>
@@ -41,7 +40,7 @@
 #include <maya/MString.h>
 #include <maya/MSelectionList.h>
 
-#include <liqGetAttr.h>
+
 
 void* liqGetAttr::creator()
 //

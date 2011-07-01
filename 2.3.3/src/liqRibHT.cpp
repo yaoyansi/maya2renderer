@@ -31,6 +31,7 @@
 ** Liquid Rib Hash Table Source
 ** ______________________________________________________________________
 */
+#include <liqRibHT.h>
 
 #ifdef _WIN32
 #pragma warning(disable:4786)
@@ -49,8 +50,10 @@
 
 #include <liquid.h>
 #include <liqRibNode.h>
-#include <liqRibHT.h>
 #include <liqGlobalHelpers.h>
+
+using namespace boost;
+using namespace std;
 
 extern int debugMode;
 

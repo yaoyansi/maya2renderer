@@ -28,6 +28,8 @@
 */
 
 
+#include <liqRibTranslator.h>
+
 #include <sys/types.h>
 
 #ifndef _WIN32
@@ -41,13 +43,6 @@
 #pragma warning(disable:4786)
 #endif
 
-
-
-// Renderman Headers
-//extern "C" {
-#include "ri_interface.h"
-//}
-
 #ifdef _WIN32
 #include <process.h>
 #include <io.h>
@@ -57,15 +52,19 @@
 #include <stdlib.h>
 #include <pwd.h>
 #endif
-
-#include <algorithm>
 #include <time.h>
+#include <algorithm>
+#include <strstream>
 
 #include <boost/scoped_array.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
-#include <strstream>
+
+// Renderman Headers
+//extern "C" {
+#include "ri_interface.h"
+//}
 
 #if defined(_WIN32) && !defined(DEFINED_LIQUIDVERSION)
 // unix build gets this from the Makefile
@@ -75,16 +74,10 @@ static const char *LIQUIDVERSION =
 #define DEFINED_LIQUIDVERSION
 #endif
 
-//#define USE_DELETE
-
-#ifdef USE_DELETE
-#	ifdef _WIN32
-#		define RM_CMD "cmd.exe /c del"
-#	else
-#	  define RM_CMD "/bin/rm"
-#	endif
+#ifdef _WIN32
+#  define RM_CMD "cmd.exe /c del"
 #else
-#  define RM_CMD ""
+#  define RM_CMD "/bin/rm"
 #endif
 
 // Maya headers
@@ -108,16 +101,20 @@ static const char *LIQUIDVERSION =
 #include <maya/MDagModifier.h>
 #include <maya/MPxNode.h>
 #include <maya/MRenderLineArray.h>
-
+#include <maya/MItDependencyNodes.h>
+#include <maya/MFnDependencyNode.h>
+#include <maya/MDagPathArray.h>
 // Liquid headers
 #include <liquid.h>
 #include <liqRibHT.h>
 #include <liqRenderer.h>
-#include <liqRibTranslator.h>
+#include <liqRibLightData.h>
 #include <liqGlobalHelpers.h>
 #include <liqProcessLauncher.h>
 #include <liqCustomNode.h>
 #include <liqShaderFactory.h>
+#include <liqExpression.h>
+#include <liqRenderScript.h>
 
 using namespace boost;
 using namespace std;

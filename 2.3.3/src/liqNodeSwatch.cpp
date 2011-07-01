@@ -31,9 +31,7 @@
 ** Liquid Node Swatch Source
 ** ______________________________________________________________________
 */
-
-#include <liquid.h>
-#include <liqSurfaceNode.h>
+#include <liqNodeSwatch.h>
 
 #include <maya/MGlobal.h>
 #include <maya/MCommandResult.h>
@@ -53,7 +51,9 @@
 #include <maya/MImage.h>
 #include <maya/MFnDependencyNode.h>
 #include <maya/MFileObject.h>
+#include <maya/MPlug.h>
 
+#include <liquid.h>
 #include <liqIOStream.h>
 
 bool liqNodeSwatch::doIteration () 

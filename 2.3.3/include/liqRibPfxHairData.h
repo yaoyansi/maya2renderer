@@ -35,8 +35,10 @@
 ** Liquid pfxToon Node Data Header File
 ** ______________________________________________________________________
 */
-
 #include <boost/shared_array.hpp>
+
+#include <liqRibData.h>
+
 
 class liqRibPfxHairData : public liqRibData {
 public: // Methods
@@ -50,12 +52,12 @@ public: // Methods
 private: // Data
 
     RtInt ncurves;
-    shared_array< RtInt >   nverts;
-    shared_array< RtFloat > CVs;
-    shared_array< RtFloat > normals;
-    shared_array< RtFloat > curveWidth;
-    shared_array< RtFloat > cvColor;
-    shared_array< RtFloat > cvOpacity;
+	boost::shared_array< RtInt >   nverts;
+    boost::shared_array< RtFloat > CVs;
+    boost::shared_array< RtFloat > normals;
+    boost::shared_array< RtFloat > curveWidth;
+    boost::shared_array< RtFloat > cvColor;
+    boost::shared_array< RtFloat > cvOpacity;
 };
 
 #endif

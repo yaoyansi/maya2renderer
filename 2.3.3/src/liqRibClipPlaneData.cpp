@@ -29,16 +29,17 @@
 ** Liquid Rib Locator Data Source
 ** ______________________________________________________________________
 */
+#include <liqRibClipPlaneData.h>
+
+#include <maya/MFnDependencyNode.h>
 
 // Renderman Headers
 //extern "C" {
   #include "ri_interface.h"
 //}
-
-#include <maya/MFnDependencyNode.h>
-
 #include <liquid.h>
-#include <liqRibClipPlaneData.h>
+
+
 
 extern int debugMode;
 

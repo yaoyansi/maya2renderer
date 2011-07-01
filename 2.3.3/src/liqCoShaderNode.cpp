@@ -31,11 +31,7 @@
 ** Liquid Co-Shader Node Source
 ** ______________________________________________________________________
 */
-
-#include <liquid.h>
 #include <liqCoShaderNode.h>
-#include <liqNodeSwatch.h>
-#include <liqMayaNodeIds.h>
 
 #include <maya/MGlobal.h>
 #include <maya/MCommandResult.h>
@@ -55,7 +51,9 @@
 #include <maya/MImage.h>
 #include <maya/MFnDependencyNode.h>
 
-
+#include <liquid.h>
+#include <liqNodeSwatch.h>
+#include <liqMayaNodeIds.h>
 #include <liqIOStream.h>
 
 // static data

@@ -31,8 +31,10 @@
 ** Liquid Rib Node Source
 ** ______________________________________________________________________
 */
-
-
+#include <liqRibNode.h>
+// Standard/Boost headers
+#include <list>
+#include <boost/scoped_array.hpp>
 // RenderMan headers
 //extern "C" {
 #include "ri_interface.h"
@@ -61,11 +63,9 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibNode.h>
 
-// Standard/Boost headers
-#include <list>
-#include <boost/scoped_array.hpp>
+using namespace std;
+using namespace boost;
 
 
 #ifdef _WIN32

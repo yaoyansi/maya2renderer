@@ -33,10 +33,12 @@
 ** Liquid Rib Paint Effects Data Header File
 ** ______________________________________________________________________
 */
+#include <vector>
+#include <boost/shared_array.hpp>
 
 #include <maya/MPlug.h>
 
-#include <boost/shared_array.hpp>
+#include <liqRibData.h>
 
 class liqRibPfxData : public liqRibData {
 public: // Methods
@@ -54,8 +56,8 @@ private: // Data
   unsigned                grain;
   bool                    hasFeature[ 3 ];
   ObjectType			  pfxtype;
-  vector< RtInt >         nverts[ 3 ];
-  shared_array< RtFloat > CVs;
+  std::vector< RtInt >         nverts[ 3 ];
+  boost::shared_array< RtFloat > CVs;
   liqTokenPointer::array pfxTokenPointerArrays[ 3 ];
 };
 

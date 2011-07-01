@@ -35,14 +35,12 @@
 ** Liquid Rib Maya Subdivision Data Header File
 ** ______________________________________________________________________
 */
-
-#include <maya/MUint64Array.h>
 #include <vector>
-#include <liqRibData.h>
-
 #include <boost/shared_array.hpp>
 
-using namespace boost;
+#include <liquid.h>
+#include <liqRibData.h>
+
 
 typedef struct tagMayaPolyEdgeIndx {
     RtInt	vtx0;
@@ -73,8 +71,8 @@ public: // Methods
 private: // Data
   RtInt     numFaces;
   RtInt     numPoints;
-  shared_array< RtInt > nverts;
-  shared_array< RtInt > verts;
+  boost::shared_array< RtInt > nverts;
+  boost::shared_array< RtInt > verts;
   const RtFloat* vertexParam;
 
   DetailType uvDetail;

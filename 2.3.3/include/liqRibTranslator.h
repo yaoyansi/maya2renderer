@@ -34,26 +34,23 @@
 ** Liquid Rib Translator Header File
 ** ______________________________________________________________________
 */
-
-#include <liquid.h>
-#include <liqRenderer.h>
-#include <liqRibHT.h>
-#include <liqShader.h>
-#include <liqRenderScript.h>
-#include <liqRibLightData.h>
-#include <liqExpression.h>
-
-#include <maya/MPxCommand.h>
-#include <maya/MDagPathArray.h>
-#include <maya/MFnCamera.h>
-#include <maya/MArgList.h>
-#include <maya/MFloatArray.h>
-
+#include <vector>
 #include <map>
 #include <boost/shared_ptr.hpp>
 
+#include <maya/M3dView.h>
+#include <maya/MComputation.h>
+#include <maya/MPxCommand.h>
+#include <maya/MFnCamera.h>
+#include <maya/MArgList.h>
+#include <maya/MIntArray.h>
+#include <maya/MStringArray.h>
 
-using namespace std;
+#include <liquid.h>
+#include <liqRibHT.h>
+#include <liqShader.h>
+
+class liqRibLightData;
 
 class liqRibTranslator : public MPxCommand {
 public:
@@ -115,12 +112,12 @@ private: // Data
 	MRibStatus ribStatus;
 
 	// Render Globals and RIB Export Options
-	vector<structJob>  jobList;
-	vector<structJob>  shadowList;
+	std::vector<structJob>  jobList;
+	std::vector<structJob>  shadowList;
 
-	vector<structJob>  refList;  // reflections list
-	vector<structJob>  envList;  // environments list
-	vector<structJob>  txtList;  // make textures list
+	std::vector<structJob>  refList;  // reflections list
+	std::vector<structJob>  envList;  // environments list
+	std::vector<structJob>  txtList;  // make textures list
 
 	// MDagPathArray shadowLightArray;            //  UN-USED GLOBAL
 	// MDagPath activeCamera;                     //  UN-USED GLOBAL
@@ -130,7 +127,7 @@ private: // Data
 
 	liquidlong width, height, depth;
 
-	vector< int > frameNumbers;
+	std::vector< int > frameNumbers;
 
 	// alfred stuff
 	bool useRenderScript;
@@ -211,7 +208,7 @@ private: // Data
 	bool launchRender;
 
 	// Hash table for scene
-	shared_ptr< liqRibHT > htable;
+	boost::shared_ptr< liqRibHT > htable;
 
 	// Depth in attribute blocking
 	// NOTE : used in liqRibTranslator::doAttributeBlocking,
@@ -389,7 +386,7 @@ private :
 		float           filterY;
 		structDDParam   xtraParams;
 	} structDisplay;
-	vector<structDisplay> m_displays;
+	std::vector<structDisplay> m_displays;
 
 	typedef struct structChannel {
 		MString     name;
@@ -403,7 +400,7 @@ private :
 		float       pixelFilterX;
 		float       pixelFilterY;
 	} structChannel;
-	vector<structChannel> m_channels;
+	std::vector<structChannel> m_channels;
 
 	// MStringArray  m_pixelFilterNames;
 	liquidlong    m_rFilter;

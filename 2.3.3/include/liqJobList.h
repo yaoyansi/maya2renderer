@@ -33,15 +33,8 @@
 ** ______________________________________________________________________
 */
 
-
 #include <maya/MPxCommand.h>
 #include <maya/MStringArray.h>
-#include <maya/MDagPath.h>
-
-#include <liqRibTranslator.h>
-
-// forward declaration
-//class liqRibTranslator;
 
 class liqJobList : public MPxCommand {
 public:

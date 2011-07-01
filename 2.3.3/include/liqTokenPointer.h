@@ -25,16 +25,13 @@
 */
 #ifndef liqTokenPointer_H
 #define liqTokenPointer_H
-//extern "C" {
-#include "ri_interface.h"
-//}
 
 #include <string>
 #include <vector>
 #include <boost/shared_array.hpp>
-
-using namespace std;
-using namespace boost;
+//extern "C" {
+#include "ri_interface.h"
+//}
 
 // token/pointer pairs structure
 
@@ -67,12 +64,12 @@ class liqTokenPointer
     liqTokenPointer(const liqTokenPointer& src);
     liqTokenPointer& operator=( const liqTokenPointer& src);
     ~liqTokenPointer();
-    void           setTokenName( const string& name );
-    bool           set( const string& name, ParameterType ptype );
-    bool           set( const string& name, ParameterType ptype, unsigned int arraySize );
-    bool           set( const string& name, ParameterType ptype, unsigned int arraySize, unsigned int uArraySize );
+    void           setTokenName( const std::string& name );
+    bool           set( const std::string& name, ParameterType ptype );
+    bool           set( const std::string& name, ParameterType ptype, unsigned int arraySize );
+    bool           set( const std::string& name, ParameterType ptype, unsigned int arraySize, unsigned int uArraySize );
     // Deprecated: use one of the above three set() functions instead!
-    bool           set( const string& name, ParameterType ptype, bool asArray, bool asUArray, unsigned int arraySize );
+    bool           set( const std::string& name, ParameterType ptype, bool asArray, bool asUArray, unsigned int arraySize );
     // -----------
     int            reserve( unsigned int size );
     void           setDetailType( DetailType dType );
@@ -80,33 +77,33 @@ class liqTokenPointer
     void           setTokenFloat( unsigned int i, unsigned int uIndex, RtFloat val );
     void           setTokenFloat( unsigned int i, RtFloat x, RtFloat y , RtFloat z );
     void           setTokenFloat( unsigned int i, RtFloat x, RtFloat y , RtFloat z, RtFloat w );
-    void           setTokenFloats( const shared_array< RtFloat > floatVals ); // Warning! This method assumes ownership of the pointer is transferred to the TokenPointer!!!
+	void           setTokenFloats( const boost::shared_array< RtFloat > floatVals ); // Warning! This method assumes ownership of the pointer is transferred to the TokenPointer!!!
     void           setTokenFloats( const RtFloat* floatVals ); // Use this one to copy the data
-    void           setTokenString( unsigned int i, const string& str );
-    string         getTokenName() const;
-    const string&  getDetailedTokenName();
+    void           setTokenString( unsigned int i, const std::string& str );
+	std::string         getTokenName() const;
+    const std::string&  getDetailedTokenName();
     DetailType     getDetailType() const;
     const RtFloat* getTokenFloatArray() const;
-    const shared_array< RtFloat > getTokenFloatSharedArray() const;
-    string         getTokenString() const;
+	const boost::shared_array< RtFloat > getTokenFloatSharedArray() const;
+    std::string         getTokenString() const;
     ParameterType  getParameterType() const;
     const RtPointer getRtPointer();
-    string         getRiDeclare() const;
+    std::string         getRiDeclare() const;
                    operator bool() const;
     bool           empty() const;
     bool           isBasicST() const;
     void           resetTokenString();
     void           reset();
 
-    typedef vector< liqTokenPointer > array;
+    typedef std::vector< liqTokenPointer > array;
   private:
-    shared_array< RtFloat > m_tokenFloats;
-    vector< string > m_tokenString;
-	shared_array< RtString > m_tokenStringArray; // Holds pointers for getRtPointer();
+	  boost::shared_array< RtFloat > m_tokenFloats;
+    std::vector< std::string > m_tokenString;
+	boost::shared_array< RtString > m_tokenStringArray; // Holds pointers for getRtPointer();
     ParameterType m_pType;
     DetailType m_dType;
-    string m_tokenName;
-    string detailedTokenName; // This needs to be a member or else the getTokenArrays...() stuff fails as it uses c_str() on a temporary string.
+    std::string m_tokenName;
+    std::string detailedTokenName; // This needs to be a member or else the getTokenArrays...() stuff fails as it uses c_str() on a temporary string.
     unsigned m_arraySize;
     unsigned m_uArraySize;
     unsigned m_eltSize;
@@ -114,7 +111,7 @@ class liqTokenPointer
     bool m_isUArray;
     bool m_isString;
     bool m_isFull;
-    static const string detailType[];
+    static const std::string detailType[];
     int m_stringSize;
     int m_tokenSize;
 };

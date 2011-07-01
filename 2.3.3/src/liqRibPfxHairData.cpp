@@ -31,31 +31,28 @@
 ** Liquid Rib pfxHair Curve Data Source
 ** ______________________________________________________________________
 */
+#include <liqRibPfxHairData.h>
 
+#include <boost/scoped_array.hpp>
 // Renderman Headers
 //extern "C" {
 #include "ri_interface.h"
 //}
-
 // Maya's Headers
 #include <maya/MDoubleArray.h>
 #include <maya/MItCurveCV.h>
 #include <maya/MPoint.h>
 #include <maya/MFnNurbsCurve.h>
 #include <maya/MPlug.h>
-
 #include <maya/MFnPfxGeometry.h>
 #include <maya/MRenderLineArray.h>
 #include <maya/MRenderLine.h>
 #include <maya/MVectorArray.h>
 
-
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibData.h>
-#include <liqRibPfxHairData.h>
 
-#include <boost/scoped_array.hpp>
+using namespace boost;
 
 extern int debugMode;
 

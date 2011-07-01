@@ -60,15 +60,12 @@
 #  include <malloc.h>
 #endif
 
-#include <liqMemory.h>
-#include <liqIOStream.h>
-
-#include <maya/M3dView.h>
-#include <maya/MComputation.h>
 #include <maya/MString.h>
 #include <maya/MMatrix.h>
 #include <maya/MDagPath.h>
-#include <maya/MDagPathArray.h>
+
+#include <liqMemory.h>
+#include <liqIOStream.h>
 
 ////////////////////////
 // Macros and Defines //

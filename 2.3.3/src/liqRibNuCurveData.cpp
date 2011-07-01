@@ -31,28 +31,22 @@
 ** Liquid Rib Nurbs Curve Data Source
 ** ______________________________________________________________________
 */
-
+#include <liqRibNuCurveData.h>
 // Renderman Headers
 //extern "C" {
 #include "ri_interface.h"
 //}
-
 // Maya headers
 #include <maya/MDoubleArray.h>
 #include <maya/MItCurveCV.h>
 #include <maya/MPoint.h>
 #include <maya/MFnNurbsCurve.h>
 #include <maya/MPlug.h>
-
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibData.h>
-#include <liqRibNuCurveData.h>
-
 // Boost headers
 #include <boost/scoped_array.hpp>
-#include <boost/shared_array.hpp>
 
 using namespace boost;
 

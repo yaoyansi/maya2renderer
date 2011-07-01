@@ -24,10 +24,11 @@
 ** RenderMan (R) is a registered trademark of Pixar
 
 */
+#include <liqExpression.h>
 
 #include <liqIOStream.h>
 #include <liqGlobalHelpers.h>
-#include <liqExpression.h>
+
 
 extern int debugMode;
 
@@ -41,7 +42,7 @@ extern bool liqglo_doShadows;
 extern bool liqglo_shortShaderNames;
 extern MStringArray liqglo_DDimageName;
 
-liqExpression::liqExpression( const string& str1, const string& objName ) :
+liqExpression::liqExpression( const std::string& str1, const std::string& objName ) :
 // liqExpression::liqExpression( char * str, char *objName ) :
   destExists( false ),
   destIsNewer( false ),

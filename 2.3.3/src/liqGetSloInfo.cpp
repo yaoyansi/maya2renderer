@@ -53,10 +53,9 @@
 //#ifdef PIXIE
 //#include <sdr.h>
 //#endif
-
+#include <liqGetSloInfo.h>
 // Maya's Headers
 #include <maya/MFn.h>
-#include <maya/MString.h>
 #include <maya/MCommandResult.h>
 #include <maya/MStringArray.h>
 #include <maya/MFnStringArrayData.h>
@@ -64,15 +63,14 @@
 #include <maya/MFnIntArrayData.h>
 #include <maya/MArgList.h>
 #include <maya/MGlobal.h>
-#include <maya/MFnDependencyNode.h>
 #include <maya/MPlug.h>
 #include <maya/MSelectionList.h>
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqGetSloInfo.h>
 
-#include <map>
+
+
 
 extern int debugMode;
 

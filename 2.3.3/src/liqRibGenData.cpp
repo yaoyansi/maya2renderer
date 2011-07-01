@@ -31,6 +31,7 @@
 ** Liquid Rib Gen Data Source
 ** ______________________________________________________________________
 */
+#include <liqRibGenData.h>
 
 #ifndef _WIN32
 #  include <dlfcn.h> // dlopen() etc
@@ -55,11 +56,14 @@
 #include <maya/MSelectionList.h>
 #include <maya/MPlugArray.h>
 
+#include<windows.h>
+
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibGenData.h>
 #include <liqRibGen.h>
+
+using namespace std;
 
 extern int debugMode;
 
@@ -203,7 +207,7 @@ void liqRibGenData::_write()
   else 
   {
 #if defined _WIN32    
-    TCHAR szBuf[80]; 
+//    TCHAR szBuf[80]; 
     LPVOID lpMsgBuf;
     DWORD dw = GetLastError(); 
 

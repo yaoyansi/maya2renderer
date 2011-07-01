@@ -26,21 +26,18 @@
 #ifndef liqShader_H_
 #define liqShader_H_
 
+#include <string>
+#include <vector>
 
-#include <maya/MColor.h>
 #include <maya/MFnDependencyNode.h>
-#include <maya/MDagPath.h>
 #include <maya/MString.h>
+#include <maya/MObject.h>
 
 #include <liqTokenPointer.h>
 #include <liqGetSloInfo.h>
 #define MR_SURFPARAMSIZE 1024
 
-#include <string>
-#include <vector>
 
-
-using namespace std;
 
 class liqShader
 {
@@ -50,9 +47,9 @@ public :
     liqShader & operator=( const liqShader & src );
     liqShader ( MObject shaderObj );
     virtual ~liqShader();
-    MStatus liqShaderParseVectorAttr( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType );
-    MStatus liqShaderParseVectorArrayAttr( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType, unsigned int arraySize );
-	MStatus liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNode, const string& argName, ParameterType pType );
+	MStatus liqShaderParseVectorAttr( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType );
+    MStatus liqShaderParseVectorArrayAttr( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType, unsigned int arraySize );
+	MStatus liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType );
 
 	void appendCoShader(MObject coshader, MPlug plug);
 	void write(bool shortShaderNames, unsigned int indentLevel);
@@ -62,8 +59,8 @@ public :
     // void freeShader( void ); -- not needed anymore. vector calls the dtors itself when going out of scope
     // int numTPV; -- handled by tokenPointerArray.size() now
 
-    string      name;
-    string      file;
+	std::string      name;
+    std::string      file;
     RtColor     rmColor;
     RtColor     rmOpacity;
     bool        hasShadingRate;
@@ -78,8 +75,8 @@ public :
     int         evaluateAtEveryFrame;
     MObject     m_mObject;
     
-    vector< liqTokenPointer	> tokenPointerArray;
-    vector< MObject > m_coShaderArray;
+    std::vector< liqTokenPointer	> tokenPointerArray;
+    std::vector< MObject > m_coShaderArray;
 };
 
 

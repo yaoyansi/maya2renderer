@@ -23,6 +23,8 @@
 **
 ** RenderMan (R) is a registered trademark of Pixar
 */
+#include <liqRenderer.h>
+
 #include <maya/MObject.h>
 #include <maya/MString.h>
 #include <maya/MStringArray.h>
@@ -33,7 +35,7 @@
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRenderer.h>
+
 
 extern MObject rGlobalObj;
 

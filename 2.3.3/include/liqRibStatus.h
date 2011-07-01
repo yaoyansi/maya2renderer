@@ -43,9 +43,9 @@
 //}
 #include <string>
 
-#include <maya/MGlobal.h>
+//#include <maya/MGlobal.h>
 #include <maya/MCommandResult.h>
-#include <maya/MDagPath.h>
+//#include <maya/MDagPath.h>
 
 class liqRibContextResult;
 class liqRibStatus {
@@ -74,7 +74,7 @@ public:
 		RenderingPass renderPass;
 		bool     transBlur, defBlur;
 		bool     compressed, binary;
-		string   objectName;
+		std::string   objectName;
 		RtMatrix cameraMatrix;
 		RtFloat  shutterAngle;
 		MDagPath dagPath;

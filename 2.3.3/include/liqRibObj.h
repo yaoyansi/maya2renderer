@@ -34,14 +34,22 @@
 ** Liquid Rib Object Header File
 ** ______________________________________________________________________
 */
-
-#include <liqRibData.h>
+#include <vector>
 #include <boost/shared_ptr.hpp>
 
-using namespace boost;
+#include <maya/MDagPath.h>
+#include <maya/MMatrix.h>
+// Renderman Headers
+//extern "C" {
+#include "ri_interface.h"
+//}
 
+enum ObjectType;
+enum AnimType;
 class liqRibObj;
-typedef shared_ptr< liqRibObj > liqRibObjPtr;
+class liqRibData;
+typedef boost::shared_ptr< liqRibObj > liqRibObjPtr;
+typedef boost::shared_ptr< liqRibData > liqRibDataPtr;
 
 class liqRibObj {
 public:
@@ -72,7 +80,7 @@ public:
     //char         **lightSources; // unused?
 
 private:
-    vector< MMatrix > instanceMatrices; // Matrices for all instances of this object
+	std::vector< MMatrix > instanceMatrices; // Matrices for all instances of this object
     RtObjectHandle    objectHandle;     // Handle used by RenderMan to refer to defined geometry
     int               referenceCount;   // Object's reference count
     liqRibDataPtr     data;             // Geometry or light data

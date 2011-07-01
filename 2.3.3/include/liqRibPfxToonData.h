@@ -35,9 +35,7 @@
 ** Liquid pfxToon Node Data Header File
 ** ______________________________________________________________________
 */
-
-#include <maya/MIntArray.h>
-#include <maya/MFloatArray.h>
+#include <liqRibData.h>
 
 
 class liqRibPfxToonData : public liqRibData {
@@ -51,12 +49,12 @@ public: // Methods
 
 private: // Data
 
-    shared_array< RtInt >   nverts;
+	boost::shared_array< RtInt >   nverts;
     RtInt                   ncurves;
-    shared_array< RtFloat > CVs;
-    shared_array< RtFloat > curveWidth;
-    shared_array< RtFloat > cvColor;
-    shared_array< RtFloat > cvOpacity;
+    boost::shared_array< RtFloat > CVs;
+    boost::shared_array< RtFloat > curveWidth;
+    boost::shared_array< RtFloat > cvColor;
+    boost::shared_array< RtFloat > cvOpacity;
 
 };
 

@@ -33,24 +33,16 @@
 ** Liquid RibData Header File
 ** ______________________________________________________________________
 */
-
-// Boost headers
-#include <boost/shared_ptr.hpp>
-
+// Standard headers
+#include <vector>
 // Maya headers
 #include <maya/MDagPath.h>
 #include <maya/MFnDependencyNode.h>
-#include <maya/MStringArray.h>
 
-// Standard headers
-#include <vector>
 #include <liqTokenPointer.h>
 
-using namespace boost;
-using namespace std;
-
-class liqRibData;
-typedef shared_ptr< liqRibData > liqRibDataPtr;
+//typedef shared_ptr< liqRibData > liqRibDataPtr;
+enum ObjectType;
 
 class liqRibData {
 public:

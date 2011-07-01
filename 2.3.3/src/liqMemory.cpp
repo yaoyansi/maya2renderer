@@ -41,13 +41,14 @@
 // Standard Headers
 #include <stdlib.h>
 #include <sys/types.h>
-#include <string.h>
+#include <string>
+#include <list>
 
 // maya headers
 #include <maya/MString.h>
 #include <maya/MGlobal.h>
 
-#include <list>
+
 
 // Error Messages 
 MString errorGettingMemoryMessage = "Liquid -> Error Allocating Memory!\n";

@@ -29,6 +29,10 @@
 ** Liquid Rib Particle Data Source
 ** ______________________________________________________________________
 */
+#include <liqRibParticleData.h>
+
+#include <boost/shared_ptr.hpp>
+#include <boost/scoped_array.hpp>
 
 // Renderman Headers
 //extern "C" {
@@ -60,12 +64,9 @@ using namespace __gnu_cxx;
 #include <maya/MQuaternion.h>
 
 #include <liquid.h>
-#include <liqRibParticleData.h>
 #include <liqGlobalHelpers.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/scoped_array.hpp>
-
+using namespace std;
 using namespace boost;
 
 extern int debugMode;

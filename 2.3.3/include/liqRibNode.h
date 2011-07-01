@@ -38,29 +38,24 @@
 
 // Standard headers
 #include <map>
-
 // Boost headers
 #include <boost/shared_ptr.hpp>
-
 // Maya headers
 #include <maya/MColor.h>
 #include <maya/MFnDependencyNode.h>
 #include <maya/MDagPath.h>
 #include <maya/MObjectArray.h>
-
 // Liquid headers
+#include <liquid.h>
 #include <liqRibData.h>
 #include <liqRibObj.h>
 #include <liqTokenPointer.h>
-
+//#include <liqRibNode.h>
 
 //enum transmissions {TRANS, OPAQUE, OS, SHADER};
 
 class liqRibNode;
-
-using namespace std;
-using namespace boost;
-typedef shared_ptr< liqRibNode > liqRibNodePtr;
+typedef boost::shared_ptr< liqRibNode > liqRibNodePtr;
 
 
 
@@ -242,7 +237,7 @@ class liqRibNode {
     } shadowRib;
 
     struct grouping {
-      string membership;
+		std::string membership;
     } grouping;
 
 	struct delightSSS {
@@ -320,13 +315,13 @@ class liqRibNode {
     bool    invisible;
     bool    ignoreShapes;
 
-    map< string, liqTokenPointer > tokenPointerMap;
+	std::map< std::string, liqTokenPointer > tokenPointerMap;
 
 
 private:
 
     MDagPath    DagPath;
-    vector< liqRibObjPtr > objects;
+	std::vector< liqRibObjPtr > objects;
     liqRibNodePtr instance;
     MString     instanceStr;
     MString     ribGenName;

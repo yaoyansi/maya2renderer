@@ -31,12 +31,17 @@
 ** Liquid Rib Paint Effects Data Source
 ** ______________________________________________________________________
 */
+#include <liqRibPfxData.h>
 
+#include <stdlib.h>
+#include <cassert>
+
+// Standard/Boost headers
+#include <boost/scoped_array.hpp>
 // Renderman headers
 //extern "C" {
 #include "ri_interface.h"
 //}
-
 // Maya headers
 #include <maya/MDoubleArray.h>
 #include <maya/MGlobal.h>
@@ -52,17 +57,12 @@
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibData.h>
-#include <liqRibPfxData.h>
+
 #include <liqRibNode.h>
 
-// Standard/Boost headers
-#include <cassert>
-#include <vector>
-#include <boost/scoped_array.hpp>
-#include <boost/shared_array.hpp>
+using namespace boost;
 
-#include <stdlib.h>
+
 
 // For debug purposes: set to 1, 2, 3 to see only mainLines, also leafLines and also flowerLines
 #define MAX_DETAIL 3
@@ -327,7 +327,7 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
 						*cvPtr++ = pfxVerts[ 0 ].y;
 						*cvPtr++ = pfxVerts[ 0 ].z;
 					}
-				}//for( pOn )
+				}
 				// end vertex
 				// last vertex has already been pushed
 
@@ -337,9 +337,9 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
 				*cvPtr++ = tmpVertex.z;
 
 				// record number of vertices for this curve
-				nverts[ setOn ].push_back( pfxVerts.length()+2 );//nverts[ setOn ].push_back( pOn + 2 );
-			}//if
-		}//for( lineOn )
+				nverts[ setOn ].push_back( pOn + 2 );
+			}
+		}
 
 		LIQDEBUGPRINTF( "-> number of pfx curve CVs: %u\n", totalVertex );
 		LIQDEBUGPRINTF( "-> number of pfx curves: %u\n", nverts[ setOn ].size() );

@@ -29,12 +29,11 @@
 ** Liquid RibData Source File
 ** ______________________________________________________________________
 */
-
+#include <liqRibData.h>
 // Renderman Headers
 //extern "C" {
 #include "ri_interface.h"
 //}
-
 // Maya's Headers
 #include <maya/MDoubleArray.h>
 #include <maya/MFnDoubleArrayData.h>
@@ -44,13 +43,14 @@
 #include <maya/MFnVectorArrayData.h>
 #include <maya/MVectorArray.h>
 #include <maya/MFnMesh.h>
+#include <maya/MStringArray.h>
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibData.h>
+
+using namespace std;
 
 extern int debugMode;
-
 
 liqRibData::~liqRibData()
 {

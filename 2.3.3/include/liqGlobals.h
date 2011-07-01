@@ -1,3 +1,8 @@
+
+#ifndef liqGlobals_H
+#define liqGlobals_H
+
+
 class liqGlobals {
   public:
     struct {
@@ -62,3 +67,5 @@ class liqGlobals {
       
     } rib; 
 }
+
+#endif//liqGlobals_H

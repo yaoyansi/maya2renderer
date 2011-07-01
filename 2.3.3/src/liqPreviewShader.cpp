@@ -25,7 +25,7 @@
 */
 
 /* liquid command to export a shader ball with the selected shader */
-
+#include <liqPreviewShader.h>
 // Renderman headers
 //extern "C" {
 #include "ri_interface.h"
@@ -45,11 +45,14 @@
 
 #include <liqRenderer.h>
 #include <liqProcessLauncher.h>
-#include <liqPreviewShader.h>
 #include <liqGlobalHelpers.h>
+#include <liqShader.h>
 
 // Standard/Boost headers
 #include <boost/scoped_array.hpp>
+
+using namespace std;
+using namespace boost;
 
 extern int debugMode;
 //#ifndef DELIGHT

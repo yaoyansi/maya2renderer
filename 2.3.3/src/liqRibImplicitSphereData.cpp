@@ -31,14 +31,14 @@
 ** Liquid Rib Locator Data Source
 ** ______________________________________________________________________
 */
+#include <liqRibImplicitSphereData.h>
+// Boost headers
+#include <boost/scoped_array.hpp>
 
 // Renderman Headers
 //extern "C" {
 #include "ri_interface.h"
 //}
-
-// Boost headers
-#include <boost/scoped_array.hpp>
 
 // Maya headers
 //#include <maya/MPoint.h>
@@ -51,7 +51,9 @@
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibImplicitSphereData.h>
+
+using namespace std;
+using namespace boost;
 
 extern int debugMode;
 

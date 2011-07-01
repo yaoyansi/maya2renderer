@@ -32,17 +32,12 @@
 ** Liquid Get .slo Info Header File
 ** ______________________________________________________________________
 */
-
-#include <maya/MString.h>
-#include <maya/MStringArray.h>
-#include <maya/MIntArray.h>
-#include <maya/MFnDependencyNode.h>
-#include <maya/MPxCommand.h>
-
 #include <vector>
 #include <map>
 
-
+#include <maya/MString.h>
+#include <maya/MFnDependencyNode.h>
+#include <maya/MPxCommand.h>
 
 typedef enum {
     SHADER_TYPE_UNKNOWN,

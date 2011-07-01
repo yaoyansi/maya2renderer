@@ -35,6 +35,8 @@
 #include <maya/MMatrix.h>
 #include <liqMayaNodeIds.h>
 
+using namespace boost;
+
 const MTypeId liqBoundingBoxLocator::id( liqBoundingBoxLocatorId );
 
 MObject liqBoundingBoxLocator::aDrawBox;

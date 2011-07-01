@@ -36,13 +36,15 @@
 #if !defined(__LIQMAYARENDERVIEW_H__)
 #define __LIQMAYARENDERVIEW_H__
 
+#include <vector>
+#include <deque>
+
 #include <maya/MPxCommand.h>
 #include <maya/MSyntax.h>
 #include <maya/MObject.h>
+
 #include "liqBucket.h"
-#include <vector>
-#include <deque>
-using namespace std;
+
 
 class liqMayaRenderCmd : public MPxCommand
 {
@@ -57,13 +59,13 @@ public:
 	bool		isUndoable() const;
 	static MSyntax newSyntax();
 	static		void* creator();
-	static std::deque<string> m_lastBucketFiles;
+	static std::deque<std::string> m_lastBucketFiles;
 
 private:
 	MStatus renderBucket(const bucket* b, const imageInfo &info);
 	MStatus getBucket(const int socket,const unsigned int numChannels,bucket* b,bool &theEnd);
-	MStatus writeBuckets(const char* file, const vector<bucket*> &buckets,const imageInfo &info) const;
-	MStatus readBuckets(const char* file,vector<bucket*> &buckets, imageInfo &info) const;
+	MStatus writeBuckets(const char* file, const std::vector<bucket*> &buckets,const imageInfo &info) const;
+	MStatus readBuckets(const char* file,std::vector<bucket*> &buckets, imageInfo &info) const;
 
 	int createSocket(const char *hostname,const unsigned int port);
 
@@ -81,8 +83,8 @@ private:
 
 MObject getNode(MString name,MStatus *returnStatus);
 
-#undef ERROR
-#define ERROR(MSG) MGlobal::displayError(MString("")+MSG);
+#undef LIQ_ERROR
+#define LIQ_ERROR(MSG) MGlobal::displayError(MString("")+MSG);
 
 
 #define INFO(EXPR,ENDL) {cout<<#EXPR<<" "<<EXPR<<" ";if(ENDL)cout<<endl;}

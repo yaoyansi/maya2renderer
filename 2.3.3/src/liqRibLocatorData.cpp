@@ -31,7 +31,7 @@
 ** Liquid Rib Locator Data Source
 ** ______________________________________________________________________
 */
-
+#include <liqRibLocatorData.h>
 // Renderman Headers
 //extern "C" {
 #include "ri_interface.h"
@@ -47,7 +47,7 @@
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibLocatorData.h>
+
 
 extern int debugMode;
 

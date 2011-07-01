@@ -56,13 +56,9 @@
 #include <map>
 #include <vector>
 
-using namespace boost;
-using namespace std;
-
-
-typedef multimap< ulong, liqRibNodePtr > RNMAP;
-typedef vector< MString > str_Vector;
-typedef vector< ObjectType > type_Vector;
+	typedef std::multimap< ulong, liqRibNodePtr > RNMAP;
+	typedef std::vector< MString > str_Vector;
+	typedef std::vector< ObjectType > type_Vector;
 
 class liqRibHT {
 

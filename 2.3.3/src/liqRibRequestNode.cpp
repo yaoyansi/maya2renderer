@@ -33,9 +33,12 @@
 */
 
 #include <liqRibRequestNode.h>
-#include <liqMayaNodeIds.h>
 
 #include <maya/MFnTypedAttribute.h>
+
+#include <liqMayaNodeIds.h>
+
+
 
 MTypeId liqRibRequestNode::id( liqRibRequestId );
 

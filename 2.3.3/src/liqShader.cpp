@@ -23,10 +23,12 @@
 **
 ** RenderMan (R) is a registered trademark of Pixar
 */
+#include <liqShader.h>
 
-
-#include <lights.h>
 #include <algorithm>
+#include <boost/scoped_array.hpp>
+#include <boost/scoped_ptr.hpp>
+
 #include <maya/MPlug.h>
 #include <maya/MDoubleArray.h>
 #include <maya/MFnDoubleArrayData.h>
@@ -34,16 +36,15 @@
 #include <maya/MPlugArray.h>
 #include <maya/MFnMatrixData.h>
 
+#include <lights.h>
 #include <liquid.h>
-#include <liqShader.h>
 #include <liqGlobalHelpers.h>
 #include <liqMayaNodeIds.h>
 #include <liqShaderFactory.h>
 
-#include <boost/scoped_array.hpp>
-#include <boost/scoped_ptr.hpp>
 
-
+using namespace std;
+using namespace boost;
 
 extern int debugMode;
 

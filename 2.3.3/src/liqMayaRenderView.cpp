@@ -31,7 +31,12 @@
 ** display server communicating with the liqmaya display driver
 ** ______________________________________________________________________
 */
+//#pragma pack(2)
+#include "liqMayaRenderView.h"
+//#pragma options align=reset
 
+#include <stdio.h>
+#include <errno.h>
 
 #include <maya/MArgDatabase.h>
 #include <maya/MGlobal.h>
@@ -40,14 +45,6 @@
 #include <maya/MSelectionList.h>
 #include <maya/MComputation.h>
 #include <maya/M3dView.h>
-#include <stdio.h>
-#include <errno.h>
-
-//#pragma pack(2)
-#include "liqMayaRenderView.h"
-//#pragma options align=reset
-
-
 
 #ifndef _WIN32
 #include <sys/types.h>
@@ -104,7 +101,7 @@ liqMayaRenderCmd::liqMayaRenderCmd()
 	if (WSAStartup(0x202,&wsaData) == SOCKET_ERROR)
 	{
 		WSACleanup();
-		ERROR("Winsock init error\n");
+		LIQ_ERROR("Winsock init error\n");
 	}
 #endif
 }
@@ -143,7 +140,7 @@ MStatus liqMayaRenderCmd::doIt( const MArgList& args)
 	else
 		if(m_bRenderFromFile)
     {
-			ERROR("-bucketFile must be set if -renderFromFile is on");
+			LIQ_ERROR("-bucketFile must be set if -renderFromFile is on");
 			return MS::kFailure;
 		}
 
@@ -221,7 +218,7 @@ MStatus liqMayaRenderCmd::redoIt()
 		//check if displayDriver is ready
 		if(!waitSocket(s,m_timeout,true))
     {
-			ERROR("[liqMayaRenderView] timeout reached, display driver didn't respond in time. Aborting");
+			LIQ_ERROR("[liqMayaRenderView] timeout reached, display driver didn't respond in time. Aborting");
 			closesocket(s);
 			return MS::kFailure;
 		}
@@ -281,7 +278,7 @@ MStatus liqMayaRenderCmd::redoIt()
     {
 			if(renderComputation.isInterruptRequested())
       {
-				ERROR("[liqMayaRenderView] render aborted");
+				LIQ_ERROR("[liqMayaRenderView] render aborted");
 				break;
 			}
 			try
@@ -300,7 +297,7 @@ MStatus liqMayaRenderCmd::redoIt()
 				buckets.push_back(b);
 			}
 			catch(...){
-				ERROR("[liqMayaRenderView] exception caught");
+				LIQ_ERROR("[liqMayaRenderView] exception caught");
 				break;
 			}
 		}
@@ -344,7 +341,7 @@ MStatus liqMayaRenderCmd::getBucket(const int socket,const unsigned int numChann
 	errno =0;
 	if(!waitSocket(socket,m_timeout,true))
   {
-		ERROR("[liqMayaRenderView] timeout reached, aborting");
+		LIQ_ERROR("[liqMayaRenderView] timeout reached, aborting");
 		return MS::kFailure;
 	}
 
@@ -448,7 +445,7 @@ MStatus liqMayaRenderCmd::renderBucket(const bucket* b,const imageInfo &imgInfo)
 	RV_PIXEL *pixels = new RV_PIXEL[nPixels];
 	if( !pixels ) 
   {
-		ERROR("[liqMayaRenderView] cannot allocate memory for pixels");
+		LIQ_ERROR("[liqMayaRenderView] cannot allocate memory for pixels");
 		return  MS::kInsufficientMemory;
 	}
 #ifdef _WIN32	
@@ -593,7 +590,7 @@ MObject getNode(MString name,MStatus *returnStatus){
 
 	if(MS::kSuccess!=*returnStatus)
   {
-		ERROR("[liqMayaRenderView] Cound't get node :"+ name +". There might be multiple nodes called "+name);
+		LIQ_ERROR("[liqMayaRenderView] Cound't get node :"+ name +". There might be multiple nodes called "+name);
 		return node;
 	}
 
@@ -601,7 +598,7 @@ MObject getNode(MString name,MStatus *returnStatus){
 
 	if(MS::kSuccess!=*returnStatus)
   {
-		ERROR("[liqMayaRenderView] Cound't get node :"+ name +". There might be multiple nodes called "+name);
+		LIQ_ERROR("[liqMayaRenderView] Cound't get node :"+ name +". There might be multiple nodes called "+name);
 		return MObject::kNullObj;
 	}
 	return node;
@@ -616,13 +613,13 @@ MStatus liqMayaRenderCmd::writeBuckets(const char* file, const vector<bucket*> &
 	FILE *fh = fopen(file,"wb");
 	if(!fh)
 	{
-		ERROR(MString("")+"[liqMayaRenderCmd] couldn't open "+file+" for writing");
+		LIQ_ERROR(MString("")+"[liqMayaRenderCmd] couldn't open "+file+" for writing");
 		return MS::kFailure;
 	}
 	fwrite(&info,sizeof(imageInfo),1,fh);
 	if(ferror(fh))
   { 
-    ERROR("[liqMayaRenderCmd] error writing imageInfo"); 
+    LIQ_ERROR("[liqMayaRenderCmd] error writing imageInfo"); 
     fclose(fh); 
     return MS::kFailure;
   }
@@ -641,7 +638,7 @@ MStatus liqMayaRenderCmd::writeBuckets(const char* file, const vector<bucket*> &
 		if(!b) continue;
 		fwrite(&b->getInfo() , sizeof(bucket::bucketInfo),1,fh);
 		if(ferror(fh)){
-			ERROR("[liqMayaRenderCmd] error writing bucketInfo");
+			LIQ_ERROR("[liqMayaRenderCmd] error writing bucketInfo");
 			status = MS::kFailure;
 			break;
 		}
@@ -666,7 +663,7 @@ MStatus liqMayaRenderCmd::readBuckets(const char* file,vector<bucket*> &buckets,
 	FILE *fh = fopen(file,"rb");
 	if(!fh) 
   {
-		ERROR("[liqMayaRenderCmd] Error: couldn't open " +file+" for reading");
+		LIQ_ERROR("[liqMayaRenderCmd] Error: couldn't open " +file+" for reading");
 		return MS::kFailure;
 	}
 	fread(&imgInfo,sizeof(imageInfo),1,fh);
@@ -674,7 +671,7 @@ MStatus liqMayaRenderCmd::readBuckets(const char* file,vector<bucket*> &buckets,
 	fread(&size,sizeof(unsigned int),1,fh);
 	if(ferror(fh))
   {
-		ERROR("[liqMayaRenderCmd] Error: failed reading data from "+file);
+		LIQ_ERROR("[liqMayaRenderCmd] Error: failed reading data from "+file);
 		fclose(fh);
 		return MS::kFailure;
 	}
@@ -686,7 +683,7 @@ MStatus liqMayaRenderCmd::readBuckets(const char* file,vector<bucket*> &buckets,
 		fread(&info,sizeof(bucket::bucketInfo),1,fh);
 		if(ferror(fh)) 
     {
-			ERROR(MString("[liqMayaRenderCmd] Error: failed reading data from ")+file);
+			LIQ_ERROR(MString("[liqMayaRenderCmd] Error: failed reading data from ")+file);
 			status = MS::kFailure;
 			break;
 		}
@@ -694,14 +691,14 @@ MStatus liqMayaRenderCmd::readBuckets(const char* file,vector<bucket*> &buckets,
 		BUCKETDATATYPE *data = new BUCKETDATATYPE[datasize];
 		if(!data)
     {
-			ERROR("[liqMayaRenderCmd] Error: failed reading data from "+file);
+			LIQ_ERROR("[liqMayaRenderCmd] Error: failed reading data from "+file);
 			status = MS::kInsufficientMemory;
 			break;
 		}
 		fread(data,datasize,1,fh);
 		if(ferror(fh)) 
     {
-			ERROR("[liqMayaRenderCmd] Error: failed reading data from "+file);
+			LIQ_ERROR("[liqMayaRenderCmd] Error: failed reading data from "+file);
 			status = MS::kFailure;
 			break;
 		}

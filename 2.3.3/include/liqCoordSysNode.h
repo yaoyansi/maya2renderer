@@ -1,22 +1,15 @@
+
+#ifndef liqCoordSysNode_H
+#define liqCoordSysNode_H
+
 #include <maya/MPxLocatorNode.h>
-#include <maya/MString.h>
-#include <maya/MTypeId.h>
-#include <maya/MPlug.h>
-#include <maya/MVector.h>
-#include <maya/MDataBlock.h>
-#include <maya/MDataHandle.h>
 #include <maya/MColor.h>
-#include <maya/M3dView.h>
-#include <maya/MFnEnumAttribute.h>
-
-
-
 
 class liqCoordSysNode : public MPxLocatorNode
 {
   public:
-    //liqCoordSysNode();
-    //virtual ~liqCoordSysNode();
+	  liqCoordSysNode(){}
+	  virtual ~liqCoordSysNode(){}
 
     virtual MStatus         compute( const MPlug& plug, MDataBlock& data );
 
@@ -44,3 +37,4 @@ class liqCoordSysNode : public MPxLocatorNode
 
 };
 
+#endif//liqCoordSysNode_H

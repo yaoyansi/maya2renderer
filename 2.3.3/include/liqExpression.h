@@ -47,7 +47,7 @@ enum ExprType {
 
 class liqExpression {
   public:
-  liqExpression( const string& str, const string& objName = string() );
+	  liqExpression( const std::string& str, const std::string& objName = std::string() );
   // liqExpression( char * str, char *objName = NULL );
 
   MString	CalcValue( void );

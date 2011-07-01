@@ -35,12 +35,13 @@
 ** ______________________________________________________________________
 */
 
-#include <maya/MGlobal.h>
-#include <maya/MCommandResult.h>
+//#include <maya/MGlobal.h>
+
 
 #include <liqRibData.h>
 #include <liqRibStatus.h>
 
+class MCommandResult;
 
 class liqRibGenStatus: public liqRibStatus {
   private:

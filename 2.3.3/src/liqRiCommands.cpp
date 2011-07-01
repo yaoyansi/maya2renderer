@@ -33,17 +33,17 @@
 ** ______________________________________________________________________
 ** 
 */
-
-// Renderman headers
 #include <liqRiCommands.h>
-//extern "C" {
-#include "ri_interface.h"
-//}
 
 #include <fstream>
 #include <boost/scoped_array.hpp>
 using namespace boost;
 using namespace std;
+
+// Renderman headers
+//extern "C" {
+#include "ri_interface.h"
+//}
 
 // flags
 const char *helpFlag = "-h", *helpLongFlag = "-help";

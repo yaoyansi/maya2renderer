@@ -30,14 +30,6 @@
 ** ______________________________________________________________________
 */
 
-#include <maya/MDagPath.h>
-#include <maya/MFnDependencyNode.h>
-#include <maya/MStringArray.h>
-
-#include <liquid.h>
-#include <liqRibData.h>
-
-
 // This is a virtual base class that custom Maya nodes can inherit
 // from to be compatible with Liquid for RIB output.
 //

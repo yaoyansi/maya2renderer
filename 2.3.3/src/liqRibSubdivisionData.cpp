@@ -32,8 +32,9 @@
 ** Liquid Rib Subdivision Mesh Data Source
 ** ______________________________________________________________________
 */
-
-
+#include <liqRibSubdivisionData.h>
+// Standard/Boost headers
+#include <boost/scoped_array.hpp>
 // Renderman headers
 //extern "C" {
 #include "ri_interface.h"
@@ -50,16 +51,9 @@
 #include <maya/MGlobal.h>
 #include <maya/MSelectionList.h>
 #include <maya/MUintArray.h>
-
 // Liquid headers
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-#include <liqRibSubdivisionData.h>
-
-// Standard/Boost headers
-#include <boost/scoped_array.hpp>
-#include <boost/shared_array.hpp>
-
 
 using namespace boost;
 
