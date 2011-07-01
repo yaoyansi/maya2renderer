@@ -4102,6 +4102,7 @@ void liqRibTranslator::oneObjectBlock(
 				{
 					//if ribNode is tagged as readArchive or delayedReadArchive, 
 					//we do not output its geometry data.
+					liqRIBMsg("%s has ribbox data,(and no geometry deform),so we do not output the deometry.", ribNode->name.asChar());
 				}else{
 					//ribNode->object( 0 )->writeObject();
 					_writeObject(ribNode, currentJob, false, 0);
