@@ -66,6 +66,7 @@
 #include <liqRibPfxToonData.h>
 #include <liqRibPfxHairData.h>
 #include <liqRibImplicitSphereData.h>
+#include <liqRibShaveData.h>
 
 extern int debugMode;
 extern bool liqglo_useMtorSubdiv;
@@ -223,8 +224,19 @@ liqRibObj::liqRibObj( const MDagPath &path, ObjectType objType )
 			// i.e. you want to use shave & haircut and attach a custom shader to it
 			else if( obj.hasFn( MFn::kPluginShape ) )
 			{
-				type = MRT_Weirdo; // lets use this at least once :)
-				data = liqRibDataPtr( new liqRibSurfaceData( skip ) ); // you could use any here
+				MString nodeType;
+				MGlobal::executeCommand(("nodeType "+pathName), nodeType);
+				liquidMessage2(messageInfo, "liqRibObj(MFn::kPluginShape) %s, type=%s\n", pathName.asChar(), nodeType.asChar());
+				
+				if(nodeType=="shaveHair")
+				{
+					type = MRT_Shave;
+					data = liqRibDataPtr( new liqRibShaveData( ignoreShapes? skip : obj ) );
+				}else{
+					type = MRT_Weirdo; // lets use this at least once :)
+					data = liqRibDataPtr( new liqRibSurfaceData( skip ) ); // you could use any here
+				}
+
 			}
       else if( obj.hasFn( MFn::kMesh ) ) 
       {

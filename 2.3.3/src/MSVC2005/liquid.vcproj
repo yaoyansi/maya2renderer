@@ -3163,6 +3163,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqRibShaveData.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\liqRibSubdivisionData.cpp"
 				>
 			</File>
@@ -3433,6 +3437,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\liqRibRequestNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\liqRibShaveData.h"
 				>
 			</File>
 			<File
