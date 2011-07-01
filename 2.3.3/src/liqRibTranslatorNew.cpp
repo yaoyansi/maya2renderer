@@ -1609,25 +1609,6 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 				if( MS::kSuccess != returnStatus )
 					continue;
 			}
-			// scanScene: Now deal with all the particle-instanced objects (where a
-			// particle is replaced by an object or group of objects).
-			//
-			MItInstancer instancerIter;
-			while( !instancerIter.isDone() )
-			{
-				MDagPath path( instancerIter.path() );
-				MString instanceStr( ( MString )"|INSTANCE_" +
-					instancerIter.instancerId() + (MString)"_" +
-					instancerIter.particleId() + (MString)"_" +
-					instancerIter.pathId() );
-				MMatrix instanceMatrix( instancerIter.matrix() );
-				if( ( sample > 0 ) && isObjectMotionBlur( path ) )
-					htable->insert( path, lframe, sample, MRT_Unknown,count++, &instanceMatrix, instanceStr, instancerIter.particleId() );
-				else
-					htable->insert( path, lframe, 0, MRT_Unknown,count++, &instanceMatrix, instanceStr, instancerIter.particleId() );
-				instancerIter.next();
-			}
-
 		}
 		else
 		{
@@ -1635,11 +1616,12 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 			MSelectionList currentSelection;
 			MGlobal::getActiveSelectionList( currentSelection );
 			MItSelectionList selIterator( currentSelection );
-			MItDag dagIterator( MItDag::kDepthFirst, MFn::kInvalid, &returnStatus);
 			for( ; !selIterator.isDone(); selIterator.next() )
 			{
 				MDagPath objectPath;
 				selIterator.getDagPath( objectPath );
+				
+				MItDag dagIterator( MItDag::kDepthFirst, MFn::kInvalid, &returnStatus);			
 				dagIterator.reset (objectPath.node(), MItDag::kDepthFirst, MFn::kInvalid );
 				for (; !dagIterator.isDone(); dagIterator.next())
 				{
@@ -1653,27 +1635,13 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 						continue;
 				}
 			}
-			// scanScene: Now deal with all the particle-instanced objects (where a
-			// particle is replaced by an object or group of objects).
-			//
-			MItInstancer instancerIter;
-			while( !instancerIter.isDone() )
-			{
-				MDagPath path( instancerIter.path() );
-				MString instanceStr( ( MString )"|INSTANCE_" +
-					instancerIter.instancerId() + (MString)"_" +
-					instancerIter.particleId() + (MString)"_" +
-					instancerIter.pathId() );
-
-				MMatrix instanceMatrix( instancerIter.matrix() );
-
-				if( ( sample > 0 ) && isObjectMotionBlur( path ))
-					htable->insert( path, lframe, sample, MRT_Unknown,count++, &instanceMatrix, instanceStr, instancerIter.particleId() );
-				else
-					htable->insert( path, lframe, 0, MRT_Unknown,count++, &instanceMatrix, instanceStr, instancerIter.particleId() );
-				instancerIter.next();
-			}
 		}
+
+		// scanScene: Now deal with all the particle-instanced objects (where a
+		// particle is replaced by an object or group of objects).
+		//
+		dealwithParticleInstancedObjects(sample, lframe, count);
+
 
 		vector<structJob>::iterator iter = jobList.begin();
 		while ( iter != jobList.end() ) 
@@ -2022,4 +1990,27 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 	}
 	return MS::kFailure;
 }
+//
+void liqRibTranslator::dealwithParticleInstancedObjects(
+	const float lframe__, const int sample__,
+	int &count__ 
+	)
+{
+	MItInstancer instancerIter;
+	while( !instancerIter.isDone() )
+	{
+		MDagPath path( instancerIter.path() );
+		MString instanceStr( ( MString )"|INSTANCE_" +
+			instancerIter.instancerId() + (MString)"_" +
+			instancerIter.particleId() + (MString)"_" +
+			instancerIter.pathId() );
 
+		MMatrix instanceMatrix( instancerIter.matrix() );
+
+		if( ( sample__ > 0 ) && isObjectMotionBlur( path ))
+			htable->insert( path, lframe__, sample__, MRT_Unknown,count__++, &instanceMatrix, instanceStr, instancerIter.particleId() );
+		else
+			htable->insert( path, lframe__, 0, MRT_Unknown,count__++, &instanceMatrix, instanceStr, instancerIter.particleId() );
+		instancerIter.next();
+	}
+}

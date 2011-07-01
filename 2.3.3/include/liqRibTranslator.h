@@ -506,6 +506,9 @@ private :
 	void postActions(const MString& originalLayer__);
 	MStatus buildShadowJobs__();
 	MStatus scanScene__(float lframe, int sample );
+	void dealwithParticleInstancedObjects(
+		const float lframe__, const int sample__,
+		int &count__ );
 
 	MTime originalTime;
 
