@@ -335,7 +335,7 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
 				*cvPtr++ = tmpVertex.z;
 
 				// record number of vertices for this curve
-				nverts[ setOn ].push_back( pOn + 2 );
+				nverts[ setOn ].push_back( pfxVerts.length()+2 );
 			}
 		}
 
