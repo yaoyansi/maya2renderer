@@ -25,24 +25,26 @@ History		:	Created by yaoyansi, 2010.04.16.
 
 ---------------------------------------------------------------------------------------------*/
 #include "MayaConnection.h"
-#include "../log/prerequest_std.h"
+
 //#include "../log/prerequest_local.h"
 #include "../log/mayacheck.h"
 
+#	pragma comment( lib, "eiAPI.lib" )
+
 typedef float ChannelType;
 
-void color128to64( Vector3f & color, ChannelType &r, ChannelType &g, ChannelType &b, ChannelType &a )
+void color128to64( eiVector & color, ChannelType &r, ChannelType &g, ChannelType &b, ChannelType &a )
 {
-	clamp( color.r, 0.0f, 1.0f );
-	clamp( color.g, 0.0f, 1.0f );
-	clamp( color.b, 0.0f, 1.0f );
+	clampi( color.r, 0.0f, 1.0f );
+	clampi( color.g, 0.0f, 1.0f );
+	clampi( color.b, 0.0f, 1.0f );
 	r = ( 255.0f * color.r );
 	g = ( 255.0f * color.g );
 	b = ( 255.0f * color.b );
 	a = 255.0f;
 }
 
-void MayaConnection::Print( const int code, const int severity, const char *message )
+void MayaConnection::Print( const eiInt severity, const char *message )
 {
 	//_LogFunctionCall("MayaConnection::Print()");
 
@@ -56,18 +58,19 @@ void MayaConnection::Print( const int code, const int severity, const char *mess
 	if( severity < 1 || severity > NUM_SEVERITY_LEVELS )
 		return;
 
-	std::cout << severity_strings[severity - 1] << " : " << code << " : " << message << std::endl;
+	std::cout << severity_strings[severity - 1] << " : " << message << std::endl;
 }
 //
-bool MayaConnection::Progress( const float percent )
+bool MayaConnection::Progress( const eiScalar percent )
 {
 	//_LogFunctionCall("MayaConnection::Progress(" << percent << " %)");
 
 	return true;
 }
 //
-void MayaConnection::ClearTile( const int left, const int right, 
-									const int top, const int bottom )
+void MayaConnection::ClearTile( const eiInt left, const eiInt right, 
+							   const eiInt top, const eiInt bottom,
+							   const eiHostID host )
 {
 	//_LogFunctionCall("MayaConnection::ClearTile()");
 	if( !isInteractiveRenderingMode() )
@@ -98,11 +101,11 @@ void setPixel(RV_PIXEL*pixels,
 
 // Note:
 // the tile of elvishray range from [left right) to [top bottom)
-void MayaConnection::UpdateTile( e_FrameBufferCache *colorFrameBuffer, 
-									 e_FrameBufferCache *opacityFrameBuffer, 
-									 std::vector< e_FrameBufferCache * > *frameBuffers, 
-									 const int left, const int right, 
-									 const int top, const int bottom )
+void MayaConnection::UpdateTile( eiFrameBufferCache *colorFrameBuffer, 
+								eiFrameBufferCache *opacityFrameBuffer, 
+								ei_array *frameBuffers, 
+								const eiInt left, const eiInt right, 
+								const eiInt top, const eiInt bottom )
 {
 	//_LogFunctionCall("MayaConnection::UpdateTile("<<left<<","<<right<<","<<top<<","<<bottom<<")");
 	MStatus status;
@@ -120,12 +123,11 @@ void MayaConnection::UpdateTile( e_FrameBufferCache *colorFrameBuffer,
 	RV_PIXEL* pixels = new RV_PIXEL[(tile_width)*(tile_height)];
 
 	unsigned int index = 0;
-	for( int j = 0; j < colorFrameBuffer->get_height(); ++j )
+	for( int j = 0; j < ei_framebuffer_cache_get_height(colorFrameBuffer); ++j )
 	{
-		Vector3f	*color_scanline = (Vector3f *) colorFrameBuffer->get_scanline( j );
-		//Vector3f	*alpha_scanline = (Vector3f *) opacityFrameBuffer->get_scanline( j );
+		eiVector	*color_scanline = (eiVector *) ei_framebuffer_cache_get_scanline(colorFrameBuffer, j);
 
-		for( int i = 0; i < colorFrameBuffer->get_width(); ++i )
+		for( int i = 0; i < ei_framebuffer_cache_get_width(colorFrameBuffer); ++i )
 		{
 			ChannelType r,g,b,a;
 			color128to64(color_scanline[ i], r,g,b,a);
@@ -195,7 +197,7 @@ void MayaConnection::UpdateTile( e_FrameBufferCache *colorFrameBuffer,
 	}
 }
 //
-void MayaConnection::DrawPixel( const int x, const int y, const Vector3f & color )
+void MayaConnection::DrawPixel( const eiInt x, const eiInt y, const eiVector *_color )
 {	
 	//_LogFunctionCall("MayaConnection::DrawPixel()");
 
@@ -203,8 +205,8 @@ void MayaConnection::DrawPixel( const int x, const int y, const Vector3f & color
 		return;
 }
 //
-void MayaConnection::UpdateSubWindow( const int left, const int right, 
-										  const int top, const int bottom )
+void MayaConnection::UpdateSubWindow( const eiInt left, const eiInt right, 
+									 const eiInt top, const eiInt bottom )
 {
 	//_LogFunctionCall("MayaConnection::UpdateSubWindow()");
 
@@ -235,6 +237,7 @@ MayaConnection* MayaConnection::m_instance = NULL;
 MayaConnection::MayaConnection()
 {
 	//_LogFunctionCall("MayaConnection::MayaConnection()");
+	setConnection();
 }
 //
 MayaConnection::~MayaConnection()
@@ -263,4 +266,90 @@ void MayaConnection::delInstance()
 bool MayaConnection::isInteractiveRenderingMode()
 {
 	return MRenderView::doesRenderEditorExist();
+}
+//////////////////////////////////////////////////////////////////////////
+//	Max connection implementation
+
+static void maya_connection_print(
+								 eiConnection *connection, 
+								 const eiInt severity, 
+								 const char *message)
+{
+	MayaConnection *con = ((eiMayaConnection *)connection)->object;
+
+	con->Print(severity, message);
+}
+
+static eiBool maya_connection_progress(
+									  eiConnection *connection, 
+									  const eiScalar percent)
+{
+	MayaConnection *con = ((eiMayaConnection *)connection)->object;
+
+	return con->Progress(percent);
+}
+
+static void maya_connection_clear_tile(
+									  eiConnection *connection, 
+									  const eiInt left, 
+									  const eiInt right, 
+									  const eiInt top, 
+									  const eiInt bottom, 
+									  const eiHostID host)
+{
+	MayaConnection *con = ((eiMayaConnection *)connection)->object;
+
+	con->ClearTile(left, right, top, bottom, host);
+}
+
+static void maya_connection_update_tile(
+									   eiConnection *connection, 
+									   eiFrameBufferCache *colorFrameBuffer, 
+									   eiFrameBufferCache *opacityFrameBuffer, 
+									   ei_array *frameBuffers, 
+									   const eiInt left, 
+									   const eiInt right, 
+									   const eiInt top, 
+									   const eiInt bottom)
+{
+	MayaConnection *con = ((eiMayaConnection *)connection)->object;
+
+	con->UpdateTile(colorFrameBuffer, opacityFrameBuffer, 
+		frameBuffers, left, right, top, bottom);
+}
+
+static void maya_connection_draw_pixel(
+									  eiConnection *connection, 
+									  const eiInt x, 
+									  const eiInt y, 
+									  const eiVector *color)
+{
+	MayaConnection *con = ((eiMayaConnection *)connection)->object;
+
+	con->DrawPixel(x, y, color);
+}
+
+static void maya_connection_update_sub_window(
+	eiConnection *connection, 
+	const eiInt left, 
+	const eiInt right, 
+	const eiInt top, 
+	const eiInt bottom)
+{
+	MayaConnection *con = ((eiMayaConnection *)connection)->object;
+
+	con->UpdateSubWindow(left, right, top, bottom);
+}
+
+//////////////////////////////////////////////////////////////////////////
+void MayaConnection::setConnection()
+{
+	connection.object = this;
+	connection.base.print = maya_connection_print;
+	connection.base.progress = maya_connection_progress;
+	connection.base.clear_tile = maya_connection_clear_tile;
+	connection.base.update_tile = maya_connection_update_tile;
+	connection.base.draw_pixel = maya_connection_draw_pixel;
+	connection.base.update_sub_window = maya_connection_update_sub_window;
+
 }

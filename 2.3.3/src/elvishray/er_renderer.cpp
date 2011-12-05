@@ -236,7 +236,7 @@ namespace elvishray
 	{
 		_s("\n// Renderer::exportPointLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "pointlight", "lightcolor", color( 1.0f, 1.0f, 1.0f ), "intensity", i_intensity, ei_end) );
+		//_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "pointlight", "lightcolor", color( 1.0f, 1.0f, 1.0f ), "intensity", i_intensity, ei_end) );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light(  sLightObjectName.c_str() ) );
@@ -302,7 +302,7 @@ namespace elvishray
 	{
 		_s("\n// Renderer::exportSpotLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "spotlight", "lightcolor",color( 1.0f, 1.0f, 1.0f ), "intensity", i_intensity, ei_end ) );
+//		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "spotlight", "lightcolor",color( 1.0f, 1.0f, 1.0f ), "intensity", i_intensity, ei_end ) );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light( sLightObjectName.c_str() ) );
@@ -407,7 +407,7 @@ namespace elvishray
 		for(int i=0; i<position.length(); i++)
 		{
 			_S( ei_vertex(i) );
-			_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
+			//_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
 		}
 		_s("//### triangles");
 		for(size_t i=0; i<triangleVertices.length(); i=i+3)
@@ -467,7 +467,7 @@ namespace elvishray
 		_s("//### SCENE BEGIN ###");
 		_S( ei_scene() );
 
-		_S( ei_set_connection(MayaConnection::getInstance()) );
+		_S( ei_connection(&(MayaConnection::getInstance()->connection.base)) );
 
 		//ei_verbose(	EI_VERBOSE_ALL );
 		_S( ei_link( "dso" ) );
@@ -655,7 +655,7 @@ namespace elvishray
 		_S( ei_camera( sCameraObjectName.c_str() ) );
 			_S( ei_frame( lframe, off ) );
 	 		if(currentJob.imageName.length()!=0){
-	 			_S( ei_output( currentJob.imageName.asChar(), EI_IMG_BMP, EI_IMG_DATA_RGB, "color" ) );
+	 			//_S( ei_output( currentJob.imageName.asChar(), EI_IMG_BMP, EI_IMG_DATA_RGB, "color" ) );
 	 		}
 			_S( ei_focal( focal ) );
 			_S( ei_aperture( aperture ) );
@@ -828,8 +828,8 @@ namespace elvishray
 		const std::string shaderobject(shader.getName()+"_object");
 		_S( ei_shader( shaderobject.c_str(),
 			"shadername", "plastic",
-			"Ka", color( 1.0f, 1.0f, 1.0f ) , 
-			"Kd", color( 0.7f, 1.0f, 1.0f ) , 
+			"Ka", 1.0f, 1.0f, 1.0f, 
+			"Kd", 0.7f, 1.0f, 1.0f, 
 			"Ks", 1.0f, 
 			"roughness", 0.2f , ei_end )
 			);

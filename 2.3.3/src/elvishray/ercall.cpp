@@ -1,14 +1,16 @@
 #include "ercall.h"
-#include "../log/prerequest_std.h"
 #include "er_renderer.h"
 
-#define _USE_ER_LIB_
+//#define _USE_ER_LIB_
 
 #ifdef _USE_ER_LIB_
-#	include <core/include/eray_core.h>
-// set $(ER_ROOT)=E:\dev\render\renderer\elvishrayrenderer\elvishrayrenderer
-// then add  $(ER_ROOT)/debug/lib to the lib path
-#	pragma comment( lib, "eray_core.lib" )
+#	include <eiAPI/ei.h>
+// set $(ER_ROOT)=E:\dev\render\elvishrender\
+// then add  $(ER_ROOT)/build/r990/x86/lib to the lib path
+#	pragma comment( lib, "eiAPI.lib" )
+#	pragma comment( lib, "eiCORE.lib" )
+#	pragma comment( lib, "eiIMG.lib" )
+#	pragma comment( lib, "eiSHADER.lib" )
 #	define _e( _call_ )  _call_ 
 #else 
 #	define _e( _call_ )  dummy.get()<< "// eray_core.lib is not linked. "<< #_call_<<" is not called. You should define _USE_ER_LIB_." <<std::endl;
@@ -24,10 +26,10 @@ namespace elvishray
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//	Client application connection:
-	void my_ei_set_connection( e_Connection *con )
+	void my_ei_connection( eiConnection *con )
 	{
 		//_s("ei_set_connection( MayaConnection::getInstance() )");
-		_e( ei_set_connection(con));
+		_e( ei_connection(con));
 	}
 
 	//	Network Rendering:
@@ -701,11 +703,11 @@ namespace elvishray
 		_s("ei_variable("<< type<<", \""<<name<<"\", ...)" ); 
 		_e( ei_variable(type, name));
 	}
-	void my_ei_variable_color( const char *name, const color &c )
-	{
-		_s("ei_variable( et_color, \""<<name<<"\", color("<<c.r<<","<<c.g<<","<<c.b<<") )" ); 
-		_e( ei_variable(et_color, name, c));
-	}
+// 	void my_ei_variable_color( const char *name, const color &c )
+// 	{
+// 		_s("ei_variable( et_color, \""<<name<<"\", color("<<c.r<<","<<c.g<<","<<c.b<<") )" ); 
+// 		_e( ei_variable(et_color, name, c));
+// 	}
 	void my_ei_triangle( int mtl, int v1, int v2, int v3 )
 	{
 		_s("ei_triangle("<<mtl<<","<<v1<<","<<v2<<","<<v3<<")"); 
@@ -870,35 +872,35 @@ namespace elvishray
 	void my_ei_shader(
 		const char* shaderInstanceName, 
 		const char* shadername, const char* shadertype,
-		const char* param0, const color v0, 
-		const char* param1, const color v1, 
+		const char* param0, const eiScalar v0x, const eiScalar v0y, const eiScalar v0z, 
+		const char* param1, const eiScalar v1x, const eiScalar v1y, const eiScalar v1z, 
 		const char* param2, const float v2, 
 		const char* param3, const float v3, 
 		int end_, ...)
 	{
 		_s("ei_shader(\""<<shaderInstanceName<<"\","
 			<<"\""<<shadername<<"\",\""<<shadertype<<"\", "
-			<<"\""<<param0<<"\",ei_var( color("<<v0.r<<","<<v0.g<<","<<v0.b<<") ), "
-			<<"\""<<param1<<"\",ei_var( color("<<v1.r<<","<<v1.g<<","<<v1.b<<") ), "
+			<<"\""<<param0<<"\",ei_var( color("<<v0x<<","<<v0y<<","<<v0z<<") ), "
+			<<"\""<<param1<<"\",ei_var( color("<<v1x<<","<<v1y<<","<<v1z<<") ), "
 			<<"\""<<param2<<"\",ei_var("<<v2<<"), "
 			<<"\""<<param3<<"\",ei_var("<<v3<<"), "
 			<< end_<<")");
-		_e( ei_shader(shaderInstanceName, shadername, shadertype, param0, ei_var(color(v0.r, v0.g, v0.b)), param1,ei_var(color(v1.r, v1.g, v1.b)), param2,ei_var(v2), param3, ei_var(v3), end_) );
+		_e( ei_shader(shaderInstanceName, shadername, shadertype, param0, ei_var(color(v0x, v0y, v0z)), param1,ei_var(color(v1x, v1y, v1z)), param2,ei_var(v2), param3, ei_var(v3), end_) );
 
 	}
 	void my_ei_shader(
 		const char* shaderInstanceName, 
 		const char* shadername, const char* shadertype,
-		const char* param0, const color v0,
+		const char* param0, const eiScalar v0x, const eiScalar v0y, const eiScalar v0z,
 		const char* param1, const float v1, 
 		int end_, ...)
 	{
 		_s("ei_shader(\""<<shaderInstanceName<<"\","
 			<<"\""<<shadername<<"\",\""<<shadertype<<"\", "
-			<<"\""<<param0<<"\",ei_var( color("<<v0.r<<","<<v0.g<<","<<v0.b<<") ), "
+			<<"\""<<param0<<"\",ei_var( color("<<v0x<<","<<v0y<<","<<v0z<<") ), "
 			<<"\""<<param1<<"\",ei_var("<<v1<<"), "
 			<< end_<<")");
-		_e( ei_shader(shaderInstanceName, shadername, shadertype, param0, ei_var(color(v0.r, v0.g, v0.b)), param1, ei_var(v1), end_) );
+		_e( ei_shader(shaderInstanceName, shadername, shadertype, param0, ei_var(color(v0x, v0y, v0z)), param1, ei_var(v1), end_) );
 
 	}
 }

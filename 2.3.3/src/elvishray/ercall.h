@@ -2,18 +2,20 @@
 #ifndef _ER_CALL_
 #define _ER_CALL_
 
-#	include <core/include/eray_core.h>
+
+#include "../log/prerequest_std.h"
+#include <eiAPI/ei.h>
 
 #define ei_end				-1
-#define on					1
-#define off					0
+//#define on					1
+//#define off					0
 
 class e_Connection;
 
 namespace elvishray
 {
 	//	Client application connection:
-	 void my_ei_set_connection( e_Connection *con );
+	 void my_ei_connection( eiConnection *con );
 
 	//	Network Rendering:
 	 void my_ei_hosts( const char *host_name, const int port_number, const char *remote_params, ... );
@@ -205,7 +207,7 @@ namespace elvishray
 	 void my_ei_motion_vertex( int index );
 	 void my_ei_bake_uv( int index );
 	 void my_ei_variable( int type, const char *name, ... );
-	 void my_ei_variable_color( const char *name, const color &c );
+//	 void my_ei_variable_color( const char *name, const color &c );
 
 	 void my_ei_triangle( int mtl, int v1, int v2, int v3 );
 	 void my_ei_polygon( int mtl, ... );
@@ -275,15 +277,15 @@ void my_ei_shader(
 void my_ei_shader(
 				  const char* shaderInstanceName, 
 				  const char* shadername, const char* shadertype,
-				  const char* param0, const color v0, 
-				  const char* param1, const color v1, 
+				  const char* param0, const eiScalar v0x, const eiScalar v0y, const eiScalar v0z, 
+				  const char* param1, const eiScalar v1x, const eiScalar v1y, const eiScalar v1z,
 				  const char* param2, const float v2, 
 				  const char* param3, const float v3, 
 				  int end_, ...);
 void my_ei_shader(
 				  const char* shaderInstanceName, 
 				  const char* shadername, const char* shadertype,
-				  const char* param0, const color v0,
+				  const char* param0, const eiScalar v0x, const eiScalar v0y, const eiScalar v0z,
 				  const char* param1, const float v1, 
 				  int end_, ...);
 void my_ei_shading_rate(const float v);

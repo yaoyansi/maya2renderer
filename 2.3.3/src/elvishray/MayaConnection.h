@@ -28,12 +28,19 @@ History		:	Created by yaoyansi, 2010.04.16.
 
 #ifndef _MAYA_CONNECTION_
 #define _MAYA_CONNECTION_
-
+#include "../log/prerequest_std.h"
 #include "../log/prerequest_maya.h"
-#include <core/include/connection.h>
+#include <eiAPI/ei_connection.h>
 
+class MayaConnection;
 
-class MayaConnection : public e_Connection
+class eiMayaConnection {
+public:
+	eiConnection	base;
+	MayaConnection	*object;
+};
+
+class MayaConnection
 {
 public:
 	//interfaces for maya
@@ -47,18 +54,19 @@ public:
 
 
 	// interfaces for elvishray
-	virtual void	Print( const int code, const int severity, const char *message );
-	virtual bool	Progress( const float percent );
-	virtual void	ClearTile( const int left, const int right, 
-								const int top, const int bottom );
-	virtual void	UpdateTile( e_FrameBufferCache *colorFrameBuffer, 
-								e_FrameBufferCache *opacityFrameBuffer, 
-								std::vector< e_FrameBufferCache * > *frameBuffers, 
-								const int left, const int right, 
-								const int top, const int bottom );
-	virtual void	DrawPixel( const int x, const int y, const Vector3f & color );
-	virtual void	UpdateSubWindow( const int left, const int right, 
-									const int top, const int bottom );
+	virtual void	Print( const eiInt severity, const char *message );
+	virtual bool	Progress( const eiScalar percent );
+	virtual void	ClearTile( const eiInt left, const eiInt right, 
+								const eiInt top, const eiInt bottom,
+								const eiHostID host );
+	virtual void	UpdateTile( eiFrameBufferCache *colorFrameBuffer, 
+								eiFrameBufferCache *opacityFrameBuffer, 
+								ei_array *frameBuffers, 
+								const eiInt left, const eiInt right, 
+								const eiInt top, const eiInt bottom );
+	virtual void	DrawPixel( const eiInt x, const eiInt y, const eiVector *_color );
+	virtual void	UpdateSubWindow( const eiInt left, const eiInt right, 
+								const eiInt top, const eiInt bottom  );
 
 	//
 public:
@@ -71,6 +79,12 @@ protected:
 	static MayaConnection *m_instance;
 
 	bool isInteractiveRenderingMode();
+
+public:
+	eiMayaConnection connection;
+
+protected:
+	void setConnection();
 };
 
 #endif //_MAYA_CONNECTION_
