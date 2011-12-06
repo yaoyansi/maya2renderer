@@ -1,0 +1,34 @@
+*********************************************************
+*                                                       *
+*  HOW TO INSTALL elvish render x86 PLUGIN FOR 3ds Max  *
+*                                                       *
+*********************************************************
+
+> Step 1. Copy the following files from the parent folder
+
+eiAPI.dll
+eiCORE.dll
+eiIMG.dll
+eiSHADER.dll
+er.exe
+ersrv.exe
+manager.ini
+server.ini
+
+to  C:/Program Files (x86)/elvishrender/bin/Release
+
+> Step 2. Copy the manager.ini in this folder(NOT the one copied in previous step) to the folder which contains 3dsmax.exe
+
+> Step 3. Add C:/Program Files (x86)/elvishrender/bin/Release to your system environment variable *Path*
+
+> Step 4. Find plugin.ini in something like C:\Users\username\AppData\Local\Autodesk\3dsMax\9 - 32bit\enu
+
+Add something like the following line
+
+elvish render plug-ins=C:\Program files (x86)\elvishrender\bin\Release
+
+below something like
+
+Additional MAX plug-ins=C:\Program Files (x86)\Autodesk\3ds Max 9\PlugIns
+
+> Step 5. Now you can launch 3ds Max and choose elvish render as current renderer from the Render Scene dialog.
