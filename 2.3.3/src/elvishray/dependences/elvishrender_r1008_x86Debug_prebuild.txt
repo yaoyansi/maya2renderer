@@ -1,1 +1,0 @@
-copy from ElvishrenderRoot\build\r1008\x86_Debug
