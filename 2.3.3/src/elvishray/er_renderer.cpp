@@ -123,12 +123,15 @@ namespace elvishray
 	{
 		_s("\n// Renderer::exportShadowPassLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "shadowlight", "intensity", 3.0, ei_end) );
+		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
+		_S( ei_shader_param_string("desc", "shadowlight") ); 
+		_S( ei_shader_param_scalar("intensity", 3.0 ) );
+		_S( ei_end_shader() );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light( sLightObjectName.c_str() ) );
-		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
-		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
+		_S( ei_add_light(	sShaderInstanceName.c_str() ) );
+		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
 		_S( ei_instance(  shaderinstance.c_str() ) );
@@ -146,14 +149,15 @@ namespace elvishray
 	{
 		_s("\n// Renderer::exportAmbientLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "ambientlight", "intensity", 3.0, ei_end) );
-
+		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
+		_S( ei_shader_param_string("desc", "ambientlight") ); 
+		_S( ei_shader_param_scalar("intensity", 3.0 ) );
+		_S( ei_end_shader() );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light(  sLightObjectName.c_str() ) );
-		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
-		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
-
+		_S( ei_add_light(	sShaderInstanceName.c_str() ) );
+		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
 		_S( ei_instance(  shaderinstance.c_str()) );
@@ -193,12 +197,15 @@ namespace elvishray
 	{
 		_s("// Renderer::exportDistantLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "distantlight", "intensity", 3.0, ei_end) );
+		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
+		_S( ei_shader_param_string("desc", "distantlight") ); 
+		_S( ei_shader_param_scalar("intensity", 3.0 ) );
+		_S( ei_end_shader() );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light( sLightObjectName.c_str()) );
-		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
-		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
+		_S( ei_add_light(	sShaderInstanceName.c_str() ) );
+		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
 		_S( ei_instance( shaderinstance.c_str()) );
@@ -236,12 +243,16 @@ namespace elvishray
 	{
 		_s("\n// Renderer::exportPointLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-		//_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "pointlight", "lightcolor", color( 1.0f, 1.0f, 1.0f ), "intensity", i_intensity, ei_end) );
+		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
+		_S( ei_shader_param_string("desc", "pointlight") ); 
+		_S( ei_shader_param_vector("lightcolor", 1.0f, 1.0f, 1.0f ) );
+		_S( ei_shader_param_scalar("intensity", i_intensity) );
+		_S( ei_end_shader() );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light(  sLightObjectName.c_str() ) );
-		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
-		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
+		_S( ei_add_light(	sShaderInstanceName.c_str()  ) );
+		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
 		_S( ei_instance( shaderinstance.c_str() ) );
@@ -302,12 +313,16 @@ namespace elvishray
 	{
 		_s("\n// Renderer::exportSpotLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-//		_S( ei_shader( sShaderInstanceName.c_str(), "shadername", "spotlight", "lightcolor",color( 1.0f, 1.0f, 1.0f ), "intensity", i_intensity, ei_end ) );
+		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
+		_S( ei_shader_param_string("desc", "spotlight") ); 
+		_S( ei_shader_param_vector("lightcolor", 1.0f, 1.0f, 1.0f ) ); 
+		_S( ei_shader_param_scalar("intensity", i_intensity ) );
+		_S( ei_end_shader() );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light( sLightObjectName.c_str() ) );
-		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
-		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
+		_S( ei_add_light(	sShaderInstanceName.c_str()  ) );
+		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
 		_S( ei_instance( shaderinstance.c_str() ) );
@@ -343,12 +358,15 @@ namespace elvishray
 	{
 		_s("\n// Renderer::exportAreaLight()");
 		std::string sShaderInstanceName(shaderinstance+"_shader");
-		_S( ei_shader(sShaderInstanceName.c_str(), "shadername", "arealight", "intensity", 3.0, ei_end) );
+		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
+		_S( ei_shader_param_string("desc", "arealight") ); 
+		_S( ei_shader_param_scalar("intensity", 3.0 ) );
+		_S( ei_end_shader() );
 
 		std::string sLightObjectName(shaderinstance+"_object");
 		_S( ei_light(  sLightObjectName.c_str() ) );
-		_S( ei_lightsource(	sShaderInstanceName.c_str(), ei_end ) );
-		_S( ei_transform( t[0][0],t[0][1],t[0][2],t[0][3],  t[1][0],t[1][1],t[1][2],t[1][3],  t[2][0],t[2][1],t[2][2],t[2][3],  t[3][0],t[3][1],t[3][2],t[3][3]) );
+		_S( ei_add_light(	sShaderInstanceName.c_str() ) );
+		_S( ei_origin( t[3][0],t[3][1],t[3][2]  ) );
 		_S( ei_end_light() );
 
 		_S( ei_instance( shaderinstance.c_str() ) );
@@ -397,31 +415,52 @@ namespace elvishray
 
 		// geometry data (shape)
 		_s("\n//############################### mesh #");
-		_S( ei_object( mesh->getName() ) );
+		std::string sMeshObjectName(std::string(mesh->getName())+"_object");
+		_S( ei_object( sMeshObjectName.c_str(), "poly" ) );
 		_s("//### vertex positions");
+		_s("{");
+		_s("eiTag tag;"); eiTag tag;
+		_s("tag = "); tag =   
+		_S( ei_tab(EI_DATA_TYPE_VECTOR, 1024) ); //_s(";");
+		_s("//tag="<<tag);
+		_S( ei_pos_list( tag ) );//_s( "ei_pos_list( tag );" );
 		for(size_t i=0; i<position.length(); ++i)
 		{
-			_S( ei_vector( position[i][0],position[i][1],position[i][2] ) );
+			_S( ei_tab_add_vector( position[i][0],position[i][1],position[i][2] ) );
 		}
-		_s("//### vertex color");
-		for(int i=0; i<position.length(); i++)
-		{
-			_S( ei_vertex(i) );
-			//_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
-		}
+		_S( ei_end_tab() );
+// 		_s("//### vertex color");
+// 		for(int i=0; i<position.length(); i++)
+// 		{
+// 			_S( ei_vertex(i) );
+// 			//_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
+// 		}
 		_s("//### triangles");
+		_s("tag = "); tag = 
+		_S( ei_tab(EI_DATA_TYPE_INDEX, 1024) ); //_s(";");
+		_s("//tag="<<tag);
+		_S( ei_triangle_list( tag ) );//_s( "ei_triangle_list( tag );" );
 		for(size_t i=0; i<triangleVertices.length(); i=i+3)
 		{
-			_S( ei_triangle( 0,triangleVertices[i],triangleVertices[i+1],triangleVertices[i+2] ) );
+			_S( ei_tab_add_index(triangleVertices[i])); 
+			_S( ei_tab_add_index(triangleVertices[i+1])); 
+			_S( ei_tab_add_index(triangleVertices[i+2])); 
 		}
+		_S( ei_end_tab() );
+		_s("}");
 		_S( ei_end_object() );
 		_s("\n//--------------------------");
 		_S( ei_instance( mesh->getName() ) );//transform
- 		_S( ei_visible( on ) );
+ 		//_S( ei_visible( on ) );
 // 		ei_shadow( on );
 // 		ei_trace( on );
-		_S( ei_set_material( shader.getName().c_str(), ei_end ) );
-		_S( ei_element( mesh->getName() ) );
+		{
+		//_S( ei_add_material( shader.getName().c_str() ) );
+		
+		// add test shader,must removed when the shader export is done.
+		_S( ei_add_material("phong_mtl_for_test") );
+		}
+		_S( ei_element( sMeshObjectName.c_str() ) );
 // 		if( motion_transform )
 // 		{
 // 			ei_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
@@ -465,15 +504,20 @@ namespace elvishray
 			_S( ei_make_texture( currentJob.imageName.asChar(), currentJob.texName.asChar() , EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f ) );
 		}	
 		_s("//### SCENE BEGIN ###");
-		_S( ei_scene() );
+		CONTEXT =_S( ei_create_context() );
+
+		_S( ei_context(CONTEXT) );
 
 		_S( ei_connection(&(MayaConnection::getInstance()->connection.base)) );
 
-		//ei_verbose(	EI_VERBOSE_ALL );
-		_S( ei_link( "dso" ) );
+		_S( ei_verbose(	EI_VERBOSE_ALL ) );
+		_S( ei_link( "eiIMG" ) );
+		_S( ei_link( "eiSHADER" ) );
 
 		m_root_group = currentJob.name.asChar();
 		m_groupMgr->createGroup(m_root_group);//
+
+		dummyPhongShader();//for test only, must be removed when the shader export is done.
 
 		return MS::kSuccess;
 	}
@@ -493,9 +537,12 @@ namespace elvishray
 		}
 
 		_S( ei_render( m_root_group.c_str(), currentJob.camera[0].name.asChar(), m_option.c_str() ) );
-		//ei_render( "world",	"caminst1",	"opt" );
+		//ei_render( "world",	"caminst1",	"opt" );		
+		//dummy.get()<< "ei_render(\""<<m_root_group<<"\", \""<<currentJob.camera[0].name<<"\", \""<<m_option<<"\");"<<std::endl;
+		//ei_render( m_root_group.c_str(), currentJob.camera[0].name.asChar(), m_option.c_str() );
+
 		
-		_S( ei_end_scene() );
+		_S( ei_delete_context(CONTEXT) );
 
 		// end render
 		if (MayaConnection::getInstance()->endRender() != MS::kSuccess)
@@ -523,7 +570,7 @@ namespace elvishray
 		if( currentJob.isShadow ){
 			_S( ei_samples( currentJob.shadowPixelSamples, currentJob.shadowPixelSamples ) );
 			_S( ei_filter( EI_FILTER_BOX, 1 ) );
-			_S( ei_shading_rate( currentJob.shadingRateFactor ) );
+			//_S( ei_shading_rate( currentJob.shadingRateFactor ) );
 
 		}else{
 			_S( ei_samples(0,2) );//_S("ei_Samples("<< liqglo.pixelSamples<<","<<liqglo.pixelSamples<<");");//4,4
@@ -598,7 +645,7 @@ namespace elvishray
 		//	Miscellaneous:
 		_S( ei_face( EI_FACE_BOTH ) );
 //		_S( ei_memory( int size ) );
-		_S( ei_ambient( 0.12f, 0.13f, 0.05f ) );
+		//_S( ei_ambient( 0.12f, 0.13f, 0.05f ) );
 
 		_S( ei_end_options() );
 
@@ -653,10 +700,13 @@ namespace elvishray
 		_s("\n//############################### camera #");
 		std::string sCameraObjectName(std::string(currentJob.camera[0].name.asChar())+"_object");
 		_S( ei_camera( sCameraObjectName.c_str() ) );
-			_S( ei_frame( lframe, off ) );
+			//_S( ei_frame( lframe, off ) );
 	 		if(currentJob.imageName.length()!=0){
-	 			//_S( ei_output( currentJob.imageName.asChar(), EI_IMG_BMP, EI_IMG_DATA_RGB, "color" ) );
-	 		}
+	 			_S( ei_output( currentJob.imageName.asChar(), "bmp", EI_IMG_DATA_RGB ) );
+				//_S( ei_output( "d:/_cameraShape1.0001.bmp", "bmp", EI_IMG_DATA_RGB ) );
+				_S( ei_output_variable("color", EI_DATA_TYPE_VECTOR));
+				_S( ei_end_output());
+			}
 			_S( ei_focal( focal ) );
 			_S( ei_aperture( aperture ) );
 			_S( ei_aspect( aspect ) );
@@ -669,8 +719,8 @@ namespace elvishray
 			_S( ei_clip( currentJob.camera[0].neardb, currentJob.camera[0].fardb) );
 			if(  liqglo.doDof && !currentJob.isShadow  )
 			{
-				_S( ei_dof( on ) );
-				_S( ei_dof( currentJob.camera[0].fStop, focal ) );
+				//_S( ei_dof( on ) );
+				//_S( ei_dof( currentJob.camera[0].fStop, focal ) );
 			}
 		_S( ei_end_camera() );
 		_s("//----------------------------------");
@@ -725,10 +775,17 @@ namespace elvishray
 			LightNames lights = group.gatherLights();
 			LightNames::iterator light_i = lights.begin();
 			LightNames::iterator light_e = lights.end();
-			for(; light_i!=light_e; ++light_i)
+			if(lights.empty())
 			{
-				_S( ei_init_instance( light_i->c_str()) );	
+				_s("//[warning]: light links are default and not output here, you must edit light links in Maya.")
+			}else{
+				for(; light_i!=light_e; ++light_i)
+				{
+					_S( ei_add_instance( light_i->c_str()) );	
+				}
 			}
+			
+
 
 			//
 			std::map<MeshName, LightNames>::iterator mesh_i 
@@ -741,10 +798,11 @@ namespace elvishray
 				LightNames::iterator light_e = mesh_i->second.end();
 				for(; light_i!=light_e; ++light_i)// has light link
 				{
-					_S( ei_illuminate( light_i->c_str(), on ) );
+					//_S( ei_illuminate( light_i->c_str(), on ) );//removed in new eiAPI
 				}
+
 				// init object
-				_S( ei_init_instance( mesh_i->first.c_str() ) );
+				_S( ei_add_instance( mesh_i->first.c_str() ) );
 				_s("\n");
 			}
 
@@ -826,17 +884,21 @@ namespace elvishray
 			}
 		}//for
 		const std::string shaderobject(shader.getName()+"_object");
-		_S( ei_shader( shaderobject.c_str(),
-			"shadername", "plastic",
-			"Ka", 1.0f, 1.0f, 1.0f, 
-			"Kd", 0.7f, 1.0f, 1.0f, 
-			"Ks", 1.0f, 
-			"roughness", 0.2f , ei_end )
-			);
+		_S( ei_shader( shaderobject.c_str() ));
+		_S( ei_shader_param_string("desc", "plastic") );
+		//_S( ei_shader_param_vector("Ka", 1.0f, 1.0f, 1.0f) ); 
+		_S( ei_shader_param_vector("Kd", 0.7f, 1.0f, 1.0f) ); 
+		_S( ei_shader_param_scalar("Ks", 1.0f) );
+		_S( ei_shader_param_scalar("roughness", 0.2f ) );
+		_S( ei_end_shader() );
+
+		_S( ei_shader("opaque_shadow"));
+		_S( ei_shader_param_string("desc", "opaque"));
+		_S( ei_end_shader());
+
 		_S( ei_material( shader.getName().c_str() ) );
-		_S( ei_opaque( on ) );
-		_S( ei_surface(	shaderobject.c_str(), ei_end ) );
-		//_S( ei_shadow( "opaque_shadow", ei_end ) );
+		_S( ei_add_surface(	shaderobject.c_str() ) );
+		//_S( ei_shadow( "opaque_shadow" ) );
 		_S( ei_end_material() );
 	}
 	liqLightHandle Renderer::shader_light(
@@ -873,5 +935,26 @@ namespace elvishray
 			mesh->object(0)->getDataPtr()->getName(),
 			light->object(0)->getDataPtr()->getName()
 			);//_S( ei_init_instance( mesh->getName() ) );
+	}
+	void Renderer::dummyPhongShader()
+	{
+		_s("//----------------phong_shader_for_test begin---");
+		_S( ei_shader("phong_shader_for_test") );
+		_S( ei_shader_param_string("desc", "plastic") );
+		_S( ei_shader_param_vector("Cs", 1.0f, 0.2f, 0.3f) );
+		_S( ei_shader_param_vector("Kd", 0.7f, 1.0f, 1.0f) );
+		_S( ei_shader_param_scalar("Ks", 1.0f) );
+		_S( ei_shader_param_scalar("roughness", 0.2f) );
+		_S( ei_end_shader() );
+
+		_S( ei_shader("opaque_shadow_for_test") );
+		_S( ei_shader_param_string("desc", "opaque") );
+		_S( ei_end_shader() );
+
+		_S( ei_material("phong_mtl_for_test") );
+		_S( ei_add_surface("phong_shader_for_test") );
+		_S( ei_add_shadow("opaque_shadow_for_test") );
+		_S( ei_end_material() );
+		_s("//----------------phong_shader_for_test end ---");
 	}
 }//namespace

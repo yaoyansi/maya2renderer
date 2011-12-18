@@ -8,6 +8,8 @@ namespace liquid{
 	class LogMgr;
 }
 
+struct eiContext;
+
 namespace elvishray
 {
 	class GroupMgr;
@@ -229,6 +231,9 @@ namespace elvishray
 
  		void _Script(const std::string &data){ m_log.log___(data); }
 		void cookInstanceGroup();
+		void dummyPhongShader();//for test only
+
+		eiContext *CONTEXT;
 	};
 
 }

@@ -59,7 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="eiAPI.lib eiCORE.lib eiIMG.lib eiSHADER.lib"
-				AdditionalLibraryDirectories="E:\dev\render\elvishrender\build\r990\x86\lib"
+				AdditionalLibraryDirectories="E:\dev\Autodesk\maya\myplugin\project\liquid_\2.3.3\src\elvishray\dependences\lib"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -196,7 +196,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\script.er"
+				RelativePath="D:\script.er"
 				>
 			</File>
 		</Filter>

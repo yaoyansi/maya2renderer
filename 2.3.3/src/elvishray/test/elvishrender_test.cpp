@@ -37,8 +37,8 @@ History		:
 void test_liquid2er()
 {
 //#include"cornellbox.esa"
-//#include "script.er"
-#include"ei_scene_unittest.esa"//<----- use your own elvishender api script file here.
+#include "d:/script.er"
+//#include"ei_scene_unittest.esa"//<----- use your own elvishender api script file here.
 }
 //
 int main()
@@ -50,9 +50,7 @@ int main()
 
 
 	cout << "all tests done." << endl;
-
-	int a;
-	cin >> a;
+ 
 
 	return 0;
 }
