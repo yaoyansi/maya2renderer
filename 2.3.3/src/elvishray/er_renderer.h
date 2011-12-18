@@ -232,6 +232,7 @@ namespace elvishray
  		void _Script(const std::string &data){ m_log.log___(data); }
 		void cookInstanceGroup();
 		void dummyPhongShader();//for test only
+		void pretest();
 
 		eiContext *CONTEXT;
 	};
