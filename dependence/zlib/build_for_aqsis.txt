@@ -1,0 +1,4 @@
+Get latest source, unarchive to a suitable folder, presume C:\projects\zlib1.2.3. Presuming the Aqsis SVN of win32libs is at C:\projects\aqsis\win32libs, do...
+	cd C:\projects\zlib1.2.3
+	<run vcvars32.bat for appropriate build tools>
+	nmake -f C:\projects\aqsis\win32libs\zlib\aqsis.vc COMPILERV=vc[6|7|8] AQSIS_WIN32LIBS=C:\projects\aqsis\win32libs

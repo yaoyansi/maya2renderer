@@ -1,0 +1,76 @@
+- Development environment
+   - msvc 2008(sp1)
+   - Boost(1.46.1 or later), set BOOST_ROOT in system environment variables, e.g. BOOST_ROOT=E:/dev/boost/1_46_1
+   - Maya2009 x32, set MAYA_PATH2009 in system environment variables, e.g. MAYA_PATH2009=D:\Program Files\Autodesk\Maya2009
+   - (For renderman renderer only) Renderman(http://code.google.com/p/hojocn/downloads/detail?name=pixar_win32.7z&can=2&q=#makechanges)
+
+- Build
+  - access https://github.com/yaoyansi/maya2renderer, check out the code to your local directory, say it $(LiquidRoot).
+    The directory structure should be：
+       $(LiquidRoot)\
+                 +---2.3.3\
+                 +---dependence\
+	         ...
+  - check out Elvishray http://elvishrender.googlecode.com/svn/trunk (r1014 for now) to $(LiquidRoot)/dependence/elvishray/trunk/
+    The directory structure should be:
+       $(LiquidRoot)\
+                 +---2.3.3\
+                 +---dependence/elvishray/trunk/
+                                            +-- eiAPI/
+                                            +-- eiCOMMON/
+                                            +-- eiCORE/
+                                            ...
+  - open $(LiquidRoot)\2.3.3\src\MSVC2005\liquid.sln, choose “Win32” and “Prman2009Debug” in Configuration Manager，
+    - (For renderman renderer only)
+      - build displayDriverAqsis project, liqmaya.dll will be generated;
+      - make sure liqmaya.dll is copied to "$(RMANTREE)\etc\d_liqmaya.dll"。
+    - build liquid project；
+
+- Install
+  - backup your original (My_Documents_DIR)\maya\2009\Maya.env
+  - copy $(LiquidRoot)\2.3.3\bin\Maya.env to (My_Documents_DIR)\maya\2009\Maya.env
+  - open (My_Documents_DIR)\maya\2009\Maya.env, set LIQUID_ROOT to your liquid directory $(LiquidRoot),
+     e.g.  LIQUID_ROOT = E:/dev/autodesk/maya/myplugin/project/liquid_
+  - (For Elvishray renderer only)
+    you must copy manager.ini of Elvishray to $(MAYA_PATH2009)/bin/
+     - copy $(LiquidRoot)\dependence\elvishray\trunk\build\r1008\x86_Debug\manager.ini to $(MAYA_PATH2009)/bin/
+     - open $(MAYA_PATH2009)/bin/manager.ini, set searchpath to the directory which contain eiIMG.dll and eiSHADER.dll
+	e.g. if $(MAYA_PATH2009)/bin/manager.ini doesn't has searchpath, you can append the follow line to manager.ini
+	searchpath E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/elvishray/trunk/build/r1008/x86_Debug
+
+- Test 
+  - open maya2009, load $(LiquidRoot)\2.3.3\test\er.ma,
+  - in "Render Settings" panel
+    - select Liquid renderer
+    - in liquid tab：
+       - set "Debug-->NewTranslator(refactoring)" checked.
+       - set "Renderer-->Renderer" to elvishray
+  - render.
+
+
+- link error boost::system::get_system_category() 找不到
+解决方法：在liquid项目里把\boost\1_39\libs\system\src\error_code.cpp包含进去
+
+
+- for batch rendering,需要替换Maya2009的mayaBatchRenderProcedure.mel文件，方法如下:
+run $(LiquidRoot)\mel\replace_mayaBatchRenderProcedure.bat to replace $(MayaRoot)\scripts\other\mayaBatchRenderProcedure.mel
+
+
+- liquid生成的rib文件，用renderman studio it.exe 测试
+对于liquid生成的rib脚本,把Display里的"liqmaya"改成"it"
+例如$(LiquidRoot)\2.3.3\test\render_with_rms_it\_perspShape.0010.rib里的“liqmaya”已经改为"it"。
+1.由于liquid生成的rib使用绝对路径，所以将$(LiquidRoot)\2.3.3\test\render_with_rms_it\*.*拷贝到E:\MyDocuments\maya\projects\default\rib，
+2.必须先打开it。（D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008\bin\it.exe）
+3.运行test.bat
+
+-deepShadow测试
+1.打开$(LiquidRoot)\2.3.3\test\test_deepshadow\test_deepshadow.ma
+2.菜单Liquid-》Helpers-》Convert Shading Network To RSL
+3.RenderSettings面板
+  - 选择Liquid渲染器
+  - liquid面板里：勾选NewTranslator(refactoring)；Renderer里选择renderman；
+4.渲染
+
+-compile $(LiquidRoot)\2.3.3\lib\shaders\*.sl
+ 1).You must set RMS_ROOT to you RendermanStudio install directory(e.g.D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008) in system enviroment variables.
+ 2).run $(LiquidRoot)\2.3.3\lib\shaders\compile.cmd
