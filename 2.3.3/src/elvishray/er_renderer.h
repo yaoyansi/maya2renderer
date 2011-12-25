@@ -237,7 +237,9 @@ namespace elvishray
 		eiContext *CONTEXT;
 	};
 
-}
+	extern Renderer dummy;
+}//namespace elvishray
+
 
 
 

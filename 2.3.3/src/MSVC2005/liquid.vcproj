@@ -3915,6 +3915,10 @@
 					RelativePath="..\renderman\rm_renderer.h"
 					>
 				</File>
+				<File
+					RelativePath="..\renderman\rm_shader.cpp"
+					>
+				</File>
 				<Filter
 					Name="mel"
 					>
@@ -3952,11 +3956,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\elvishray\er_shader.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\elvishray\ercall.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\elvishray\ercall.h"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\log_helper.h"
 					>
 				</File>
 				<File
