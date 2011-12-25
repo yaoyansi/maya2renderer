@@ -1,5 +1,5 @@
 
-print "This is elvishray usersetup.mel.\n";
+print "This is elvishray /2.3.3/src/elvishray/mel/usersetup.mel.\n";
 
 source er_AEliquidInstanceFlags.mel;
 source er_CreateMenus.mel;

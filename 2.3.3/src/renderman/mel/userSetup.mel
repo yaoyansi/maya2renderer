@@ -1,2 +1,2 @@
 
-print "This is renderman usersetup.mel.\n";
+print "This is renderman /2.3.3/src/renderman/mel/usersetup.mel.\n";
