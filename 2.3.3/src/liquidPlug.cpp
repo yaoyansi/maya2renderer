@@ -86,6 +86,7 @@
 // unix build gets this from the Makefile
 const char * LIQUIDVERSION =
 #include "../liquid.version"
+#include "../buildtime.txt"
 ;
 #define DEFINED_LIQUIDVERSION
 #endif
