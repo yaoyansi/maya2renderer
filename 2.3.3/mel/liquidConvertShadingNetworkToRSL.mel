@@ -769,10 +769,14 @@ global proc liquidConvertShadingNetworkToRSL ()
 	if ( !`liquidGlobalsExists` ) {
 		liquidCreateGlobals;
 	}
-	//make sure the shaderDirectory is not empty.
-	if(`getAttr liquidGlobals.shaderDirectory`==""){
-		error ("[liquid Error] liquidGlobals.shaderDirectory is empty, can't convert. " +
-			   "Please set the shaderDirectory in RenderSetting->File->Directories->Generated Shaders");
+	//liqlog("make sure the shaderDirectory is not empty.");
+	string $attr=`getAttr liquidGlobals.shaderDirectory`;
+	if($attr==""){
+		error ("[liquid Error] liquidGlobals.shaderDirectory is empty, can't convert. \n" +
+			   "Please set the shaderDirectory in RenderSetting->liquid->File->Directories->\"Generated Shaders\" \n"+
+			   "e.g. create directory $(MyDocuments)/maya/projects/$(ProjectName)/generatedShader, \n"+
+			   "     and set RenderSetting->liquid->File->Directories->\"Generated Shaders\" =generatedShader"
+			   );
 		liqPopIdent();
 		return;
 	}
