@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="E:\dev\render\elvishrender\"
+				AdditionalIncludeDirectories="../../../../dependence/elvishray/trunk"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -59,7 +59,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="eiAPI.lib eiCORE.lib eiIMG.lib eiSHADER.lib"
-				AdditionalLibraryDirectories="E:\dev\Autodesk\maya\myplugin\project\liquid_\2.3.3\src\elvishray\dependences\lib"
+				AdditionalLibraryDirectories="../../../../dependence/elvishray/trunk/build/r1008/x86_Debug/lib"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>

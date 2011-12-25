@@ -441,16 +441,19 @@ namespace elvishray
 		_S( ei_end_tab() );
 		_s("}");
 		_S( ei_end_object() );
-		_s("\n//--------------------------");
+
+		_s("//--------------------------");
 		_S( ei_instance( mesh->getName() ) );//transform
  		//_S( ei_visible( on ) );
 // 		ei_shadow( on );
 // 		ei_trace( on );
-		{
-		//_S( ei_add_material( shader.getName().c_str() ) );
+		{//material
+		const std::string &rmSloFilePath=shader.getShaderFileName();
+		const std::string &mayaShaderName=rmSloFilePath.substr(rmSloFilePath.find_last_of('/')+1);
+		_S( ei_add_material( mayaShaderName.c_str() ) );
 		
 		// add test shader,must removed when the shader export is done.
-		_S( ei_add_material("phong_mtl_for_test") );
+		//_S( ei_add_material("phong_mtl_for_test") );
 		}
 		_S( ei_element( sMeshObjectName.c_str() ) );
 // 		if( motion_transform )
