@@ -63,6 +63,7 @@ run $(LiquidRoot)\mel\replace_mayaBatchRenderProcedure.bat to replace $(MayaRoot
 2.必须先打开it。（D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008\bin\it.exe）
 3.运行test.bat
 
+
 -deepShadow测试
 1.打开$(LiquidRoot)\2.3.3\test\test_deepshadow\test_deepshadow.ma
 2.菜单Liquid-》Helpers-》Convert Shading Network To RSL
@@ -71,6 +72,18 @@ run $(LiquidRoot)\mel\replace_mayaBatchRenderProcedure.bat to replace $(MayaRoot
   - liquid面板里：勾选NewTranslator(refactoring)；Renderer里选择renderman；
 4.渲染
 
+
 -compile $(LiquidRoot)\2.3.3\lib\shaders\*.sl
  1).You must set RMS_ROOT to you RendermanStudio install directory(e.g.D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008) in system enviroment variables.
  2).run $(LiquidRoot)\2.3.3\lib\shaders\compile.cmd
+
+
+- Textute 测试
+  - 把textures\*.* 拷贝到E:\MyDocuments\maya\projects\default\rmantex下，再运行test case
+  - 可行的texture路径格式
+      E:/MyDocuments/maya/projects/default/rmantex/check10.tex
+      E:/MyDocuments/maya/projects/default/rmantex/check11.bmp (Note: have to set "Map&Texture" to "rmantex")
+      E:/MyDocuments/maya/projects/default/rmantex/a.b/check.14.bmp (Note: have to set "Map&Texture" to "rmantex/a.b")
+  - 不可行的texture路径格式
+      E:\MyDocuments\maya\projects\default\rmantex/check10.tex(反斜杠‘\’)
+  - 测试用例 test\test_rm_texture\*.*

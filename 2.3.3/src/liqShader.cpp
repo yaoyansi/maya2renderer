@@ -307,6 +307,10 @@ liqShader::liqShader( MObject shaderObj )
 								if(MString("tex")!=textureExten.toLowerCase()){
 									stringPlugVal += ".tex";
 								}
+								//why do this? Because this way can store the original image type information.
+								//e.g. the original image is testB.bmp, if we replaced "bmp" with "tex" here,
+								//the problem would occur when we run "txmake testB.? testB.tex" later,
+								//how we know the image type of the original testB? the type "bmp" is replaced by "tex" here and lost.
 							}
 							MString stringDefault( shaderInfo.getArgStringDefault( i, 0 ) );
 							if( stringPlugVal == stringDefault )
@@ -883,11 +887,43 @@ void liqShader::scanExpressions( liqShader & currentShader )
 	}
 }
 //
+const std::string removeRedundentExtsion(std::string const& texturepath)//texturepath=e:/a.b\c.d.bmp.tex
+{
+	std::string texpath(texturepath);
+	std::replace(texpath.begin(), texpath.end(), '\\', '/');//texpath=e:/a.b/c.d.bmp.tex
+
+	std::string texname(texpath.substr(texpath.find_last_of('/')+1));//texname=c.d.bmp.tex
+
+	std::string basepath(texpath.substr(0,texpath.find_last_of('/')));//basepath=e:/a.b
+
+	std::size_t i_last_dot = texname.find_last_of('.');
+	if( i_last_dot == std::string::npos ){
+		liquidMessage2(messageError,"%s has no extention!", texturepath.c_str());
+		return texturepath;
+	}
+
+	std::string const texname2(texname.substr(0, i_last_dot));//texname2=c.d.bmp
+
+	std::size_t i_last2_dot = texname2.find_last_of('.');
+	if( i_last2_dot == std::string::npos ){
+		liquidMessage2(messageError,"%s is a tex texture", texturepath.c_str());
+		return texturepath;
+	}else{
+		std::string imgext(texname2.substr(i_last2_dot+1));//imgext=bmp
+		std::transform(imgext.begin(),imgext.end(),imgext.begin(),tolower);
+		if( imgext!="bmp" && imgext!="jpg" && imgext!="png" ){
+			liquidMessage2(messageWarning,"%s 'type %s maybe not supported.", texname2.c_str(), imgext.c_str());
+		}
+		return basepath+"/"+texname2;//return "e:/a.b/c.d.bmp"
+	}
+}
+//
 void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *light )
 {
 	if( token != NULL ) 
 	{
 		std::string strValue( token->getTokenString() );
+		strValue = removeRedundentExtsion(strValue);
 		LIQDEBUGPRINTF( "-> Expression:(%s)\n", token->getTokenName().c_str() );
 		// NOTE:
 		// For convenience, we use the image path instead of [MakeTexture ...],
