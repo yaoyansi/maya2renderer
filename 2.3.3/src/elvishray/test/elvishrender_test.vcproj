@@ -168,7 +168,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\ei_face_color_unittest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ei_shader_graph_unittest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\elvishrender_test.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\er_shader_link_test.cpp"
 				>
 			</File>
 		</Filter>
