@@ -451,7 +451,14 @@ namespace elvishray
 		const std::string &rmSloFilePath=shader.getShaderFileName();
 		const std::string &mayaShaderName=rmSloFilePath.substr(rmSloFilePath.find_last_of('/')+1);
 		_S( ei_add_material( mayaShaderName.c_str() ) );
-		
+		if(mayaShaderName.empty()){
+			std::string warrning; 
+			warrning+="// ";
+			warrning+=mesh->getName();
+			warrning+="'s liqShader name is empty. Don't forget to select this mesh and convert its shader to RSL.";
+			_s(warrning);
+			liquidMessage2(messageWarning, warrning.c_str());
+		}
 		// add test shader,must removed when the shader export is done.
 		//_S( ei_add_material("phong_mtl_for_test") );
 		}

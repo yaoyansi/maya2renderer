@@ -49,36 +49,36 @@
 
 
 - link error boost::system::get_system_category() 找不到
-解决方法：在liquid项目里把\boost\1_39\libs\system\src\error_code.cpp包含进去
+  解决方法：在liquid项目里把\boost\1_39\libs\system\src\error_code.cpp包含进去
 
 
 - for batch rendering,需要替换Maya2009的mayaBatchRenderProcedure.mel文件，方法如下:
-run $(LiquidRoot)\mel\replace_mayaBatchRenderProcedure.bat to replace $(MayaRoot)\scripts\other\mayaBatchRenderProcedure.mel
+  run $(LiquidRoot)\mel\replace_mayaBatchRenderProcedure.bat to replace $(MayaRoot)\scripts\other\mayaBatchRenderProcedure.mel
 
 
 - liquid生成的rib文件，用renderman studio it.exe 测试
-对于liquid生成的rib脚本,把Display里的"liqmaya"改成"it"
-例如$(LiquidRoot)\2.3.3\test\render_with_rms_it\_perspShape.0010.rib里的“liqmaya”已经改为"it"。
-1.由于liquid生成的rib使用绝对路径，所以将$(LiquidRoot)\2.3.3\test\render_with_rms_it\*.*拷贝到E:\MyDocuments\maya\projects\default\rib，
-2.必须先打开it。（D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008\bin\it.exe）
-3.运行test.bat
+  对于liquid生成的rib脚本,把Display里的"liqmaya"改成"it"
+  例如$(LiquidRoot)\2.3.3\test\render_with_rms_it\_perspShape.0010.rib里的“liqmaya”已经改为"it"。
+  - 由于liquid生成的rib使用绝对路径，所以将$(LiquidRoot)\2.3.3\test\render_with_rms_it\*.*拷贝到E:\MyDocuments\maya\projects\default\rib，
+  - 必须先打开it。（D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008\bin\it.exe）
+  - 运行test.bat
 
 
 -deepShadow测试
-1.打开$(LiquidRoot)\2.3.3\test\test_deepshadow\test_deepshadow.ma
-2.菜单Liquid-》Helpers-》Convert Shading Network To RSL
-3.RenderSettings面板
-  - 选择Liquid渲染器
-  - liquid面板里：勾选NewTranslator(refactoring)；Renderer里选择renderman；
-4.渲染
+ - 打开$(LiquidRoot)\2.3.3\test\test_deepshadow\test_deepshadow.ma
+ - 菜单Liquid-》Helpers-》Convert Shading Network To RSL
+ - RenderSettings面板
+   - 选择Liquid渲染器
+   - liquid面板里：勾选NewTranslator(refactoring)；Renderer里选择renderman；
+ - 渲染
 
 
--compile $(LiquidRoot)\2.3.3\lib\shaders\*.sl
- 1).You must set RMS_ROOT to you RendermanStudio install directory(e.g.D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008) in system enviroment variables.
- 2).run $(LiquidRoot)\2.3.3\lib\shaders\compile.cmd
+- compile $(LiquidRoot)\2.3.3\lib\shaders\*.sl
+  - You must set RMS_ROOT to you RendermanStudio install directory(e.g.D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008) in system enviroment variables.
+  - run $(LiquidRoot)\2.3.3\lib\shaders\compile.cmd
 
 
-- Textute 测试
+- MakeTextute 测试
   - 把$(LiquidRoot)\2.3.3\test\test_rm_texture\textures\*.* 拷贝到E:\MyDocuments\maya\projects\default\rmantex下，再运行test case
   - 可行的texture路径格式
       E:/MyDocuments/maya/projects/default/rmantex/check10.tex
@@ -87,3 +87,12 @@ run $(LiquidRoot)\mel\replace_mayaBatchRenderProcedure.bat to replace $(MayaRoot
   - 不可行的texture路径格式
       E:\MyDocuments\maya\projects\default\rmantex/check10.tex(反斜杠‘\’)
   - 测试用例 $(LiquidRoot)\2.3.3\test\test_rm_texture\*.*
+
+
+- er渲染不出mesh，脚本里有mesh数据，但mesh的material名称为空，例如：
+    ei_instance("pCubeShape3");
+       ei_add_material("");
+       ei_element("pCubeShape3_object");
+       ei_motion(1);
+    ei_end_instance();
+  解决方法，选择该mesh，点击菜单Liquid-》Helpers-》Convert Shading Network To RSL。
