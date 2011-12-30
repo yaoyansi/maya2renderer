@@ -225,6 +225,7 @@ liqRibTranslator::liqRibTranslator()
 
 	m_outputHeroPass = true;
 	m_useNewTranslator = true;
+	m_OutputShaderGraph = false;
 	m_outputShadowPass = false;
 	liqglo.m_illuminateByDefault = false;
 	m_liquidSetLightLinking = false;
@@ -1551,6 +1552,7 @@ void liqRibTranslator::liquidReadGlobals()
 	liquidGetPlugValue( rGlobalNode, "ignoreVolumes", m_ignoreVolumes, gStatus );
 
 	liquidGetPlugValue( rGlobalNode, "useNewTranslator", m_useNewTranslator, gStatus );
+	liquidGetPlugValue( rGlobalNode, "outputShaderGraph", m_OutputShaderGraph, gStatus );
 	liquidGetPlugValue( rGlobalNode, "outputShadowPass", m_outputShadowPass, gStatus );
 	liquidGetPlugValue( rGlobalNode, "outputHeroPass", m_outputHeroPass, gStatus );
 
@@ -1990,7 +1992,6 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 {
 	MStatus status;
 
-
 	// check if we need to switch to a specific render layer
 	// we do that here because we need to switch to the chosen layer first
 	// to be able to read overriden gloabsl and stuff...
@@ -2033,6 +2034,13 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 	if( !status ) 
 		return MS::kFailure;
 
+	{
+		liquidMessage(std::string("m_OutputShaderGraph=")+(m_OutputShaderGraph?"1":"0"), messageInfo);
+		//printf("m_OutputShaderGraph=%d\n",m_OutputShaderGraph);
+		if (m_OutputShaderGraph){
+			return MS::kFailure;
+		}
+	}
 	{//set renderer
 		MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 		MString renderer;

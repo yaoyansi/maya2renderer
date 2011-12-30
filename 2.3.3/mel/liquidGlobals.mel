@@ -2612,6 +2612,7 @@ global proc liquidGlobalsFrameTab( string $prefix )
     frameLayout -bs "etchedIn" -l "Debug" -cll true -cl false;
       columnLayout -adj true ;
         liquidShowBoolGlobal "useNewTranslator" "UseNewTranslator(refactoring)" $prefix;
+        liquidShowBoolGlobal "outputShaderGraph" "OutputShaderGraph(ER)" $prefix;
       setParent ..;
     setParent ..;
 

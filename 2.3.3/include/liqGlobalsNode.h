@@ -135,6 +135,7 @@ class liqGlobalsNode : public MPxNode
     static MObject aOutputLightsInDeepShadows;
 
     static MObject aUseNewTranslator;
+    static MObject aOutputShaderGraph;
     static MObject aOutputShadowPass;
     static MObject aOutputHeroPass;
     static MObject aOutputComments;
