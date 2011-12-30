@@ -52,6 +52,7 @@
 #include <liqShaderFactory.h>
 #include <liqExpression.h>
 #include "renderermgr.h"
+#include "shadergraph/shadermgr.h"
 
 using namespace boost;
 using namespace std;
@@ -2035,10 +2036,9 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 		return MS::kFailure;
 
 	{
-		liquidMessage(std::string("m_OutputShaderGraph=")+(m_OutputShaderGraph?"1":"0"), messageInfo);
-		//printf("m_OutputShaderGraph=%d\n",m_OutputShaderGraph);
 		if (m_OutputShaderGraph){
-			return MS::kFailure;
+			ShaderMgr::getSingletonPtr()->exportShaderGraph();
+			return MS::kSuccess;
 		}
 	}
 	{//set renderer

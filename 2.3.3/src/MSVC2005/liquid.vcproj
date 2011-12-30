@@ -3236,6 +3236,18 @@
 				RelativePath="..\ri_interface.cpp"
 				>
 			</File>
+			<Filter
+				Name="shadergraph"
+				>
+				<File
+					RelativePath="..\shadergraph\shadermgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shadermgr.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
