@@ -30,7 +30,7 @@
 #include <liqRibTranslator.h>
 
 
-#include "./log/prerequest_std.h"
+#include "./common/prerequest_std.h"
 
 // Renderman Headers
 //extern "C" {
@@ -39,7 +39,7 @@
 
 
 // Maya headers
-#include "./log/prerequest_maya.h"
+#include "./common/prerequest_maya.h"
 
 // Liquid headers
 #include <liquid.h>
@@ -2037,7 +2037,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 
 	{
 		if (m_OutputShaderGraph){
-			ShaderMgr::getSingletonPtr()->exportShaderGraph();
+			liquidmaya::ShaderMgr::getSingletonPtr()->exportShaderGraph();
 			return MS::kSuccess;
 		}
 	}

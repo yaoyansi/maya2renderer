@@ -3,7 +3,7 @@
 #define _ER_CALL_
 
 
-#include "../log/prerequest_std.h"
+#include "../common/prerequest_std.h"
 #include <eiAPI/ei.h>
 
 #define ei_end				-1

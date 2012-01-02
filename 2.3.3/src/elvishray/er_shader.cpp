@@ -1,11 +1,11 @@
 
 #include "er_renderer.h"
 // Maya headers
-#include "../log/prerequest_maya.h"
+#include "../common/prerequest_maya.h"
 // Liquid headers
 #include <liqShader.h>
 
-#include "../log/mayacheck.h"
+#include "../common/mayacheck.h"
 #include "ercall.h"
 #include "log_helper.h"
 

@@ -3,7 +3,7 @@
 #include "boost/format.hpp"
 
 // Maya headers
-#include "../log/prerequest_maya.h"
+#include "../common/prerequest_maya.h"
 // Liquid headers
 #include <liquid.h>
 #include <liqRibHT.h>
@@ -26,7 +26,7 @@
 #include <liqRibTranslator.h>
 
 #include "../renderermgr.h"
-#include "../log/mayacheck.h"
+#include "../common/mayacheck.h"
 #include "ercall.h"
 #include "MayaConnection.h"
 #include "er_groupmgr.h"

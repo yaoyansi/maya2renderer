@@ -74,7 +74,7 @@
 
 
 // Maya headers
-#include "./log/prerequest_maya.h"
+#include "./common/prerequest_maya.h"
 // Liquid headers
 #include <liquid.h>
 #include <liqRibHT.h>

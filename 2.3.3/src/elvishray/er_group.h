@@ -1,7 +1,7 @@
 #ifndef _ER_GROUP_H_
 #define _ER_GROUP_H_
 
-#include "../log/prerequest_std.h"
+#include "../common/prerequest_std.h"
 
 namespace elvishray
 {

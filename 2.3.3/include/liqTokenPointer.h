@@ -26,7 +26,7 @@
 #ifndef liqTokenPointer_H
 #define liqTokenPointer_H
 
-#include "./log/prerequest_std.h"
+#include "../src/common/prerequest_std.h"
 //extern "C" {
 #include "ri_interface.h"//#include "liqtypes.h"
 //}

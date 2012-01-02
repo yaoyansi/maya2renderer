@@ -2,7 +2,7 @@
 #define ER_Renderer_H
 
 #include "../rendererinterface.h"
-#include "../log/logmgr.h"
+#include "../common/logmgr.h"
 
 namespace liquid{
 	class LogMgr;

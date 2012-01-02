@@ -1,6 +1,6 @@
 #include "rm_renderer.h"
 
-#include "../log/prerequest_std.h"
+#include "../common/prerequest_std.h"
 #include <boost/scoped_array.hpp>
 
 // Renderman Headers
@@ -9,7 +9,7 @@
 //}
 
 // Maya headers
-#include "../log/prerequest_maya.h"
+#include "../common/prerequest_maya.h"
 // Liquid headers
 #include <liquid.h>
 #include <liqRibHT.h>
