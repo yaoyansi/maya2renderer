@@ -3240,11 +3240,67 @@
 				Name="shadergraph"
 				>
 				<File
+					RelativePath="..\shadergraph\convertShadingNetwork.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\convertShadingNetwork.h"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\mayashader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\mayashader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\mayashader_materials.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\mayashader_materials.h"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shader.h"
+					>
+				</File>
+				<File
 					RelativePath="..\shadergraph\shadermgr.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\shadergraph\shadermgr.h"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shaderOutput.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shaderOutput.h"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shaderOutputMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shaderOutputMgr.h"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shaderOutputRSL.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shaderOutputRSL.h"
 					>
 				</File>
 			</Filter>
@@ -4011,26 +4067,6 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="log"
-				>
-				<File
-					RelativePath="..\log\logmgr.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\log\logmgr.h"
-					>
-				</File>
-				<File
-					RelativePath="..\log\mayacheck.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\log\mayacheck.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="luxrenderer"
 				>
 				<Filter
@@ -4050,6 +4086,26 @@
 					</File>
 				</Filter>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="common"
+			>
+			<File
+				RelativePath="..\common\logmgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\logmgr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\common\mayacheck.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\common\mayacheck.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

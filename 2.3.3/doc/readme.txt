@@ -96,3 +96,21 @@
        ei_motion(1);
     ei_end_instance();
   解决方法，选择该mesh，点击菜单Liquid-》Helpers-》Convert Shading Network To RSL。
+
+
+- export shader graph with new code(C++)
+  - select "Render Settings-->Liquid-->Frame-->Debug-->OutputShaderGraph(ER)"
+    Note: This option will output the shader graph but not render the scene.
+    So, if you render with renderman, it will complain:
+        "Error: liquidNewShaderNode : shader is not readable >
+         E:/MyDocuments/maya/projects/default/generatedShader/<YourShaderName>.slo //"
+    Just ingore this error, it will disappear after you uncheck the "OutputShaderGraph(ER)" option.
+  - set "Render Settings-->Liquid-->File-->Directories-->GeneratedShaders" to "generatedShader"
+  - edit the shader or shader graph
+  - assign the shader to a mesh
+  - select the mesh
+  - render. The shader will be generated at ,e.g. E:/MyDocuments/maya/projects/default/generatedShader/<YourShaderName>.er
+  - test case: $(LiquidRoot)\2.3.3\test\test_shader_graph\er_rm_shader_graph.ma
+
+
+
