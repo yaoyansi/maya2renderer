@@ -360,7 +360,7 @@ global proc beginRSL ( string $name )
 proc int getUpstreamConvertibleNodes ( string $currentNode, string $nodes[], int $numConnections[] )
 {
 	liqPushIdent();
-	liqlog("getUpstreamConvertibleNodes(...)");
+	liqlog("getUpstreamConvertibleNodes("+$currentNode+",nodes[s="+size($nodes)+"], numConnections[s="+size($numConnections)+"])");
 	// If the current node has already been visited
 	for( $node in $nodes )
 	{
@@ -428,7 +428,7 @@ proc int getUpstreamConvertibleNodes ( string $currentNode, string $nodes[], int
 proc addNodeInputVariable( string $plug, string $inputVars[] )
 {	
 	liqPushIdent();
-	liqlog("addNodeInputVariable("+$plug+","+size($inputVars)+")");
+	liqlog("addNodeInputVariable("+$plug+", inputVars[s="+size($inputVars)+"])");
 	string $inputPlugs[] = `listConnections -plugs true $plug`;
 	string $varName;
 	string $inputNode;
@@ -482,7 +482,7 @@ proc addNodeOutputVariable( string $node, string $validConnection,
 						   string $shaderData[] )
 {
 	liqPushIdent();
-	liqlog("addNodeOutputVariable(...)");
+	liqlog("addNodeOutputVariable("+$node+","+$validConnection+","+$plug+",outputVars[s="+size($outputVars)+"], ...)");
 	string $type = `getAttr -type $plug`;
 	string $varName = $node + "_" + $validConnection;
 	int $outputIndex = size( $outputVars );
@@ -519,7 +519,7 @@ proc addNodeOutputVariable( string $node, string $validConnection,
 proc string getNodeVariables( string $node, string $validConnections[], string $shaderData[] )
 {	
 	liqPushIdent();
-	liqlog("getNodeVariables(...)");
+	liqlog("getNodeVariables("+$node+", validConnection[s="+size($validConnections)+"],...");
 	string $vars[];
 	string $varString = "";
 	string $inputVars[];
@@ -579,7 +579,7 @@ proc string getNodeVariables( string $node, string $validConnections[], string $
 proc decrementDownstreamConnections( string $node, string $nodes[], int $numConnections[], string $validConnections[] )
 {	
 	liqPushIdent();
-	liqlog("decrementDownstreamConnections(...)");
+	liqlog("decrementDownstreamConnections("+$node+",nodes[s="+size($nodes)+"], numConnections[s="+size($numConnections)+"],...)");
 	string $downstreamNodes[];
 
 	// Get the list of down stream nodes along supported connections
@@ -622,7 +622,7 @@ proc decrementDownstreamConnections( string $node, string $nodes[], int $numConn
 proc traverseGraphAndOutputNodeFunctions( string $nodes[], int $numConnections[], string $shaderData[] )
 {
 	liqPushIdent();
-	liqlog("traverseGraphAndOutputNodeFunctions(...)");
+	liqlog("traverseGraphAndOutputNodeFunctions(nodes[s="+size($nodes)+"], numConnections[s="+size($numConnections)+"],...)");
 	int $index = 0;
 	int $numNodes = size( $nodes );
 	for( ; $index < $numNodes; $index += 1 )
@@ -690,7 +690,7 @@ proc outputShaderMethod( string $shaderData[] )
 proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 {
 	liqPushIdent();
-	liqlog("convertShadingNetworkToRSL(...)");
+	liqlog("convertShadingNetworkToRSL("+$startingNode+","+$assingToNode+")");
 	string $nodes[];
 	int $numConnections[];
 
