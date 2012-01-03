@@ -64,5 +64,5 @@ int ShaderMgr::convertibleConnection(const char*plugname)
 {
 	return shadingnetwork.convertibleConnection(plugname);
 }
-//
+
 }//namespace liquidmaya

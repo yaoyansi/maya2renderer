@@ -3,21 +3,22 @@
 #include "../common/mayacheck.h"
 #include "convertShadingNetwork.h"
 #include "shadermgr.h"
+#include "mayashader_materials.h"
 
 namespace liquidmaya
 {
 
-RSL::RSL()
+RSLShaderHelper::RSLShaderHelper()
 {
 
 }
 //
-RSL::~RSL()
+RSLShaderHelper::~RSLShaderHelper()
 {
 
 }
 //
-void RSL::addRSLVariable(MString rslType, const MString& rslName,
+void RSLShaderHelper::addRSLVariable(MString rslType, const MString& rslName,
 					const MString& mayaName, const MString& mayaNode)
 {
 	MString cmd;
@@ -117,12 +118,12 @@ void RSL::addRSLVariable(MString rslType, const MString& rslName,
 	}//else
 }
 //
-void RSL::addToRSL(const MString& code)
+void RSLShaderHelper::addToRSL(const MString& code)
 {
 	rslShaderBody += (" "+code+"\n");
 }
 //
-void RSL::beginRSL (const MString& $name)
+void RSLShaderHelper::beginRSL (const MString& $name)
 {
 	// "Open" the header and body.
 	//
@@ -130,7 +131,7 @@ void RSL::beginRSL (const MString& $name)
 	rslShaderBody = "{\n";
 }
 //
-void RSL::endRSL ()
+void RSLShaderHelper::endRSL ()
 {
 	// "Close" the header and body.
 	//
@@ -145,6 +146,38 @@ void RSL::endRSL ()
 		liquidMessage2(messageError, "RSLfile is not open.");
 	}
 }
-//
+//////////////////////////////////////////////////////////////////////////
+RSL::RSL()
+{
 
+}
+//
+RSL::~RSL()
+{
+
+}
+//
+void RSL::output(const char* shaderNodeName)
+{
+	MString nodetype;
+	IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+MString(shaderNodeName)+"\""), nodetype));
+
+	_output(shaderNodeName, nodetype.asChar());
+}
+//
+void RSL::_output(const char* shaderNodeName, const char* nodetype)
+{
+	if( strcmp("lambert", nodetype) == 0 )
+	{
+		Lambert::writeRSL(shaderNodeName);
+	}
+	else if( strcmp("blinn", nodetype) == 0 ){
+		Blinn::writeRSL(shaderNodeName);
+	}
+	//else if(...){}
+	else{
+		liquidMessage2(messageError, ("shader type <"+std::string(nodetype)+"> is not supported.").c_str() );
+		assert( 0 && "shader type is not support.");
+	}
+}
 }//namespace liquidmaya

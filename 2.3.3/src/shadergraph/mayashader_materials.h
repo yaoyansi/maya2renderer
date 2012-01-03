@@ -11,7 +11,7 @@ namespace liquidmaya
 	public:
 		Lambert();
 		virtual ~Lambert();
-		virtual void writeRSL(const char* node) const;
+		static void writeRSL(const char* node);
 
 	protected:
 		virtual void setValidConnection();
@@ -23,7 +23,7 @@ namespace liquidmaya
 	public:
 		Blinn();
 		virtual ~Blinn();
-		virtual void writeRSL(const char* node) const;
+		static void writeRSL(const char* node);
 
 	protected:
 		virtual void setValidConnection();

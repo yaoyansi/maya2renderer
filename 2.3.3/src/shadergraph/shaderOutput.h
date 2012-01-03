@@ -7,7 +7,9 @@ class ShaderOutput
 {
 public:
 	ShaderOutput();
-	virtual ~ShaderOutput() = 0;
+	virtual ~ShaderOutput();
+
+	virtual void output(const char* shaderNodeName) = 0;
 
 
 };

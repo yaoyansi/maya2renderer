@@ -3,6 +3,7 @@
 #include "../common/mayacheck.h"
 #include <liqlog.h>
 #include "shadermgr.h"
+#include "shaderOutputMgr.h"
 
 namespace liquidmaya{
 
@@ -419,14 +420,14 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 			
 			MString nodetype;
 			IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+currentNode+"\""), nodetype));
+
+			// write out the current node's function
+			ShaderOutputMgr::getSingletonPtr()->output(currentNode.asChar());//shader->writeRSL(currentNode.asChar());
+
+			// Get the list of supported connections from the current node			
 			const liquidmaya::Shader* shader 
 				= ShaderMgr::getSingletonPtr()->getShader(nodetype.asChar());
 			assert( shader );
-
-			// write out the current node's function
-			shader->writeRSL(currentNode.asChar());
-
-			// Get the list of supported connections from the current node
 			const MStringArray& validConnections = shader->getValidConnectionRef();
 
 			decrementDownstreamConnections( currentNode,

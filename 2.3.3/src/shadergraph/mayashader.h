@@ -17,7 +17,7 @@ namespace liquidmaya
 
 		const MStringArray& getValidConnectionRef() const;
 
-		virtual void writeRSL(const char* nodename) const = 0;
+		//virtual void writeRSL(const char* nodename) const = 0;
 
 	protected:
 		virtual void setValidConnection() = 0;

@@ -6,11 +6,11 @@
 
 namespace liquidmaya{
 
-class RSL : public ShaderOutput
+class RSLShaderHelper
 {
 public:
-	RSL();
-	~RSL();
+	RSLShaderHelper();
+	~RSLShaderHelper();
 
 	//--------------------------------------------------------------------
 	// Perform the necessary setup to allow a variable to be used in the
@@ -45,6 +45,20 @@ public:
 protected:
 	MString rslShaderHeader;
 	MString rslShaderBody;
+
+};
+//////////////////////////////////////////////////////////////////////////
+class RSL : public ShaderOutput
+{
+public:
+	RSL();
+	~RSL();
+
+	virtual void output(const char* shaderNodeName);
+
+protected:
+	void _output(const char* shaderNodeName, const char* nodetype);
+
 
 };
 

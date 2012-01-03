@@ -8,13 +8,12 @@ ShaderOutputMgr* ShaderOutputMgr::m_instance = 0;
 //
 ShaderOutputMgr::ShaderOutputMgr()
 {
-	rsl = new liquidmaya::RSL();
+	createReceivers();
 }
 //
 ShaderOutputMgr::~ShaderOutputMgr()
 {
-	delete rsl;
-	rsl = 0;
+	deleteReceivers();
 }
 //
 ShaderOutputMgr* ShaderOutputMgr::getSingletonPtr()
@@ -24,5 +23,35 @@ ShaderOutputMgr* ShaderOutputMgr::getSingletonPtr()
 	}
 	return m_instance;
 }
-
+//
+void ShaderOutputMgr::createReceivers()
+{
+	receivers.push_back( new RSL());
+}
+//
+void ShaderOutputMgr::deleteReceivers()
+{
+	std::vector<ShaderOutput*>::iterator i = receivers.begin();
+	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	for( ; i != e; ++i )
+	{
+		delete (*i);
+	}
+	receivers.clear();
+}
+//
+void ShaderOutputMgr::notify_output(const char* shaderNodeName)
+{
+	std::vector<ShaderOutput*>::iterator i = receivers.begin();
+	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	for( ; i != e; ++i )
+	{
+		(*i)->output(shaderNodeName);
+	}
+}
+//
+void ShaderOutputMgr::output(const char* shaderNodeName)
+{
+	notify_output(shaderNodeName);
+}
 }//namespace liquidmaya

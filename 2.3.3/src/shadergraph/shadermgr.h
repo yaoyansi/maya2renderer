@@ -10,6 +10,7 @@
 namespace liquidmaya
 {
 
+	class OutputAgentInterface;
 	//
 	class ShaderMgr
 	{
@@ -21,6 +22,8 @@ namespace liquidmaya
 		const liquidmaya::Shader* getShader(const std::string& shadertype);
 		int convertibleConnection(const char*plugname);
 
+
+
 	private:
 		ShaderMgr();
 		static ShaderMgr* m_instance;
@@ -29,6 +32,8 @@ namespace liquidmaya
 		ShaderTypeMap shadertype; 
 
 		ConvertShadingNetwork shadingnetwork;
+
+
 
 	};
 }

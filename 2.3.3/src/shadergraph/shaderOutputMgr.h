@@ -1,6 +1,8 @@
 #ifndef _SHADER_OUTPUT_MGR_H_
 #define _SHADER_OUTPUT_MGR_H_
 
+#include "../common/prerequest_std.h"
+
 namespace liquidmaya{
 
 	class ShaderOutput;
@@ -13,12 +15,18 @@ namespace liquidmaya{
 
 		~ShaderOutputMgr();
 
-		RSL *rsl;
+		void output(const char* shaderNodeName);
 
 	private:
 		ShaderOutputMgr();
-		static ShaderOutputMgr* m_instance;
 
+
+		static ShaderOutputMgr* m_instance;
+		
+		void createReceivers();
+		void deleteReceivers();
+		void notify_output(const char* shaderNodeName);
+		std::vector<ShaderOutput*> receivers;
 
 	};
 
