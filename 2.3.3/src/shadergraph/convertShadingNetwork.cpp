@@ -7,6 +7,13 @@
 
 namespace liquidmaya{
 
+void connectMStringArray(MString& des, const MStringArray& src)
+{
+	des.clear();
+	for(std::size_t i=0; i<src.length(); ++i){
+		des += src[ i ] + ",";
+	}
+}
 
 ConvertShadingNetwork::ConvertShadingNetwork()
 {
@@ -306,12 +313,11 @@ void ConvertShadingNetwork::addNodeOutputVariable(
 }
 //
 MString ConvertShadingNetwork::getNodeVariables(
-	const MString& node, const MStringArray& validConnections, MStringArray& shaderData)
+	const MString& node, const MStringArray& validConnections, MStringArray& shaderData,
+	MStringArray& inputVars, MStringArray& outputVars)
 {
 	MStringArray vars;
 	MString varString;
-	MStringArray inputVars;
-	MStringArray outputVars;
 	int connectionType = 0;
 
 	for( std::size_t i = 0; i<validConnections.length(); ++i )
@@ -433,14 +439,28 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 				nodes,
 				numConnections,
 				validConnections );
-			
+
+			MStringArray inputVars; 
+			MStringArray outputVars;
 			MString vars = getNodeVariables( currentNode,
 				validConnections,
-				shaderData );
+				shaderData,
+				inputVars,
+				outputVars);
 
 			// Add the current node method to the shader body
 			shaderData[ SHADER_METHOD_BODY_I ] += " " + currentNode +"("+vars+");\n";
-		
+			
+			// test the input and output of currentNode
+			{	
+				MString inputVarsStr; 
+				MString outputVarsStr;
+				connectMStringArray(inputVarsStr, inputVars);
+				connectMStringArray(outputVarsStr, outputVars);
+				shaderData[ SHADER_METHOD_BODY_I ] += "//input: " + inputVarsStr +"\n";
+				shaderData[ SHADER_METHOD_BODY_I ] += "//output:" + outputVarsStr +"\n\n";
+			}
+
 			// We are done with the current node
 			numConnections[ index ] = -1;
 

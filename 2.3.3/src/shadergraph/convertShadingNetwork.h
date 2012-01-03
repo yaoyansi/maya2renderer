@@ -68,7 +68,8 @@ public:
 	// output variables for the this node.
 	//--------------------------------------------------------------------
 	MString getNodeVariables(
-		const MString& node, const MStringArray& validConnection, MStringArray& shaderData);
+		const MString& node, const MStringArray& validConnection, MStringArray& shaderData,
+		MStringArray& inputVars, MStringArray& outputVars);
 
 	//--------------------------------------------------------------------
 	// Given a convertible node and its valid connections, iterates over
