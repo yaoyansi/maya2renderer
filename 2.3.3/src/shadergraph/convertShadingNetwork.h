@@ -89,14 +89,14 @@ public:
 	//--------------------------------------------------------------------
 	// Outputs the shader method.
 	//--------------------------------------------------------------------
-	void outputShaderMethod( const MStringArray& shaderData, std::ofstream& file );
+	void outputShaderMethod( const MStringArray& shaderData );
 
 	//--------------------------------------------------------------------
 	// Convert a network of shading nodes to RSL.
 	//--------------------------------------------------------------------
 	void convertShadingNetworkToRSL(const MString& startingNode, const MString& node);
 
-	static std::ofstream RSLfile;
+
 
 protected:
 	std::vector<std::string> convertibleNodeTypes;

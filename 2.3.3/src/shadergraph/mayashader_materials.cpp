@@ -26,9 +26,9 @@ namespace liquidmaya
 		validConnection.append("outTransparency");
 	}
 	//
-	void Lambert::writeRSL(const char* node)
+	void Lambert::writeRSL(const char* node, std::ofstream& RSLfile)
 	{
-		RSLShaderHelper o;
+		RSLShaderHelper o(RSLfile);
 
 		o.beginRSL(node);
 
@@ -79,9 +79,9 @@ namespace liquidmaya
 		validConnection.append("outColor");
 	}
 	//
-	void Blinn::writeRSL(const char* node)
+	void Blinn::writeRSL(const char* node, std::ofstream& RSLfile)
 	{
-		RSLShaderHelper o;
+		RSLShaderHelper o(RSLfile);
 
 		o.beginRSL(node);
 

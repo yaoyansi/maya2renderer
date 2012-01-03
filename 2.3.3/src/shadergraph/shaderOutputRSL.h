@@ -9,7 +9,7 @@ namespace liquidmaya{
 class RSLShaderHelper
 {
 public:
-	RSLShaderHelper();
+	RSLShaderHelper(std::ofstream& RSLfile);
 	~RSLShaderHelper();
 
 	//--------------------------------------------------------------------
@@ -46,6 +46,7 @@ protected:
 	MString rslShaderHeader;
 	MString rslShaderBody;
 
+	std::ofstream& RSLfileRef;
 };
 //////////////////////////////////////////////////////////////////////////
 class RSL : public ShaderOutput
@@ -54,12 +55,15 @@ public:
 	RSL();
 	~RSL();
 
-	virtual void output(const char* shaderNodeName);
+	virtual void outputBegin(const char* shaderNodeName);
+	virtual void outputUpstreamShader(const char* shaderNodeName);
+	virtual void outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
+	virtual void outputEnd();
 
 protected:
-	void _output(const char* shaderNodeName, const char* nodetype);
+	void _outputUpstreamShader(const char* shaderNodeName, const char* nodetype);
 
-
+	std::ofstream RSLfile;
 };
 
 }//namespace liquidmaya

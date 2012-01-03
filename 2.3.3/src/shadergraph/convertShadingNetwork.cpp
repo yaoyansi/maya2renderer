@@ -7,7 +7,6 @@
 
 namespace liquidmaya{
 
-std::ofstream ConvertShadingNetwork::RSLfile;
 
 ConvertShadingNetwork::ConvertShadingNetwork()
 {
@@ -422,7 +421,7 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 			IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+currentNode+"\""), nodetype));
 
 			// write out the current node's function
-			ShaderOutputMgr::getSingletonPtr()->output(currentNode.asChar());//shader->writeRSL(currentNode.asChar());
+			ShaderOutputMgr::getSingletonPtr()->outputUpstreamShader(currentNode.asChar());//shader->writeRSL(currentNode.asChar());
 
 			// Get the list of supported connections from the current node			
 			const liquidmaya::Shader* shader 
@@ -451,13 +450,15 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 	}
 }
 //
-void ConvertShadingNetwork::outputShaderMethod( const MStringArray& shaderData, std::ofstream& file )
+void ConvertShadingNetwork::outputShaderMethod( const MStringArray& shaderData )
 {
-	file << "surface " + shaderData[SHADER_NAME_I] +"()\n{\n";
-	file << shaderData[SHADER_METHOD_VARIAVLES_I];
-	file << "\n";
-	file << shaderData[SHADER_METHOD_BODY_I];
-	file << "}\n";
+	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
+		outputShaderMethod(
+		shaderData[SHADER_NAME_I].asChar(),
+		shaderData[SHADER_METHOD_VARIAVLES_I].asChar(),
+		shaderData[SHADER_METHOD_BODY_I].asChar()
+	);
+
 }
 //
 void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNode, const MString& node)
@@ -475,25 +476,19 @@ void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNo
 
 	getUpstreamConvertibleNodes(startingNode, nodes, numConnections);
 
-	// Work out where to put it & make sure the directory exists
-	MString wsdir;
-	IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
-	MString shaderdir;
-	IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
-	shaderdir = wsdir + shaderdir;
-	
-	MString shaderFileName;
-	IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+startingNode+"\")", shaderFileName));
-	RSLfile.open( (shaderFileName+".er").asChar() );
+	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
+		outputBegin(startingNode.asChar());
 
 	// Traverse the graph outputing functions for nodes that have received all
 	// of their respective inputs
 	traverseGraphAndOutputNodeFunctions(nodes, numConnections, shaderData);
 	
 	// Output the shader method
-	outputShaderMethod(shaderData, RSLfile);
+	outputShaderMethod(shaderData);
 
-	RSLfile.close();
+	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
+		outputEnd();
+
 
 	//...
 }

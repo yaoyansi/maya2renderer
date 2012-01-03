@@ -40,18 +40,59 @@ void ShaderOutputMgr::deleteReceivers()
 	receivers.clear();
 }
 //
-void ShaderOutputMgr::notify_output(const char* shaderNodeName)
+//
+void ShaderOutputMgr::notify_outputBegin(const char* shaderNodeName)
 {
 	std::vector<ShaderOutput*>::iterator i = receivers.begin();
 	std::vector<ShaderOutput*>::iterator e = receivers.end();
 	for( ; i != e; ++i )
 	{
-		(*i)->output(shaderNodeName);
+		(*i)->outputBegin(shaderNodeName);
+	}
+}
+void ShaderOutputMgr::notify_outputUpstreamShader(const char* shaderNodeName)
+{
+	std::vector<ShaderOutput*>::iterator i = receivers.begin();
+	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	for( ; i != e; ++i )
+	{
+		(*i)->outputUpstreamShader(shaderNodeName);
+	}
+}
+void ShaderOutputMgr::notify_outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody)
+{
+	std::vector<ShaderOutput*>::iterator i = receivers.begin();
+	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	for( ; i != e; ++i )
+	{
+		(*i)->outputShaderMethod(shaderName, shaderMethodVariavles, shaderMethodBody);
+	}
+}
+void ShaderOutputMgr::notify_outputEnd()
+{
+	std::vector<ShaderOutput*>::iterator i = receivers.begin();
+	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	for( ; i != e; ++i )
+	{
+		(*i)->outputEnd();
 	}
 }
 //
-void ShaderOutputMgr::output(const char* shaderNodeName)
+void ShaderOutputMgr::outputBegin(const char* shaderNodeName)
 {
-	notify_output(shaderNodeName);
+	notify_outputBegin(shaderNodeName);
 }
+void ShaderOutputMgr::outputUpstreamShader(const char* shaderNodeName)
+{
+	notify_outputUpstreamShader(shaderNodeName);
+}
+void ShaderOutputMgr::outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody)
+{
+	notify_outputShaderMethod(shaderName, shaderMethodVariavles, shaderMethodBody);
+}
+void ShaderOutputMgr::outputEnd()
+{
+	notify_outputEnd();
+}
+//
 }//namespace liquidmaya

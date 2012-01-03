@@ -8,9 +8,10 @@
 namespace liquidmaya
 {
 
-RSLShaderHelper::RSLShaderHelper()
+RSLShaderHelper::RSLShaderHelper(std::ofstream& RSLfile)
+:RSLfileRef(RSLfile)
 {
-
+	assert(RSLfileRef.is_open());
 }
 //
 RSLShaderHelper::~RSLShaderHelper()
@@ -138,13 +139,7 @@ void RSLShaderHelper::endRSL ()
 	rslShaderHeader += ")\n";
 	rslShaderBody += "}\n";
 
-	if( ConvertShadingNetwork::RSLfile.is_open() )
-	{
-		ConvertShadingNetwork::RSLfile
-			<< rslShaderHeader + rslShaderBody + "\n" ;
-	}else{
-		liquidMessage2(messageError, "RSLfile is not open.");
-	}
+	RSLfileRef << rslShaderHeader + rslShaderBody + "\n" ;
 }
 //////////////////////////////////////////////////////////////////////////
 RSL::RSL()
@@ -157,22 +152,16 @@ RSL::~RSL()
 
 }
 //
-void RSL::output(const char* shaderNodeName)
-{
-	MString nodetype;
-	IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+MString(shaderNodeName)+"\""), nodetype));
 
-	_output(shaderNodeName, nodetype.asChar());
-}
 //
-void RSL::_output(const char* shaderNodeName, const char* nodetype)
+void RSL::_outputUpstreamShader(const char* shaderNodeName, const char* nodetype)
 {
 	if( strcmp("lambert", nodetype) == 0 )
 	{
-		Lambert::writeRSL(shaderNodeName);
+		Lambert::writeRSL(shaderNodeName, RSLfile);
 	}
 	else if( strcmp("blinn", nodetype) == 0 ){
-		Blinn::writeRSL(shaderNodeName);
+		Blinn::writeRSL(shaderNodeName, RSLfile);
 	}
 	//else if(...){}
 	else{
@@ -180,4 +169,40 @@ void RSL::_output(const char* shaderNodeName, const char* nodetype)
 		assert( 0 && "shader type is not support.");
 	}
 }
+//
+void RSL::outputBegin(const char* startingNode)
+{
+	// Work out where to put it & make sure the directory exists
+	MString wsdir;
+	IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
+	MString shaderdir;
+	IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
+	shaderdir = wsdir + shaderdir;
+	
+	MString shaderFileName;
+	IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(startingNode)+"\")", shaderFileName));
+
+	RSLfile.open( (shaderFileName+".er").asChar() );
+}
+void RSL::outputUpstreamShader(const char* shaderNodeName)
+{
+	MString nodetype;
+	IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+MString(shaderNodeName)+"\""), nodetype));
+
+	_outputUpstreamShader(shaderNodeName, nodetype.asChar());
+}
+void RSL::outputShaderMethod(const char* shaderName,
+						const char* shaderMethodVariavles,const char* shaderMethodBody)
+{
+	RSLfile << "surface " << shaderName << "()\n{\n";
+	RSLfile << shaderMethodVariavles;
+	RSLfile << "\n";
+	RSLfile << shaderMethodBody;
+	RSLfile << "}\n";
+}
+void RSL::outputEnd()
+{
+	RSLfile.close();
+}
+//
 }//namespace liquidmaya
