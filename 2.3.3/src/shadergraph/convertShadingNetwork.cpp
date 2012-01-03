@@ -290,11 +290,11 @@ void ConvertShadingNetwork::addNodeOutputVariable(
 		IfMErrorWarn(MGlobal::executeCommand( ("match(\"[0-9]*$\", \""+type_+"\")"), typeSize));
 		if(typeSize=="")
 		{
-			shaderData[0] += " float "+varName+";\n";
+			shaderData[SHADER_METHOD_VARIAVLES_I] += " float "+varName+";\n";
 		}else if(typeSize=="3"){
-			shaderData[0] += " vector "+varName+";\n";
+			shaderData[SHADER_METHOD_VARIAVLES_I] += " vector "+varName+";\n";
 		}else{
-			shaderData[0] += " float "+varName+"["+typeSize+"];\n";
+			shaderData[SHADER_METHOD_VARIAVLES_I] += " float "+varName+"["+typeSize+"];\n";
 		}
 
 		if( outputVars.length()<(outputIndex+1) ){
@@ -439,7 +439,7 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 				shaderData );
 
 			// Add the current node method to the shader body
-			shaderData[ 1 ] += " " + currentNode +"("+vars+");\n";
+			shaderData[ SHADER_METHOD_BODY_I ] += " " + currentNode +"("+vars+");\n";
 		
 			// We are done with the current node
 			numConnections[ index ] = -1;
