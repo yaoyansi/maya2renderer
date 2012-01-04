@@ -23,6 +23,9 @@ namespace liquidmaya
 		virtual void setValidConnection() = 0;
 
 		MStringArray validConnection;
+	private:
+		Shader(const Shader&);
+		Shader& operator=(const Shader&);
 	};
 }
 

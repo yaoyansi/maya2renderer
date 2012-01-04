@@ -35,7 +35,9 @@ namespace liquidmaya{
 		void notify_outputEnd();
 
 		std::vector<ShaderOutput*> receivers;
-
+	private:
+		ShaderOutputMgr(const ShaderOutputMgr&);
+		ShaderOutputMgr& operator=(const ShaderOutputMgr&);
 	};
 
 }//namespace liquidmaya

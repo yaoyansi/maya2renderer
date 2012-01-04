@@ -20,7 +20,9 @@ public:
 		) = 0;
 	
 	virtual void outputEnd() = 0;
-
+private:
+	ShaderOutput(const ShaderOutput&);
+	ShaderOutput& operator=(const ShaderOutput&);
 };
 
 }//namespace liquidmaya

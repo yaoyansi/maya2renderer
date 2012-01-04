@@ -34,7 +34,9 @@ namespace liquidmaya
 		ConvertShadingNetwork shadingnetwork;
 
 
-
+	private:
+		ShaderMgr(const ShaderMgr&);
+		ShaderMgr& operator=(const ShaderMgr&);
 	};
 }
 

@@ -8,7 +8,9 @@ namespace liquid
 	public:
 		ShaderInterface(){}
 		virtual ~ShaderInterface() = 0{}
-
+	private:
+		ShaderInterface(const ShaderInterface&);
+		ShaderInterface& operator=(const ShaderInterface&);
 	};
 }
 

@@ -15,7 +15,9 @@ namespace liquidmaya
 
 	protected:
 		virtual void setValidConnection();
-
+	private:
+		Lambert(const Lambert&);
+		Lambert& operator=(const Lambert&);
 	};
 	//
 	class Blinn : public liquidmaya::Shader
@@ -27,7 +29,9 @@ namespace liquidmaya
 
 	protected:
 		virtual void setValidConnection();
-
+	private:
+		Blinn(const Blinn&);
+		Blinn& operator=(const Blinn&);
 	};
 	//
 	//

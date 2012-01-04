@@ -47,6 +47,10 @@ protected:
 	MString rslShaderBody;
 
 	std::ofstream& RSLfileRef;
+
+private:
+	RSLShaderHelper(const RSLShaderHelper&);
+	RSLShaderHelper& operator=(const RSLShaderHelper&);
 };
 //////////////////////////////////////////////////////////////////////////
 class RSL : public ShaderOutput
@@ -64,6 +68,9 @@ protected:
 	void _outputUpstreamShader(const char* shaderNodeName, const char* nodetype);
 
 	std::ofstream RSLfile;
+private:
+	RSL(const RSL&);
+	RSL& operator=(const RSL&);
 };
 
 }//namespace liquidmaya
