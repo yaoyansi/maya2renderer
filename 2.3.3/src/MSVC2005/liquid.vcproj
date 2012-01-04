@@ -2773,7 +2773,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Print build time to $(LiquidRoot)\2.3.3\buildtime.txt"
+				Description="Print build time to LiquidRoot\2.3.3\buildtime.txt"
 				CommandLine="echo &quot; (buildtime=%time%)&quot; &gt; ..\..\buildtime.txt "
 			/>
 			<Tool
