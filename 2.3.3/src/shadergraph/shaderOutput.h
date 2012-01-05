@@ -3,27 +3,33 @@
 
 namespace liquidmaya{
 
-class ShaderOutput
+// Visitor Pattern
+class ShaderOutputVisitor
 {
 public:
-	ShaderOutput();
-	virtual ~ShaderOutput();
+	ShaderOutputVisitor();
+	virtual ~ShaderOutputVisitor();
 
 	virtual void outputBegin(const char* shaderNodeName) = 0;
-
 	virtual void outputUpstreamShader(const char* shaderNodeName) = 0;
-	
 	virtual void outputShaderMethod(
 		const char* shaderName,
 		const char* shaderMethodVariavles,
 		const char* shaderMethodBody
 		) = 0;
-	
 	virtual void outputEnd() = 0;
+	//
+	// @node	maya shader node name
+	virtual void visitLambert(const char* node) = 0;
+	// @node	maya shader node name
+	virtual void visitBlinn(const char* node) = 0;
+	// @node	maya shader node name
+	//virtual void visitPhong(const char* node) = 0;
 private:
-	ShaderOutput(const ShaderOutput&);
-	ShaderOutput& operator=(const ShaderOutput&);
+	ShaderOutputVisitor(const ShaderOutputVisitor&);
+	ShaderOutputVisitor& operator=(const ShaderOutputVisitor&);
 };
+//
 
 }//namespace liquidmaya
 #endif//_SHADER_OUTPUT_H_

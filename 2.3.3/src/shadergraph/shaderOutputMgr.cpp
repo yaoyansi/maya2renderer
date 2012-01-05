@@ -26,13 +26,13 @@ ShaderOutputMgr* ShaderOutputMgr::getSingletonPtr()
 //
 void ShaderOutputMgr::createReceivers()
 {
-	receivers.push_back( new RSL());
+	receivers.push_back( new RSLVisitor());
 }
 //
 void ShaderOutputMgr::deleteReceivers()
 {
-	std::vector<ShaderOutput*>::iterator i = receivers.begin();
-	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
+	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
 	for( ; i != e; ++i )
 	{
 		delete (*i);
@@ -43,8 +43,8 @@ void ShaderOutputMgr::deleteReceivers()
 //
 void ShaderOutputMgr::notify_outputBegin(const char* shaderNodeName)
 {
-	std::vector<ShaderOutput*>::iterator i = receivers.begin();
-	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
+	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
 	for( ; i != e; ++i )
 	{
 		(*i)->outputBegin(shaderNodeName);
@@ -52,8 +52,8 @@ void ShaderOutputMgr::notify_outputBegin(const char* shaderNodeName)
 }
 void ShaderOutputMgr::notify_outputUpstreamShader(const char* shaderNodeName)
 {
-	std::vector<ShaderOutput*>::iterator i = receivers.begin();
-	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
+	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
 	for( ; i != e; ++i )
 	{
 		(*i)->outputUpstreamShader(shaderNodeName);
@@ -61,8 +61,8 @@ void ShaderOutputMgr::notify_outputUpstreamShader(const char* shaderNodeName)
 }
 void ShaderOutputMgr::notify_outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody)
 {
-	std::vector<ShaderOutput*>::iterator i = receivers.begin();
-	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
+	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
 	for( ; i != e; ++i )
 	{
 		(*i)->outputShaderMethod(shaderName, shaderMethodVariavles, shaderMethodBody);
@@ -70,8 +70,8 @@ void ShaderOutputMgr::notify_outputShaderMethod(const char* shaderName,const cha
 }
 void ShaderOutputMgr::notify_outputEnd()
 {
-	std::vector<ShaderOutput*>::iterator i = receivers.begin();
-	std::vector<ShaderOutput*>::iterator e = receivers.end();
+	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
+	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
 	for( ; i != e; ++i )
 	{
 		(*i)->outputEnd();

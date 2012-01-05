@@ -3,11 +3,11 @@
 
 namespace liquidmaya{
 
-	ShaderOutput::ShaderOutput()
+	ShaderOutputVisitor::ShaderOutputVisitor()
 	{
 
 	}
-	ShaderOutput::~ShaderOutput()
+	ShaderOutputVisitor::~ShaderOutputVisitor()
 	{
 
 	}

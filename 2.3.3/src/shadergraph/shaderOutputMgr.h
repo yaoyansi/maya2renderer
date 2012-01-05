@@ -5,8 +5,7 @@
 
 namespace liquidmaya{
 
-	class ShaderOutput;
-	class RSL;
+	class ShaderOutputVisitor;
 	//
 	class ShaderOutputMgr
 	{
@@ -34,7 +33,7 @@ namespace liquidmaya{
 		void notify_outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
 		void notify_outputEnd();
 
-		std::vector<ShaderOutput*> receivers;
+		std::vector<ShaderOutputVisitor*> receivers;
 	private:
 		ShaderOutputMgr(const ShaderOutputMgr&);
 		ShaderOutputMgr& operator=(const ShaderOutputMgr&);

@@ -53,24 +53,29 @@ private:
 	RSLShaderHelper& operator=(const RSLShaderHelper&);
 };
 //////////////////////////////////////////////////////////////////////////
-class RSL : public ShaderOutput
+class RSLVisitor : public ShaderOutputVisitor
 {
 public:
-	RSL();
-	~RSL();
+	RSLVisitor();
+	~RSLVisitor();
 
 	virtual void outputBegin(const char* shaderNodeName);
 	virtual void outputUpstreamShader(const char* shaderNodeName);
 	virtual void outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
 	virtual void outputEnd();
+	//
+	// @node	maya shader node name
+	virtual void visitLambert(const char* node);
+	// @node	maya shader node name
+	virtual void visitBlinn(const char* node);
 
 protected:
 	void _outputUpstreamShader(const char* shaderNodeName, const char* nodetype);
 
 	std::ofstream RSLfile;
 private:
-	RSL(const RSL&);
-	RSL& operator=(const RSL&);
+	RSLVisitor(const RSLVisitor&);
+	RSLVisitor& operator=(const RSLVisitor&);
 };
 
 }//namespace liquidmaya
