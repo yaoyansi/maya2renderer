@@ -3,23 +3,22 @@
 #include "../common/mayacheck.h"
 #include "convertShadingNetwork.h"
 #include "shadermgr.h"
-#include "mayashader_materials.h"
 
-namespace liquidmaya
+namespace RSL
 {
 
-RSLShaderHelper::RSLShaderHelper(std::ofstream& RSLfile)
+OutputHelper::OutputHelper(std::ofstream& RSLfile)
 :RSLfileRef(RSLfile)
 {
 	assert(RSLfileRef.is_open());
 }
 //
-RSLShaderHelper::~RSLShaderHelper()
+OutputHelper::~OutputHelper()
 {
 
 }
 //
-void RSLShaderHelper::addRSLVariable(MString rslType, const MString& rslName,
+void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 					const MString& mayaName, const MString& mayaNode)
 {
 	MString cmd;
@@ -39,7 +38,7 @@ void RSLShaderHelper::addRSLVariable(MString rslType, const MString& rslName,
 
 	// Create the plug's name, and check for convertible connections.
 	MString plug(mayaNode+"."+mayaName);
-	int connected = ShaderMgr::getSingletonPtr()->convertibleConnection(plug.asChar());
+	int connected = liquidmaya::ShaderMgr::getSingletonPtr()->convertibleConnection(plug.asChar());
 
 	// If there are no convertible connections, then we have to
 	// write out the variable into the shader's body.
@@ -128,12 +127,12 @@ void RSLShaderHelper::addRSLVariable(MString rslType, const MString& rslName,
 	}//else
 }
 //
-void RSLShaderHelper::addToRSL(const MString& code)
+void OutputHelper::addToRSL(const MString& code)
 {
 	rslShaderBody += (" "+code+"\n");
 }
 //
-void RSLShaderHelper::beginRSL (const MString& $name)
+void OutputHelper::beginRSL (const MString& $name)
 {
 	// "Open" the header and body.
 	//
@@ -141,7 +140,7 @@ void RSLShaderHelper::beginRSL (const MString& $name)
 	rslShaderBody = "{\n";
 }
 //
-void RSLShaderHelper::endRSL ()
+void OutputHelper::endRSL ()
 {
 	// "Close" the header and body.
 	//
@@ -151,19 +150,19 @@ void RSLShaderHelper::endRSL ()
 	RSLfileRef << rslShaderHeader + rslShaderBody + "\n" ;
 }
 //////////////////////////////////////////////////////////////////////////
-RSLVisitor::RSLVisitor()
+Visitor::Visitor()
 {
 
 }
 //
-RSLVisitor::~RSLVisitor()
+Visitor::~Visitor()
 {
 
 }
 //
 
 //
-void RSLVisitor::_outputUpstreamShader(const char* shaderNodeName, const char* nodetype)
+void Visitor::_outputUpstreamShader(const char* shaderNodeName, const char* nodetype)
 {
 	if( strcmp("lambert", nodetype) == 0 )
 	{
@@ -179,7 +178,7 @@ void RSLVisitor::_outputUpstreamShader(const char* shaderNodeName, const char* n
 	}
 }
 //
-void RSLVisitor::outputBegin(const char* startingNode)
+void Visitor::outputBegin(const char* startingNode)
 {
 	// Work out where to put it & make sure the directory exists
 	MString wsdir;
@@ -193,14 +192,14 @@ void RSLVisitor::outputBegin(const char* startingNode)
 
 	RSLfile.open( (shaderFileName+".er").asChar() );
 }
-void RSLVisitor::outputUpstreamShader(const char* shaderNodeName)
+void Visitor::outputUpstreamShader(const char* shaderNodeName)
 {
 	MString nodetype;
 	IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+MString(shaderNodeName)+"\""), nodetype));
 
 	_outputUpstreamShader(shaderNodeName, nodetype.asChar());
 }
-void RSLVisitor::outputShaderMethod(const char* shaderName,
+void Visitor::outputShaderMethod(const char* shaderName,
 						const char* shaderMethodVariavles,const char* shaderMethodBody)
 {
 	RSLfile << "surface " << shaderName << "()\n{\n";
@@ -209,14 +208,14 @@ void RSLVisitor::outputShaderMethod(const char* shaderName,
 	RSLfile << shaderMethodBody;
 	RSLfile << "}\n";
 }
-void RSLVisitor::outputEnd()
+void Visitor::outputEnd()
 {
 	RSLfile.close();
 }
 //
-void RSLVisitor::visitLambert(const char* node)
+void Visitor::visitLambert(const char* node)
 {
-	RSLShaderHelper o(RSLfile);
+	OutputHelper o(RSLfile);
 
 	o.beginRSL(node);
 
@@ -240,9 +239,9 @@ void RSLVisitor::visitLambert(const char* node)
 
 	o.endRSL();
 }
-void RSLVisitor::visitBlinn(const char* node)
+void Visitor::visitBlinn(const char* node)
 {
-	RSLShaderHelper o(RSLfile);
+	OutputHelper o(RSLfile);
 
 	o.beginRSL(node);
 
@@ -298,4 +297,4 @@ void RSLVisitor::visitBlinn(const char* node)
 
 	o.endRSL();
 }
-}//namespace liquidmaya
+}//namespace RSL

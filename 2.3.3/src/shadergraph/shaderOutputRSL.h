@@ -4,13 +4,13 @@
 #include "../common/prerequest_maya.h"
 #include "shaderOutput.h"
 
-namespace liquidmaya{
+namespace RSL{
 
-class RSLShaderHelper
+class OutputHelper
 {
 public:
-	RSLShaderHelper(std::ofstream& RSLfile);
-	~RSLShaderHelper();
+	OutputHelper(std::ofstream& RSLfile);
+	~OutputHelper();
 
 	//--------------------------------------------------------------------
 	// Perform the necessary setup to allow a variable to be used in the
@@ -49,15 +49,15 @@ protected:
 	std::ofstream& RSLfileRef;
 
 private:
-	RSLShaderHelper(const RSLShaderHelper&);
-	RSLShaderHelper& operator=(const RSLShaderHelper&);
+	OutputHelper(const OutputHelper&);
+	OutputHelper& operator=(const OutputHelper&);
 };
 //////////////////////////////////////////////////////////////////////////
-class RSLVisitor : public ShaderOutputVisitor
+class Visitor : public liquidmaya::ShaderOutputVisitor
 {
 public:
-	RSLVisitor();
-	~RSLVisitor();
+	Visitor();
+	~Visitor();
 
 	virtual void outputBegin(const char* shaderNodeName);
 	virtual void outputUpstreamShader(const char* shaderNodeName);
@@ -74,9 +74,9 @@ protected:
 
 	std::ofstream RSLfile;
 private:
-	RSLVisitor(const RSLVisitor&);
-	RSLVisitor& operator=(const RSLVisitor&);
+	Visitor(const Visitor&);
+	Visitor& operator=(const Visitor&);
 };
 
-}//namespace liquidmaya
+}//namespace RSL
 #endif

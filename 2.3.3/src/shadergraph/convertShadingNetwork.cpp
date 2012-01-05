@@ -174,11 +174,10 @@ int ConvertShadingNetwork::getUpstreamConvertibleNodes ( const MString& currentN
 
 	MString nodetype;
 	IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+currentNode+"\""), nodetype));
-	const liquidmaya::Shader* shader = ShaderMgr::getSingletonPtr()->getShader(nodetype.asChar());
-	assert( shader );
 
 	// Get the list of supported connections from the current node
-	const MStringArray& validConnections = shader->getValidConnectionRef();
+	const MStringArray& validConnections =
+		ShaderMgr::getSingletonPtr()->getValidConnectionRef(nodetype.asChar());
 	// Get the list of up stream nodes along supported connections
 	std::set<const std::string> upstreamNodes;
 	for(size_t i=0; i < validConnections.length(); ++i)
@@ -246,10 +245,9 @@ void ConvertShadingNetwork::addNodeInputVariable(const MString& plug, MStringArr
 			
 			MString nodetype;
 			IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+inputNode+"\""), nodetype));
-			const liquidmaya::Shader* shader = ShaderMgr::getSingletonPtr()->getShader(nodetype.asChar());
-			assert( shader );
+
 			const MStringArray& validConnections =
-				shader->getValidConnectionRef();
+				ShaderMgr::getSingletonPtr()->getValidConnectionRef(nodetype.asChar());
 			
 			for(size_t i=0; i < validConnections.length(); ++i)
 			{
@@ -430,10 +428,8 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 			ShaderOutputMgr::getSingletonPtr()->outputUpstreamShader(currentNode.asChar());//shader->writeRSL(currentNode.asChar());
 
 			// Get the list of supported connections from the current node			
-			const liquidmaya::Shader* shader 
-				= ShaderMgr::getSingletonPtr()->getShader(nodetype.asChar());
-			assert( shader );
-			const MStringArray& validConnections = shader->getValidConnectionRef();
+			const MStringArray& validConnections = 
+				ShaderMgr::getSingletonPtr()->getValidConnectionRef(nodetype.asChar());
 
 			decrementDownstreamConnections( currentNode,
 				nodes,

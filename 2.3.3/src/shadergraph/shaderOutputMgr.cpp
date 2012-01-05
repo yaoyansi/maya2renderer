@@ -26,7 +26,7 @@ ShaderOutputMgr* ShaderOutputMgr::getSingletonPtr()
 //
 void ShaderOutputMgr::createReceivers()
 {
-	receivers.push_back( new RSLVisitor());
+	receivers.push_back( new RSL::Visitor());
 }
 //
 void ShaderOutputMgr::deleteReceivers()

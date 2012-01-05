@@ -3248,30 +3248,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\shadergraph\mayashader.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\mayashader.h"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\mayashader_materials.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\mayashader_materials.h"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\shader.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\shader.h"
-					>
-				</File>
-				<File
 					RelativePath="..\shadergraph\shadermgr.cpp"
 					>
 				</File>
@@ -3301,6 +3277,14 @@
 				</File>
 				<File
 					RelativePath="..\shadergraph\shaderOutputRSL.h"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shaderValidConnection.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shaderValidConnection.h"
 					>
 				</File>
 			</Filter>

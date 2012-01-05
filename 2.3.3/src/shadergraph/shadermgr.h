@@ -4,8 +4,8 @@
 
 #include "../common/prerequest_maya.h"
 #include "../common/prerequest_std.h"
-#include "mayashader.h"
 #include "convertShadingNetwork.h"
+#include "shaderValidConnection.h"
 
 namespace liquidmaya
 {
@@ -18,21 +18,24 @@ namespace liquidmaya
 		static ShaderMgr* getSingletonPtr();
 		~ShaderMgr();
 
+		//
 		void exportShaderGraph();
-		const liquidmaya::Shader* getShader(const std::string& shadertype);
+
+		//
 		int convertibleConnection(const char*plugname);
 
-
+		// @shadertype	e.g. "lambert","blinn",.... lowercase is prefered.
+		const MStringArray& getValidConnectionRef(const char* shadertype) const;
 
 	private:
 		ShaderMgr();
 		static ShaderMgr* m_instance;
 
-		typedef std::map<const std::string, const liquidmaya::Shader*> ShaderTypeMap;
-		ShaderTypeMap shadertype; 
-
+		//
 		ConvertShadingNetwork shadingnetwork;
 
+		//
+		ShaderValidConnection shaderValidConnection;
 
 	private:
 		ShaderMgr(const ShaderMgr&);
