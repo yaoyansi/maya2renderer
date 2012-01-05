@@ -116,6 +116,15 @@ void RSLShaderHelper::addRSLVariable(MString rslType, const MString& rslName,
 		}
 		rslShaderHeader += ";\n";
 
+		//
+		if(connected == 1)
+		{
+			MStringArray srcPlug;
+			IfMErrorWarn(MGlobal::executeCommand("listConnections -source true -plugs true \""+plug+"\"", srcPlug));
+			assert(srcPlug.length()==1);
+			rslShaderBody +="//"+plug+" <-- "+srcPlug[0]+"\n";
+		}
+
 	}//else
 }
 //
