@@ -212,6 +212,10 @@ void Visitor::outputEnd()
 {
 	RSLfile.close();
 }
+void Visitor::outputShadingGroup(const char* shadingGroupNode)
+{
+
+}
 //
 void Visitor::visitLambert(const char* node)
 {

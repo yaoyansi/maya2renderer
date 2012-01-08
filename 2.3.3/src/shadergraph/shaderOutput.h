@@ -18,6 +18,7 @@ public:
 		const char* shaderMethodBody
 		) = 0;
 	virtual void outputEnd() = 0;
+	virtual void outputShadingGroup(const char* shadingGroupNode) = 0;
 	//
 	// @node	maya shader node name
 	virtual void visitLambert(const char* node) = 0;

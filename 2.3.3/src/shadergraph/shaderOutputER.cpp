@@ -213,6 +213,46 @@ void Visitor::outputEnd()
 {
 	file.close();
 }
+void Visitor::outputShadingGroup(const char* shadingGroupNode)
+{
+	MString cmd;
+
+	MStringArray surfaceShaders;
+	MStringArray displacementShaders;
+	{
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".surfaceShader\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, surfaceShaders));
+
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".displacementShader\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, displacementShaders));
+	}
+
+	// Work out where to put it & make sure the directory exists
+	MString shadingGroupFileName;
+	{
+		MString wsdir;
+		IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
+		MString shaderdir;
+		IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
+		shaderdir = wsdir + shaderdir;
+
+		IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(shadingGroupNode)+"\")", shadingGroupFileName));
+	}
+
+	std::ofstream shadingGroupFile;
+	shadingGroupFile.open((shadingGroupFileName+".erapi").asChar());
+	shadingGroupFile<<"ei_material(\""<<shadingGroupNode<<"\");"<<std::endl;
+	if( surfaceShaders[0].length() != 0 ){
+		shadingGroupFile<<"ei_add_surface(\""<<surfaceShaders[0].asChar()<<"\");"<<std::endl;
+	}
+	if( displacementShaders[0].length() != 0 ){
+		shadingGroupFile<<"ei_add_displace(\""<<displacementShaders[0].asChar()<<"\");"<<std::endl;
+	}
+	shadingGroupFile<<"ei_end_material();"<<std::endl;
+	shadingGroupFile.close();
+
+	
+}
 //
 void Visitor::visitLambert(const char* node)
 {
@@ -247,45 +287,14 @@ void Visitor::visitBlinn(const char* node)
 	o.addRSLVariable("vector", "specColor",	"specularColor",node);
 	o.addRSLVariable("vector", "outColor",		"outColor",		node);
 
-	o.addToRSL( "extern normal N;");
-	o.addToRSL( "normal Nn = normalize( N );");
-	o.addToRSL( "Oi = Os * color ( 1 - transparency );");
-	o.addToRSL( "vector Cdiffuse;");
-	o.addToRSL( "Cdiffuse = incandescence +");
-	o.addToRSL( "           ( inColor * ( diffusion * ");
-	o.addToRSL( "                         vector diffuse( Nn ) +");
-	o.addToRSL( "                         ambColor ) );");
-	o.addToRSL( "vector Cspecular = 0;");
-	o.addToRSL( "float eccSq = pow( eccentricity, 2 );");
-	o.addToRSL( "vector V = normalize( -I );");
-	o.addToRSL( "float NV = Nn . V;");
-	o.addToRSL( "illuminance( P, Nn, PI / 2 )");
-	o.addToRSL( "{");
-	o.addToRSL( " vector Ln = normalize( L );");
-	o.addToRSL( " vector H = normalize( V + Ln );");
-	o.addToRSL( " float NH = Nn . H;");
-	o.addToRSL( " float NL = Nn . Ln;");
-	o.addToRSL( " float VH = V . H;");
-	o.addToRSL( " float D = pow( eccSq / ");
-	o.addToRSL( "                ( pow( NH, 2 ) * ");
-	o.addToRSL( "                  ( eccSq - 1 ) + 1 ), 2 );");
-	o.addToRSL( " float G = min( min( 1, 2 * NH * NV / VH ), ");
-	o.addToRSL( "                2 * NH * NL / VH );");
-	o.addToRSL( " Cspecular += ( vector Cl * ( D * G / NV ) );");
-	o.addToRSL( "}");
-
-	MStringArray con;
-	IfMErrorWarn(MGlobal::executeCommand( ("listConnections(\""+MString(node)+"\" + \".reflectedColor\")"), con));
-	if( con.length() != 0 )
-	{
-		o.addRSLVariable( "float", "reflectivity", "reflectivity", node);
-		o.addRSLVariable( "vector", "refColor", "reflectedColor", node);
-		o.addToRSL( "Cspecular += ( reflectivity * refColor );");
-	}
-	o.addToRSL( "Cspecular *= specColor;");
-	o.addToRSL( "Cspecular *= mix( 1, specRollOff, );");
-	o.addToRSL( "outColor = Cdiffuse + Cspecular;");
-	o.addToRSL( "Ci = Cs * Oi * color outColor;");
+//	MStringArray con;
+//	IfMErrorWarn(MGlobal::executeCommand( ("listConnections(\""+MString(node)+"\" + \".reflectedColor\")"), con));
+//	if( con.length() != 0 )
+//	{
+//		o.addRSLVariable( "float", "reflectivity", "reflectivity", node);
+//		o.addRSLVariable( "vector", "refColor", "reflectedColor", node);
+//		o.addToRSL( "Cspecular += ( reflectivity * refColor );");
+//	}
 
 	o.endRSL();
 }

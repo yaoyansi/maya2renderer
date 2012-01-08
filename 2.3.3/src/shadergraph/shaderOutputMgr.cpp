@@ -79,6 +79,15 @@ void ShaderOutputMgr::notify_outputEnd()
 		(*i)->outputEnd();
 	}
 }
+void ShaderOutputMgr::notify_outputShadingGroup(const char* shadingGroupNode)
+{
+	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
+	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
+	for( ; i != e; ++i )
+	{
+		(*i)->outputShadingGroup(shadingGroupNode);
+	}
+}
 //
 void ShaderOutputMgr::outputBegin(const char* shaderNodeName)
 {
@@ -96,5 +105,10 @@ void ShaderOutputMgr::outputEnd()
 {
 	notify_outputEnd();
 }
+void ShaderOutputMgr::outputShadingGroup(const char* shadingGroupNode)
+{
+	notify_outputShadingGroup(shadingGroupNode);
+}
 //
+
 }//namespace liquidmaya

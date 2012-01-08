@@ -63,6 +63,7 @@ public:
 	virtual void outputUpstreamShader(const char* shaderNodeName);
 	virtual void outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
 	virtual void outputEnd();
+	virtual void outputShadingGroup(const char* shadingGroupNode);
 	//
 	// @node	maya shader node name
 	virtual void visitLambert(const char* node);

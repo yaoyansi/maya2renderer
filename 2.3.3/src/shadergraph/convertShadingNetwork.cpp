@@ -526,26 +526,52 @@ void ConvertShadingNetwork::__export()
 		IfMErrorWarn(MGlobal::executeCommand( cmd, sgNodes));
 
 		//string $shaders[] = `listConnections ( $sgNodes[0] + ".surfaceShader" )`;
-		MStringArray shaders;
-		cmd = "listConnections (\""+sgNodes[0]+"\" + \".surfaceShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
+		{//surface shader
+			MStringArray shaders;
+			cmd = "listConnections (\""+sgNodes[0]+"\" + \".surfaceShader\")";
+			IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
 
-		const MString startingNode(shaders[0]);
+			const MString startingNode(shaders[0]);
 
-		MString nodetype;
-		cmd = "nodeType \""+startingNode+"\"";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
+			MString nodetype;
+			cmd = "nodeType \""+startingNode+"\"";
+			IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
 
-		if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
-			liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
-		}else{
-			convertShadingNetworkToRSL(startingNode, node);
+			if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
+				liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
+			}else{
+				convertShadingNetworkToRSL(startingNode, node);
+			}
 		}
+		{//displacement shader
+			MStringArray shaders;
+			cmd = "listConnections (\""+sgNodes[0]+"\" + \".displacementShader\")";
+			IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
+
+			const MString startingNode(shaders[0]);
+
+			MString nodetype;
+			cmd = "nodeType \""+startingNode+"\"";
+			IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
+
+			if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
+				liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
+			}else{
+				convertShadingNetworkToRSL(startingNode, node);
+			}
+		}
+		outputShadingGroup(sgNodes[0]);
+
+
 	}
 
 }
 //
-
+void ConvertShadingNetwork::outputShadingGroup(const MString& shadingGroupNode)
+{
+	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
+		outputShadingGroup(shadingGroupNode.asChar());
+}
 //
 
 

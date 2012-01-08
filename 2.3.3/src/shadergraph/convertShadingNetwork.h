@@ -97,6 +97,7 @@ public:
 	//--------------------------------------------------------------------
 	void convertShadingNetworkToRSL(const MString& startingNode, const MString& node);
 
+	void outputShadingGroup(const MString& shadingGroupNode);
 
 
 protected:
