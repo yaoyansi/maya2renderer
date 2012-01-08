@@ -2420,5 +2420,90 @@ global proc liquidDeleteProceduralAttributes()
   } 
   liqPopIdent();
 }
+//CustomShader-----------------------------------------------------
+global proc liquidCreateCustomShaderAttributes()
+{
+	liqPushIdent();
+    liqlog("liquidCreateCustomShaderAttributes()");
 
+  string $shapes[] = `ls -selection -dag -shapes`;
+  for ( $currentShape in $shapes ) {
+		string $shadingGroup[] = `listConnections -type "shadingEngine" -destination on ($currentShape+".instObjGroups")`;
+		
+		for( $sg in $shadingGroup){
+// 			if ( !`attributeQuery -node $sg -ex "liqSurfaceShader"` ) {
+// 			  addAttr -ln "liqSurfaceShader" -usedAsColor -at "float3" -k true $sg;
+// 			  addAttr -ln "liqSurfaceShaderred"   -at "float" -dv 1 -k true -parent "liqSurfaceShader" $sg;
+// 			  addAttr -ln "liqSurfaceShadergreen" -at "float" -dv 1 -k true -parent "liqSurfaceShader" $sg;
+// 			  addAttr -ln "liqSurfaceShaderblue"  -at "float" -dv 1 -k true -parent "liqSurfaceShader" $sg;
+// 			}
+// 			if ( !`attributeQuery -node $sg -ex "liqDisplacementShader"` ) {
+// 			  addAttr -ln "liqDisplacementShader" -usedAsColor -at "float3" -k true $sg;
+// 			  addAttr -ln "liqDisplacementShaderred"   -at "float" -dv 1 -k true -parent "liqDisplacementShader" $sg;
+// 			  addAttr -ln "liqDisplacementShadergreen" -at "float" -dv 1 -k true -parent "liqDisplacementShader" $sg;
+// 			  addAttr -ln "liqDisplacementShaderblue"  -at "float" -dv 1 -k true -parent "liqDisplacementShader" $sg;
+// 			}
+			if ( !`attributeQuery -node $sg -ex "liqShadowShader"` ) {
+			  addAttr -ln "liqShadowShader" -usedAsColor -at "float3" -k true $sg;
+			  addAttr -ln "liqShadowShaderred"   -at "float" -dv 1 -k true -parent "liqShadowShader" $sg;
+			  addAttr -ln "liqShadowShadergreen" -at "float" -dv 1 -k true -parent "liqShadowShader" $sg;
+			  addAttr -ln "liqShadowShaderblue"  -at "float" -dv 1 -k true -parent "liqShadowShader" $sg;
+			}
+// 			if ( !`attributeQuery -node $sg -ex "liqVolumeShader"` ) {
+// 			  addAttr -ln "liqVolumeShader" -usedAsColor -at "float3" -k true $sg;
+// 			  addAttr -ln "liqVolumeShaderred"   -at "float" -dv 1 -k true -parent "liqVolumeShader" $sg;
+// 			  addAttr -ln "liqVolumeShadergreen" -at "float" -dv 1 -k true -parent "liqVolumeShader" $sg;
+// 			  addAttr -ln "liqVolumeShaderblue"  -at "float" -dv 1 -k true -parent "liqVolumeShader" $sg;
+// 			}
+			if ( !`attributeQuery -node $sg -ex "liqEnvironmentShader"` ) {
+			  addAttr -ln "liqEnvironmentShader" -usedAsColor -at "float3" -k true $sg;
+			  addAttr -ln "liqEnvironmentShaderred"   -at "float" -dv 1 -k true -parent "liqEnvironmentShader" $sg;
+			  addAttr -ln "liqEnvironmentShadergreen" -at "float" -dv 1 -k true -parent "liqEnvironmentShader" $sg;
+			  addAttr -ln "liqEnvironmentShaderblue"  -at "float" -dv 1 -k true -parent "liqEnvironmentShader" $sg;
+			}
+			if ( !`attributeQuery -node $sg -ex "liqPhotonShader"` ) {
+			  addAttr -ln "liqPhotonShader" -usedAsColor -at "float3" -k true $sg;
+			  addAttr -ln "liqPhotonShaderred"   -at "float" -dv 1 -k true -parent "liqPhotonShader" $sg;
+			  addAttr -ln "liqPhotonShadergreen" -at "float" -dv 1 -k true -parent "liqPhotonShader" $sg;
+			  addAttr -ln "liqPhotonShaderblue"  -at "float" -dv 1 -k true -parent "liqPhotonShader" $sg;
+			}
+		}
+  }
+
+  liqPopIdent();
+}
+global proc liquidDeleteCustomShaderAttributes()
+{
+	liqPushIdent();
+    liqlog("liquidDeleteCustomShaderAttributes()");
+
+  string $shapes[] = `ls -selection -dag -shapes`;
+  string $attr[] = { 
+//	"liqSurfaceShader",
+//	"liqDisplacementShader",
+	"liqShadowShader",
+//	"liqVolumeShader",
+	"liqEnvironmentShader",
+	"liqPhotonShader"
+  };
+
+  for ( $currentShape in $shapes ) 
+  {
+	string $shadingGroup[] = `listConnections -type "shadingEngine" -destination on ($currentShape+".instObjGroups")`;
+	for( $sg in $shadingGroup){
+		for ( $a in $attr ) 
+		{
+		  if ( `attributeQuery -node $sg -ex $a` ) 
+		  {
+			//deleteAttr ( $sg + "."+$a );
+			
+			// philippe: this is a fix to deal with a bug with compound attributes
+			renameAttr ( $sg + "."+$a ) "TO_BE_DELETED";
+			deleteAttr ( $sg + ".TO_BE_DELETED" );
+		  }
+		}
+	}
+  } 
+  liqPopIdent();
+}
 

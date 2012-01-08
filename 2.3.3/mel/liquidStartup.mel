@@ -395,7 +395,7 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
     menuItem -label "Remove Shadow RIB Group" -command liquidDeleteShdRIBAttributes -ann "Remove Shadow RIB attributes from selected Transform node(s)";
     menuItem -d true;
     menuItem -label "Add Instancing" -command liquidCreateInstancingAttributes -ann "Add Instancing control to selected node";
-    menuItem -label "Delete Instancing" -command liquidDeleteInstancingAttributes -ann "Remove Instancing control from selected Transform node(s)";
+    menuItem -label "Delete Instancing" -command liquidDeleteInstancingAttributes -ann "Remove Instancing from selected Transform node(s)";
     menuItem -d true;
     menuItem -label "Create 3Delight Sub Surface Scattering Group" -command liquidCreate3DelightSubSurfaceScatteringAttributes -ann "Add 3Delight Sub Surface Scattering control to selected node";
     menuItem -label "Remove 3Delight Sub Surface Scattering Group" -command liquidDelete3DelightSubSurfaceScatteringAttributes -ann "Remove 3Delight Sub Surface Scattering control to selected node";
@@ -410,7 +410,7 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
     menuItem -label "Trim Curve Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostTrimCurveAttribute "+$prefix);
       menuItem -label "sense" -command liquidCreateTrimCurveSenseAttribute ($prefix+"LiquidMenuItemTrimCurveSense");
     setParent -menu ..;
-	menuItem -label "Remove TrimCurve Group" -command liquidDeleteTrimCurveAttribute -ann "Remove Trim Curve control from selected node";
+	menuItem -label "Remove TrimCurve Group" -command liquidDeleteTrimCurveAttribute -ann "Remove Trim Curve from selected node";
     menuItem -d true;
     menuItem -label "Create Stitch Group"    -command liquidCreateStitchAttribute -ann "Add Stitch to selected node";
     menuItem -label "Stitch Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostStitchAttribute "+$prefix);
@@ -418,14 +418,14 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
       menuItem -label "traceenable" -command liquidCreateStitchTraceEnableAttribute ($prefix+"LiquidMenuItemStitchTraceEnable");
       menuItem -label "newgroup"    -command liquidCreateStitchNewGroupAttribute    ($prefix+"LiquidMenuItemStitchNewGroup");
 	setParent -menu ..;
-	menuItem -label "Remove Stitch Group" -command liquidDeleteStitchAttribute -ann "Remove Stitch control from selected node";
+	menuItem -label "Remove Stitch Group" -command liquidDeleteStitchAttribute -ann "Remove Stitch from selected node";
     menuItem -d true;
     menuItem -label "Create Stochastic Group"    -command liquidCreateStochasticAttribute -ann "Add Stochastic to selected node";
     menuItem -label "Stochastic Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostStochasticAttribute "+$prefix);
       menuItem -label "sigma"        -command liquidCreateStochasticSigmaAttribute        ($prefix+"LiquidMenuItemStochasticSigma");
       menuItem -label "pointfalloff" -command liquidCreateStochasticPointFallOffAttribute ($prefix+"LiquidMenuItemStochasticPointFallOff");
 	setParent -menu ..;
-	menuItem -label "Remove Stochastic Group" -command liquidDeleteStochasticAttribute -ann "Remove Stochastic control from selected node";
+	menuItem -label "Remove Stochastic Group" -command liquidDeleteStochasticAttribute -ann "Remove Stochastic from selected node";
     menuItem -d true;
     menuItem -label "Create Dice Group"    -command liquidCreateDiceAttributes -ann "Add Dice to selected node";
  //   menuItem -label "Stochastic Add" -subMenu true -tearOff true -postMenuCommand ("liquidMenuPostStochasticAttribute "+$prefix);
@@ -435,10 +435,13 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
 	menuItem -label "Remove Dice Group" -command liquidDeleteDiceAttributes -ann "Remove Dice control from selected node";
     menuItem -d true;
     menuItem -label "Create Derivatives Group" -command liquidCreateDerivativesAttributes -ann "Add Derivatives to selected node";
-	menuItem -label "Remove Derivatives Group" -command liquidDeleteDerivativesAttributes -ann "Remove Derivatives control from selected node";
+	menuItem -label "Remove Derivatives Group" -command liquidDeleteDerivativesAttributes -ann "Remove Derivatives from selected node";
     menuItem -d true;
     menuItem -label "Create Procedural Group" -command liquidCreateProceduralAttributes -ann "Add Procedural to selected node";
-	menuItem -label "Remove Procedural Group" -command liquidDeleteProceduralAttributes -ann "Remove Procedural control from selected node";
+	menuItem -label "Remove Procedural Group" -command liquidDeleteProceduralAttributes -ann "Remove Procedural from selected node";
+    menuItem -d true;
+    menuItem -label "Create CustomShader" -command liquidCreateCustomShaderAttributes -ann "Add CustomShader to selected node";
+	menuItem -label "Remove CustomShader" -command liquidDeleteCustomShaderAttributes -ann "Remove CustomShader from selected node";
 
   setParent -menu ..;
   liqPopIdent();

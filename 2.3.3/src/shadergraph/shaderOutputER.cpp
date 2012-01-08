@@ -218,13 +218,29 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	MString cmd;
 
 	MStringArray surfaceShaders;
+	MStringArray volumeShaders;
 	MStringArray displacementShaders;
+	MStringArray shadowShaders;
+	MStringArray environmentShaders;
+	MStringArray photonShaders;
 	{
 		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".surfaceShader\")";
 		IfMErrorWarn(MGlobal::executeCommand( cmd, surfaceShaders));
 
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".volumeShader\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, volumeShaders));
+
 		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".displacementShader\")";
 		IfMErrorWarn(MGlobal::executeCommand( cmd, displacementShaders));
+
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".liqShadowShader\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, shadowShaders));
+		
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".liqEnvironmentShader\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, environmentShaders));
+
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".liqPhotonShader\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, photonShaders));
 	}
 
 	// Work out where to put it & make sure the directory exists
@@ -245,8 +261,20 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	if( surfaceShaders[0].length() != 0 ){
 		shadingGroupFile<<"ei_add_surface(\""<<surfaceShaders[0].asChar()<<"\");"<<std::endl;
 	}
+	if( volumeShaders[0].length() != 0 ){
+		shadingGroupFile<<"ei_add_volume(\""<<volumeShaders[0].asChar()<<"\");"<<std::endl;
+	}
 	if( displacementShaders[0].length() != 0 ){
 		shadingGroupFile<<"ei_add_displace(\""<<displacementShaders[0].asChar()<<"\");"<<std::endl;
+	}
+	if( shadowShaders[0].length() != 0 ){
+		shadingGroupFile<<"ei_add_shadow(\""<<shadowShaders[0].asChar()<<"\");"<<std::endl;
+	}
+	if( environmentShaders[0].length() != 0 ){
+		shadingGroupFile<<"ei_add_environment(\""<<environmentShaders[0].asChar()<<"\");"<<std::endl;
+	}
+	if( photonShaders[0].length() != 0 ){
+		shadingGroupFile<<"ei_add_photon(\""<<photonShaders[0].asChar()<<"\");"<<std::endl;
 	}
 	shadingGroupFile<<"ei_end_material();"<<std::endl;
 	shadingGroupFile.close();

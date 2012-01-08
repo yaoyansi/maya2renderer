@@ -456,6 +456,15 @@ global proc AEliquidInstanceFlags( string $node )
       editorTemplate -label "attribute"    -addDynamicControl "liqProceduralAttribute";
     editorTemplate -endLayout;
 
+	editorTemplate -beginLayout "CustomShader" -collapse true;
+//    editorTemplate -label "SurfaceShader"			-addDynamicControl "liqSurfaceShader";
+//    editorTemplate -label "DisplacementShader"	-addDynamicControl "liqDisplacementShader";
+      editorTemplate -label "ShadowShader"			-addDynamicControl "liqShadowShader";
+//    editorTemplate -label "VolumeShader"			-addDynamicControl "liqVolumeShader";
+      editorTemplate -label "EenvironmentShader"	-addDynamicControl "liqEnvironmentShader";
+      editorTemplate -label "PhotonShader"			-addDynamicControl "liqPhotonShader";
+	editorTemplate -endLayout;
+
   editorTemplate -endLayout;//"Liquid"
 
   //create elvishray attributes

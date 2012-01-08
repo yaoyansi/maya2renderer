@@ -119,3 +119,20 @@
     这时“liquidDisplacement1-->RIB”标签页的参数就可以显示出来了
     再点击渲染，就可以了。
 
+
+- ei_material(), shading group测试
+  - test case:2.3.3\test\test_shadinggroup\er_rm_shadinggroup.ma
+  - ei_material相当于maya里的shading group，
+    surface shader，volume shader，displament shader仍使用maya里的数据，
+    liqShadowShader，liqEnvironmentShader，liqPhotonShader供er使用，
+    在mesh shape对应的shadinggroup标签的“ExtraAttributes”里有liqShadowShader，liqEnvironmentShader，liqPhotonShader
+
+
+
+
+
+
+
+
+
+

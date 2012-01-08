@@ -190,7 +190,7 @@ void Visitor::outputBegin(const char* startingNode)
 	MString shaderFileName;
 	IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(startingNode)+"\")", shaderFileName));
 
-	RSLfile.open( (shaderFileName+".er").asChar() );
+	RSLfile.open( (shaderFileName+".sl_my").asChar() );
 }
 void Visitor::outputUpstreamShader(const char* shaderNodeName)
 {

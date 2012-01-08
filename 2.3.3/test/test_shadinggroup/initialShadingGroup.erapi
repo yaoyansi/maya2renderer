@@ -1,0 +1,8 @@
+ei_material("initialShadingGroup");
+ei_add_surface("lambert1");
+ei_add_volume("lambert3");
+ei_add_displace("blinn1");
+ei_add_shadow("lambert2");
+ei_add_environment("blinn2");
+ei_add_photon("lambert3");
+ei_end_material();
