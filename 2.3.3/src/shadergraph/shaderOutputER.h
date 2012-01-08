@@ -1,15 +1,15 @@
-#ifndef _SHADER_OUTPUT_RSL_H_
-#define _SHADER_OUTPUT_RSL_H_
+#ifndef _SHADER_OUTPUT_ER_H_
+#define _SHADER_OUTPUT_ER_H_
 
 #include "../common/prerequest_maya.h"
 #include "shaderOutput.h"
 
-namespace RSL{
+namespace ER{
 
 class OutputHelper
 {
 public:
-	OutputHelper(std::ofstream& RSLfile);
+	OutputHelper(std::ofstream& file_);
 	~OutputHelper();
 
 	//--------------------------------------------------------------------
@@ -35,7 +35,7 @@ public:
 	//--------------------------------------------------------------------
 	// Begin a new block (function) of RSL code.
 	//--------------------------------------------------------------------
-	void beginRSL (const MString& $name);
+	void beginRSL (const MString& name);
 
 	//--------------------------------------------------------------------
 	// End the current block (function) of RSL code.
@@ -46,7 +46,7 @@ protected:
 	MString rslShaderHeader;
 	MString rslShaderBody;
 
-	std::ofstream& RSLfileRef;
+	std::ofstream& file;
 
 private:
 	OutputHelper(const OutputHelper&);
@@ -72,11 +72,11 @@ public:
 protected:
 	void _outputUpstreamShader(const char* shaderNodeName, const char* nodetype);
 
-	std::ofstream RSLfile;
+	std::ofstream file;
 private:
 	Visitor(const Visitor&);
 	Visitor& operator=(const Visitor&);
 };
 
-}//namespace RSL
-#endif//_SHADER_OUTPUT_RSL_H_
+}//namespace ER
+#endif//_SHADER_OUTPUT_ER_H_
