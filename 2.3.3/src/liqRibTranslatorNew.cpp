@@ -96,6 +96,7 @@
 #include <liqRibCamera.h>
 
 #include "renderermgr.h"
+#include "shadergraph/shadermgr.h"
 
 using namespace boost;
 using namespace std;
@@ -450,7 +451,11 @@ TempControlBreak liqRibTranslator::processOneFrame(
 			else 
 				liqglo__.liqglo_isShadowPass = false;
 
-
+			{
+				if (m_OutputShaderGraph){
+					liquidmaya::ShaderMgr::getSingletonPtr()->exportShaderGraph();
+				}
+			}
 			//************************************************************************************
 			LIQDEBUGPRINTF( "-> setting RiOptions\n" );
 			//************************************************************************************

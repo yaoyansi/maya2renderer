@@ -2035,12 +2035,6 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 	if( !status ) 
 		return MS::kFailure;
 
-	{
-		if (m_OutputShaderGraph){
-			liquidmaya::ShaderMgr::getSingletonPtr()->exportShaderGraph();
-			return MS::kSuccess;
-		}
-	}
 	{//set renderer
 		MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 		MString renderer;
