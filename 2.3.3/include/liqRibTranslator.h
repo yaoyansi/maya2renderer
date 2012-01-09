@@ -522,6 +522,8 @@ public:
 		const liqRibNodePtr &ribNode,
 		const structJob&currentJob
 		);
+	void writeShadingGroup(const MString& meshname);
+
 private:
 	liqRibTranslator(const liqRibTranslator&);
 	liqRibTranslator& operator=(const liqRibTranslator&);

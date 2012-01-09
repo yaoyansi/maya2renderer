@@ -95,6 +95,7 @@
 #include <liqHeroRibWriterMgr.h>
 #include <liqRibCamera.h>
 
+#include "common/mayacheck.h"
 #include "renderermgr.h"
 #include "shadergraph/shadermgr.h"
 
@@ -3157,7 +3158,7 @@ void liqRibTranslator::oneObjectBlock(
 				// per shader shadow pass override
 				if( true/*!currentJob.isShadow || currentShader.outputInShadow*/ )
 				{
-					currentShader.write();
+					//currentShader.write();//use ShadingGroup reference instead.
 				}
 
 				//if( !currentShader.hasErrors && outputDispShader )
@@ -3181,6 +3182,9 @@ void liqRibTranslator::oneObjectBlock(
 				//		RiTransformEnd();
 				//}
 			}
+
+			writeShadingGroup(ribNode->name);
+
 		}else{
 			//currentJob.isShadow==true
 
@@ -3382,7 +3386,7 @@ MStatus liqRibTranslator::writeShader_(
 			// per shader shadow pass override
 			if( !isShadowJob || currentShader.outputInShadow )
 			{
-				currentShader.write();
+				//currentShader.write();//use ShadingGroup reference instead.
 			}
 		}
 
@@ -3418,7 +3422,7 @@ MStatus liqRibTranslator::writeShader_(
 				// per shader shadow pass override
 				if( !isShadowJob || currentShader.outputInShadow )
 				{
-					currentShader.write();
+					//currentShader.write();//use ShadingGroup reference instead.
 				}
 
 				//if( outputSurfaceShader )
@@ -3690,4 +3694,27 @@ MStatus liqRibTranslator::writeShader_forShadow(
 
 
 	return MS::kSuccess;
+}
+//
+void liqRibTranslator::writeShadingGroup(const MString& meshname)
+{
+	RiArchiveRecord( RI_COMMENT, "use Shading Group reference:" );
+	{
+		MStringArray shadingGroupNode;
+		{
+			MString cmd = "listConnections -type \"shadingEngine\" -destination on (\""+meshname+"\" + \".instObjGroups\")";
+			IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNode));
+		}
+		MString shadingGroupFileName;
+		{
+			MString wsdir;
+			IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
+			MString shaderdir;
+			IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
+			shaderdir = wsdir + shaderdir;
+
+			IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(shadingGroupNode[0])+"\")", shadingGroupFileName));
+		}
+		RiReadArchive( const_cast< RtToken >((shadingGroupFileName+".rmsg").asChar()), NULL, RI_NULL );
+	}
 }

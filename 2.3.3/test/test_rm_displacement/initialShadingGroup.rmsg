@@ -1,0 +1,4 @@
+##RenderMan RIB-Structure 1.0
+version 3.03
+#shading group: initialShadingGroup
+#no volume shader.

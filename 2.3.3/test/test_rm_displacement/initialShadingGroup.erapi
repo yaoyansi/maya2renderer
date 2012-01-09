@@ -1,0 +1,4 @@
+ei_material("initialShadingGroup");
+ei_add_surface("lambert1");
+ei_add_displace("blinn1");
+ei_end_material();

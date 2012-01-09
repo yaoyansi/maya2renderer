@@ -1,12 +1,25 @@
 #include "shaderOutputRSL.h"
 #include <liqlog.h>
+#include <liqShader.h>
+#include <liqShaderFactory.h>
 #include "../common/mayacheck.h"
 #include "convertShadingNetwork.h"
 #include "shadermgr.h"
+#include "ri_interface.h"
 
 namespace RSL
 {
-
+	MObject getMObjectByName(const MString& name)
+	{
+		MSelectionList sList;
+		MGlobal::getSelectionListByName(name, sList);
+		assert(1==sList.length());
+		
+		MObject mobj;
+		sList.getDependNode(0, mobj);
+		return mobj;
+	}
+//////////////////////////////////////////////////////////////////////////
 OutputHelper::OutputHelper(std::ofstream& RSLfile)
 :RSLfileRef(RSLfile)
 {
@@ -214,6 +227,68 @@ void Visitor::outputEnd()
 }
 void Visitor::outputShadingGroup(const char* shadingGroupNode)
 {
+	MString cmd;
+
+	MStringArray surfaceShaders;
+	MStringArray volumeShaders;
+	MStringArray displacementShaders;
+	{
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".surfaceShader\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, surfaceShaders));
+
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".volumeShader\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, volumeShaders));
+
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".displacementShader\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, displacementShaders));
+	}
+
+	// Work out where to put it & make sure the directory exists
+	MString shadingGroupFileName;
+	{
+		MString wsdir;
+		IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
+		MString shaderdir;
+		IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
+		shaderdir = wsdir + shaderdir;
+
+		IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(shadingGroupNode)+"\")", shadingGroupFileName));
+	}
+
+	//RiOption( tokenCast("RI2RIB_Output"), "Type", (RtPointer)tokenCast("Ascii"),RI_NULL );
+	RtContextHandle c = RiGetContext();//push context;
+	{
+		RiBegin( const_cast<RtToken>((shadingGroupFileName+".rmsg").asChar()));
+		RiArchiveRecord(RI_COMMENT, "shading group: %s", shadingGroupNode);
+		//surface shader
+		if( surfaceShaders[0].length() != 0 ){
+			liqShader& currentShader = 
+				liqShaderFactory::instance().getShader( getMObjectByName(surfaceShaders[0]) );
+			currentShader.write();
+		}else{
+			RiArchiveRecord(RI_COMMENT, "no surface shader.");
+		}
+		//volume shader
+		if( volumeShaders[0].length() != 0 ){
+			liqShader& currentShader = 
+				liqShaderFactory::instance().getShader( getMObjectByName(volumeShaders[0]) );
+			currentShader.write();			
+		}else{
+			RiArchiveRecord(RI_COMMENT, "no volume shader.");
+		}
+		//displacement shader
+		if( displacementShaders[0].length() != 0 ){
+			liqShader& currentShader = 
+				liqShaderFactory::instance().getShader( getMObjectByName(displacementShaders[0]) );
+			currentShader.write();	
+		}else{
+			RiArchiveRecord(RI_COMMENT, "no displacement shader.");
+		}
+		RiEnd();
+	}
+	RiContext(c);//pop context
+
+
 
 }
 //
