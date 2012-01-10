@@ -129,4 +129,8 @@ const MString replaceAll(const MString& str, const char from, const char to);
 MString generateShadowArchiveName( bool renderAllFrames, long renderAtframe, MString geometrySet );
 MString getBaseShadowName(const structJob &job__);
 
+void getDagPathByName(MDagPath& dagPath, char const* name);
+void getDependNodeByName(MObject& depNode, char const* name);
+void getShaderType(MString& type,  MString const& name);
+
 #endif

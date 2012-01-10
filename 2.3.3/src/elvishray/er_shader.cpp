@@ -4,17 +4,16 @@
 #include "../common/prerequest_maya.h"
 // Liquid headers
 #include <liqShader.h>
-
+#include <liqGlobalHelpers.h>
 #include "../common/mayacheck.h"
 #include "ercall.h"
 #include "log_helper.h"
 
+
 namespace elvishray
 {
 	//////////////////////////////////////////////////////////////////////////
-	void getDagPathByName(MDagPath& dagPath, char const* name);
-	void getDependNodeByName(MObject& depNode, char const* name);
-	void getShaderType(MString& type,  MString const& name);
+
 	void shader_surface_lambert(MString const& mayaShaderName);
 	//////////////////////////////////////////////////////////////////////////
 	void Renderer::shader_transformBegin(const liqString  shaderSpace)
@@ -146,22 +145,7 @@ namespace elvishray
 		_s("//----------------phong_shader_for_test end ---");
 	}
 	//////////////////////////////////////////////////////////////////////////
-	void getDagPathByName(MDagPath& dagPath, char const* name)
-	{
-		MSelectionList      selList;
-		IfMErrorWarn(MGlobal::getSelectionListByName( name, selList ));
-		IfMErrorWarn(selList.getDagPath( 0, dagPath ));
-	}
-	void getDependNodeByName(MObject& depNode, char const* name)
-	{
-		MSelectionList      selList;
-		IfMErrorWarn(MGlobal::getSelectionListByName( name, selList ));
-		IfMErrorWarn(selList.getDependNode( 0, depNode ));
-	}
-	void getShaderType(MString& type, MString const& name)
-	{
-		IfMErrorWarn( MGlobal::executeCommand( ("nodeType \""+name+"\""), type) );
-	}
+
 	void shader_surface_lambert(MString const& mayaShaderName)
 	{
 		MDoubleArray color;

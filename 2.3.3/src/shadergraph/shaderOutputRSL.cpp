@@ -262,25 +262,45 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 		RiArchiveRecord(RI_COMMENT, "shading group: %s", shadingGroupNode);
 		//surface shader
 		if( surfaceShaders[0].length() != 0 ){
-			liqShader& currentShader = 
-				liqShaderFactory::instance().getShader( getMObjectByName(surfaceShaders[0]) );
-			currentShader.write();
+			MString nodetype;
+			getShaderType(nodetype, surfaceShaders[0]);
+			if( nodetype == "liquidSurface" ){
+				liqShader& currentShader = 
+					liqShaderFactory::instance().getShader( getMObjectByName(surfaceShaders[0]) );
+				currentShader.write();
+			}else{
+				RiSurface( const_cast<char *>(surfaceShaders[0].asChar()), RI_NULL );
+			}
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no surface shader.");
 		}
 		//volume shader
 		if( volumeShaders[0].length() != 0 ){
-			liqShader& currentShader = 
-				liqShaderFactory::instance().getShader( getMObjectByName(volumeShaders[0]) );
-			currentShader.write();			
+			MString nodetype;
+			getShaderType(nodetype, volumeShaders[0]);
+			if( nodetype == "liquidVolume" ){
+				liqShader& currentShader = 
+					liqShaderFactory::instance().getShader( getMObjectByName(volumeShaders[0]) );
+				currentShader.write();
+			}else{
+				RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the volume shader, RiAtmosphere(), RiInterior(), or RiExterior().");
+				RiAtmosphere( const_cast<char *>(volumeShaders[0].asChar()), RI_NULL );
+			}
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no volume shader.");
 		}
 		//displacement shader
 		if( displacementShaders[0].length() != 0 ){
-			liqShader& currentShader = 
-				liqShaderFactory::instance().getShader( getMObjectByName(displacementShaders[0]) );
-			currentShader.write();	
+			MString nodetype;
+			getShaderType(nodetype, displacementShaders[0]);
+			if( nodetype == "liquidDisplacement" ){
+				liqShader& currentShader = 
+					liqShaderFactory::instance().getShader( getMObjectByName(displacementShaders[0]) );
+				currentShader.write();
+			}else{
+				RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the displacement shader, RiDeformation(), or RiDisplacement().");
+				RiDisplacement( const_cast<char *>(displacementShaders[0].asChar()), RI_NULL );
+			}
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no displacement shader.");
 		}

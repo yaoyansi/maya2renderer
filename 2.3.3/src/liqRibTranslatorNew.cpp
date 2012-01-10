@@ -3487,8 +3487,8 @@ MStatus liqRibTranslator::writeShader_(
 					RiSurface( "liquidpfx", RI_NULL );
 				}else {
 					//RiSurface( "plastic", RI_NULL );
-					MFnDependencyNode shaderFn(shader);
-					RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );
+					//MFnDependencyNode shaderFn(shader);
+					//RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );//use ShadingGroup reference instead.
 				}
 			}
 		}//if( hasSurfaceShader && !m_ignoreSurfaces )else

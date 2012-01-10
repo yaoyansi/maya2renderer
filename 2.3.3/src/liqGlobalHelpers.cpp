@@ -71,6 +71,7 @@
 
 #include <liqMayaNodeIds.h>
 #include <liqGlobalVariable.h>
+#include "common/mayacheck.h"
 
 using namespace std;
 using namespace boost;
@@ -1338,4 +1339,20 @@ MString getBaseShadowName(const structJob &job__)
 	baseShadowName___ = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, baseShadowName___, liqglo.liqglo_ribDir );
 
 	return baseShadowName___;
+}
+void getDagPathByName(MDagPath& dagPath, char const* name)
+{
+	MSelectionList      selList;
+	IfMErrorWarn(MGlobal::getSelectionListByName( name, selList ));
+	IfMErrorWarn(selList.getDagPath( 0, dagPath ));
+}
+void getDependNodeByName(MObject& depNode, char const* name)
+{
+	MSelectionList      selList;
+	IfMErrorWarn(MGlobal::getSelectionListByName( name, selList ));
+	IfMErrorWarn(selList.getDependNode( 0, depNode ));
+}
+void getShaderType(MString& type, MString const& name)
+{
+	IfMErrorWarn( MGlobal::executeCommand( ("nodeType \""+name+"\""), type) );
 }
