@@ -452,11 +452,7 @@ TempControlBreak liqRibTranslator::processOneFrame(
 			else 
 				liqglo__.liqglo_isShadowPass = false;
 
-			{
-				if (m_OutputShaderGraph){
-					liquidmaya::ShaderMgr::getSingletonPtr()->exportShaderGraph();
-				}
-			}
+
 			//************************************************************************************
 			LIQDEBUGPRINTF( "-> setting RiOptions\n" );
 			//************************************************************************************

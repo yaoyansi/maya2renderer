@@ -5,6 +5,7 @@
 
 #include <liqGlobalVariable.h>
 #include <liqRibTranslator.h>
+#include "shadergraph/shadermgr.h"
 
 tHeroRibWriterMgr::tHeroRibWriterMgr()
 {
@@ -49,6 +50,11 @@ struct liqGlobalVariable &liqglo___,
 	{
 		if( liqRibTranslator::getInstancePtr()->framePrologue__( scanTime__, currentJob___ ) != MS::kSuccess ) 
 			return TCB_Break;//break;
+
+		if (liqRibTranslator::getInstancePtr()->m_OutputShaderGraph){
+			liquidmaya::ShaderMgr::getSingletonPtr()->exportShaderGraph();
+		}
+		
 		if( liqRibTranslator::getInstancePtr()->worldPrologue__(currentJob___) != MS::kSuccess ) 
 			return TCB_Break;//break;
 		if( !currentJob___.isShadow || ( currentJob___.isShadow && currentJob___.deepShadows && m_outputLightsInDeepShadows__) ) 
