@@ -148,32 +148,32 @@ namespace elvishray
 
 	void shader_surface_lambert(MString const& mayaShaderName)
 	{
-		MDoubleArray color;
-		IfMErrorWarn( MGlobal::executeCommand( ("getAttr \""+mayaShaderName+".color\""), color) );
-		
-		MDoubleArray transparency;
-		IfMErrorWarn( MGlobal::executeCommand( ("getAttr \""+mayaShaderName+".transparency\""), transparency) );
-
-		const MString shaderObjectName(mayaShaderName+"_object");
-		const MString opaqueShadowObjectName(mayaShaderName+"_opaque_shadow_object");
-		_s("//----------------shader begin---");
-		_S( ei_shader( shaderObjectName.asChar()) );
-		_S( ei_shader_param_string("desc", "plastic") );
-		_S( ei_shader_param_vector("Cs", color[0], color[1], color[2]) );
-		_S( ei_shader_param_vector("Kd", 0.7f, 1.0f, 1.0f) );
-		_S( ei_shader_param_scalar("Ks", 1.0f) );
-		_S( ei_shader_param_scalar("roughness", 0.2f) );
-		_S( ei_end_shader() );
-
-		_S( ei_shader(opaqueShadowObjectName.asChar()) );
-		_S( ei_shader_param_string("desc", "opaque") );
-		_S( ei_end_shader() );
-
-		_S( ei_material(mayaShaderName.asChar()) );
-		_S( ei_add_surface(shaderObjectName.asChar()) );
-		_S( ei_add_shadow(opaqueShadowObjectName.asChar()) );
-		_S( ei_end_material() );
-		_s("//----------------shader end ---");
+// 		MDoubleArray color;
+// 		IfMErrorWarn( MGlobal::executeCommand( ("getAttr \""+mayaShaderName+".color\""), color) );
+// 		
+// 		MDoubleArray transparency;
+// 		IfMErrorWarn( MGlobal::executeCommand( ("getAttr \""+mayaShaderName+".transparency\""), transparency) );
+// 
+// 		const MString shaderObjectName(mayaShaderName+"_object");
+// 		const MString opaqueShadowObjectName(mayaShaderName+"_opaque_shadow_object");
+// 		_s("//----------------shader begin---");
+// 		_S( ei_shader( shaderObjectName.asChar()) );
+// 		_S( ei_shader_param_string("desc", "plastic") );
+// 		_S( ei_shader_param_vector("Cs", color[0], color[1], color[2]) );
+// 		_S( ei_shader_param_vector("Kd", 0.7f, 1.0f, 1.0f) );
+// 		_S( ei_shader_param_scalar("Ks", 1.0f) );
+// 		_S( ei_shader_param_scalar("roughness", 0.2f) );
+// 		_S( ei_end_shader() );
+// 
+// 		_S( ei_shader(opaqueShadowObjectName.asChar()) );
+// 		_S( ei_shader_param_string("desc", "opaque") );
+// 		_S( ei_end_shader() );
+// 
+// 		_S( ei_material(mayaShaderName.asChar()) );
+// 		_S( ei_add_surface(shaderObjectName.asChar()) );
+// 		_S( ei_add_shadow(opaqueShadowObjectName.asChar()) );
+// 		_S( ei_end_material() );
+// 		_s("//----------------shader end ---");
 	}
 	//
 }//namespace elvishray

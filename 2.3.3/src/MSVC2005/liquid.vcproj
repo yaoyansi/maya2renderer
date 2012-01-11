@@ -3272,6 +3272,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\shadergraph\shaderOutputERCall.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\shadergraph\shaderOutputERCall.h"
+					>
+				</File>
+				<File
 					RelativePath="..\shadergraph\shaderOutputMgr.cpp"
 					>
 				</File>

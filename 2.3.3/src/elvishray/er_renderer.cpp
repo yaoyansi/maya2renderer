@@ -443,22 +443,18 @@ namespace elvishray
 		_S( ei_end_object() );
 
 		_s("//--------------------------");
-		_S( ei_instance( mesh->getName() ) );//transform
+		_S( ei_instance( mesh->getName() ) );//shape node
  		//_S( ei_visible( on ) );
 // 		ei_shadow( on );
 // 		ei_trace( on );
 		{//material
-		const std::string &rmSloFilePath=shader.getShaderFileName();
-		const std::string &mayaShaderName=rmSloFilePath.substr(rmSloFilePath.find_last_of('/')+1);
-		_S( ei_add_material( mayaShaderName.c_str() ) );
-		if(mayaShaderName.empty()){
-			std::string warrning; 
-			warrning+="// ";
-			warrning+=mesh->getName();
-			warrning+="'s liqShader name is empty. Don't forget to select this mesh and convert its shader to RSL.";
-			_s(warrning);
-			liquidMessage2(messageWarning, warrning.c_str());
-		}
+			MStringArray shadingGroupNodes;
+			{
+				MString cmd;
+				cmd = "listConnections -type \"shadingEngine\" -destination on (\""+MString(mesh->getName())+"\" + \".instObjGroups\")";
+				IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNodes));
+			}
+		_S( ei_add_material( shadingGroupNodes[0].asChar() ) );
 		// add test shader,must removed when the shader export is done.
 		//_S( ei_add_material("phong_mtl_for_test") );
 		}

@@ -1,9 +1,9 @@
 //Maya ASCII 2009 scene
-//Name: er_shader.ma
-//Last modified: Sun, Dec 25, 2011 09:38:40 PM
+//Name: er_shader_lambert.ma
+//Last modified: Wed, Jan 11, 2012 08:41:37 PM
 //Codeset: 936
 requires maya "2009";
-requires "liquid_2009x32d" "2.3.5 (buildtime=21:12:10.56)";
+requires "liquid_2009x32d" "2.3.5 (buildtime=20:32:20.53)";
 requires "stereoCamera" "10.0";
 currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
@@ -240,6 +240,7 @@ createNode liquidGlobals -n "liquidGlobals";
 	setAttr ".ddbd[0]"  8;
 	setAttr ".shdd" -type "string" "generatedShader";
 	setAttr ".unt" yes;
+	setAttr ".osg" yes;
 	setAttr ".rdc" -type "string" "prman";
 	setAttr ".prv" -type "string" "prman";
 	setAttr ".lrs" -type "string" "E:/MyDocuments/maya/projects/default/rmantmp/.xml";
@@ -657,4 +658,4 @@ connectAttr "pointLightShape2.ltd" ":lightList1.l" -na;
 connectAttr "pCubeShape1.iog" ":initialShadingGroup.dsm" -na;
 connectAttr "pointLight1.iog" ":defaultLightSet.dsm" -na;
 connectAttr "pointLight2.iog" ":defaultLightSet.dsm" -na;
-// End of er_shader.ma
+// End of er_shader_lambert.ma

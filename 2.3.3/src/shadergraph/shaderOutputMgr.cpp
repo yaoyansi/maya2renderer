@@ -1,6 +1,8 @@
 #include "shaderOutputMgr.h"
 #include "shaderOutputRSL.h"
 #include "shaderOutputER.h"
+#include "shaderOutputERCall.h"
+
 
 namespace liquidmaya{
 
@@ -29,6 +31,7 @@ void ShaderOutputMgr::createReceivers()
 {
 	receivers.push_back( new RSL::Visitor());
 	receivers.push_back( new ER::Visitor());
+	receivers.push_back( new ERCall::Visitor());
 }
 //
 void ShaderOutputMgr::deleteReceivers()
