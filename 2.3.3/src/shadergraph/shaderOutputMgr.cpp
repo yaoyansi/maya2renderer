@@ -1,7 +1,6 @@
 #include "shaderOutputMgr.h"
-#include "shaderOutputRSL.h"
-#include "shaderOutputER.h"
-#include "shaderOutputERCall.h"
+#include "shaderOutput.h"
+
 
 
 namespace liquidmaya{
@@ -11,12 +10,10 @@ ShaderOutputMgr* ShaderOutputMgr::m_instance = 0;
 //
 ShaderOutputMgr::ShaderOutputMgr()
 {
-	createReceivers();
 }
 //
 ShaderOutputMgr::~ShaderOutputMgr()
 {
-	deleteReceivers();
 }
 //
 ShaderOutputMgr* ShaderOutputMgr::getSingletonPtr()
@@ -27,11 +24,9 @@ ShaderOutputMgr* ShaderOutputMgr::getSingletonPtr()
 	return m_instance;
 }
 //
-void ShaderOutputMgr::createReceivers()
+void ShaderOutputMgr::addReceiver(ShaderOutputVisitor* visitor)
 {
-	receivers.push_back( new RSL::Visitor());
-	receivers.push_back( new ER::Visitor());
-	receivers.push_back( new ERCall::Visitor());
+	receivers.push_back( visitor );
 }
 //
 void ShaderOutputMgr::deleteReceivers()

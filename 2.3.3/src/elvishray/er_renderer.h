@@ -217,27 +217,26 @@ namespace elvishray
 
 
 		//
-		std::ofstream& get() { return m_log.get(); }
+		//std::ofstream& get() { return m_log.get(); }
+ 		static liquid::LogMgr m_log;
 
 	protected:
 		Renderer(const Renderer&);
 		Renderer& operator=(const Renderer&);
 
- 		liquid::LogMgr m_log;
+
 		std::string m_root_group;
 		std::string m_option;
 
 		GroupMgr *m_groupMgr;
 
- 		void _Script(const std::string &data){ m_log.log___(data); }
+ 		//void _Script(const std::string &data){ m_log.log___(data); }
 		void cookInstanceGroup();
 		void dummyPhongShader();//for test only
 		void pretest();
 
 		eiContext *CONTEXT;
 	};
-
-	extern Renderer dummy;
 }//namespace elvishray
 
 

@@ -20,14 +20,14 @@ namespace liquidmaya{
 		void outputEnd();
 		void outputShadingGroup(const char* shadingGroupNode);
 
+		void addReceiver(ShaderOutputVisitor* visitor);
+		void deleteReceivers();
+
 	private:
 		ShaderOutputMgr();
 
-
 		static ShaderOutputMgr* m_instance;
 		
-		void createReceivers();
-		void deleteReceivers();
 
 		void notify_outputBegin(const char* shaderNodeName);
 		void notify_outputUpstreamShader(const char* shaderNodeName);

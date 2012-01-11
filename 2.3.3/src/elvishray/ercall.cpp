@@ -13,16 +13,15 @@
 #	pragma comment( lib, "eiSHADER.lib" )
 #	define _e( _call_ )  _call_ 
 #else 
-#	define _e( _call_ )  dummy.get()<< "// "<< #_call_<<" is not called. You should define _USE_ER_LIB_." <<std::endl;
+#	define _e( _call_ )  elvishray::Renderer::m_log.get()<< "// "<< #_call_<<" is not called. You should define _USE_ER_LIB_." <<std::endl;
 #endif
 
-#define _s( _log_ ) dummy.get()<< _log_ <<";"<<std::endl;
+#define _s( _log_ ) elvishray::Renderer::m_log.get()<< _log_ <<";"<<std::endl;
 
 
 
 namespace elvishray
 {
-	extern Renderer dummy;
 
 	//////////////////////////////////////////////////////////////////////////////////
 	eiContext *my_ei_create_context()

@@ -40,17 +40,11 @@ extern const char *LIQUIDVERSION;
 
 namespace renderman
 {
-	static const Renderer dummy;
-	// the only goal to define a Renderer variable is 
-	// to run the constructor to register this renderer.
-
-	static const char *RendererName="renderman";
-
 	Renderer::Renderer()
 	{
-		liquid::RendererMgr::getInstancePtr()->registerRenderer(
-			RendererName, this
-		);
+// 		liquid::RendererMgr::getInstancePtr()->registerRenderer(
+// 			"renderman", this
+// 		);
 	}
 	//
 	Renderer::~Renderer()
@@ -60,7 +54,7 @@ namespace renderman
 	//
 	void Renderer::test()
 	{
-		liquidMessage2(messageInfo, "this is %s.", RendererName );
+		liquidMessage2(messageInfo, "this is %s.", "renderman" );
 	}
 	//
 	void Renderer::setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress)

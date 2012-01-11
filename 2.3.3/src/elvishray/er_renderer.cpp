@@ -34,19 +34,15 @@
 
 namespace elvishray
 {
-	//static const char *LogName="d:/script.er";
-	/*static const*/ Renderer dummy; 
-	// the only goal to define a Renderer variable is 
-	// to run the constructor to register this renderer.
-	static const char *RendererName="elvishray";
+	liquid::LogMgr Renderer::m_log;
 
 	Renderer::Renderer()
 	{
 		m_groupMgr = new GroupMgr(this);
 
-		liquid::RendererMgr::getInstancePtr()->registerRenderer(
-			RendererName, this
-			);
+// 		liquid::RendererMgr::getInstancePtr()->registerRenderer(
+// 			"elvishray", this
+// 			);
 	}
 	//
 	Renderer::~Renderer()
@@ -58,7 +54,7 @@ namespace elvishray
 	//
 	void Renderer::test()
 	{
-		liquidMessage2(messageInfo, "this is %s.", RendererName );
+		liquidMessage2(messageInfo, "this is %s.", "elvishray" );
 
 	}
 	//

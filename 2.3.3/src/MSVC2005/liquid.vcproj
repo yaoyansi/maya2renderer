@@ -3955,6 +3955,10 @@
 			Name="renderer"
 			>
 			<File
+				RelativePath="..\liqAbstractFactory.h"
+				>
+			</File>
+			<File
 				RelativePath="..\liqtypes.cpp"
 				>
 			</File>
@@ -3977,6 +3981,14 @@
 			<Filter
 				Name="renderman"
 				>
+				<File
+					RelativePath="..\renderman\rm_factory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\renderman\rm_factory.h"
+					>
+				</File>
 				<File
 					RelativePath="..\renderman\rm_renderer.cpp"
 					>
@@ -4001,6 +4013,14 @@
 			<Filter
 				Name="elvishray"
 				>
+				<File
+					RelativePath="..\elvishray\er_factory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\er_factory.h"
+					>
+				</File>
 				<File
 					RelativePath="..\elvishray\er_group.cpp"
 					>
