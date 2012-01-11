@@ -305,6 +305,7 @@ void Visitor::visitBlinn(const char* node)
 
 	o.beginRSL(node);
 
+	o.addToRSL("ei_shader_param_string(\"desc\", \"plastic\");");
 	o.addRSLVariable("vector", "inColor",		"color",		node);
 	o.addRSLVariable("vector", "transparency", "transparency", node);
 	o.addRSLVariable("vector", "ambColor",		"ambientColor", node);
