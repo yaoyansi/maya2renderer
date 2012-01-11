@@ -1,0 +1,22 @@
+##RenderMan RIB-Structure 1.0
+version 3.03
+AttributeBegin
+    Attribute "identifier" "name" [ "_pCube1_pCubeShape1" ] 
+    Transform [ 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 ]
+    GeometricApproximation "motionfactor" 1.000000
+    Color [ 1.000000 1.000000 1.000000 ]
+    Opacity [ 1.000000 1.000000 1.000000 ]
+    #use Shading Group reference:
+    ReadArchive "E:/MyDocuments/maya/projects/default/generatedShader/initialShadingGroup.rmsg"
+    ReadArchive "E:/MyDocuments/maya/projects/default/rib/_pCube1_pCubeShape1.15.rib"
+AttributeEnd
+AttributeBegin
+    Attribute "identifier" "name" [ "_pCube2_pCubeShape2" ] 
+    Transform [ 5.516421 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 4.117695 4.480752 -0.309225 1.000000 ]
+    GeometricApproximation "motionfactor" 1.000000
+    Color [ 1.000000 1.000000 1.000000 ]
+    Opacity [ 1.000000 1.000000 1.000000 ]
+    #use Shading Group reference:
+    ReadArchive "E:/MyDocuments/maya/projects/default/generatedShader/lambert3SG.rmsg"
+    ReadArchive "E:/MyDocuments/maya/projects/default/rib/_pCube2_pCubeShape2.15.rib"
+AttributeEnd

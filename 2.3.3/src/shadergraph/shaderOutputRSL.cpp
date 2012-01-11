@@ -245,10 +245,10 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 
 	// Work out where to put it & make sure the directory exists
 	MString shadingGroupFileName;
+	MString shaderdir;
 	{
 		MString wsdir;
 		IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
-		MString shaderdir;
 		IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
 		shaderdir = wsdir + shaderdir;
 
@@ -269,7 +269,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 					liqShaderFactory::instance().getShader( getMObjectByName(surfaceShaders[0]) );
 				currentShader.write();
 			}else{
-				RiSurface( const_cast<char *>(surfaceShaders[0].asChar()), RI_NULL );
+				RiSurface( const_cast<char *>((shaderdir+"/"+surfaceShaders[0]).asChar()), RI_NULL );
 			}
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no surface shader.");
@@ -284,7 +284,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 				currentShader.write();
 			}else{
 				RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the volume shader, RiAtmosphere(), RiInterior(), or RiExterior().");
-				RiAtmosphere( const_cast<char *>(volumeShaders[0].asChar()), RI_NULL );
+				RiAtmosphere( const_cast<char *>((shaderdir+"/"+volumeShaders[0]).asChar()), RI_NULL );
 			}
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no volume shader.");
@@ -299,7 +299,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 				currentShader.write();
 			}else{
 				RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the displacement shader, RiDeformation(), or RiDisplacement().");
-				RiDisplacement( const_cast<char *>(displacementShaders[0].asChar()), RI_NULL );
+				RiDisplacement( const_cast<char *>((shaderdir+"/"+displacementShaders[0]).asChar()), RI_NULL );
 			}
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no displacement shader.");
