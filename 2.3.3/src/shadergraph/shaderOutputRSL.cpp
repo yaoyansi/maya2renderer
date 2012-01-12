@@ -193,17 +193,7 @@ void Visitor::_outputUpstreamShader(const char* shaderNodeName, const char* node
 //
 void Visitor::outputBegin(const char* startingNode)
 {
-	// Work out where to put it & make sure the directory exists
-	MString wsdir;
-	IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
-	MString shaderdir;
-	IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
-	shaderdir = wsdir + shaderdir;
-	
-	MString shaderFileName;
-	IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(startingNode)+"\")", shaderFileName));
-
-	RSLfile.open( (shaderFileName+".sl_my").asChar() );
+	RSLfile.open( (getShaderDirectory()+startingNode+".sl_my").asChar() );
 }
 void Visitor::outputUpstreamShader(const char* shaderNodeName)
 {
@@ -244,16 +234,9 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	}
 
 	// Work out where to put it & make sure the directory exists
-	MString shadingGroupFileName;
-	MString shaderdir;
-	{
-		MString wsdir;
-		IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
-		IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
-		shaderdir = wsdir + shaderdir;
 
-		IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(shadingGroupNode)+"\")", shadingGroupFileName));
-	}
+	MString shaderdir(getShaderDirectory());
+	MString shadingGroupFileName(shaderdir+shadingGroupNode);
 
 	//RiOption( tokenCast("RI2RIB_Output"), "Type", (RtPointer)tokenCast("Ascii"),RI_NULL );
 	RtContextHandle c = RiGetContext();//push context;

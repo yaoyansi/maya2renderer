@@ -188,15 +188,6 @@ void Visitor::_outputUpstreamShader(const char* shaderNodeName, const char* node
 //
 void Visitor::outputBegin(const char* startingNode)
 {
-	// Work out where to put it & make sure the directory exists
-	MString wsdir;
-	IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
-	MString shaderdir;
-	IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
-	shaderdir = wsdir + shaderdir;
-	
-	MString shaderFileName;
-	IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(startingNode)+"\")", shaderFileName));
 
 }
 void Visitor::outputUpstreamShader(const char* shaderNodeName)
@@ -241,18 +232,6 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 
 		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".liqPhotonShader\")";
 		IfMErrorWarn(MGlobal::executeCommand( cmd, photonShaders));
-	}
-
-	// Work out where to put it & make sure the directory exists
-	MString shadingGroupFileName;
-	{
-		MString wsdir;
-		IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
-		MString shaderdir;
-		IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
-		shaderdir = wsdir + shaderdir;
-
-		IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(shadingGroupNode)+"\")", shadingGroupFileName));
 	}
 
 	ei_material( shadingGroupNode );

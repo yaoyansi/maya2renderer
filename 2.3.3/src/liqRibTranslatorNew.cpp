@@ -3701,16 +3701,9 @@ void liqRibTranslator::writeShadingGroup(const MString& meshname)
 			MString cmd = "listConnections -type \"shadingEngine\" -destination on (\""+meshname+"\" + \".instObjGroups\")";
 			IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNode));
 		}
-		MString shadingGroupFileName;
-		{
-			MString wsdir;
-			IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
-			MString shaderdir;
-			IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
-			shaderdir = wsdir + shaderdir;
 
-			IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(shadingGroupNode[0])+"\")", shadingGroupFileName));
-		}
+		MString shadingGroupFileName(getShaderDirectory()+shadingGroupNode[0]);
+
 		RiReadArchive( const_cast< RtToken >((shadingGroupFileName+".rmsg").asChar()), NULL, RI_NULL );
 	}
 }

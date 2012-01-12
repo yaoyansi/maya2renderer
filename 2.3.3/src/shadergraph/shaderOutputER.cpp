@@ -181,17 +181,7 @@ void Visitor::_outputUpstreamShader(const char* shaderNodeName, const char* node
 //
 void Visitor::outputBegin(const char* startingNode)
 {
-	// Work out where to put it & make sure the directory exists
-	MString wsdir;
-	IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
-	MString shaderdir;
-	IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
-	shaderdir = wsdir + shaderdir;
-	
-	MString shaderFileName;
-	IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(startingNode)+"\")", shaderFileName));
-
-	file.open( (shaderFileName+".erapi").asChar() );
+	file.open( (getShaderDirectory()+startingNode+".erapi").asChar() );
 }
 void Visitor::outputUpstreamShader(const char* shaderNodeName)
 {
@@ -244,16 +234,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	}
 
 	// Work out where to put it & make sure the directory exists
-	MString shadingGroupFileName;
-	{
-		MString wsdir;
-		IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
-		MString shaderdir;
-		IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
-		shaderdir = wsdir + shaderdir;
-
-		IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"/"+MString(shadingGroupNode)+"\")", shadingGroupFileName));
-	}
+	MString shadingGroupFileName(getShaderDirectory()+shadingGroupNode);
 
 	std::ofstream shadingGroupFile;
 	shadingGroupFile.open((shadingGroupFileName+".erapi").asChar());

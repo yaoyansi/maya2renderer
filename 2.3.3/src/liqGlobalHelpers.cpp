@@ -1356,3 +1356,23 @@ void getShaderType(MString& type, MString const& name)
 {
 	IfMErrorWarn( MGlobal::executeCommand( ("nodeType \""+name+"\""), type) );
 }
+MString getWorkspaceDirectory()
+{
+	MString wsdir;
+	IfMErrorWarn(MGlobal::executeCommand( "workspace -q -rd", wsdir));
+	return wsdir;
+}
+MString getShaderDirectory()
+{
+	MString shaderdir;
+	IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
+	shaderdir = getWorkspaceDirectory() + shaderdir;
+	
+	IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"\")", shaderdir));
+	
+	if( shaderdir.substring(shaderdir.length()-1, shaderdir.length()-1) != "/" ){
+		shaderdir += "/";
+	}
+    return shaderdir;
+}
+
