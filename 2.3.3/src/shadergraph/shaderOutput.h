@@ -10,6 +10,7 @@ public:
 	ShaderOutputVisitor();
 	virtual ~ShaderOutputVisitor();
 
+	virtual void preOutput(const char* shaderNodeName) = 0;
 	virtual void outputBegin(const char* shaderNodeName) = 0;
 	virtual void outputUpstreamShader(const char* shaderNodeName) = 0;
 	virtual void outputShaderMethod(
@@ -18,6 +19,7 @@ public:
 		const char* shaderMethodBody
 		) = 0;
 	virtual void outputEnd() = 0;
+	virtual void postOutput() = 0;
 	virtual void outputShadingGroup(const char* shadingGroupNode) = 0;
 	//
 	// @node	maya shader node name

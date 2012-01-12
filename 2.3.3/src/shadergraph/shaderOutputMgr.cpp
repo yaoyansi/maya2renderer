@@ -41,6 +41,15 @@ void ShaderOutputMgr::deleteReceivers()
 }
 //
 //
+void ShaderOutputMgr::notify_preOutput(const char* shaderNodeName)
+{
+	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
+	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
+	for( ; i != e; ++i )
+	{
+		(*i)->preOutput(shaderNodeName);
+	}
+}
 void ShaderOutputMgr::notify_outputBegin(const char* shaderNodeName)
 {
 	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
@@ -77,6 +86,15 @@ void ShaderOutputMgr::notify_outputEnd()
 		(*i)->outputEnd();
 	}
 }
+void ShaderOutputMgr::notify_postOutput()
+{
+	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
+	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
+	for( ; i != e; ++i )
+	{
+		(*i)->postOutput();
+	}
+}
 void ShaderOutputMgr::notify_outputShadingGroup(const char* shadingGroupNode)
 {
 	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
@@ -87,6 +105,10 @@ void ShaderOutputMgr::notify_outputShadingGroup(const char* shadingGroupNode)
 	}
 }
 //
+void ShaderOutputMgr::preOutput(const char* shaderNodeName)
+{
+	notify_preOutput(shaderNodeName);
+}
 void ShaderOutputMgr::outputBegin(const char* shaderNodeName)
 {
 	notify_outputBegin(shaderNodeName);
@@ -102,6 +124,10 @@ void ShaderOutputMgr::outputShaderMethod(const char* shaderName,const char* shad
 void ShaderOutputMgr::outputEnd()
 {
 	notify_outputEnd();
+}
+void ShaderOutputMgr::postOutput()
+{
+	notify_postOutput();
 }
 void ShaderOutputMgr::outputShadingGroup(const char* shadingGroupNode)
 {

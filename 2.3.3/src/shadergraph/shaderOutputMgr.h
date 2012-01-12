@@ -14,10 +14,13 @@ namespace liquidmaya{
 
 		~ShaderOutputMgr();
 
+		void preOutput(const char* shaderNodeName);
 		void outputBegin(const char* shaderNodeName);
 		void outputUpstreamShader(const char* shaderNodeName);
 		void outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
 		void outputEnd();
+		void postOutput();
+
 		void outputShadingGroup(const char* shadingGroupNode);
 
 		void addReceiver(ShaderOutputVisitor* visitor);
@@ -28,11 +31,12 @@ namespace liquidmaya{
 
 		static ShaderOutputMgr* m_instance;
 		
-
+		void notify_preOutput(const char* shaderNodeName);
 		void notify_outputBegin(const char* shaderNodeName);
 		void notify_outputUpstreamShader(const char* shaderNodeName);
 		void notify_outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
 		void notify_outputEnd();
+		void notify_postOutput();
 		void notify_outputShadingGroup(const char* shadingGroupNode);
 
 		std::vector<ShaderOutputVisitor*> receivers;

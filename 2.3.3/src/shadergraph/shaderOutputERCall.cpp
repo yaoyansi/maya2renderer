@@ -186,6 +186,9 @@ void Visitor::_outputUpstreamShader(const char* shaderNodeName, const char* node
 	}
 }
 //
+void Visitor::preOutput(const char* shaderNodeName)
+{
+}
 void Visitor::outputBegin(const char* startingNode)
 {
 
@@ -202,6 +205,9 @@ void Visitor::outputShaderMethod(const char* shaderName,
 {
 }
 void Visitor::outputEnd()
+{
+}
+void Visitor::postOutput()
 {
 }
 void Visitor::outputShadingGroup(const char* shadingGroupNode)

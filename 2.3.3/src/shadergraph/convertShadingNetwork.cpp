@@ -493,6 +493,8 @@ void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNo
 	getUpstreamConvertibleNodes(startingNode, nodes, numConnections);
 
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
+		preOutput(startingNode.asChar());
+	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
 		outputBegin(startingNode.asChar());
 
 	// Traverse the graph outputing functions for nodes that have received all
@@ -504,7 +506,8 @@ void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNo
 
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
 		outputEnd();
-
+	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
+		postOutput();
 
 	//...
 }

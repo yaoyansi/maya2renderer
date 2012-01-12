@@ -59,10 +59,12 @@ public:
 	Visitor();
 	~Visitor();
 
+	virtual void preOutput(const char* shaderNodeName);
 	virtual void outputBegin(const char* shaderNodeName);
 	virtual void outputUpstreamShader(const char* shaderNodeName);
 	virtual void outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
 	virtual void outputEnd();
+	virtual void postOutput();
 	virtual void outputShadingGroup(const char* shadingGroupNode);
 	//
 	// @node	maya shader node name

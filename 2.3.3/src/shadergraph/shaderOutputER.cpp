@@ -179,6 +179,9 @@ void Visitor::_outputUpstreamShader(const char* shaderNodeName, const char* node
 	}
 }
 //
+void Visitor::preOutput(const char* shaderNodeName)
+{
+}
 void Visitor::outputBegin(const char* startingNode)
 {
 	file.open( (getShaderDirectory()+startingNode+".erapi").asChar() );
@@ -202,6 +205,9 @@ void Visitor::outputShaderMethod(const char* shaderName,
 void Visitor::outputEnd()
 {
 	file.close();
+}
+void Visitor::postOutput()
+{
 }
 void Visitor::outputShadingGroup(const char* shadingGroupNode)
 {
