@@ -69,7 +69,10 @@ public:
 	virtual void visitLambert(const char* node);
 	// @node	maya shader node name
 	virtual void visitBlinn(const char* node);
-
+	// @node	maya shader node name
+	virtual void visitFile(const char* node);
+	// @node	maya shader node name
+	virtual void visitPlace2dTexture(const char* node);
 protected:
 	void _outputUpstreamShader(const char* shaderNodeName, const char* nodetype);
 

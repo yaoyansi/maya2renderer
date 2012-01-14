@@ -28,6 +28,10 @@ public:
 	virtual void visitBlinn(const char* node) = 0;
 	// @node	maya shader node name
 	//virtual void visitPhong(const char* node) = 0;
+	// @node	maya shader node name
+	virtual void visitFile(const char* node) = 0;
+	// @node	maya shader node name
+	virtual void visitPlace2dTexture(const char* node) = 0;
 private:
 	ShaderOutputVisitor(const ShaderOutputVisitor&);
 	ShaderOutputVisitor& operator=(const ShaderOutputVisitor&);

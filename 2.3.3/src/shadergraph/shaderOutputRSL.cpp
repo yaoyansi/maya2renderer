@@ -184,6 +184,12 @@ void Visitor::_outputUpstreamShader(const char* shaderNodeName, const char* node
 	else if( strcmp("blinn", nodetype) == 0 ){
 		visitBlinn(shaderNodeName);
 	}
+	else if( strcmp("file", nodetype) == 0 ){
+		visitFile(shaderNodeName);
+	}
+	else if( strcmp("place2dTexture", nodetype) == 0 ){
+		visitPlace2dTexture(shaderNodeName);
+	}
 	//else if(...){}
 	else{
 		liquidMessage2(messageError, ("shader type <"+std::string(nodetype)+"> is not supported.").c_str() );
@@ -391,6 +397,53 @@ void Visitor::visitBlinn(const char* node)
 	o.addToRSL( "Cspecular *= mix( 1, specRollOff, );");
 	o.addToRSL( "outColor = Cdiffuse + Cspecular;");
 	o.addToRSL( "Ci = Cs * Oi * color outColor;");
+
+	o.endRSL();
+}
+//
+void Visitor::visitFile(const char* node)
+{	
+	OutputHelper o(RSLfile);
+
+	o.beginRSL( node );
+
+	o.addRSLVariable( "float2", "uvCoord", "uvCoord",node);
+	o.addRSLVariable( "vector", "outColor", "outColor", node);
+
+	MString mayaTexName;
+	IfMErrorWarn(MGlobal::executeCommand("getAttr (\""+MString(node)+".fileTextureName\")", mayaTexName));
+	MString texName = mayaTexName + ".tex";
+	//system("txmake mayaTexName texName");
+	IfMErrorWarn(MGlobal::executeCommand("system(\"txmake "+mayaTexName+" "+texName+"\")", true));
+
+	o.addToRSL( "string texName = \"" + texName + "\";" );
+	o.addToRSL( "float ss = uvCoord[ 0 ], tt = uvCoord[ 1 ];");
+	o.addToRSL( "outColor = vector color texture( texName, ss, tt );");
+
+	int connected = liquidmaya::ShaderMgr::getSingletonPtr()->
+		convertibleConnection((MString(node)+".outTransparency").asChar());
+
+	if( connected )
+	{
+		o.addRSLVariable( "vector", "outTrans", "outTransparency", node);
+		o.addToRSL( "float alpha = float texture( texName[3], ss, tt );");
+		o.addToRSL( "outTrans = vector ( 1 -  alpha );");
+	}
+
+	o.endRSL();
+}
+void Visitor::visitPlace2dTexture(const char* node)
+{
+	OutputHelper o(RSLfile);
+
+	o.beginRSL(node);
+
+	o.addRSLVariable("float2", "repeatUV", "repeatUV", node);
+	o.addRSLVariable("float2", "outUV", "outUV", node);
+
+	o.addToRSL("extern float s, t;");
+	o.addToRSL("outUV[ 0 ] = mod( t * repeatUV[ 0 ], 1 );");
+	o.addToRSL("outUV[ 1 ] = mod( s * repeatUV[ 1 ], 1 );");
 
 	o.endRSL();
 }

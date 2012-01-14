@@ -178,6 +178,12 @@ void Visitor::_outputUpstreamShader(const char* shaderNodeName, const char* node
 	}
 	else if( strcmp("blinn", nodetype) == 0 ){
 		visitBlinn(shaderNodeName);
+	}	
+	else if( strcmp("file", nodetype) == 0 ){
+		visitFile(shaderNodeName);
+	}
+	else if( strcmp("place2dTexture", nodetype) == 0 ){
+		visitPlace2dTexture(shaderNodeName);
 	}
 	//else if(...){}
 	else{
@@ -310,5 +316,11 @@ void Visitor::visitBlinn(const char* node)
 //	}
 
 	o.endRSL();
+}
+void Visitor::visitFile(const char* node)
+{
+}
+void Visitor::visitPlace2dTexture(const char* node)
+{
 }
 }//namespace ERCall
