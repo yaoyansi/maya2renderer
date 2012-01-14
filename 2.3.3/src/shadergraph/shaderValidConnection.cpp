@@ -22,6 +22,7 @@ void ShaderValidConnection::setValidConnection()
 	validConnection.append("");
 	validConnectionMap.insert(std::make_pair("null", validConnection));	
 
+	// material -----------------------------------
 	//lambert
 	validConnection.clear();
 	validConnection.append("color");
@@ -49,6 +50,20 @@ void ShaderValidConnection::setValidConnection()
 	validConnectionMap.insert(std::make_pair("blinn", validConnection));	
 
 	//...
+
+	// utility -----------------------------------
+	// file
+	validConnection.clear();
+	validConnection.append("uvCoord");
+	validConnection.append("outColor");
+	validConnection.append("outTransparency");
+	validConnectionMap.insert(std::make_pair("file", validConnection));	
+	
+	// place2dTexture
+	validConnection.clear();
+	validConnection.append("repeatUV");
+	validConnection.append("outUV");
+	validConnectionMap.insert(std::make_pair("place2dTexture", validConnection));	
 }
 //
 bool ShaderValidConnection::hasShaderType(const char* shadertype)const
@@ -59,13 +74,11 @@ bool ShaderValidConnection::hasShaderType(const char* shadertype)const
 const MStringArray& 
 ShaderValidConnection::getValidConnectionRef(const char* shadertype) const
 {
-	std::string lowercase(shadertype);
-	std::transform(lowercase.begin(), lowercase.end(), lowercase.begin(), std::tolower);
-
-	if( hasShaderType(lowercase.c_str()) ){
-		return validConnectionMap.find(lowercase)->second;
+	if( hasShaderType(shadertype) ){
+		return validConnectionMap.find(shadertype)->second;
 	}else{
-		liquidMessage2(messageError, "shader type \"%s\" is not supported.", lowercase);
+		liquidMessage2(messageError, "shader type \"%s\" is not supported.", shadertype);
+		assert(0&&"shader type is not supported.");
 		return validConnectionMap.find("null")->second;
 	}
 }

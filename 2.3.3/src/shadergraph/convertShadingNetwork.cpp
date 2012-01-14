@@ -171,7 +171,7 @@ int ConvertShadingNetwork::getUpstreamConvertibleNodes ( const MString& currentN
 		numConnections.setLength(index+1);
 	}
 	numConnections[index] = 0;//numConnections.set(0, index);//
-
+	//std::cout<<"numConnections[]="<<numConnections<<std::endl;
 	MString nodetype;
 	IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+currentNode+"\""), nodetype));
 
@@ -213,7 +213,7 @@ int ConvertShadingNetwork::getUpstreamConvertibleNodes ( const MString& currentN
 		numConnections[index] += 
 			getUpstreamConvertibleNodes(node, nodes, numConnections);
 	}
-
+	//std::cout<<"numConnections[]="<<numConnections<<std::endl;
 	return 1;
 }
 //
@@ -398,7 +398,7 @@ void ConvertShadingNetwork::decrementDownstreamConnections(
 			}
 		}
 	}
-
+	//std::cout<<"numConnections[]="<<numConnections<<std::endl;
 	downstreamNodes.clear();
 }
 void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( 
@@ -413,14 +413,13 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 
 	for(size_t index = 0; index< nodes.length(); ++index)
 	{
+		MString currentNode(nodes[index]);
 		// if the current node has all of its required inputs, then
 		// write out the information for the current node and decrement
 		// the number of inputs for all nodes awaiting the completion of
 		// the current node
 		if( numConnections[index] == 0 )
 		{
-			MString currentNode(nodes[index]);
-			
 			MString nodetype;
 			IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+currentNode+"\""), nodetype));
 
@@ -463,6 +462,7 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 			// Start back at the beginning
 			index = -1;
 		}
+		//std::cout<<"numConnections[]="<<numConnections<<std::endl;
 	}
 }
 //
@@ -491,7 +491,7 @@ void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNo
 	shaderData[SHADER_NAME_I]             = startingNode;// shader name
 
 	getUpstreamConvertibleNodes(startingNode, nodes, numConnections);
-
+	//std::cout<<"numConnections[]="<<numConnections<<std::endl;
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
 		preOutput(startingNode.asChar());
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->

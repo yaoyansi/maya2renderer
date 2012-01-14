@@ -385,7 +385,7 @@ proc int getUpstreamConvertibleNodes ( string $currentNode, string $nodes[], int
 
 	// Initialize the number of input connections to 0 for the newly found node
 	$numConnections[ $index ] = 0;
-
+	//print("$numConnections:\n"); print($numConnections);
 	// Get the list of supported connections from the current node
 	string $validConnections[] =
 		eval( "validConnections_" + `nodeType $currentNode` );
@@ -416,6 +416,7 @@ proc int getUpstreamConvertibleNodes ( string $currentNode, string $nodes[], int
 			$nodes,
 			$numConnections );
 	}
+	//print("$numConnections:\n"); print($numConnections);
 	liqPopIdent();
 	return 1;
 }
@@ -610,7 +611,7 @@ proc decrementDownstreamConnections( string $node, string $nodes[], int $numConn
 			}
 		}
 	}
-
+	//print("$numConnections:\n"); print($numConnections);
 	clear $downstreamNodes;
 	liqPopIdent();
 }
@@ -661,6 +662,7 @@ proc traverseGraphAndOutputNodeFunctions( string $nodes[], int $numConnections[]
 			// Start back at the beginning
 			$index = -1;
 		}
+		//print("$numConnections:\n"); print($numConnections);
 	}
 	liqPopIdent();
 }
@@ -703,7 +705,7 @@ proc convertShadingNetworkToRSL ( string $startingNode, string $assingToNode )
 	getUpstreamConvertibleNodes( $startingNode,
 		$nodes,
 		$numConnections );
-
+	//print("$numConnections:\n"); print($numConnections);
 	global int $RSLfileId;
 	// Work out where to put it & make sure the directory exists
 	string $shaderdir = `workspace -q -rd` + `getAttr "liquidGlobals.shaderDirectory"` + "/";
