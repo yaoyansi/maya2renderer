@@ -508,6 +508,7 @@ namespace elvishray
 		_S( ei_verbose(	EI_VERBOSE_ALL ) );
 		_S( ei_link( "eiIMG" ) );
 		_S( ei_link( "eiSHADER" ) );
+		_S( ei_link( "eiSHADER_maya" ) );
 
 		m_root_group = currentJob.name.asChar();
 		m_groupMgr->createGroup(m_root_group);//

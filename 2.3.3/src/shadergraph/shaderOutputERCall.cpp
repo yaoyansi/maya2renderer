@@ -77,6 +77,13 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 			{
 				ei_shader_param_string( rslName.asChar(), val.asChar());
 			}
+		}else if(rslType=="texture"){
+			MString val;
+			IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
+			rslShaderBody +="\""+val+"\"";
+			{
+				ei_shader_param_texture(rslName.asChar(),val.asChar());
+			}
 		}else if(rslType=="float"){
 			if(rslTypeSize == 1){
 				double val;
@@ -318,9 +325,73 @@ void Visitor::visitBlinn(const char* node)
 	o.endRSL();
 }
 void Visitor::visitFile(const char* node)
-{
+{	
+	OutputHelper o;
+
+	//generate texture and construct texture node
+	{
+		MString fileImageName;
+		IfMErrorWarn(MGlobal::executeCommand("getAttr \""+MString(node)+".fileTextureName\"", fileImageName));
+		//test "fileImageName" exist or not.
+		if( access(fileImageName.asChar(), 0) != 0){
+			liquidMessage2(messageError,"%s not exist!", fileImageName.asChar());
+			assert(0&&"image not exist.");
+		}
+
+		bool isERTex;//whether fileImageName is ER texture
+		{
+			std::string fileImageName_(fileImageName.asChar());
+			std::size_t i_last_dot = fileImageName_.find_last_of('.');
+			if( i_last_dot == std::string::npos ){
+				liquidMessage2(messageWarning,"%s has no extention!", fileImageName_.c_str());
+				assert(0&&"warrning: texture name has not extention.");
+			}
+			std::string imgext(fileImageName_.substr(i_last_dot+1));//imgext=tex
+			std::transform(imgext.begin(),imgext.end(),imgext.begin(),tolower);
+		
+			isERTex = (imgext == "tex");
+		}
+
+		MString fileTextureName = (isERTex)? fileImageName : (fileImageName+".tex");
+
+		//generate texture
+		if ( access(fileTextureName.asChar(), 0) != 0 )//not exist
+		{
+			ei_make_texture(fileImageName.asChar(), fileTextureName.asChar(),
+				EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f);
+		}
+		//construct texture node
+		//if (ei_file_exists(fileTextureName))
+		{
+			ei_texture(fileImageName.asChar());
+				ei_file_texture(fileTextureName.asChar(), eiFALSE);
+			ei_end_texture();
+		}
+	}
+
+
+	o.beginRSL(node);
+
+	ei_shader_param_string("desc", "maya_file");
+	o.addRSLVariable("float",  "uCoord",	"uCoord",	node);
+	o.addRSLVariable("float",  "vCoord",	"vCoord",	node);
+	o.addRSLVariable("texture", "fileTextureName",	"fileTextureName",	node);
+//	o.addRSLVariable("vector", "outColor",	"outColor",	node);
+//	o.addToRSL("ei_shader_param_texture(\"fileTextureName\", texturename1)");
+	o.endRSL();
 }
 void Visitor::visitPlace2dTexture(const char* node)
 {
+	OutputHelper o;
+
+	o.beginRSL(node);
+
+	ei_shader_param_string("desc", "maya_place2dTexture");
+	o.addRSLVariable("float",  "repeatU",	"repeatU",	node);
+	o.addRSLVariable("float",  "repeatV",	"repeatV",	node);
+	o.addRSLVariable("float",  "outU",		"outU",	node);
+	o.addRSLVariable("float",  "outV",		"outV",	node);
+
+	o.endRSL();
 }
 }//namespace ERCall
