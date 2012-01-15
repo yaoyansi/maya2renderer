@@ -73,6 +73,11 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 			IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
 			rslShaderBody +="\""+val+"\"";
 			file<<"ei_shader_param_string(\""<<rslName<<"\", \""<<val<<"\");"<<endl;
+		}else if(rslType=="texture"){
+			MString val;
+			IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
+			rslShaderBody +="\""+val+"\"";
+			file<<"ei_shader_param_texture(\""<<rslName<<"\", \""<<val<<"\");"<<endl;
 		}else if(rslType=="float"){
 			if(rslTypeSize == 1){
 				double val;
@@ -323,9 +328,72 @@ void Visitor::visitBlinn(const char* node)
 //
 void Visitor::visitFile(const char* node)
 {
+	OutputHelper o(file);
 
+	//generate texture and construct texture node
+	{
+		MString fileImageName;
+		IfMErrorWarn(MGlobal::executeCommand("getAttr \""+MString(node)+".fileTextureName\"", fileImageName));
+		//test "fileImageName" exist or not.
+		if( access(fileImageName.asChar(), 0) != 0){
+			liquidMessage2(messageError,"%s not exist!", fileImageName.asChar());
+			assert(0&&"image not exist.");
+		}
+
+		bool isERTex;//whether fileImageName is ER texture
+		{
+			std::string fileImageName_(fileImageName.asChar());
+			std::size_t i_last_dot = fileImageName_.find_last_of('.');
+			if( i_last_dot == std::string::npos ){
+				liquidMessage2(messageWarning,"%s has no extention!", fileImageName_.c_str());
+				assert(0&&"warrning: texture name has not extention.");
+			}
+			std::string imgext(fileImageName_.substr(i_last_dot+1));//imgext=tex
+			std::transform(imgext.begin(),imgext.end(),imgext.begin(),tolower);
+		
+			isERTex = (imgext == "tex");
+		}
+
+		MString fileTextureName = (isERTex)? fileImageName : (fileImageName+".tex");
+
+		//generate texture
+		if ( access(fileTextureName.asChar(), 0) != 0 )//not exist
+		{
+			o.addToRSL( "ei_make_texture(\""+fileImageName+"\",\""+fileTextureName+"\","+
+				"EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f)" );
+		}
+		//construct texture node
+		//if (ei_file_exists(fileTextureName))
+		{
+			o.addToRSL( "ei_texture(\""+fileImageName+"\");" );
+			o.addToRSL( "ei_file_texture(\""+fileTextureName+"\", eiFALSE);" );
+			o.addToRSL( "ei_end_texture();" );
+		}
+	}
+
+
+	o.beginRSL(node);
+
+	o.addToRSL("ei_shader_param_string(\"desc\", \"file\");");
+	o.addRSLVariable("float",  "uCoord",	"uCoord",	node);
+	o.addRSLVariable("float",  "vCoord",	"vCoord",	node);
+	o.addRSLVariable("texture", "fileTextureName",	"fileTextureName",	node);
+//	o.addRSLVariable("vector", "outColor",	"outColor",	node);
+//	o.addToRSL("ei_shader_param_texture(\"fileTextureName\", texturename1)");
+	o.endRSL();
 }
 void Visitor::visitPlace2dTexture(const char* node)
 {
+	OutputHelper o(file);
+
+	o.beginRSL(node);
+
+	o.addToRSL("ei_shader_param_string(\"desc\", \"place2dTexture\");");
+	o.addRSLVariable("float",  "repeatU",	"repeatU",	node);
+	o.addRSLVariable("float",  "repeatV",	"repeatV",	node);
+	o.addRSLVariable("float",  "outU",		"outU",	node);
+	o.addRSLVariable("float",  "outV",		"outV",	node);
+
+	o.endRSL();
 }
 }//namespace ER

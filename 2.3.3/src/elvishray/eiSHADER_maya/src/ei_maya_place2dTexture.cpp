@@ -27,9 +27,8 @@ SURFACE(maya_place2dTexture)
 
 	void main()
 	{
-		//extern float s, t;
-		outU = mod( t * repeatU, 1 );
-		outV = mod( s * repeatV, 1 );
+		outU() = fmodf( u() * repeatU(), 1.0f );
+		outV() = fmodf( v() * repeatV(), 1.0f );
 	}
 
 END(maya_place2dTexture)
