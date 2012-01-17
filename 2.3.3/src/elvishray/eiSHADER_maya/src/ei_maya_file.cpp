@@ -5,15 +5,13 @@
 SURFACE(maya_file)
 
 	PARAM(eiTag, fileTextureName);
-	PARAM(scalar, uCoord);
-	PARAM(scalar, vCoord);
+	PARAM(vector, uvCoord);
 	PARAM(color, outColor);
 
 	void parameters(int pid)
 	{
 		DECLARE_TAG(fileTextureName, eiNULL_TAG);
-		DECLARE_SCALAR(uCoord, 0.0f);
-		DECLARE_SCALAR(vCoord, 0.0f);
+		DECLARE_VECTOR(uvCoord, 0.0f, 0.0f, 0.0f);
 		DECLARE_COLOR(outColor, 0.0f, 0.0f, 0.0f);
 	}
 
@@ -31,7 +29,7 @@ SURFACE(maya_file)
 		
 		if (tex != eiNULL_TAG)
 		{
-			outColor() = color_texture(tex, 0, uCoord(), vCoord());
+			outColor() = color_texture(tex, 0, uvCoord().x, uvCoord().y);
 		}
 	}
 

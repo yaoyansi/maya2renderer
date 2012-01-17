@@ -134,5 +134,7 @@ void getDependNodeByName(MObject& depNode, char const* name);
 void getShaderType(MString& type,  MString const& name);
 MString getWorkspaceDirectory();
 MString getShaderDirectory();
-
+bool is2DFileTexture(const MString& name);
+bool is2DTexture(const MString& name);
+bool is3DTexture(const MString& name);
 #endif

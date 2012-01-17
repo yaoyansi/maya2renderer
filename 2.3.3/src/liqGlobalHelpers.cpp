@@ -1375,4 +1375,54 @@ MString getShaderDirectory()
 	}
     return shaderdir;
 }
+bool is2DFileTexture(const MString& name)
+{
+	MString type;
+	getShaderType(type, name);
 
+	bool ret =	type=="file"
+			  ||type=="psdFileTex"
+		;
+	return ret;
+}
+bool is2DTexture(const MString& name)
+{
+	MString type;
+	getShaderType(type, name);
+
+	bool ret =	type=="bulge"
+		||type=="checker"
+		||type=="cloth"
+		||type=="fluidTexture2D"
+		||type=="fractal"
+		||type=="grid"
+		||type=="mountain"
+		||type=="movie"
+		||type=="noise"
+		||type=="ocean"
+		||type=="ramp"
+		||type=="water"
+		;
+	return ret || is2DFileTexture(name);
+}
+bool is3DTexture(const MString& name)
+{
+	MString type;
+	getShaderType(type, name);
+
+	bool ret =	type=="brownian"
+		||type=="cloud"
+		||type=="crater"
+		||type=="fluidTexture3D"
+		||type=="granite"
+		||type=="leather"
+		||type=="marble"
+		||type=="rock"
+		||type=="snow"
+		||type=="solidFractal"
+		||type=="stucco"
+		||type=="volumeNoise"
+		||type=="wood"
+		;
+	return ret;
+}

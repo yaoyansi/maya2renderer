@@ -4,17 +4,13 @@
 
 SURFACE(maya_place2dTexture)
 
-	PARAM(scalar, repeatU);
-	PARAM(scalar, repeatV);
-	PARAM(scalar, outU);
-	PARAM(scalar, outV);
+	PARAM(vector, repeatUV);
+	PARAM(vector, outUV);
 
 	void parameters(int pid)
 	{
-		DECLARE_SCALAR(repeatU, 0.0f);
-		DECLARE_SCALAR(repeatV, 0.0f);
-		DECLARE_SCALAR(outU, 0.0f);
-		DECLARE_SCALAR(outV, 0.0f);
+		DECLARE_VECTOR(repeatUV, 0.0f, 0.0f, 0.0f);
+		DECLARE_VECTOR(outUV,    0.0f, 0.0f, 0.0f); 
 	}
 
 	void init()
@@ -27,8 +23,8 @@ SURFACE(maya_place2dTexture)
 
 	void main()
 	{
-		outU() = fmodf( u() * repeatU(), 1.0f );
-		outV() = fmodf( v() * repeatV(), 1.0f );
+		outUV().x = fmodf( u() * repeatUV().x, 1.0f );
+		outUV().y = fmodf( v() * repeatUV().y, 1.0f );
 	}
 
 END(maya_place2dTexture)
