@@ -77,8 +77,6 @@ public:
 	virtual void visitPlace2dTexture(const char* node);
 
 protected:
-	void _outputUpstreamShader(const char* shaderNodeName, const char* nodetype);
-
 	std::ofstream RSLfile;
 private:
 	Visitor(const Visitor&);
