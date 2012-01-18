@@ -401,17 +401,22 @@ namespace elvishray
 		MIntArray triangleCounts,triangleVertices;
 		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));
 
+		MFloatVectorArray nmls;
+		IfMErrorWarn(fnMesh.getNormals(nmls));
+
+		MString currentUVsetName;
+		IfMErrorWarn(fnMesh.getCurrentUVSetName(currentUVsetName));
+
 		// geometry data (shape)
 		_s("\n//############################### mesh #");
 		std::string sMeshObjectName(std::string(mesh->getName())+"_object");
 		_S( ei_object( sMeshObjectName.c_str(), "poly" ) );
-		_s("//### vertex positions");
+		_s("//### vertex positions, size="<<position.length() );
 		_s("{");
-		_s("eiTag tag;"); eiTag tag;
-		_s("tag = "); tag =   
-		_S( ei_tab(EI_DATA_TYPE_VECTOR, 1024) ); //_s(";");
+		_d( eiTag tag );
+		_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
 		_s("//tag="<<tag);
-		_S( ei_pos_list( tag ) );//_s( "ei_pos_list( tag );" );
+		_S( ei_pos_list( tag ) );
 		for(size_t i=0; i<position.length(); ++i)
 		{
 			_S( ei_tab_add_vector( position[i][0],position[i][1],position[i][2] ) );
@@ -423,11 +428,55 @@ namespace elvishray
 // 			_S( ei_vertex(i) );
 // 			//_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
 // 		}
-		_s("//### triangles");
-		_s("tag = "); tag = 
-		_S( ei_tab(EI_DATA_TYPE_INDEX, 1024) ); //_s(";");
+		if(nmls.length()!=0)
+		{
+			_s("//### N");
+			_d( tag = eiNULL_TAG );
+			_S( ei_declare("N", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
+			_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
+			_s("//tag="<<tag);
+			_S( ei_variable("N", &tag) );
+			for(size_t i = 0; i<nmls.length(); ++i)
+			{
+				_S( ei_tab_add_vector(nmls[i].x, nmls[i].y, nmls[i].z) );
+			}
+			_S( ei_end_tab() );
+		}
+		if( currentUVsetName.length() != 0 )//there is a current uv set
+		{
+			MFloatArray u_coords;
+			MFloatArray v_coords;
+
+			IfMErrorWarn( fnMesh.getUVs(u_coords,v_coords,&currentUVsetName) );
+			_s("//### UV, size="<< fnMesh.numUVs(currentUVsetName) );
+			// u
+			_d( tag = eiNULL_TAG );
+			_S( ei_declare("u", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
+			_d( tag = ei_tab(EI_DATA_TYPE_SCALAR, 1024) )
+			_s("//tag="<<tag);
+			_S( ei_variable("u", &tag) );
+			for(size_t i = 0; i<fnMesh.numUVs(currentUVsetName); ++i)
+			{
+				_S( ei_tab_add_scalar(u_coords[i]) );
+			}
+			_S( ei_end_tab() );
+			// v
+			_d( tag = eiNULL_TAG );
+			_S( ei_declare("v", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
+			_d( tag = ei_tab(EI_DATA_TYPE_SCALAR, 1024) )
+			_s("//tag="<<tag);
+			_S( ei_variable("v", &tag) );
+			for(size_t i = 0; i<fnMesh.numUVs(currentUVsetName); ++i)
+			{
+				_S( ei_tab_add_scalar(v_coords[i]) );
+			}
+			_S( ei_end_tab() );
+		}
+
+		_s("//### triangles, size="<< triangleCounts);
+		_d( tag = ei_tab(EI_DATA_TYPE_INDEX, 1024) )
 		_s("//tag="<<tag);
-		_S( ei_triangle_list( tag ) );//_s( "ei_triangle_list( tag );" );
+		_S( ei_triangle_list( tag ) );
 		for(size_t i=0; i<triangleVertices.length(); i=i+3)
 		{
 			_S( ei_tab_add_index(triangleVertices[i])); 
@@ -435,7 +484,7 @@ namespace elvishray
 			_S( ei_tab_add_index(triangleVertices[i+2])); 
 		}
 		_S( ei_end_tab() );
-		_s("}");
+		_s("}//"<<MString(mesh->getName())+"_object");
 		_S( ei_end_object() );
 
 		_s("//--------------------------");

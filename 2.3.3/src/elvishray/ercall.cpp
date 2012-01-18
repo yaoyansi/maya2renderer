@@ -127,7 +127,11 @@ namespace elvishray
 	}
 	//void my_ei_tab_add(const void *value);
 	//void my_ei_tab_add_int(const eiInt value);
-	//void my_ei_tab_add_scalar(const eiScalar value);
+	void my_ei_tab_add_scalar(const eiScalar value)
+	{
+		_s("ei_tab_add_scalar("<<value<<")");
+		_e( ei_tab_add_scalar( value ));
+	}
 	void my_ei_tab_add_vector(const eiScalar x, const eiScalar y, const eiScalar z)
 	{
 		_s("ei_tab_add_vector("<<x<<","<<y<<","<<z<<")");
@@ -746,11 +750,6 @@ namespace elvishray
 // 		_s("ei_bake_uv("<< index <<")" ); 
 // 		_e( ei_bake_uv(index));
 // 	}
-	void my_ei_variable(const char *name, const void *value)
-	{
-		_s("ei_variable(\""<< name<<"\", \""<<value<<"\", ...)" ); 
-		_e( ei_variable( name, value));
-	}
 // 	void my_ei_variable_color( const char *name, const color &c )
 // 	{
 // 		_s("ei_variable( et_color, \""<<name<<"\", color("<<c.r<<","<<c.g<<","<<c.b<<") )" ); 
@@ -996,5 +995,16 @@ namespace elvishray
 	{
 		_s("ei_end_shader()");
 		_e( ei_end_shader() );
+	}
+
+	void my_ei_declare(const char *name, const eiInt storage_class, const eiInt type, const void *tag)
+	{
+		_s("ei_declare(\""<<name<<"\","<<storage_class<<","<<type<<", &tag)");
+		_e( ei_declare(name,storage_class,type, tag));
+	}
+	void my_ei_variable(const char *name, const void *tag)
+	{
+		_s("ei_variable(\""<<name<<"\", &tag)");
+		_e( ei_variable(name, tag) );
 	}
 }

@@ -46,7 +46,7 @@ namespace elvishray
 	 eiTag my_ei_tab(const eiInt type, const eiInt items_per_slot);
 	 //void my_ei_tab_add(const void *value);
 	 //void my_ei_tab_add_int(const eiInt value);
-	 //void my_ei_tab_add_scalar(const eiScalar value);
+	 void my_ei_tab_add_scalar(const eiScalar value);
 	 void my_ei_tab_add_vector(const eiScalar x, const eiScalar y, const eiScalar z);
 	 //void my_ei_tab_add_vector4(const eiScalar x, const eiScalar y, const eiScalar z, const eiScalar w);
 	 //void my_ei_tab_add_tag(const eiTag value);
@@ -221,7 +221,6 @@ namespace elvishray
 	 void my_ei_derivatives( int dPdu, int dPdv, int d2Pdu2, int d2Pdv2, int d2Pdudv );
 	 void my_ei_motion_vertex( int index );
 	 void my_ei_bake_uv( int index );
-	 void my_ei_variable(const char *name, const void *value);
 //	 void my_ei_variable_color( const char *name, const color &c );
 
 	 void my_ei_triangle( int mtl, int v1, int v2, int v3 );
@@ -321,5 +320,9 @@ void my_ei_shader_link_param(
 								const char *src_param_name);
 
 void my_ei_end_shader();
+
+void my_ei_declare(const char *name, const eiInt storage_class, const eiInt type, const void *default_value);
+void my_ei_variable(const char *name, const void *value);
+
 }
 #endif
