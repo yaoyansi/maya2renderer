@@ -154,7 +154,8 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 					IfMErrorWarn(MGlobal::executeCommand("getAttr \""+srcNode+".fileTextureName\"", fileTextureName));
 					file<<"ei_shader_param_texture(\""<<rslName<<"_tex\", \""<<fileTextureName<<"\");"<<std::endl;
 				}else{
-					file<<"ei_shader_param_texture(\""<<rslName<<"_tex\", \""<<srcNode<<"\");"<<std::endl;
+					//file<<"ei_shader_param_texture(\""<<rslName<<"_tex\", \""<<srcNode<<"\");"<<std::endl;
+					file<<"ei_shader_link_param(\""<<rslName<<"\", \""<<srcNode<<"\", \""<<srcAttr<<"\");"<<std::endl;
 				}
 			}
 			//the srcNode is NOT a texture
@@ -395,4 +396,19 @@ void Visitor::visitPlace2dTexture(const char* node)
 
 	o.endRSL();
 }
+void Visitor::visitChecker(const char* node)
+{
+	OutputHelper o(file);
+
+	o.beginRSL(node);
+
+	o.addToRSL("ei_shader_param_string(\"desc\", \"maya_checker_uv\");");
+	o.addRSLVariable("color",  "color1",	"color1",	node);
+	o.addRSLVariable("color",  "color2",	"color2",	node);
+	o.addRSLVariable("vector", "uvCoord",	"uvCoord",	node);
+	o.addRSLVariable("color",  "outColor",	"outColor",	node);
+
+	o.endRSL();
+}
+
 }//namespace ER

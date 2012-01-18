@@ -32,6 +32,8 @@ public:
 	virtual void visitFile(const char* node) = 0;
 	// @node	maya shader node name
 	virtual void visitPlace2dTexture(const char* node) = 0;
+	// @node	maya shader node name
+	virtual void visitChecker(const char* node) = 0;
 protected:
 	void _outputUpstreamShader(const char* shaderNodeName, const char* nodetype);
 

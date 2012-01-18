@@ -19,17 +19,15 @@ SURFACE(maya_checker)
 
 	PARAM(color, color1);
 	PARAM(color, color2);
-	PARAM(scalar, xscale);
-	PARAM(scalar, yscale);
-	PARAM(color, result);
+	PARAM(vector,uvCoord);
+	PARAM(color, outColor);
 
 	void parameters(int pid)
 	{
 		DECLARE_COLOR(color1, 0.0f, 0.0f, 0.0f);
 		DECLARE_COLOR(color2, 1.0f, 1.0f, 1.0f);
-		DECLARE_SCALAR(xscale, 2.0f);
-		DECLARE_SCALAR(yscale, 2.0f);
-		DECLARE_COLOR(result, 0.0f, 0.0f, 0.0f);
+		DECLARE_VECTOR(uvCoord, 2.0f, 2.0f, 0.0f);
+		DECLARE_COLOR(outColor, 0.0f, 0.0f, 0.0f);
 	}
 
 	void init()
@@ -44,16 +42,20 @@ SURFACE(maya_checker)
 	{
 		scalar	x, y;
 
-		x = P().x * xscale();
-		y = P().y * yscale();
+		//1
+		x = uvCoord().x;
+		y = uvCoord().y;
+		//2
+		//x = fmodf( P().x * uvCoord().x, 1.0f);
+		//y = fmodf( P().y * uvCoord().y, 1.0f);
 
-		if ((((eiInt)x + (eiInt)y) % 2) == 0)
+		if ( floor( x * 2 ) == floor( y * 2 ) )
 		{
-			result() = color1();
+			outColor() = color1();
 		}
 		else
 		{
-			result() = color2();
+			outColor() = color2();
 		}
 	}
 
@@ -63,17 +65,15 @@ SURFACE(maya_checker_uv)
 
 	PARAM(color, color1);
 	PARAM(color, color2);
-	PARAM(scalar, uscale);
-	PARAM(scalar, vscale);
-	PARAM(color, result);
+	PARAM(vector,uvCoord);
+	PARAM(color, outColor);
 
 	void parameters(int pid)
 	{
 		DECLARE_COLOR(color1, 0.0f, 0.0f, 0.0f);
 		DECLARE_COLOR(color2, 1.0f, 1.0f, 1.0f);
-		DECLARE_SCALAR(uscale, 2.0f);
-		DECLARE_SCALAR(vscale, 2.0f);
-		DECLARE_COLOR(result, 0.0f, 0.0f, 0.0f);
+		DECLARE_VECTOR(uvCoord, 2.0f, 2.0f, 0.0f);
+		DECLARE_COLOR(outColor, 0.0f, 0.0f, 0.0f);
 	}
 
 	void init()
@@ -88,16 +88,20 @@ SURFACE(maya_checker_uv)
 	{
 		scalar	x, y;
 
-		x = u() * uscale();
-		y = v() * vscale();
+		//1
+		x = uvCoord().x;
+		y = uvCoord().y;
+		//2
+		//x = fmodf( u() * uvCoord().x, 1.0f);
+		//y = fmodf( v() * uvCoord().y, 1.0f);
 
-		if ((((eiInt)x + (eiInt)y) % 2) == 0)
+		if ( floor( x * 2 ) == floor( y * 2 ) )
 		{
-			result() = color1();
+			outColor() = color1();
 		}
 		else
 		{
-			result() = color2();
+			outColor() = color2();
 		}
 	}
 
@@ -106,12 +110,12 @@ END(maya_checker_uv)
 SURFACE(maya_simple_texture)
 
 	PARAM(eiTag, texture);
-	PARAM(color, result);
+	PARAM(color, outColor);
 
 	void parameters(int pid)
 	{
 		DECLARE_TAG(texture, eiNULL_TAG);
-		DECLARE_COLOR(result, 0.0f, 0.0f, 0.0f);
+		DECLARE_COLOR(outColor, 0.0f, 0.0f, 0.0f);
 	}
 
 	void init()
@@ -124,13 +128,13 @@ SURFACE(maya_simple_texture)
 
 	void main()
 	{
-		result() = color(0.0f, 0.0f, 0.0f);
+		outColor() = color(0.0f, 0.0f, 0.0f);
 
 		eiTag tex = texture();
 
 		if (tex != eiNULL_TAG)
 		{
-			result() = color_texture(tex, 0, get_state()->bary.x, get_state()->bary.y);
+			outColor() = color_texture(tex, 0, get_state()->bary.x, get_state()->bary.y);
 		}
 	}
 

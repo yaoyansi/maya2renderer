@@ -23,8 +23,13 @@ SURFACE(maya_place2dTexture)
 
 	void main()
 	{
+		//1
 		outUV().x = fmodf( u() * repeatUV().x, 1.0f );
 		outUV().y = fmodf( v() * repeatUV().y, 1.0f );
+		
+		//2
+		//outUV().x = repeatUV().x;
+		//outUV().y = repeatUV().y;
 	}
 
 END(maya_place2dTexture)

@@ -168,6 +168,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\ei_checker_uv.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ei_face_color_unittest.cpp"
 				>
 			</File>

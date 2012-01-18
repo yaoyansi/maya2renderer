@@ -73,6 +73,8 @@ public:
 	virtual void visitFile(const char* node);
 	// @node	maya shader node name
 	virtual void visitPlace2dTexture(const char* node);
+	// @node	maya shader node name
+	virtual void visitChecker(const char* node);
 protected:
 	//std::ofstream file;
 private:

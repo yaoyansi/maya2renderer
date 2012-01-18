@@ -164,7 +164,8 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 					IfMErrorWarn(MGlobal::executeCommand("getAttr \""+srcNode+".fileTextureName\"", fileTextureName));
 					ei_shader_param_texture((rslName+"_tex").asChar(), fileTextureName.asChar());
 				}else{
-					ei_shader_param_texture((rslName+"_tex").asChar(), srcNode.asChar());
+					//ei_shader_param_texture((rslName+"_tex").asChar(), srcNode.asChar());
+					ei_shader_link_param(rslName.asChar(), srcNode.asChar(), srcAttr.asChar());
 				}
 			}
 			//the srcNode is NOT a texture
@@ -392,6 +393,20 @@ void Visitor::visitPlace2dTexture(const char* node)
 	ei_shader_param_string("desc", "maya_place2dTexture");
 	o.addRSLVariable("vector",  "repeatUV",	"repeatUV",	node);
 	o.addRSLVariable("vector",  "outUV",	"outUV",	node);
+
+	o.endRSL();
+}
+void Visitor::visitChecker(const char* node)
+{
+	OutputHelper o;
+
+	o.beginRSL(node);
+
+	ei_shader_param_string("desc", "maya_checker_uv");
+	o.addRSLVariable("color",  "color1",	"color1",	node);
+	o.addRSLVariable("color",  "color2",	"color2",	node);
+	o.addRSLVariable("vector", "uvCoord",	"uvCoord",	node);
+	o.addRSLVariable("color",  "outColor",	"outColor",	node);
 
 	o.endRSL();
 }

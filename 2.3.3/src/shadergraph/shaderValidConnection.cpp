@@ -64,6 +64,27 @@ void ShaderValidConnection::setValidConnection()
 	validConnection.append("repeatUV");
 	validConnection.append("outUV");
 	validConnectionMap.insert(std::make_pair("place2dTexture", validConnection));	
+
+	//checker
+	validConnection.clear();
+	validConnection.append("color1");
+	validConnection.append("color1R");
+	validConnection.append("color1G");
+	validConnection.append("color1B");
+	validConnection.append("color2");
+	validConnection.append("color2R");
+	validConnection.append("color2G");
+	validConnection.append("color2B");
+	validConnection.append("uvCoord");
+	validConnection.append("uCoord");
+	validConnection.append("vCoord");
+	validConnection.append("outColor");
+	validConnection.append("outColorR");
+	validConnection.append("outColorG");
+	validConnection.append("outColorB");
+	validConnectionMap.insert(std::make_pair("checker", validConnection));	
+
+
 }
 //
 bool ShaderValidConnection::hasShaderType(const char* shadertype)const

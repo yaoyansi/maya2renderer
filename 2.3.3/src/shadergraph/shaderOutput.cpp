@@ -27,6 +27,9 @@ namespace liquidmaya{
 		else if( strcmp("place2dTexture", nodetype) == 0 ){
 			visitPlace2dTexture(shaderNodeName);
 		}
+		else if( strcmp("checker", nodetype) == 0 ){
+			visitChecker(shaderNodeName);
+		}
 		//else if(...){}
 		else{
 			liquidMessage2(messageError, ("shader type <"+std::string(nodetype)+"> is not supported.").c_str() );
