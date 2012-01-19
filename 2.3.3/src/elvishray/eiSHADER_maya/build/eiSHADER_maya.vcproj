@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="eiSHADER_maya"
 	ProjectGUID="{B468E0D1-9480-4C3C-A2D4-9EA3A8020159}"
+	RootNamespace="eiSHADER_maya"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -411,6 +412,10 @@
 			>
 			<File
 				RelativePath="..\src\ei_maya_checker.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ei_maya_checker2.cpp"
 				>
 			</File>
 			<File

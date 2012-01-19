@@ -89,13 +89,17 @@ SURFACE(maya_checker_uv)
 		scalar	x, y;
 
 		//1
-		x = uvCoord().x;
-		y = uvCoord().y;
+		//x = uvCoord().x;
+		//y = uvCoord().y;
 		//2
 		//x = fmodf( u() * uvCoord().x, 1.0f);
 		//y = fmodf( v() * uvCoord().y, 1.0f);
+		//3
+		x =  u() * uvCoord().x;
+		y =  v() * uvCoord().y;
 
-		if ( floor( x * 2 ) == floor( y * 2 ) )
+		//if ( floor( x * 2 ) == floor( y * 2 ) )
+		if ((((eiInt)x + (eiInt)y) % 2) == 0)
 		{
 			outColor() = color1();
 		}
