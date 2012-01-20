@@ -1367,7 +1367,8 @@ MString getShaderDirectory()
 	MString shaderdir;
 	IfMErrorWarn(MGlobal::executeCommand( "getAttr \"liquidGlobals.shaderDirectory\"", shaderdir));
 	shaderdir = getWorkspaceDirectory() + shaderdir;
-	
+
+	IfMErrorWarn(MGlobal::executeCommand( "source liquidHelpers.mel;"));	
 	IfMErrorWarn(MGlobal::executeCommand( "toLinuxPath(\""+shaderdir+"\")", shaderdir));
 	
 	if( shaderdir.substring(shaderdir.length()-1, shaderdir.length()-1) != "/" ){
