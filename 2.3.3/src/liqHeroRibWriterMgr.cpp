@@ -70,7 +70,7 @@ struct liqGlobalVariable &liqglo___,
 			return TCB_Break;//break;
 		liqRibTranslator::getInstancePtr()->ribEpilogue__(currentJob___);
 		// output info when done with the rib - Alf
-		cout <<"Finished RIB generation "<<currentJob___.ribFileName.asChar()<<endl;
+		printf("Finished RIB generation %s\n", currentJob___.ribFileName.asChar());
 	}
 	RiEnd();
 

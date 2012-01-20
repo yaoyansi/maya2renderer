@@ -484,7 +484,7 @@ LIQUID_EXPORT MStatus initializePlugin(MObject obj)
 
   status = plugin.registerUI("liquidStartup", "liquidShutdown");
   LIQCHECKSTATUS( status, "Can't register liquidStartup and liquidShutdown interface scripts" );
-  cout << "Liquid " << LIQUIDVERSION << " registered"<< endl;
+  printf("Liquid %s registered\n", LIQUIDVERSION);
   return MS::kSuccess;
 }
 
@@ -752,7 +752,7 @@ LIQUID_EXPORT MStatus uninitializePlugin(MObject obj)
   status = MSwatchRenderRegister::unregisterSwatchRender( "liqCoShaderSwatch" );
   LIQCHECKSTATUS( status, "Can't deregister liquidCoShader swatch generator" );
 
-  cout <<"Liquid "<< LIQUIDVERSION << " unregistered"<<endl<<endl;
+  printf("Liquid %s unregistered\n\n", LIQUIDVERSION );
 
 	liqShaderFactory::deleteInstance();
 

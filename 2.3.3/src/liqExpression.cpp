@@ -159,14 +159,14 @@ MString	liqExpression::CalcValue( )
       break;
 
     case exp_EnvMap:
-      cout <<"Liquid -> EnvMap is not implemented yet"<<endl;
+      printf("Liquid -> EnvMap is not implemented yet\n");
       break;
     case exp_CubeEnvMap:
-      cout <<"Liquid -> CubeEnvMap is not implemented yet"<<endl;
+      printf("Liquid -> CubeEnvMap is not implemented yet\n");
       break;
     case exp_None:
     default:
-      cout <<"Liquid -> non valid expression token"<<endl;
+      printf("Liquid -> non valid expression token\n");
       break;
   }
   return value;

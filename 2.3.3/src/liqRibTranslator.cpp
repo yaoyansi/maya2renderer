@@ -161,7 +161,7 @@ void liqRibTranslator::printProgress( unsigned stat, unsigned numFrames, unsigne
 	int progress     = ( int ) progressf;
 
 	if( liqglo.liquidBin ) 
-		cout << "ALF_PROGRESS " << progress << "%" << endl << flush;
+		printf( "ALF_PROGRESS %d%%\n", progress );
 	else 
 	{
 		stringstream progressOutput;
@@ -2557,7 +2557,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 								break;
 							ribEpilogue();
 							// output info when done with the rib - Alf
-							cout <<"Finished RIB generation "<<liqglo_currentJob.ribFileName.asChar()<<endl;
+							printf("Finished RIB generation %s\n", liqglo_currentJob.ribFileName.asChar() );
 						}
 					}
 					RiEnd();
@@ -2961,7 +2961,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				// Moritz: Added quotes to render script name as it may contain spaces in bloody Windoze
 				// Note: also adding quotes to the path (aka project dir) breaks ShellExecute() -- cost me one hour to trace this!!!
 				// Bloody, damn, asinine Windoze!!!
-				cout << "2.liqProcessLauncher::execute("<<m_renderScriptCommand<<","<<renderScriptName <<","<<liqglo.liqglo_projectDir<<","<< false <<")"<< endl;
+				printf("2.liqProcessLauncher::execute(%s, \"%s\" ,%s, %d)\n", m_renderScriptCommand.asChar(), renderScriptName.asChar(), liqglo.liqglo_projectDir.asChar(), false);
 				liqProcessLauncher::execute( m_renderScriptCommand, "\"" + renderScriptName + "\"", liqglo.liqglo_projectDir, false );
 #else
 				liqProcessLauncher::execute( m_renderScriptCommand, renderScriptName, liqglo.liqglo_projectDir, false );
@@ -2972,14 +2972,14 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 					stringstream tmp;
 					tmp << liqglo.m_renderViewTimeOut;
 					//=============
-					cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
+					printf(">> m_renderView: m_renderViewTimeOut = %s\n", tmp.str().c_str() );
 					MString timeout( tmp.str().c_str() );
 					MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + liqglo.m_renderViewPort + " -timeout " + timeout ;
 					if( liqglo.m_renderViewCrop ) 
 						displayCmd = displayCmd + " -doRegion";
 					displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
 					//============= 
-					cout << ">> m_renderView: m_displayCmd = " <<  displayCmd.asChar() << endl;
+					printf(">> m_renderView: m_displayCmd = %s\n", displayCmd.asChar() );
 					MGlobal::executeCommand( displayCmd );
 				}
 			} 
@@ -2995,13 +2995,13 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				{
 					if(iter->skip)
 					{
-						cout << "    - skipping '"<< iter->ribFileName <<"'"<<endl;
+						printf("    - skipping '%s'\n", iter->ribFileName );
 						liquidMessage("     - skipping '"+string(iter->ribFileName.asChar())+"'", messageInfo);
 						++iter;
 						continue;
 					}
 					liquidMessage( "Making textures '" + string( iter->imageName.asChar() ) + "'", messageInfo );
-					cout << "[!] Making textures '" << iter->imageName.asChar() << "'" << endl;
+					printf("[!] Making textures '%s'\n", iter->imageName.asChar() );
 #ifdef _WIN32
 					liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
 #else
@@ -3012,21 +3012,21 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				if( liqglo.liqglo_doShadows ) 
 				{
 					liquidMessage( "Rendering shadow maps... ", messageInfo );
-					cout << endl << "[!] Rendering shadow maps... " << endl;
+					printf("\n[!] Rendering shadow maps... \n");
 					vector<structJob>::iterator iter = shadowList.begin();
 					while ( iter != shadowList.end() ) 
 					{
 						if( iter->skip ) 
 						{
-							cout <<"    - skipping '" << iter->ribFileName.asChar() << "'" << endl;
+							printf("    - skipping '%s'\n", iter->ribFileName.asChar() );
 							liquidMessage( "    - skipping '" + string( iter->ribFileName.asChar() ) + "'", messageInfo );
 							++iter;
 							continue;
 						}
-						cout << "    + '" << iter->ribFileName.asChar() << "'" << endl;
+						printf("    + '%s'\n", iter->ribFileName.asChar() );
 						liquidMessage( "    + '" + string( iter->ribFileName.asChar() ) + "'", messageInfo );
 #ifdef _WIN32
-						cout << "3.liqProcessLauncher::execute("<<liqglo.liquidRenderer.renderCommand<<", "<<" "+liqglo.liquidRenderer.renderCmdFlags+" \""+iter->ribFileName+"\""<<","<<liqglo.liqglo_projectDir<<","<< true <<")"<< endl;
+						printf("3.liqProcessLauncher::execute(%s, %s \"%s\", %s, %d)\n", liqglo.liquidRenderer.renderCommand.asChar(), liqglo.liquidRenderer.renderCmdFlags.asChar(), iter->ribFileName.asChar(), liqglo.liqglo_projectDir.asChar(), true);
 						if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " \"" + iter->ribFileName + "\"", liqglo.liqglo_projectDir, true ) )
 #else
 						if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " " + iter->ribFileName, liqglo.liqglo_projectDir, true ) )
@@ -3038,19 +3038,19 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				if( !exitstat ) 
 				{
 					liquidMessage( "Rendering hero pass... ", messageInfo );
-					cout << "[!] Rendering hero pass..." << endl;
+					printf("[!] Rendering hero pass...\n");
 					if( liqglo_currentJob.skip ) 
 					{
-						cout << "    - skipping '" << liqglo_currentJob.ribFileName.asChar() << "'" << endl;
+						printf("    - skipping '%s'\n", liqglo_currentJob.ribFileName.asChar() );
 						liquidMessage( "    - skipping '" + string( liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
 					} 
 					else 
 					{
-						cout << "    + '" << liqglo_currentJob.ribFileName.asChar() << "'" << endl;
+						printf("    + '%s'\n", liqglo_currentJob.ribFileName.asChar() );
 						liquidMessage( "    + '" + string( liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
 
 #ifdef _WIN32
-						cout << "4.liqProcessLauncher::execute("<<liqglo.liquidRenderer.renderCommand<<", "<<liqglo.liqglo_rifParams+" "+liqglo.liquidRenderer.renderCmdFlags+" \""+liqglo_currentJob.ribFileName+"\""<<","<<liqglo.liqglo_projectDir<<","<< false <<")"<< endl;
+						printf("4.liqProcessLauncher::execute(%s, %s %s \"%s\" %s, %d)\n", liqglo.liquidRenderer.renderCommand.asChar(), liqglo.liqglo_rifParams.asChar(), liqglo.liquidRenderer.renderCmdFlags.asChar(), liqglo_currentJob.ribFileName.asChar(), liqglo.liqglo_projectDir.asChar(), false);
 						liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + liqglo_currentJob.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
 #else
 						liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + liqglo_currentJob.ribFileName, liqglo.liqglo_projectDir, false );
@@ -3064,14 +3064,14 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 							stringstream tmp;
 							tmp << liqglo.m_renderViewTimeOut;
 							//=============
-							cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
+							printf(">> m_renderView: m_renderViewTimeOut = %s\n", tmp.str().c_str() );
 							MString timeout( tmp.str().c_str() );
 							MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + liqglo.m_renderViewPort + " -timeout " + timeout ;
 							if( liqglo.m_renderViewCrop ) 
 								displayCmd = displayCmd + " -doRegion";
 							displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
 							//============= 
-							cout << ">> m_renderView: m_displayCmd = " <<  displayCmd.asChar() << endl;
+							printf(">> m_renderView: m_displayCmd = %s\n",  displayCmd.asChar() );
 							MGlobal::executeCommand( displayCmd );
 						}
 					}
@@ -3903,7 +3903,7 @@ MStatus liqRibTranslator::ribPrologue()
 				// [\"UNC\" \"/from_path/\" \"//comp/to_path/\"]
 				ss << "[\\\"" << names.at(i+2) << "\\\" \\\"" << names.at(i) << "\\\" \\\"" << names.at(i+1) << "\\\"] ";
 			}
-			cout << ss.str() << endl;
+			printf("%s\n", ss.str().c_str() );
 			string dirmapsPath ( ss.str() );
 			RtString list = const_cast< char* > ( dirmapsPath.c_str() );
 			RiOption( "searchpath", "dirmap", &list, RI_NULL );
@@ -4123,22 +4123,22 @@ MStatus liqRibTranslator::scanSceneNodes( MObject &currentNode, MDagPath &path, 
 		}
 
 	}
-	liquidMessage2(messageInfo,"%s,\t\t\t\t %d%d%d %d%d%d %d%d%d %d%d\n"
-		,path.fullPathName().asChar() 
-		,currentNode.hasFn( MFn::kNurbsSurface )
-		,currentNode.hasFn( MFn::kMesh )
-		,currentNode.hasFn( MFn::kParticle )
+	//liquidMessage2(messageInfo,"%s,\t\t\t\t %d%d%d %d%d%d %d%d%d %d%d\n"
+	//	,path.fullPathName().asChar() 
+	//	,currentNode.hasFn( MFn::kNurbsSurface )
+	//	,currentNode.hasFn( MFn::kMesh )
+	//	,currentNode.hasFn( MFn::kParticle )
 
-		,currentNode.hasFn( MFn::kLocator )
-		,currentNode.hasFn( MFn::kSubdiv )
-		,currentNode.hasFn( MFn::kPfxHair )
+	//	,currentNode.hasFn( MFn::kLocator )
+	//	,currentNode.hasFn( MFn::kSubdiv )
+	//	,currentNode.hasFn( MFn::kPfxHair )
 
-		,currentNode.hasFn( MFn::kPfxToon )
-		,currentNode.hasFn( MFn::kImplicitSphere )
-		,currentNode.hasFn( MFn::kPluginShape )
+	//	,currentNode.hasFn( MFn::kPfxToon )
+	//	,currentNode.hasFn( MFn::kImplicitSphere )
+	//	,currentNode.hasFn( MFn::kPluginShape )
 
-		,currentNode.hasFn( MFn::kPfxGeometry )
-		,currentNode.hasFn( MFn::kNurbsCurve ) );
+	//	,currentNode.hasFn( MFn::kPfxGeometry )
+	//	,currentNode.hasFn( MFn::kNurbsCurve ) );
 
 	if(  currentNode.hasFn( MFn::kNurbsSurface )
 		|| currentNode.hasFn( MFn::kMesh )
@@ -4273,9 +4273,9 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 			else 
 			{
 				if( MS::kSuccess == MGlobal::executeCommand( preFrameMel, false, false ) ) 
-					cout <<"Liquid -> pre-frame script executed successfully."<<endl<<flush;
+					printf("Liquid -> pre-frame script executed successfully.\n");
 				else 
-					cout <<"Liquid -> ERROR :pre-frame script failed."<<endl<<flush;
+					printf("Liquid -> ERROR :pre-frame script failed.\n");
 			}
 		}
 
@@ -4823,9 +4823,9 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 				MGlobal::sourceFile( postFrameMel );
 			else 
 				if( MS::kSuccess == MGlobal::executeCommand( postFrameMel, false, false ) ) 
-					cout <<"Liquid -> post-frame script executed successfully."<<endl<<flush;
+					printf("Liquid -> post-frame script executed successfully.\n");
 				else 
-					cout <<"Liquid -> ERROR :post-frame script failed."<<endl<<flush;
+					printf("Liquid -> ERROR :post-frame script failed.\n");
 		}
 		return MS::kSuccess;
 	}
@@ -5513,7 +5513,7 @@ MStatus liqRibTranslator::objectBlock()
 			MString warn;
 			warn += "Liquid : set " + liqglo_currentJob.shadowObjectSet + " in shadow " + liqglo_currentJob.name + " does not exist !";
 			MGlobal:: displayWarning( warn );
-			cout << warn.asChar() << endl;
+			printf("%s\n", warn.asChar());
 		}
 		status.clear();
 	}

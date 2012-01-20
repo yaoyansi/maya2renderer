@@ -118,7 +118,7 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
         MFnDependencyNode pfxNode( pfxToon );
         MString info( "[liquid] pfxToon node " );
         info += pfxNode.name() + " : " + ncurves + " curves.";
-        cout << info << endl << flush;
+        printf("%s\n", info );
       }
 
       unsigned totalNumberOfVertices( 0 );

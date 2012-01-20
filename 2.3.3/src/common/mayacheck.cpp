@@ -130,19 +130,19 @@ void displayInfo(const MString& prefix, const MFloatArray& array)
 void displayInfo(const MString& info)
 {
 	MGlobal::displayInfo(info);
-	std::cout<< "[INFO]:"<<info.asChar()<< std::endl;
+	printf("[INFO]:%s\n", info.asChar() );
 }
 
 void displayError(const MString& error)
 {
 	MGlobal::displayError(error);
-	std::cout<< "[ERR]:"<<error.asChar()<< std::endl;
+	printf("[ERR]:%s\n", error.asChar() );
 }
 
 void displayWarning(const MString& warning)
 {
 	MGlobal::displayWarning(warning);
-	std::cout<< "[WARN]:"<<warning.asChar()<< std::endl;
+	printf("[WARN]:%s\n", warning.asChar() );
 }
 
 void displayInfo(const MString& prefix, const MString& value)

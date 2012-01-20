@@ -716,7 +716,7 @@ namespace renderman
 				// [\"UNC\" \"/from_path/\" \"//comp/to_path/\"]
 				ss << "[\\\"" << names.at(i+2) << "\\\" \\\"" << names.at(i) << "\\\" \\\"" << names.at(i+1) << "\\\"] ";
 			}
-			cout << ss.str() << endl;
+			printf("%s\n", ss.str().c_str());
 			string dirmapsPath ( ss.str() );
 			RtString list = const_cast< char* > ( dirmapsPath.c_str() );
 			RiOption( "searchpath", "dirmap", &list, RI_NULL );
@@ -789,13 +789,13 @@ namespace renderman
 		{
 			if(iter->skip)
 			{
-				cout << "    - skipping '"<< iter->ribFileName <<"'"<<endl;
+				printf("    - skipping '%s'\n", iter->ribFileName.asChar() );
 				liquidMessage("     - skipping '"+std::string(iter->ribFileName.asChar())+"'", messageInfo);
 				++iter;
 				continue;
 			}
 			liquidMessage( "Making textures '" + std::string( iter->imageName.asChar() ) + "'", messageInfo );
-			cout << "[!] Making textures '" << iter->imageName.asChar() << "'" << endl;
+			printf("[!] Making textures '%s'\n", iter->imageName.asChar() );
 #ifdef _WIN32
 			liqProcessLauncher::execute( iter->renderName, iter->ribFileName, liqglo.liqglo_projectDir, true );
 #else
@@ -814,12 +814,12 @@ namespace renderman
 		{
 			if( iter->skip ) 
 			{
-				cout <<"    - skipping '" << iter->ribFileName.asChar() << "'" << endl;
+				printf("    - skipping '%s'\n", iter->ribFileName.asChar() );
 				liquidMessage( "    - skipping '" + std::string( iter->ribFileName.asChar() ) + "'", messageInfo );
 				++iter;
 				continue;
 			}
-			cout << "    + '" << iter->ribFileName.asChar() << "'" << endl;
+			printf( "    + '%s'\n", iter->ribFileName.asChar() );
 			liquidMessage( "    + '" + std::string( iter->ribFileName.asChar() ) + "'", messageInfo );
 #ifdef _WIN32
 			if( !liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, liqglo.liquidRenderer.renderCmdFlags + " \"" + iter->ribFileName + "\"", liqglo.liqglo_projectDir, true ) )
@@ -837,24 +837,25 @@ namespace renderman
 		std::stringstream tmp;
 		tmp << liqglo.m_renderViewTimeOut;
 		//=============
-		cout << ">> m_renderView: m_renderViewTimeOut = " << tmp.str().c_str() << endl;
+		printf(">> m_renderView: m_renderViewTimeOut = %s\n", tmp.str().c_str() );
 		MString timeout( tmp.str().c_str() );
 		MString displayCmd = "liquidRenderView "+( (liqglo.renderCamera=="")?"":("-c "+liqglo.renderCamera) ) + " -l " + local + " -port " + liqglo.m_renderViewPort + " -timeout " + timeout ;
 		if( liqglo.m_renderViewCrop ) 
 			displayCmd = displayCmd + " -doRegion";
 		displayCmd = displayCmd + ";liquidSaveRenderViewImage();";
 		//============= 
-		cout << ">> m_renderView: m_displayCmd = " <<  displayCmd.asChar() << endl;
+		printf(">> m_renderView: m_displayCmd = %s\n", displayCmd.asChar() );
 		MGlobal::executeCommand( displayCmd );
 		return MStatus::kSuccess;
 	}
 	MStatus Renderer::renderAll_local(const structJob& currentJob____)
 	{
-		cout << "    + '" << currentJob____.ribFileName.asChar() << "'" << endl;
+		printf("    + '%s'\n", currentJob____.ribFileName.asChar() );
 		liquidMessage( "    + '" + std::string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
 
 #ifdef _WIN32
-		cout << "1.liqProcessLauncher::execute("<<liqglo.liquidRenderer.renderCommand<<", "<<liqglo.liqglo_rifParams+" "+liqglo.liquidRenderer.renderCmdFlags+" \""+currentJob____.ribFileName+"\""<<","<<liqglo.liqglo_projectDir<<","<< false <<")"<< endl;
+		printf("1.liqProcessLauncher::execute(%s, %s %s \"%s\", \"%s\", %d)\n",
+			liqglo.liquidRenderer.renderCommand.asChar(), liqglo.liqglo_rifParams.asChar(), liqglo.liquidRenderer.renderCmdFlags.asChar(), currentJob____.ribFileName.asChar(), liqglo.liqglo_projectDir.asChar(), false);
 		liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + currentJob____.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
 #else
 		liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + currentJob____.ribFileName, liqglo.liqglo_projectDir, false );

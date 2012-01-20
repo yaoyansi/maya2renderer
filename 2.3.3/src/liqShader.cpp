@@ -965,7 +965,7 @@ void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *ligh
 						std::string extention;
 						if( *(strValue.rbegin())==']' ){//if the strValue end with ']', extention should exclude the ']'
 							extention = strValue.substr(loc+1, strValue.size()-loc-2);
-							cout << "extention = "<<extention<<endl;
+							printf("extention = %s\n", extention.c_str() );
 						}else{
 							extention = strValue.substr(loc+1);
 						}

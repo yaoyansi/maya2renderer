@@ -58,7 +58,7 @@ void MayaConnection::Print( const eiInt severity, const char *message )
 	if( severity < 1 || severity > NUM_SEVERITY_LEVELS )
 		return;
 
-	std::cout << severity_strings[severity - 1] << " : " << message << std::endl;
+	printf("%s : %s\n", severity_strings[severity - 1], message);
 }
 //
 bool MayaConnection::Progress( const eiScalar percent )

@@ -570,9 +570,9 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 			else 
 			{
 				if( MS::kSuccess == MGlobal::executeCommand( preFrameMel, false, false ) ) 
-					cout <<"Liquid -> pre-frame script executed successfully."<<endl<<flush;
+					printf("Liquid -> pre-frame script executed successfully.\n");
 				else 
-					cout <<"Liquid -> ERROR :pre-frame script failed."<<endl<<flush;
+					printf("Liquid -> ERROR :pre-frame script failed.\n");
 			}
 		}
 
@@ -661,9 +661,9 @@ MStatus liqRibTranslator::scanScene__(float lframe, int sample )
 				MGlobal::sourceFile( postFrameMel );
 			else 
 				if( MS::kSuccess == MGlobal::executeCommand( postFrameMel, false, false ) ) 
-					cout <<"Liquid -> post-frame script executed successfully."<<endl<<flush;
+					printf("Liquid -> post-frame script executed successfully.\n");
 				else 
-					cout <<"Liquid -> ERROR :post-frame script failed."<<endl<<flush;
+					printf("Liquid -> ERROR :post-frame script failed.\n");
 		}
 		return MS::kSuccess;
 	}
@@ -1212,7 +1212,7 @@ MObject liqRibTranslator::getShadowSetObject(const structJob &currentJob)
 			MString warn;
 			warn += "Liquid : set " + currentJob.shadowObjectSet + " in shadow " + currentJob.name + " does not exist !";
 			MGlobal:: displayWarning( warn );
-			cout << warn.asChar() << endl;
+			printf("%s\n",warn.asChar() );
 		}
 		status.clear();
 	}
@@ -2473,12 +2473,12 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 
 				//if( !exitstat ){
 				liquidMessage( "Rendering hero pass... ", messageInfo );
-				cout << "[!] Rendering hero pass..." << endl;
+				printf("[!] Rendering hero pass...\n");
 
 				//structJob &currentJob____ = *(jobList.rbegin());//I guess liqglo.liqglo_currentJob is jobList.rbegin()
 				if( currentJob____.skip ) 
 				{
-					cout << "    - skipping '" << currentJob____.ribFileName.asChar() << "'" << endl;
+					printf("    - skipping '%s'\n", currentJob____.ribFileName.asChar() );
 					liquidMessage( "    - skipping '" + string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
 				} 
 				else 
@@ -2871,7 +2871,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 				// Moritz: Added quotes to render script name as it may contain spaces in bloody Windoze
 				// Note: also adding quotes to the path (aka project dir) breaks ShellExecute() -- cost me one hour to trace this!!!
 				// Bloody, damn, asinine Windoze!!!
-				cout << "5.liqProcessLauncher::execute("<<m_renderScriptCommand<<","<<renderScriptName <<","<<liqglo.liqglo_projectDir<<","<< false <<")"<< endl;
+				printf("5.liqProcessLauncher::execute(%s, \"%s\", %s, %d);\n", m_renderScriptCommand.asChar(), renderScriptName.asChar(), liqglo.liqglo_projectDir.asChar(), false);
 				liqProcessLauncher::execute( m_renderScriptCommand, "\"" + renderScriptName + "\"", liqglo.liqglo_projectDir, false );
 #else
 				liqProcessLauncher::execute( m_renderScriptCommand, renderScriptName, liqglo.liqglo_projectDir, false );

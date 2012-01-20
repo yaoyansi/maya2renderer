@@ -102,7 +102,7 @@ MStatus liqAttachPrefAttribute::doIt(const MArgList& args)
   if (flagIndex != MArgList::kInvalidArgIndex) 
     exportN = true;
 
-  //cout <<">> got "<<objectNames.length()<<" objects to PREF !"<<endl;
+  //printf(">> got %d objects to PREF !\n",objectNames.length() );
 
   return redoIt();
 }

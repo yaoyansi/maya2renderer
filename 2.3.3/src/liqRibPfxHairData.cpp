@@ -97,7 +97,7 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
         MFnDependencyNode pfxNode( pfxHair );
         MString info( "[liquid] pfxHair node " );
         info += pfxNode.name() + " : " + ncurves + " curves.";
-        cout <<  info  <<  endl  <<  flush;
+        printf("%s\n",  info.asChar() );
       }
 
       unsigned totalNumberOfVertices( 0 ), totalNumberOfSpans( 0 );

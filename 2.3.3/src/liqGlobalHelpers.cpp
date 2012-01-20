@@ -1154,19 +1154,20 @@ void liquidMessage( const string& msg, liquidVerbosityType type )
     {
       string infoOutput( "[Liquid] " );
       infoOutput += msg;
+	  string prefix;
       switch( type ) 
       {
         case messageWarning:
-          cerr << "Warning: ";
+          prefix = "Warning: ";
           break;
         case messageError:
-          cerr << "Error: ";
+          prefix = "Error: ";
           break;
         case messageInfo:
         default:
-          cerr << "Info: ";  
+          prefix = "Info: ";  
       }
-      cerr << infoOutput << endl << flush;
+      printf("%s\n", (prefix+infoOutput).c_str());
     }
   }
 }

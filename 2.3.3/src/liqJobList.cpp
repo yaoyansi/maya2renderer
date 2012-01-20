@@ -118,7 +118,7 @@ MStatus liqJobList::doIt(const MArgList& args)
 
 MStatus liqJobList::redoIt()
 {
-  if ( debug ) cout <<"redoIt"<<endl;
+  if ( debug ) printf("redoIt\n");
   clearResult();
   MStatus status;
   MObject cameraNode;
@@ -151,13 +151,13 @@ MStatus liqJobList::redoIt()
 
     // read the globals
     //
-    if ( debug ) cout <<"  read globals..."<<flush;
+    if ( debug ) printf("  read globals...");
     if ( ribTranslator.liquidInitGlobals() ) ribTranslator.liquidReadGlobals();
     else {
       MString err("no liquidGlobals node in the scene");
       throw err;
     }
-    if ( debug ) cout <<"done !"<<endl;
+    if ( debug ) printf("done !\n");
 
 
     // verify the output directories
@@ -170,12 +170,12 @@ MStatus liqJobList::redoIt()
 
     // build the job list
     //
-    if ( debug ) cout <<"  build jobs..."<<flush;
+    if ( debug ) printf("  build jobs...");
     if ( ribTranslator.buildJobs() != MS::kSuccess ) {
       MString err("buildJob() Failed");
       throw err;
     }
-    if ( debug ) cout <<"done !"<<endl;
+    if ( debug ) printf("done !\n");
 
 
     std::vector<structJob>::iterator iterShad = ribTranslator.jobList.begin();
@@ -183,7 +183,7 @@ MStatus liqJobList::redoIt()
     // get the shadows
     //
     if ( doShadows || doSingleShadows ) {
-      if ( debug ) cout <<"  do shadows..."<<flush;
+      if ( debug ) printf("  do shadows...");
 
       while ( iterShad != ribTranslator.jobList.end() ) {
         if ( doShadows && iterShad->isShadow && iterShad->everyFrame ) result.append( liquidGetRelativePath(fullPath, iterShad->ribFileName, liqglo.liqglo_projectDir) );
@@ -193,18 +193,18 @@ MStatus liqJobList::redoIt()
         ++iterShad;
       }
 
-      if ( debug ) cout <<"done !"<<endl;
+      if ( debug ) printf("done !\n");
     }
 
 
     // get the camera
     //
     if ( doCamera ) {
-      if ( debug ) cout <<"  do camera..."<<flush;
+      if ( debug ) printf("  do camera...");
       iterShad = ribTranslator.jobList.end();
       --iterShad;
       result.append( liquidGetRelativePath(fullPath, iterShad->ribFileName, liqglo.liqglo_projectDir) );
-      if ( debug ) cout <<"done !"<<endl;
+      if ( debug ) printf("done !\n");
     }
 
     ribTranslator.m_escHandler.endComputation();
