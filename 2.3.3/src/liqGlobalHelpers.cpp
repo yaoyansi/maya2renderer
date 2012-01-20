@@ -1428,3 +1428,11 @@ bool is3DTexture(const MString& name)
 		;
 	return ret;
 }
+
+bool isBatchMode()
+{
+	int bAboutBatch;
+	IfMErrorWarn(MGlobal::executeCommand( "about -batch", bAboutBatch));
+	
+	return (bAboutBatch==1);
+}

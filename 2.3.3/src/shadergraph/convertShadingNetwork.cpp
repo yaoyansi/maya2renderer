@@ -514,14 +514,21 @@ void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNo
 //
 void ConvertShadingNetwork::__export()
 {
+	_LogFunctionCall("ConvertShadingNetwork::__export()");
+
 	MString cmd;
 
-	MStringArray sel;
-	IfMErrorWarn(MGlobal::executeCommand( "ls -selection -dag -shapes", sel));
+	MStringArray geometryArray;
+	//IfMErrorWarn(MGlobal::executeCommand( "ls -selection -dag -shapes", geometryArray));
+	IfMErrorWarn(MGlobal::executeCommand( "ls -geometry", geometryArray));
 
-	for(std::size_t i=0; i<sel.length(); ++i)
+	if(geometryArray.length()==0){
+		liquidMessage2(messageWarning ,"no shape is selected, no shader will be exported.\n");
+	}
+
+	for(std::size_t i=0; i<geometryArray.length(); ++i)
 	{
-		const MString node(sel[i]);
+		const MString node(geometryArray[i]);
 
 		//string $sgNodes[] = `listConnections -type "shadingEngine" -destination on ( $node + ".instObjGroups" )`;//add -type "shadingEngine" for multy renderlayers
 		MStringArray sgNodes;		

@@ -137,4 +137,6 @@ MString getShaderDirectory();
 bool is2DFileTexture(const MString& name);
 bool is2DTexture(const MString& name);
 bool is3DTexture(const MString& name);
+bool isBatchMode();
+
 #endif

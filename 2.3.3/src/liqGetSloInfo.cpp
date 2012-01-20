@@ -497,7 +497,9 @@ int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
 	}
 	else
 	{
-		liquidMessage2(messageError, "[liqGetSloInfo::setShaderNode] error plug %s.rmanIsOutput doesn't exist\n", shaderNode.name().asChar());
+		//liquidMessage2(messageError, "[liqGetSloInfo::setShaderNode] error plug %s.rmanIsOutput doesn't exist\n", shaderNode.name().asChar());
+		liquidMessage2(messageWarning, "[liqGetSloInfo::setShaderNode] error plug %s.rmanIsOutput doesn't exist\n", shaderNode.name().asChar());
+	
 	}
 
     // get the parameter types

@@ -22,6 +22,8 @@
 #define liqRIBMsg( msg,...) 
 #endif
 
+#define _LogFunctionCall(log)  printf("CALL:%s\n", log );
+
 extern char gLogBuffer[LOG_BUFFER_LEN];
 
 #endif//liqLog_H

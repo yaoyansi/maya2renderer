@@ -52,10 +52,6 @@
   解决方法：在liquid项目里把\boost\1_39\libs\system\src\error_code.cpp包含进去
 
 
-- for batch rendering,需要替换Maya2009的mayaBatchRenderProcedure.mel文件，方法如下:
-  run $(LiquidRoot)\mel\replace_mayaBatchRenderProcedure.bat to replace $(MayaRoot)\scripts\other\mayaBatchRenderProcedure.mel
-
-
 - liquid生成的rib文件，用renderman studio it.exe 测试
   对于liquid生成的rib脚本,把Display里的"liqmaya"改成"it"
   例如$(LiquidRoot)\2.3.3\test\render_with_rms_it\_perspShape.0010.rib里的“liqmaya”已经改为"it"。
@@ -128,7 +124,8 @@
     在mesh shape对应的shadinggroup标签的“ExtraAttributes”里有liqShadowShader，liqEnvironmentShader，liqPhotonShader
 
 
-
+- er batch render
+  - test case: maya_render_er.bat, 2.3.3\test\test_er_shader\er_shader_lambert.ma
 
 
 

@@ -574,29 +574,35 @@ namespace elvishray
 		assert(currentJob.camera[0].name.length());
 		assert(!m_option.empty());
 
-		// start render
-		if (MayaConnection::getInstance()->startRender( currentJob.width, currentJob.height, false) != MS::kSuccess)
+
+		if( isBatchMode() )
 		{
-			_s( "//MayaConnection: error occured in startRender." );
-			return MS::kFailure;
-		}
+			_s("// in batch render mode");
+			_S( ei_render( m_root_group.c_str(), currentJob.camera[0].name.asChar(), m_option.c_str() ) );
+			_S( ei_delete_context(CONTEXT) );
 
-		_S( ei_render( m_root_group.c_str(), currentJob.camera[0].name.asChar(), m_option.c_str() ) );
-		//ei_render( "world",	"caminst1",	"opt" );		
-		//dummy.get()<< "ei_render(\""<<m_root_group<<"\", \""<<currentJob.camera[0].name<<"\", \""<<m_option<<"\");"<<std::endl;
-		//ei_render( m_root_group.c_str(), currentJob.camera[0].name.asChar(), m_option.c_str() );
-
-		
-		_S( ei_delete_context(CONTEXT) );
-
-		// end render
-		if (MayaConnection::getInstance()->endRender() != MS::kSuccess)
-		{
-			_s( "//MayaConnection: error occured in endRender." );
 			MayaConnection::delInstance();
-			return MS::kFailure;
+		}else{
+			// start render
+			if (MayaConnection::getInstance()->startRender( currentJob.width, currentJob.height, false) != MS::kSuccess)
+			{
+				_s( "//MayaConnection: error occured in startRender." );
+				MayaConnection::delInstance();				
+				return MS::kFailure;
+			}
+
+			_S( ei_render( m_root_group.c_str(), currentJob.camera[0].name.asChar(), m_option.c_str() ) );
+			_S( ei_delete_context(CONTEXT) );
+
+			// end render
+			if (MayaConnection::getInstance()->endRender() != MS::kSuccess)
+			{
+				_s( "//MayaConnection: error occured in endRender." );
+				MayaConnection::delInstance();
+				return MS::kFailure;
+			}
+			MayaConnection::delInstance();
 		}
-		MayaConnection::delInstance();
 
 		return MS::kSuccess;
 	}
