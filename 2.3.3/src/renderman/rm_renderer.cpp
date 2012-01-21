@@ -784,6 +784,8 @@ namespace renderman
 	//
 	MStatus Renderer::doTextures(const std::vector<structJob> &txtList_)
 	{
+		_logFunctionCall("rm::Renderer::doTextures(...)");
+
 		std::vector<structJob>::const_iterator iter = txtList_.begin();
 		while ( iter != txtList_.end() ) 
 		{
@@ -807,6 +809,8 @@ namespace renderman
 	}
 	MStatus Renderer::doShadows(const std::vector<structJob> &shadowList_)
 	{
+		_logFunctionCall("rm::Renderer::doShadows(...)");
+
 		liquidMessage( "Rendering shadow maps... ", messageInfo );
 		liquidMessage( "[!] Rendering shadow maps... ", messageInfo );
 		std::vector<structJob>::const_iterator iter = shadowList_.begin();
@@ -850,6 +854,8 @@ namespace renderman
 	}
 	MStatus Renderer::renderAll_local(const structJob& currentJob____)
 	{
+		_logFunctionCall("rm::Renderer::renderAll_local(...)");
+
 		printf("    + '%s'\n", currentJob____.ribFileName.asChar() );
 		liquidMessage( "    + '" + std::string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
 

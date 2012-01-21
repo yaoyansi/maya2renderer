@@ -175,6 +175,7 @@ void liqRibTranslator::printProgress( unsigned stat, unsigned numFrames, unsigne
 */
 bool liqRibTranslator::liquidInitGlobals()
 {
+	_logFunctionCall("liqRibTranslator::liquidInitGlobals()");
 	MStatus status;
 	MSelectionList rGlobalList;
 	status = rGlobalList.add( "liquidGlobals" );
@@ -432,6 +433,7 @@ void liqRibTranslatorErrorHandler( RtInt code, RtInt severity, const char* messa
 
 MSyntax liqRibTranslator::syntax()
 {
+	_logFunctionCall("liqRibTranslator::syntax()");
 	MSyntax syntax;
 
 	syntax.addFlag("lr",    "launchRender");
@@ -514,6 +516,7 @@ MSyntax liqRibTranslator::syntax()
 */
 MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 {
+	_logFunctionCall("liqRibTranslator::liquidDoArgs()");
 	MStatus status;
 	MString argValue;
 
@@ -1037,6 +1040,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 */
 void liqRibTranslator::liquidReadGlobals()
 {
+	_logFunctionCall("liqRibTranslator::liquidReadGlobals()");
 	MStatus gStatus;
 	MPlug gPlug;
 	MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
@@ -1670,6 +1674,7 @@ void liqRibTranslator::liquidReadGlobals()
 
 bool liqRibTranslator::verifyOutputDirectories()
 {
+	_logFunctionCall("liqRibTranslator::verifyOutputDirectories()");
 #ifdef _WIN32
 	int dirMode = 6; // dummy arg
 	int mkdirMode = 0;
@@ -1787,6 +1792,7 @@ bool liqRibTranslator::verifyOutputDirectories()
 
 MString liqRibTranslator::generateRenderScriptName() const
 {
+	_logFunctionCall("liqRibTranslator::generateRenderScriptName()");
 	MString renderScriptName;
 	renderScriptName = m_tmpDir;
 	if( m_userRenderScriptFileName != MString( "" ) )
@@ -1818,6 +1824,7 @@ MString liqRibTranslator::generateRenderScriptName() const
 
 MString liqRibTranslator::generateTempMayaSceneName() const
 {
+	_logFunctionCall("liqRibTranslator::generateTempMayaSceneName()");
 	MString tempDefname = m_tmpDir;
 	tempDefname += liqglo.liqglo_sceneName;
 #ifndef _WIN32
@@ -1863,6 +1870,7 @@ MString liqRibTranslator::generateTempMayaSceneName() const
 
 MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& job )
 {
+	_logFunctionCall("liqRibTranslator::generateFileName()");
 	MString filename;
 	MString debug;
 	switch( mode )
@@ -1991,6 +1999,7 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 */
 MStatus liqRibTranslator::doIt( const MArgList& args )
 {
+	_logFunctionCall("liqRibTranslator::doIt()");
 	MStatus status;
 
 	// check if we need to switch to a specific render layer
@@ -2064,6 +2073,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 //
 MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalLayer )
 {
+	_logFunctionCall("liqRibTranslator::_doIt()");
 	MStatus status;
 	MString lastRibName;
 	bool hashTableInited = false;
@@ -5216,8 +5226,12 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 						imageName = "+" + imageName;
 					// get display type ( tiff, openexr, etc )
 					imageType = (*m_displays_iterator).type;
-					if( imageType == "" ) 
-						imageType = "framebuffer";
+					if( !isBatchMode() ){
+						if( imageType == "" )
+							imageType = "framebuffer";
+					}else {// if in batch mode, we always use "file"
+						imageType = "file";
+					}
 					// get display mode ( rgb, z or defined display channel )
 					imageMode = (*m_displays_iterator).mode;
 					if( imageMode == "" ) 
@@ -5281,7 +5295,8 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 
 					liqRIBMsg("Display 8");
 					// output call
-					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" %s %s %s %s\n", const_cast< char* >( imageName.asChar() ), 
+					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" %s %s %s %s\n", 
+						const_cast< char* >( imageName.asChar() ), 
 						imageType.asChar(), 
 						imageMode.asChar(), 
 						( quantizer.length() )? quantizer.asChar() : "", 

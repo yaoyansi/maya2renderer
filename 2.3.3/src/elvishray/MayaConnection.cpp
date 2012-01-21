@@ -46,7 +46,7 @@ void color128to64( eiVector & color, ChannelType &r, ChannelType &g, ChannelType
 
 void MayaConnection::Print( const eiInt severity, const char *message )
 {
-	//_LogFunctionCall("MayaConnection::Print()");
+	//_logFunctionCall("MayaConnection::Print()");
 
 	static const int	NUM_SEVERITY_LEVELS = 5;
 	static const char	*severity_strings[ NUM_SEVERITY_LEVELS ] = { "FATAL",
@@ -63,7 +63,7 @@ void MayaConnection::Print( const eiInt severity, const char *message )
 //
 bool MayaConnection::Progress( const eiScalar percent )
 {
-	//_LogFunctionCall("MayaConnection::Progress(" << percent << " %)");
+	//_logFunctionCall("MayaConnection::Progress(" << percent << " %)");
 
 	return true;
 }
@@ -72,7 +72,7 @@ void MayaConnection::ClearTile( const eiInt left, const eiInt right,
 							   const eiInt top, const eiInt bottom,
 							   const eiHostID host )
 {
-	//_LogFunctionCall("MayaConnection::ClearTile()");
+	//_logFunctionCall("MayaConnection::ClearTile()");
 	if( !isInteractiveRenderingMode() )
 		return;
 
@@ -107,7 +107,7 @@ void MayaConnection::UpdateTile( eiFrameBufferCache *colorFrameBuffer,
 								const eiInt left, const eiInt right, 
 								const eiInt top, const eiInt bottom )
 {
-	//_LogFunctionCall("MayaConnection::UpdateTile("<<left<<","<<right<<","<<top<<","<<bottom<<")");
+	//_logFunctionCall("MayaConnection::UpdateTile("<<left<<","<<right<<","<<top<<","<<bottom<<")");
 	MStatus status;
 
 	if( !isInteractiveRenderingMode() )
@@ -199,7 +199,7 @@ void MayaConnection::UpdateTile( eiFrameBufferCache *colorFrameBuffer,
 //
 void MayaConnection::DrawPixel( const eiInt x, const eiInt y, const eiVector *_color )
 {	
-	//_LogFunctionCall("MayaConnection::DrawPixel()");
+	//_logFunctionCall("MayaConnection::DrawPixel()");
 
 	if( !isInteractiveRenderingMode() )
 		return;
@@ -208,7 +208,7 @@ void MayaConnection::DrawPixel( const eiInt x, const eiInt y, const eiVector *_c
 void MayaConnection::UpdateSubWindow( const eiInt left, const eiInt right, 
 									 const eiInt top, const eiInt bottom )
 {
-	//_LogFunctionCall("MayaConnection::UpdateSubWindow()");
+	//_logFunctionCall("MayaConnection::UpdateSubWindow()");
 
 	if( !isInteractiveRenderingMode() )
 		return;
@@ -218,7 +218,7 @@ MStatus MayaConnection::startRender( unsigned int w, unsigned int h,
 					bool doNotClearBackground ,
 					bool immediateFeedback)
 {
-	//_LogFunctionCall("MayaConnection::startRender()");
+	//_logFunctionCall("MayaConnection::startRender()");
 	width  = w;
 	height = h;
 	return MRenderView::startRender( width, height, doNotClearBackground, immediateFeedback);
@@ -226,7 +226,7 @@ MStatus MayaConnection::startRender( unsigned int w, unsigned int h,
 //
 MStatus MayaConnection::endRender()
 {
-	//_LogFunctionCall("MayaConnection::endRender()");
+	//_logFunctionCall("MayaConnection::endRender()");
 	width  = 0;
 	height = 0;
 	return MRenderView::endRender();
@@ -236,18 +236,18 @@ MStatus MayaConnection::endRender()
 MayaConnection* MayaConnection::m_instance = NULL;
 MayaConnection::MayaConnection()
 {
-	//_LogFunctionCall("MayaConnection::MayaConnection()");
+	//_logFunctionCall("MayaConnection::MayaConnection()");
 	setConnection();
 }
 //
 MayaConnection::~MayaConnection()
 {
-	//_LogFunctionCall("MayaConnection::~MayaConnection()");
+	//_logFunctionCall("MayaConnection::~MayaConnection()");
 }
 //
 MayaConnection* MayaConnection::getInstance()
 {
-	//_LogFunctionCall("MayaConnection::getInstance()");
+	//_logFunctionCall("MayaConnection::getInstance()");
 	if(!m_instance){
 		m_instance = new MayaConnection();
 	}
@@ -256,7 +256,7 @@ MayaConnection* MayaConnection::getInstance()
 //
 void MayaConnection::delInstance()
 {
-	//_LogFunctionCall("MayaConnection::delInstance()");
+	//_logFunctionCall("MayaConnection::delInstance()");
 	if(m_instance){
 		delete m_instance;
 		m_instance = NULL;

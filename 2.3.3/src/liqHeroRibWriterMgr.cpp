@@ -384,8 +384,12 @@ void tHeroRibWriterMgr::framePrologue_display(const structJob &currentJob)
 						imageName = "+" + imageName;
 					// get display type ( tiff, openexr, etc )
 					imageType = (*m_displays_iterator).type;
-					if( imageType == "" ) 
-						imageType = "framebuffer";
+					if( !isBatchMode() ){
+						if( imageType == "" )
+							imageType = "framebuffer";
+					}else {// if in batch mode, we always use "file"
+						imageType = "file";
+					}
 					// get display mode ( rgb, z or defined display channel )
 					imageMode = (*m_displays_iterator).mode;
 					if( imageMode == "" ) 

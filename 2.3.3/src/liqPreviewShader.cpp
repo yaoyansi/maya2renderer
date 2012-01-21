@@ -193,6 +193,8 @@ void liquidNewPreview( const liqPreviewShaderOptions& options )
 
 MStatus	liqPreviewShader::doIt( const MArgList& args )
 {
+	_logFunctionCall("liqPreviewShader::doIt()");
+
   MStatus status;
 
   liqPreviewShaderOptions preview;

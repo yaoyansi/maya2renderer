@@ -22,7 +22,7 @@
 #define liqRIBMsg( msg,...) 
 #endif
 
-#define _LogFunctionCall(log)  printf("CALL:%s\n", log );
+void _logFunctionCall(const char* log);
 
 extern char gLogBuffer[LOG_BUFFER_LEN];
 

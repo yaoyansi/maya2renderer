@@ -17,9 +17,10 @@
 */
 
 #include "liqProcessLauncher.h"
-
+#include <boost/algorithm/string/replace.hpp>
 #include <maya/MString.h>
-
+#include <maya/MGlobal.h>
+#include "common/mayacheck.h"
 
 /* ______________________________________________________________________
 **
@@ -32,7 +33,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-bool liqProcessLauncher::execute( const MString &command, const MString &arguments, const MString &path, const bool wait )
+bool liqProcessLauncher::_execute( const MString &command, const MString &arguments, const MString &path, const bool wait )
 {
   chdir( path.asChar() );
   MString cmd = command + " " + arguments + ( wait ? "" : "&" );
@@ -51,7 +52,7 @@ bool liqProcessLauncher::execute( const MString &command, const MString &argumen
 #include <sys/types.h>
 #include <unistd.h>
 
-bool liqProcessLauncher::execute( const MString &command, const MString &arguments, const MString &path, const bool wait )
+bool liqProcessLauncher::_execute( const MString &command, const MString &arguments, const MString &path, const bool wait )
 {
   chdir( path.asChar() );
   pcreatelp( command.asChar(), command.asChar(), arguments.asChar(), NULL );
@@ -70,9 +71,12 @@ bool liqProcessLauncher::execute( const MString &command, const MString &argumen
 #include <direct.h>
 #include <process.h>
 #include <windows.h>
+#include <liqlog.h>
 
-bool liqProcessLauncher::execute( const MString &command, const MString &arguments, const MString &path, const bool wait )
+bool liqProcessLauncher::_execute( const MString &command, const MString &arguments, const MString &path, const bool wait )
 {
+	_logFunctionCall("liqProcessLauncher::_execute(...)");
+
   if ( !wait ) {
     printf( "::=> Render (no wait) %s %s %s\n", command.asChar(), arguments.asChar(), path.asChar() );
     /* Doesn't work on Windows 7!!!!! 
@@ -177,5 +181,28 @@ bool liqProcessLauncher::execute( const MString &command, const MString &argumen
   }
 }
 #endif // _WIN32
+
+bool liqProcessLauncher::execute( const MString &command, const MString &arguments, const MString &path, const bool wait )
+{
+	_logFunctionCall("liqProcessLauncher::execute(...)");
+
+	if( isBatchMode() ){
+		printf("// in batch mode.\n");
+		_chdir( path.asChar() );
+
+		std::string arguments2(arguments.asChar());
+		boost::replace_all(arguments2, "\"", "\\\"");
+
+		MString cmd("system(\""+command+" "+MString(arguments2.c_str())+"\")");
+		printf("%s\n", cmd.asChar());
+
+		IfMErrorWarn(MGlobal::executeCommand(cmd, true));
+
+		return true;
+
+	}else{
+		return _execute(command, arguments, path, wait);
+	}
+}
 
 

@@ -30,6 +30,7 @@ class liqProcessLauncher
 {
 public:
   static bool execute(const MString &command, const MString &arguments, const MString &path, const bool wait );
+  static bool _execute(const MString &command, const MString &arguments, const MString &path, const bool wait );
 };
 
 
