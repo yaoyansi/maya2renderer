@@ -6558,7 +6558,7 @@ MStatus liqRibTranslator::objectBlock()
 				else 
 					RiOpacity( currentShader.rmOpacity );
 				
-				liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.name.c_str(), currentShader.file.c_str(), currentShader.outputInShadow );
+				liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.getName().c_str(), currentShader.getShaderFileName().c_str(), currentShader.outputInShadow );
 				if(currentShader.outputInShadow){
 					currentShader.write();
 				}

@@ -3150,7 +3150,7 @@ void liqRibTranslator::oneObjectBlock(
 				//liqShader & currentShader = liqGetShader( ribNode__->assignedDisp.object() );
 				liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode->assignedDisp.object() );
 
-				liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", currentJob.isShadowJob, currentShader.outputInShadow );
+				liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", currentJob.isShadow, currentShader.outputInShadow );
 				// per shader shadow pass override
 				if( true/*!currentJob.isShadow || currentShader.outputInShadow*/ )
 				{
@@ -3201,7 +3201,7 @@ void liqRibTranslator::oneObjectBlock(
 				//liqShader & currentShader = liqGetShader( ribNode__->assignedDisp.object() );
 				liqShader &currentShader = liqShaderFactory::instance().getShader( ribNode->assignedDisp.object() );
 
-				liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", currentJob.isShadowJob, currentShader.outputInShadow );
+				liqRIBMsg("[3] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", currentJob.isShadow, currentShader.outputInShadow );
 				// per shader shadow pass override
 				if( /*!currentJob.isShadow || */currentShader.outputInShadow )
 				{
@@ -3660,7 +3660,7 @@ MStatus liqRibTranslator::writeShader_forShadow(
 
 			F1(ribNode__, currentShader);
 
-			liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.name.c_str(), currentShader.file.c_str(), currentShader.outputInShadow );
+			liqRIBMsg("[8] currentShader[.name=%s, .filename=%s, .outputInShadow=%d]", currentShader.getName().c_str(), currentShader.getShaderFileName().c_str(), currentShader.outputInShadow );
 			if(currentShader.outputInShadow){
 				currentShader.write();
 			}
