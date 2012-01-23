@@ -53,6 +53,7 @@
 #include <liqGlobalHelpers.h>
 #include <liqRenderer.h>
 #include <liqGlobalVariable.h>
+#include <liqRibTranslator.h>
 
 using namespace boost;
 

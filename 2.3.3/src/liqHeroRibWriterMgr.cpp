@@ -358,7 +358,9 @@ void tHeroRibWriterMgr::framePrologue_display(const structJob &currentJob)
 
 					liqRIBMsg("Display 7");
 					RiArchiveRecord( RI_COMMENT, "Render To Maya renderView :" );
-					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" \"int merge\" [0] \"int mayaDisplayPort\" [%s] \"string host\" [\"%s\"]\n", const_cast< char* >( imageName.asChar() ), formatType.asChar(), imageMode.asChar(), port.asChar(), host.asChar() );
+					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" \"int merge\" [0] \"int mayaDisplayPort\" [%s] \"string host\" [\"%s\"]\n", 
+						const_cast< char* >( imageName.asChar() ), 
+						formatType.asChar(), imageMode.asChar(), port.asChar(), host.asChar() );
 
 					// in this case, override the launch render settings
 					if( liqglo.launchRender == false ) 
@@ -453,7 +455,8 @@ void tHeroRibWriterMgr::framePrologue_display(const structJob &currentJob)
 
 					liqRIBMsg("Display 8");
 					// output call
-					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" %s %s %s %s\n", const_cast< char* >( imageName.asChar() ), 
+					RiArchiveRecord( RI_VERBATIM, "Display \"%s\" \"%s\" \"%s\" %s %s %s %s\n", 
+						const_cast< char* >( imageName.asChar() ), 
 						imageType.asChar(), 
 						imageMode.asChar(), 
 						( quantizer.length() )? quantizer.asChar() : "", 

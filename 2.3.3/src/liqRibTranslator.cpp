@@ -228,6 +228,7 @@ liqRibTranslator::liqRibTranslator()
 	m_outputHeroPass = true;
 	m_useNewTranslator = true;
 	m_OutputShaderGraph = false;
+	m_outputDebugMsgToRib = false;
 	m_outputShadowPass = false;
 	liqglo.m_illuminateByDefault = false;
 	m_liquidSetLightLinking = false;
@@ -1558,6 +1559,7 @@ void liqRibTranslator::liquidReadGlobals()
 
 	liquidGetPlugValue( rGlobalNode, "useNewTranslator", m_useNewTranslator, gStatus );
 	liquidGetPlugValue( rGlobalNode, "outputShaderGraph", m_OutputShaderGraph, gStatus );
+	liquidGetPlugValue( rGlobalNode, "outputDebugMsgToRib", m_outputDebugMsgToRib, gStatus );
 	liquidGetPlugValue( rGlobalNode, "outputShadowPass", m_outputShadowPass, gStatus );
 	liquidGetPlugValue( rGlobalNode, "outputHeroPass", m_outputHeroPass, gStatus );
 

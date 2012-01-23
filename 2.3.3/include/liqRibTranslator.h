@@ -319,6 +319,7 @@ public:
 	bool m_ignoreVolumes;
 	bool m_useNewTranslator;
 	bool m_OutputShaderGraph;
+	bool m_outputDebugMsgToRib;
 	bool m_outputShadowPass;
 	bool m_outputHeroPass;
 

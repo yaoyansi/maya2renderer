@@ -2613,6 +2613,7 @@ global proc liquidGlobalsFrameTab( string $prefix )
       columnLayout -adj true ;
         liquidShowBoolGlobal "useNewTranslator" "UseNewTranslator(refactoring)" $prefix;
         liquidShowBoolGlobal "outputShaderGraph" "OutputShaderGraph(ER)" $prefix;
+        liquidShowBoolGlobal "outputDebugMsgToRib" "OutputDebugMsgToRib(RM)" $prefix;
       setParent ..;
     setParent ..;
 

@@ -11,16 +11,15 @@
 	liquidMessage(gLogBuffer, msgtype );\
 }
 
-#ifdef RIBMSG
+void _liqRIBMsg(const char* msg);
 //output debug info to rib file
 #define liqRIBMsg( msg,...) \
 {\
-	sprintf_s(gLogBuffer, LOG_BUFFER_LEN, (msg),__VA_ARGS__ );\
-	RiArchiveRecord( RI_COMMENT, "\t\t\t\t[DEBUG] %s", gLogBuffer );\
+	if(liqRibTranslator::getInstancePtr()->m_outputDebugMsgToRib){\
+		sprintf_s(gLogBuffer, LOG_BUFFER_LEN, (msg),__VA_ARGS__ );\
+		_liqRIBMsg(gLogBuffer);\
+	}\
 }
-#else
-#define liqRIBMsg( msg,...) 
-#endif
 
 void _logFunctionCall(const char* log);
 
