@@ -5184,7 +5184,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 				if( m_displays_iterator == liqglo.m_displays.begin() && liqglo.m_renderView ) 
 				{
 					MString imageName( liqglo.m_pixDir );
-					imageName += parseString( liqglo.liqglo_DDimageName[ 0 ], false );
+					imageName += parseString( liqglo.m_displays[ 0 ].name, false );
 					//imageName = liquidGetRelativePath( liqglo_relativeFileNames, imageName, liqglo_projectDir );
 
 					MString formatType = "liqmaya";

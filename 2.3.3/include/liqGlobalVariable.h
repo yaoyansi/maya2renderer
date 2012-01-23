@@ -85,7 +85,7 @@ struct liqGlobalVariable
 	bool         liqglo_expandShaderArrays;
 	bool         liqglo_shortShaderNames;                 // true if we don't want to output path names with shaders
 	bool         liqglo_relativeFileNames;                // true if we only want to output project relative names
-	MStringArray liqglo_DDimageName;
+	//MStringArray liqglo_DDimageName;
 	double       liqglo_FPS;                              // Frame-rate (for particle streak length)
 	bool         liqglo_outputMeshUVs;                    // true if we are writing uvs for subdivs/polys (in addition to "st")
 	bool         liqglo_noSingleFrameShadows;             // allows you to skip single-frame shadows when you chunk a render

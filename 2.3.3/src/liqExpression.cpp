@@ -113,14 +113,14 @@ MString	liqExpression::CalcValue( )
       object_name = tokens[1];
       if ( object_name.length() ) 
       {
-        if ( ( liqglo.liqglo_DDimageName[0] == "" ) ) 
+        if ( ( liqglo.m_displays[0].name == "" ) ) 
         {
           value += liqglo.liqglo_sceneName;
         } 
         else 
         {
-          int pointIndex = liqglo.liqglo_DDimageName[0].index( '.' );
-          value += liqglo.liqglo_DDimageName[0].substring(0, pointIndex-1).asChar();
+          int pointIndex = liqglo.m_displays[0].name.index( '.' );
+          value += liqglo.m_displays[0].name.substring(0, pointIndex-1).asChar();
         }
         value += "_";
         value += object_name;
@@ -135,14 +135,14 @@ MString	liqExpression::CalcValue( )
     case exp_PointShadow:
       if ( object_name.length() ) 
       {
-        if ( ( liqglo.liqglo_DDimageName[0] == "" ) ) 
+        if ( ( liqglo.m_displays[0].name == "" ) ) 
         {
           value += liqglo.liqglo_sceneName;
         } 
         else 
         {
-          int pointIndex = liqglo.liqglo_DDimageName[0].index( '.' );
-          value += liqglo.liqglo_DDimageName[0].substring(0, pointIndex-1).asChar();
+          int pointIndex = liqglo.m_displays[0].name.index( '.' );
+          value += liqglo.m_displays[0].name.substring(0, pointIndex-1).asChar();
         }
         value += "_";
         value += object_name;

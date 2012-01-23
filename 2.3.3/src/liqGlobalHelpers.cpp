@@ -457,7 +457,7 @@ MString parseString( const MString& inString, bool doEscaped )
       } 
       else if( tokenString == "IMG" ) 
       {
-        constructedString += liqglo.liqglo_DDimageName[0];
+        constructedString += liqglo.m_displays[0].name;
         inToken = false;
         tokenString.clear();
       } 
