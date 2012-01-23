@@ -3985,6 +3985,18 @@
 					RelativePath="..\renderman\shaderOutputRSL.h"
 					>
 				</File>
+				<File
+					RelativePath="..\renderman\shaderOutputRSL_materials.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\renderman\shaderOutputRSL_textures.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\renderman\shaderOutputRSL_utilities.cpp"
+					>
+				</File>
 				<Filter
 					Name="mel"
 					>
@@ -4062,11 +4074,35 @@
 					>
 				</File>
 				<File
+					RelativePath="..\elvishray\shaderOutputER_materials.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputER_textures.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputER_utilities.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\elvishray\shaderOutputERCall.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\elvishray\shaderOutputERCall.h"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputERCall_materials.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputERCall_textures.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputERCall_utilities.cpp"
 					>
 				</File>
 				<Filter

@@ -1,5 +1,5 @@
 #include "rm_factory.h"
-#include "../shadergraph/shaderOutputRSL.h"
+#include "shaderOutputRSL.h"
 #include "rm_renderer.h"
 #include "../shadergraph/shaderOutputMgr.h"
 
