@@ -124,9 +124,9 @@
     在mesh shape对应的shadinggroup标签的“ExtraAttributes”里有liqShadowShader，liqEnvironmentShader，liqPhotonShader
 
 
-- er batch render
-  - test case: maya_render_er.bat, 2.3.3\test\test_er_shader\er_shader_lambert.ma
-
+- batch render
+  - er  test case: maya_render_er.bat, 2.3.3\test\test_er_shader\er_shader_lambert.ma
+  - cmd batch render script: 2.3.3\test\mayabatch_template.bat
 
 
 
