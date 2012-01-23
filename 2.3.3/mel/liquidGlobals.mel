@@ -2614,6 +2614,7 @@ global proc liquidGlobalsFrameTab( string $prefix )
         liquidShowBoolGlobal "useNewTranslator" "UseNewTranslator(refactoring)" $prefix;
         liquidShowBoolGlobal "outputShaderGraph" "OutputShaderGraph(ER)" $prefix;
         liquidShowBoolGlobal "outputDebugMsgToRib" "OutputDebugMsgToRib(RM)" $prefix;
+        liquidShowBoolGlobal "logFunctionCall" "logFunctionCall" $prefix;
       setParent ..;
     setParent ..;
 

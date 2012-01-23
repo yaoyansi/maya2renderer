@@ -39,6 +39,8 @@ void initHinderParameters()
 	liqglo.m_depthMaskReverseSign = false;
 	liqglo.m_depthMaskDepthBias = 0.01;
 
+
+
 }
 //
 void getHinderParameters(const MFnDependencyNode& rGlobalNode)
@@ -348,6 +350,9 @@ void initOtherParameters()
 	liqglo.launchRender = false;
 	liqglo.outExt = "tif";
 	liqglo.m_pixDir = "rmanpix/";
+
+	//debug
+	liqglo.m_logFunctionCall = false;
 }
 void getOtherParameters(const MFnDependencyNode& rGlobalNode)
 {
@@ -366,6 +371,10 @@ void getOtherParameters(const MFnDependencyNode& rGlobalNode)
 		liqglo.m_bakeNoCullHidden = !liqglo.m_bakeNoCullHidden;
 
 	liquidGetPlugValue( rGlobalNode, "launchRender", liqglo.launchRender, gStatus );
+
+	//debug
+	liquidGetPlugValue( rGlobalNode, "logFunctionCall", liqglo.m_logFunctionCall, gStatus );
+
 }
 //
 void initCameraParameters()

@@ -1,12 +1,16 @@
 
 #include <liqlog.h>
+#include <liqGlobalVariable.h>
 
 char gLogBuffer[LOG_BUFFER_LEN];
 
 void _logFunctionCall(const char* log)
 {
-	printf("CALL:%s\n", log );
-	_flushall();
+	if(liqglo.m_logFunctionCall)
+	{
+		printf("CALL:%s\n", log );
+		_flushall();
+	}
 }
 void _liqRIBMsg(const char* msg)
 {

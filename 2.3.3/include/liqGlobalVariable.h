@@ -250,7 +250,10 @@ struct liqGlobalVariable
 	bool          m_renderViewLocal;
 	liquidlong    m_renderViewPort;
 	liquidlong    m_renderViewTimeOut;
-		bool launchRender;
+	bool launchRender;
+
+	//debug
+	bool m_logFunctionCall;//enable logFunctionCall
 };
 
 extern struct liqGlobalVariable liqglo;
