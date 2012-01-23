@@ -3264,35 +3264,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\shadergraph\shaderOutputER.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\shaderOutputER.h"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\shaderOutputERCall.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\shaderOutputERCall.h"
-					>
-				</File>
-				<File
 					RelativePath="..\shadergraph\shaderOutputMgr.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\shadergraph\shaderOutputMgr.h"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\shaderOutputRSL.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\shadergraph\shaderOutputRSL.h"
 					>
 				</File>
 				<File
@@ -4001,6 +3977,14 @@
 					RelativePath="..\renderman\rm_shader.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\renderman\shaderOutputRSL.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\renderman\shaderOutputRSL.h"
+					>
+				</File>
 				<Filter
 					Name="mel"
 					>
@@ -4067,6 +4051,22 @@
 				</File>
 				<File
 					RelativePath="..\elvishray\MayaConnection.h"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputER.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputER.h"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputERCall.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputERCall.h"
 					>
 				</File>
 				<Filter
