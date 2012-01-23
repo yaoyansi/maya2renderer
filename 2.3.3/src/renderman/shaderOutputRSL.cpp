@@ -3,8 +3,8 @@
 #include <liqShader.h>
 #include <liqShaderFactory.h>
 #include "../common/mayacheck.h"
-#include "convertShadingNetwork.h"
-#include "shadermgr.h"
+#include "../shadergraph/convertShadingNetwork.h"
+#include "../shadergraph/shadermgr.h"
 #include "ri_interface.h"
 
 namespace RSL

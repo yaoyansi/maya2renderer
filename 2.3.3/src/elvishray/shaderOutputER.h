@@ -2,7 +2,7 @@
 #define _SHADER_OUTPUT_ER_H_
 
 #include "../common/prerequest_maya.h"
-#include "shaderOutput.h"
+#include "../shadergraph/shaderOutput.h"
 
 namespace ER{
 

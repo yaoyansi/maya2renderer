@@ -1,6 +1,6 @@
 #include "er_factory.h"
-#include "../shadergraph/shaderOutputER.h"
-#include "../shadergraph/shaderOutputERCall.h"
+#include "shaderOutputER.h"
+#include "shaderOutputERCall.h"
 #include "er_renderer.h"
 #include "../shadergraph/shaderOutputMgr.h"
 

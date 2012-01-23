@@ -1,8 +1,8 @@
 #include "shaderOutputER.h"
 #include <liqlog.h>
 #include "../common/mayacheck.h"
-#include "convertShadingNetwork.h"
-#include "shadermgr.h"
+#include "../shadergraph/convertShadingNetwork.h"
+#include "../shadergraph/shadermgr.h"
 
 namespace ER
 {
