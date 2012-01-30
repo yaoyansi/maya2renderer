@@ -1436,3 +1436,33 @@ bool isBatchMode()
 	
 	return (bAboutBatch==1);
 }
+
+int find_first_of(const MString& search, const MStringArray& array)
+{
+	assert(array.length() != 0);
+	for(size_t i=0; i<array.length(); ++i)
+	{
+		if(array[i]==search)
+			return i;
+	}
+	return -1;
+}
+
+MString toFullDagPath(const MString& name)
+{
+	MSelectionList list;
+	MGlobal::getSelectionListByName(name ,list);
+
+	MDagPath dagPath;
+	list.getDagPath( 0, dagPath );
+	dagPath.extendToShape();
+
+	return dagPath.fullPathName();
+}
+void toFullDagPath(MStringArray& array)
+{
+	for(size_t i=0; i<array.length(); ++i)
+	{
+		array[i] = toFullDagPath(array[i]);
+	}
+}

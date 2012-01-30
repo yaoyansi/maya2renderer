@@ -1267,37 +1267,48 @@ MStatus liqRibTranslator::tRiIlluminate(const structJob &currentJob__, const liq
 {
 	_logFunctionCall("liqRibTranslator::tRiIlluminate(");
 	// Moritz: only write out light linking if we're not in a shadow pass
+#if 0
+// 		MObjectArray linkLights;
+// 
+// 		// light linking mode - Alf
+// 		// inclusive - lights are off by default and objects list included lights
+// 		// exclusive - lights are on by default and objects list ignored lights
+// 		// liquid Light sets - ignores the maya light linker
+// 		if( m_liquidSetLightLinking )
+// 			ribNode__->getSetLights( linkLights );
+// 		else
+// 			ribNode__->getLinkLights( linkLights, liqglo.m_illuminateByDefault );
+// 
+// 		for( unsigned i( 0 ); i < linkLights.length(); i++ )
+// 		{
+// 			MFnDagNode lightFnDag( linkLights[i] );
+// 			MString nodeName = lightFnDag.fullPathName();
+// 			if( htable )
+// 			{
+// 				//RibNode * ln = htable->find( light, MRT_Light );
+// 				MDagPath nodeDagPath;
+// 				lightFnDag.getPath( nodeDagPath );
+// 				liqRibNodePtr  ln( htable->find( lightFnDag.fullPathName(), nodeDagPath, MRT_Light ) );
+// 				if( NULL != ln )
+// 				{
+// 					liquid::RendererMgr::getInstancePtr()->
+// 						getRenderer()->exportLightLinks(
+// 						currentJob__, ribNode__, ln, liqglo.m_illuminateByDefault);
+// 				}
+// 			}
+// 		}
+#else
+	MString mesh(ribNode__->name);
 
-		MObjectArray linkLights;
+	MStringArray lights;
+	IfMErrorWarn(MGlobal::executeCommand( "lightlink -q -set 0 -t 0 -object "+mesh, lights));
+	toFullDagPath(lights);
 
-		// light linking mode - Alf
-		// inclusive - lights are off by default and objects list included lights
-		// exclusive - lights are on by default and objects list ignored lights
-		// liquid Light sets - ignores the maya light linker
-		if( m_liquidSetLightLinking )
-			ribNode__->getSetLights( linkLights );
-		else
-			ribNode__->getLinkLights( linkLights, liqglo.m_illuminateByDefault );
+	liquid::RendererMgr::getInstancePtr()->
+		getRenderer()->exportLightLinks(
+		currentJob__, ribNode__, lights);
 
-		for( unsigned i( 0 ); i < linkLights.length(); i++ )
-		{
-			MFnDagNode lightFnDag( linkLights[i] );
-			MString nodeName = lightFnDag.fullPathName();
-			if( htable )
-			{
-				//RibNode * ln = htable->find( light, MRT_Light );
-				MDagPath nodeDagPath;
-				lightFnDag.getPath( nodeDagPath );
-				liqRibNodePtr  ln( htable->find( lightFnDag.fullPathName(), nodeDagPath, MRT_Light ) );
-				if( NULL != ln )
-				{
-					liquid::RendererMgr::getInstancePtr()->
-						getRenderer()->exportLightLinks(
-						currentJob__, ribNode__, ln, liqglo.m_illuminateByDefault);
-				}
-			}
-		}
-
+#endif
 	return MS::kSuccess;
 }
 //

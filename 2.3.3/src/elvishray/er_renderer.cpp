@@ -823,18 +823,19 @@ namespace elvishray
 			Group &group = group_i->second;
 
 			//ei_init_instance( all light )
-			LightNames lights = group.gatherLights();
-			LightNames::iterator light_i = lights.begin();
-			LightNames::iterator light_e = lights.end();
-			if(lights.empty())
-			{
-				_s("//[warning]: light links are default and not output here, you must edit light links in Maya.")
-			}else{
-				for(; light_i!=light_e; ++light_i)
-				{
-					_S( ei_add_instance( light_i->c_str()) );	
-				}
-			}
+// 			LightNames lights = group.gatherLights();
+// 			LightNames::iterator light_i = lights.begin();
+// 			LightNames::iterator light_e = lights.end();
+// 			if(lights.empty())
+// 			{
+// 				_s("//[warning]: light links are default and not output here, you must edit light links in Maya.")
+// 			}else{
+// 				_s("//all lights");
+// 				for(; light_i!=light_e; ++light_i)
+// 				{
+// 					_S( ei_add_instance( light_i->c_str()) );	
+// 				}
+// 			}
 			
 
 
@@ -845,32 +846,52 @@ namespace elvishray
 				= group.lightlink.end();
 			for(; mesh_i!=mesh_e; ++mesh_i)
 			{
+				_s("//lightlinks");
 				LightNames::iterator light_i = mesh_i->second.begin();
 				LightNames::iterator light_e = mesh_i->second.end();
 				for(; light_i!=light_e; ++light_i)// has light link
 				{
-					//_S( ei_illuminate( light_i->c_str(), on ) );//removed in new eiAPI
+					_S( ei_add_instance( light_i->c_str()) );
 				}
 
 				// init object
 				_S( ei_add_instance( mesh_i->first.c_str() ) );
 				_s("\n");
-			}
+			}//for mesh
 
 			_S( ei_end_instgroup() );
-		}
+		}//for group
 
 	}
+// 	void Renderer::exportLightLinks(
+// 		const structJob &currentJob__,
+// 		const liqRibNodePtr mesh, 
+// 		const liqRibNodePtr light,
+// 		const bool bIlluminateByDefault)
+// 	{
+// 		m_groupMgr->addLightLink(currentJob__.name.asChar(), 
+// 			mesh->object(0)->getDataPtr()->getName(),
+// 			light->object(0)->getDataPtr()->getName()
+// 			);//_S( ei_init_instance( mesh->getName() ) );
+// 	}
 	void Renderer::exportLightLinks(
 		const structJob &currentJob__,
 		const liqRibNodePtr mesh, 
-		const liqRibNodePtr light,
-		const bool bIlluminateByDefault)
+		const MStringArray& lightedByWhichLightShapes)
 	{
-		m_groupMgr->addLightLink(currentJob__.name.asChar(), 
-			mesh->object(0)->getDataPtr()->getName(),
-			light->object(0)->getDataPtr()->getName()
-			);//_S( ei_init_instance( mesh->getName() ) );
+		if(lightedByWhichLightShapes.length() == 0){
+			_s( mesh->name << " is not lighted." );
+			return;
+		}
+
+		for(size_t i=0; i<lightedByWhichLightShapes.length(); ++i)
+		{
+			m_groupMgr->addLightLink(currentJob__.name.asChar(), 
+				mesh->object(0)->getDataPtr()->getName(),
+				lightedByWhichLightShapes[i].asChar()
+				);
+		}
+
 	}
 	/// shader interfaces are moved to er_shader.cpp
 

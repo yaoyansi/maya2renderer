@@ -194,11 +194,15 @@ public:
 		const liqRibMeshData *mesh, 
 		const structJob &currentJob
 		) = 0;
+// 	virtual void exportLightLinks(
+// 		const structJob &currentJob__,
+// 		const liqRibNodePtr mesh, 
+// 		const liqRibNodePtr light,
+// 		const bool bIlluminateByDefault) = 0;
 	virtual void exportLightLinks(
 		const structJob &currentJob__,
 		const liqRibNodePtr mesh, 
-		const liqRibNodePtr light,
-		const bool bIlluminateByDefault) = 0;
+		const MStringArray& lightedByWhichLightShapes) = 0;
 	// Shader
 	virtual void shader_transformBegin(const liqString  shaderSpace) = 0;
 	virtual void shader_transformEnd(const liqString  shaderSpace) = 0;

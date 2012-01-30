@@ -139,4 +139,9 @@ bool is2DTexture(const MString& name);
 bool is3DTexture(const MString& name);
 bool isBatchMode();
 
+int find_first_of(const MString& search, const MStringArray& array);
+
+MString toFullDagPath(const MString& name);
+void toFullDagPath(MStringArray& array);
+
 #endif

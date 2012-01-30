@@ -882,12 +882,37 @@ namespace renderman
 	}
 
 
+// 	void Renderer::exportLightLinks(
+// 		const structJob &currentJob__,
+// 		const liqRibNodePtr mesh,
+// 		const liqRibNodePtr light,
+// 		const bool bIlluminateByDefault)
+// 	{
+// 		RiIlluminate( light->object(0)->lightHandle(), !bIlluminateByDefault );
+// 	}
 	void Renderer::exportLightLinks(
 		const structJob &currentJob__,
-		const liqRibNodePtr mesh,
-		const liqRibNodePtr light,
-		const bool bIlluminateByDefault)
+		const liqRibNodePtr mesh, 
+		const MStringArray& lightedByWhichLightShapes)
 	{
-		RiIlluminate( light->object(0)->lightHandle(), !bIlluminateByDefault );
+		if(lightedByWhichLightShapes.length() == 0){
+			_liqRIBMsg((mesh->name+" is not lighted.").asChar());
+			return;
+		}
+
+		boost::shared_ptr< liqRibHT > &htable = liqRibTranslator::getInstancePtr()->htable;
+		for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
+		{
+			liqRibNodePtr   ribNode = (*rniter).second;
+
+			if( ribNode->object(0)->ignore || ribNode->object(0)->type != MRT_Light )
+				continue;
+			
+			if(-1 != find_first_of(ribNode->name.asChar(), lightedByWhichLightShapes) ){
+				RiIlluminate( ribNode->object(0)->lightHandle(), 1 );
+			}else{
+				RiIlluminate( ribNode->object(0)->lightHandle(), 0 );
+			}
+		}
 	}
 }//namespace

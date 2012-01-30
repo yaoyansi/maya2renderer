@@ -190,11 +190,15 @@ namespace elvishray
 			const liqRibMeshData *mesh, 
 			const structJob &currentJob
 			);
+// 		virtual void exportLightLinks(
+// 			const structJob &currentJob__,
+// 			const liqRibNodePtr mesh, 
+// 			const liqRibNodePtr light,
+// 			const bool bIlluminateByDefault);
 		virtual void exportLightLinks(
 			const structJob &currentJob__,
 			const liqRibNodePtr mesh, 
-			const liqRibNodePtr light,
-			const bool bIlluminateByDefault);
+			const MStringArray& lightedByWhichLightShapes);
 		// Shader
 		virtual void shader_transformBegin(const liqString  shaderSpace);
 		virtual void shader_transformEnd(const liqString  shaderSpace);
