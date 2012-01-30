@@ -56,7 +56,7 @@ source xxliquidutility.mel;
 proc liquidSl_setShaderName( string $token )
 {
   liqPushIdent();
-	liqlog("liquidSl_setShaderName(...)");
+	liqlog("liquidSl_setShaderName("+$token+")");
   global string $gLiquidSlShaderName;
 
   if ( $token == "" ) {
@@ -71,7 +71,7 @@ proc liquidSl_setShaderName( string $token )
 proc string liquidSl_getShaderType( int $fid )
 {
   liqPushIdent();
-	liqlog("liquidSl_getShaderType(...)");
+	liqlog("liquidSl_getShaderType("+$fid+")");
   string $type = "";
   // The first word on the first non-empty
   // line is the shader type.
@@ -109,7 +109,7 @@ proc string liquidSl_getShaderType( int $fid )
 proc string liquidSl_getParamName( string $line )
 {
   liqPushIdent();
-	liqlog("liquidSl_getParamName(...)");
+	liqlog("liquidSl_getParamName("+$line+")");
     string $strip = `substitute "^[^\"]*\"" $line ""`;
 	if ( $strip == $line ) { liqPopIdent();return "";}
 
@@ -123,7 +123,7 @@ proc string liquidSl_getParamName( string $line )
 proc string liquidSl_getParamDetail( string $line )
 {
   liqPushIdent();
-	liqlog("liquidSl_getParamDetail(...)");
+	liqlog("liquidSl_getParamDetail("+$line+")");
     string $prefix = "\"[^\"]*parameter *";
     string $suffix = " *[floatpinvecorlsgmx]+";
 
@@ -137,7 +137,7 @@ proc string liquidSl_getParamDetail( string $line )
 proc int liquidSl_isOutputParam( string $line )
 {
   liqPushIdent();
-	liqlog("liquidSl_isOutputParam(...)");
+	liqlog("liquidSl_isOutputParam("+$line+")");
 	if ( gmatch( $line, "*output parameter*") ) { liqPopIdent();return 1;}
 
   liqPopIdent();
@@ -147,7 +147,7 @@ proc int liquidSl_isOutputParam( string $line )
 proc string liquidSl_getParamType( string $line )
 {
   liqPushIdent();
-	liqlog("liquidSl_getParamType(...)");
+	liqlog("liquidSl_getParamType("+$line+")");
     string $prefix = "\"[^\"]*parameter *[uniformvaryg]+ *";
 
 	if      ( `match ($prefix+"string") $line` != "" ) { liqPopIdent();return "string";}
@@ -166,7 +166,7 @@ proc string liquidSl_getParamType( string $line )
 proc int liquidSl_getParamArraySize( string $line )
 {
   liqPushIdent();
-	liqlog("liquidSl_getParamArraySize(...)");
+	liqlog("liquidSl_getParamArraySize("+$line+")");
     string $strip = `substitute "^.*[a-z]\\[" $line ""`;
 	if ( $strip == $line ) { liqPopIdent();return -1;}
 
@@ -183,7 +183,7 @@ proc int liquidSl_getParamArraySize( string $line )
 proc string liquidSl_getParamDefaultF( string $value)
 {
 	liqPushIdent();
-	liqlog("liquidSl_getParamDefaultF(...)");
+	liqlog("liquidSl_getParamDefaultF("+$value+")");
     string $result = "0.0";
 
     // First check for "Unknown" or null for shaders
@@ -232,7 +232,7 @@ proc string liquidSl_getParamDefaultS( string $value )
 proc string liquidSl_getParamDefaultM( string $value )
 {
   liqPushIdent();
-	liqlog("liquidSl_getParamDefaultM(...)");
+	liqlog("liquidSl_getParamDefaultM("+$value+")");
     string $result = ( "<<0, 0, 0, 0; " +
                         "0, 0, 0, 0;" +
                         "0, 0, 0, 0;" +
@@ -262,6 +262,7 @@ proc string liquidSl_getParamDefaultM( string $value )
 proc string liquidSl_getParamDefaultV( string $value )
 {
   liqPushIdent();
+  	liqlog("liquidSl_getParamDefaultV("+$value+")");
     string $result = "<<0,0,0>>";
 
     // First check for "Unknown"
@@ -285,7 +286,7 @@ proc string liquidSl_getParamDefaultV( string $value )
 proc string liquidSl_getParamDefault( string $line, string $paramType )
 {
   liqPushIdent();
-	liqlog("liquidSl_getParamDefault(...)");
+	liqlog("liquidSl_getParamDefault("+$line+","+$paramType+")");
     string $value = "";
 	
 	if (size(match("[Dd]efault value", $line))) {
@@ -322,6 +323,7 @@ proc string liquidSl_getParamDefault( string $line, string $paramType )
 proc string getSloLine (int $fid)
 {
   liqPushIdent();
+  	liqlog("getSloLine("+$fid+")");
 	string $line = "";
 
 	// get a non empty line
@@ -354,7 +356,7 @@ proc string getSloLine (int $fid)
 global proc liquidSlParseSlo( string $sloFile )
 {
   liqPushIdent();
-	liqlog("liquidSlParseSlo(...)");
+	liqlog("liquidSlParseSlo("+$sloFile+")");
     if ( ! `filetest -r $sloFile` )
     {
         error( "shader does not exist: " + $sloFile );
@@ -404,6 +406,7 @@ global proc liquidSlParseSlo( string $sloFile )
     if ( $slInfo == "" ) error ("Liquid : Please load a renderer Preset or fill the field in RenderGlobals>Renderer>ShaderInfo !");
     string $cmd = $slInfo + " \"" + $sloFile + "\"";
     int $fid = `popen $cmd "r"`;
+	liqlog("`popen "+$cmd+" \"r\"`;");
 
 
     // Get the shader type - also sets the shader name
@@ -428,6 +431,7 @@ global proc liquidSlParseSlo( string $sloFile )
 
     $cmd = $slInfo + " --methods \"" + $sloFile + "\"";
 	int $fmid = `popen $cmd "r"`;
+	liqlog("`popen "+$cmd+" \"r\"`;");
 	//int $m = 0;
 	clear($gLiquidSlMethods);
     while (!`feof $fmid`) {
@@ -536,10 +540,19 @@ global proc liquidSlParseSlo( string $sloFile )
         $gLiquidSlParamDefaults[ $paramNum ] = $paramDefault;
         $gLiquidSlParamArraySizes[ $paramNum ] = $paramArraySize;
 
+		liqlog("param "+$paramNum);
+		liqlog("{");
+		liqlog("      Name:"+$paramName);
+		liqlog("      Details:"+$paramDetail);
+		liqlog("      Type:"+$paramType);
+		liqlog("      IsOutput:"+$isOutputParam);
+		liqlog("      Defaults:"+$paramDefault);
+		liqlog("      ArraySizes:"+$paramArraySize);
+		liqlog("}");
 		// Default declarations are over, we go on to next parameter
 		// We don't need to get a new line, we must still parse the current one
 		$paramNum += 1;
-    }
+    }//while ( size($line) )
 
     // Store the total number of shader parameters
     $gLiquidSlNumParams = $paramNum;

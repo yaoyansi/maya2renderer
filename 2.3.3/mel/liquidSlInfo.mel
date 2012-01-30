@@ -508,7 +508,7 @@ global proc int liquidSlTypedStringEquivalent(string $type, string $stringA, str
 global proc liquidSlSetShader( string $shaderFile )
 {
   liqPushIdent();
-	liqlog("liquidSlSetShader(...)");
+	liqlog("liquidSlSetShader("+$shaderFile+")");
     global string $gLiquidSlShaderFile;
     global string $gLiquidSLifFile[];
 
