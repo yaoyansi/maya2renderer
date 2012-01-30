@@ -87,10 +87,6 @@ namespace elvishray
 		
 		ribNode->object(0)->writeObject("", currentJob);//call liqRibLightData::_write(...)
 		ribNode->object(0)->written = 1;
-// 		if( liqglo.m_illuminateByDefault )
-// 			RiIlluminate( ribNode->object(0)->lightHandle(), 1 );
-// 		else
-// 			RiIlluminate( ribNode->object(0)->lightHandle(), 0 );
 
 		return MS::kSuccess;
 	}
@@ -860,17 +856,7 @@ namespace elvishray
 		}//for group
 
 	}
-// 	void Renderer::exportLightLinks(
-// 		const structJob &currentJob__,
-// 		const liqRibNodePtr mesh, 
-// 		const liqRibNodePtr light,
-// 		const bool bIlluminateByDefault)
-// 	{
-// 		m_groupMgr->addLightLink(currentJob__.name.asChar(), 
-// 			mesh->object(0)->getDataPtr()->getName(),
-// 			light->object(0)->getDataPtr()->getName()
-// 			);//_S( ei_init_instance( mesh->getName() ) );
-// 	}
+
 	void Renderer::exportLightLinks(
 		const structJob &currentJob__,
 		const liqRibNodePtr mesh, 

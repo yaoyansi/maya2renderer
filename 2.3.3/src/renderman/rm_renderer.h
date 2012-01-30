@@ -183,11 +183,6 @@ namespace renderman
 			const liqRibMeshData *mesh, 
 			const structJob &currentJob
 			);
-// 		virtual void exportLightLinks(
-// 			const structJob &currentJob__,
-// 			const liqRibNodePtr mesh, 
-// 			const liqRibNodePtr light,
-// 			const bool bIlluminateByDefault);
 		virtual void exportLightLinks(
 			const structJob &currentJob__,
 			const liqRibNodePtr mesh, 

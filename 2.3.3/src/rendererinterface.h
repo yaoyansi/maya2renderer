@@ -194,11 +194,6 @@ public:
 		const liqRibMeshData *mesh, 
 		const structJob &currentJob
 		) = 0;
-// 	virtual void exportLightLinks(
-// 		const structJob &currentJob__,
-// 		const liqRibNodePtr mesh, 
-// 		const liqRibNodePtr light,
-// 		const bool bIlluminateByDefault) = 0;
 	virtual void exportLightLinks(
 		const structJob &currentJob__,
 		const liqRibNodePtr mesh, 

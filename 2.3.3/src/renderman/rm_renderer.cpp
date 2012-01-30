@@ -255,12 +255,8 @@ namespace renderman
 			ribNode->object(0)->written = 1;
 			// The next line pops the light...
 			RiAttributeEnd();
-			// ...so we have to switch it on again explicitly
-			// if exclusive Lightlinking is set
-			if( liqglo.m_illuminateByDefault )
-				RiIlluminate( ribNode->object(0)->lightHandle(), 1 );
-			else
-				RiIlluminate( ribNode->object(0)->lightHandle(), 0 );
+			// close light by default // [1/30/2012 yaoyansi]
+			RiIlluminate( ribNode->object(0)->lightHandle(), 0 );
 			return MStatus::kSuccess;
 	}
 	void Renderer::openLog()
@@ -881,15 +877,6 @@ namespace renderman
 		return MStatus::kSuccess;
 	}
 
-
-// 	void Renderer::exportLightLinks(
-// 		const structJob &currentJob__,
-// 		const liqRibNodePtr mesh,
-// 		const liqRibNodePtr light,
-// 		const bool bIlluminateByDefault)
-// 	{
-// 		RiIlluminate( light->object(0)->lightHandle(), !bIlluminateByDefault );
-// 	}
 	void Renderer::exportLightLinks(
 		const structJob &currentJob__,
 		const liqRibNodePtr mesh, 
