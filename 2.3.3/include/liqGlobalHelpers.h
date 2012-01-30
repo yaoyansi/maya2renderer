@@ -141,6 +141,7 @@ bool isBatchMode();
 
 int find_first_of(const MString& search, const MStringArray& array);
 
+std::string toFullDagPath(const std::string& name);
 MString toFullDagPath(const MString& name);
 void toFullDagPath(MStringArray& array);
 

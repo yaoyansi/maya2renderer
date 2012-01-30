@@ -1448,6 +1448,11 @@ int find_first_of(const MString& search, const MStringArray& array)
 	return -1;
 }
 
+std::string toFullDagPath(const std::string& name)
+{
+	return toFullDagPath( MString(name.c_str()) ).asChar();
+}
+
 MString toFullDagPath(const MString& name)
 {
 	MSelectionList list;

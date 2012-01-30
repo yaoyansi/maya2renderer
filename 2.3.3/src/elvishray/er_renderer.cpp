@@ -110,20 +110,22 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportShadowPassLight()");
-		std::string sShaderInstanceName(shaderinstance+"_shader");
-		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
+		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
+
+		std::string sShaderInstanceName(shaderinstanceFullPath+"_shader");
+		_S( ei_shader( sShaderInstanceName.c_str() ) );//shader 
 		_S( ei_shader_param_string("desc", "shadowlight") ); 
 		_S( ei_shader_param_scalar("intensity", 3.0 ) );
 		_S( ei_end_shader() );
 
-		std::string sLightObjectName(shaderinstance+"_object");
-		_S( ei_light( sLightObjectName.c_str() ) );
-		_S( ei_add_light(	sShaderInstanceName.c_str() ) );
+		std::string sLightObjectName(shaderinstanceFullPath+"_object");
+		_S( ei_light( sLightObjectName.c_str() ) );//object
+		_S( ei_add_light(	sShaderInstanceName.c_str() ) );//shader
 		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
-		_S( ei_instance(  shaderinstance.c_str() ) );
-		_S( ei_element(	 sLightObjectName.c_str() ) );
+		_S( ei_instance(  shaderinstanceFullPath.c_str() ) );
+		_S( ei_element(	 sLightObjectName.c_str() ) );//object
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -136,19 +138,21 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportAmbientLight()");
-		std::string sShaderInstanceName(shaderinstance+"_shader");
+		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
+
+		std::string sShaderInstanceName(shaderinstanceFullPath+"_shader");
 		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
 		_S( ei_shader_param_string("desc", "ambientlight") ); 
 		_S( ei_shader_param_scalar("intensity", 3.0 ) );
 		_S( ei_end_shader() );
 
-		std::string sLightObjectName(shaderinstance+"_object");
+		std::string sLightObjectName(shaderinstanceFullPath+"_object");
 		_S( ei_light(  sLightObjectName.c_str() ) );
 		_S( ei_add_light(	sShaderInstanceName.c_str() ) );
 		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
-		_S( ei_instance(  shaderinstance.c_str()) );
+		_S( ei_instance(  shaderinstanceFullPath.c_str()) );
 		_S( ei_element(	 sLightObjectName.c_str()));
 		_S( ei_end_instance() );
 
@@ -184,19 +188,21 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("// Renderer::exportDistantLight()");
-		std::string sShaderInstanceName(shaderinstance+"_shader");
+		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
+
+		std::string sShaderInstanceName(shaderinstanceFullPath+"_shader");
 		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
 		_S( ei_shader_param_string("desc", "distantlight") ); 
 		_S( ei_shader_param_scalar("intensity", 3.0 ) );
 		_S( ei_end_shader() );
 
-		std::string sLightObjectName(shaderinstance+"_object");
+		std::string sLightObjectName(shaderinstanceFullPath+"_object");
 		_S( ei_light( sLightObjectName.c_str()) );
 		_S( ei_add_light(	sShaderInstanceName.c_str() ) );
 		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
-		_S( ei_instance( shaderinstance.c_str()) );
+		_S( ei_instance( shaderinstanceFullPath.c_str()) );
 		_S( ei_element(	sLightObjectName.c_str()) );
 		_S( ei_end_instance() );
 
@@ -230,20 +236,22 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportPointLight()");
-		std::string sShaderInstanceName(shaderinstance+"_shader");
+		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
+
+		std::string sShaderInstanceName(shaderinstanceFullPath+"_shader");
 		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
 		_S( ei_shader_param_string("desc", "pointlight") ); 
 		_S( ei_shader_param_vector("lightcolor", 1.0f, 1.0f, 1.0f ) );
 		_S( ei_shader_param_scalar("intensity", i_intensity) );
 		_S( ei_end_shader() );
 
-		std::string sLightObjectName(shaderinstance+"_object");
+		std::string sLightObjectName(shaderinstanceFullPath+"_object");
 		_S( ei_light(  sLightObjectName.c_str() ) );
 		_S( ei_add_light(	sShaderInstanceName.c_str()  ) );
 		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
-		_S( ei_instance( shaderinstance.c_str() ) );
+		_S( ei_instance( shaderinstanceFullPath.c_str() ) );
 		_S( ei_element( sLightObjectName.c_str() ) );
 		_S( ei_end_instance() );
 
@@ -300,20 +308,22 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportSpotLight()");
-		std::string sShaderInstanceName(shaderinstance+"_shader");
+		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
+
+		std::string sShaderInstanceName(shaderinstanceFullPath+"_shader");
 		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
 		_S( ei_shader_param_string("desc", "spotlight") ); 
 		_S( ei_shader_param_vector("lightcolor", 1.0f, 1.0f, 1.0f ) ); 
 		_S( ei_shader_param_scalar("intensity", i_intensity ) );
 		_S( ei_end_shader() );
 
-		std::string sLightObjectName(shaderinstance+"_object");
+		std::string sLightObjectName(shaderinstanceFullPath+"_object");
 		_S( ei_light( sLightObjectName.c_str() ) );
 		_S( ei_add_light(	sShaderInstanceName.c_str()  ) );
 		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
 		_S( ei_end_light() );
 
-		_S( ei_instance( shaderinstance.c_str() ) );
+		_S( ei_instance( shaderinstanceFullPath.c_str() ) );
 		_S( ei_element(	sLightObjectName.c_str() ) );
 		_S( ei_end_instance() );
 
@@ -345,19 +355,21 @@ namespace elvishray
 		const liqMatrix &t)
 	{
 		_s("\n// Renderer::exportAreaLight()");
-		std::string sShaderInstanceName(shaderinstance+"_shader");
+		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
+
+		std::string sShaderInstanceName(shaderinstanceFullPath+"_shader");
 		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
 		_S( ei_shader_param_string("desc", "arealight") ); 
 		_S( ei_shader_param_scalar("intensity", 3.0 ) );
 		_S( ei_end_shader() );
 
-		std::string sLightObjectName(shaderinstance+"_object");
+		std::string sLightObjectName(shaderinstanceFullPath+"_object");
 		_S( ei_light(  sLightObjectName.c_str() ) );
 		_S( ei_add_light(	sShaderInstanceName.c_str() ) );
 		_S( ei_origin( t[3][0],t[3][1],t[3][2]  ) );
 		_S( ei_end_light() );
 
-		_S( ei_instance( shaderinstance.c_str() ) );
+		_S( ei_instance( shaderinstanceFullPath.c_str() ) );
 		_S( ei_element(	 sLightObjectName.c_str() ) );
 		_S( ei_end_instance() );
 
@@ -822,23 +834,6 @@ namespace elvishray
 			
 			Group &group = group_i->second;
 
-			//ei_init_instance( all light )
-// 			LightNames lights = group.gatherLights();
-// 			LightNames::iterator light_i = lights.begin();
-// 			LightNames::iterator light_e = lights.end();
-// 			if(lights.empty())
-// 			{
-// 				_s("//[warning]: light links are default and not output here, you must edit light links in Maya.")
-// 			}else{
-// 				_s("//all lights");
-// 				for(; light_i!=light_e; ++light_i)
-// 				{
-// 					_S( ei_add_instance( light_i->c_str()) );	
-// 				}
-// 			}
-			
-
-
 			//
 			std::map<MeshName, LightNames>::iterator mesh_i 
 				= group.lightlink.begin();
@@ -846,7 +841,9 @@ namespace elvishray
 				= group.lightlink.end();
 			for(; mesh_i!=mesh_e; ++mesh_i)
 			{
-				_s("//lightlinks");
+				if( mesh_i->second.size() ){
+					_s("//lightlinks");
+				}
 				LightNames::iterator light_i = mesh_i->second.begin();
 				LightNames::iterator light_e = mesh_i->second.end();
 				for(; light_i!=light_e; ++light_i)// has light link
