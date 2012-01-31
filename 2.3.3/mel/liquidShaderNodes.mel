@@ -44,7 +44,7 @@ global string $gLiquidAELastNode;
 proc rmanParams_create( string $node, int $reReadShaderParams )
 {
   liqPushIdent();
-	liqlog("rmanParams_create(...)");
+  liqlog("rmanParams_create("+$node+","+$reReadShaderParams+")");
   if ( $reReadShaderParams ) {
     string $shaderPath = `getAttr ($node+".rmanShaderLong")`;
     liquidSlInfoReset(); // force reload
@@ -63,17 +63,18 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
   for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
       $cmd += ( "" + liquidSlParamIsOutput($i) + " " );
   }
-  //trace $cmd;
+  liqlog($cmd);
   eval $cmd;
 
-  // store the method names
+  // store the method names 
   //
-  string $cmd = ( "setAttr -type stringArray " + $node + ".rmanMethods " + liquidSlNumMethods() + " " );
-  for ( $i = 0; $i < liquidSlNumMethods(); $i++ ) {
-      $cmd += ( "\"" + liquidSlMethodName($i) + "\" " );
-  }
-  //trace $cmd;
-  eval $cmd;
+  // - omitted by yaoyansi
+//   string $cmd = ( "setAttr -type stringArray " + $node + ".rmanMethods " + liquidSlNumMethods() + " " );
+//   for ( $i = 0; $i < liquidSlNumMethods(); $i++ ) {
+//       $cmd += ( "\"" + liquidSlMethodName($i) + "\" " );
+//   }
+//   liqlog($cmd);
+//   eval $cmd;
 
   // store the param names
   //
@@ -81,7 +82,7 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
   for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
       $cmd += ( "\"" + liquidSlParamName($i) + "\" " );
   }
-  ////trace $cmd;
+  liqlog($cmd);
   eval $cmd;
 
   // store the param details
@@ -90,7 +91,7 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
   for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
       $cmd += ( liquidSlParamDetail($i) + " " );
   }
-  ////trace $cmd;
+  liqlog($cmd);
   eval $cmd;
 
   // store the param types
@@ -99,7 +100,7 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
   for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
       $cmd += ( "\"" + liquidSlParamType($i) + "\" " );
   }
-  ////trace $cmd;
+  liqlog($cmd);
   eval $cmd;
 
   // store the defaults
@@ -109,7 +110,7 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
       if ( liquidSlParamType($i) == "string" ) $cmd += ( "\"" + liquidSlParamDefaultRaw($i) + "\" " );
       else $cmd += ( "\"" + liquidSlParamDefaultRaw($i) + "\" " );
   }
-  ////trace $cmd;
+  liqlog($cmd);
   eval $cmd;
 
   // store the array sizes
@@ -118,7 +119,7 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
   for ( $i = 0; $i < liquidSlNumParams(); $i++ ) {
       $cmd += ( liquidSlParamArraySize($i) + " " );
   }
-  ////trace $cmd;
+  liqlog($cmd);
   eval $cmd;
 
   // store the lif command sequence
@@ -129,7 +130,7 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
   for ( $i = 0; $i < $guiSize; $i++ ) {
       $cmd += ( "\"" + encodeString($gLifCmdList[$i]) + "\" " );
   }
-  ////trace $cmd;
+  liqlog($cmd);
   eval $cmd;
   liqPopIdent();
 }
@@ -137,7 +138,7 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
 global proc removeObsoleteParams( string $node )
 {
   liqPushIdent();
-	liqlog("removeObsoleteParams(...)");
+	liqlog("removeObsoleteParams("+$node+")");
   // delete obsolete params
   //
   global string $gLiquidSlParamNames[];
@@ -192,7 +193,7 @@ global proc removeObsoleteParams( string $node )
 proc checkParamsDefinition( string $node )
 {
   liqPushIdent();
-	liqlog("checkParamsDefinition(...)");
+	liqlog("checkParamsDefinition("+$node+")");
 	int $numOfArgs = liquidSlNumParams();
 
 	//trace ("[checkParamsDefinition] for "+$node);
@@ -276,15 +277,32 @@ proc checkParamsDefinition( string $node )
 global proc liquidShaderNodes_initParams( string $nodeAttr )
 {
   liqPushIdent();
-	liqlog("liquidShaderNodes_initParams(...)");
+  liqlog("liquidShaderNodes_initParams("+$nodeAttr+")");
+
   $node = basenameEx( $nodeAttr );
   string $shaderPath = `getAttr ($node+".rmanShaderLong")`;
-
   $shaderPath = `workspace -expandName $shaderPath`; // get absolute name from relative
   
+  string $ext = fileExtension($shaderPath);
+  if($ext=="slo"){
+	liquidShaderNodes_initParams_slo($nodeAttr, $shaderPath);
+  }else{
+	liquidShaderNodes_initParams_pl($nodeAttr,  $shaderPath);
+  }
+
+  liqPopIdent();
+}
+
+global proc liquidShaderNodes_initParams_slo( string $nodeAttr, string $shaderPath )
+{
+  liqPushIdent();
+	liqlog("liquidShaderNodes_initParams_slo("+$nodeAttr+","+$shaderPath+")");
+
+    $node = basenameEx( $nodeAttr );
+
   // shader does not exist / not readable
   if ( !`filetest -s $shaderPath` ) 
-    warning ("[liquidShaderNodes_initParams] "+$shaderPath+" does not exist or is not readable");
+    warning ("[liquidShaderNodes_initParams_slo] "+$shaderPath+" does not exist or is not readable");
   
 
   // invalid path
@@ -293,7 +311,7 @@ global proc liquidShaderNodes_initParams( string $nodeAttr )
   string $extension = `getAttr "liquidGlobals.shaderExt"`;
   if ( ( match("[a-zA-Z]+$", $shaderPath ) != $extension ) && ( "" != $extension ) ) 
   {
-    warning ("[liquidShaderNodes_initParams] Shaders must end with "+$extension+" ");
+    warning ("[liquidShaderNodes_initParams_slo] Shaders must end with "+$extension+" ");
     liqPopIdent();
 	return;
   }
@@ -313,7 +331,7 @@ global proc liquidShaderNodes_initParams( string $nodeAttr )
 	  if ( !gmatch( $nodeType,  ("*" + $shadertype + "*") ) ) {
 		string $short = basenameEx( $shaderPath );
 		string $typ = substitute("liquid", $nodeType, "" );
-		warning ("[liquidShaderNodes_initParams] "+$short+" is not a "+$typ+" shader !");
+		warning ("[liquidShaderNodes_initParams_slo] "+$short+" is not a "+$typ+" shader !");
 		liqPopIdent();
 		return;
 	  }
@@ -364,20 +382,71 @@ global proc liquidShaderNodes_initParams( string $nodeAttr )
       }
       string $parentAttr[] = `attributeQuery -n $node -listParent $at`;
       if ( !size($parentAttr) ) 
-      deleteAttr $fullattr;
+		deleteAttr $fullattr;
     }
   }
   //trace "[init] > done.";
   liqPopIdent();
 }
 
+global proc liquidShaderNodes_initParams_pl( string $nodeAttr,  string $shaderPath )
+{
+  liqPushIdent();
+  liqlog("liquidShaderNodes_initParams_pl("+$nodeAttr+","+$shaderPath+")");
+
+  $node = basenameEx( $nodeAttr );
+
+  // shader does not exist / not readable
+  if ( !`filetest -s $shaderPath` ) 
+    warning ("[liquidShaderNodes_initParams_pl] "+$shaderPath+" does not exist or is not readable");
+  
+
+  // invalid path
+  if ( !liquidGlobalsExists() ) 
+    eval("liquidCreateGlobals();select "+$node+";");
+
+  // read shader params
+  liquidSlInfoReset();
+  liquidSlSetShader( $shaderPath );
+
+  // check the type
+  string $shadertype = liquidSlShaderType();
+  string $nodeType = nodeType( $node );
+  $nodeType = tolower( $nodeType );
+  //print("nodeType = " + $nodeType + "\n");
+  //print("shadertype = " + $shadertype + "\n");
+  if( $nodeType != "liquidcoshader" )  // accept everything
+  {
+	  if ( !gmatch( $nodeType,  ("*" + $shadertype + "*") ) ) {
+		string $short = basenameEx( $shaderPath );
+		string $typ = substitute("liquid", $nodeType, "" );
+		warning ("[liquidShaderNodes_initParams_pl] "+$short+" is not a "+$typ+" shader !");
+		liqPopIdent();
+		return;
+	  }
+  }
+
+  // here we check for false-positives : parameters with the same name
+  // but a different type or array size.
+  // This can be done only once the shader has been set.
+  checkParamsDefinition( $node );
+
+  // create shader params
+  liquidAttachShaderParams( $node, $shaderPath );
+
+  // save the params description in a string array attribute
+  rmanParams_create( $node, 0 );
+
+
+  liqPopIdent();
+}
 /**
  *  Preview function for the shader node
  */
 global proc liquidShaderNodePreview( string $node )
 {
   liqPushIdent();
-	liqlog("liquidShaderNodePreview(...)");
+	liqlog("liquidShaderNodePreview("+$node+")");
   if ( !liquidGlobalsExists() ) 
     eval("liquidCreateGlobals();select "+$node+";");
 
@@ -490,7 +559,7 @@ global proc liquidShaderNodePreview( string $node )
 global proc liquidPreviewSwatchNew ( string $nodeName, string $msg )
 {
   liqPushIdent();
-	liqlog("liquidPreviewSwatchNew(...)");
+	liqlog("liquidPreviewSwatchNew("+$nodeName+","+$msg+")");
   global int $gTextColumnWidthIndex;
 
   string $node[];
@@ -550,7 +619,7 @@ global proc liquidPreviewSwatchNew ( string $nodeName, string $msg )
 global proc liquidPreviewSwatchReplace ( string $nodeName, string $msg )
 {	
   liqPushIdent();
-	liqlog("liquidPreviewSwatchReplace(...)");
+	liqlog("liquidPreviewSwatchReplace("+$nodeName+","+$msg+")");
   string $node[];
   tokenize($msg, ".", $node);
 
@@ -584,7 +653,7 @@ global proc liquidPreviewSwatchReplace ( string $nodeName, string $msg )
 global proc string liquidAE_getShaderLayoutName( string $nodeType, string $rmanShaderLong )
 {	
   liqPushIdent();
-	liqlog("liquidAE_getShaderLayoutName(...)");
+	liqlog("liquidAE_getShaderLayoutName("+$nodeType+","+$rmanShaderLong+")");
   string $name = `substitute $rmanShaderLong "s/[\/\\. -]*/_/g"`;
   string $ret = $nodeType + basenameEx( $name );
 
@@ -599,7 +668,7 @@ global proc string liquidAE_getShaderLayoutName( string $nodeType, string $rmanS
 global proc string liquidAE_setCacheLayout( string $parent, string $shaderType, string $rmanShaderLong )
 {
   liqPushIdent();
-	liqlog("liquidAE_setCacheLayout(...)");
+	liqlog("liquidAE_setCacheLayout("+$parent+","+$shaderType+","+$rmanShaderLong+")");
   global string $gLiquid_currentAEShader;
 
   // create the base form layout if needed
@@ -660,7 +729,7 @@ global proc string liquidAE_setCacheLayout( string $parent, string $shaderType, 
 global proc liquidAE_showCachedLayout( string $shaderType, string $rmanShaderLong )
 {
   liqPushIdent();
-	liqlog("liquidAE_showCachedLayout(...)");
+	liqlog("liquidAE_showCachedLayout("+$shaderType+","+$rmanShaderLong+")");
   string $baseLayout = ( $shaderType + "CachedLayouts" );
   string $shaderLayout = liquidAE_getShaderLayoutName( $shaderType, $rmanShaderLong );
 
@@ -700,7 +769,7 @@ global proc liquidAE_showCachedLayout( string $shaderType, string $rmanShaderLon
 global proc liquidShaderNodesParamsNew ( string $msg )
 {	
   liqPushIdent();
-	liqlog("liquidShaderNodesParamsNew(...)");
+	liqlog("liquidShaderNodesParamsNew("+$msg+")");
   liquidShaderNodesParamsReplace( $msg );
   liqPopIdent();
 }
@@ -712,7 +781,7 @@ global proc liquidShaderNodesParamsNew ( string $msg )
 global proc liquidShaderNodesParamsReplace ( string $msg )
 {
   liqPushIdent();
-	liqlog("liquidShaderNodesParamsReplace(...)");
+	liqlog("liquidShaderNodesParamsReplace("+$msg+")");
   float $st = `timerX`;
 
   //trace ("[liquidShaderNodesParamsReplace] for "+$msg);
@@ -840,7 +909,7 @@ global proc liquidShaderNodesMakeInstance( string $node )
 global proc liquidShaderNodesUninstance( string $node )
 {
   liqPushIdent();
-	liqlog("liquidShaderNodesUninstance(...)");
+	liqlog("liquidShaderNodesUninstance("+$node+")");
   global string $gLiquidInheritedStandardShaderParams[];
   
   string $nodeType = nodeType( $node );
@@ -879,7 +948,7 @@ global proc liquidShaderNodesUninstance( string $node )
 global proc liquidShaderNodes_reloadRecursive( string $node )
 {
   liqPushIdent();
-	liqlog("liquidShaderNodes_reloadRecursive(...)");
+	liqlog("liquidShaderNodes_reloadRecursive("+$node+")");
   string $oldParams[];
   string $newParams[];
   string $parentShader[];
@@ -932,7 +1001,7 @@ global proc liquidShaderNodes_reloadRecursive( string $node )
 global proc liquidShaderNodes_reloadAndRefresh( string $node )
 {
   liqPushIdent();
-	liqlog("liquidShaderNodes_reloadAndRefresh(...)");
+	liqlog("liquidShaderNodes_reloadAndRefresh("+$node+")");
 /*
   liquidShaderNodes_initParams( $node );
   string $nodeType = nodeType( $node );
@@ -999,7 +1068,7 @@ global proc liquidShaderNodes_reloadAndRefresh( string $node )
 global proc liquidShaderPickerNew( string $nodeName, string $msg )
 {
   liqPushIdent();
-	liqlog("liquidShaderPickerNew(...)");
+	liqlog("liquidShaderPickerNew("+$nodeName+","+$msg+")");
   if ( !liquidGlobalsExists() ) 
     liquidCreateGlobals();
 
@@ -1049,7 +1118,7 @@ global proc liquidShaderPickerNew( string $nodeName, string $msg )
 global proc liquidShaderPickerReplace( string $nodeName, string $msg )
 {
   liqPushIdent();
-	liqlog("liquidShaderPickerReplace(...)");
+	liqlog("liquidShaderPickerReplace("+$nodeName+","+$msg+")");
   if ( !liquidGlobalsExists() ) 
     liquidCreateGlobals();
 
@@ -1079,7 +1148,7 @@ global proc liquidShaderPickerReplace( string $nodeName, string $msg )
 global proc liquidShaderNode_loadCMD( string $nodeDotAttr, string $longShaderName )
 {
   liqPushIdent();
-	liqlog("liquidShaderNode_loadCMD(...)");
+	liqlog("liquidShaderNode_loadCMD("+$nodeDotAttr+","+$longShaderName+")");
   setAttr -type "string" $nodeDotAttr $longShaderName;
   evalDeferred("liquidShaderNodes_initParams "+basenameEx($nodeDotAttr));
   liqPopIdent();
@@ -1091,7 +1160,7 @@ global proc liquidShaderNode_loadCMD( string $nodeDotAttr, string $longShaderNam
 proc liquidShaderNodesCustomPrimitiveBuildCustomMenu( string $parent, string $nodeDotAttr )
 {
   liqPushIdent();
-	liqlog("liquidShaderNodesCustomPrimitiveBuildCustomMenu(...)");
+	liqlog("liquidShaderNodesCustomPrimitiveBuildCustomMenu("+$parent+","+$nodeDotAttr+")");
   ////trace ($parent+"  "+$nodeDotAttr);
   string $attr = fileExtension($nodeDotAttr);
   string $ribPath;
@@ -1160,7 +1229,7 @@ proc liquidShaderNodesCustomPrimitiveBuildCustomMenu( string $parent, string $no
 global proc liquidShaderNodesCustomPrimitiveNew( string $label, string $nodeDotAttr )
 {
   liqPushIdent();
-	liqlog("liquidShaderNodesCustomPrimitiveNew(...)");
+	liqlog("liquidShaderNodesCustomPrimitiveNew("+$label+","+$nodeDotAttr+")");
   string $nodeType = nodeType( $nodeDotAttr );
   string $tokenized[] = stringToStringArray( $nodeDotAttr, ".");
   string $cltName = ($nodeType + "_" + $tokenized[1]);
@@ -1178,7 +1247,7 @@ global proc liquidShaderNodesCustomPrimitiveNew( string $label, string $nodeDotA
 global proc liquidShaderNodesCustomPrimitiveReplace( string $label, string $nodeDotAttr )
 {
   liqPushIdent();
-	liqlog("liquidShaderNodesCustomPrimitiveReplace(...)");
+	liqlog("liquidShaderNodesCustomPrimitiveReplace("+$label+","+$nodeDotAttr+")");
   string $nodeType = nodeType( $nodeDotAttr );
   string $tokenized[] = stringToStringArray( $nodeDotAttr, ".");
   string $cltName = ($nodeType + "_" + $tokenized[1]);
@@ -1207,7 +1276,7 @@ global proc liquidShaderNodesCustomPrimitiveReplace( string $label, string $node
 global proc liquidAssignRibboxToSelected( string $node )
 {
   liqPushIdent();
-	liqlog("liquidAssignRibboxToSelected(...)");
+	liqlog("liquidAssignRibboxToSelected("+$node+")");
   string $selected[] = `ls -transforms -sl`;
   for ( $sel in $selected ) 
   {
@@ -1221,7 +1290,7 @@ global proc liquidAssignRibboxToSelected( string $node )
 global proc liquidSelectAssignedToRibbox( string $node )
 {
   liqPushIdent();
-	liqlog("liquidSelectAssignedToRibbox(...)");
+	liqlog("liquidSelectAssignedToRibbox("+$node+")");
   select (`listConnections ($node + ".ribbox")`);
   liqPopIdent();
 }
@@ -1232,7 +1301,7 @@ global proc liquidSelectAssignedToRibbox( string $node )
 global proc liquidAssignLightShaderToSelected( string $node )
 {
   liqPushIdent();
-	liqlog("liquidAssignLightShaderToSelected(...)");
+	liqlog("liquidAssignLightShaderToSelected("+$node+")");
   string $selected[] = `ls -l -lights -dag -sl`;
 
   if ( !objExists( ($node + ".liqAssignedObjects") ) )
@@ -1251,7 +1320,7 @@ global proc liquidAssignLightShaderToSelected( string $node )
 global proc liquidSelectAssignedToLightShader( string $node )
 {
   liqPushIdent();
-	liqlog("liquidSelectAssignedToLightShader(...)");
+	liqlog("liquidSelectAssignedToLightShader("+$node+")");
   select (`listConnections ($node+".liqAssignedObjects")`);
   liqPopIdent();
 }
@@ -1259,7 +1328,7 @@ global proc liquidSelectAssignedToLightShader( string $node )
 global proc liquidAssignSurfaceShaderToSelected( string $node )
 {
   liqPushIdent();
-	liqlog("liquidAssignSurfaceShaderToSelected(...)");
+	liqlog("liquidAssignSurfaceShaderToSelected("+$node+")");
   // assign the shader to geometry
   if ( size(`ls -geometry -dag -sl`) ) 
     hyperShade -assign $node;
@@ -1289,7 +1358,7 @@ global proc liquidAssignSurfaceShaderToSelected( string $node )
 global proc liquidAssignDisplacementShaderToSelected( string $node )
 {
   liqPushIdent();
-	liqlog("liquidAssignDisplacementShaderToSelected(...)");
+	liqlog("liquidAssignDisplacementShaderToSelected("+$node+")");
   // assign the shader to geometry
   if ( size(`ls -geometry -dag -sl`) ) 
     hyperShade -assign $node;
@@ -1319,7 +1388,7 @@ global proc liquidAssignDisplacementShaderToSelected( string $node )
 global proc liquidAssignVolumeShaderToSelected( string $node )
 {
   liqPushIdent();
-	liqlog("liquidAssignVolumeShaderToSelected(...)");
+	liqlog("liquidAssignVolumeShaderToSelected("+$node+")");
   // assign the shader to geometry
   if ( size(`ls -geometry -dag -sl`) ) 
     hyperShade -assign $node;
@@ -1353,7 +1422,7 @@ global proc liquidAssignVolumeShaderToSelected( string $node )
 global proc liquidSelectShaderAssignedTo( string $obj )
 {
   liqPushIdent();
-	liqlog("liquidSelectShaderAssignedTo(...)");
+	liqlog("liquidSelectShaderAssignedTo("+$obj+")");
   ////trace $obj;
   string $selectionList[];
   string $objList[];
@@ -1399,7 +1468,7 @@ global proc liquidSelectShaderAssignedTo( string $obj )
 global proc liquidAssignShaderToSelected( string $node )
 {
   liqPushIdent();
-	liqlog("liquidAssignShaderToSelected(...)");
+	liqlog("liquidAssignShaderToSelected("+$node+")");
   string $nodetype = nodeType($node);
   if      ( $nodetype == "liquidLight" ) liquidAssignLightShaderToSelected( $node );
   else if ( $nodetype == "liquidSurface" ) liquidAssignSurfaceShaderToSelected( $node );

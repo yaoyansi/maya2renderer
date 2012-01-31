@@ -124,7 +124,7 @@ global proc liquidChangeTextFileAttrPlus ( string $selectedObj, string $argName,
 global proc int liquidChangeTextFileAttrPlusCB ( string $selectedObj, string $argName, string $fieldName, string $filename, string $fileType )
 {
   liqPushIdent();
-	liqlog("liquidChangeTextFileAttrPlusCB(...)");
+	liqlog("liquidChangeTextFileAttrPlusCB("+$selectedObj+","+ $argName+","+ $fieldName+","+ $filename+", "+ $fileType+")");
   if ( $filename != "" ) {
   	$filename = `workspace -projectPath $filename`; // get relative name if possible
 	string $currentDir = `workspace -q -dir`;
@@ -230,7 +230,7 @@ global proc liquidParamAU( string $selectedObj )
 global proc liquidFluidBuildLifFile( string $longShaderName )
 {
   liqPushIdent();
-	liqlog("liquidFluidBuildLifFile(...)");
+	liqlog("liquidFluidBuildLifFile("+$longShaderName+")");
   $longShaderName = `workspace -expandName $longShaderName`; // get absolute name from relative
   
   liqlog ("[liquidFluidBuildLifFile] $longShaderName = " + $longShaderName + "\n");
@@ -277,12 +277,13 @@ global proc liquidFluidBuildLifFile( string $longShaderName )
 global proc liquidFluidEditLifFile( string $selectedObj )
 {
   liqPushIdent();
-	liqlog("liquidFluidEditLifFile(...)");
+	liqlog("liquidFluidEditLifFile("+$selectedObj+")");
   string $longShaderName = `getAttr ( $selectedObj + ".rmanShaderLong" )`;
   $longShaderName = `workspace -expandName $longShaderName`; // get absolute name from relative
   string $longLifName = substitute( "\\..+$", $longShaderName, ".lif" );
   string $shortShaderName = basenameEx( $longShaderName );
-
+	
+  liqlog("filetest -r "+$longLifName);
   if ( !`filetest -r $longLifName` ) {
     string $answer = `confirmDialog -title "No Matching LIF File" -message ("Could not find a lif file for "+$shortShaderName+".\nDo you want to create one ?")
                                     -button "Yes" -button "No" -defaultButton "Yes"

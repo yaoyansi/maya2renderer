@@ -129,7 +129,7 @@
   - cmd batch render script: 2.3.3\test\mayabatch_template.bat
 
 
-
-
+- liquidSurfaceShader parameters list
+  - ¼ûHowToUseLiquid.pdfµÄliquidSurfaceShaderÕÂ½Ú
 
 

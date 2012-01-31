@@ -1,0 +1,447 @@
+//
+//
+// The contents of this file are subject to the Mozilla Public License Version 1.1 (the
+// "License"); you may not use this file except in compliance with the License. You may
+// obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+// Software distributed under the License is distributed on an "AS IS" basis, WITHOUT
+// WARRANTY OF ANY KIND, either express or implied. See the License for the specific
+// language governing rights and limitations under the License.
+//
+// The Original Code is the Liquid Rendering Toolkit.
+//
+// The Initial Developer of the Original Code is Colin Doncaster. Portions created by
+// Colin Doncaster are Copyright (C) 2002. All Rights Reserved.
+//
+// Contributor(s): Berj Bannayan.
+//
+//
+// The RenderMan (R) Interface Procedures and Protocol are:
+// Copyright 1988, 1989, Pixar
+// All Rights Reserved
+//
+//
+// RenderMan (R) is a registered trademark of Pixar
+//
+//  Creation Date:    July 8, 2003
+//
+//  Procedure Name:
+//      liquidSlParseSlo
+//
+//  Description:
+//      Procedure called by liquidSlSetShader() to parse
+//      a prman .slo shader file.  All parsed information
+//      is stored in the following global variables later
+//      used by the various liquidSl* routines:
+//
+//          global string $gLiquidSlShaderName;
+//          global string $gLiquidSlShaderType;
+//          global int    $gLiquidSlNumMethods;
+//          global string $gLiquidSlMethods[];
+//          global int    $gLiquidSlNumParams;
+//          global string $gLiquidSlParamNames[];
+//          global string $gLiquidSlParamDetails[];
+//          global string $gLiquidSlParamTypes[];
+//          global string $gLiquidSlParamDefaults[];
+//          global int    $gLiquidSlParamArraySizes[];
+//
+//
+source xxliquidutility.mel;
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Local helper procedures
+//
+global int $i_ParmName		= 0;
+global int $i_ParmDetails	= 1;
+global int $i_ParmType		= 2;
+global int $i_ParmOutput	= 3;
+global int $i_ParmDefault	= 4;
+global int $i_ParmArraySize	= 5;
+
+proc liquidSl_setShaderName( string $token )
+{
+  liqPushIdent();
+	liqlog("liquidSl_setShaderName("+$token+")");
+  global string $gLiquidSlShaderName;
+
+  if ( $token == "" ) {
+    $gLiquidSlShaderName = "unknown";
+  } else {
+    $gLiquidSlShaderName = basenameEx( $token );
+  }
+  liqPopIdent();
+}
+
+proc string liquidSl_getShaderName( int $fid )
+{
+	liqPushIdent();
+	liqlog("liquidSl_getShaderName("+$fid+")");
+	
+	while (!`feof $fid`) 
+	{
+		string $line = `fgetline $fid`;
+		$line = strip($line);
+
+		if( $line == "" )//empty line
+			continue;
+
+		if( `gmatch $line "#shaderName"` ){//shaderName
+			string $shaderName = strip(`fgetline $fid`);
+			liqPopIdent();
+			return $shaderName;
+		}
+	}
+	liqPopIdent();
+}
+
+
+proc string liquidSl_getShaderType( int $fid )
+{
+	liqPushIdent();
+	liqlog("liquidSl_getShaderType("+$fid+")");
+	
+	while (!`feof $fid`) 
+	{
+		string $line = `fgetline $fid`;
+		$line = strip($line);
+
+		if( $line == "" )//empty line
+			continue;
+
+		if( `gmatch $line "#shaderType"` ){//shaderType
+			string $shaderType = strip(`fgetline $fid`);
+			liqPopIdent();
+			return $shaderType;
+		}
+	}
+	liqPopIdent();
+}
+
+proc string liquidSl_getParamName( string $line )
+{
+	liqPushIdent();
+	liqlog("liquidSl_getParamName("+$line+")");
+	
+	global int $i_ParmName;
+
+	string $array[];
+	int $size;
+
+	$array = stringToStringArray($line,":");
+	$size = size($array);
+
+	liqPopIdent();
+	return $array[$i_ParmName];
+}
+
+proc string liquidSl_getParamDetail( string $line )
+{
+	liqPushIdent();
+	liqlog("liquidSl_getParamDetail("+$line+")");
+	
+	global int $i_ParmDetails;
+
+	string $array[];
+	int $size;
+
+	$array = stringToStringArray($line,":");
+	$size = size($array);
+
+	liqPopIdent();
+	return $array[$i_ParmDetails];
+}
+
+proc int liquidSl_isOutputParam( string $line )
+{
+	liqPushIdent();
+	liqlog("liquidSl_isOutputParam("+$line+")");
+	global int $i_ParmOutput;
+
+	string $array[];
+	int $size;
+
+	$array = stringToStringArray($line,":");
+	$size = size($array);
+
+	liqPopIdent();
+	return $array[$i_ParmOutput];
+}
+
+proc string liquidSl_getParamType( string $line )
+{
+	liqPushIdent();
+	liqlog("liquidSl_getParamType("+$line+")");
+	global int $i_ParmType;
+
+	string $array[];
+	int $size;
+
+	$array = stringToStringArray($line,":");
+	$size = size($array);
+
+	liqPopIdent();
+	return $array[$i_ParmType];
+}
+
+proc int liquidSl_getParamArraySize( string $line )
+{
+	liqPushIdent();
+	liqlog("liquidSl_getParamArraySize("+$line+")");
+	global int $i_ParmArraySize;
+
+	string $array[];
+	int $size;
+
+	$array = stringToStringArray($line,":");
+	$size = size($array);
+
+	liqPopIdent();
+	return $array[$i_ParmArraySize];
+}
+
+proc string liquidSl_getParamDefault( string $line, string $paramType )
+{
+ 	liqPushIdent();
+	liqlog("liquidSl_getParamDefault("+$line+","+$paramType+")");
+	global int $i_ParmDefault;
+
+	string $array[];
+	int $size;
+
+	$array = stringToStringArray($line,":");
+	$size = size($array);
+
+	liqPopIdent();
+	return $array[$i_ParmDefault];
+}
+
+ // Consolidated / coherent line from a sloFile
+proc string getSloLine (int $fid)
+{
+  liqPushIdent();
+  	liqlog("getSloLine("+$fid+")");
+	
+	while (!`feof $fid`) 
+	{
+		string $line = `fgetline $fid`;
+		$line = strip($line);
+
+		if( $line == "" )//empty line
+			continue;
+		if( `gmatch $line "#*"` )//comment line
+			continue;
+
+		//print($line+"\n");
+		liqPopIdent();
+		return $line;		
+	}
+
+  liqPopIdent();
+	return "";
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// Primary global procedure for parsing a prman .slo shader file
+//
+
+global proc liquidSlParsePL( string $shaderFile )
+{
+  liqPushIdent();
+	liqlog("liquidSlParsePL("+$shaderFile+")");
+    if ( ! `filetest -r $shaderFile` )
+    {
+        error( "shader does not exist: " + $shaderFile );
+		liqPopIdent();
+        return;
+    }
+
+    string $plFile = dirname( $shaderFile )+"/"+basename( $shaderFile, fileExtension($shaderFile) ) +"pl";
+    //
+    // Initialize the global variables
+    // used to store all the shader info
+    //
+
+    global string $gLiquidSlShaderFile;
+    global string $gLiquidSlShaderName;
+    global string $gLiquidSlShaderType;
+    global int    $gLiquidSlNumMethods;
+    global string $gLiquidSlMethods[];
+    global int    $gLiquidSlNumParams;
+    global string $gLiquidSlParamNames[];
+    global string $gLiquidSlParamDetails[];
+    global int    $gLiquidSlParamIsOutput[];
+    global string $gLiquidSlParamTypes[];
+    global string $gLiquidSlParamDefaults[];
+    global int    $gLiquidSlParamArraySizes[];
+
+    $gLiquidSlShaderFile = $shaderFile;
+    $gLiquidSlShaderName = "";
+    $gLiquidSlShaderType = "";
+    $gLiquidSlNumMethods = -1;
+    $gLiquidSlNumParams = -1;
+    clear( $gLiquidSlMethods );
+    clear( $gLiquidSlParamNames );
+    clear( $gLiquidSlParamDetails );
+    clear( $gLiquidSlParamTypes );
+    clear( $gLiquidSlParamDefaults );
+    clear( $gLiquidSlParamArraySizes );
+
+
+    // Strip the extension otherwise sloinfo will barf
+    //$sloFile = `substitute "\\.slo$" $shaderFile ""`;
+
+	//trace ("[liquidSlParseSlo] on file: "+$sloFile);
+
+    // Build and run the sloinfo command
+    //string $slInfo = `getAttr liquidGlobals.shaderInfo`;
+    //if ( $slInfo == "" ) error ("Liquid : Please load a renderer Preset or fill the field in RenderGlobals>Renderer>ShaderInfo !");
+    int $fid = `fopen $plFile "r"`;
+	liqlog("`fopen "+$plFile+" \"r\"`;");
+
+
+    // Get the shader type - also sets the shader name
+    string $shaderType = liquidSl_getShaderType( $fid );
+	liqlog("$shaderType=["+$shaderType+"]");
+    if ( $shaderType != "surface"       &&
+         $shaderType != "displacement"  &&
+         $shaderType != "volume"        &&
+         $shaderType != "light"         &&
+         $shaderType != "shader" 
+		)
+    {
+        fclose $fid;
+        error( "unknown shader type \"" + $shaderType + "\": " + $plFile );
+		liqPopIdent();
+        return;
+    }
+
+    // Store the shader type
+	// TODO : temporary fix until Liquid internal code supports SL 2.0
+	// shaders of type "shader"
+
+ //   $cmd = $slInfo + " --methods \"" + $sloFile + "\"";
+	//int $fmid = `popen $cmd "r"`;
+	//liqlog("`popen "+$cmd+" \"r\"`;");
+	////int $m = 0;
+	//clear($gLiquidSlMethods);
+ //   while (!`feof $fmid`) {
+	//	string $line = strip(`fgetline $fmid`);
+	//	if($line!="")
+	//	{
+	//		$gLiquidSlMethods[size($gLiquidSlMethods)] = $line;
+	//	}
+ //   }
+
+ //   $gLiquidSlNumMethods = size($gLiquidSlMethods);
+
+ //   if ($shaderType == "shader" ) 
+	//{
+ //       if (stringArrayContains("surface", $gLiquidSlMethods)) {
+ //           $shaderType = "surface";
+ //       } else if (stringArrayContains("lighting", $gLiquidSlMethods)) {
+ //           $shaderType = "surface";
+ //       } else if (stringArrayContains("volume", $gLiquidSlMethods)) {
+ //           $shaderType = "volume";
+ //       } else if (stringArrayContains("light", $gLiquidSlMethods)) {
+ //           $shaderType = "light";
+ //       } else if (stringArrayContains("displacement", $gLiquidSlMethods)) {
+ //           $shaderType = "displacement";
+ //       }
+ //   }
+
+
+    $gLiquidSlShaderType = $shaderType;
+    
+    string $shaderName = liquidSl_getShaderName( $fid );
+	liqlog("$$shaderName=["+$shaderName+"]");
+	liquidSl_setShaderName($shaderName);
+
+    //
+    // Now for each parameter...
+    //
+    int $paramNum = 0;
+
+    while ( !`feof $fid` ) 
+	{
+		$line = getSloLine ($fid);
+		//trace ("[liquidSlParseSlo] parsing line: "+substitute("\n", $line, ""));
+
+        string $paramName = liquidSl_getParamName( $line );
+        if ( $paramName == "" )
+        {
+            fclose $fid;
+            error( "parameter #" + $paramNum +
+                   ": cannot parse parameter name" );
+			liqPopIdent();
+            return;
+        }
+
+        string $paramDetail = liquidSl_getParamDetail( $line );
+        if ( $paramDetail == "" )
+        {
+            fclose $fid;
+            error( "parameter " + $paramNum +
+                   ": cannot parse parameter detail > " + $line );
+			liqPopIdent();
+            return;
+        }
+
+        int $isOutputParam = liquidSl_isOutputParam( $line );
+
+        string $paramType = liquidSl_getParamType( $line );
+        if ( $paramType == "" )
+        {
+            fclose $fid;
+            error( "parameter " + $paramNum +
+                   ": cannot parse parameter type" );
+			liqPopIdent();
+            return;
+        }
+
+        int $paramArraySize = liquidSl_getParamArraySize( $line );
+		int $isArrayParam;
+		if ($paramArraySize < 0) {
+			$isArrayParam = 0;
+		} else {
+			$isArrayParam = 1;
+		}
+
+
+		// Format default values
+		string $paramDefault = liquidSl_getParamDefault( $line, $paramType );
+
+
+		string $arrayNotation = ($paramArraySize > 0) ? ("["+$paramArraySize+"]") : (($paramArraySize == 0) ? "[]" : "");
+		//trace ("[liquidSlParseSlo] got param: "+$paramDetail+" "+$paramType+" "+$paramName+$arrayNotation+" = "+$paramDefault);
+
+        // Store the results for this parameter
+        $gLiquidSlParamNames[ $paramNum ] = $paramName;
+        $gLiquidSlParamDetails[ $paramNum ] = $paramDetail;
+        $gLiquidSlParamTypes[ $paramNum ] = $paramType;
+        $gLiquidSlParamIsOutput[ $paramNum ] = $isOutputParam;
+        $gLiquidSlParamDefaults[ $paramNum ] = $paramDefault;
+        $gLiquidSlParamArraySizes[ $paramNum ] = $paramArraySize;
+
+		liqlog("param "+$paramNum);
+		liqlog("{");
+		liqlog("      Name:"+$paramName);
+		liqlog("      Details:"+$paramDetail);
+		liqlog("      Type:"+$paramType);
+		liqlog("      IsOutput:"+$isOutputParam);
+		liqlog("      Defaults:"+$paramDefault);
+		liqlog("      ArraySizes:"+$paramArraySize);
+		liqlog("}");
+		// Default declarations are over, we go on to next parameter
+		// We don't need to get a new line, we must still parse the current one
+		$paramNum += 1;
+    }//while ( size($line) )
+
+    // Store the total number of shader parameters
+    $gLiquidSlNumParams = $paramNum;
+
+    fclose $fid;
+	liqPopIdent();
+}

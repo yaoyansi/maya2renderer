@@ -624,7 +624,7 @@ global proc string liquidAE_LifFloat_field( string $paramName, string $attr, str
 global proc string liquidAE_LifFloat_slider( string $paramName, string $attr, string $label, string $range[], string $description, int $state )
 {
   liqPushIdent();
-	liqlog("liquidAE_LifFloat_slider(...)");
+	liqlog("liquidAE_LifFloat_slider("+$paramName+","+$attr+","+$label+",$range[],"+$description+","+$state+")");
 	global string $gLiquid_currentAENode;
 	global string $gLiquid_currentAEParent;
 	global string $gLiquid_currentAEShader;
@@ -765,7 +765,7 @@ global proc liquidAE_LifFloat( string $paramName, int $arraySize, string $subtyp
 	global string	$gLiquid_currentAEShader;
 	global int		$gLiquid_maxDisplayElements;
 
-	// print ("[liquidAE_LifFloat] on "+$gLiquid_currentAENode+" for "+$paramName+" ("+$subtype+"), size "+$arraySize+", label "+$label+",range ["+stringArrayToString($range, " ")+"], state "+$state+", desc "+$description+"\n");
+	print ("[liquidAE_LifFloat] on "+$gLiquid_currentAENode+" for "+$paramName+" ("+$subtype+"), size "+$arraySize+", label "+$label+",range ["+stringArrayToString($range, " ")+"], state "+$state+", desc "+$description+"\n");
 	//trace ("[liquidAE_LifFloat] on "+$gLiquid_currentAENode+" for "+$paramName+" ("+$subtype+"), size "+$arraySize+", label "+$label+",range ["+stringArrayToString($range, " ")+"], state "+$state+", desc "+$description);
 
 	// error checking : if the param does not exist, we might have a bad lif
@@ -1474,7 +1474,7 @@ global proc liquidAE_LifStringOverrideDisplay( int $override, string $ctl )
 global proc liquidAE_LifStringOverrideDisplayAll()
 {
 	liqPushIdent();
-	liqlog("liquidAE_LifStringOverrideDisplayAll(...)");
+	liqlog("liquidAE_LifStringOverrideDisplayAll()");
   // global maintained by maya containing the name
   // of the main attribute editor window.
   global string $gAttributeEditorWindowName;

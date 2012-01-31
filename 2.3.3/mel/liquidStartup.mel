@@ -94,6 +94,7 @@ global proc liquidLoadScripts()
     "liquidBuildHypergraphNodePopupMenuItems.mel",
     "getMultiListerSelection.mel",
     "liquidIni.mel",
+	"liquidSlParsePL.mel",
     "liquidSlParseSdl.mel",
     "liquidSlParseSdr.mel",
     "liquidSlParseSlo.mel",

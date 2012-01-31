@@ -417,7 +417,7 @@ global proc liquidFileBrowserWindow_load( string $filemask, string $callback )
 global proc liquidFileBrowserWindow_wrapCallback(string $callback, string $arg1, string $arg2)
 {
   liqPushIdent();
-	liqlog("liquidFileBrowserWindow_wrapCallback(...)");
+	liqlog("liquidFileBrowserWindow_wrapCallback("+$callback+","+$arg1+","+$arg2+")");
 	if ( $callback !=  "" ) eval ( $callback + " \"" + $arg1 + "\" \"" + $arg2 + "\"" );
   
 	liqPopIdent();
@@ -430,7 +430,7 @@ global proc liquidFileBrowserWindow_wrapCallback(string $callback, string $arg1,
 global proc liquidFileBrowserWindow( string $path, string $filemask, string $callback )
 {  
 	liqPushIdent();
-	liqlog("liquidFileBrowserWindow(...)");
+	liqlog("liquidFileBrowserWindow("+$path+","+$filemask+","+$callback+")");
 	if (`about -nt` || `about -mac`) {
 		string $workspace = `workspace -q -fn`;
 		// note globals do NOT get set
