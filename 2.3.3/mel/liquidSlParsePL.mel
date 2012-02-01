@@ -367,6 +367,13 @@ global proc liquidSlParsePL( string $shaderFile )
     while ( !`feof $fid` ) 
 	{
 		$line = getSloLine ($fid);
+		
+		$line = strip($line);
+
+		if( $line == "" )//empty line
+			continue;
+		if( `gmatch $line "#*"` )//comment line
+			continue;
 		//trace ("[liquidSlParseSlo] parsing line: "+substitute("\n", $line, ""));
 
         string $paramName = liquidSl_getParamName( $line );
@@ -433,7 +440,8 @@ global proc liquidSlParsePL( string $shaderFile )
 		liqlog("      IsOutput:"+$isOutputParam);
 		liqlog("      Defaults:"+$paramDefault);
 		liqlog("      ArraySizes:"+$paramArraySize);
-		liqlog("}");
+		liqlog("}//"+$paramName+":"+$paramDetail+":"+$paramType+":"+$isOutputParam+":"+$paramDefault+":"+$paramArraySize);
+
 		// Default declarations are over, we go on to next parameter
 		// We don't need to get a new line, we must still parse the current one
 		$paramNum += 1;
