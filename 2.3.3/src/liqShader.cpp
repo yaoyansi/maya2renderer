@@ -303,14 +303,29 @@ liqShader::liqShader( MObject shaderObj )
 							MStatus stat = stringPlugVal.split('.', textureTokensString);
 							if(stat == MS::kSuccess)
 							{
-								MString textureExten(textureTokensString[textureTokensString.length()-1]);
-								if(MString("tex")!=textureExten.toLowerCase()){
-									stringPlugVal += ".tex";
+								// [2/1/2012 yaoyansi]
+								// This is a restriction in liquid(maya2renderer).
+								// - If the attribute name starts with 'texname',(e.g. texname, texname0, texname_0, and etc.)
+								//   it is a texture name or texture full path, 
+								//   so we MUST append '.tex' to the plug value.
+								// - If the plug is not a texture name or texture full path,
+								//   DO NOT let the attribute name starts with 'texname'.
+								std::string attrName(stringPlug.partialName().asChar());
+								if( "texname" == attrName.substr(0,7) )
+								{
+									MString textureExten(textureTokensString[textureTokensString.length()-1]);
+									if(MString("tex")==textureExten.toLowerCase()){
+										// It is a ".tex", so we don't have to append ".tex" to value.
+									}else{
+										stringPlugVal += ".tex"; // append ".tex" to value.
+										//why do this? Because this way can store the original image type information.
+										//e.g. the original image is testB.bmp, if we replaced "bmp" with "tex" here,
+										//the problem would occur when we run "txmake testB.? testB.tex" later,
+										//how we know the image type of the original testB? the type "bmp" is replaced by "tex" here and lost.
+									}
+								}else{
+									//this attribute is not a texture, keep the value unchanged.
 								}
-								//why do this? Because this way can store the original image type information.
-								//e.g. the original image is testB.bmp, if we replaced "bmp" with "tex" here,
-								//the problem would occur when we run "txmake testB.? testB.tex" later,
-								//how we know the image type of the original testB? the type "bmp" is replaced by "tex" here and lost.
 							}
 							MString stringDefault( shaderInfo.getArgStringDefault( i, 0 ) );
 							if( stringPlugVal == stringDefault )

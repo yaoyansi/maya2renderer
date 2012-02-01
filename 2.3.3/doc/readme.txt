@@ -133,3 +133,30 @@
   - 见HowToUseLiquid.pdf的liquidSurfaceShader章节
 
 
+
+
+
+
+  ---------------------------------------------------------------------
+                              NOTES
+  ---------------------------------------------------------------------
+- liquidSurfaceShader 有些参数没有输出到rib文件里
+  注意：参数如果是默认值，就不被输出到rib文件里。
+  你可以更改参数的值，看看是否仍然没有输出到rib文件里
+
+- 自定义shader里string类型参数的命名限制。
+  对于自定义shader（比如liquidSurfaceShader）参数列表里的string类型参数(string a, string b)。
+   - 如果该参数制定纹理名(string a="/texturepath/a.tex"),
+     则需要将参数名加上前缀“texname”（string texnamea="/texturepath/a.tex"）
+   - 如果该参数不指定纹理(string b="teststr"),
+     则该参数名一定不能有“texname”前缀。
+     如果有“texname”前缀，比如定义了(string texnameb="teststr")，同时texnameb不是纹理名或纹理路径，
+     那么liquid会将string texnameb="teststr.tex"输出到rib文件里，造成错误。
+    see liqShader.cpp line306 for more details.
+    // [2/1/2012 yaoyansi]
+    // This is a restriction in liquid(maya2renderer).
+    // - If the attribute name starts with 'texname',(e.g. texname, texname0, texname_0, and etc.)
+    //   it is a texture name or texture full path, 
+    //   so we MUST append '.tex' to the plug value.
+    // - If the plug is not a texture name or texture full path,
+    //   DO NOT let the attribute name starts with 'texname'.
