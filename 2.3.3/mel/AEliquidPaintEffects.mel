@@ -38,7 +38,7 @@ source xxliquidutility.mel;
 global proc AEliquidPaintEffects( string $node )
 {
   liqPushIdent();
-  liqlog("AEliquidPaintEffects("+$node+")");
+  liqAElog("AEliquidPaintEffects("+$node+")");
 
   editorTemplate -beginLayout "Liquid" -collapse true;
 

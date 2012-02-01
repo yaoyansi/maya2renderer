@@ -3,7 +3,7 @@ source xxliquidutility.mel;
 global proc AEliquidVolumeTemplate( string $nodeName )
 {
   liqPushIdent();
-  liqlog("AEliquidVolumeTemplate("+$nodeName+")");
+  liqAElog("AEliquidVolumeTemplate("+$nodeName+")");
 
   layout -e -vis false "AEcontrolFormLayout";
 

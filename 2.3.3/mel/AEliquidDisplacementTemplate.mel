@@ -3,7 +3,7 @@ source xxliquidutility.mel;
 global proc AEliquidDisplacementTemplate( string $nodeName )
 {
   liqPushIdent();
-  //liqlog("AEliquidDisplacementTemplate("+$nodeName+")");
+  liqAElog("AEliquidDisplacementTemplate("+$nodeName+")");
 
   layout -e -vis false "AEcontrolFormLayout";
 

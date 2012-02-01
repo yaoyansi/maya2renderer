@@ -56,22 +56,24 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 	int $numOfArgs = liquidSlNumParams();
 	for ( $i = 0; $i < $numOfArgs ; $i++ )
 	{
+		liqlog($i+"-----------------");
 		string $argName      = liquidSlParamName($i);
-
+		liqlog("0");
 		// filter out ouptut parameters
 		if ( $filterOutputParams && liquidSlParamIsOutput($i) && match( $outputFilter, $argName) == "" ) {
-			//trace ("attach skip : "+$argName+" ( \""+$outputFilter+"\" )");
+			liqlog ("attach skip : "+$argName+" ( \""+$outputFilter+"\" )");
 			continue;
 		} else {
-			//trace ("attach : "+$argName+" ( \""+$outputFilter+"\" )");
+			liqlog ("attach : "+$argName+" ( \""+$outputFilter+"\" )");
 		}
+
 		string $argType      = liquidSlParamType($i);
 		int    $argArrayLen  = liquidSlParamArraySize($i);
 		string $paramDefault = liquidSlParamDefault($i);
 		int $isArray = ($argArrayLen >= 0);
 		int $resizable = ($argArrayLen == 0);
  		string $arrayNotation = ($argArrayLen > 0) ? ("["+$argArrayLen+"]") : (($argArrayLen == 0) ? "[]" : "");
-		//trace ("[liquidAttachShaderParams] for param: "+$argType+" "+$argName+$arrayNotation+" = "+$paramDefault);
+		liqlog("for param: "+$argType+" "+$argName+$arrayNotation+" = "+$paramDefault);
 
 		string $argDefaultS[];
 		float  $argDefaultF[];
@@ -80,8 +82,27 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 		int $hiddenState = false;
 		string $plug = ($currentNodeName + "." + $argName);
 		string $cplug = $plug;
+		//liqlog("before `attributeQuery -node "+$currentNodeName+" -ex  "+$argName+"`");
+		
+		// we delete the plug if it already exists, 
+		if( `attributeQuery -node $currentNodeName -ex $argName` ){
+			liqlog("before  renameAttr "+$plug+" \"TO_BE_DELETED\")");
+			// philippe: this is a fix to deal with a bug with compound attributes
+			if ( catch( `renameAttr $plug "TO_BE_DELETED"` ) ){
+				liqError("renameAttr "+$plug+" \"TO_BE_DELETED\")");
+			}
+			//NOTE: without this for-loop, maya will lead a crash.
+			for($i=0; $i<1; $i++){ print("");}
 
-		if ( ! objExists( $plug ) ) {
+			liqlog("before  deleteAttr \""+$currentNodeName+".TO_BE_DELETED\"");
+			if ( catch( `deleteAttr ($currentNodeName+".TO_BE_DELETED")` ) ){
+				liqError("deleteAttr \""+$currentNodeName+".TO_BE_DELETED\"");
+			}
+		}
+
+		liqlog("objExists("+$plug+")="+ objExists( $plug ) );
+		if ( ! objExists( $plug ) ) 
+		{
 			switch( $argType ) {
 			case "float":
 				if ( $isArray )
@@ -201,18 +222,26 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 				}
 				else
 				{
+					liqlog("vector/point/normal:$paramDefault="+$paramDefault);
 					$argDefaultV[0] = liquidSlDefaultToVector( $paramDefault );
+					liqlog("vector/point/normal:$argDefaultV[0]="+$argDefaultV[0]);
 					vector $v = $argDefaultV[0];
-					addAttr -hidden true -k true -longName $argName -at double3 $currentNodeName;
-					addAttr -hidden true -k true -longName ( $argName + "a" ) -at double -parent $argName $currentNodeName;
-					addAttr -hidden true -k true -longName ( $argName + "b" ) -at double -parent $argName $currentNodeName;
-					addAttr -hidden true -k true -longName ( $argName + "c" ) -at double -parent $argName $currentNodeName;
+						
+			liqlog("addAttr -hidden true -k true -longName "+$argName+" -at \"double3\" "+$currentNodeName);
+					addAttr -hidden true -k true -longName $argName -at "double3" $currentNodeName;
+			liqlog("addAttr -hidden true -k true -longName "+$argName+"a"+" -at \"double\" -parent "+$argName+" "+$currentNodeName);
+					addAttr -hidden true -k true -longName ( $argName + "a" ) -at "double" -parent $argName $currentNodeName;
+			liqlog("addAttr -hidden true -k true -longName "+$argName+"b"+" -at \"double\" -parent "+$argName+" "+$currentNodeName);
+					addAttr -hidden true -k true -longName ( $argName + "b" ) -at "double" -parent $argName $currentNodeName;
+			liqlog("addAttr -hidden true -k true -longName "+$argName+"c"+" -at \"double\" -parent "+$argName+" "+$currentNodeName);
+					addAttr -hidden true -k true -longName ( $argName + "c" ) -at "double" -parent $argName $currentNodeName;
+			liqlog("setAttr "+$currentNodeName+"."+$argName+" -type double3 "+$v);
 					setAttr  ( $currentNodeName + "." + $argName ) -type double3 ($v.x) ($v.y) ($v.z);
 				}
 				break;
 			case "matrix":
 				if( $argArrayLen > 0 ){
-					liqError("[liquidAttachShaderParams] matrix Array parameter type unsupported yet");
+					liqError("matrix Array parameter type unsupported yet");
 				}else{
 					matrix $m[4][4] = liquidSlDefaultToMatrix( $paramDefault );
 					liqlog("$paramDefault="+$paramDefault+", $argName="+$argName+", $currentNodeName="+$currentNodeName);
@@ -241,7 +270,7 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 				}
 				break;
 			default:
-				error ("[liquidAttachShaderParams] unkown parameter type "+$argType+"\n");
+				error ("unkown parameter type "+$argType+"\n");
 				break;				
 			}
 		}

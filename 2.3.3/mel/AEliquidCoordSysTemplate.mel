@@ -38,7 +38,7 @@ source xxliquidutility.mel;
 global proc AEliquidCoordSysTemplate( string $nodeName )
 {
   liqPushIdent();
-  //liqlog("AEliquidCoordSysTemplate("+$nodeName+")");
+  liqAElog("AEliquidCoordSysTemplate("+$nodeName+")");
 
   editorTemplate -beginScrollLayout;
 

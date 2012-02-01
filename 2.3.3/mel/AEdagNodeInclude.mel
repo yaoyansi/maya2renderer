@@ -37,7 +37,7 @@ source xxliquidutility.mel;
 global proc AEdagNodeInclude ( string $nodeName )
 {
   liqPushIdent();
-  //liqlog("AEdagNodeInclude("+$nodeName+")");
+  liqAElog("AEdagNodeInclude("+$nodeName+")");
 
   // include/call base class/node attributes
   editorTemplate -suppress "renderInfo";

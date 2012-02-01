@@ -3,7 +3,7 @@ source xxliquidutility.mel;
 global proc AEliquidCoShaderTemplate( string $nodeName )
 {
   liqPushIdent();
-  //liqlog("AEliquidCoShaderTemplate("+$nodeName+")");
+  liqAElog("AEliquidCoShaderTemplate("+$nodeName+")");
 
 	layout -e -vis false "AEcontrolFormLayout";
 	editorTemplate -callCustom ("liquidPreviewSwatchNew "+$nodeName) ("liquidPreviewSwatchReplace "+$nodeName) "message";

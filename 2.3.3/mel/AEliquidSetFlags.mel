@@ -3,7 +3,7 @@ source xxliquidutility.mel;
 global proc AEliquidSetFlags( string $node )
 {
   liqPushIdent();
-  liqlog("AEliquidSetFlags("+$node+")");
+  liqAElog("AEliquidSetFlags("+$node+")");
 
   editorTemplate -beginLayout "Liquid" -collapse true;
 

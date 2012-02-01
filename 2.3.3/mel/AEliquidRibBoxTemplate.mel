@@ -47,7 +47,7 @@ global proc liquidRibBoxEditorReplace( string $nodeName, string $msg )
 global proc AEliquidRibBoxTemplate( string $nodeName )
 {
   liqPushIdent();
-  liqlog("AEliquidRibBoxTemplate("+$nodeName+")");
+  liqAElog("AEliquidRibBoxTemplate("+$nodeName+")");
 
   AEswatchDisplay $nodeName;
 

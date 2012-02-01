@@ -64,7 +64,7 @@ global proc liquidLightViewShadowReplace( string $nodeDotAttr )
 global proc AEliquidShadowControls( string $node )
 {
   liqPushIdent();
-  liqlog("AEliquidShadowControls("+$node+")");
+  liqAElog("AEliquidShadowControls("+$node+")");
 
   editorTemplate -beginLayout "Liquid" -collapse false;
 

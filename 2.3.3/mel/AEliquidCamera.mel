@@ -38,7 +38,7 @@ source xxliquidutility.mel;
 global proc AEliquidCamera( string $node )
 {
   liqPushIdent();
-  //liqlog("AEliquidCamera("+$node+")");
+  liqAElog("AEliquidCamera("+$node+")");
 
   editorTemplate -beginLayout "Liquid" -collapse true;
 

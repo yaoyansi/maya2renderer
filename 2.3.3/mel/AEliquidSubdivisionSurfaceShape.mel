@@ -3,7 +3,7 @@ source xxliquidutility.mel;
 global proc AEliquidSubdivisionSurfaceShape(string $node)
 {
   liqPushIdent();
-  liqlog("AEliquidSubdivisionSurfaceShape("+$node+")");
+  liqAElog("AEliquidSubdivisionSurfaceShape("+$node+")");
 
 
   editorTemplate -beginLayout "Liquid" -collapse true;

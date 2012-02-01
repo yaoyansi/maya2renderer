@@ -3,7 +3,7 @@ source xxliquidutility.mel;
 global proc AEliquidFGGIOverrideFlags(string $node)
 {
   liqPushIdent();
-  //liqlog("AEliquidFGGIOverrideFlags("+$node+")");
+  liqAElog("AEliquidFGGIOverrideFlags("+$node+")");
 
   editorTemplate -beginLayout "Liquid" -collapse true;
 
@@ -22,7 +22,7 @@ global proc AEliquidFGGIOverrideFlags(string $node)
 global proc AEliquidRenderSubdivisonMeshActive(string $node)
 {
   liqPushIdent();
-  //liqlog("AEliquidRenderSubdivisonMeshActive("+$node+")");
+  liqAElog("AEliquidRenderSubdivisonMeshActive("+$node+")");
 
   string $nodes[] = `ls -dag -sl`;
   string $currentNode;

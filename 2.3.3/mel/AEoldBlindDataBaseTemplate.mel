@@ -8,7 +8,7 @@ source xxliquidutility.mel;
 global proc AEoBDupdateLiqShaderParams( string $attr )
 {
   liqPushIdent();
-  liqlog("AEoBDupdateLiqShaderParams("+$attr+")");
+  liqAElog("AEoBDupdateLiqShaderParams("+$attr+")");
 
 	global string $AEliqShaderParams[];
 	string $nodeName = match("[A-Za-z0-9_]+", $attr);
@@ -35,7 +35,7 @@ global proc AEoBDupdateLiqShaderParams( string $attr )
 global proc AEoBDliqRmanShaderFieldReplace( string $attr )
 {
   liqPushIdent();
-  liqlog("AEoBDliqRmanShaderFieldReplace("+$attr+")");
+  liqAElog("AEoBDliqRmanShaderFieldReplace("+$attr+")");
 
 	string $nodeName = match("[A-Za-z0-9_]+", $attr);
 	if ( $nodeName == "liquidGlobals" ){  liqPopIdent(); return;}
@@ -82,7 +82,7 @@ global proc AEoBDliqRmanShaderFieldReplace( string $attr )
 global proc AEoBDliqRmanShaderFieldNew( string $attr )
 {
   liqPushIdent();
-  liqlog("AEoBDliqRmanShaderFieldNew("+$attr+")");
+  liqAElog("AEoBDliqRmanShaderFieldNew("+$attr+")");
 
 	AEoBDliqRmanShaderFieldReplace $attr;
 
@@ -95,7 +95,7 @@ global proc AEoBDliqRmanShaderFieldNew( string $attr )
 global proc AEoldBlindDataBaseTemplate ( string $nodeName )
 {
   liqPushIdent();
-  liqlog("AEoldBlindDataBaseTemplate("+$nodeName+")");
+  liqAElog("AEoldBlindDataBaseTemplate("+$nodeName+")");
 
 	AEoBDupdateLiqShaderParams( $nodeName );
 

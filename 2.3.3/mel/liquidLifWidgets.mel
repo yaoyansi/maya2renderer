@@ -1046,7 +1046,9 @@ global proc liquidAE_LifVector( string $paramName, int $arraySize, string $subty
   global string $gLiquid_currentAEParent;
   global string $gLiquid_currentAENode;
   global string $gLiquid_currentAEShader;
-
+//	liqlog("$gLiquid_currentAEParent="+$gLiquid_currentAEParent);
+//	liqlog("$gLiquid_currentAENode="+$gLiquid_currentAENode);
+//	liqlog("$gLiquid_currentAEShader="+$gLiquid_currentAEShader);
 
   if ( ! objExists( ($gLiquid_currentAENode+"."+$paramName) ) ) {
     warning ("[liquid] liquidAE_LifVector : "+$gLiquid_currentAENode+"."+$paramName+" does not exist ! Your Lif file might be obsolete...");
@@ -1072,9 +1074,12 @@ global proc liquidAE_LifVector( string $paramName, int $arraySize, string $subty
 
   }
 
+//  liqlog("setAttr -k "+$channelBox+" ("+$gLiquid_currentAENode+"."+$paramName+")");
   setAttr -k $channelBox ($gLiquid_currentAENode+"."+$paramName);
 
   for ( $i=0; $i<$nValues; $i++ ) {
+
+//	liqlog("i="+$i+"------------------");
 
     string $pname     = ( $arraySize )? ( $gLiquid_currentAENode + "." + $paramName + "[" + $i + "]" ) : ( $gLiquid_currentAENode + "." + $paramName );
     string $pnameCtl  = ( $arraySize )? ( $gLiquid_currentAEShader + "_" + $paramName + "_" + $i + "_LIF" ) : ( $gLiquid_currentAEShader + "_" + $paramName + "_LIF" );
@@ -1092,9 +1097,17 @@ global proc liquidAE_LifVector( string $paramName, int $arraySize, string $subty
                     -cc ( "liquidParamAU " + $gLiquid_currentAENode )
                     -attribute $pname
                     $pnameCtl;
-    } else attrFieldGrp -e -attribute $pname -ann $description $pnameCtl;
+	} else{
+		//liqlog("attrFieldGrp -e -attribute "+$pname+"-ann "+$description+" "+$pnameCtl);
+		attrFieldGrp -e -attribute $pname -ann $description $pnameCtl;
+	}
 
     string $subPname = ( $arraySize )? ($pname+"."+$paramName) : ($pname);
+
+//	liqlog("setAttr -k "+$channelBox+" "+$pname);
+//	liqlog("setAttr -k "+$channelBox+" "+$subPname+"a");
+//	liqlog("setAttr -k "+$channelBox+" "+$subPname+"b");
+//	liqlog("setAttr -k "+$channelBox+" "+$subPname+"c");
     setAttr -k $channelBox $pname;
     setAttr -k $channelBox ($subPname+"a");
     setAttr -k $channelBox ($subPname+"b");

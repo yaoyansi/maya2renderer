@@ -3,7 +3,7 @@ source xxliquidutility.mel;
 global proc AEliquidRibRequestTemplate( string $nodeName )
 {
   liqPushIdent();
-  liqlog("AEliquidRibRequestTemplate("+$nodeName+")");
+  liqAElog("AEliquidRibRequestTemplate("+$nodeName+")");
 
 	string $msg = "preFrame&preWorld&postWorld&preGeom";
 
@@ -22,7 +22,7 @@ global proc AEliquidRibRequestTemplate( string $nodeName )
 global proc liquidRibRequestEditorNew( string $nodeName, string $strmsg )
 {
   liqPushIdent();
-  liqlog("liquidRibRequestEditorNew(...)");
+  liqAElog("liquidRibRequestEditorNew(...)");
 
 	string $msg[] = stringToStringArray( $strmsg, "&" );
 	string $tmp[] = stringToStringArray( $msg[0], "." );
@@ -45,7 +45,7 @@ global proc liquidRibRequestEditorNew( string $nodeName, string $strmsg )
 global proc liquidRibRequestEditorReplace( string $nodeName, string $strmsg )
 { 
   liqPushIdent();
-  liqlog("liquidRibRequestEditorReplace(...)");
+  liqAElog("liquidRibRequestEditorReplace(...)");
 
 	string $msg[] = stringToStringArray( $strmsg, "&" );
 	string $tmp[] = stringToStringArray( $msg[0], "." );

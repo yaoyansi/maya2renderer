@@ -1,4 +1,5 @@
 global int $g_IndentNum = 0;
+global int $g_ShowAELog = 1;
 proc log2(string $prefix, string $log)
 {
 	global int $g_IndentNum;
@@ -41,4 +42,13 @@ global proc liqPopIdent()
 {
 	global int $g_IndentNum;
 	$g_IndentNum--;
+}
+
+global proc liqAElog(string $log)
+{
+	global int $g_ShowAELog;
+
+	if($g_ShowAELog){
+		log2("", $log);
+	}
 }

@@ -36,7 +36,7 @@ source xxliquidutility.mel;
 global proc AEdependNodeTemplate ( string $nodeName )
 {
 	liqPushIdent();
-    //liqlog("AEdagNodeInclude("+$nodeName+")");
+    liqAElog("AEdagNodeInclude("+$nodeName+")");
 
 	editorTemplate -beginLayout "Node Behavior";
 		editorTemplate -addControl "caching";

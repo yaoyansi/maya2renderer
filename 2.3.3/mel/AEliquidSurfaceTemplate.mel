@@ -35,7 +35,7 @@ source xxliquidutility.mel;
 global proc AEliquidSurfaceTemplate( string $nodeName )
 {
   liqPushIdent();
-  liqlog("AEliquidSurfaceTemplate("+$nodeName+")");
+  liqAElog("AEliquidSurfaceTemplate("+$nodeName+")");
 
   layout -e -vis false "AEcontrolFormLayout";
 

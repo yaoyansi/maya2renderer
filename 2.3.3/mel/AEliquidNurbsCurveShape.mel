@@ -3,7 +3,7 @@ source xxliquidutility.mel;
 global proc AEliquidNurbsCurveShape(string $node)
 {
   liqPushIdent();
-  liqlog("AEliquidNurbsCurveShape("+$node+")");
+  liqAElog("AEliquidNurbsCurveShape("+$node+")");
 
 	editorTemplate -beginLayout "Liquid"   -collapse true;
 	
@@ -23,7 +23,7 @@ global proc AEliquidNurbsCurveShape(string $node)
 global proc AEliquidRenderasCurveActive(string $node)
 {
   liqPushIdent();
-  liqlog("AEliquidRenderasCurveActive("+$node+")");
+  liqAElog("AEliquidRenderasCurveActive("+$node+")");
 
 	string $nodes[] = `ls -dag -sl`;
 	string $currentNode;

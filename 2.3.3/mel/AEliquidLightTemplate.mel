@@ -354,7 +354,7 @@ global proc mainShadowStatusReplace( string $nodeDotAttr )
 global proc AEliquidLightTemplate( string $nodeDotAttr )
 {
   liqPushIdent();
-  liqlog("mainShadowStatusReplace("+$nodeDotAttr+")");
+  liqAElog("AEliquidLightTemplate("+$nodeDotAttr+")");
 
   layout -e -vis false "AEcontrolFormLayout";
 
@@ -424,7 +424,7 @@ global proc AEliquidLightTemplate( string $nodeDotAttr )
 global proc AEliquidAreaLight( string $node )
 {
   liqPushIdent();
-  liqlog("AEliquidAreaLight("+$node+")");
+  liqAElog("AEliquidAreaLight("+$node+")");
 
   editorTemplate -beginLayout "Liquid" -collapse true;
 
