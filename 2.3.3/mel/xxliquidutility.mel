@@ -52,3 +52,26 @@ global proc liqAElog(string $log)
 		log2("", $log);
 	}
 }
+// myDeleteAttr() always lead a crash on my machine :(
+global proc myDeleteAttr(string $node, string $attr, int $loop)
+{
+	liqPushIdent();
+	liqlog("myDeleteAttr("+$node+","+$attr+","+$loop+")");
+
+	string $plug = $node+"."+$attr;
+
+	liqlog("before  renameAttr "+$plug+" \"TO_BE_DELETED\")");
+	if ( catch( `renameAttr $plug "TO_BE_DELETED"` ) ){
+		liqError("renameAttr "+$plug+" \"TO_BE_DELETED\")");
+	}
+
+	//NOTE: without this for-loop, maya may lead to a crash.
+	for($i=0; $i<$loop; $i++){ print("+");}print("\n");
+
+	liqlog("before  deleteAttr \""+$node+".TO_BE_DELETED\"");
+	if ( catch( `deleteAttr ($node+".TO_BE_DELETED")` ) ){
+		liqError("deleteAttr \""+$node+".TO_BE_DELETED\"");
+	}
+	
+	liqPopIdent();
+}
