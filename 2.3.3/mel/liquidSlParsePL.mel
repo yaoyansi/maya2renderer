@@ -335,7 +335,7 @@ global proc liquidSlParsePL( string $shaderFile )
 	//	}
  //   }
 
- //   $gLiquidSlNumMethods = size($gLiquidSlMethods);
+    $gLiquidSlNumMethods = size($gLiquidSlMethods);
 
  //   if ($shaderType == "shader" ) 
 	//{

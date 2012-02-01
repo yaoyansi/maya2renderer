@@ -68,13 +68,12 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
 
   // store the method names 
   //
-  // - omitted by yaoyansi
-//   string $cmd = ( "setAttr -type stringArray " + $node + ".rmanMethods " + liquidSlNumMethods() + " " );
-//   for ( $i = 0; $i < liquidSlNumMethods(); $i++ ) {
-//       $cmd += ( "\"" + liquidSlMethodName($i) + "\" " );
-//   }
-//   liqlog($cmd);
-//   eval $cmd;
+   string $cmd = ( "setAttr -type stringArray " + $node + ".rmanMethods " + liquidSlNumMethods() + " " );
+   for ( $i = 0; $i < liquidSlNumMethods(); $i++ ) {
+       $cmd += ( "\"" + liquidSlMethodName($i) + "\" " );
+   }
+   liqlog($cmd);
+   eval $cmd;
 
   // store the param names
   //

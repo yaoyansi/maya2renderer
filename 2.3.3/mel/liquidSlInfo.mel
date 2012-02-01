@@ -677,7 +677,7 @@ global proc int liquidSlNumMethods()
 	liqlog("liquidSlNumMethods()");
     global int $gLiquidSlNumMethods;
     if ( $gLiquidSlNumMethods == -1 )
-		liqlog( "error: [liquidSlNumMethods] no shader set" );
+		error( "[liquidSlNumMethods] no shader set" );
   liqPopIdent();
     return $gLiquidSlNumMethods;
 }
