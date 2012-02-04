@@ -377,7 +377,48 @@ namespace elvishray
 		const structJob &currentJob__
 		)
 	{
+		
 		liqRibTranslator::getInstancePtr()->_writeObject(ribNode__, currentJob__, false, 0);
+		//_writeObject() will call Renderer::exportOneGeometry_Mesh()
+
+
+		_s("//--------------------------");
+		unsigned int sample = 0;
+		const liqRibDataPtr mesh = ribNode__->object(sample)->getDataPtr();
+		_S( ei_instance( mesh->getName() ) );//shape node
+		//_S( ei_visible( on ) );
+		// 		ei_shadow( on );
+		// 		ei_trace( on );
+		{//material
+			MStringArray shadingGroupNodes;
+			{
+				MString cmd;
+				cmd = "listConnections -type \"shadingEngine\" -destination on (\""+MString(mesh->getName())+"\" + \".instObjGroups\")";
+				IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNodes));
+			}
+			_S( ei_add_material( shadingGroupNodes[0].asChar() ) );
+			// add test shader,must removed when the shader export is done.
+			//_S( ei_add_material("phong_mtl_for_test") );
+		}
+		_S( ei_element( getObjectName(mesh->getName()).c_str() ) );
+// 		if( motion_transform )
+// 		{
+// 			ei_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
+// 				0.0f, 1.0f, 0.0f, 0.0f, 
+// 				0.0f, 0.0f, 1.0f, 0.0f, 
+// 				0.0f, 0.0f, 0.0f, 1.0f );
+// 			// 			ei_motion_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
+// 			// 				0.0f, 1.0f, 0.0f, 0.0f, 
+// 			// 				0.0f, 0.0f, 1.0f, 0.0f, 
+// 			// 				2.3f, 2.0f, 3.1f, 1.0f );
+// 		}
+		int bMotion = (ribNode__->doDef || ribNode__->doMotion);
+		_S( ei_motion( bMotion ) );
+
+		_S( ei_end_instance() );
+		_s("//");
+		//
+		m_groupMgr->addObjectInstance( currentJob__.name.asChar(), mesh->getName() );//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
 
 	}
 	void Renderer::exportOneGeometry_Mesh(
@@ -418,8 +459,7 @@ namespace elvishray
 
 		// geometry data (shape)
 		_s("\n//############################### mesh #");
-		std::string sMeshObjectName(std::string(mesh->getName())+"_object");
-		_S( ei_object( sMeshObjectName.c_str(), "poly" ) );
+		_S( ei_object( getObjectName(mesh->getName()).c_str(), "poly" ) );
 		_s("//### vertex positions, size="<<position.length() );
 		_s("{");
 		_d( eiTag tag );
@@ -496,41 +536,6 @@ namespace elvishray
 		_s("}//"<<MString(mesh->getName())+"_object");
 		_S( ei_end_object() );
 
-		_s("//--------------------------");
-		_S( ei_instance( mesh->getName() ) );//shape node
- 		//_S( ei_visible( on ) );
-// 		ei_shadow( on );
-// 		ei_trace( on );
-		{//material
-			MStringArray shadingGroupNodes;
-			{
-				MString cmd;
-				cmd = "listConnections -type \"shadingEngine\" -destination on (\""+MString(mesh->getName())+"\" + \".instObjGroups\")";
-				IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNodes));
-			}
-		_S( ei_add_material( shadingGroupNodes[0].asChar() ) );
-		// add test shader,must removed when the shader export is done.
-		//_S( ei_add_material("phong_mtl_for_test") );
-		}
-		_S( ei_element( sMeshObjectName.c_str() ) );
-// 		if( motion_transform )
-// 		{
-// 			ei_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
-// 				0.0f, 1.0f, 0.0f, 0.0f, 
-// 				0.0f, 0.0f, 1.0f, 0.0f, 
-// 				0.0f, 0.0f, 0.0f, 1.0f );
-// 			// 			ei_motion_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
-// 			// 				0.0f, 1.0f, 0.0f, 0.0f, 
-// 			// 				0.0f, 0.0f, 1.0f, 0.0f, 
-// 			// 				2.3f, 2.0f, 3.1f, 1.0f );
-// 		}
-		int bMotion = (ribNode->doDef || ribNode->doMotion);
-		_S( ei_motion( bMotion ) );
-
-		_S( ei_end_instance() );
-		_s("//");
-		//
-		m_groupMgr->addObjectInstance( currentJob.name.asChar(), mesh->getName() );//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
 
 	}
 	//

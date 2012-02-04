@@ -145,4 +145,6 @@ std::string toFullDagPath(const std::string& name);
 MString toFullDagPath(const MString& name);
 void toFullDagPath(MStringArray& array);
 
+std::string getObjectName(const char *ribDataName);
+
 #endif

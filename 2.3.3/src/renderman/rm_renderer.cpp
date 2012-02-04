@@ -655,13 +655,13 @@ namespace renderman
 
 							for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
 							{ 
-								_writeObject(ribNode__, currentJob__, true, msampleOn);
+								liqRibTranslator::getInstancePtr()->_writeObject(ribNode__, currentJob__, true, msampleOn);
 							}
 							RiMotionEnd();
 						}else {
 							RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
 
-							_writeObject(ribNode__, currentJob__, false, 0);
+							liqRibTranslator::getInstancePtr()->_writeObject(ribNode__, currentJob__, false, 0);
 						}
 					}
 #else

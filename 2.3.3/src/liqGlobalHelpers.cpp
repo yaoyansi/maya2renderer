@@ -1471,3 +1471,9 @@ void toFullDagPath(MStringArray& array)
 		array[i] = toFullDagPath(array[i]);
 	}
 }
+
+std::string getObjectName(const char *ribDataName)
+{
+	return std::string(ribDataName)+"_object";
+
+}
