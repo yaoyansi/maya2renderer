@@ -373,8 +373,8 @@ namespace elvishray
 	}
 	//
 	void Renderer::exportOneObject(
-		const liqRibNodePtr *lightdata, 
-		const structJob &currentJob
+		const liqRibNodePtr &ribNode__,  
+		const structJob &currentJob__
 		)
 	{
 

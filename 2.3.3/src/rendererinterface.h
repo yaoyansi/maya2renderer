@@ -187,8 +187,8 @@ public:
 	// Object
 	//
 	virtual void exportOneObject(
-		const liqRibNodePtr *lightdata, 
-		const structJob &currentJob
+		const liqRibNodePtr &ribNode__, 
+		const structJob &currentJob__
 		) = 0;
 	virtual void exportOneGeometry_Mesh(
 		const liqRibMeshData *mesh, 
