@@ -3096,8 +3096,7 @@ void liqRibTranslator::oneObjectBlock(
 		RiAttributeBegin();
 		RiAttribute( "identifier", "name", &getLiquidRibName( ribNode->name.asChar() ), RI_NULL );
 
-		// Alf: preTransformMel
-		preTransformMel(transform);
+
 
 		if( !ribNode->grouping.membership.empty() ) 
 		{
@@ -3124,6 +3123,10 @@ void liqRibTranslator::oneObjectBlock(
 		{
 			tRiIlluminate(currentJob, ribNode);
 		}
+		//{// transform motion blur
+		// Alf: preTransformMel
+		preTransformMel(transform);
+		
 		bool bMotionBlur =
 			ribNode->motion.transformationBlur &&
 			( ribNode->object( 1 ) ) &&
@@ -3138,6 +3141,7 @@ void liqRibTranslator::oneObjectBlock(
 
 		// Alf: postTransformMel
 		postTransformMel(transform);
+		//}
 
 		bool hasSurfaceShader( false );
 		liqDetailShaderKind hasCustomSurfaceShader( liqRegularShaderNode );
