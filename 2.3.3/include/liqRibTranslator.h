@@ -524,6 +524,13 @@ public:
 		const structJob&currentJob
 		);
 	void writeShadingGroup(const MString& meshname);
+	
+	// temporarily used to refactor
+	void exportOneObject(
+		const liqRibNodePtr &ribNode__,
+		const structJob&currentJob__
+
+		);
 
 private:
 	liqRibTranslator(const liqRibTranslator&);
