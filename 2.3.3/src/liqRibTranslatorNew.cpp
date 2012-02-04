@@ -3123,25 +3123,6 @@ void liqRibTranslator::oneObjectBlock(
 		{
 			tRiIlluminate(currentJob, ribNode);
 		}
-		//{// transform motion blur
-		// Alf: preTransformMel
-		preTransformMel(transform);
-		
-		bool bMotionBlur =
-			ribNode->motion.transformationBlur &&
-			( ribNode->object( 1 ) ) &&
-			//( ribNode->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
-			( !currentJob.isShadow || currentJob.deepShadows );
-
-		bool bMatrixMotionBlur = 
-			liqglo.liqglo_doMotion 
-			&& bMotionBlur;
-
-		MaxtrixMotionBlur(ribNode, path, bMatrixMotionBlur);
-
-		// Alf: postTransformMel
-		postTransformMel(transform);
-		//}
 
 		bool hasSurfaceShader( false );
 		liqDetailShaderKind hasCustomSurfaceShader( liqRegularShaderNode );
@@ -3286,6 +3267,25 @@ void liqRibTranslator::oneObjectBlock(
 			}
 		}
 
+		//{// transform motion blur
+		// Alf: preTransformMel
+		preTransformMel(transform);
+
+		const bool bMotionBlur =
+			ribNode->motion.transformationBlur &&
+			( ribNode->object( 1 ) ) &&
+			//( ribNode->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
+			( !currentJob.isShadow || currentJob.deepShadows );
+
+		const bool bMatrixMotionBlur = 
+			liqglo.liqglo_doMotion 
+			&& bMotionBlur;
+
+		MaxtrixMotionBlur(ribNode, path, bMatrixMotionBlur);
+
+		// Alf: postTransformMel
+		postTransformMel(transform);
+		//}
 
 		//////////////////////////////////////////////////////////////////////////
 		if( ribNode->rib.hasBox() ) 
@@ -3327,7 +3327,8 @@ void liqRibTranslator::oneObjectBlock(
 			} */
 		}
 		//////////////////////////////////////////////////////////////////////////
-		
+
+
 		// Alf: preShapeMel
 		preShapeMel(transform);
 
