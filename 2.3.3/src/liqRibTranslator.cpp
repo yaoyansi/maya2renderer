@@ -7174,7 +7174,9 @@ void liqRibTranslator::_writeObject(
 	MString MotionPostfix;
 	unsigned int sample;
 	if( bGeometryMotionBlur ){
-		MotionPostfix = ".m"+(int)msampleOn;
+		MString MSampleOn;
+		MSampleOn.set((int)msampleOn);
+		MotionPostfix = ".m"+MSampleOn;
 		sample        = msampleOn;
 	}else{
 		MotionPostfix = "";
