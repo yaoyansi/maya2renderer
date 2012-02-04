@@ -409,18 +409,29 @@ namespace elvishray
 		RtMatrix m;		
 		IfMErrorWarn(matrix.get(m));
 		_S( ei_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
-
-// 		if( motion_transform )
-// 		{
-// 			ei_motion_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
-// 				0.0f, 1.0f, 0.0f, 0.0f, 
-// 				0.0f, 0.0f, 1.0f, 0.0f, 
-// 				2.3f, 2.0f, 3.1f, 1.0f );
-// 		}
 		
+		const bool bMotionBlur =
+			ribNode__->motion.transformationBlur &&
+			( ribNode__->object( 1 ) ) &&
+			//( ribNode__->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
+			( !currentJob__.isShadow || currentJob__.deepShadows );
 
+		const bool bMatrixMotionBlur = 
+			liqglo.liqglo_doMotion 
+			&& bMotionBlur;
 
+ 		if( bMatrixMotionBlur )
+ 		{
+			unsigned lastSample = liqglo.liqglo_motionSamples -1;
+
+			matrix = ribNode__->object( lastSample )->matrix( ribNode__->path().instanceNumber() );
+			IfMErrorWarn(matrix.get(m));
+			//_s();
+			_S( ei_motion_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
+ 		}
+		
 		int bMotion = (ribNode__->doDef || ribNode__->doMotion);
+		_s("//ribNode->doDef="<<ribNode__->doDef<<", ribNode->doMotion="<<ribNode__->doMotion);
 		_S( ei_motion( bMotion ) );
 
 		_S( ei_end_instance() );
@@ -660,7 +671,8 @@ namespace elvishray
 
 		//	Motion Blur:
 //		_S("ei_Shutter( float open, float close );");
-		//_S( ei_motion( (liqglo.liqglo_doMotion? 1:0) ) );
+		_s("//transform motion="<<liqglo.liqglo_doMotion<<", deform motion="<<liqglo.liqglo_doDef);
+		_S( ei_motion( liqglo.liqglo_doMotion||liqglo.liqglo_doDef ) );
 //		_S("ei_motion_Segments( int num );");
 
 		//	Trace Depth:
