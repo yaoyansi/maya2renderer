@@ -377,6 +377,7 @@ namespace elvishray
 		const structJob &currentJob__
 		)
 	{
+		liqRibTranslator::getInstancePtr()->_writeObject(ribNode__, currentJob__, false, 0);
 
 	}
 	void Renderer::exportOneGeometry_Mesh(
