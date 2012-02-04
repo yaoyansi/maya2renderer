@@ -400,18 +400,26 @@ namespace elvishray
 			// add test shader,must removed when the shader export is done.
 			//_S( ei_add_material("phong_mtl_for_test") );
 		}
+		
+		//element
 		_S( ei_element( getObjectName(mesh->getName()).c_str() ) );
+		
+		MMatrix matrix;
+		matrix = ribNode__->object( sample )->matrix( ribNode__->path().instanceNumber() );
+		RtMatrix m;		
+		IfMErrorWarn(matrix.get(m));
+		_S( ei_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
+
 // 		if( motion_transform )
 // 		{
-// 			ei_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
+// 			ei_motion_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
 // 				0.0f, 1.0f, 0.0f, 0.0f, 
 // 				0.0f, 0.0f, 1.0f, 0.0f, 
-// 				0.0f, 0.0f, 0.0f, 1.0f );
-// 			// 			ei_motion_transform( 1.0f, 0.0f, 0.0f, 0.0f, 
-// 			// 				0.0f, 1.0f, 0.0f, 0.0f, 
-// 			// 				0.0f, 0.0f, 1.0f, 0.0f, 
-// 			// 				2.3f, 2.0f, 3.1f, 1.0f );
+// 				2.3f, 2.0f, 3.1f, 1.0f );
 // 		}
+		
+
+
 		int bMotion = (ribNode__->doDef || ribNode__->doMotion);
 		_S( ei_motion( bMotion ) );
 
@@ -446,7 +454,7 @@ namespace elvishray
 		IfMErrorWarn(status);
 
 		MFloatPointArray position;
-		IfMErrorWarn(fnMesh.getPoints (position, MSpace::kWorld));
+		IfMErrorWarn(fnMesh.getPoints (position, MSpace::kObject));
 
 		MIntArray triangleCounts,triangleVertices;
 		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));
