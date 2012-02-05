@@ -212,7 +212,7 @@ namespace elvishray
 	 void my_ei_object( const char *name, const char *type );
 	 /* polygon objects */
 	 void my_ei_pos_list(const eiTag tab);
-	 //void my_ei_motion_pos_list(const eiTag tab);
+	 void my_ei_motion_pos_list(const eiTag tab);
 	 void my_ei_triangle_list(const eiTag tab);
 
 	 void my_ei_vector( float x, float y, float z );

@@ -190,10 +190,10 @@ public:
 		const liqRibNodePtr &ribNode__, 
 		const structJob &currentJob__
 		) = 0;
-	virtual void exportOneGeometry_Mesh(
-		const liqRibMeshData *mesh, 
-		const structJob &currentJob
-		) = 0;
+// 	virtual void exportOneGeometry_Mesh(
+// 		const liqRibMeshData *mesh, 
+// 		const structJob &currentJob
+// 		) = 0;
 	virtual void exportLightLinks(
 		const structJob &currentJob__,
 		const liqRibNodePtr mesh, 

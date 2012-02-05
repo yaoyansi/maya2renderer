@@ -57,7 +57,7 @@
 #include <liqGlobalHelpers.h>
 #include <liqGlobalVariable.h>
 #include "renderermgr.h"
-
+#include "renderman/rm_renderer.h"
 
 using namespace boost;
 using namespace std;
@@ -352,8 +352,9 @@ void liqRibMeshData::_write(const structJob &currentJob)
 			RiIlluminate( handle, 1 );
 		}
 	}else{
-		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->exportOneGeometry_Mesh(this, currentJob);
+		renderman::Renderer* rm = 
+		(renderman::Renderer*)(liquid::RendererMgr::getInstancePtr()->getRenderer());
+		rm->exportOneGeometry_Mesh(this, currentJob);
 	}
 
   } 

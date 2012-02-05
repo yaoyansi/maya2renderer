@@ -9,6 +9,7 @@ namespace liquid{
 }
 
 struct eiContext;
+class MFnMEsh;
 
 namespace elvishray
 {
@@ -186,10 +187,6 @@ namespace elvishray
 			const liqRibNodePtr &ribNode__, 
 			const structJob &currentJob
 			);
-		virtual void exportOneGeometry_Mesh(
-			const liqRibMeshData *mesh, 
-			const structJob &currentJob
-			);
 
 		virtual void exportLightLinks(
 			const structJob &currentJob__,
@@ -234,6 +231,16 @@ namespace elvishray
 		void cookInstanceGroup();
 		void dummyPhongShader();//for test only
 		void pretest();
+
+		void exportOneGeometry_Mesh(
+			const liqRibNodePtr &ribNode__,
+			const structJob &currentJob,
+			unsigned int sample_first,
+			unsigned int sample_last
+			);
+//		void _exportVertexFromDagNode(const MFnMesh* fnMesh);
+		void _exportVertexFromNodePlug(
+			const liqRibNodePtr &ribNode__, unsigned int sample);
 
 		eiContext *CONTEXT;
 	};

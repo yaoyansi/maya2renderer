@@ -673,12 +673,13 @@ namespace renderman
 					for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
 					{ 
 						liqRibTranslator::getInstancePtr()->_writeObject(ribNode__, currentJob__, true, msampleOn);
+						//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 					}
 					RiMotionEnd();
 #endif
 				}else{
-					//ribNode__->object( 0 )->writeObject();
 					liqRibTranslator::getInstancePtr()->_writeObject(ribNode__, currentJob__, false, 0);
+					//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 				}// if(bGeometryMotion)
 			}//if(hasRibBoxData)
 

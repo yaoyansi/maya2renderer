@@ -377,14 +377,25 @@ namespace elvishray
 		const structJob &currentJob__
 		)
 	{
-		
-		liqRibTranslator::getInstancePtr()->_writeObject(ribNode__, currentJob__, false, 0);
+		unsigned int sample_first = 0;
+		unsigned int sample_last = liqglo.liqglo_motionSamples -1;
+
+		const bool bMotionBlur =
+			ribNode__->motion.transformationBlur &&
+			( ribNode__->object( 1 ) ) &&
+			//( ribNode__->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
+			( !currentJob__.isShadow || currentJob__.deepShadows );
+
+		bool bGeometryMotion = 
+			liqglo.liqglo_doDef 
+			&& bMotionBlur
+			&& ( ribNode__->object(0)->type != MRT_RibGen );
+
+		exportOneGeometry_Mesh(ribNode__, currentJob__ , sample_first, bGeometryMotion?sample_last:sample_first);
 		//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 
-
 		_s("//--------------------------");
-		unsigned int sample = 0;
-		const liqRibDataPtr mesh = ribNode__->object(sample)->getDataPtr();
+		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
 		_S( ei_instance( mesh->getName() ) );//shape node
 		//_S( ei_visible( on ) );
 		// 		ei_shadow( on );
@@ -405,31 +416,23 @@ namespace elvishray
 		_S( ei_element( getObjectName(mesh->getName()).c_str() ) );
 		
 		MMatrix matrix;
-		matrix = ribNode__->object( sample )->matrix( ribNode__->path().instanceNumber() );
+		matrix = ribNode__->object( sample_first )->matrix( ribNode__->path().instanceNumber() );
 		RtMatrix m;		
 		IfMErrorWarn(matrix.get(m));
 		_S( ei_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
 		
-		const bool bMotionBlur =
-			ribNode__->motion.transformationBlur &&
-			( ribNode__->object( 1 ) ) &&
-			//( ribNode__->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
-			( !currentJob__.isShadow || currentJob__.deepShadows );
-
+		//transform motion
 		const bool bMatrixMotionBlur = 
 			liqglo.liqglo_doMotion 
 			&& bMotionBlur;
-
  		if( bMatrixMotionBlur )
  		{
-			unsigned lastSample = liqglo.liqglo_motionSamples -1;
-
-			matrix = ribNode__->object( lastSample )->matrix( ribNode__->path().instanceNumber() );
+			matrix = ribNode__->object( sample_last )->matrix( ribNode__->path().instanceNumber() );
 			IfMErrorWarn(matrix.get(m));
-			//_s();
 			_S( ei_motion_transform( m[0][0], m[0][1], m[0][2], m[0][3],   m[1][0], m[1][1], m[1][2], m[1][3],   m[2][0], m[2][1], m[2][2], m[2][3],   m[3][0], m[3][1], m[3][2], m[3][3] ) );
  		}
-		
+
+		//toggle motion on this instance
 		int bMotion = (ribNode__->doDef || ribNode__->doMotion);
 		_s("//ribNode->doDef="<<ribNode__->doDef<<", ribNode->doMotion="<<ribNode__->doMotion);
 		_S( ei_motion( bMotion ) );
@@ -438,14 +441,19 @@ namespace elvishray
 		_s("//");
 		//
 		m_groupMgr->addObjectInstance( currentJob__.name.asChar(), mesh->getName() );//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
-
 	}
+	//
 	void Renderer::exportOneGeometry_Mesh(
-		const liqRibMeshData *mesh, 
-		const structJob &currentJob
+		const liqRibNodePtr &ribNode__,
+		const structJob &currentJob,
+		unsigned int sample_first,
+		unsigned int sample_last
 		)
 	{
-		_s("\n// Renderer::exportOneGeometry_Mesh("<<mesh->getName()<<")");
+		_s("\n// Renderer::exportOneGeometry_Mesh("<<ribNode__->name.asChar()<<","<<sample_first<<","<<sample_last<<")");
+
+		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
+
 		//
 		liqRibNodePtr ribNode = liqRibTranslator::getInstancePtr()->htable->find(
 			mesh->objDagPath.fullPathName(), 
@@ -464,8 +472,6 @@ namespace elvishray
 		MFnMesh fnMesh(mesh->objDagPath, &status);
 		IfMErrorWarn(status);
 
-		MFloatPointArray position;
-		IfMErrorWarn(fnMesh.getPoints (position, MSpace::kObject));
 
 		MIntArray triangleCounts,triangleVertices;
 		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));
@@ -479,23 +485,41 @@ namespace elvishray
 		// geometry data (shape)
 		_s("\n//############################### mesh #");
 		_S( ei_object( getObjectName(mesh->getName()).c_str(), "poly" ) );
-		_s("//### vertex positions, size="<<position.length() );
 		_s("{");
 		_d( eiTag tag );
+
+		//vertex position
+		_s("//### vertex positions, fnMesh.numVertices()="<<fnMesh.numVertices() );
 		_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
 		_s("//tag="<<tag);
 		_S( ei_pos_list( tag ) );
-		for(size_t i=0; i<position.length(); ++i)
-		{
-			_S( ei_tab_add_vector( position[i][0],position[i][1],position[i][2] ) );
-		}
+
+		//_exportVertexFromDagNode(fnMesh);
+		_exportVertexFromNodePlug(ribNode__, sample_first);
+
 		_S( ei_end_tab() );
+
+		{//deform motion
+			if( sample_first != sample_last )
+			{
+				_s("//### vertex deform positions, " );
+				_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
+				_s("//tag="<<tag);
+				_S( ei_motion_pos_list( tag ) );
+
+				_exportVertexFromNodePlug(ribNode__, sample_last);
+
+				_S( ei_end_tab() );
+			}
+		}
+
 // 		_s("//### vertex color");
 // 		for(int i=0; i<position.length(); i++)
 // 		{
 // 			_S( ei_vertex(i) );
 // 			//_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
 // 		}
+
 		if(nmls.length()!=0)
 		{
 			_s("//### N");
@@ -510,6 +534,7 @@ namespace elvishray
 			}
 			_S( ei_end_tab() );
 		}
+
 		if( currentUVsetName.length() != 0 )//there is a current uv set
 		{
 			MFloatArray u_coords;
@@ -555,6 +580,48 @@ namespace elvishray
 		_s("}//"<<MString(mesh->getName())+"_object");
 		_S( ei_end_object() );
 
+
+	}
+// 	void Renderer::_exportVertexFromDagNode(const MFnMesh* fnMesh)
+// 	{
+// 		MFloatPointArray position;
+// 		IfMErrorWarn(fnMesh.getPoints (position, MSpace::kObject));
+// 
+// 		for(size_t i=0; i<position.length(); ++i)
+// 		{
+// 			_S( ei_tab_add_vector( position[i][0],position[i][1],position[i][2] ) );
+// 		}
+// 	}
+	void Renderer::_exportVertexFromNodePlug(
+		const liqRibNodePtr &ribNode__,
+		unsigned int sample)
+	{	
+		MStatus status;
+
+		const liqRibDataPtr ribdata = ribNode__->object(sample)->getDataPtr();
+		liqRibMeshData* mesh = (liqRibMeshData*)(ribdata.get());
+		const std::vector<liqTokenPointer>& tokenPointerArray = mesh->tokenPointerArray;
+		
+		liqTokenPointer vertex;
+		for( std::vector< liqTokenPointer >::const_iterator iter( tokenPointerArray.begin() ); iter != tokenPointerArray.end(); ++iter ) 
+		{
+			if( "P" == const_cast< liqTokenPointer* >( &( *iter ) )->getDetailedTokenName() )// find the Position data
+			{
+				vertex = *iter;
+				break;
+			}
+		}
+		assert( !vertex.empty() );
+		const RtFloat* vertex_buf = vertex.getTokenFloatArray();
+
+		MFnMesh fnMesh(mesh->objDagPath, &status);
+		IfMErrorWarn(status);
+
+		// add vertex position to ER
+		for(size_t i=0; i<fnMesh.numVertices(); ++i)
+		{
+			_S( ei_tab_add_vector( vertex_buf[3*i+0],vertex_buf[3*i+1],vertex_buf[3*i+2] ) );
+		}
 
 	}
 	//
