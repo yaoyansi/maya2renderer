@@ -60,6 +60,11 @@ public: // Methods
 	  return verts;
   }
 
+  bool isAreaLight()const { return areaLight; }
+  bool isEmpty()const { return (numPoints>1); }
+  MString getName()const { return name; }
+  float getAreaIntensity() const {return areaIntensity;}
+  const RtFloat* getTransformationMatrixPtr() const {return &transformationMatrix[0][0]; }
 
 private: // Data
   RtInt     numFaces;
@@ -79,5 +84,7 @@ private:
 	liqRibMeshData(const liqRibMeshData&);
 	liqRibMeshData& operator=(const liqRibMeshData&);
 };
+
+typedef boost::shared_ptr< liqRibMeshData > liqRibMeshDataPtr;
 
 #endif

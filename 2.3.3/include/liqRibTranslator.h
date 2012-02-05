@@ -380,13 +380,14 @@ public:
 	//void freeShaders( void );
 
 //	void scanExpressions( liqRibLightData *light );
-
+protected:
 	void _writeObject( 
 		const liqRibNodePtr& ribNode,
 		const structJob &currentJob,
 		const bool bGeometryMotionBlur,
 		const unsigned int msampleOn
 	);
+public:
 	void makeReflectionPass(
 		std::vector<structJob> &refList__, 
 		liqRenderScript::Job &reflectJob__,

@@ -304,64 +304,26 @@ void liqRibMeshData::printMesh()
  */
 void liqRibMeshData::_write(const structJob &currentJob)
 {
-  if ( numPoints > 1 ) 
-  {
-	  LIQDEBUGPRINTF( "-> writing mesh\n" );
-
-	if(areaLight)
-	{
-		RtLightHandle handle = INVALID_LIGHT_INDEX;
-
-		{ // What happens if we're inside a motion block????? This whole approach of Liquid is flawed...
-			LIQDEBUGPRINTF( "-> mesh is area light\n" );
-			//	RiAttributeBegin();
-			RtString ribname = const_cast< char* >( name.asChar() );
-			RiAttribute( "identifier", "name", &ribname, RI_NULL );
-			RtMatrix tmp;
-			memcpy( tmp, transformationMatrix, sizeof( RtMatrix ) );
-			RiTransform( tmp );
-
-			handle = RiAreaLightSource( "arealight", "intensity", &areaIntensity, RI_NULL );
-		}
-		//
-		//mesh data begin
-		//
-		// Each loop has one polygon, so we just want an array of 1's of
-		// the correct size. Stack version.
-		//vector< RtInt > nloops( numFaces, 1 );
-		// Alternatively (heap version):
-		scoped_array< RtInt > nloops( new RtInt[ numFaces ] );
-		fill( nloops.get(), nloops.get() + numFaces, ( RtInt )1 );
-
-		unsigned numTokens( tokenPointerArray.size() );
-		scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-		scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-		assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
-
-		RiPointsGeneralPolygonsV( numFaces,
-			&nloops[ 0 ],
-			nverts.get(),
-			verts.get(),
-			numTokens,
-			tokenArray.get(),
-			pointerArray.get() );
-		//mesh data end
-
-		{
-			// RiAttributeEnd();
-			RiIlluminate( handle, 1 );
-		}
-	}else{
-		renderman::Renderer* rm = 
-		(renderman::Renderer*)(liquid::RendererMgr::getInstancePtr()->getRenderer());
-		rm->exportOneGeometry_Mesh(this, currentJob);
-	}
-
-  } 
-  else 
-  {
-//    liquidMessage( "Could not export degenerate mesh", messageError );
-  }
+//  if ( numPoints > 1 ) 
+//  {
+//	  LIQDEBUGPRINTF( "-> writing mesh\n" );
+//
+//
+//	if(areaLight)
+//	{
+	assert(0 && "moved to renderman::Renderer::_writeObject() >> if( meshdata->isAreaLight() )");
+//	}else{
+//		renderman::Renderer* rm = 
+//		(renderman::Renderer*)(liquid::RendererMgr::getInstancePtr()->getRenderer());
+//		rm->exportOneGeometry_Mesh(this, currentJob);
+	assert(0 && "moved to renderman::Renderer::_writeObject() >> if( ribNode->object(sample)->type == MRT_Mesh)" );
+//	}
+//
+//  } 
+//  else 
+//  {
+////    liquidMessage( "Could not export degenerate mesh", messageError );
+//  }
 }
 
 /** Compare this mesh to the other for the purpose of determining

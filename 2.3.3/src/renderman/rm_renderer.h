@@ -179,10 +179,10 @@ namespace renderman
 			const liqRibNodePtr &ribNode__, 
 			const structJob &currentJob__
 			);
-		void exportOneGeometry_Mesh(
-			const liqRibMeshData *mesh, 
-			const structJob &currentJob
-			);
+// 		void exportOneGeometry_Mesh(
+// 			const liqRibMeshData *mesh, 
+// 			const structJob &currentJob
+// 			);
 		virtual void exportLightLinks(
 			const structJob &currentJob__,
 			const liqRibNodePtr mesh, 
@@ -211,7 +211,12 @@ namespace renderman
 		Renderer& operator=(const Renderer&);
 
 		void _RiOption_format_compress(bool bBinary, bool bCompress);
-	
+		void _writeObject(
+			const liqRibNodePtr& ribNode, 
+			const structJob &currentJob,
+			const bool bGeometryMotionBlur,
+			const unsigned int msampleOn
+			);
 	private:
 
 	};

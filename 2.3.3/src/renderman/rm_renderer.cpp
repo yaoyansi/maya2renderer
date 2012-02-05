@@ -672,13 +672,13 @@ namespace renderman
 
 					for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
 					{ 
-						liqRibTranslator::getInstancePtr()->_writeObject(ribNode__, currentJob__, true, msampleOn);
+						this->_writeObject(ribNode__, currentJob__, true, msampleOn);
 						//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 					}
 					RiMotionEnd();
 #endif
 				}else{
-					liqRibTranslator::getInstancePtr()->_writeObject(ribNode__, currentJob__, false, 0);
+					this->_writeObject(ribNode__, currentJob__, false, 0);
 					//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 				}// if(bGeometryMotion)
 			}//if(hasRibBoxData)
@@ -689,35 +689,35 @@ namespace renderman
 		} // else RiArchiveRecord( RI_COMMENT, " Shapes Ignored !!" );
 
 	}
-	void Renderer::exportOneGeometry_Mesh(
-		const liqRibMeshData *meshdata,  
-		const structJob &currentJob
-		)
-	{
-		//
-		//mesh data begin
-		//
-		// Each loop has one polygon, so we just want an array of 1's of
-		// the correct size. Stack version.
-		//vector< RtInt > nloops( numFaces, 1 );
-		// Alternatively (heap version):
-		boost::scoped_array< RtInt > nloops( new RtInt[ meshdata->getNumFaces() ] );
-		std::fill( nloops.get(), nloops.get() + meshdata->getNumFaces(), ( RtInt )1 );
+	//void Renderer::exportOneGeometry_Mesh(
+	//	const liqRibMeshData *meshdata,  
+	//	const structJob &currentJob
+	//	)
+	//{
+	//	//
+	//	//mesh data begin
+	//	//
+	//	// Each loop has one polygon, so we just want an array of 1's of
+	//	// the correct size. Stack version.
+	//	//vector< RtInt > nloops( numFaces, 1 );
+	//	// Alternatively (heap version):
+	//	boost::scoped_array< RtInt > nloops( new RtInt[ meshdata->getNumFaces() ] );
+	//	std::fill( nloops.get(), nloops.get() + meshdata->getNumFaces(), ( RtInt )1 );
 
-		unsigned numTokens( meshdata->tokenPointerArray.size() );
-		boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-		assignTokenArraysV( meshdata->tokenPointerArray, tokenArray.get(), pointerArray.get() );
+	//	unsigned numTokens( meshdata->tokenPointerArray.size() );
+	//	boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+	//	boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+	//	assignTokenArraysV( meshdata->tokenPointerArray, tokenArray.get(), pointerArray.get() );
 
-		RiPointsGeneralPolygonsV( meshdata->getNumFaces(),
-			&nloops[ 0 ],
-			meshdata->getNverts().get(),
-			meshdata->getVerts().get(),
-			numTokens,
-			tokenArray.get(),
-			pointerArray.get() );
-		//mesh data end
-	}
+	//	RiPointsGeneralPolygonsV( meshdata->getNumFaces(),
+	//		&nloops[ 0 ],
+	//		meshdata->getNverts().get(),
+	//		meshdata->getVerts().get(),
+	//		numTokens,
+	//		tokenArray.get(),
+	//		pointerArray.get() );
+	//	//mesh data end
+	//}
 	//
 	void Renderer::ribPrologue_comment(const char* liqversion, 
 		const char* scenename, const char* user, const time_t &now)
@@ -1043,5 +1043,164 @@ namespace renderman
 				RiIlluminate( ribNode->object(0)->lightHandle(), 0 );
 			}
 		}
+	}
+
+	void Renderer::_writeObject(
+		const liqRibNodePtr& ribNode, 
+		const structJob &currentJob,
+		const bool bGeometryMotionBlur,
+		const unsigned int msampleOn
+		)
+	{
+
+		MString MotionPostfix;
+		unsigned int sample;
+		if( bGeometryMotionBlur ){
+			MString MSampleOn;
+			MSampleOn.set((int)msampleOn);
+			MotionPostfix = ".m"+MSampleOn;
+			sample        = msampleOn;
+		}else{
+			MotionPostfix = "";
+			sample        = 0;
+		}
+
+		MString geometryRibFile( 
+			liquidGetRelativePath( 
+			false, 
+			getLiquidRibName( ribNode->name.asChar() ), 
+			liqglo.liqglo_ribDir 
+			) +"."+(int)liqglo.liqglo_lframe+MotionPostfix+".rib" 
+			);
+
+		//ribNode->object( sample )->writeObject(geometryRibFile, currentJob);
+		if( ribNode->object(sample)->type == MRT_Mesh)
+		{
+			MString m_ribFileFullPath( geometryRibFile );
+			//handle rib-begin----------------------------------------------
+			RtContextHandle c;
+			//if m_ribFileFullPath is "", write the data into the current rib file.
+			if(m_ribFileFullPath!=""){
+				//1)make a reference
+				RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+				//2)write the data into another rib file.
+				c = RiGetContext();//push context
+				liquidMessage("output geometry rib: "+ std::string(m_ribFileFullPath.asChar()) , messageInfo);
+				RiBegin( const_cast< RtToken >( m_ribFileFullPath.asChar() ) );
+			}
+			//-------------------------------------------------------------
+
+			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
+			const liqRibMeshDataPtr meshdata = 
+				boost::dynamic_pointer_cast<liqRibMeshData>(ribNode->object(sample)->getDataPtr() );
+			assert( meshdata.get() != NULL );
+
+			//mesh data begin
+			//
+			// Each loop has one polygon, so we just want an array of 1's of
+			// the correct size. Stack version.
+			//vector< RtInt > nloops( numFaces, 1 );
+			// Alternatively (heap version):
+			boost::scoped_array< RtInt > nloops( new RtInt[ meshdata->getNumFaces() ] );
+			std::fill( nloops.get(), nloops.get() + meshdata->getNumFaces(), ( RtInt )1 );
+
+			unsigned numTokens( meshdata->tokenPointerArray.size() );
+			boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+			boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+			assignTokenArraysV( meshdata->tokenPointerArray, tokenArray.get(), pointerArray.get() );
+
+			RiPointsGeneralPolygonsV( meshdata->getNumFaces(),
+				&nloops[ 0 ],
+				meshdata->getNverts().get(),
+				meshdata->getVerts().get(),
+				numTokens,
+				tokenArray.get(),
+				pointerArray.get() );
+			//mesh data end
+
+			//handle rib-end-----------------------------------------------
+			if(m_ribFileFullPath!=""){
+				RiEnd();
+				RiContext(c);//pop context
+			}
+			//-------------------------------------------------------------
+
+		}
+		else if( ribNode->object(sample)->type == MRT_Light )
+		{
+			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
+			const liqRibMeshDataPtr meshdata = 
+				boost::dynamic_pointer_cast<liqRibMeshData>(ribNode->object(sample)->getDataPtr() );
+			
+			if( meshdata.get() != NULL )//mesh light
+			{
+				if( !meshdata->isEmpty() )
+				{
+					if( meshdata->isAreaLight() )
+					{
+						// this code section comes from liqRibMeshData::_write(const structJob &currentJob)
+
+						RtLightHandle handle = INVALID_LIGHT_INDEX;
+
+						{ // What happens if we're inside a motion block????? This whole approach of Liquid is flawed...
+							LIQDEBUGPRINTF( "-> mesh is area light\n" );
+							//	RiAttributeBegin();
+							RtString ribname = const_cast< char* >( meshdata->getName().asChar() );
+							RiAttribute( "identifier", "name", &ribname, RI_NULL );
+							RtMatrix tmp;
+							memcpy( tmp, meshdata->getTransformationMatrixPtr(), sizeof( RtMatrix ) );
+							RiTransform( tmp );
+							float areaIntensity = meshdata->getAreaIntensity();
+							handle = RiAreaLightSource( "arealight", "intensity", &areaIntensity, RI_NULL );
+						}
+						//
+						//mesh data begin
+						//
+						// Each loop has one polygon, so we just want an array of 1's of
+						// the correct size. Stack version.
+						//vector< RtInt > nloops( numFaces, 1 );
+						// Alternatively (heap version):
+						boost::scoped_array< RtInt > nloops( new RtInt[ meshdata->getNumFaces() ] );
+						std::fill( nloops.get(), nloops.get() + meshdata->getNumFaces(), ( RtInt )1 );
+
+						unsigned numTokens( meshdata->tokenPointerArray.size() );
+						boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+						boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+						assignTokenArraysV( meshdata->tokenPointerArray, tokenArray.get(), pointerArray.get() );
+
+						RiPointsGeneralPolygonsV( meshdata->getNumFaces(),
+							&nloops[ 0 ],
+							meshdata->getNverts().get(),
+							meshdata->getVerts().get(),
+							numTokens,
+							tokenArray.get(),
+							pointerArray.get() );
+						//mesh data end
+
+						{
+							// RiAttributeEnd();
+							RiIlluminate( handle, 1 );
+						}
+					}
+				}else{
+				   liquidMessage( "Could not export degenerate mesh", messageError );
+				}
+
+
+			}//if( meshdata.get() != NULL )//mesh light
+
+
+
+
+			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
+			const liqRibLightDataPtr lightdata = 
+				boost::dynamic_pointer_cast<liqRibLightData>(ribNode->object(sample)->getDataPtr() );
+
+			if( lightdata.get() != NULL )//light
+			{
+
+			}
+		}
+
 	}
 }//namespace

@@ -136,5 +136,7 @@ private:
 	liqRibLightData& operator=(const liqRibLightData&);
 };
 
+typedef boost::shared_ptr< liqRibLightData > liqRibLightDataPtr;
+
 
 #endif
