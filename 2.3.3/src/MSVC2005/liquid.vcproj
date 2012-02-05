@@ -3970,6 +3970,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\renderman\rm_helper.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\renderman\rm_helper.h"
+					>
+				</File>
+				<File
 					RelativePath="..\renderman\rm_renderer.cpp"
 					>
 				</File>

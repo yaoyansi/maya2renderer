@@ -61,7 +61,7 @@ public: // Methods
   }
 
   bool isAreaLight()const { return areaLight; }
-  bool isEmpty()const { return (numPoints>1); }
+  bool isEmpty()const { return (numPoints<=1); }
   MString getName()const { return name; }
   float getAreaIntensity() const {return areaIntensity;}
   const RtFloat* getTransformationMatrixPtr() const {return &transformationMatrix[0][0]; }

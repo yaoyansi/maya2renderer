@@ -12,6 +12,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "displayDriverPixie", "displayDriverPixie\displayDriverPixie.vcproj", "{59A8A411-90E8-495F-BC45-3C60FF6E9B2F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liquid", "liquid.vcproj", "{EC91D9D7-946F-4D42-AEA6-F607A1FBE4F5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{74E7C4B8-B607-43A9-8CE3-21209CF2DA67} = {74E7C4B8-B607-43A9-8CE3-21209CF2DA67}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "liquidBin", "liquidBin\liquidBin.vcproj", "{C72B3D60-A418-41EF-9B83-0F16430BC6CF}"
 EndProject
