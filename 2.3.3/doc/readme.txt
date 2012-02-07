@@ -1,8 +1,48 @@
+ ---------------------------------------------------------------------
+                          CONTENTS
+ ---------------------------------------------------------------------
+- License
+- Build/Install/Test
+- Others
+- NOTES
+- F.A.Q.
+
+
+ ---------------------------------------------------------------------
+                          License
+ ---------------------------------------------------------------------
+The contents of this file are subject to the Mozilla Public License Version 1.1
+(the "License"); you may not use this file except in compliance with the
+License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
+the specific language governing rights and limitations under the License.
+
+The Original Code is the Liquid Rendering Toolkit.
+The Initial Developer of the Original Code is Colin Doncaster. Portions created
+by Colin Doncaster are Copyright (C) 2002. All Rights Reserved.
+
+Contributor(s): Dan Bethell, Berj Bannayan, Andrew Chapman, Colin Doncaster,
+St閜hane Deverly, George Harker, Jamie McCarter, Ken McGaugh, Moritz Moeller,
+Michael Duffy, Richard Pickler, Rob Pieke, Paul Scruby, Yuri Meshalkin,
+Alf Kraus, Leon Tony Atkinson.
+
+The RenderMan (R) Interface Procedures and Protocol are:
+Copyright 1988, 1989, Pixar
+All Rights Reserved
+
+RenderMan (R) is a registered trademark of Pixar
+
+
+ ---------------------------------------------------------------------
+                          Build/Install/Test
+ ---------------------------------------------------------------------
 - Development environment
    - msvc 2008(sp1)
    - Boost(1.46.1 or later), set BOOST_ROOT in system environment variables, e.g. BOOST_ROOT=E:/dev/boost/1_46_1
    - Maya2009 x32, set MAYA_PATH2009 in system environment variables, e.g. MAYA_PATH2009=D:\Program Files\Autodesk\Maya2009
-   - (For renderman renderer only) Renderman(http://code.google.com/p/hojocn/downloads/detail?name=pixar_win32.7z&can=2&q=#makechanges)
+   - (For renderman renderer only) Renderman Pro Server.
 
 - Build
   - access https://github.com/yaoyansi/maya2renderer, check out the code to your local directory, say it $(LiquidRoot).
@@ -22,6 +62,8 @@
                                             ...
   - open $(LiquidRoot)\2.3.3\src\MSVC2005\liquid.sln, choose “Win32” and “Prman2009Debug” in Configuration Manager，
     - (For renderman renderer only)
+      - make sure Prman is installed, and $(RMANTREE) is set(e.g. RMANTREE=D:\Program Files\Pixar\RenderManProServer-13.5.2),
+        $(RMANTREE) contains 3 sub-directories, bin\, etc\ and lib\.
       - build displayDriverAqsis project, liqmaya.dll will be generated;
       - make sure liqmaya.dll is copied to "$(RMANTREE)\etc\d_liqmaya.dll"。
     - build liquid project；
@@ -40,6 +82,10 @@
 
 - Test 
   - open maya2009, load $(LiquidRoot)\2.3.3\test\er.ma,
+  - load liquid plugin:
+    Menu "Window" --> "Settings/Preferences" --> "Plug-in Manager"
+    Liquid plugin would be listed in "Plug-in Manager" window if you use $(LiquidRoot)\2.3.3\bin\Maya.env,
+    If liquid plugin is not listed, load $(LiquidRoot)\2.3.3\bin\Prman\win32\liquid_2009x32d.mll manually please.
   - in "Render Settings" panel
     - select Liquid renderer
     - in liquid tab：
@@ -48,6 +94,10 @@
   - render.
 
 
+
+ ---------------------------------------------------------------------
+                            Others
+ ---------------------------------------------------------------------
 - link error boost::system::get_system_category() 找不到
   解决方法：在liquid项目里把\boost\1_39\libs\system\src\error_code.cpp包含进去
 
@@ -126,7 +176,7 @@
 
 - batch render
   - er  test case: maya_render_er.bat, 2.3.3\test\test_er_shader\er_shader_lambert.ma
-  - cmd batch render script: 2.3.3\test\mayabatch_template.bat
+  - cmd batch render script: $(LiquidRoot)\2.3.3\test\mayabatch_template.bat
 
 
 - liquidSurfaceShader parameters list
@@ -160,3 +210,17 @@
     //   so we MUST append '.tex' to the plug value.
     // - If the plug is not a texture name or texture full path,
     //   DO NOT let the attribute name starts with 'texname'.
+
+
+
+
+
+  ---------------------------------------------------------------------
+                              F.A.Q.
+  ---------------------------------------------------------------------
+- Q: $(LiquidRoot)\2.3.3\renderers\*.lg 文件是什么?
+  A:renderman是一个标准，支持这个标准的渲染器有prman，aqsis，3dlight等，
+    lg文件就是用来配置prman，aqsis，3dlight各自的参数的
+  
+  Q:Aqsis和prman在我们项目里起的作用是什么
+  A:liquid里用到aqsis的ribout模块，以输出rib文件
