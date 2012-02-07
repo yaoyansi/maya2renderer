@@ -60,6 +60,7 @@ RenderMan (R) is a registered trademark of Pixar
                                             +-- eiCOMMON/
                                             +-- eiCORE/
                                             ...
+  - open $(LiquidRoot)\2.3.3\include\liqConfig.h, set _USE_SHAVE_ to 1 if shave is installed, or set _USE_SHAVE_ to 0 if shave isn't installed.
   - open $(LiquidRoot)\2.3.3\src\MSVC2005\liquid.sln, choose ¡°Win32¡± and ¡°Prman2009Debug¡± in Configuration Manager£¬
     - (For renderman renderer only)
       - make sure Prman is installed, and $(RMANTREE) is set(e.g. RMANTREE=D:\Program Files\Pixar\RenderManProServer-13.5.2),

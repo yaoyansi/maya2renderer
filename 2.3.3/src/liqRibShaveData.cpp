@@ -25,7 +25,7 @@
 ** RenderMan (R) is a registered trademark of Pixar
 **
 */
-
+#if _USE_SHAVE_
 /* ______________________________________________________________________
 **
 ** Liquid Rib Surface Data Source
@@ -820,3 +820,4 @@ void displayHairInfo(
 	}
 }
 
+#endif//_USE_SHAVE_

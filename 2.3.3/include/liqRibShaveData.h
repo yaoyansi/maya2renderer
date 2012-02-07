@@ -24,6 +24,7 @@
 ** RenderMan (R) is a registered trademark of Pixar
 **
 */
+#if _USE_SHAVE_
 
 #ifndef liqRibShaveData_H
 #define liqRibShaveData_H
@@ -80,3 +81,5 @@ private:
 };
 
 #endif//#ifndef liqRibShaveData_H
+
+#endif//_USE_SHAVE_

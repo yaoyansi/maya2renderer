@@ -3302,6 +3302,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\liqConfig.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\liqCoordSysNode.h"
 				>
 			</File>

@@ -69,6 +69,7 @@
 ////////////////////////
 // Macros and Defines //
 ////////////////////////
+#include "liqConfig.h"
 // #ifndef debugMode
 // extern int debugMode;
 // #endif
