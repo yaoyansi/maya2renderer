@@ -183,7 +183,8 @@ RenderMan (R) is a registered trademark of Pixar
   - 见HowToUseLiquid.pdf的liquidSurfaceShader章节
 
 
-
+- MotionBlur
+  - 见motion_blur.pdf
 
 
 
