@@ -3108,7 +3108,7 @@ global proc liquidGlobalsDisplaysTab_buildIt( string $prefix )
     tabLayout -cr false liquidGlobalsDisplaysSubTabs;
 
       columnLayout -adj true liquidGlobalsDisplaysSetPrimary;
-        liquidShowStringGlobalPlus( "ddImageName[0]", "Display Name", "e.g. img_$LYR_$F.tif", $prefix );
+        liquidShowStringGlobalPlus( "ddImageName[0]", "Display Name", "e.g. img_$LYR_$CAM_$F_$RND.tif", $prefix );
         liquidShowStringGlobal( "ddImageType[0]", "Display Driver", $prefix );
         liquidShowStringGlobal( "ddImageMode[0]", "Channel(s)", $prefix );
         liquidShowStringGlobal( "ddParamType[0]", "Parameter Type", $prefix );

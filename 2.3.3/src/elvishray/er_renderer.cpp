@@ -853,12 +853,14 @@ namespace elvishray
 		std::string sCameraObjectName(std::string(currentJob.camera[0].name.asChar())+"_object");
 		_S( ei_camera( sCameraObjectName.c_str() ) );
 			//_S( ei_frame( lframe, off ) );
-	 		if(currentJob.imageName.length()!=0){
-	 			_S( ei_output( currentJob.imageName.asChar(), "bmp", EI_IMG_DATA_RGB ) );
-				//_S( ei_output( "d:/_cameraShape1.0001.bmp", "bmp", EI_IMG_DATA_RGB ) );
-				_S( ei_output_variable("color", EI_DATA_TYPE_VECTOR));
-				_S( ei_end_output());
-			}
+			MString imageName(
+				liqglo.m_pixDir + parseString( liqglo.m_displays[ 0 ].name, false )
+			);
+ 			_S( ei_output( imageName.asChar(), "bmp", EI_IMG_DATA_RGB ) );
+			//_S( ei_output( "d:/_cameraShape1.0001.bmp", "bmp", EI_IMG_DATA_RGB ) );
+			_S( ei_output_variable("color", EI_DATA_TYPE_VECTOR));
+			_S( ei_end_output());
+			 
 			_S( ei_focal( focal ) );
 			_S( ei_aperture( aperture ) );
 			_S( ei_aspect( aspect ) );

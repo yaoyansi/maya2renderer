@@ -1,9 +1,9 @@
 //Maya ASCII 2009 scene
 //Name: deform.ma
-//Last modified: Sat, Feb 04, 2012 10:52:06 PM
+//Last modified: Thu, Feb 09, 2012 12:05:18 AM
 //Codeset: 936
 requires maya "2009";
-requires "liquid_2009x32d" "2.3.5 (buildtime=22:42:18.32)";
+requires "liquid_2009x32d" "2.3.5 (buildtime=23:56:13.23)";
 currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
 fileInfo "product" "Maya Unlimited 2009";
@@ -150,7 +150,7 @@ createNode script -n "liquidCleanUpNode";
 	setAttr ".st" 2;
 createNode liquidGlobals -n "liquidGlobals";
 	setAttr ".rc" -type "string" "perspShape";
-	setAttr ".ddin[0]" -type "string" "";
+	setAttr ".ddin[0]" -type "string" "$CAM.$F.$RND.bmp";
 	setAttr ".ddim[0]" -type "string" "rgba";
 	setAttr ".ddit[0]" -type "string" "it";
 	setAttr ".ddbd[0]"  8;
@@ -179,6 +179,7 @@ createNode liquidGlobals -n "liquidGlobals";
 	setAttr ".Points" yes;
 	setAttr ".Raytracing" yes;
 	setAttr ".AdvancedVisibility" yes;
+	setAttr ".sn" -type "string" "";
 	setAttr ".rnd" -type "string" "renderman";
 createNode polyPlane -n "polyPlane1";
 	setAttr ".sw" 1;

@@ -509,6 +509,23 @@ MString parseString( const MString& inString, bool doEscaped )
         inToken = false;
         tokenString.clear();
       }
+	  else if( tokenString == "RND" ) 
+	  {
+		  MStatus status;
+		  MString renderer;
+		  MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
+		  IfMErrorWarn(liquidGetPlugValue( rGlobalNode, "renderer", renderer, status ));
+
+		  constructedString += renderer;
+		  inToken = false;
+		  tokenString.clear();
+	  } 
+	  else if( tokenString == "CAM" ) 
+	  {
+		  constructedString += liqglo.renderCamera;
+		  inToken = false;
+		  tokenString.clear();
+	  } 
     } 
     else if( str == "@" && str_dec != "\\" ) 
     {
