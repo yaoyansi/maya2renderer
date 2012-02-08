@@ -24,11 +24,13 @@
 ** RenderMan (R) is a registered trademark of Pixar
 **
 */
-#if _USE_SHAVE_
+
 
 #ifndef liqRibShaveData_H
 #define liqRibShaveData_H
 
+#include "liqConfig.h"
+#if _USE_SHAVE_
 /* ______________________________________________________________________
 **
 ** Liquid Rib Surface Data Header File
@@ -37,6 +39,7 @@
 #include <boost/shared_array.hpp>
 
 #include <liqRibData.h>
+
 
 class liqRibShaveData : public liqRibData {
 public: // Methods
@@ -79,7 +82,8 @@ private:
 	liqRibShaveData& operator=(const liqRibShaveData&);
 
 };
+#endif//_USE_SHAVE_
 
 #endif//#ifndef liqRibShaveData_H
 
-#endif//_USE_SHAVE_
+

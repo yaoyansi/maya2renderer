@@ -25,13 +25,16 @@
 ** RenderMan (R) is a registered trademark of Pixar
 **
 */
-#if _USE_SHAVE_
+
 /* ______________________________________________________________________
 **
 ** Liquid Rib Surface Data Source
 ** ______________________________________________________________________
 */
 #include <liqRibShaveData.h>
+
+#if _USE_SHAVE_
+
 // Boost headers
 #include <boost/scoped_array.hpp>
 #include <boost/shared_array.hpp>
@@ -54,6 +57,8 @@
 #include <liqRenderer.h>
 #include <liqGlobalVariable.h>
 #include <liqRibTranslator.h>
+
+
 
 using namespace boost;
 
