@@ -60,7 +60,7 @@ RenderMan (R) is a registered trademark of Pixar
                                             +-- eiCOMMON/
                                             +-- eiCORE/
                                             ...
-  - build ER. copy the *.dll/*.exe to $(LiquidRoot)\dependence\elvishray\bin\Debug, and copy *.lib to $(LiquidRoot)\dependence\elvishray\bin\Debug\lib
+  - build ER. copy the *.dll/*.exe to $(LiquidRoot)\dependence\elvishray\bin, and copy *.lib to $(LiquidRoot)\dependence\elvishray\bin
   - build $(LiquidRoot)\2.3.3\src\elvishray\eiSHADER_maya\build\eiSHADER_maya.sln
   - open $(LiquidRoot)\2.3.3\include\liqConfig.h, set _USE_SHAVE_ to 1 if shave is installed, or set _USE_SHAVE_ to 0 if shave isn't installed.
   - open $(LiquidRoot)\2.3.3\src\MSVC2005\liquid.sln, choose “Win32” and “Prman2009Debug” in Configuration Manager，
@@ -79,10 +79,10 @@ RenderMan (R) is a registered trademark of Pixar
      e.g.  LIQUID_ROOT = E:/dev/autodesk/maya/myplugin/project/liquid_
   - (For Elvishray renderer only)
     you must copy manager.ini of Elvishray to $(MAYA_PATH2009)/bin/
-     - copy $(LiquidRoot)\dependence\elvishray\bin\Debug\manager.ini to $(MAYA_PATH2009)/bin/
+     - copy $(LiquidRoot)\dependence\elvishray\bin\manager.ini to $(MAYA_PATH2009)/bin/
      - open $(MAYA_PATH2009)/bin/manager.ini, set searchpath to the directory which contain eiIMG.dll and eiSHADER.dll
 	e.g. if $(MAYA_PATH2009)/bin/manager.ini doesn't has searchpath, you can append the follow line to manager.ini
-	searchpath E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/elvishray/bin/Debug
+	searchpath E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/elvishray/bin
 
 - Test 
   - open maya2009, load $(LiquidRoot)\2.3.3\test\er.ma,
@@ -229,7 +229,15 @@ RenderMan (R) is a registered trademark of Pixar
     // - If the plug is not a texture name or texture full path,
     //   DO NOT let the attribute name starts with 'texname'.
 
-- 每次更新Maya.env后，需要相应更新liquid_\test\image_diff\testall.py里configMayaEnv()的环境变量
+- 每次更新Maya.env后，需要相应更新liquid_\test\image_diff\testall.py里configMayaEnv()的环境变量ELVISHRAY_BIN的值
+- 每次更细ER后
+  - ER binary files(*.lib/*.dll/*.exe)所在的路径是否改变了，如果改变了，则需要更改：
+    - eiSHADER_maya.sln里link lib的路径， post build event里的路径
+    - liquid.sln里link的路径
+    - liquid_\2.3.3\bin\Maya.env里ELVISHRAY_BIN的路径，并把Maya.env考到E:\MyDocuments\maya\2009\Maya.env
+      同时更新liquid_\test\image_diff\testall.py里configMayaEnv()的环境变量ELVISHRAY_BIN的值
+    - Maya2009\bin\manager.ini里searchpath的路径
+  - 编译er，编译eiSHADER_maya.sln，编译liquid.sln
 
 
 
