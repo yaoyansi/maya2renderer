@@ -438,6 +438,10 @@
 				RelativePath="..\src\ei_maya_shader.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\src\ei_maya_transparent.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

@@ -323,7 +323,7 @@ SURFACE(maya_lambert_transparent)
 	PARAM(scalar, Ks);
 	PARAM(scalar, roughness);
 	PARAM(color, specularcolor);
-	PARAM(scalar, opacity);
+	PARAM(scalar, transparency);
 	PARAM(eiTag, Cs_tex);
 
 	void parameters(int pid)
@@ -333,7 +333,7 @@ SURFACE(maya_lambert_transparent)
 		DECLARE_SCALAR(Ks, 0.5f);
 		DECLARE_SCALAR(roughness, 0.1f);
 		DECLARE_COLOR(specularcolor, 1.0f, 1.0f, 1.0f);
-		DECLARE_SCALAR(opacity, 0.5f);
+		DECLARE_SCALAR(transparency, 0.5f);
 		DECLARE_TAG(Cs_tex, eiNULL_TAG);
 	}
 
@@ -420,9 +420,9 @@ SURFACE(maya_lambert_transparent)
 		}
 
 		Ci() += Kd() * irradiance();
-		if (opacity() < 1.0f)
+		if ( transparency() > 0.0f )
 		{
-			Ci() = Ci() * opacity() + trace_transparent() * (1.0f - opacity());
+			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
 		}
 		Oi() = color(1.0f);
 	}

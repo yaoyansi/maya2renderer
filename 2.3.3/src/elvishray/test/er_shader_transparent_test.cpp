@@ -149,11 +149,11 @@ void er_shader_transparent_test( )
 	//surface_lambert1();
 	ei_shader("lambert1");
 		ei_shader_param_string("desc", "maya_lambert_transparent"); //"" //plastic
-		ei_shader_param_vector("Cs", 0.8, 0.8, 0.8);
+		ei_shader_param_vector("Cs", 0.8, 0.0, 0.8);
 		ei_shader_param_vector("Kd", 1.0f, 1.0f, 1.0f);//?
 		ei_shader_param_scalar("Ks", 0.0f);
 		ei_shader_param_scalar("roughness", 0.2f);//?
-		ei_shader_param_scalar("opacity", 0.5f);
+		ei_shader_param_scalar("opacity", 0.8f);
 	ei_end_shader();
 
 	ei_shader("opaque_shadow");
@@ -162,7 +162,7 @@ void er_shader_transparent_test( )
 
 	ei_material("mtl");
 		ei_add_surface("lambert1");
-		ei_add_shadow("opaque_shadow");
+		//ei_add_shadow("opaque_shadow");
 	ei_end_material();
 
 	ei_object("obj1", "poly");

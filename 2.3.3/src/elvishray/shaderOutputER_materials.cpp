@@ -56,7 +56,7 @@ void Visitor::visitLambert(const char* node)
 
 	o.beginRSL(node);
 
-	o.addToRSL("ei_shader_param_string(\"desc\", \"plastic\");");
+	o.addToRSL("ei_shader_param_string(\"desc\", \"maya_lambert_transparent\");");
 	o.addRSLVariable("vector", "Cs",		"color",		node);
 	o.addRSLVariable("vector", "transparency", "transparency", node);
 	o.addRSLVariable("vector", "ambientColor",	"ambientColor", node);
