@@ -36,6 +36,7 @@ extern void ei_face_color_unittest(const eiApprox *approx, const char *suffix);
 extern void ei_shader_graph_unittest(const eiBool texturing, const char *suffix);
 extern void ei_shader_link_test(const eiBool texturing, const char *suffix);
 extern void ei_checker_uv();
+extern void er_shader_transparent_test();
 
 void test_liquid2er()
 {
@@ -46,7 +47,8 @@ void test_liquid2er()
 	//ei_face_color_unittest(NULL, "suffix");
 //	ei_shader_graph_unittest(true, "suffix");
 	//ei_shader_link_test(false, "suffix");
-	ei_checker_uv();
+	//ei_checker_uv();
+	er_shader_transparent_test();
 }
 //
 int main()
