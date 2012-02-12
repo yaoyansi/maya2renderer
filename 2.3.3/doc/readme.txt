@@ -188,6 +188,19 @@ RenderMan (R) is a registered trademark of Pixar
   - ¼ûmotion_blur.pdf
 
 
+- automation test
+  - first, render you scene(test_motionblur\transform\deform.ma) manully, 
+    and save the image as stander image to your scene directory with a postfix "_std"(perspShape.6.elvishray_std.bmp, perspShape.6.renderman_std.bmp)
+  - add your test scene in testall.py.test_all_scene()
+        LIQUID_ROOT="E:/dev/Autodesk/maya/myplugin/project/liquid_"
+        testFile=LIQUID_ROOT+"/2.3.3/test/test_motionblur/transform/deform.ma"
+        liqRenderer=""
+        MyTestOne.test_one_scene(testFile, liqRenderer)
+  - run $(LiquidRoot)\test\image_diff\test.py, it will run the test, 
+    and compare the image with the stander image, if the images are not equal, 
+    a diff image will be generated($(your_project_dir)\rmanpix\perspShape.6.renderman_diff.bmp)
+
+
 
   ---------------------------------------------------------------------
                               NOTES
