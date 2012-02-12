@@ -19,7 +19,7 @@ def configMayaEnv():
     os.environ["LIQUIDHOME"]     = os.environ["LIQUID_ROOT"]+"/2.3.3"
     os.environ["LIQUID_GLOBALS_OVERRIDE"] = os.environ["LIQUID_ROOT"]+"/2.3.3/renderers"
     #elvishray
-    os.environ["ELVISHRAY_BIN"] = os.environ["LIQUID_ROOT"]+"/dependence/elvishray/trunk/build/r1008/x86_Debug"
+    os.environ["ELVISHRAY_BIN"] = os.environ["LIQUID_ROOT"]+"/dependence/elvishray/bin/Debug"
     
     # PATH
     os.environ["PATH"] = os.environ["ELVISHRAY_BIN"]+";"+os.environ["PATH"]

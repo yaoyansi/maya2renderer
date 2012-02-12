@@ -209,11 +209,6 @@ namespace elvishray
 		_s("ei_motion("<< type <<")");
 		_e( ei_motion(type));
 	}
-	void my_ei_motion_segments( int num )
-	{
-		_s("ei_motion_segments("<< num <<")");
-		_e( ei_motion_segments(num));
-	}
 
 	//	Trace Depth:
 	void my_ei_trace_depth( int reflect, int refract, int sum )

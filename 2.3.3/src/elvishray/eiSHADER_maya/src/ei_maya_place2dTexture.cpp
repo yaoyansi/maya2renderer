@@ -21,7 +21,7 @@ SURFACE(maya_place2dTexture)
 	{
 	}
 
-	void main()
+	void main(void *arg)
 	{
 		//1
 		//outUV().x = fmodf( u() * repeatUV().x, 1.0f );

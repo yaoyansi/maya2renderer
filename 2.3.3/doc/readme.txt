@@ -51,7 +51,7 @@ RenderMan (R) is a registered trademark of Pixar
                  +---2.3.3\
                  +---dependence\
 	         ...
-  - check out Elvishray http://elvishrender.googlecode.com/svn/trunk (r1014 for now) to $(LiquidRoot)/dependence/elvishray/trunk/
+  - check out Elvishray http://elvishrender.googlecode.com/svn/trunk (r1117 for now) to $(LiquidRoot)/dependence/elvishray/trunk/
     The directory structure should be:
        $(LiquidRoot)\
                  +---2.3.3\
@@ -60,6 +60,8 @@ RenderMan (R) is a registered trademark of Pixar
                                             +-- eiCOMMON/
                                             +-- eiCORE/
                                             ...
+  - build ER. copy the *.dll/*.exe to $(LiquidRoot)\dependence\elvishray\bin\Debug, and copy *.lib to $(LiquidRoot)\dependence\elvishray\bin\Debug\lib
+  - build $(LiquidRoot)\2.3.3\src\elvishray\eiSHADER_maya\build\eiSHADER_maya.sln
   - open $(LiquidRoot)\2.3.3\include\liqConfig.h, set _USE_SHAVE_ to 1 if shave is installed, or set _USE_SHAVE_ to 0 if shave isn't installed.
   - open $(LiquidRoot)\2.3.3\src\MSVC2005\liquid.sln, choose “Win32” and “Prman2009Debug” in Configuration Manager，
     - (For renderman renderer only)
@@ -72,14 +74,15 @@ RenderMan (R) is a registered trademark of Pixar
 - Install
   - backup your original (My_Documents_DIR)\maya\2009\Maya.env
   - copy $(LiquidRoot)\2.3.3\bin\Maya.env to (My_Documents_DIR)\maya\2009\Maya.env
+    make sure ELVISHRAY_BIN point to the ER's DLL directory which you are using.
   - open (My_Documents_DIR)\maya\2009\Maya.env, set LIQUID_ROOT to your liquid directory $(LiquidRoot),
      e.g.  LIQUID_ROOT = E:/dev/autodesk/maya/myplugin/project/liquid_
   - (For Elvishray renderer only)
     you must copy manager.ini of Elvishray to $(MAYA_PATH2009)/bin/
-     - copy $(LiquidRoot)\dependence\elvishray\trunk\build\r1008\x86_Debug\manager.ini to $(MAYA_PATH2009)/bin/
+     - copy $(LiquidRoot)\dependence\elvishray\bin\Debug\manager.ini to $(MAYA_PATH2009)/bin/
      - open $(MAYA_PATH2009)/bin/manager.ini, set searchpath to the directory which contain eiIMG.dll and eiSHADER.dll
 	e.g. if $(MAYA_PATH2009)/bin/manager.ini doesn't has searchpath, you can append the follow line to manager.ini
-	searchpath E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/elvishray/trunk/build/r1008/x86_Debug
+	searchpath E:/dev/Autodesk/maya/myplugin/project/liquid_/dependence/elvishray/bin/Debug
 
 - Test 
   - open maya2009, load $(LiquidRoot)\2.3.3\test\er.ma,
@@ -226,7 +229,7 @@ RenderMan (R) is a registered trademark of Pixar
     // - If the plug is not a texture name or texture full path,
     //   DO NOT let the attribute name starts with 'texname'.
 
-
+- 每次更新Maya.env后，需要相应更新liquid_\test\image_diff\testall.py里configMayaEnv()的环境变量
 
 
 

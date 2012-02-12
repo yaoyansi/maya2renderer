@@ -40,7 +40,7 @@ SURFACE(maya_checker_uv2)
 	{
 	}
 
-	void main()
+	void main(void *arg)
 	{
 		scalar	x, y;
 

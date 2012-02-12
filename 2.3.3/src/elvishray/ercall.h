@@ -71,7 +71,6 @@ namespace elvishray
 	//	Motion Blur:
 	 void my_ei_shutter( float open, float close );
 	 void my_ei_motion( int type );
-	 void my_ei_motion_segments( int num );
 
 	//	Trace Depth:
 	 void my_ei_trace_depth( int reflect, int refract, int sum );

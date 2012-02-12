@@ -23,7 +23,7 @@ SURFACE(maya_file)
 	{
 	}
 
-	void main()
+	void main(void *arg)
 	{
 		eiTag tex = fileTextureName();
 		

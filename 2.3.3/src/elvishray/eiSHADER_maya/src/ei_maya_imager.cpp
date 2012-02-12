@@ -32,7 +32,7 @@ IMAGER(maya_simple_imager)
 	{
 	}
 
-	void main()
+	void main(void *arg)
 	{
 		Ci() = clamp(Ci() * brightness(), color(0.0f, 0.0f, 0.0f), color(1.0f, 1.0f, 1.0f));
 	}

@@ -38,7 +38,7 @@ SURFACE(maya_checker)
 	{
 	}
 
-	void main()
+	void main(void *arg)
 	{
 		scalar	x, y;
 
@@ -84,7 +84,7 @@ SURFACE(maya_checker_uv)
 	{
 	}
 
-	void main()
+	void main(void *arg)
 	{
 		scalar	x, y;
 
@@ -130,7 +130,7 @@ SURFACE(maya_simple_texture)
 	{
 	}
 
-	void main()
+	void main(void *arg)
 	{
 		outColor() = color(0.0f, 0.0f, 0.0f);
 

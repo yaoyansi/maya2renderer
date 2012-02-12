@@ -2830,7 +2830,7 @@
 				OutputFile="../../bin/prman/win32/liquid_2009x32d.mll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2009)/lib&quot;;&quot;$(BOOST_ROOT)/stage/lib&quot;;../../../dependence/aqsis/1.6.0/build/DebugLib;../../../dependence/elvishray/trunk/build/r1008/x86_Debug/lib;../../../dependence/zlib/lib;../../../dependence/libtiff/lib"
+				AdditionalLibraryDirectories="&quot;$(MAYA_PATH2009)/lib&quot;;&quot;$(BOOST_ROOT)/stage/lib&quot;;../../../dependence/aqsis/1.6.0/build/DebugLib;../../../dependence/elvishray/bin/Debug/lib;../../../dependence/zlib/lib;../../../dependence/libtiff/lib"
 				IgnoreDefaultLibraryNames="libcmt.lib"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
