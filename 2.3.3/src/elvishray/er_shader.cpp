@@ -40,27 +40,37 @@ namespace elvishray
 		if(shaderNode.hasFn(MFn::kLambert)){
 			shader_surface_lambert(mayaShaderName.c_str());
 		}
-#if 0 //tokenPointerArray only store parameters of user-defined shader
+
+
+		_S( ei_shader(liquidShaderName.c_str()) );
+
+		_s("ei_shader_param_string( \"desc\","<<mayaShaderName<<");");
+		ei_shader_param_string("desc", mayaShaderName.c_str()); // //"opaque"
+
+		//tokenPointerArray only store parameters of user-defined shader
 		size_t parameterNum =  tokenPointerArray.size() - 1;
 		for(size_t i=0; i<parameterNum; ++i)
 		{
-// 			_s("//- "
-// 				<<const_cast<liqTokenPointer*>(&tokenPointerArray[i])->getDetailedTokenName()<<","//uniform float intensity
-// 				<<tokenPointerArray[i].getDetailType()<<","
-// 				<<"//tokenPointerArray[i].getTokenFloatArray()"<<","
-// 				<<"//[error]tokenPointerArray[i].getTokenString()"<<","
-// 				<<tokenPointerArray[i].getTokenName()<<","//intensity,
-// 				<<tokenPointerArray[i].getParameterType()<<","//rFloat,
-// 				<<tokenPointerArray[i].getRiDeclare()<<","//uniform float,
-// 				);
+ 			_s("//- "
+ 				<<const_cast<liqTokenPointer*>(&tokenPointerArray[i])->getDetailedTokenName()<<","//uniform float intensity
+ 				<<tokenPointerArray[i].getDetailType()<<","
+ 				<<"//tokenPointerArray[i].getTokenFloatArray()"<<","
+ 				<<"//[error]tokenPointerArray[i].getTokenString()"<<","
+ 				<<tokenPointerArray[i].getTokenName()<<","//intensity,
+ 				<<tokenPointerArray[i].getParameterType()<<","//rFloat,
+ 				<<tokenPointerArray[i].getRiDeclare()<<","//uniform float,
+ 				);
 // 			_s("// "<<tokenPointerArray[i].getTokenName());
+
 			liqTokenPointer* vp = const_cast< liqTokenPointer* >( &tokenPointerArray[i] );
 			switch( tokenPointerArray[i].getParameterType() )
 			{
 			case rFloat:
 				{
 					const liqFloat *v = vp->getTokenFloatArray();
-					_s("//     "<<v[0]);
+
+					_s("ei_shader_param_scalar( "<<vp->getTokenName()<<"," <<v[0]<<");");
+					ei_shader_param_scalar( vp->getTokenName().c_str(), v[0] );
 				}
 				break;
 			case rPoint: case rVector: case rNormal: case rColor:
@@ -95,8 +105,10 @@ namespace elvishray
 			default :
 				assert(0);
 			}
+
 		}//for
-#endif
+		_S( ei_end_shader() );
+
 
 	}
 	liqLightHandle Renderer::shader_light(

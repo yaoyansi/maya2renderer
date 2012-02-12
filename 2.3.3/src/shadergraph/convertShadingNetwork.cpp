@@ -1,6 +1,8 @@
 #include "convertShadingNetwork.h"
 #include <boost/algorithm/string.hpp>
 #include "../common/mayacheck.h"
+#include <liqShader.h>
+#include <liqShaderFactory.h>
 #include <liqlog.h>
 #include "shadermgr.h"
 #include "shaderOutputMgr.h"
@@ -570,7 +572,38 @@ void ConvertShadingNetwork::__export()
 				convertShadingNetworkToRSL(startingNode, node);
 			}
 		}
+		{//shadow shader
+			int isShadowShaderExist;
+			cmd = "attributeQuery -node \""+sgNodes[0]+"\" -ex \"liqShadowShader\"";
+			IfMErrorWarn(MGlobal::executeCommand( cmd, isShadowShaderExist));
+			if(isShadowShaderExist)
+			{
+				MStringArray shaders;
+				cmd = "listConnections (\""+sgNodes[0]+"\" + \".liqShadowShader\")";
+				IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
+
+				const MString startingNode(shaders[0]);
+
+				MString nodetype;
+				cmd = "nodeType \""+startingNode+"\"";
+				IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
+
+				if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
+					//liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
+					MObject shaderObj;
+					getDependNodeByName( shaderObj,startingNode.asChar());
+					liqShader &currentShader = liqShaderFactory::instance().getShader( shaderObj );
+					currentShader.write();
+
+				}else{
+					convertShadingNetworkToRSL(startingNode, node);
+				}
+			}
+		}
+
+		//
 		outputShadingGroup(sgNodes[0]);
+
 
 
 	}

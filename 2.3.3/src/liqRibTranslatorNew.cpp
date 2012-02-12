@@ -3189,7 +3189,7 @@ void liqRibTranslator::oneObjectBlock(
 				// per shader shadow pass override
 				if( true/*!currentJob.isShadow || currentShader.outputInShadow*/ )
 				{
-					//currentShader.write();//use ShadingGroup reference instead.
+					//currentShader.write();//use ShadingGroup file reference(e.g. *.erapi/*.rmsg) instead.
 				}
 
 				//if( !currentShader.hasErrors && outputDispShader )
@@ -3303,7 +3303,7 @@ MStatus liqRibTranslator::writeShader_(
 			// per shader shadow pass override
 			if( !isShadowJob || currentShader.outputInShadow )
 			{
-				//currentShader.write();//use ShadingGroup reference instead.
+				//currentShader.write();//use ShadingGroup file reference(e.g. *.erapi/*.rmsg) instead.
 			}
 		}
 
@@ -3339,7 +3339,7 @@ MStatus liqRibTranslator::writeShader_(
 				// per shader shadow pass override
 				if( !isShadowJob || currentShader.outputInShadow )
 				{
-					//currentShader.write();//use ShadingGroup reference instead.
+					//currentShader.write();//use ShadingGroup file reference(e.g. *.erapi/*.rmsg) instead.
 				}
 
 				//if( outputSurfaceShader )
@@ -3409,7 +3409,7 @@ MStatus liqRibTranslator::writeShader_(
 				}else {
 					//RiSurface( "plastic", RI_NULL );
 					//MFnDependencyNode shaderFn(shader);
-					//RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );//use ShadingGroup reference instead.
+					//RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );//use ShadingGroup file reference(e.g. *.erapi/*.rmsg) instead.
 				}
 			}
 		}//if( hasSurfaceShader && !m_ignoreSurfaces )else
