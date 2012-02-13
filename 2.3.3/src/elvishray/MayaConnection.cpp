@@ -28,7 +28,7 @@ History		:	Created by yaoyansi, 2010.04.16.
 
 //#include "../common/prerequest_local.h"
 #include "../common/mayacheck.h"
-
+#include "liqRibTranslator.h"
 #	pragma comment( lib, "eiAPI.lib" )
 
 typedef float ChannelType;
@@ -65,7 +65,11 @@ bool MayaConnection::Progress( const eiScalar percent )
 {
 	//_logFunctionCall("MayaConnection::Progress(" << percent << " %)");
 
-	return true;
+	bool isInterrupted = liqRibTranslator::getInstancePtr()->isInterruptRequested();
+	if (isInterrupted){
+		liquidMessage2(messageWarning, "Liquid is interrputed at %f%%.\n", percent);
+	}
+	return !isInterrupted;
 }
 //
 void MayaConnection::ClearTile( const eiInt left, const eiInt right, 

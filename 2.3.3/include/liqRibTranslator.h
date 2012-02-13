@@ -234,6 +234,7 @@ private :
 public: 
 #endif
 	static MComputation  m_escHandler;
+	bool isInterruptRequested() { return m_escHandler.isInterruptRequested(); }
 
 	bool          m_justRib;
 	liquidlong    m_minCPU;

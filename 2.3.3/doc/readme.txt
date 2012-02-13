@@ -204,6 +204,8 @@ RenderMan (R) is a registered trademark of Pixar
     a diff image will be generated($(your_project_dir)\rmanpix\perspShape.6.renderman_diff.bmp)
 
 
+- press ESC to interrupt the rendering.
+
 
   ---------------------------------------------------------------------
                               NOTES
