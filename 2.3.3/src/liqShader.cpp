@@ -688,7 +688,7 @@ MStatus liqShader::liqShaderParseVectorArrayAttr ( const MFnDependencyNode& shad
 void liqShader::write(/*, */)
 {
 	//bool shortShaderNames  = ;
-	unsigned int indentLevel = 0;
+	//unsigned int indentLevel = 0;
 
 	MFnDependencyNode node(m_mObject);
 	if( hasErrors )
@@ -697,83 +697,8 @@ void liqShader::write(/*, */)
 		return;
 	}
 
-	// write co-shaders before
-	unsigned int i; 
-	for(i=0; i<m_coShaderArray.size(); i++)
-	{
-		liqShader &coShader = liqShaderFactory::instance().getShader(m_coShaderArray[i]);
-		if( coShader.hasErrors )
-		{
-			char errorMsg[512];
-			sprintf(errorMsg, "[liqShader::write] While initializing coShader for '%s', node couldn't be exported", coShader.name.c_str());
-			liquidMessage( errorMsg, messageError );
-		}
-		else
-		{
-			coShader.writeAsCoShader(/*shortShaderNames, indentLevel*/);
-		}
-	}
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->shader_UserDefinedShader(this);
 
-	// write shader
-	char* shaderFileName = const_cast<char*>(getShaderFileName().c_str());
-	if( shaderSpace != "" )
-	{
-		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_transformBegin((const liqString)shaderSpace.asChar());
-	}
-	// output shader
-	// its one less as the tokenPointerArray has a preset size of 1 not 0
-
-	switch( shader_type )
-	{
-    case SHADER_TYPE_LIGHT :
-    {  
-
-      //outputIndentation(indentLevel);
-		RtLightHandle ret = liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_light( *this,  tokenPointerArray );
-#ifdef RIBLIB_AQSIS
-		shaderHandler.set( reinterpret_cast<ptrdiff_t>(static_cast<RtLightHandle>(ret)) );
-#else
-		shaderHandler.set( ret );
-#endif
-	  } break;
-	    
-	case SHADER_TYPE_SURFACE :
-		{
-
-		//outputIndentation(indentLevel);
-		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_surface( *this,  tokenPointerArray );
-
-		}break;
-	case SHADER_TYPE_DISPLACEMENT :
-		{
-
-		//outputIndentation(indentLevel);
-		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_displacement( *this,  tokenPointerArray );
-
-		}break;
-	case SHADER_TYPE_VOLUME :
-		{
-
-		//outputIndentation(indentLevel);
-		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_volume( *this,   tokenPointerArray );
-
-		}break;
-	default :
-		char errorMsg[512];
-		sprintf(errorMsg, "[liqShader::write] Unknown shader type for %s shader_type=%d", name.c_str(), shader_type);
-		liquidMessage( errorMsg, messageError );
-		break;
-	}
-	if( shaderSpace != "" )
-	{
-		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->shader_transformEnd((const liqString)shaderSpace.asChar());
-	}
 }
 
 

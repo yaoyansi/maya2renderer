@@ -199,6 +199,7 @@ public:
 		const liqRibNodePtr mesh, 
 		const MStringArray& lightedByWhichLightShapes) = 0;
 	// Shader
+	virtual void shader_UserDefinedShader(const liqShader* liqshader) = 0;
 	virtual void shader_transformBegin(const liqString  shaderSpace) = 0;
 	virtual void shader_transformEnd(const liqString  shaderSpace) = 0;
 	virtual void shader_surface(

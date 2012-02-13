@@ -193,6 +193,7 @@ namespace elvishray
 			const liqRibNodePtr mesh, 
 			const MStringArray& lightedByWhichLightShapes);
 		// Shader
+		virtual void shader_UserDefinedShader(const liqShader* liqshader);
 		virtual void shader_transformBegin(const liqString  shaderSpace);
 		virtual void shader_transformEnd(const liqString  shaderSpace);
 		virtual void shader_surface(

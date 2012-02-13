@@ -1,7 +1,7 @@
 
 #include "rm_renderer.h"
 #include <liqShader.h>
-
+#include <liqShaderFactory.h>
 namespace renderman
 {
 	void Renderer::shader_transformBegin(const liqString  shaderSpace)
@@ -63,5 +63,80 @@ namespace renderman
 
 		RiAtmosphereV ( const_cast<char *>(shader.getShaderFileName().c_str()), shaderParamCount,  tokenArray.get(), pointerArray.get() );
 
+	}
+	void Renderer::shader_UserDefinedShader(const liqShader* liqshader)
+	{
+
+		// write co-shaders before
+		unsigned int i; 
+		for(i=0; i<liqshader->m_coShaderArray.size(); i++)
+		{
+			liqShader &coShader = liqShaderFactory::instance().getShader(liqshader->m_coShaderArray[i]);
+			if( coShader.hasErrors )
+			{
+				char errorMsg[512];
+				sprintf(errorMsg, "[liqShader::write] While initializing coShader for '%s', node couldn't be exported", coShader.getName().c_str());
+				liquidMessage( errorMsg, messageError );
+			}
+			else
+			{
+				coShader.writeAsCoShader(/*shortShaderNames, indentLevel*/);
+			}
+		}
+
+		// write shader
+		char* shaderFileName = const_cast<char*>(liqshader->getShaderFileName().c_str());
+		if( liqshader->shaderSpace != "" )
+		{
+			this->shader_transformBegin((const liqString)liqshader->shaderSpace.asChar());
+		}
+		// output shader
+		// its one less as the tokenPointerArray has a preset size of 1 not 0
+
+		switch( liqshader->shader_type )
+		{
+		case SHADER_TYPE_LIGHT :
+			{  
+
+				//outputIndentation(indentLevel);
+				RtLightHandle ret = this->shader_light( *liqshader,  liqshader->tokenPointerArray );
+#ifdef RIBLIB_AQSIS
+				(const_cast<liqShader*>(liqshader))->shaderHandler.set( reinterpret_cast<ptrdiff_t>(static_cast<RtLightHandle>(ret)) );
+#else
+				liqshader->shaderHandler.set( ret );
+#endif
+			} break;
+
+		case SHADER_TYPE_SURFACE :
+			{
+
+				//outputIndentation(indentLevel);
+				this->shader_surface( *liqshader,  liqshader->tokenPointerArray );
+
+			}break;
+		case SHADER_TYPE_DISPLACEMENT :
+			{
+
+				//outputIndentation(indentLevel);
+				this->shader_displacement( *liqshader,  liqshader->tokenPointerArray );
+
+			}break;
+		case SHADER_TYPE_VOLUME :
+			{
+
+				//outputIndentation(indentLevel);
+				this->shader_volume( *liqshader,   liqshader->tokenPointerArray );
+
+			}break;
+		default :
+			char errorMsg[512];
+			sprintf(errorMsg, "[liqShader::write] Unknown shader type for %s shader_type=%d", liqshader->getName().c_str(), liqshader->shader_type);
+			liquidMessage( errorMsg, messageError );
+			break;
+		}
+		if( liqshader->shaderSpace != "" )
+		{
+			this->shader_transformEnd((const liqString)liqshader->shaderSpace.asChar());
+		}
 	}
 }//namespace renderman
