@@ -61,6 +61,7 @@ MTypeId liqCoShaderNode::id( liqCoShaderNodeId );
 
 // Attributes
 MObject liqCoShaderNode::aRmanShader;
+MObject liqCoShaderNode::aRmanShaderType;
 MObject liqCoShaderNode::aRmanShaderLong;
 MObject liqCoShaderNode::aRmanShaderLif;
 MObject liqCoShaderNode::aRmanParams;
@@ -148,6 +149,9 @@ MStatus liqCoShaderNode::initialize()
 	aRmanShader = tAttr.create( MString("rmanShader"), MString("rms"), MFnData::kString, aRmanShader, &status );
 	MAKE_INPUT(tAttr);
 
+	aRmanShaderType = tAttr.create( MString("rmanShaderType"), MString("rst"), MFnData::kString, aRmanShaderType, &status );
+	MAKE_INPUT(tAttr);
+
 	aRmanShaderLong = tAttr.create( MString("rmanShaderLong"), MString("rml"), MFnData::kString, aRmanShaderLong, &status );
 	MAKE_INPUT(tAttr);
 
@@ -221,6 +225,7 @@ MStatus liqCoShaderNode::initialize()
 	MAKE_OUTPUT(nAttr);
 
 	CHECK_MSTATUS(addAttribute(aRmanShader));
+	CHECK_MSTATUS(addAttribute(aRmanShaderType));
 	CHECK_MSTATUS(addAttribute(aRmanShaderLong));
 	CHECK_MSTATUS(addAttribute(aRmanShaderLif));
 	CHECK_MSTATUS(addAttribute(aRmanParams));

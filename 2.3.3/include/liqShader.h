@@ -85,7 +85,8 @@ public:
     RtFloat     displacementBound;
     bool        outputInShadow;
     bool        hasErrors;
-    SHADER_TYPE shader_type;
+    //SHADER_TYPE shader_type;
+	MString     shader_type_ex;
     MString     shaderSpace;
     MString     shaderHandler;
     int         evaluateAtEveryFrame;

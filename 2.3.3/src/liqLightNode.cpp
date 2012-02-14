@@ -62,6 +62,7 @@ MTypeId liqLightNode::id( liqLightNodeId );
 
 // Attributes
 MObject liqLightNode::aRmanShader;
+MObject liqLightNode::aRmanShaderType;
 MObject liqLightNode::aRmanShaderLong;
 MObject liqLightNode::aRmanShaderLif;
 MObject liqLightNode::aRmanParams;
@@ -160,6 +161,9 @@ MStatus liqLightNode::initialize()
   // Create input attributes
 
   aRmanShader = tAttr.create( MString( "rmanShader"), MString( "rms"), MFnData::kString, aRmanShader, &status );
+  MAKE_INPUT(tAttr);
+
+  aRmanShaderType = tAttr.create( MString("rmanShaderType"), MString("rst"), MFnData::kString, aRmanShaderType, &status );
   MAKE_INPUT(tAttr);
 
   aRmanShaderLong = tAttr.create( MString( "rmanShaderLong"), MString( "rml"), MFnData::kString, aRmanShaderLong, &status );
@@ -274,6 +278,7 @@ MStatus liqLightNode::initialize()
 
 
   CHECK_MSTATUS(addAttribute(aRmanShader));
+  CHECK_MSTATUS(addAttribute(aRmanShaderType));
   CHECK_MSTATUS(addAttribute(aRmanShaderLong));
   CHECK_MSTATUS(addAttribute(aRmanShaderLif));
   CHECK_MSTATUS(addAttribute(aRmanParams));

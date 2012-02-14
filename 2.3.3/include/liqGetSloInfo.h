@@ -52,10 +52,11 @@ public:
   void          resetIt();
   int           nargs();
   MString       getName();
-  SHADER_TYPE   getType();
+//  SHADER_TYPE   getType();
   int           getNumParam();
-  MString       getTypeStr();
-  static MString getTypeStr(SHADER_TYPE shaderType);
+//  MString       getTypeStr();
+//  static MString getTypeStr(SHADER_TYPE shaderType);
+  MString       getTypeStr2()const;
   MString       getArgName( int num );
   SHADER_TYPE   getArgType( int num );
   MString       getArgTypeStr( int num );
@@ -83,6 +84,7 @@ public:
 private:
   unsigned numParam;
   SHADER_TYPE shaderType;
+  MString shaderTypeEx;
   MString shaderName;
   std::vector<MString> argName;
   std::vector<SHADER_TYPE> argType;

@@ -57,6 +57,8 @@ proc rmanParams_create( string $node, int $reReadShaderParams )
 
   setAttr -type "string" ( $node + ".rmanShader" ) (liquidSlShaderName());
 
+  setAttr -type "string" ( $node + ".rmanShaderType" ) (liquidSlShaderType());
+
   // store the output values
   //
   string $cmd = ( "setAttr -type Int32Array " + $node + ".rmanIsOutput " + liquidSlNumParams() + " " );
@@ -397,7 +399,7 @@ global proc liquidShaderNodes_initParams_pl( string $nodeAttr,  string $shaderPa
 
   // shader does not exist / not readable
   if ( !`filetest -s $shaderPath` ) 
-    warning ("[liquidShaderNodes_initParams_pl] "+$shaderPath+" does not exist or is not readable");
+    warning ("[liquidShaderNodes_initParams_pl] "+$shaderPath+" does not exist, or is not readable, or is empty.");
   
 
   // invalid path
@@ -412,16 +414,20 @@ global proc liquidShaderNodes_initParams_pl( string $nodeAttr,  string $shaderPa
   string $shadertype = liquidSlShaderType();
   string $nodeType = nodeType( $node );
   $nodeType = tolower( $nodeType );
-  //print("nodeType = " + $nodeType + "\n");
-  //print("shadertype = " + $shadertype + "\n");
+  print("nodeType = " + $nodeType + "\n");
+  print("shadertype = " + $shadertype + "\n");
   if( $nodeType != "liquidcoshader" )  // accept everything
   {
-	  if ( !gmatch( $nodeType,  ("*" + $shadertype + "*") ) ) {
-		string $short = basenameEx( $shaderPath );
-		string $typ = substitute("liquid", $nodeType, "" );
-		warning ("[liquidShaderNodes_initParams_pl] "+$short+" is not a "+$typ+" shader !");
-		liqPopIdent();
-		return;
+	  if ( !gmatch( $nodeType,  ("*" + $shadertype + "*") ) ) 
+	  {
+		if ( ! isValidShaderTypeForPL($shadertype) )
+		{
+			string $short = basenameEx( $shaderPath );
+			string $typ = substitute("liquid", $nodeType, "" );
+			warning ("[liquidShaderNodes_initParams_pl] "+$short+" is not a "+$typ+" shader !");
+			liqPopIdent();
+			return;
+		}
 	  }
   }
 

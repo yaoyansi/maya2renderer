@@ -35,6 +35,7 @@ global proc AEliquidVolumeTemplate( string $nodeName )
     editorTemplate -endLayout;
 
     editorTemplate -suppress rmanShader;
+	editorTemplate -suppress rmanShaderType;
     editorTemplate -suppress rmanShaderLong;
     editorTemplate -suppress rmanShaderLif;
     editorTemplate -suppress rmanParams;

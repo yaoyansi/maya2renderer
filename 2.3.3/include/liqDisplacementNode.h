@@ -60,6 +60,7 @@ class liqDisplacementNode : public MPxNode
 
     // Input attributes
     static MObject aRmanShader;
+    static MObject aRmanShaderType;
     static MObject aRmanShaderLong;
     static MObject aRmanShaderLif;
     static MObject aRmanParams;

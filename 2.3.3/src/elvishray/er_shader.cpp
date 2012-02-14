@@ -25,7 +25,7 @@ namespace elvishray
 	{
 
 	}
-	void Renderer::shader_surface(
+	void Renderer::_UserDefinedShader(
 		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
@@ -112,28 +112,35 @@ namespace elvishray
 
 
 	}
+	void Renderer::shader_surface(
+		const liqShader &shader,
+		const std::vector<liqTokenPointer> &tokenPointerArray
+		)
+	{
+		_UserDefinedShader(shader, tokenPointerArray);
+	}
 	liqLightHandle Renderer::shader_light(
 		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
-		_s( "// shader_light("<<shader.getName()<<","<<", ...)" );
+		_UserDefinedShader(shader, tokenPointerArray);
 
-		return (liqLightHandle)0;	
+		return (liqLightHandle)0;//dummy value
 	}
 	void Renderer::shader_displacement(
 		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
-		_s( "// shader_displacement("<<shader.getName()<<","<<", ...)" );	 
+		_UserDefinedShader(shader, tokenPointerArray);
 	}
 	void Renderer::shader_volume(
 		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
-		_s( "// shader_volume("<<shader.getName()<<","<<", ...)" );	
+		_UserDefinedShader(shader, tokenPointerArray);
 	}
 
 	void Renderer::dummyPhongShader()
@@ -218,50 +225,64 @@ namespace elvishray
 		// output shader
 		// its one less as the tokenPointerArray has a preset size of 1 not 0
 
-		switch( liqshader->shader_type )
+		if( liqshader->shader_type_ex == "light" )
 		{
-		case SHADER_TYPE_LIGHT :
-			{  
-
-				//outputIndentation(indentLevel);
-				RtLightHandle ret = this->shader_light( *liqshader,  liqshader->tokenPointerArray );
+			//outputIndentation(indentLevel);
+			RtLightHandle ret = this->shader_light( *liqshader,  liqshader->tokenPointerArray );
 #ifdef RIBLIB_AQSIS
-				(const_cast<liqShader*>(liqshader))->shaderHandler.set( reinterpret_cast<ptrdiff_t>(static_cast<RtLightHandle>(ret)) );
+			(const_cast<liqShader*>(liqshader))->shaderHandler.set( reinterpret_cast<ptrdiff_t>(static_cast<RtLightHandle>(ret)) );
 #else
-				liqshader->shaderHandler.set( ret );
+			liqshader->shaderHandler.set( ret );
 #endif
-			} break;
-
-		case SHADER_TYPE_SURFACE :
-			{
-
-				//outputIndentation(indentLevel);
-				this->shader_surface( *liqshader,  liqshader->tokenPointerArray );
-
-			}break;
-		case SHADER_TYPE_DISPLACEMENT :
-			{
-
-				//outputIndentation(indentLevel);
-				this->shader_displacement( *liqshader,  liqshader->tokenPointerArray );
-
-			}break;
-		case SHADER_TYPE_VOLUME :
-			{
-
-				//outputIndentation(indentLevel);
-				this->shader_volume( *liqshader,   liqshader->tokenPointerArray );
-
-			}break;
-		default :
+		}else if(liqshader->shader_type_ex == "surface"){
+			//outputIndentation(indentLevel);
+			this->shader_surface( *liqshader,  liqshader->tokenPointerArray );
+		}else if(liqshader->shader_type_ex == "displace"){
+			//outputIndentation(indentLevel);
+			this->shader_displacement( *liqshader,  liqshader->tokenPointerArray );
+		}else if(liqshader->shader_type_ex == "volume"){
+			//outputIndentation(indentLevel);
+			this->shader_volume( *liqshader,   liqshader->tokenPointerArray );
+		}else if(liqshader->shader_type_ex == "shadow"){
+			//outputIndentation(indentLevel);
+			this->shader_shadow( *liqshader,   liqshader->tokenPointerArray );
+		}else if(liqshader->shader_type_ex == "environment"){
+			//outputIndentation(indentLevel);
+			this->shader_environment( *liqshader,   liqshader->tokenPointerArray );
+		}else if(liqshader->shader_type_ex == "photon"){
+			//outputIndentation(indentLevel);
+			this->shader_photon( *liqshader,   liqshader->tokenPointerArray );
+		}else{
 			char errorMsg[512];
-			sprintf(errorMsg, "[liqShader::write] Unknown shader type for %s shader_type=%d", liqshader->getName().c_str(), liqshader->shader_type);
+			sprintf(errorMsg, "[liqShader::write] Unknown shader type for %s shader_type=%s", liqshader->getName().c_str(), liqshader->shader_type_ex.asChar());
 			liquidMessage( errorMsg, messageError );
-			break;
 		}
+
 		if( liqshader->shaderSpace != "" )
 		{
 			this->shader_transformEnd((const liqString)liqshader->shaderSpace.asChar());
 		}
 	}
+	void Renderer::shader_shadow(
+		const liqShader &shader,
+		const std::vector<liqTokenPointer> &tokenPointerArray
+		)
+	{
+		_UserDefinedShader(shader, tokenPointerArray);
+	}
+	void Renderer::shader_environment(
+		const liqShader &shader,
+		const std::vector<liqTokenPointer> &tokenPointerArray
+		)
+	{
+		_UserDefinedShader(shader, tokenPointerArray);
+	}
+	void Renderer::shader_photon(
+		const liqShader &shader,
+		const std::vector<liqTokenPointer> &tokenPointerArray
+		)
+	{
+		_UserDefinedShader(shader, tokenPointerArray);
+	}
+
 }//namespace elvishray

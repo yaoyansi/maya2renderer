@@ -240,8 +240,32 @@ proc string getSloLine (int $fid)
   liqPopIdent();
 	return "";
 }
+// \@ret 1: true;  0: false
+global proc int isValidShaderTypeForPL(string $shaderType)
+{
+    liqPushIdent();
+    liqlog("isValidShaderTypeForPL("+$shaderType+")");
 
+    if ( //common shader type
+		 $shaderType == "surface"		||
+		 $shaderType == "displacement"  || 		 $shaderType == "displace"      ||
+		 $shaderType == "volume"        ||
+		 // RM shader type
+		 $shaderType == "light"         ||
+		 $shaderType == "shader"        ||
+		 // ER shader type
+		 $shaderType == "shadow"        ||
+		 $shaderType == "environment"   ||
+		 $shaderType == "photon"
+	)
+	{
+		liqPopIdent();
+		return 1;
+	}
 
+    liqPopIdent();
+	return 0;
+}
 //////////////////////////////////////////////////////////////////////////////
 //
 // Primary global procedure for parsing a prman .slo shader file
@@ -304,13 +328,8 @@ global proc liquidSlParsePL( string $shaderFile )
 
     // Get the shader type - also sets the shader name
     string $shaderType = liquidSl_getShaderType( $fid );
-	liqlog("$shaderType=["+$shaderType+"]");
-    if ( $shaderType != "surface"       &&
-         $shaderType != "displacement"  &&
-         $shaderType != "volume"        &&
-         $shaderType != "light"         &&
-         $shaderType != "shader" 
-		)
+	liqlog("$shaderType="+$shaderType+".");
+    if ( ! isValidShaderTypeForPL($shaderType) )
     {
         fclose $fid;
         error( "unknown shader type \"" + $shaderType + "\": " + $plFile );

@@ -212,8 +212,18 @@ namespace elvishray
 			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
 		);
-
-
+		void shader_shadow(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		void shader_environment(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		void shader_photon(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
 		//
 		//std::ofstream& get() { return m_log.get(); }
  		static liquid::LogMgr m_log;
@@ -242,6 +252,10 @@ namespace elvishray
 //		void _exportVertexFromDagNode(const MFnMesh* fnMesh);
 		void _exportVertexFromNodePlug(
 			const liqRibNodePtr &ribNode__, unsigned int sample);
+		void _UserDefinedShader(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
 
 		eiContext *CONTEXT;
 	};

@@ -502,6 +502,7 @@ int liquidOutputPreviewShader( const string& fileName, const liqPreviewShaderOpt
   char* shaderFileName;
   liqShader currentShader;
   MObject	shaderObj;
+  MString shader_type_TempForRefactoring;//  [2/14/2012 yaoyansi]
 
   if ( options.fullShaderPath ) 
 	{
@@ -512,11 +513,15 @@ int liquidOutputPreviewShader( const string& fileName, const liqPreviewShaderOpt
     string tmp( options.shaderNodeName );
     currentShader.setShaderFileName(tmp.substr( 0, tmp.length() -  4 ) );
 
-    if ( options.type == "surface" ) 
-			currentShader.shader_type = SHADER_TYPE_SURFACE;
-    else 
-			if ( options.type == "displacement" ) 
-				currentShader.shader_type = SHADER_TYPE_DISPLACEMENT;
+	if ( options.type == "surface" ){
+		assert(0&&"we should use currentShader.shader_type_ex = \"surface\"");
+		//currentShader.shader_type = SHADER_TYPE_SURFACE;//  [2/14/2012 yaoyansi]
+		shader_type_TempForRefactoring = "surface";
+	}else if ( options.type == "displacement" ){
+		assert(0&&"we should use currentShader.shader_type_ex = \"displacement\"");
+		//currentShader.shader_type = SHADER_TYPE_DISPLACEMENT;//  [2/14/2012 yaoyansi]
+		shader_type_TempForRefactoring = "displacement";
+	}
     //cout <<"[liquid]   options.shaderNodeName = " << options.shaderNodeName << endl;
     //cout <<"[liquid]   options.type = "<<options.type<<endl;
 	} 
@@ -567,7 +572,7 @@ int liquidOutputPreviewShader( const string& fileName, const liqPreviewShaderOpt
   RtFloat scale( 1.f / ( RtFloat )options.objectScale );
   RiScale( scale, scale, scale );
 
-  if ( currentShader.shader_type == SHADER_TYPE_SURFACE ) 
+  if ( shader_type_TempForRefactoring=="surface"/*currentShader.shader_type == SHADER_TYPE_SURFACE*/ ) //  [2/14/2012 yaoyansi]
 	{
     RiColor( currentShader.rmColor );
     RiOpacity( currentShader.rmOpacity );
@@ -581,7 +586,7 @@ int liquidOutputPreviewShader( const string& fileName, const liqPreviewShaderOpt
 			RiSurfaceV( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
 		}
   } 
-	else if ( currentShader.shader_type == SHADER_TYPE_DISPLACEMENT ) 
+	else if ( shader_type_TempForRefactoring=="displacement"/*currentShader.shader_type == SHADER_TYPE_DISPLACEMENT*/ ) //  [2/14/2012 yaoyansi]
 	{
     RtToken Kd( "Kd" );
     RtFloat KdValue( 1. );
@@ -849,7 +854,7 @@ int liquidOutputPreviewShader( const string& fileName, const liqPreviewShaderOpt
 		{
       RiAttributeBegin();
       RiScale( 0.91, 0.91, 0.91 );
-      if( SHADER_TYPE_DISPLACEMENT == currentShader.shader_type ) 
+      if( MString("displacement")==shader_type_TempForRefactoring/*SHADER_TYPE_DISPLACEMENT == currentShader.shader_type*/ ) //  [2/14/2012 yaoyansi]
 			{
         RtColor bg = { 0.698, 0.698, 0. };
         RiColor( bg );

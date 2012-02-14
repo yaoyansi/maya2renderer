@@ -178,10 +178,11 @@ global proc liquidSLReplace()
 global proc liquidReloadFluidShader(string $shadername)
 {
 	liqPushIdent();
-	liqlog("liquidReloadFluidShader(...)");
+	liqlog("liquidReloadFluidShader("+$shadername+")");
  string $shader_name = `getAttr ( $shadername + ".rmanShaderLong" ) `;
  liquidSlSetShader( $shader_name );
  string $type = liquidSlShaderType();
+ liqlog("type="+$type);
  if ( $type == "surface" ) liquidReAttachParams $shadername "surface";
  if ( $type == "light" ) liquidReAttachParams $shadername "light";
  if ( $type == "displacement" ) liquidReAttachParams $shadername "disp";

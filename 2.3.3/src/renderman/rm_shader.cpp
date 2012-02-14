@@ -93,11 +93,8 @@ namespace renderman
 		// output shader
 		// its one less as the tokenPointerArray has a preset size of 1 not 0
 
-		switch( liqshader->shader_type )
+		if( liqshader->shader_type_ex == "light" )
 		{
-		case SHADER_TYPE_LIGHT :
-			{  
-
 				//outputIndentation(indentLevel);
 				RtLightHandle ret = this->shader_light( *liqshader,  liqshader->tokenPointerArray );
 #ifdef RIBLIB_AQSIS
@@ -105,35 +102,21 @@ namespace renderman
 #else
 				liqshader->shaderHandler.set( ret );
 #endif
-			} break;
-
-		case SHADER_TYPE_SURFACE :
-			{
-
+		}else if(liqshader->shader_type_ex == "surface"){
 				//outputIndentation(indentLevel);
 				this->shader_surface( *liqshader,  liqshader->tokenPointerArray );
-
-			}break;
-		case SHADER_TYPE_DISPLACEMENT :
-			{
-
+		}else if(liqshader->shader_type_ex == "displacement"){
 				//outputIndentation(indentLevel);
 				this->shader_displacement( *liqshader,  liqshader->tokenPointerArray );
-
-			}break;
-		case SHADER_TYPE_VOLUME :
-			{
-
+		}else if(liqshader->shader_type_ex == "volume"){
 				//outputIndentation(indentLevel);
 				this->shader_volume( *liqshader,   liqshader->tokenPointerArray );
-
-			}break;
-		default :
+		}else{
 			char errorMsg[512];
-			sprintf(errorMsg, "[liqShader::write] Unknown shader type for %s shader_type=%d", liqshader->getName().c_str(), liqshader->shader_type);
+			sprintf(errorMsg, "[liqShader::write] Unknown shader type for %s shader_type=%s", liqshader->getName().c_str(), liqshader->shader_type_ex.asChar());
 			liquidMessage( errorMsg, messageError );
-			break;
 		}
+		//
 		if( liqshader->shaderSpace != "" )
 		{
 			this->shader_transformEnd((const liqString)liqshader->shaderSpace.asChar());

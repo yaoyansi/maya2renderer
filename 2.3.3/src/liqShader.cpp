@@ -68,7 +68,8 @@ liqShader::liqShader()
   displacementBound     = 0.0;
   outputInShadow        = false;
   hasErrors             = false;
-  shader_type           = SHADER_TYPE_UNKNOWN;
+//  shader_type           = SHADER_TYPE_UNKNOWN;
+  shader_type_ex        = "";
   shaderSpace           = "";
   evaluateAtEveryFrame  = 0;
   tokenPointerArray.push_back( liqTokenPointer() ); // ENsure we have a 0 element
@@ -93,7 +94,8 @@ liqShader::liqShader( const liqShader& src )
   displacementBound    = src.displacementBound;
   outputInShadow       = src.outputInShadow;
   hasErrors            = src.hasErrors;
-  shader_type          = src.shader_type;
+//  shader_type        = src.shader_type;
+  shader_type_ex       = src.shader_type_ex;
   shaderSpace          = src.shaderSpace;
   evaluateAtEveryFrame = src.evaluateAtEveryFrame;
   shaderHandler        = src.shaderHandler;
@@ -118,7 +120,8 @@ liqShader & liqShader::operator=( const liqShader & src )
   displacementBound     = src.displacementBound;
   outputInShadow        = src.outputInShadow;
   hasErrors             = src.hasErrors;
-  shader_type           = src.shader_type;
+//  shader_type         = src.shader_type;
+  shader_type_ex        = src.shader_type_ex;
   shaderSpace           = src.shaderSpace;
   evaluateAtEveryFrame = src.evaluateAtEveryFrame;
   shaderHandler        = src.shaderHandler;
@@ -182,7 +185,7 @@ liqShader::liqShader( MObject shaderObj )
 		overrides the global shading rate but gets overridden with the
 		node specific shading rate. */
 
-		shader_type = shaderInfo.getType();
+		shader_type_ex = shaderInfo.getTypeStr2();
 		// Set RiColor and RiOpacity
 		status.clear();
 		MPlug colorPlug = shaderNode.findPlug( "color" );
@@ -738,21 +741,33 @@ void liqShader::writeAsCoShader()
 	// its one less as the tokenPointerArray has a preset size of 1 not 0
 	int shaderParamCount = tokenPointerArray.size() - 1;
 	char *shaderHandlerPtr = const_cast<char*>(shaderHandler.asChar());
-	switch( shader_type )
+
+// 	switch( shader_type )
+// 	{
+// 	case SHADER_TYPE_SHADER:case SHADER_TYPE_SURFACE:case SHADER_TYPE_DISPLACEMENT:case SHADER_TYPE_VOLUME:
+// 		//outputIndentation(indentLevel);
+// 		RiShaderV(shaderFileName, shaderHandlerPtr, shaderParamCount, tokenArray.get(), pointerArray.get());
+// 		break;
+// 	default :
+// 		char errorMsg[512];
+// 		sprintf(errorMsg, "[liqShader::writeAsCoShader] Unknown shader type for %s shader_type=%d (%s)", name.c_str(), shader_type, liqGetSloInfo::getTypeStr(shader_type).asChar());
+// 		liquidMessage( errorMsg, messageError );
+// 		break;
+// 	}
+	if( shader_type_ex=="shader"       ||
+		shader_type_ex=="surface"      ||
+		shader_type_ex=="displacement" ||
+		shader_type_ex=="volume"         )
 	{
-	case SHADER_TYPE_SHADER :
-	case SHADER_TYPE_SURFACE :
-	case SHADER_TYPE_DISPLACEMENT :
-	case SHADER_TYPE_VOLUME :
 		//outputIndentation(indentLevel);
 		RiShaderV(shaderFileName, shaderHandlerPtr, shaderParamCount, tokenArray.get(), pointerArray.get());
-		break;
-	default :
+	}else{
 		char errorMsg[512];
-		sprintf(errorMsg, "[liqShader::writeAsCoShader] Unknown shader type for %s shader_type=%d (%s)", name.c_str(), shader_type, liqGetSloInfo::getTypeStr(shader_type).asChar());
+		sprintf(errorMsg, "[liqShader::writeAsCoShader] Unknown shader type for %s shader_type=%s", name.c_str(), shader_type_ex.asChar());
 		liquidMessage( errorMsg, messageError );
-		break;
 	}
+
+
 	if( shaderSpace != "" )
 	{
 		liquid::RendererMgr::getInstancePtr()->

@@ -68,7 +68,7 @@
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
-
+#include "./common/mayacheck.h"
 
 
 
@@ -153,31 +153,35 @@ MString liqGetSloInfo::getName()
   return shaderName;
 }
 
-SHADER_TYPE liqGetSloInfo::getType()
-{
-  return shaderType;
-}
+// SHADER_TYPE liqGetSloInfo::getType()
+// {
+//   return shaderType;
+// }
 
 int liqGetSloInfo::getNumParam()
 {
   return numParam;
 }
 
-MString liqGetSloInfo::getTypeStr()
-{
-    return MString( shaderTypeStr[ shaderType ] );
-}
+// MString liqGetSloInfo::getTypeStr()
+// {
+//     return MString( shaderTypeStr[ shaderType ] );
+// }
 
-MString liqGetSloInfo::getTypeStr(SHADER_TYPE type)
-{
-	if( (unsigned int)type > shaderTypeStrSize )
-	{
-		liquidMessage2( messageError, "[liqGetSloInfo::getTypeStr] error index out of range %d \n", (int)type);
-		return MString("??");
-	}
-    return MString( shaderTypeStr[ type ] );
-}
+// MString liqGetSloInfo::getTypeStr(SHADER_TYPE type)
+// {
+// 	if( (unsigned int)type > shaderTypeStrSize )
+// 	{
+// 		liquidMessage2( messageError, "[liqGetSloInfo::getTypeStr] error index out of range %d \n", (int)type);
+// 		return MString("??");
+// 	}
+//     return MString( shaderTypeStr[ type ] );
+// }
 
+MString liqGetSloInfo::getTypeStr2() const
+{
+	return shaderTypeEx;
+}
 MString liqGetSloInfo::getArgName( int num )
 {
   return argName[ num ];
@@ -250,6 +254,7 @@ void liqGetSloInfo::resetIt()
 
 int liqGetSloInfo::setShader( MString shaderFileName )
 {
+  assert(0&&"liqGetSloInfo::setShader() seems nerver been used.");
   int rstatus = 0;
   resetIt();
 
@@ -273,9 +278,9 @@ int liqGetSloInfo::setShader( MString shaderFileName )
     LIQCHECKSTATUS( cmdStat, "liqGetSloInfo::setShader -> liquidSlShaderName failed !" );
     //cout <<"setShader:  shaderName = "<<shaderName<<endl;
 
-    // get the shader type  : seems to be obsolete, value is overrided after....
-    //cmdStat = MGlobal::executeCommand( "liquidSlShaderType();", shaderType );
-    //LIQCHECKSTATUS( cmdStat, "liqGetSloInfo::setShader -> liquidSlShaderType failed !" );
+    // get the shader type  : Elvishray has shadow/photon/environment shader types //  [2/14/2012 yaoyansi]
+    cmdStat = MGlobal::executeCommand( "liquidSlShaderType();", shaderTypeEx );
+    LIQCHECKSTATUS( cmdStat, "liqGetSloInfo::setShader -> liquidSlShaderType() failed !" );
 
     // get the number of params
     cmdStat = MGlobal::executeCommand( "liquidSlNumParams();", numParam );
@@ -448,13 +453,18 @@ int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
     //cout <<"setShaderNode:  shaderName = "<<shaderName<<endl;
 
     // get the shader type
+#if 0 //  [2/14/2012 yaoyansi]
     MString nodeType = shaderNode.typeName();
     if ( nodeType == "liquidSurface" )            shaderType = ( SHADER_TYPE ) 5;
     else if ( nodeType == "liquidLight" )         shaderType = ( SHADER_TYPE ) 6;
     else if ( nodeType == "liquidDisplacement" )  shaderType = ( SHADER_TYPE ) 7;
     else if ( nodeType == "liquidVolume" )        shaderType = ( SHADER_TYPE ) 8;
     else if ( nodeType == "liquidCoShader" )      shaderType = ( SHADER_TYPE ) 14;
-
+#else
+	shaderPlug = shaderNode.findPlug( "rmanShaderType", stat );
+	IfMErrorWarn(stat);
+	IfMErrorWarn(shaderPlug.getValue( shaderTypeEx ));
+#endif
     MStringArray shaderParams, shaderDetails, shaderTypes, shaderDefaults, shaderMethods;
     MIntArray shaderArraySizes, shaderOutputs;
 
@@ -682,6 +692,7 @@ int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
 
 MStatus liqGetSloInfo::doIt( const MArgList& args )
 {
+  assert(0&&"liqGetSloInfo::doIt() seems nerver been used.");
 
   MStatus     status;
   unsigned    i;
@@ -696,7 +707,7 @@ MStatus liqGetSloInfo::doIt( const MArgList& args )
         setResult( getName() );
       }
       if ( MString( "-type" ) == args.asString( i, &status ) )  {
-        setResult( getTypeStr() );
+        setResult( getTypeStr2() );
       }
       if ( MString( "-numParam" ) == args.asString( i, &status ) )  {
         setResult( getNumParam() );

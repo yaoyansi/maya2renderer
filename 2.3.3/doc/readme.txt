@@ -207,6 +207,14 @@ RenderMan (R) is a registered trademark of Pixar
 - press ESC to interrupt the rendering.
 
 
+- *.pl 文件里shaderType可以使用shadow
+  - use liqShader.shader_type_ex instead of liqShader.shader_type.
+  - shader_type_ex can be set by shaderType-section in *.pl
+  - shader_type_ex is set by liqGetSloInfo::shaderTypeEx, which comes from "$node.rmanShaderType"
+  - add ".rmanShaderType" to liqSurfaceNode/liqDisplacementNode/liqCoShaderNode/liqLightNode/liqVolumeNode
+  - set ".rmanShaderType" in rmanParams_create()
+  - use ".rmanShaderType" in liqGetSloInfo::setShaderNode()-->shaderNode.findPlug("rmanShaderType",...);
+
   ---------------------------------------------------------------------
                               NOTES
   ---------------------------------------------------------------------

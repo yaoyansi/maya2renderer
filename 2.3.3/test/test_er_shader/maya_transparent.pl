@@ -1,5 +1,5 @@
 #shaderType
-surface
+shadow
 #shaderName
 transparent
 #Name:Details:Type:IsOutput:Defaults:ArraySizes
