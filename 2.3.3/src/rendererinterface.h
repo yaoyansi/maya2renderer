@@ -200,24 +200,7 @@ public:
 		const MStringArray& lightedByWhichLightShapes) = 0;
 	// Shader
 	virtual void shader_UserDefinedShader(const liqShader* liqshader) = 0;
-	virtual void shader_transformBegin(const liqString  shaderSpace) = 0;
-	virtual void shader_transformEnd(const liqString  shaderSpace) = 0;
-	virtual void shader_surface(
-		const liqShader &shader,
-		const std::vector<liqTokenPointer> &tokenPointerArray
-	) = 0;
-	virtual liqLightHandle shader_light(
-		const liqShader &shader,
-		const std::vector<liqTokenPointer> &tokenPointerArray
-	) = 0;
-	virtual void shader_displacement(
-		const liqShader &shader,
-		const std::vector<liqTokenPointer> &tokenPointerArray
-	) = 0;
-	virtual void shader_volume(
-		const liqShader &shader, 
-		const std::vector<liqTokenPointer> &tokenPointerArray
-	) = 0;
+
 protected:
 
 

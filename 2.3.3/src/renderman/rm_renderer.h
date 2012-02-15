@@ -189,6 +189,18 @@ namespace renderman
 			const MStringArray& lightedByWhichLightShapes);
 		// Shader
 		virtual void shader_UserDefinedShader(const liqShader* liqshader);
+
+	protected:
+		Renderer(const Renderer&);
+		Renderer& operator=(const Renderer&);
+
+		void _RiOption_format_compress(bool bBinary, bool bCompress);
+		void _writeObject(
+			const liqRibNodePtr& ribNode, 
+			const structJob &currentJob,
+			const bool bGeometryMotionBlur,
+			const unsigned int msampleOn
+			);
 		virtual void shader_transformBegin(const liqString  shaderSpace);
 		virtual void shader_transformEnd(const liqString  shaderSpace);
 		virtual void shader_surface(
@@ -207,17 +219,7 @@ namespace renderman
 			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
 			);
-	protected:
-		Renderer(const Renderer&);
-		Renderer& operator=(const Renderer&);
-
-		void _RiOption_format_compress(bool bBinary, bool bCompress);
-		void _writeObject(
-			const liqRibNodePtr& ribNode, 
-			const structJob &currentJob,
-			const bool bGeometryMotionBlur,
-			const unsigned int msampleOn
-			);
+		void writeAsCoShader(const liqShader* liqshader);
 	private:
 
 	};

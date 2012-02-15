@@ -194,36 +194,6 @@ namespace elvishray
 			const MStringArray& lightedByWhichLightShapes);
 		// Shader
 		virtual void shader_UserDefinedShader(const liqShader* liqshader);
-		virtual void shader_transformBegin(const liqString  shaderSpace);
-		virtual void shader_transformEnd(const liqString  shaderSpace);
-		virtual void shader_surface(
-			const liqShader &shader,
-			const std::vector<liqTokenPointer> &tokenPointerArray
-		);
-		virtual liqLightHandle shader_light(
-			const liqShader &shader,
-			const std::vector<liqTokenPointer> &tokenPointerArray
-		);
-		virtual void shader_displacement(
-			const liqShader &shader,
-			const std::vector<liqTokenPointer> &tokenPointerArray
-		);
-		virtual void shader_volume(
-			const liqShader &shader,
-			const std::vector<liqTokenPointer> &tokenPointerArray
-		);
-		void shader_shadow(
-			const liqShader &shader,
-			const std::vector<liqTokenPointer> &tokenPointerArray
-			);
-		void shader_environment(
-			const liqShader &shader,
-			const std::vector<liqTokenPointer> &tokenPointerArray
-			);
-		void shader_photon(
-			const liqShader &shader,
-			const std::vector<liqTokenPointer> &tokenPointerArray
-			);
 		//
 		//std::ofstream& get() { return m_log.get(); }
  		static liquid::LogMgr m_log;
@@ -253,6 +223,36 @@ namespace elvishray
 		void _exportVertexFromNodePlug(
 			const liqRibNodePtr &ribNode__, unsigned int sample);
 		void _UserDefinedShader(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		virtual void shader_transformBegin(const liqString  shaderSpace);
+		virtual void shader_transformEnd(const liqString  shaderSpace);
+		virtual void shader_surface(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		virtual liqLightHandle shader_light(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		virtual void shader_displacement(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		virtual void shader_volume(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		void shader_shadow(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		void shader_environment(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		void shader_photon(
 			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
 			);

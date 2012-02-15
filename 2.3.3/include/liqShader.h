@@ -57,7 +57,7 @@ public :
 
 	void appendCoShader(MObject coshader, MPlug plug);
 	void write();
-    void writeAsCoShader();
+    //void writeAsCoShader();
 	//void outputIndentation(unsigned int indentLevel);
 
 	void buildJobs();

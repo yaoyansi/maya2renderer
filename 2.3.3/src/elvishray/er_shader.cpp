@@ -212,7 +212,8 @@ namespace elvishray
 			}
 			else
 			{
-				coShader.writeAsCoShader(/*shortShaderNames, indentLevel*/);
+				assert(0&&"er has not coShader.");
+				//coShader.writeAsCoShader(/*shortShaderNames, indentLevel*/);
 			}
 		}
 
