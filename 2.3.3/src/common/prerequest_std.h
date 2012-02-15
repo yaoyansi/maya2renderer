@@ -47,5 +47,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/smart_ptr/shared_ptr.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/bind.hpp>
 
 #endif//_PREREQUEST_STD_H_

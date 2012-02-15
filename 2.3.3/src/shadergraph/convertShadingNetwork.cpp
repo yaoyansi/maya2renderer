@@ -1,11 +1,11 @@
 #include "convertShadingNetwork.h"
-#include <boost/algorithm/string.hpp>
 #include "../common/mayacheck.h"
 #include <liqShader.h>
 #include <liqShaderFactory.h>
 #include <liqlog.h>
 #include "shadermgr.h"
 #include "shaderOutputMgr.h"
+#include "../renderermgr.h"
 
 namespace liquidmaya{
 
@@ -537,69 +537,13 @@ void ConvertShadingNetwork::__export()
 		cmd = "listConnections -type \"shadingEngine\" -destination on (\""+node+"\" + \".instObjGroups\")";
 		IfMErrorWarn(MGlobal::executeCommand( cmd, sgNodes));
 
-		//string $shaders[] = `listConnections ( $sgNodes[0] + ".surfaceShader" )`;
-		{//surface shader
-			MStringArray shaders;
-			cmd = "listConnections (\""+sgNodes[0]+"\" + \".surfaceShader\")";
-			IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
+		std::vector<std::string> plugs;
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->getValidShaderPlugsInShadingGroup(plugs);
 
-			const MString startingNode(shaders[0]);
-
-			MString nodetype;
-			cmd = "nodeType \""+startingNode+"\"";
-			IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
-
-			if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
-				liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
-			}else{
-				convertShadingNetworkToRSL(startingNode, node);
-			}
-		}
-		{//displacement shader
-			MStringArray shaders;
-			cmd = "listConnections (\""+sgNodes[0]+"\" + \".displacementShader\")";
-			IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
-
-			const MString startingNode(shaders[0]);
-
-			MString nodetype;
-			cmd = "nodeType \""+startingNode+"\"";
-			IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
-
-			if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
-				liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
-			}else{
-				convertShadingNetworkToRSL(startingNode, node);
-			}
-		}
-		{//shadow shader
-			int isShadowShaderExist;
-			cmd = "attributeQuery -node \""+sgNodes[0]+"\" -ex \"liqShadowShader\"";
-			IfMErrorWarn(MGlobal::executeCommand( cmd, isShadowShaderExist));
-			if(isShadowShaderExist)
-			{
-				MStringArray shaders;
-				cmd = "listConnections (\""+sgNodes[0]+"\" + \".liqShadowShader\")";
-				IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
-
-				const MString startingNode(shaders[0]);
-
-				MString nodetype;
-				cmd = "nodeType \""+startingNode+"\"";
-				IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
-
-				if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
-					//liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
-					MObject shaderObj;
-					getDependNodeByName( shaderObj,startingNode.asChar());
-					liqShader &currentShader = liqShaderFactory::instance().getShader( shaderObj );
-					currentShader.write();
-
-				}else{
-					convertShadingNetworkToRSL(startingNode, node);
-				}
-			}
-		}
+		for_each(plugs.begin(), plugs.end(),
+			boost::bind( &ConvertShadingNetwork::exportShaderInShadingGroup, this, node, sgNodes[0], _1 )
+		);
 
 		//
 		outputShadingGroup(sgNodes[0]);
@@ -616,7 +560,41 @@ void ConvertShadingNetwork::outputShadingGroup(const MString& shadingGroupNode)
 		outputShadingGroup(shadingGroupNode.asChar());
 }
 //
+void ConvertShadingNetwork::exportShaderInShadingGroup(
+	const MString& node, 
+	const MString& sgNode, 
+	const std::string& plug_)
+{
+	const MString plug(plug_.c_str());
+	MString cmd;
 
+	int isShaderPlugExist;
+	cmd = "attributeQuery -node \""+sgNode+"\" -ex \""+plug+"\"";
+	IfMErrorWarn(MGlobal::executeCommand( cmd, isShaderPlugExist));
+	if(isShaderPlugExist)
+	{
+		MStringArray shaders;
+		cmd = "listConnections (\""+sgNode+"\" + \"."+plug+"\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
+
+		const MString startingNode(shaders[0]);
+
+		MString nodetype;
+		cmd = "nodeType \""+startingNode+"\"";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
+
+		if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
+			//liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
+			MObject shaderObj;
+			getDependNodeByName( shaderObj,startingNode.asChar());
+			liqShader &currentShader = liqShaderFactory::instance().getShader( shaderObj );
+			currentShader.write();
+		}else{
+			convertShadingNetworkToRSL(startingNode, node);
+		}
+	}
+	
+}
 
 
 

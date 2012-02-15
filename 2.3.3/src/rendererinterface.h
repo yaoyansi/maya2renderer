@@ -7,6 +7,7 @@
 #include <liqRibMeshData.h>
 #include <liqTokenPointer.h>
 #include "liqtypes.h"
+#include "./common/prerequest_std.h"
 
 struct structJob;
 class liqRibLightData;
@@ -200,6 +201,7 @@ public:
 		const MStringArray& lightedByWhichLightShapes) = 0;
 	// Shader
 	virtual void shader_UserDefinedShader(const liqShader* liqshader) = 0;
+	virtual void getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const = 0 ;
 
 protected:
 

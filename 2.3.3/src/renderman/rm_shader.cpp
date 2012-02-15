@@ -123,6 +123,14 @@ namespace renderman
 		}
 	}
 	//
+	void Renderer::getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const
+	{
+		plugs.clear();
+		plugs.push_back("surfaceShader");
+		plugs.push_back("displacementShader");
+		plugs.push_back("volumeShader");
+	}
+	//
 	void Renderer::writeAsCoShader(const liqShader* liqshader)
 	{
 

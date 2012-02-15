@@ -189,7 +189,7 @@ namespace renderman
 			const MStringArray& lightedByWhichLightShapes);
 		// Shader
 		virtual void shader_UserDefinedShader(const liqShader* liqshader);
-
+		virtual void getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const;
 	protected:
 		Renderer(const Renderer&);
 		Renderer& operator=(const Renderer&);

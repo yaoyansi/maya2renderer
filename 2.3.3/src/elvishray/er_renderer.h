@@ -194,6 +194,7 @@ namespace elvishray
 			const MStringArray& lightedByWhichLightShapes);
 		// Shader
 		virtual void shader_UserDefinedShader(const liqShader* liqshader);
+		virtual void getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const;
 		//
 		//std::ofstream& get() { return m_log.get(); }
  		static liquid::LogMgr m_log;

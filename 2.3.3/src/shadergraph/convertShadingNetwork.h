@@ -106,6 +106,11 @@ protected:
 	static const int SHADER_METHOD_BODY_I = 1;
 	static const int SHADER_NAME_I = 2;
 
+	void exportShaderInShadingGroup(
+		const MString& node, 
+		const MString& sgNode, 
+		const std::string& plug_);
+
 private:
 	ConvertShadingNetwork(const ConvertShadingNetwork&);
 	ConvertShadingNetwork& operator=(const ConvertShadingNetwork&);

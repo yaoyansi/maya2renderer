@@ -461,7 +461,7 @@ global proc AEliquidInstanceFlags( string $node )
 //    editorTemplate -label "DisplacementShader"	-addDynamicControl "liqDisplacementShader";
       editorTemplate -label "ShadowShader"			-addDynamicControl "liqShadowShader";
 //    editorTemplate -label "VolumeShader"			-addDynamicControl "liqVolumeShader";
-      editorTemplate -label "EenvironmentShader"	-addDynamicControl "liqEnvironmentShader";
+      editorTemplate -label "EnvironmentShader"	-addDynamicControl "liqEnvironmentShader";
       editorTemplate -label "PhotonShader"			-addDynamicControl "liqPhotonShader";
 	editorTemplate -endLayout;
 

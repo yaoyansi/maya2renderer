@@ -285,5 +285,15 @@ namespace elvishray
 	{
 		_UserDefinedShader(shader, tokenPointerArray);
 	}
+	void Renderer::getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const
+	{
+		plugs.clear();
+		plugs.push_back("surfaceShader");
+		plugs.push_back("displacementShader");
+		plugs.push_back("volumeShader");
+		plugs.push_back("liqShadowShader");
+		plugs.push_back("liqEnvironmentShader");
+		plugs.push_back("liqPhotonShader");
+	}
 
 }//namespace elvishray
