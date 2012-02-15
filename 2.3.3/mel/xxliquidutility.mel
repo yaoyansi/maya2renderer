@@ -1,14 +1,43 @@
 global int $g_IndentNum = 0;
 global int $g_ShowAELog = 1;
+
+global int $g_LogFileId = 0;
+global string $g_LogFileFullPath="d:/liquidDebug.log";
+global proc openLogFile()
+{
+	global int $g_LogFileId;
+    global string $g_LogFileFullPath;
+	
+	$g_LogFileId=`fopen $g_LogFileFullPath "w"`;
+	if($g_LogFileId == 0){
+		error ("open "+$g_LogFileFullPath+" fail.");
+	}
+}
+global proc closeLogFile()
+{
+	global int $g_LogFileId;
+	fclose $g_LogFileId;
+	$g_LogFileId = 0;
+}
+
 proc log2(string $prefix, string $log)
 {
 	global int $g_IndentNum;
+	global int $g_LogFileId;
+
 	string $indent;
 	int $i=0;
 	for(; $i<$g_IndentNum; ++$i){
 		$indent +="    ";
 	}
-	print($indent + $prefix +">"+ $log +"\n");
+
+	if( $g_LogFileId == 0 ){// log file is not open.
+		print($indent + $prefix +">"+ $log +"\n");
+	}else{
+		fprint $g_LogFileId ($indent + $prefix +">"+ $log +"\n");
+	}
+
+
 }
 
 global proc liqlog(string $log)
