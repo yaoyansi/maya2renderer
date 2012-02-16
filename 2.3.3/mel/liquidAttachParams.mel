@@ -82,43 +82,43 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 		int $hiddenState = false;
 		string $plug = ($currentNodeName + "." + $argName);
 		string $cplug = $plug;
-		//liqlog("before `attributeQuery -node "+$currentNodeName+" -ex  "+$argName+"`");
-		
-		// When you load a user-defined shader, the parameter of the shader will not updated 
-		// if the parameter already exists. The solution is : delete the plug(parameter) and 
-		// create it again.
-		if( `attributeQuery -node $currentNodeName -ex $argName` ){
-			if(0){
-				liqlog("Way1. call myDeleteAttr() always lead a crash on my machine.");
-				myDeleteAttr($currentNodeName, $argName, 1000);
-			}else{
-				liqlog("Way2. this is good, and not lead a crash on my machine,"+
-					"but I'm not sure whether Way2 is ok on other machine.");
-				string $node = $currentNodeName;
-				string $attr = $argName;
-				int $loop    = 2;
-				{
-					liqlog("-->hardcode("+$node+","+$attr+","+$loop+")");
-					string $_plug = $node+"."+$attr;
-					
-					liqlog("Way3. if you see this log, and there is a crash. Please ommit this 'if(`attributeQuery...)' section,"+ 
-					"and let user delete '"+$node+"'or'"+$_plug+"' manully and create it again.");
-					
-					liqlog("before  renameAttr "+$_plug+" \"TO_BE_DELETED\")");
-					// philippe: this is a fix to deal with a bug with compound attributes
-					if ( catch( `renameAttr $_plug "TO_BE_DELETED"` ) ){
-						liqError("renameAttr "+$_plug+" \"TO_BE_DELETED\")");
-					}
-					//NOTE: without this for-loop, maya will lead a crash.
-					for($j=0; $j<$loop; $j++){ print("");}
-
-					liqlog("before  deleteAttr \""+$node+".TO_BE_DELETED\"");
-					if ( catch( `deleteAttr ($node+".TO_BE_DELETED")` ) ){
-						liqError("deleteAttr \""+$node+".TO_BE_DELETED\"");
-					}
-				}
-			}
-		}
+// [ 2012-2-16 yaoyansi ] the following code is omited, because the default values in UI are wrong. 
+// 		//liqlog("before `attributeQuery -node "+$currentNodeName+" -ex  "+$argName+"`");
+// 		// When you load a user-defined shader, the parameter of the shader will not updated 
+// 		// if the parameter already exists. The solution is : delete the plug(parameter) and 
+// 		// create it again.
+// 		if( `attributeQuery -node $currentNodeName -ex $argName` ){
+// 			if(0){
+// 				liqlog("Way1. call myDeleteAttr() always lead a crash on my machine.");
+// 				myDeleteAttr($currentNodeName, $argName, 1000);
+// 			}else{
+// 				liqlog("Way2. this is good, and not lead a crash on my machine,"+
+// 					"but I'm not sure whether Way2 is ok on other machine.");
+// 				string $node = $currentNodeName;
+// 				string $attr = $argName;
+// 				int $loop    = 2;
+// 				{
+// 					liqlog("-->hardcode("+$node+","+$attr+","+$loop+")");
+// 					string $_plug = $node+"."+$attr;
+// 					
+// 					liqlog("Way3. if you see this log, and there is a crash. Please ommit this 'if(`attributeQuery...)' section,"+ 
+// 					"and let user delete '"+$node+"'or'"+$_plug+"' manully and create it again.");
+// 					
+// 					liqlog("before  renameAttr "+$_plug+" \"TO_BE_DELETED\")");
+// 					// philippe: this is a fix to deal with a bug with compound attributes
+// 					if ( catch( `renameAttr $_plug "TO_BE_DELETED"` ) ){
+// 						liqError("renameAttr "+$_plug+" \"TO_BE_DELETED\")");
+// 					}
+// 					//NOTE: without this for-loop, maya will lead a crash.
+// 					for($j=0; $j<$loop; $j++){ print("");}
+// 
+// 					liqlog("before  deleteAttr \""+$node+".TO_BE_DELETED\"");
+// 					if ( catch( `deleteAttr ($node+".TO_BE_DELETED")` ) ){
+// 						liqError("deleteAttr \""+$node+".TO_BE_DELETED\"");
+// 					}
+// 				}
+// 			}
+// 		}
 
 
 
@@ -145,10 +145,10 @@ global proc liquidAttachShaderParams( string $currentNodeName, string $shaderFil
 				{
 					// simple float
 					$argDefaultF[0] = liquidSlDefaultToFloat( $paramDefault );
-					//trace ("[liquidAttachShaderParams]\taddAttr double "+$argName);
+					//liqlog("addAttr double "+$argName);
 					addAttr -hidden true -longName $argName -at double -k true $currentNodeName;
-					//trace ("[liquidAttachShaderParams]\tsetAttr "+$cplug+" "+$argDefaultF[0]);
-					setAttr $plug $argDefaultF[0];
+					//liqlog("setAttr "+$cplug+" "+$argDefaultF[0]);
+					setAttr $cplug $argDefaultF[0];
 				}
 				break;
 			case "shader":
