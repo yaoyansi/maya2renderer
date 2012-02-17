@@ -451,7 +451,7 @@ MString parseString( const MString& inString, bool doEscaped )
       } 
       else if( tokenString == "SCN" ) 
       {
-        constructedString += liqglo.liqglo_sceneName;
+        constructedString += liquidTransGetSceneName();
         inToken = false;
         tokenString.clear();
       } 
@@ -1329,7 +1329,7 @@ MString generateShadowArchiveName( bool renderAllFrames, long renderAtframe, MSt
 {
 	MString baseShadowName;
 	if( !liqglo.liqglo_shapeOnlyInShadowNames ) 
-		baseShadowName += liqglo.liqglo_sceneName + "_";
+		baseShadowName += liquidTransGetSceneName() + "_";
 
 	baseShadowName += "SHADOWBODY";
 	if( geometrySet != "" ) 

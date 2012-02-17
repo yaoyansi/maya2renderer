@@ -378,7 +378,7 @@ void tHeroRibWriterMgr::framePrologue_display(const structJob &currentJob)
 					// defaults to scenename.0001.tif if left empty
 					imageName = (*m_displays_iterator).name;
 					if( imageName == "" ) 
-						imageName = liqglo.liqglo_sceneName + ".#." + liqglo.outExt;
+						imageName = liquidTransGetSceneName() + ".#." + liqglo.outExt;
 					imageName = liqglo.m_pixDir + parseString( imageName, false );
 					// we test for an absolute path before converting from rel to abs path in case the picture dir was overriden through the command line.
 					//if( liqglo.m_pixDir.index( '/' ) != 0 ) imageName = liquidGetRelativePath( liqglo_relativeFileNames, imageName, liqglo_projectDir );

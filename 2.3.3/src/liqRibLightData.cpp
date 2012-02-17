@@ -1501,7 +1501,7 @@ MString liqRibLightData::autoShadowName( int PointLightDir ) const
     shadowName = liquidGetRelativePath( liqglo.liqglo_relativeFileNames, liqglo.liqglo_textureDir, liqglo.liqglo_projectDir );
     if ( !liqglo.liqglo_shapeOnlyInShadowNames ) 
     {
-      shadowName += liqglo.liqglo_sceneName;
+      shadowName += liquidTransGetSceneName();
       shadowName = parseString( shadowName, false );
       shadowName += "_";
     }
@@ -1551,7 +1551,7 @@ MString liqRibLightData::autoShadowName( int PointLightDir ) const
     shadowName += frame;
     shadowName += ".tex";
   }
-  //cout <<"liqRibLightData::autoShadowName : "<<shadowName.asChar()<<"  ( "<<liqglo_sceneName.asChar()<<" )"<<endl;
+  //cout <<"liqRibLightData::autoShadowName : "<<shadowName.asChar()<<"  ( "<<liquidTransGetSceneName().asChar()<<" )"<<endl;
 
   return shadowName;
 
@@ -1591,7 +1591,7 @@ MString liqRibLightData::extraShadowName( const MFnDependencyNode & lightShaderN
       shadowCamParamPlug = shadowCamDepNode.findPlug( "liqGeometrySet", &status );
       if ( MS::kSuccess == status ) shadowCamParamPlug.getValue( shdCamGeometrySet );
 
-      shadowName += liqglo.liqglo_sceneName;
+      shadowName += liquidTransGetSceneName();
       shadowName =  parseString( shadowName, false );
       shadowName += "_";
       shadowName += sanitizeNodeName( shdCamName );
@@ -1623,7 +1623,7 @@ MString liqRibLightData::extraShadowName( const MFnDependencyNode & lightShaderN
     liquidMessage( err, messageError );
   }
 
-  //cout <<"liqRibLightData::extraShadowName : "<<shadowName.asChar()<<"  ( "<<liqglo_sceneName.asChar()<<" )"<<endl;
+  //cout <<"liqRibLightData::extraShadowName : "<<shadowName.asChar()<<"  ( "<<liquidTransGetSceneName().asChar()<<" )"<<endl;
 
   return shadowName;
 }

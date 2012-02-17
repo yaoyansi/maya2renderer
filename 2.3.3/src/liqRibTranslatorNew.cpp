@@ -1082,7 +1082,7 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 
 	liquid::RendererMgr::getInstancePtr()->getRenderer()->ribPrologue_comment(
 		LIQUIDVERSION,
-		(liqglo.liqglo_projectDir + liqglo.liqglo_sceneName).asChar(),
+		(liqglo.liqglo_projectDir + liquidTransGetSceneName()).asChar(),
 		user, now
 		);
 
@@ -2461,7 +2461,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 			tFrameScriptJobMgr frameScriptJobMgr(frameScriptJob);
 
 			stringstream titleStream;
-			titleStream << liqglo.liqglo_sceneName.asChar() << "Frame" << liqglo.liqglo_lframe;
+			titleStream << liquidTransGetSceneName().asChar() << "Frame" << liqglo.liqglo_lframe;
 			frameScriptJobMgr.setCommonParameters( titleStream.str() );
 
 			///////////////////////////////////////////////////
@@ -2678,7 +2678,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 		if( true/*useRenderScript*/ ) 
 		{
 			if( renderJobName == "" ) 
-				renderJobName = liqglo.liqglo_sceneName;
+				renderJobName = liquidTransGetSceneName();
 
 			jobScriptMgr.setCommonParameters(
 				renderJobName.asChar(), liqglo.useNetRman, m_minCPU, m_maxCPU, liqglo.m_dirmaps 
@@ -2719,7 +2719,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 			tFrameScriptJobMgr frameScriptJobMgr(frameScriptJob);
 
 			stringstream titleStream;
-			titleStream << liqglo.liqglo_sceneName.asChar() << "Frame" << liqglo.liqglo_lframe;
+			titleStream << liquidTransGetSceneName().asChar() << "Frame" << liqglo.liqglo_lframe;
 			frameScriptJobMgr.setCommonParameters( titleStream.str() );
 
 			if( true/*useRenderScript*/ ) 
@@ -2744,7 +2744,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 				if( liqglo.m_deferredGen ) 
 				{
 					stringstream ss;
-					ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
+					ss << liquidTransGetSceneName().asChar() << "FrameRIBGEN" << currentBlock;
 					frameScriptJobMgr.addInstanceJob(true, ss.str() );
 				}
 			}//if( useRenderScript ) 

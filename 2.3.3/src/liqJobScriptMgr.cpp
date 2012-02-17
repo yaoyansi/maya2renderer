@@ -72,8 +72,13 @@ void tJobScriptMgr::addDefferedJob(
 									  )
 {
 	std::stringstream ribGenExtras;
-	// ribGenExtras << " -progress -noDef -nop -noalfred -projectDir " << liqglo_projectDir.asChar() << " -ribName " << liqglo_sceneName.asChar() << " -mf " << liqglo.tempDefname.asChar() << " -t ";
-	ribGenExtras << " -progress -noDef -projectDir " << liqglo.liqglo_projectDir.asChar() << " -ribName " << liqglo.liqglo_sceneName.asChar() << " -fl ";
+	//Note:  -ribName is set to liqglo.liqglo_sceneName originally. 
+	//       Because we replace liqglo.liqglo_sceneName with liquidTransGetSceneName(), and delete liqglo.liqglo_sceneName,
+	//       we use liqglo.liqglo_ribName to store the ribName which passed by commandline parameter '-ribName'
+	//  [2/17/2012 yaoyansi]
+	assert(0&&"warrning: ribName is store in liqglo.liqglo_ribName instead of liqglo.liqglo_sceneName.[2/17/2012 yaoyansi]");
+	// ribGenExtras << " -progress -noDef -nop -noalfred -projectDir " << liqglo_projectDir.asChar() << " -ribName " << liqglo.liqglo_ribName.asChar() << " -mf " << liqglo.tempDefname.asChar() << " -t ";
+	ribGenExtras << " -progress -noDef -projectDir " << liqglo.liqglo_projectDir.asChar() << " -ribName " << liqglo.liqglo_ribName.asChar() << " -fl ";
 
 	unsigned lastGenFrame( ( frameIndex__ + liqglo.m_deferredBlockSize ) < liqglo.frameNumbers.size() ? frameIndex__ + liqglo.m_deferredBlockSize : liqglo.frameNumbers.size() );
 
@@ -86,7 +91,7 @@ void tJobScriptMgr::addDefferedJob(
 		// liquidMessage2(messageInfo, "\t outputFrame = %d\n", outputFrame );
 	}
 	std::stringstream titleStream;
-	titleStream << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock__;
+	titleStream << liquidTransGetSceneName().asChar() << "FrameRIBGEN" << currentBlock__;
 	deferredJob__.title = titleStream.str();
 
 	std::stringstream ss;

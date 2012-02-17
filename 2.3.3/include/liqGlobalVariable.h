@@ -79,7 +79,7 @@ struct liqGlobalVariable
 	float        liqglo_shutterEfficiency;
 	bool         liqglo_doShadows;                        // Kept global for liquidRigLightData
 	bool         liqglo_shapeOnlyInShadowNames;
-	MString      liqglo_sceneName;
+	MString      liqglo_ribName;
 	bool         liqglo_beautyRibHasCameraName;           // if true, usual behaviour, otherwise, no camera name in beauty rib
 	bool         liqglo_isShadowPass;                     // true if we are rendering a shadow pass
 	bool         liqglo_expandShaderArrays;

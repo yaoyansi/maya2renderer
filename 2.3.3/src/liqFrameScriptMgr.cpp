@@ -159,7 +159,7 @@ void tFrameScriptJobMgr::makeShadowPass(
 		if( liqglo.m_deferredGen ) 
 		{
 			std::stringstream ss;
-			ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock__;
+			ss << liquidTransGetSceneName().asChar() << "FrameRIBGEN" << currentBlock__;
 			liqRenderScript::Job instanceJob;
 			instanceJob.isInstance = true;
 			instanceJob.title = ss.str();

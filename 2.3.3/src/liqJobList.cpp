@@ -141,7 +141,7 @@ MStatus liqJobList::redoIt()
 
     // set the current scene name
     //
-    liqglo.liqglo_sceneName = liquidTransGetSceneName();
+    //liqglo.liqglo_sceneName = liquidTransGetSceneName();
 
 
     // set the frame

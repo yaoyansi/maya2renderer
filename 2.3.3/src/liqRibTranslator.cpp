@@ -540,7 +540,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 	liqglo.liqglo_projectDir = MELReturn;
 
 	// get the current scene name
-	liqglo.liqglo_sceneName = liquidTransGetSceneName();
+	//liqglo.liqglo_sceneName = liquidTransGetSceneName();
 
 	// setup default animation parameters
 	liqglo.frameNumbers.push_back( ( int )MAnimControl::currentTime().as( MTime::uiUnit() ) );
@@ -767,7 +767,16 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 		{
 			LIQCHECKSTATUS(status, "error in -ribName parameter");  i++;
 			MString parsingString = args.asString( i, &status );
+			//Note:  -ribName is set to liqglo.liqglo_sceneName originally. 
+			//       Because we replace liqglo.liqglo_sceneName with liquidTransGetSceneName(), and delete liqglo.liqglo_sceneName,
+			//       we use liqglo.liqglo_ribName to store the ribName which passed by commandline parameter '-ribName'
+			//  [2/17/2012 yaoyansi]
+			assert(0&&"warrning: ribName is store in liqglo.liqglo_ribName instead of liqglo.liqglo_sceneName.[2/17/2012 yaoyansi]");
+#if 0
 			liqglo.liqglo_sceneName = parseString( parsingString );
+#else
+			liqglo.liqglo_ribName = parseString( parsingString );
+#endif
 			LIQCHECKSTATUS(status, "error in -ribName parameter");
 		} 
 		else if((arg == "-rel") || (arg == "-relativeDirs")) 
@@ -1488,8 +1497,14 @@ void liqRibTranslator::liquidReadGlobals()
 	}
 	getCameraParameters(rGlobalNode);
 
-	if ( liquidGetPlugValue( rGlobalNode, "ribName", varVal, gStatus ) == MS::kSuccess ) 
-		liqglo.liqglo_sceneName = parseString( varVal );
+	if ( liquidGetPlugValue( rGlobalNode, "ribName", varVal, gStatus ) == MS::kSuccess ) {
+		//Note:  -ribName is set to liqglo.liqglo_sceneName originally. 
+		//       Because we replace liqglo.liqglo_sceneName with liquidTransGetSceneName(), and delete liqglo.liqglo_sceneName,
+		//       we use liqglo.liqglo_ribName to store the ribName which passed by commandline parameter '-ribName'
+		//  [2/17/2012 yaoyansi]
+		assert(0&&"warrning: ribName is store in liqglo.liqglo_ribName instead of liqglo.liqglo_sceneName.[2/17/2012 yaoyansi]");
+		liqglo.liqglo_ribName = parseString( varVal );
+	}
 
 	liquidGetPlugValue( rGlobalNode, "beautyRibHasCameraName", liqglo.liqglo_beautyRibHasCameraName, gStatus );
 
@@ -1801,7 +1816,7 @@ MString liqRibTranslator::generateRenderScriptName() const
 		renderScriptName += m_userRenderScriptFileName;
 	else 
 	{
-		renderScriptName += liqglo.liqglo_sceneName;
+		renderScriptName += liquidTransGetSceneName();
 #ifndef _WIN32
 		struct timeval  t_time;
 		struct timezone t_zone;
@@ -1828,7 +1843,7 @@ MString liqRibTranslator::generateTempMayaSceneName() const
 {
 	_logFunctionCall("liqRibTranslator::generateTempMayaSceneName()");
 	MString tempDefname = m_tmpDir;
-	tempDefname += liqglo.liqglo_sceneName;
+	tempDefname += liquidTransGetSceneName();
 #ifndef _WIN32
 	struct timeval  t_time;
 	struct timezone t_zone;
@@ -1853,7 +1868,7 @@ MString liqRibTranslator::generateTempMayaSceneName() const
  //{
  //	MString baseShadowName;
  //	if( !liqglo.liqglo_shapeOnlyInShadowNames ) 
- //		baseShadowName += liqglo.liqglo_sceneName + "_";
+ //		baseShadowName += liquidTransGetSceneName() + "_";
  //
  //	baseShadowName += "SHADOWBODY";
  //	if( geometrySet != "" ) 
@@ -1882,7 +1897,7 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 		filename = liqglo.liqglo_textureDir;
 		if( !liqglo.liqglo_shapeOnlyInShadowNames )
 		{
-			filename += liqglo.liqglo_sceneName;
+			filename += liquidTransGetSceneName();
 			filename += "_";
 		}
 		// check if aggregate is on
@@ -1923,7 +1938,7 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 		filename = liqglo.liqglo_ribDir;
 		if( !liqglo.liqglo_shapeOnlyInShadowNames )
 		{
-			filename += liqglo.liqglo_sceneName;
+			filename += liquidTransGetSceneName();
 			filename += "_";
 		}
 		filename += sanitizeNodeName( job.name );
@@ -1954,7 +1969,7 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 	case fgm_beauty_rib:
 		debug = "fgm_beauty_rib";
 		filename = liqglo.liqglo_ribDir;
-		filename += liqglo.liqglo_sceneName;
+		filename += liquidTransGetSceneName();
 		if( liqglo.liqglo_beautyRibHasCameraName )
 		{
 			filename += "_";
@@ -1968,7 +1983,7 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 	case fgm_image:
 		debug = "fgm_image";
 		filename = liqglo.m_pixDir;
-		filename += liqglo.liqglo_sceneName;
+		filename += liquidTransGetSceneName();
 		if( liqglo.liqglo_beautyRibHasCameraName )
 		{
 			filename += "_";
@@ -2194,7 +2209,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 		if( useRenderScript ) 
 		{
 			if( renderJobName == "" ) 
-				renderJobName = liqglo.liqglo_sceneName;
+				renderJobName = liquidTransGetSceneName();
 			jobScript.title = renderJobName.asChar();
 
 			if( liqglo.useNetRman ) 
@@ -2274,8 +2289,13 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 							currentBlock++;
 
 						stringstream ribGenExtras;
-						// ribGenExtras << " -progress -noDef -nop -noalfred -projectDir " << liqglo_projectDir.asChar() << " -ribName " << liqglo_sceneName.asChar() << " -mf " << tempDefname.asChar() << " -t ";
-						ribGenExtras << " -progress -noDef -projectDir " << liqglo.liqglo_projectDir.asChar() << " -ribName " << liqglo.liqglo_sceneName.asChar() << " -fl ";
+						//Note:  -ribName is set to liqglo.liqglo_sceneName originally. 
+						//       Because we replace liqglo.liqglo_sceneName with liquidTransGetSceneName(), and delete liqglo.liqglo_sceneName,
+						//       we use liqglo.liqglo_ribName to store the ribName which passed by commandline parameter '-ribName'
+						//  [2/17/2012 yaoyansi]
+						assert(0&&"warrning: ribName is store in liqglo.liqglo_ribName instead of liqglo.liqglo_sceneName.[2/17/2012 yaoyansi]");
+						// ribGenExtras << " -progress -noDef -nop -noalfred -projectDir " << liqglo_projectDir.asChar() << " -ribName " << liqglo.liqglo_ribName.asChar() << " -mf " << tempDefname.asChar() << " -t ";
+						ribGenExtras << " -progress -noDef -projectDir " << liqglo.liqglo_projectDir.asChar() << " -ribName " << liqglo.liqglo_ribName.asChar() << " -fl ";
 
 						unsigned lastGenFrame( ( frameIndex + liqglo.m_deferredBlockSize ) < liqglo.frameNumbers.size() ? frameIndex + liqglo.m_deferredBlockSize : liqglo.frameNumbers.size() );
 
@@ -2288,7 +2308,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 							// liquidMessage2(messageInfo, "\t outputFrame = %d\n", outputFrame );
 						}
 						stringstream titleStream;
-						titleStream << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
+						titleStream << liquidTransGetSceneName().asChar() << "FrameRIBGEN" << currentBlock;
 						deferredJob.title = titleStream.str();
 
 						stringstream ss;
@@ -2306,13 +2326,13 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 				if( !m_justRib ) 
 				{
 					stringstream titleStream;
-					titleStream << liqglo.liqglo_sceneName.asChar() << "Frame" << liqglo.liqglo_lframe;
+					titleStream << liquidTransGetSceneName().asChar() << "Frame" << liqglo.liqglo_lframe;
 					frameScriptJob.title = titleStream.str();
 
 					if( liqglo.m_deferredGen ) 
 					{
 						stringstream ss;
-						ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
+						ss << liquidTransGetSceneName().asChar() << "FrameRIBGEN" << currentBlock;
 						liqRenderScript::Job instanceJob;
 						instanceJob.isInstance = true;
 						instanceJob.title = ss.str();
@@ -2665,7 +2685,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 							if( liqglo.m_deferredGen ) 
 							{
 								stringstream ss;
-								ss << liqglo.liqglo_sceneName.asChar() << "FrameRIBGEN" << currentBlock;
+								ss << liquidTransGetSceneName().asChar() << "FrameRIBGEN" << currentBlock;
 								liqRenderScript::Job instanceJob;
 								instanceJob.isInstance = true;
 								instanceJob.title = ss.str();
@@ -3871,7 +3891,7 @@ MStatus liqRibTranslator::ribPrologue()
 		// general info for traceability
 		//
 		RiArchiveRecord( RI_COMMENT, "    Generated by Liquid v%s", LIQUIDVERSION );
-		RiArchiveRecord( RI_COMMENT, "    Scene : %s", (liqglo.liqglo_projectDir + liqglo.liqglo_sceneName).asChar() );
+		RiArchiveRecord( RI_COMMENT, "    Scene : %s", (liqglo.liqglo_projectDir + liquidTransGetSceneName()).asChar() );
 #ifndef _WIN32
 		uid_t userId = getuid();
 		struct passwd *userPwd = getpwuid( userId );
@@ -5220,7 +5240,7 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 					// defaults to scenename.0001.tif if left empty
 					imageName = (*m_displays_iterator).name;
 					if( imageName == "" ) 
-						imageName = liqglo.liqglo_sceneName + ".#." + liqglo.outExt;
+						imageName = liquidTransGetSceneName() + ".#." + liqglo.outExt;
 					imageName = liqglo.m_pixDir + parseString( imageName, false );
 					// we test for an absolute path before converting from rel to abs path in case the picture dir was overriden through the command line.
 					//if( liqglo.m_pixDir.index( '/' ) != 0 ) imageName = liquidGetRelativePath( liqglo_relativeFileNames, imageName, liqglo_projectDir );

@@ -115,7 +115,7 @@ MString	liqExpression::CalcValue( )
       {
         if ( ( liqglo.m_displays[0].name == "" ) ) 
         {
-          value += liqglo.liqglo_sceneName;
+          value += liquidTransGetSceneName();
         } 
         else 
         {
@@ -137,7 +137,7 @@ MString	liqExpression::CalcValue( )
       {
         if ( ( liqglo.m_displays[0].name == "" ) ) 
         {
-          value += liqglo.liqglo_sceneName;
+          value += liquidTransGetSceneName();
         } 
         else 
         {
