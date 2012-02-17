@@ -1502,7 +1502,7 @@ void liqRibTranslator::liquidReadGlobals()
 		//       Because we replace liqglo.liqglo_sceneName with liquidTransGetSceneName(), and delete liqglo.liqglo_sceneName,
 		//       we use liqglo.liqglo_ribName to store the ribName which passed by commandline parameter '-ribName'
 		//  [2/17/2012 yaoyansi]
-		assert(0&&"warrning: ribName is store in liqglo.liqglo_ribName instead of liqglo.liqglo_sceneName.[2/17/2012 yaoyansi]");
+		liquidMessage2(messageWarning,"warrning: ribName is store in liqglo.liqglo_ribName instead of liqglo.liqglo_sceneName.[2/17/2012 yaoyansi]");
 		liqglo.liqglo_ribName = parseString( varVal );
 	}
 
