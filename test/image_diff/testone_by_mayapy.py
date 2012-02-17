@@ -3,7 +3,7 @@ import os
 import maya.standalone
 import maya.OpenMaya as OpenMaya
 import maya.cmds as cmds
-
+import liqGlobalHelpers as gHelper
 
 
 def parseString(strdata):
@@ -21,7 +21,7 @@ def parseString(strdata):
 
     if strdata.find('$SCN')!=-1:
         strinfo = re.compile('\$SCN')
-        strdata = strinfo.sub( cmds.getAttr('liquidGlobals.ribName'), strdata)
+        strdata = strinfo.sub( gHelper.liquidTransGetSceneName(), strdata)
 
     if strdata.find('$IMG')!=-1:
         strinfo = re.compile('\$IMG')
