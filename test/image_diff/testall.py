@@ -58,11 +58,11 @@ def initialize():
 def test_all_scene():
     LIQUID_ROOT="E:/dev/Autodesk/maya/myplugin/project/liquid_"
 
-    #testFile=LIQUID_ROOT+"/2.3.3/test/test_motionblur/transform/deform.ma"
-    #MyTestOne.test_one_scene(testFile, "")
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_motionblur/transform/deform.ma"
+    MyTestOne.test_one_scene(testFile, "")
 
-    testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_texture/check10_tex.ma"
-    MyTestOne.test_one_scene(testFile, "renderman")
+    #testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_texture/check10_tex.ma"
+    #MyTestOne.test_one_scene(testFile, "renderman")
 
 
 def main():
