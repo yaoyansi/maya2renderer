@@ -4,7 +4,7 @@ import maya.standalone
 import maya.OpenMaya as OpenMaya
 import maya.cmds as cmds
 import testone_by_mayapy as MyTestOne
-
+import liqTestLog as mLiqlog
 
 
 def configMayaEnv():
@@ -61,16 +61,20 @@ def test_all_scene():
     testFile=LIQUID_ROOT+"/2.3.3/test/test_motionblur/transform/deform.ma"
     MyTestOne.test_one_scene(testFile, "")
 
-    #testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_texture/check10_tex.ma"
-    #MyTestOne.test_one_scene(testFile, "renderman")
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_texture/check10_tex.ma"
+    MyTestOne.test_one_scene(testFile, "renderman")
 
 
 def main():
     configMayaEnv()
+    mLiqlog.flog("configMayaEnv() done.")
     initialize()
+    mLiqlog.flog("initialize() done.")
 
+    mLiqlog.flog("test_all_scene() begin.")
     test_all_scene()
-    raw_input("test_all_cases() done. Press ENTER to exit")
+    mLiqlog.flog("test_all_scene() end.")
+    #raw_input("test_all_cases() done. Press ENTER to exit")
 
 
 if __name__ == '__main__':

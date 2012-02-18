@@ -1,10 +1,8 @@
 import sys
 import os
 import hashlib
+import liqTestLog as mLiqlog
 
-
-fileA="E:/dev/Autodesk/maya/myplugin/project/liquid_/test/image_diff/check12.bmp"
-fileB="E:/dev/Autodesk/maya/myplugin/project/liquid_/test/image_diff/check12_m.bmp"
 
 def getDiffImageName(fileFullPath):
     diff_postfix="_diff";
@@ -15,7 +13,7 @@ def getDiffImageName(fileFullPath):
 
 def doDiff(filenameA, filenameB, diffFileName):
     cmd=".\\ImageMagick_6.7.5_Q16\\compare.exe "+filenameA+' '+filenameB+' '+diffFileName
-    print("cmd="+cmd+"\n")
+    #print("cmd="+cmd+"\n")
     os.system(cmd)
 
 
@@ -27,10 +25,12 @@ def _compare(filenameA, filenameB):
 
 
 def compare(filenameA, filenameB):
-    print("compare("+filenameA+","+filenameB+")\n")
+    #print("compare("+filenameA+","+filenameB+")\n")
     if _compare(filenameA, filenameB)==True:
-        print("two images are equal.\n.")
+        mLiqlog.flog("two images are equal.")
     else:
         diffFileName = getDiffImageName(filenameA)
         doDiff( filenameA, filenameB, diffFileName )
-        print("diff image has been output to:\n"+diffFileName+"\n")
+
+        mLiqlog.imgdiff_beg("WARNING: Two images are NOT equal! see the diff-image:", diffFileName)
+        mLiqlog.imgdiff_end()

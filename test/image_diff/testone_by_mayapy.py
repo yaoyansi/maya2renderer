@@ -4,7 +4,7 @@ import maya.standalone
 import maya.OpenMaya as OpenMaya
 import maya.cmds as cmds
 import liqGlobalHelpers as gHelper
-
+import liqTestLog as mLiqlog
 
 def parseString(strdata):
     import maya.cmds as cmds
@@ -74,13 +74,16 @@ def _render(mayaFile, liqRenderer):
     command = """ "source \\"registerLiquidRenderer.mel\\"; registerLiquidRenderer(); setAttr -type \\"string\\" liquidGlobals.renderer """+liqRenderer+"""; mayaBatchRenderProcedure(0,\\"\\",\\"\\",\\"liquid\\",\\"\\");" """;
     cmd = batchRenderCmd+" -file "+mayaFile+" -command "+command;
 
-    print("batchRenderCmd="+cmd)
+    #mLiqlog.flog("batchRenderCmd="+cmd)
     os.system(cmd)
 
 
 def _test(mayaFile, liqRenderer):
+    mLiqlog.renderer_beg(liqRenderer)
+
     output_image_fullpath = getImageOutputDirectory(mayaFile)+getOutputImageName(mayaFile, liqRenderer)
-    print("output_image="+output_image_fullpath+"\n")
+    mLiqlog.output_img_beg(output_image_fullpath)
+    mLiqlog.output_img_end()
 
     _render(mayaFile, liqRenderer)
 
@@ -90,15 +93,19 @@ def _test(mayaFile, liqRenderer):
     std_image_fullpath = getStanderImage(mayaFile, liqRenderer);
     import imagediff
     imagediff.compare(output_image_fullpath, std_image_fullpath)
+    
+    mLiqlog.renderer_end()
     #raw_input("test_case("+mayaFile+") done. Press ENTER to exit")
 
 
 def test_one_scene(mayaFile, liqRenderer):
+    mLiqlog.scene_beg(mayaFile)
     if liqRenderer == "":
         _test(mayaFile, "elvishray")
         _test(mayaFile, "renderman")
     else:
         _test(mayaFile, liqRenderer)
+    mLiqlog.scene_end()
 
 
 def test_getStanderImage():

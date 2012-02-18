@@ -1,12 +1,21 @@
 import sys
 import os
+import liqTestLog as mLiqlog
+
+HTMLViewerPath="D:/Program Files/Mozilla Firefox/firefox.exe";
+pyFile  = "testall.py";
 
 def main():
-    pyFile  = "testall.py";
-    command = "mayapy.exe "+pyFile;
 
+    command = "mayapy.exe "+pyFile;
     os.system(command)
-    raw_input("Press ENTER to exit.\n")
+
+    # open the log file
+    #if HTMLViewerPath=="":
+    #    os.system("explorer.exe .\\_liqTestLog.htm")
+    #else:
+    #    os.system("\""+HTMLViewerPath+"\" ./_liqTestLog.htm")
+
 
 if __name__ == '__main__':
     main()

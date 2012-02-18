@@ -193,15 +193,18 @@ RenderMan (R) is a registered trademark of Pixar
 
 - automation test
   - first, render you scene(test_motionblur\transform\deform.ma) manully, 
-    and save the image as stander image to your scene directory with a postfix "_std"(perspShape.6.elvishray_std.bmp, perspShape.6.renderman_std.bmp)
+    and save the image as stander image to the sub-directory(output_img_std/) of your scene file, e.g. test_motionblur\transform\output_img_std/.
   - add your test scene in testall.py.test_all_scene()
         LIQUID_ROOT="E:/dev/Autodesk/maya/myplugin/project/liquid_"
         testFile=LIQUID_ROOT+"/2.3.3/test/test_motionblur/transform/deform.ma"
         liqRenderer=""
         MyTestOne.test_one_scene(testFile, liqRenderer)
-  - run $(LiquidRoot)\test\image_diff\test.py, it will run the test, 
-    and compare the image with the stander image, if the images are not equal, 
-    a diff image will be generated($(your_project_dir)\rmanpix\perspShape.6.renderman_diff.bmp)
+    - if you set liqRenderer="elvishray", the test file will rendered with elvishray only,
+      if you set liqRenderer="renderman", the test file will rendered with prman only,
+      if you set liqRenderer="", the test file will rendered with both elvishray and prman.
+
+  - run $(LiquidRoot)\test\image_diff\test.py, it will run the test and generate the log file _liqTestLog.htm
+
 
 
 - press ESC to interrupt the rendering.
@@ -214,6 +217,7 @@ RenderMan (R) is a registered trademark of Pixar
   - add ".rmanShaderType" to liqSurfaceNode/liqDisplacementNode/liqCoShaderNode/liqLightNode/liqVolumeNode
   - set ".rmanShaderType" in rmanParams_create()
   - use ".rmanShaderType" in liqGetSloInfo::setShaderNode()-->shaderNode.findPlug("rmanShaderType",...);
+
 
   ---------------------------------------------------------------------
                               NOTES
