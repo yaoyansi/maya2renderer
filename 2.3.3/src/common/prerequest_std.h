@@ -18,6 +18,8 @@
 	#include <process.h>
 	#include <io.h>
 	#include <direct.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
 #else
 	#include <unistd.h>
 	#include <stdlib.h>
@@ -41,13 +43,21 @@
 #include <sstream>
 #include <fstream>
 
+
+#include <boost/bind.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <boost/shared_array.hpp>
 #include <boost/scoped_array.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/tokenizer.hpp>
+
 #include <boost/algorithm/string/case_conv.hpp>
-#include <boost/shared_array.hpp>
-#include <boost/smart_ptr/shared_ptr.hpp>
+#include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/bind.hpp>
+
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/algorithm.hpp>
 
 #endif//_PREREQUEST_STD_H_

@@ -31,50 +31,14 @@
 */
 #include <liqGlobalHelpers.h>
 
-// Standard headers
-#include <set>
-#ifdef _WIN32
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <direct.h> //for _mdir()
-//#include <list>
-
-//#include <process.h>
-#include <io.h>
-#include <boost/scoped_ptr.hpp>
-
-// Maya Headers
-#include <maya/MPlug.h>
-#include <maya/MFnAttribute.h>
-#include <maya/MFnMesh.h>
-#include <maya/MItSelectionList.h>
-#include <maya/MItDependencyNodes.h>
-#include <maya/MGlobal.h>
-#include <maya/MFnDoubleArrayData.h>
-#include <maya/MCommandResult.h>
-#include <maya/MFnRenderLayer.h>
-
-
-
-
-#include <liqShader.h>
-
-#endif
-
-// Boost headers
-#include <boost/tokenizer.hpp>
-#include <boost/scoped_array.hpp>
-#include <boost/algorithm/string/replace.hpp>
-#include <boost/algorithm/string/case_conv.hpp>
-#include <boost/algorithm/string/trim.hpp>
-
-
-#include <liqMayaNodeIds.h>
-#include <liqGlobalVariable.h>
+#include "./common/prerequest_maya.h"
+#include "./common/prerequest_std.h"
 #include "common/mayacheck.h"
 
-using namespace std;
-using namespace boost;
+#include <liqShader.h>
+#include <liqMayaNodeIds.h>
+#include <liqGlobalVariable.h>
+
 
 /**  Check to see if the node NodeFn has any attributes starting with pPrefix and store those
  *  in Matches to return.
@@ -315,10 +279,10 @@ void assignTokenArrays( unsigned int numTokens, const liqTokenPointer tokenPoint
  *
  *  This is another version that takes a vector as input instead of a static array.
  */
-void assignTokenArraysV( const vector<liqTokenPointer>& tokenPointerArray, RtToken tokens[], RtPointer pointers[] )
+void assignTokenArraysV( const std::vector<liqTokenPointer>& tokenPointerArray, RtToken tokens[], RtPointer pointers[] )
 {
   unsigned i( 0 );
-  for( vector< liqTokenPointer >::const_iterator iter( tokenPointerArray.begin() ); iter != tokenPointerArray.end(); iter++, i++ ) 
+  for( std::vector< liqTokenPointer >::const_iterator iter( tokenPointerArray.begin() ); iter != tokenPointerArray.end(); iter++, i++ ) 
   {
     tokens[ i ] = const_cast< RtString >( const_cast< liqTokenPointer* >( &( *iter ) )->getDetailedTokenName().c_str() );
     pointers[ i ] = const_cast< liqTokenPointer* >( &( *iter ) )->getRtPointer();
@@ -419,8 +383,8 @@ MString parseString( const MString& inString, bool doEscaped )
   MString constructedString;
   MString tokenString;
   bool inToken = false;
-  string prep_str ( inString.asChar() );
-  trim( prep_str );
+  std::string prep_str ( inString.asChar() );
+  boost::trim( prep_str );
   MString inputString( prep_str.c_str() );
   int sLength = inputString.length();
   int i;
@@ -826,8 +790,8 @@ char* basename( const char *filename ) {
 /** Converts '\' into '/'
  */
 MString liquidSanitizePath( const MString& inputString ) {
-  const string str( inputString.asChar() );
-  string constructedString, buffer;
+  const std::string str( inputString.asChar() );
+  std::string constructedString, buffer;
 
   for( unsigned i( 0 ); i < inputString.length(); i++ ) 
     if( '\\' == str[ i ] ) 
@@ -849,8 +813,8 @@ MString liquidSanitizeSearchPath( const MString& inputString ) {
   return constructedString;
 }
 
-string liquidSanitizePath( const string& inputString ) {
-  string constructedString, buffer;
+std::string liquidSanitizePath( const std::string& inputString ) {
+  std::string constructedString, buffer;
 
   for( unsigned i( 0 ); i < inputString.length(); i++ ) 
   {
@@ -869,16 +833,16 @@ string liquidSanitizePath( const string& inputString ) {
   return constructedString;
 }
 
-string liquidSanitizeSearchPath( const string& inputString ) 
+std::string liquidSanitizeSearchPath( const std::string& inputString ) 
 {
-  string constructedString( liquidSanitizePath( inputString ) );
+  std::string constructedString( liquidSanitizePath( inputString ) );
 
 #if defined( DELIGHT ) || defined( PRMAN ) || defined( GENERIC_RIBLIB )
   // Convert from "C:/path" into "//C/path"
   if( inputString[ 1 ] == ':' ) {
     constructedString = "//" +
     constructedString.substr( 0, 1 )
-    + to_lower_copy( constructedString.substr( 2 ) );
+	+ boost::to_lower_copy( constructedString.substr( 2 ) );
   }
 #endif // defined DELIGHT || PRMAN
   return constructedString;
@@ -888,7 +852,7 @@ string liquidSanitizeSearchPath( const string& inputString )
  *  archives and the renderscript in case the user
  *  has choosen to have all paths to be relative
  */
-string liquidGetRelativePath( bool relative, const string& name, const string& dir ) 
+std::string liquidGetRelativePath( bool relative, const std::string& name, const std::string& dir ) 
 {
   if( !relative && ( '/' != name[ 0 ] ) && ( ':' != name[ 1 ] ) ) 
     return dir + name;
@@ -958,28 +922,28 @@ MObject getNodeByName( MString name, MStatus *returnStatus )
   return node;
 }
 
-string getEnvironment( const string& envVar )
+std::string getEnvironment( const std::string& envVar )
 {
-  string ret;
+  std::string ret;
   char* tmp( getenv( envVar.c_str() ) );
   if( tmp )
     ret = tmp;
   return ret;
 }
 
-vector< int > generateFrameNumbers( const string& seq ) 
+std::vector< int > generateFrameNumbers( const std::string& seq ) 
 {
   // We maintain a set to ensure we don't insert a frame into the list twice
-  set< int > theSeq;
-  vector< int > theFrames;
-  typedef tokenizer< char_separator< char > > tokenizer;
-  char_separator< char > comma( "," );
+  std::set< int > theSeq;
+  std::vector< int > theFrames;
+  typedef boost::tokenizer< boost::char_separator< char > > tokenizer;
+  boost::char_separator< char > comma( "," );
   tokenizer frames( seq, comma );
 
   for( tokenizer::iterator it( frames.begin() ); it != frames.end(); it++ ) 
   {
-    size_t pos( it->find( "-" ) );
-    if( string::npos == pos ) 
+    std::size_t pos( it->find( "-" ) );
+    if( std::string::npos == pos ) 
     {
       float f(( float )atof( it->c_str() ) );
       if( theSeq.end() == theSeq.find(( int )f ) ) 
@@ -992,13 +956,13 @@ vector< int > generateFrameNumbers( const string& seq )
     {
       float startFrame(( float )atof( it->substr( 0, pos ).c_str() ) );
       float endFrame, frameStep;
-      size_t pos2( it->find( "@" ) );
-      size_t pos3( it->find( "x" ) );
-      if( string::npos == pos2 ) 
-        if( string::npos != pos3 ) 
+      std::size_t pos2( it->find( "@" ) );
+      std::size_t pos3( it->find( "x" ) );
+      if( std::string::npos == pos2 ) 
+        if( std::string::npos != pos3 ) 
           pos2 = pos3;
       // Support both RSP- & Shake frame sequence syntax
-      if( string::npos == pos2 ) {
+      if( std::string::npos == pos2 ) {
         endFrame =( float )atof( it->substr( pos + 1 ).c_str() );
         frameStep = 1;
       }
@@ -1038,24 +1002,24 @@ vector< int > generateFrameNumbers( const string& seq )
 /**
  *  Create a full path
  */
-bool makeFullPath( const string& name, int mode ) 
+bool makeFullPath( const std::string& name, int mode ) 
 {
   struct stat stats;
   // Get some space to store out tokenized string
-  scoped_array< char > tmp( new char[ name.length() + 1 ] );
+  boost::scoped_array< char > tmp( new char[ name.length() + 1 ] );
   // Need to copy the input string since strtok changes its input
-  strncpy( tmp.get(), name.c_str(), name.length() + 1 );
+  std::strncpy( tmp.get(), name.c_str(), name.length() + 1 );
   // Tokenize
   char* token( strtok( tmp.get(), "/" ) );
   // Our path for mkdir()
-  string path( token );
+  std::string path( token );
   
 if( '/' == name[ 0 ] ) 
-      path = string( "/" ) + path;
+      path = std::string( "/" ) + path;
 #ifdef _WIN32
     if( '/' == name[ 1 ] ) // probably windows network path here...
     {
-      path = string( "/" ) + path;
+      path = std::string( "/" ) + path;
       // try to find first avaliable share name
       while( true )
       {
@@ -1064,7 +1028,7 @@ if( '/' == name[ 0 ] )
           token = strtok( NULL, "/" );
           if( !token ) 
             break;
-          path += string( "/" ) + token;
+          path += std::string( "/" ) + token;
         } 
         else
           break;
@@ -1108,33 +1072,33 @@ if( '/' == name[ 0 ] )
     token = strtok( NULL, "/" );
     if( !token ) 
       break;
-    path += string( "/" ) + token;
+    path += std::string( "/" ) + token;
   }
   return true;
 }
 
-string sanitizeNodeName( const string& name ) 
+std::string sanitizeNodeName( const std::string& name ) 
 {
-  string newName( name );
+  std::string newName( name );
 //  replace_all( newName, "|", "_" );
 //  replace_all( newName, ":", "_" );
 // mesh: replaced this due strange exeption in boost function
 // on OSX 10.6 Maya2011 x64...
-  newName = replace_all_copy( newName, "|", "_" );
-  newName = replace_all_copy( newName, ":", "_" );
+  newName = boost::replace_all_copy( newName, "|", "_" );
+  newName = boost::replace_all_copy( newName, ":", "_" );
   return newName;
 }
 
 MString sanitizeNodeName( const MString& name ) 
 {
-  string newName( name.asChar() );
-  newName = replace_all_copy( newName, "|", "_" );
-  newName = replace_all_copy( newName, ":", "_" );
+  std::string newName( name.asChar() );
+  newName = boost::replace_all_copy( newName, "|", "_" );
+  newName = boost::replace_all_copy( newName, ":", "_" );
   return MString( newName.c_str() );
 }
 
-RtString& getLiquidRibName( const string& name ) {
-  static string ribName;
+RtString& getLiquidRibName( const std::string& name ) {
+  static std::string ribName;
   static RtString tmp;
   ribName = sanitizeNodeName( name );
   tmp = const_cast< RtString >( ribName.c_str() );
@@ -1144,7 +1108,7 @@ RtString& getLiquidRibName( const string& name ) {
 /** Standard function to send messages to either the
  *  maya console or the shell for user feedback.
  */
-void liquidMessage( const string& msg, liquidVerbosityType type ) 
+void liquidMessage( const std::string& msg, liquidVerbosityType type ) 
 {
   if( liqglo_verbosity >= type || liqglo.liquidBin ) 
   {
@@ -1169,9 +1133,9 @@ void liquidMessage( const string& msg, liquidVerbosityType type )
     } 
     else 
     {
-      string infoOutput( "[Liquid] " );
+      std::string infoOutput( "[Liquid] " );
       infoOutput += msg;
-	  string prefix;
+	  std::string prefix;
       switch( type ) 
       {
         case messageWarning:
@@ -1337,7 +1301,7 @@ MString generateShadowArchiveName( bool renderAllFrames, long renderAtframe, MSt
 	baseShadowName += LIQ_ANIM_EXT;
 	baseShadowName += ".rib";
 
-	size_t shadowNameLength = baseShadowName.length() + 1;
+	std::size_t shadowNameLength = baseShadowName.length() + 1;
 	shadowNameLength += 10;
 	boost::scoped_ptr< char > baseShadowRibName( new char[ shadowNameLength ] );
 	sprintf( baseShadowRibName.get(), baseShadowName.asChar(), liqglo.liqglo_doExtensionPadding ? liqglo.liqglo_outPadding : 0, renderAllFrames ? liqglo.liqglo_lframe : renderAtframe );
@@ -1493,4 +1457,14 @@ std::string getObjectName(const char *ribDataName)
 {
 	return std::string(ribDataName)+"_object";
 
+}
+
+void printFrameSequence(const char* prefix)
+{
+	std::stringstream sstr;
+	std::for_each(
+		liqglo.frameNumbers.begin(),
+		liqglo.frameNumbers.end(),
+		sstr << boost::lambda::_1 << ',');
+	liquidMessage2( messageInfo, "[%s] Frames:%s", prefix,sstr.str().c_str() );
 }

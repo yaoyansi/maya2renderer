@@ -4178,6 +4178,14 @@
 				RelativePath="..\common\mayacheck.h"
 				>
 			</File>
+			<File
+				RelativePath="..\common\prerequest_maya.h"
+				>
+			</File>
+			<File
+				RelativePath="..\common\prerequest_std.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

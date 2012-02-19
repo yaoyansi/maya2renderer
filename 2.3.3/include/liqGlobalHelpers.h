@@ -147,4 +147,5 @@ void toFullDagPath(MStringArray& array);
 
 std::string getObjectName(const char *ribDataName);
 
+void printFrameSequence(const char* prefix);
 #endif

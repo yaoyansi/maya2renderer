@@ -253,7 +253,7 @@ RenderMan (R) is a registered trademark of Pixar
     - Maya2009\bin\manager.ini里searchpath的路径
   - 编译er，编译eiSHADER_maya.sln，编译liquid.sln
 
-
+- 设置帧序列时，一定要记得把Animation选项勾上，否则只输出当前帧。
 
   ---------------------------------------------------------------------
                               F.A.Q.

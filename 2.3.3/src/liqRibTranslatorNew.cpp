@@ -2430,7 +2430,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 		// 		preJobInstance.isInstance = true;
 		tJobScriptMgr jobScriptMgr(jobScript);
 
-
+		printFrameSequence("1");
 		// build the frame array
 		//
 		if( liqglo.m_renderView ) 
@@ -2445,7 +2445,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 		// start looping through the frames  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		//
 		liquidMessage( "Starting to loop through frames", messageInfo );
-
+		printFrameSequence("2");
 
 		unsigned frameIndex( 0 );
 		for ( ; frameIndex < liqglo.frameNumbers.size(); frameIndex++ ) 
