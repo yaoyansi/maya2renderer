@@ -36,13 +36,6 @@ namespace elvishray
 		_s( "// shader_surface("<<mayaShaderName<<","<<", ...)" );//Renderman slo file name, e.g."your_shader_dir/test_type2"
 		//_s( "// shader_surface("<<liquidShaderName<<","<<", ...)" );//e.g."lambert1", or "liquidSurface1", NOTE: it is liquidShader, not maya shader.
 
-		MObject shaderNode;
-		getDependNodeByName(shaderNode, mayaShaderName.c_str());
-		if(shaderNode.hasFn(MFn::kLambert)){
-			shader_surface_lambert(mayaShaderName.c_str());
-		}
-
-
 		_S( ei_shader(liquidShaderName.c_str()) );
 
 		_s("ei_shader_param_string( \"desc\",\""<<mayaShaderName<<"\");");

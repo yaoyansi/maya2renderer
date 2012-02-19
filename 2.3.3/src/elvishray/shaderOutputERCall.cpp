@@ -239,23 +239,17 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	MStringArray environmentShaders;
 	MStringArray photonShaders;
 	{
-		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".surfaceShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, surfaceShaders));
+		getlistConnections(shadingGroupNode, "surfaceShader", surfaceShaders);
 
-		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".volumeShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, volumeShaders));
+		getlistConnections(shadingGroupNode, "volumeShader", volumeShaders);
 
-		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".displacementShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, displacementShaders));
+		getlistConnections(shadingGroupNode, "displacementShader", displacementShaders);
 
-		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".liqShadowShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, shadowShaders));
-		
-		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".liqEnvironmentShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, environmentShaders));
+		getlistConnections(shadingGroupNode, "liqShadowShader", shadowShaders);
 
-		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".liqPhotonShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, photonShaders));
+		getlistConnections(shadingGroupNode, "liqEnvironmentShader", environmentShaders);
+
+		getlistConnections(shadingGroupNode, "liqPhotonShader", photonShaders);
 	}
 
 	ei_material( shadingGroupNode );

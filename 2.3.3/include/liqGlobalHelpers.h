@@ -148,4 +148,8 @@ void toFullDagPath(MStringArray& array);
 std::string getObjectName(const char *ribDataName);
 
 void printFrameSequence(const char* prefix);
+
+void getlistConnections(const MString& shadingGroupNode,
+						const MString& plug, 
+						MStringArray& connections );
 #endif

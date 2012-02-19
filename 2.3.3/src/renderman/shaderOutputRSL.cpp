@@ -220,14 +220,11 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	MStringArray volumeShaders;
 	MStringArray displacementShaders;
 	{
-		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".surfaceShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, surfaceShaders));
+		getlistConnections(shadingGroupNode, "surfaceShader", surfaceShaders);
 
-		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".volumeShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, volumeShaders));
+		getlistConnections(shadingGroupNode, "volumeShader", volumeShaders);
 
-		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \".displacementShader\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, displacementShaders));
+		getlistConnections(shadingGroupNode, "displacementShader", displacementShaders);
 	}
 
 	// Work out where to put it & make sure the directory exists

@@ -1331,7 +1331,7 @@ void getDagPathByName(MDagPath& dagPath, char const* name)
 void getDependNodeByName(MObject& depNode, char const* name)
 {
 	MSelectionList      selList;
-	IfMErrorWarn(MGlobal::getSelectionListByName( name, selList ));
+	IfMErrorMsgWarn(MGlobal::getSelectionListByName( name, selList ), "getDependNodeByName(,\""+MString(name)+"\")");
 	IfMErrorWarn(selList.getDependNode( 0, depNode ));
 }
 void getShaderType(MString& type, MString const& name)
@@ -1467,4 +1467,19 @@ void printFrameSequence(const char* prefix)
 		liqglo.frameNumbers.end(),
 		sstr << boost::lambda::_1 << ',');
 	liquidMessage2( messageInfo, "[%s] Frames:%s", prefix,sstr.str().c_str() );
+}
+
+void getlistConnections(const MString& shadingGroupNode,
+						const MString& plug, 
+						MStringArray& connections )
+{
+	MString cmd;
+	int isShaderPlugExist;
+	cmd = "attributeQuery -node \""+shadingGroupNode+"\" -ex \""+plug+"\"";
+	IfMErrorWarn(MGlobal::executeCommand( cmd, isShaderPlugExist));
+	if(isShaderPlugExist)
+	{
+		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \"."+plug+"\")";
+		IfMErrorWarn(MGlobal::executeCommand( cmd, connections));
+	}
 }
