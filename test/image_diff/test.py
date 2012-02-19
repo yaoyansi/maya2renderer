@@ -11,11 +11,11 @@ def main():
     os.system(command)
 
     # open the log file
-    #if HTMLViewerPath=="":
-    #    os.system("explorer.exe .\\_liqTestLog.htm")
-    #else:
-    #    os.system("\""+HTMLViewerPath+"\" ./_liqTestLog.htm")
-
+    if HTMLViewerPath=="":
+        os.system("explorer.exe .\\_liqTestLog.htm")
+    else:
+        os.system("\""+HTMLViewerPath+"\" ./_liqTestLog.htm")
+    raw_input("main() done. Press ENTER to exit.")
 
 if __name__ == '__main__':
     main()
