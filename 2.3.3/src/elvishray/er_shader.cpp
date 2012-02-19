@@ -45,7 +45,7 @@ namespace elvishray
 
 		_S( ei_shader(liquidShaderName.c_str()) );
 
-		_s("ei_shader_param_string( \"desc\","<<mayaShaderName<<");");
+		_s("ei_shader_param_string( \"desc\",\""<<mayaShaderName<<"\");");
 		ei_shader_param_string("desc", mayaShaderName.c_str()); // //"opaque"
 
 		//tokenPointerArray only store parameters of user-defined shader

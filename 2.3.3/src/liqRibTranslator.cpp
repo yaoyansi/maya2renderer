@@ -2061,29 +2061,33 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 	if( !status ) 
 		return MS::kFailure;
 
-	{//set renderer
-		MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
-		MString renderer;
-		liquidGetPlugValue( rGlobalNode, "renderer", renderer, status );
-		liquid::RendererMgr::getInstancePtr()->createFactory(renderer.asChar());
-		liquid::RendererMgr::getInstancePtr()->install();
-		liquid::RendererMgr::getInstancePtr()->prologue();
+	if ( checkSettings() )
+	{
+		{//set renderer
+			MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
+			MString renderer;
+			liquidGetPlugValue( rGlobalNode, "renderer", renderer, status );
+			liquid::RendererMgr::getInstancePtr()->createFactory(renderer.asChar());
+			liquid::RendererMgr::getInstancePtr()->install();
+			liquid::RendererMgr::getInstancePtr()->prologue();
+		}
+
+		if(m_useNewTranslator){
+			liquidMessage("_doItNew()", messageInfo);
+			status = _doItNew(args, originalLayer);// new doIt() process
+		}else{
+			liquidMessage("_doIt()", messageInfo);
+			status = _doIt(args, originalLayer);//original doIt() process
+		}
+
+		{//
+			liquid::RendererMgr::getInstancePtr()->test();
+			liquid::RendererMgr::getInstancePtr()->epilogue();
+			liquid::RendererMgr::getInstancePtr()->uninstall();
+			liquid::RendererMgr::getInstancePtr()->deleteFactory();
+		}
 	}
 
-	if(m_useNewTranslator){
-		liquidMessage("_doItNew()", messageInfo);
-		status = _doItNew(args, originalLayer);// new doIt() process
-	}else{
-		liquidMessage("_doIt()", messageInfo);
-		status = _doIt(args, originalLayer);//original doIt() process
-	}
-
-	{//
-		liquid::RendererMgr::getInstancePtr()->test();
-		liquid::RendererMgr::getInstancePtr()->epilogue();
-		liquid::RendererMgr::getInstancePtr()->uninstall();
-		liquid::RendererMgr::getInstancePtr()->deleteFactory();
-	}
 
 	return status;
 }
@@ -7211,4 +7215,14 @@ void liqRibTranslator::_writeObject(
 				) +"."+(int)liqglo.liqglo_lframe+MotionPostfix+".rib" 
 			);
 	ribNode->object( sample )->writeObject(geometryRibFile, currentJob);
+}
+//
+bool liqRibTranslator::checkSettings()
+{
+	if( liqglo.m_displays[0].name.length()==0 )
+	{
+		assert(0&&"liqglo.m_displays[ 0 ].name is empty. Please set the output image and render the scene again.");
+		liquidMessage2(messageError,"liqglo.m_displays[ 0 ].name is empty. Please set the output image and render the scene again.");
+		return false;
+	}
 }

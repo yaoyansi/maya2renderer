@@ -526,6 +526,7 @@ public:
 		const structJob&currentJob
 		);
 	void writeShadingGroup(const MString& meshname);
+	bool checkSettings();
 
 
 private:
