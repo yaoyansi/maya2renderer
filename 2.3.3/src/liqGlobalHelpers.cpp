@@ -1476,10 +1476,10 @@ void getlistConnections(const MString& shadingGroupNode,
 	MString cmd;
 	int isShaderPlugExist;
 	cmd = "attributeQuery -node \""+shadingGroupNode+"\" -ex \""+plug+"\"";
-	IfMErrorWarn(MGlobal::executeCommand( cmd, isShaderPlugExist));
+	IfMErrorMsgWarn(MGlobal::executeCommand( cmd, isShaderPlugExist), cmd);
 	if(isShaderPlugExist)
 	{
 		cmd = "listConnections (\""+MString(shadingGroupNode)+"\" + \"."+plug+"\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, connections));
+		IfMErrorMsgWarn(MGlobal::executeCommand( cmd, connections), cmd);
 	}
 }

@@ -537,20 +537,22 @@ void ConvertShadingNetwork::__export()
 		cmd = "listConnections -type \"shadingEngine\" -destination on (\""+node+"\" + \".instObjGroups\")";
 		IfMErrorWarn(MGlobal::executeCommand( cmd, sgNodes));
 
-		//get the shader plugs in ShadingGroup
-		std::vector<std::string> plugs;
-		liquid::RendererMgr::getInstancePtr()->
-			getRenderer()->getValidShaderPlugsInShadingGroup(plugs);
-		//export the plugs
-		for_each(plugs.begin(), plugs.end(),
-			boost::bind( &ConvertShadingNetwork::exportShaderInShadingGroup, this, node, sgNodes[0], _1 )
-		);
+		if( sgNodes.length() !=0 )
+		{
+			//get the shader plugs in ShadingGroup
+			std::vector<std::string> plugs;
+			liquid::RendererMgr::getInstancePtr()->
+				getRenderer()->getValidShaderPlugsInShadingGroup(plugs);
+			//export the plugs
+			for_each(plugs.begin(), plugs.end(),
+				boost::bind( &ConvertShadingNetwork::exportShaderInShadingGroup, this, node, sgNodes[0], _1 )
+			);
 
-		//
-		outputShadingGroup(sgNodes[0]);
-
-
-
+			//
+			outputShadingGroup(sgNodes[0]);
+		}else{
+			liquidMessage2(messageInfo, ("\""+node +"\" has not shading group, skip.").asChar() );
+		}
 	}
 
 }
@@ -571,12 +573,12 @@ void ConvertShadingNetwork::exportShaderInShadingGroup(
 
 	int isShaderPlugExist;
 	cmd = "attributeQuery -node \""+sgNode+"\" -ex \""+plug+"\"";
-	IfMErrorWarn(MGlobal::executeCommand( cmd, isShaderPlugExist));
+	IfMErrorMsgWarn(MGlobal::executeCommand( cmd, isShaderPlugExist), cmd);
 	if(isShaderPlugExist)
 	{
 		MStringArray shaders;
 		cmd = "listConnections (\""+sgNode+"\" + \"."+plug+"\")";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
+		IfMErrorMsgWarn(MGlobal::executeCommand( cmd, shaders), cmd);
 
 		if( shaders.length() != 0 )
 		{
