@@ -537,10 +537,11 @@ void ConvertShadingNetwork::__export()
 		cmd = "listConnections -type \"shadingEngine\" -destination on (\""+node+"\" + \".instObjGroups\")";
 		IfMErrorWarn(MGlobal::executeCommand( cmd, sgNodes));
 
+		//get the shader plugs in ShadingGroup
 		std::vector<std::string> plugs;
 		liquid::RendererMgr::getInstancePtr()->
 			getRenderer()->getValidShaderPlugsInShadingGroup(plugs);
-
+		//export the plugs
 		for_each(plugs.begin(), plugs.end(),
 			boost::bind( &ConvertShadingNetwork::exportShaderInShadingGroup, this, node, sgNodes[0], _1 )
 		);
@@ -577,23 +578,25 @@ void ConvertShadingNetwork::exportShaderInShadingGroup(
 		cmd = "listConnections (\""+sgNode+"\" + \"."+plug+"\")";
 		IfMErrorWarn(MGlobal::executeCommand( cmd, shaders));
 
-		const MString startingNode(shaders[0]);
+		if( shaders.length() != 0 )
+		{
+			const MString startingNode(shaders[0]);
 
-		MString nodetype;
-		cmd = "nodeType \""+startingNode+"\"";
-		IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
+			MString nodetype;
+			cmd = "nodeType \""+startingNode+"\"";
+			IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
 
-		if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
-			//liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
-			MObject shaderObj;
-			getDependNodeByName( shaderObj,startingNode.asChar());
-			liqShader &currentShader = liqShaderFactory::instance().getShader( shaderObj );
-			currentShader.write();
-		}else{
-			convertShadingNetworkToRSL(startingNode, node);
+			if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
+				//liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
+				MObject shaderObj;
+				getDependNodeByName( shaderObj,startingNode.asChar());
+				liqShader &currentShader = liqShaderFactory::instance().getShader( shaderObj );
+				currentShader.write();
+			}else{
+				convertShadingNetworkToRSL(startingNode, node);
+			}
 		}
 	}
-	
 }
 
 

@@ -645,7 +645,7 @@ global proc liquidViewShadowMap( string $node )
 global proc string toLinuxPath ( string $strFile )
 {
   liqPushIdent();
-	liqlog("toLinuxPath(...)");
+	liqlog("toLinuxPath("+$strFile+")");
 	string $ret = python("(u\"" + encodeString($strFile) + "\").replace(\"\\\\\",\"/\");");
   liqPopIdent();
 	return $ret;
