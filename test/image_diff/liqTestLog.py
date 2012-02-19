@@ -78,6 +78,8 @@ def imgdiff_beg(msg, imgdiffFullPath):
 def imgdiff_end():
     gLiqTestLog.write("")
 
+def warn(msg):
+    gLiqTestLog.write("<font size=\"+1\" color=\"red\">WARNING:"+msg+"</font>")
 
 
 def flog(data):

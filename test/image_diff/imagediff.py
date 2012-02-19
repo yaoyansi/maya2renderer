@@ -26,6 +26,13 @@ def _compare(filenameA, filenameB):
 
 def compare(filenameA, filenameB):
     #print("compare("+filenameA+","+filenameB+")\n")
+    if os.path.isfile(filenameA) == False:
+        mLiqlog.warn(filenameA+" not exist.")
+        return
+    if os.path.isfile(filenameB) == False:
+        mLiqlog.warn(filenameB+" not exist.")
+        return
+
     if _compare(filenameA, filenameB)==True:
         mLiqlog.flog("two images are equal.")
     else:
