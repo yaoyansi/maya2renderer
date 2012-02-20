@@ -1,9 +1,9 @@
 //Maya ASCII 2009 scene
 //Name: three_boxes.ma
-//Last modified: Fri, Jan 13, 2012 12:07:11 AM
+//Last modified: Mon, Feb 20, 2012 11:07:48 PM
 //Codeset: 936
 requires maya "2009";
-requires "liquid_2009x32d" "2.3.5 (buildtime= 0:04:00.17)";
+requires "liquid_2009x32d" "2.3.5 (buildtime=22:34:55.54)";
 requires "stereoCamera" "10.0";
 currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
@@ -266,7 +266,7 @@ createNode script -n "liquidCleanUpNode";
 	setAttr ".st" 2;
 createNode liquidGlobals -n "liquidGlobals";
 	setAttr ".rc" -type "string" "cameraShape1";
-	setAttr ".ddin[0]" -type "string" "";
+	setAttr ".ddin[0]" -type "string" "$SCN.$CAM.$F.$RND.bmp";
 	setAttr ".ddim[0]" -type "string" "rgba";
 	setAttr ".ddit[0]" -type "string" "it";
 	setAttr ".ddbd[0]"  8;

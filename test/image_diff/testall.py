@@ -60,6 +60,8 @@ def test_all_scene():
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_motionblur/transform/deform.ma"
     #MyTestOne.test_one_scene(testFile, "")
+    #testFile=LIQUID_ROOT+"/2.3.3/test/test_motionblur/transform/transform.ma"
+    #MyTestOne.test_one_scene(testFile, "")
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_texture/check10_tex.ma"
     #MyTestOne.test_one_scene(testFile, "renderman")
@@ -70,9 +72,14 @@ def test_all_scene():
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_pl/test_shader_pl.ma"
     #MyTestOne.test_one_scene(testFile, "elvishray")
 
-    testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_graph/er_rm_shader_graph.ma"
-    MyTestOne.test_one_scene(testFile, "")
+    #testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_graph/er_rm_shader_graph.ma"
+    #MyTestOne.test_one_scene(testFile, "")
 
+    #testFile=LIQUID_ROOT+"/2.3.3/test/test_er_shader/three_boxes.ma"
+    #MyTestOne.test_one_scene(testFile, "")
+
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_er_shader/lambert_transparent.ma"
+    MyTestOne.test_one_scene(testFile, "")
 
 def main():
     configMayaEnv()
