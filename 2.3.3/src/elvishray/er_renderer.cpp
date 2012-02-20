@@ -462,16 +462,11 @@ namespace elvishray
 			);
 		assert( ribNode!=0 );
 		assert( ribNode->path().fullPathName() == mesh->objDagPath.fullPathName() );
-	
-		liqShader& shader = 
-			liqShaderFactory::instance().getShader( ribNode->assignedShader.object() );
-		//shader.name;//liquidSurface1
-		//shader.file;//"your_shader_dir/test_type2"
+
 		//
 		MStatus status;
 		MFnMesh fnMesh(mesh->objDagPath, &status);
 		IfMErrorWarn(status);
-
 
 		MIntArray triangleCounts,triangleVertices;
 		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));

@@ -462,8 +462,8 @@ int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
     else if ( nodeType == "liquidCoShader" )      shaderType = ( SHADER_TYPE ) 14;
 #else
 	shaderPlug = shaderNode.findPlug( "rmanShaderType", stat );
-	IfMErrorWarn(stat);
-	IfMErrorWarn(shaderPlug.getValue( shaderTypeEx ));
+	IfMErrorMsgWarn(stat, shaderNode.name()+".findPlug(\"rmanShaderType\")");
+	IfMErrorMsgWarn(shaderPlug.getValue( shaderTypeEx ), shaderPlug.name() );
 #endif
     MStringArray shaderParams, shaderDetails, shaderTypes, shaderDefaults, shaderMethods;
     MIntArray shaderArraySizes, shaderOutputs;
