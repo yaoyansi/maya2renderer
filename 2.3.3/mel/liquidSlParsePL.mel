@@ -200,17 +200,146 @@ proc int liquidSl_getParamArraySize( string $line )
 	return $array[$i_ParmArraySize];
 }
 
+proc string liquidSl_getParamDefaultF( string $value)
+{
+	liqPushIdent();
+	liqlog("liquidSlParsePL.mel::liquidSl_getParamDefaultF("+$value+")");
+    string $result = "0.0";
+
+    // First check for "Unknown" or null for shaders
+    if ( ($value == "") || ($value == "Unknown") ) {
+		liqPopIdent();
+        return $result;
+    }
+
+    // Check we don't have an overflow value
+    $result = float($value);
+    if ( size(match("inf", $result)) ) {
+    	warning( "[liquidSlParseSdl.liquidSl_getParamDefaultF] float overflow value \""+$value+"\" was set to 0.0");
+    	$result = "0.0";
+    } else if ( !size(match( "[e\.]", $result)) ) {
+    	$result += ".0";
+	}
+	
+	liqPopIdent();
+    return $result;
+}
+
+proc string liquidSl_getParamDefaultS( string $value )
+{
+  liqPushIdent();
+	liqlog("liquidSlParsePL.mel::liquidSl_getParamDefaultS("+$value+")");
+    string $result = "\"\"";
+
+    // First check for "Unknown" or null for shaders
+    if ( ($value == "") || ($value == "Unknown") || ($value == "null") || ($value == "(nil)") ) {
+        liqDebug("  > return, value="+$result);
+		liqPopIdent();
+		return $result;
+    }
+    
+    // Leave the enclosing quotes, add them if needed
+    $result = match ("\".*\"", $value);
+    if ($result == "") {
+        $result = ("\""+$value+"\"");
+    }
+        
+	liqDebug("  >  value="+$result);
+	liqPopIdent();
+    return $result;
+}
+
+proc string liquidSl_getParamDefaultM( string $value )
+{
+  liqPushIdent();
+	liqlog("liquidSlParsePL.mel::liquidSl_getParamDefaultM("+$value+")");
+    string $result = ( "<<0, 0, 0, 0; " +
+                        "0, 0, 0, 0;" +
+                        "0, 0, 0, 0;" +
+                        "0, 0, 0, 0>>" );
+
+    // First check for "Unknown"
+    if ( ($value == "") || ($value == "Unknown") ) {
+		liqPopIdent();
+        return $result;
+	}
+
+    // Strip everything out the leading and trailing brackets, included
+	if (size(match("\\[.*\\]", $value))) {
+    	$result = `substitute "^.*\\[" $value ""`;
+    	$result = `substitute "\\].*$" $result ""`;
+		string $t[] = stringToStringArray($result, " \t\n");
+    	$result = ( "<<"+$t[0 ]+", "+$t[1 ]+", "+$t[2 ]+", "+$t[3 ]+"; "+
+                      $t[4 ]+", "+$t[5 ]+", "+$t[6 ]+", "+$t[7 ]+"; "+
+                      $t[8 ]+", "+$t[9 ]+", "+$t[10]+", "+$t[11]+"; "+
+                      $t[12]+", "+$t[13]+", "+$t[14]+", "+$t[15]+">>" );
+	}
+	liqPopIdent();
+    return $result;
+}
+
+// TODO : parse the space string too? ("rgb", "current")
+proc string liquidSl_getParamDefaultV( string $value )
+{
+  liqPushIdent();
+  liqlog("liquidSlParsePL.mel::liquidSl_getParamDefaultV("+$value+")");
+    string $result = "<<0,0,0>>";
+
+    // First check for "Unknown"
+    if ( ($value == "") || ($value == "Unknown") ) {
+		liqPopIdent();
+        return $result;
+	}
+
+    // Strip everything out the leading and trailing brackets, included
+	if (size(match("\\[.*\\]", $value))) {
+    	$result = `substitute "^.*\\[" $value ""`;
+    	$result = `substitute "\\].*$" $result ""`;
+		$result = stringArrayToString(stringToStringArray($result, " \t"), ",");
+		$result = ("<<"+$result+">>");
+	}
+
+	liqPopIdent();
+    return $result;
+}
 proc string liquidSl_getParamDefault( string $line, string $paramType )
 {
  	liqPushIdent();
 	liqlog("liquidSl_getParamDefault("+$line+","+$paramType+")");
 	global int $i_ParmDefault;
+	global int $i_ParmType;
 
 	string $array[];
 	int $size;
 
 	$array = stringToStringArray($line,":");
 	$size = size($array);
+
+	$value = $array[$i_ParmDefault];
+	$paramType = $array[$i_ParmType];
+    switch ( $paramType )
+	{
+		case "string":
+		case "shader":
+    		$value = liquidSl_getParamDefaultS( $value );
+    		break;
+		case "float":
+    		$value = liquidSl_getParamDefaultF( $value );
+    		break;
+		case "matrix":
+    		$value = liquidSl_getParamDefaultM( $value );
+    		break;
+		case "color":
+		case "point":
+		case "vector":
+		case "normal":
+    		$value = liquidSl_getParamDefaultV( $value );
+    	break;
+		default:
+    		// This should never be reached
+    		error( "unknown parameter type \"" + $paramType + "\"" );
+	}
+
 
 	liqPopIdent();
 	return $array[$i_ParmDefault];
