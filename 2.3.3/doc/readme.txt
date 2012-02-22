@@ -244,6 +244,9 @@ RenderMan (R) is a registered trademark of Pixar
     //   DO NOT let the attribute name starts with 'texname'.
    - 字符串里不能包含'|'(即$gSeperator)字符
 
+- *.pl 文件里matrix array没有实现
+
+
 - 每次更新Maya.env后，需要相应更新liquid_\test\image_diff\testall.py里configMayaEnv()的环境变量ELVISHRAY_BIN的值
 - 每次更细ER后
   - ER binary files(*.lib/*.dll/*.exe)所在的路径是否改变了，如果改变了，则需要更改：
