@@ -242,6 +242,7 @@ RenderMan (R) is a registered trademark of Pixar
     //   so we MUST append '.tex' to the plug value.
     // - If the plug is not a texture name or texture full path,
     //   DO NOT let the attribute name starts with 'texname'.
+   - 字符串里不能包含'|'(即$gSeperator)字符
 
 - 每次更新Maya.env后，需要相应更新liquid_\test\image_diff\testall.py里configMayaEnv()的环境变量ELVISHRAY_BIN的值
 - 每次更细ER后

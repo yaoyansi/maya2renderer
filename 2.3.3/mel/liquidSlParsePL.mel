@@ -58,6 +58,7 @@ global int $i_ParmType		= 2;
 global int $i_ParmOutput	= 3;
 global int $i_ParmDefault	= 4;
 global int $i_ParmArraySize	= 5;
+global string $gSeperator = "|";
 
 proc liquidSl_setShaderName( string $token )
 {
@@ -124,11 +125,12 @@ proc string liquidSl_getParamName( string $line )
 	liqlog("liquidSl_getParamName("+$line+")");
 	
 	global int $i_ParmName;
+	global string $gSeperator;
 
 	string $array[];
 	int $size;
 
-	$array = stringToStringArray($line,":");
+	$array = stringToStringArray($line, $gSeperator);
 	$size = size($array);
 
 	liqPopIdent();
@@ -141,11 +143,12 @@ proc string liquidSl_getParamDetail( string $line )
 	liqlog("liquidSl_getParamDetail("+$line+")");
 	
 	global int $i_ParmDetails;
+	global string $gSeperator;
 
 	string $array[];
 	int $size;
 
-	$array = stringToStringArray($line,":");
+	$array = stringToStringArray($line, $gSeperator);
 	$size = size($array);
 
 	liqPopIdent();
@@ -157,11 +160,12 @@ proc int liquidSl_isOutputParam( string $line )
 	liqPushIdent();
 	liqlog("liquidSl_isOutputParam("+$line+")");
 	global int $i_ParmOutput;
+	global string $gSeperator;
 
 	string $array[];
 	int $size;
 
-	$array = stringToStringArray($line,":");
+	$array = stringToStringArray($line, $gSeperator);
 	$size = size($array);
 
 	liqPopIdent();
@@ -173,11 +177,12 @@ proc string liquidSl_getParamType( string $line )
 	liqPushIdent();
 	liqlog("liquidSl_getParamType("+$line+")");
 	global int $i_ParmType;
+	global string $gSeperator;
 
 	string $array[];
 	int $size;
 
-	$array = stringToStringArray($line,":");
+	$array = stringToStringArray($line, $gSeperator);
 	$size = size($array);
 
 	liqPopIdent();
@@ -189,11 +194,12 @@ proc int liquidSl_getParamArraySize( string $line )
 	liqPushIdent();
 	liqlog("liquidSl_getParamArraySize("+$line+")");
 	global int $i_ParmArraySize;
+	global string $gSeperator;
 
 	string $array[];
 	int $size;
 
-	$array = stringToStringArray($line,":");
+	$array = stringToStringArray($line, $gSeperator);
 	$size = size($array);
 
 	liqPopIdent();
@@ -308,11 +314,12 @@ proc string liquidSl_getParamDefault( string $line, string $paramType )
 	liqlog("liquidSl_getParamDefault("+$line+","+$paramType+")");
 	global int $i_ParmDefault;
 	global int $i_ParmType;
+	global string $gSeperator;
 
 	string $array[];
 	int $size;
 
-	$array = stringToStringArray($line,":");
+	$array = stringToStringArray($line, $gSeperator);
 	$size = size($array);
 
 	$value = $array[$i_ParmDefault];
@@ -429,6 +436,7 @@ global proc liquidSlParsePL( string $shaderFile )
     global string $gLiquidSlParamTypes[];
     global string $gLiquidSlParamDefaults[];
     global int    $gLiquidSlParamArraySizes[];
+	global string $gSeperator;
 
     $gLiquidSlShaderFile = $shaderFile;
     $gLiquidSlShaderName = "";
@@ -588,7 +596,7 @@ global proc liquidSlParsePL( string $shaderFile )
 		liqlog("      IsOutput:"+$isOutputParam);
 		liqlog("      Defaults:"+$paramDefault);
 		liqlog("      ArraySizes:"+$paramArraySize);
-		liqlog("}//"+$paramName+":"+$paramDetail+":"+$paramType+":"+$isOutputParam+":"+$paramDefault+":"+$paramArraySize);
+		liqlog("}//"+$paramName+$gSeperator+$paramDetail+$gSeperator+$paramType+$gSeperator+$isOutputParam+$gSeperator+$paramDefault+$gSeperator+$paramArraySize);
 
 		// Default declarations are over, we go on to next parameter
 		// We don't need to get a new line, we must still parse the current one

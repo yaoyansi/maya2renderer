@@ -382,6 +382,7 @@ global proc liquidSlParseSlo( string $sloFile )
     global string $gLiquidSlParamTypes[];
     global string $gLiquidSlParamDefaults[];
     global int    $gLiquidSlParamArraySizes[];
+	global string $gSeperator;
 
     $gLiquidSlShaderFile = $sloFile;
     $gLiquidSlShaderName = "";
@@ -548,7 +549,7 @@ global proc liquidSlParseSlo( string $sloFile )
 		liqlog("      IsOutput:"+$isOutputParam);
 		liqlog("      Defaults:"+$paramDefault);
 		liqlog("      ArraySizes:"+$paramArraySize);
-		liqlog("}//"+$paramName+":"+$paramDetail+":"+$paramType+":"+$isOutputParam+":"+$paramDefault+":"+$paramArraySize);
+		liqlog("}//"+$paramName+$gSeperator+$paramDetail+$gSeperator+$paramType+$gSeperator+$isOutputParam+$gSeperator+$paramDefault+$gSeperator+$paramArraySize);
 
 		// Default declarations are over, we go on to next parameter
 		// We don't need to get a new line, we must still parse the current one
