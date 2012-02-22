@@ -1,6 +1,6 @@
 //Maya ASCII 2009 scene
 //Name: test_shader_pl_connection.ma
-//Last modified: Wed, Feb 22, 2012 08:29:21 PM
+//Last modified: Wed, Feb 22, 2012 08:33:56 PM
 //Codeset: 936
 requires maya "2009";
 requires "liquid_2009x32d" "2.3.5 (buildtime=22:34:55.54)";
