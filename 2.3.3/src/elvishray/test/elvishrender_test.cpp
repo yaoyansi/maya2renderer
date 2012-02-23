@@ -37,18 +37,21 @@ extern void ei_shader_graph_unittest(const eiBool texturing, const char *suffix)
 extern void ei_shader_link_test(const eiBool texturing, const char *suffix);
 extern void ei_checker_uv();
 extern void er_shader_transparent_test();
+extern void ei_displace_unittest();
 
 void test_liquid2er()
 {
 //#include"cornellbox.esa"
-//#include "d:/script.er"
+//#include "./liq_er_displace_good.er"
+#include "d:/script.er"
 //#include"ei_scene_unittest.esa"//<----- use your own elvishender api script file here.
 	
 	//ei_face_color_unittest(NULL, "suffix");
 //	ei_shader_graph_unittest(true, "suffix");
 	//ei_shader_link_test(false, "suffix");
 	//ei_checker_uv();
-	er_shader_transparent_test();
+	//er_shader_transparent_test();
+	//ei_displace_unittest();
 }
 //
 int main()

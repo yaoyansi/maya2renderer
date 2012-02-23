@@ -93,6 +93,7 @@ namespace elvishray
 	 void my_ei_volume( int type );
 	 void my_ei_geometry( int type );
 	 void my_ei_displace( int type );
+	 void my_ei_max_displace(eiScalar dist);
 	 void my_ei_imager( int type );
 
 	//	Caustics:
@@ -128,6 +129,8 @@ namespace elvishray
 	 void my_ei_face( int type );
 	 void my_ei_memory( int size );
 	 void my_ei_ambient( float r, float g, float b );
+
+	 void my_ei_approx(const eiApprox *approx);
 
 	 void my_ei_end_options();
 

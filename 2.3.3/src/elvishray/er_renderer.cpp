@@ -757,7 +757,8 @@ namespace elvishray
 // 		_S("ei_lens( int type );");
 // 		_S( ei_volume( name, ei_end );");
 // 		_S("ei_geometry( int type );");
-// 		_S( ei_displace( name, ei_end ) );
+ 		_S( ei_displace( on ) );
+ 		_S( ei_max_displace(1.0f) );
 // 		_S("ei_imager( name , ei_end);");
 // 		_S("ei_imager( type );");
 		//	Caustics:
@@ -793,6 +794,15 @@ namespace elvishray
 		_S( ei_face( EI_FACE_BOTH ) );
 //		_S( ei_memory( int size ) );
 		//_S( ei_ambient( 0.12f, 0.13f, 0.05f ) );
+		
+		//eiApprox
+		eiApprox	approx;
+		ei_approx_set_defaults(&approx);
+		approx.method					= EI_APPROX_METHOD_LENGTH;
+		approx.view_dep					= eiTRUE;
+		approx.args[ EI_APPROX_LENGTH ] = 2.0f;
+		approx.motion_factor			= 16.0f;
+		_S( ei_approx(&approx) );
 
 		_S( ei_end_options() );
 

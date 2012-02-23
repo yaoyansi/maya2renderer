@@ -33,8 +33,8 @@ namespace elvishray
 		std::string const& liquidShaderName=shader.getName();
 		std::string const& rmSloFilePath=shader.getShaderFileName();
 		std::string const& mayaShaderName=rmSloFilePath.substr(rmSloFilePath.find_last_of('/')+1);
-		_s( "// shader_surface("<<mayaShaderName<<","<<", ...)" );//Renderman slo file name, e.g."your_shader_dir/test_type2"
-		//_s( "// shader_surface("<<liquidShaderName<<","<<", ...)" );//e.g."lambert1", or "liquidSurface1", NOTE: it is liquidShader, not maya shader.
+		_s( "// shader("<<mayaShaderName<<","<<", ...)" );//Renderman slo file name, e.g."your_shader_dir/test_type2"
+		//_s( "// shader("<<liquidShaderName<<","<<", ...)" );//e.g."lambert1", or "liquidSurface1", NOTE: it is liquidShader, not maya shader.
 
 		_S( ei_shader(liquidShaderName.c_str()) );
 
@@ -45,15 +45,15 @@ namespace elvishray
 		size_t parameterNum =  tokenPointerArray.size() - 1;
 		for(size_t i=0; i<parameterNum; ++i)
 		{
- 			_s("//- "
- 				<<const_cast<liqTokenPointer*>(&tokenPointerArray[i])->getDetailedTokenName()<<","//uniform float intensity
- 				<<tokenPointerArray[i].getDetailType()<<","
- 				<<"//tokenPointerArray[i].getTokenFloatArray()"<<","
- 				<<"//[error]tokenPointerArray[i].getTokenString()"<<","
- 				<<tokenPointerArray[i].getTokenName()<<","//intensity,
- 				<<tokenPointerArray[i].getParameterType()<<","//rFloat,
- 				<<tokenPointerArray[i].getRiDeclare()<<","//uniform float,
- 				);
+ 			//_s("//- "
+ 			//	<<const_cast<liqTokenPointer*>(&tokenPointerArray[i])->getDetailedTokenName()<<","//uniform float intensity
+ 			//	<<tokenPointerArray[i].getDetailType()<<","
+ 			//	<<"//tokenPointerArray[i].getTokenFloatArray()"<<","
+ 			//	<<"//[error]tokenPointerArray[i].getTokenString()"<<","
+ 			//	<<tokenPointerArray[i].getTokenName()<<","//intensity,
+ 			//	<<tokenPointerArray[i].getParameterType()<<","//rFloat,
+ 			//	<<tokenPointerArray[i].getRiDeclare()<<","//uniform float,
+ 			//	);
 // 			_s("// "<<tokenPointerArray[i].getTokenName());
 
 			liqTokenPointer* vp = const_cast< liqTokenPointer* >( &tokenPointerArray[i] );
@@ -62,33 +62,35 @@ namespace elvishray
 			case rFloat:
 				{
 					const liqFloat *v = vp->getTokenFloatArray();
-
-					_s("ei_shader_param_scalar( "<<vp->getTokenName()<<"," <<v[0]<<");");
+					_s("ei_shader_param_scalar(\""<<vp->getTokenName()<<"\"," <<v[0]<<");");
 					ei_shader_param_scalar( vp->getTokenName().c_str(), v[0] );
 				}
 				break;
 			case rPoint: case rVector: case rNormal: case rColor:
 				{
 					const liqFloat *v = vp->getTokenFloatArray();
-					_s("//     "<<v[0]<<","<<v[1]<<","<<v[2]);
+					_s("ei_shader_param_vector(\""<<vp->getTokenName()<<"\"," <<v[0]<<","<<v[1]<<","<<v[2]<<");");
+					ei_shader_param_vector( vp->getTokenName().c_str(), v[0] ,v[1], v[2] );
 				}
 				break;
 			case rString: case rShader:
 				{
 					const std::string &v = vp->getTokenString();
-					_s("//     "<<v);
+					_s("ei_shader_param_string(\""<<vp->getTokenName()<<"\"," <<v<<");");
+					ei_shader_param_string( vp->getTokenName().c_str(), v.c_str() );
 				}
 				break; 
 			case rHpoint:
 				{
 					const liqFloat *v = vp->getTokenFloatArray();
-					_s("//     "<<v[0]<<","<<v[1]<<","<<v[2]<<","<<v[3]);
+					_s("ei_shader_param_vector4(\""<<vp->getTokenName()<<"\"," <<v[0]<<","<<v[1]<<","<<v[2]<<","<<v[3]<<");");
+					ei_shader_param_vector4( vp->getTokenName().c_str(), v[0] ,v[1], v[2], v[3] );
 				}
 				break;
 			case rMatrix:
 				{
 					const liqFloat *v = vp->getTokenFloatArray();
-					_s("//     "
+					_s("//matrix:"
 						<<v[0]<<","<<v[1]<<","<<v[2]<<","<<v[3]
 						<<v[4]<<","<<v[5]<<","<<v[6]<<","<<v[7]
 						<<v[8]<<","<<v[9]<<","<<v[10]<<","<<v[11]

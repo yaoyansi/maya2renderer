@@ -192,11 +192,6 @@ namespace elvishray
 // 		_s("ei_motion_factor("<<factor<<")");
 // 		_e( ei_motion_factor(factor));
 // 	}
-	void my_ei_max_displace( float dist )
-	{
-		_s("ei_max_displace("<<dist<<")");
-		_e( ei_max_displace(dist));
-	}
 
 	//	Motion Blur:
 	void my_ei_shutter( float open, float close )
@@ -286,6 +281,11 @@ namespace elvishray
 	{
 		_s("ei_displace("<<type<<")");
 		_e( ei_displace(type));
+	}
+	void my_ei_max_displace(eiScalar dist)
+	{
+		_s("ei_max_displace("<<dist<<")");
+		_e( ei_max_displace(dist));
 	}
 	void my_ei_imager( int type )
 	{
@@ -429,7 +429,20 @@ namespace elvishray
 // 		_s("ei_ambient("<<r<<","<<g<<","<<b<<")");
 // 		_e( ei_ambient(r,g,b));
 // 	}
-
+	void my_ei_approx(const eiApprox *approx)
+	{
+		_s("ei_approx(approx[method="<<approx->method\
+			<<",any="<<approx->any\
+			<<",view_dep="<<approx->view_dep\
+			<<",args="<<approx->args[0]<<","<<approx->args[1]<<","<<approx->args[2]<<","<<approx->args[3]\
+			<<",sharp="<<approx->sharp\
+			<<",min_subdiv="<<approx->min_subdiv\
+			<<",max_subdiv="<<approx->max_subdiv\
+			<<",max_grid_size="<<approx->max_grid_size\
+			<<",motion_factor="<<approx->motion_factor\
+			<<"])");
+		_e( ei_approx(approx));
+	}
 	void my_ei_end_options()
 	{
 		_s("ei_end_options()");

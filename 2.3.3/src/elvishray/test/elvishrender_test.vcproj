@@ -184,6 +184,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\er_displace_test.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\er_shader_link_test.cpp"
 				>
 			</File>
@@ -213,6 +217,10 @@
 			</File>
 			<File
 				RelativePath=".\ei_scene_unittest.esa"
+				>
+			</File>
+			<File
+				RelativePath=".\liq_er_displace_good.er"
 				>
 			</File>
 			<File
