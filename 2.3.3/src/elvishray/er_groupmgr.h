@@ -20,8 +20,16 @@ namespace elvishray
 		void createGroup(/*const long frame,*/ const std::string &groupname);
 		void createGroup(const GroupID &id);
 
-		void addObjectInstance(const std::string &groupname, const std::string &objname);
-		void addObjectInstance( const GroupID &id, const std::string &objInstanceName );
+		void addObjectInstance(
+			const std::string &groupname,
+			const std::string &objname,
+			const GroupInstanceType type
+			);
+		void addObjectInstance( 
+			const GroupID &id, 
+			const std::string &objInstanceName,
+			const GroupInstanceType type
+			);
 		
 		void addLightLink(const std::string &groupname, const std::string &objInst, const std::string &lightInst);
 		void addLightLink( const GroupID &id, const std::string &objInst, const std::string &lightInst);

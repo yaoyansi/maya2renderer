@@ -1,4 +1,5 @@
 #include "er_groupmgr.h"
+#include "liqlog.h"
 
 namespace elvishray
 {
@@ -24,14 +25,16 @@ namespace elvishray
 
 	void GroupMgr::addObjectInstance(
 		const std::string &groupname, 
-		const std::string &objInstanceName
+		const std::string &objInstanceName,
+		const GroupInstanceType type
 		)
 	{
-		addObjectInstance(GroupID(groupname), objInstanceName);
+		addObjectInstance(GroupID(groupname), objInstanceName, type);
 	}
 	void GroupMgr::addObjectInstance(
 		const GroupID &id, 
-		const std::string &objInstanceName
+		const std::string &objInstanceName,
+		const GroupInstanceType type
 		)
 	{
 		if( groups.find(id) == groups.end() )
@@ -42,7 +45,20 @@ namespace elvishray
 
 		std::map<GroupID, Group>::iterator i = groups.find(id);
 		assert(i != groups.end());
-		i->second.addObjectInstance( objInstanceName);
+		
+		switch( type )
+		{
+		case GIT_Camera:
+			i->second.addCameraInstance( objInstanceName );
+			break;
+		case GIT_Geometry:
+			i->second.addMeshInstance( objInstanceName );
+			break;
+		default:
+			liquidMessage2(messageError, "group instance type %d is unknown.",type);
+			assert(0&&"group instance type is unknown. see script window for more details.");
+		}
+
 		
 	}
 	void GroupMgr::addLightLink(

@@ -195,6 +195,10 @@
 				RelativePath=".\er_shader_transparent_test.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\er_volume_test.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="doc"

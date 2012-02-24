@@ -1,5 +1,5 @@
 #include "er_group.h"
-
+#include "liqlog.h"
 
 namespace elvishray
 {
@@ -16,8 +16,14 @@ namespace elvishray
 	{
 
 	}
+	GroupID& GroupID::operator=(const GroupID &o)
+	{
+		GroupID tmp(o);
+		swap(tmp);
+		return *this;
+	}
 
-	std::string GroupID::toString()
+	const std::string GroupID::toString() const
 	{
 		char tmp[512];
 		//sprintf_s(tmp, "f%d_%s", frame, name.c_str() );
@@ -34,6 +40,11 @@ namespace elvishray
 	{
 		return (name<o.name);
 	}
+	void GroupID::swap(GroupID &o)
+	{
+		using std::swap;
+		swap(this->name, o.name);
+	}
 	//--------------------------------------------------
 	Group::Group()
 	{
@@ -48,12 +59,32 @@ namespace elvishray
 	{
 
 	}
-	void Group::addObjectInstance(const std::string &instname)
+	void Group::addMeshInstance(const std::string &instname)
 	{
 		if( isExist(instname) ){
 			return;
 		}
 		lightlink.insert( std::make_pair(MeshName(instname),LightNames()) );
+	}
+	void Group::addCameraInstance(const std::string &instname)
+	{
+		cameras.insert(instname);
+	}
+	const CameraName Group::getCamera() const
+	{
+		if( cameras.empty() )
+		{
+			liquidMessage2(messageError, ("group["+id.toString()+"] has no camera.").c_str())
+			assert(0&&"group has no camera. see script window for more details.");
+		}
+		if( cameras.size()>1 )
+		{
+			std::stringstream ss;
+			std::copy(cameras.begin(), cameras.end(), std::ostream_iterator<CameraName>(ss, ","));
+			liquidMessage2(messageError, ("group["+id.toString()+"] has too many cameras:"+ss.str()).c_str())
+			assert(0&&"group has too many cameras. see script window for more details.");		
+		}
+		return *cameras.begin();
 	}
 	void Group::addLightLink(const std::string &objInst, 
 		const std::string &lightInst)

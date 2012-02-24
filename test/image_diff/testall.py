@@ -73,8 +73,10 @@ def test_all_scene():
     #MyTestOne.test_one_scene(testFile, "elvishray")
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_pl/test_shader_pl_connection.ma"
     #MyTestOne.test_one_scene(testFile, "renderman")
-    testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_pl/test_type_array.ma"
-    MyTestOne.test_one_scene(testFile, "renderman")
+    #testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_pl/test_type_array.ma"
+    #MyTestOne.test_one_scene(testFile, "renderman")
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_pl/test_displace_pl.ma"
+    MyTestOne.test_one_scene(testFile, "elvishray")
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_graph/er_rm_shader_graph.ma"
     #MyTestOne.test_one_scene(testFile, "")

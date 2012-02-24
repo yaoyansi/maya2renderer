@@ -431,16 +431,7 @@ namespace elvishray
 // 	}
 	void my_ei_approx(const eiApprox *approx)
 	{
-		_s("ei_approx(approx[method="<<approx->method\
-			<<",any="<<approx->any\
-			<<",view_dep="<<approx->view_dep\
-			<<",args="<<approx->args[0]<<","<<approx->args[1]<<","<<approx->args[2]<<","<<approx->args[3]\
-			<<",sharp="<<approx->sharp\
-			<<",min_subdiv="<<approx->min_subdiv\
-			<<",max_subdiv="<<approx->max_subdiv\
-			<<",max_grid_size="<<approx->max_grid_size\
-			<<",motion_factor="<<approx->motion_factor\
-			<<"])");
+		_s("//ei_approx(approx[method="<<approx->method<<",any="<<approx->any<<",view_dep="<<approx->view_dep<<",args="<<approx->args[0]<<","<<approx->args[1]<<","<<approx->args[2]<<","<<approx->args[3]<<",sharp="<<approx->sharp<<",min_subdiv="<<approx->min_subdiv<<",max_subdiv="<<approx->max_subdiv<<",max_grid_size="<<approx->max_grid_size<<",motion_factor="<<approx->motion_factor<<"])");
 		_e( ei_approx(approx));
 	}
 	void my_ei_end_options()

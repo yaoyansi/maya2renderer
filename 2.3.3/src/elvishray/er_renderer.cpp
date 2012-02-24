@@ -440,7 +440,7 @@ namespace elvishray
 		_S( ei_end_instance() );
 		_s("//");
 		//
-		m_groupMgr->addObjectInstance( currentJob__.name.asChar(), mesh->getName() );//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
+		m_groupMgr->addObjectInstance( currentJob__.name.asChar(), mesh->getName(), GIT_Geometry );//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
 	}
 	//
 	void Renderer::exportOneGeometry_Mesh(
@@ -889,7 +889,7 @@ namespace elvishray
 			//_S( ei_transform(  1.0f, 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 1.0f, 0.0f,  -1.95384,-2.76373,16.1852, 1.0f ) );
 		_S( ei_end_instance() );
 		_s("//");		
-		m_groupMgr->addObjectInstance(currentJob.name.asChar(), currentJob.camera[0].name.asChar());//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
+		m_groupMgr->addObjectInstance(currentJob.name.asChar(), currentJob.camera[0].name.asChar(), GIT_Camera);//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
 
 		return MStatus::kSuccess;
 	}
@@ -927,31 +927,34 @@ namespace elvishray
 		{
 			//each group
 			_S( ei_instgroup( group_i->first.name.c_str() ) );// not id
-			
-			Group &group = group_i->second;
-
-			//
-			std::map<MeshName, LightNames>::iterator mesh_i 
-				= group.lightlink.begin();
-			std::map<MeshName, LightNames>::iterator mesh_e 
-				= group.lightlink.end();
-			for(; mesh_i!=mesh_e; ++mesh_i)
 			{
-				if( mesh_i->second.size() ){
-					_s("//lightlinks");
-				}
-				LightNames::iterator light_i = mesh_i->second.begin();
-				LightNames::iterator light_e = mesh_i->second.end();
-				for(; light_i!=light_e; ++light_i)// has light link
+				Group &group = group_i->second;
+
+				//camera
+				_s("//camera");
+				_S( ei_add_instance( group.getCamera().c_str()) );
+
+				//mesh and light link
+				std::map<MeshName, LightNames>::iterator mesh_i 
+					= group.lightlink.begin();
+				std::map<MeshName, LightNames>::iterator mesh_e 
+					= group.lightlink.end();
+				for(; mesh_i!=mesh_e; ++mesh_i)
 				{
-					_S( ei_add_instance( light_i->c_str()) );
-				}
+					if( mesh_i->second.size() ){
+						_s("//lightlinks and meshes");
+					}
+					LightNames::iterator light_i = mesh_i->second.begin();
+					LightNames::iterator light_e = mesh_i->second.end();
+					for(; light_i!=light_e; ++light_i)// has light link
+					{
+						_S( ei_add_instance( light_i->c_str()) );
+					}
 
-				// init object
-				_S( ei_add_instance( mesh_i->first.c_str() ) );
-				_s("\n");
-			}//for mesh
-
+					// init object
+					_S( ei_add_instance( mesh_i->first.c_str() ) );
+				}//for mesh
+			}
 			_S( ei_end_instgroup() );
 		}//for group
 

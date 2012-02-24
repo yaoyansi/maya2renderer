@@ -37,7 +37,9 @@ extern void ei_shader_graph_unittest(const eiBool texturing, const char *suffix)
 extern void ei_shader_link_test(const eiBool texturing, const char *suffix);
 extern void ei_checker_uv();
 extern void er_shader_transparent_test();
-extern void ei_displace_unittest();
+void ei_displace_unittest();
+extern void ei_volume_unittest();
+
 
 void test_liquid2er()
 {
@@ -52,6 +54,7 @@ void test_liquid2er()
 	//ei_checker_uv();
 	//er_shader_transparent_test();
 	//ei_displace_unittest();
+	//ei_volume_unittest();
 }
 //
 int main()
