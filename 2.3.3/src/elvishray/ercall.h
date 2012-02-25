@@ -153,6 +153,9 @@ namespace elvishray
 	 //void my_ei_offset( int x, int y );
 	 void my_ei_window( float xmin, float xmax, float ymin, float ymax );
 	 void my_ei_clip( float hither, float yon );
+	 void my_ei_add_lens(const char *shader_name);
+	 void my_ei_add_imager(const char *shader_name);
+
 	 //void my_ei_atmosphere( const char *shader_name, int end_=ei_end,... );
 	 //void my_ei_ambience( const char *shader_name, int end_=ei_end,... );
 	 void my_ei_frame( int frame, int field );

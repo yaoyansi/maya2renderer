@@ -87,7 +87,9 @@ def test_all_scene():
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_er_shader/lambert_transparent.ma"
     #MyTestOne.test_one_scene(testFile, "")
 
-    testFile=LIQUID_ROOT+"/2.3.3/test/test_er_light/er_pointlight.ma"
+    #testFile=LIQUID_ROOT+"/2.3.3/test/test_er_light/er_pointlight.ma"
+    #MyTestOne.test_one_scene(testFile, "elvishray")
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_er_dof/er_dof2.ma"
     MyTestOne.test_one_scene(testFile, "elvishray")
 
 def main():

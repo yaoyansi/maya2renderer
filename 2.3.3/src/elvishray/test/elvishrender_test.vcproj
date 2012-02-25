@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\er_dof_test.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\er_shader_link_test.cpp"
 				>
 			</File>

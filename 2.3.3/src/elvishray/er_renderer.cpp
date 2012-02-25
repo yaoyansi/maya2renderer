@@ -857,6 +857,40 @@ namespace elvishray
 		RtMatrix m;		
 		IfMErrorWarn(m0.asMatrix().get(m));
 
+		bool bDepthOfField = liqglo.doDof && !currentJob.isShadow;
+
+		MStringArray LensShaders, EnvironmentShaders;
+		{
+			if(bDepthOfField)
+			{
+				{
+					ei_shader("dof_shader");
+					ei_shader_param_string("desc", "simple_dof");
+					ei_shader_param_scalar("fplane", currentJob.camera[0].neardb);
+					ei_end_shader();
+				}
+				LensShaders.append("dof_shader");
+			}
+
+			//env shader
+			if( 0 )
+			{
+				{
+					ei_shader("simple_env_shader");
+					ei_shader_param_string("desc", "simple_env");
+					ei_shader_param_vector("env_color", 0.0f, 0.2f, 0.8f);
+					ei_end_shader();
+				}
+				EnvironmentShaders.append("simple_env_shader");
+				{
+					ei_shader("physicalsky_shader");
+					ei_shader_param_string("desc", "physicalsky");
+					ei_end_shader();
+				}
+				EnvironmentShaders.append("physicalsky_shader");
+			}
+		}
+
 		_s("\n//############################### camera #");
 		std::string sCameraObjectName(std::string(currentJob.camera[0].name.asChar())+"_object");
 		_S( ei_camera( sCameraObjectName.c_str() ) );
@@ -879,10 +913,16 @@ namespace elvishray
 			}
 
 			_S( ei_clip( currentJob.camera[0].neardb, currentJob.camera[0].fardb) );
-			if(  liqglo.doDof && !currentJob.isShadow  )
+			
+			//lens shader
+			for( std::size_t i = 0; i<LensShaders.length(); ++i)
 			{
-				//_S( ei_dof( on ) );
-				//_S( ei_dof( currentJob.camera[0].fStop, focal ) );
+				_S( ei_add_lens( LensShaders[i].asChar() ) );
+			}
+			//env shader
+			for( std::size_t i = 0; i<EnvironmentShaders.length(); ++i)
+			{
+				_S( ei_add_environment(EnvironmentShaders[i].asChar()) );
 			}
 		_S( ei_end_camera() );
 		_s("//----------------------------------");

@@ -504,6 +504,16 @@ namespace elvishray
 		_s("ei_clip("<<hither<<","<<yon<<")");
 		_e( ei_clip(hither,yon));
 	}
+	void my_ei_add_lens(const char *shader_name)
+	{
+		_s("ei_add_lens(\""<<shader_name<<"\")");
+		_e( ei_add_lens(shader_name));
+	}
+	void my_ei_add_imager(const char *shader_name)
+	{
+		_s("ei_add_imager(\""<<shader_name<<"\")");
+		_e( ei_add_imager(shader_name));
+	}
 // 	void my_ei_atmosphere( const char *shader_name, int end_, ... )
 // 	{
 // 		_s("ei_atmosphere(\""<<shader_name<<"\", "<< end_ <<")");

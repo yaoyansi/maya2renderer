@@ -39,7 +39,7 @@ extern void ei_checker_uv();
 extern void er_shader_transparent_test();
 void ei_displace_unittest();
 extern void ei_volume_unittest();
-
+extern void ei_dof_unittest();
 
 void test_liquid2er()
 {
@@ -55,6 +55,7 @@ void test_liquid2er()
 	//er_shader_transparent_test();
 	//ei_displace_unittest();
 	//ei_volume_unittest();
+	ei_dof_unittest();
 }
 //
 int main()
