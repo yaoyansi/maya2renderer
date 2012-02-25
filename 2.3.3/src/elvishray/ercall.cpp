@@ -706,17 +706,17 @@ namespace elvishray
 	}
 	void my_ei_pos_list(const eiTag tab)
 	{
-		_s("ei_pos_list("<< tab<<")" ); 
+		_s("ei_pos_list(tag)" ); 
 		_e( ei_pos_list(tab));
 	}
  	void my_ei_motion_pos_list(const eiTag tab)
  	{
-		_s("ei_motion_pos_list("<< tab<<")" ); 
+		_s("ei_motion_pos_list(tag)" ); 
 		_e( ei_motion_pos_list(tab));
  	}
 	void my_ei_triangle_list(const eiTag tab)
 	{
-		_s("ei_triangle_list("<<tab<<")" ); 
+		_s("ei_triangle_list(tag)" ); 
 		_e( ei_triangle_list(tab));
 	}
 

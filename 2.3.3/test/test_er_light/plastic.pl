@@ -1,0 +1,10 @@
+#shaderType
+surface
+#shaderName
+plastic
+#Name|Details|Type|IsOutput|Defaults|ArraySizes
+Cs|uniform|vector|0|<<1.000000,1.000000,1.000000>>|-1
+Kd|uniform|vector|0|<<1.000000,1.000000,1.000000>>|-1
+Ks|uniform|float|0|0.5|-1
+roughness|uniform|float|0|0.1|-1
+specularcolor|uniform|color|0|<<1.000000,1.000000,1.000000>>|-1

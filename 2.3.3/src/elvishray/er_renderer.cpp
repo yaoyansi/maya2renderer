@@ -237,7 +237,7 @@ namespace elvishray
 		std::string sShaderInstanceName(shaderinstanceFullPath+"_shader");
 		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
 		_S( ei_shader_param_string("desc", "pointlight") ); 
-		_S( ei_shader_param_vector("lightcolor", 1.0f, 1.0f, 1.0f ) );
+		_S( ei_shader_param_vector("lightcolor", i_lightcolor[0], i_lightcolor[1], i_lightcolor[2] ) );
 		_S( ei_shader_param_scalar("intensity", i_intensity) );
 		_S( ei_end_shader() );
 
@@ -309,14 +309,17 @@ namespace elvishray
 		std::string sShaderInstanceName(shaderinstanceFullPath+"_shader");
 		_S( ei_shader( sShaderInstanceName.c_str() ) ); 
 		_S( ei_shader_param_string("desc", "spotlight") ); 
-		_S( ei_shader_param_vector("lightcolor", 1.0f, 1.0f, 1.0f ) ); 
+		_S( ei_shader_param_vector("lightcolor", i_lightcolor[0], i_lightcolor[1], i_lightcolor[2] ) ); 
 		_S( ei_shader_param_scalar("intensity", i_intensity ) );
+		_S( ei_shader_param_scalar("deltaangle", (eiScalar)eiPI ) );//i_coneangle*(M_PI/180.0f)
+		_S( ei_shader_param_vector("direction", 0.0f, 0.0f, -1.0f ) ); 
+		_S( ei_shader_param_scalar("spread", 50.2f ) );  
 		_S( ei_end_shader() );
 
 		std::string sLightObjectName(shaderinstanceFullPath+"_object");
 		_S( ei_light( sLightObjectName.c_str() ) );
 		_S( ei_add_light(	sShaderInstanceName.c_str()  ) );
-		_S( ei_origin( t[3][0],t[3][1],t[3][2] ) );
+		_S( ei_transform( t[0][0], t[0][1], t[0][2], t[0][3],   t[1][0], t[1][1], t[1][2], t[1][3],   t[2][0], t[2][1], t[2][2], t[2][3],   t[3][0], t[3][1], t[3][2], t[3][3] ) );
 		_S( ei_end_light() );
 
 		_S( ei_instance( shaderinstanceFullPath.c_str() ) );
