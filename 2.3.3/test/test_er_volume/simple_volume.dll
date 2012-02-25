@@ -1,0 +1,12 @@
+#shaderType
+volume
+#shaderName
+simple_volume
+#Name|Details|Type|IsOutput|Defaults|ArraySizes
+vol_color|uniform|color|0|<<0.900000,0.950000,1.000000>>|-1
+vol_density|uniform|float|0|5.0|-1
+step_size|uniform|float|0|0.2|-1
+vol_radius|uniform|float|0|3.0|-1
+vol_offset|uniform|vector|0|<<0.000000,0.000000,0.000000>>|-1
+absorption|uniform|float|0|0.3|-1
+anisotropic|uniform|float|0|0.4|-1
