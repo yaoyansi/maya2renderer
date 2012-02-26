@@ -1,6 +1,5 @@
 ##RenderMan RIB-Structure 1.0
 version 3.03
 #shading group: liquidSurface1SG
-Surface "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/lib/shaders/liquidchecker" "uniform float frequency" [ 4.500000 ] "uniform float mode" [ 0.000000 ] 
 #no volume shader.
-Displacement "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/lib/shaders/test_bump" "uniform float amplitude" [ 10.000000 ] "uniform float frequency" [ 1.000000 ] "uniform float details" [ 12.000000 ] 
+Displacement "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/lib/shaders/test_bump" "uniform float amplitude" [ 1.000000 ] "uniform float frequency" [ 1.000000 ] "uniform float details" [ 12.000000 ] 

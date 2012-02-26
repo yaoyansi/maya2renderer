@@ -1,9 +1,9 @@
 //Maya ASCII 2009 scene
 //Name: test_displacement.ma
-//Last modified: Tue, Jan 10, 2012 03:43:03 AM
+//Last modified: Sun, Feb 26, 2012 08:12:07 PM
 //Codeset: 936
 requires maya "2009";
-requires "liquid_2009x32d" "2.3.5 (buildtime= 3:36:28.51)";
+requires "liquid_2009x32d" "2.3.5 (buildtime=19:44:06.79)";
 requires "stereoCamera" "10.0";
 currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
@@ -134,6 +134,7 @@ createNode liquidDisplacement -n "liquidDisplacement1";
 	addAttr -ci true -h true -sn "frequency" -ln "frequency" -at "double";
 	addAttr -ci true -h true -sn "details" -ln "details" -at "double";
 	setAttr ".rms" -type "string" "test_bump";
+	setAttr ".rst" -type "string" "displacement";
 	setAttr ".rml" -type "string" "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/lib/shaders/test_bump.slo";
 	setAttr ".rpr" -type "stringArray" 3 "amplitude" "frequency" "details"  ;
 	setAttr ".rdt" -type "stringArray" 3 "uniform" "uniform" "uniform"  ;
@@ -145,7 +146,7 @@ createNode liquidDisplacement -n "liquidDisplacement1";
 	setAttr ".rio" -type "Int32Array" 3 0 0 0 ;
 	setAttr ".pcp" -type "string" "";
 	setAttr ".db" 3;
-	setAttr ".amplitude" 10;
+	setAttr ".amplitude" 1;
 	setAttr ".frequency" 1;
 	setAttr ".details" 12;
 createNode shadingEngine -n "liquidDisplacement1SG";
@@ -154,7 +155,7 @@ createNode shadingEngine -n "liquidDisplacement1SG";
 createNode materialInfo -n "materialInfo1";
 createNode liquidGlobals -n "liquidGlobals";
 	setAttr ".rc" -type "string" "perspShape";
-	setAttr ".ddin[0]" -type "string" "";
+	setAttr ".ddin[0]" -type "string" "$SCN.$CAM.$F.$RND.bmp";
 	setAttr ".ddim[0]" -type "string" "rgba";
 	setAttr ".ddit[0]" -type "string" "it";
 	setAttr ".ddbd[0]"  8;
@@ -163,7 +164,7 @@ createNode liquidGlobals -n "liquidGlobals";
 	setAttr ".osg" yes;
 	setAttr ".rdc" -type "string" "prman";
 	setAttr ".prv" -type "string" "prman";
-	setAttr ".lrs" -type "string" "E:/MyDocuments/maya/projects/default/rmantmp/.xml";
+	setAttr ".lrs" -type "string" "E:/MyDocuments/maya/projects/default/rmantmp/test_displacement.xml";
 	setAttr ".lrf" -type "string" "E:/MyDocuments/maya/projects/default/rib/_perspShape.0001.rib";
 	setAttr ".shi" -type "string" "sloinfo";
 	setAttr ".shcp" -type "string" "shader";
