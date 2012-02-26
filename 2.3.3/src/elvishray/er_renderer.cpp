@@ -859,7 +859,7 @@ namespace elvishray
 
 		bool bDepthOfField;//enable DOF on this camera?
 		liquidGetPlugValue(fnCamera,"depthOfField", bDepthOfField, status);
-		_s("Depth of Field on camera \""<<currentJob.camera[0].name<<"\" is turned "<< (bDepthOfField?"on":"off")<<" in Maya");
+		_s("//Depth of Field on camera \""<<currentJob.camera[0].name<<"\" is turned "<< (bDepthOfField?"on":"off")<<" in Maya");
 		bDepthOfField = bDepthOfField && liqglo.doDof && !currentJob.isShadow;
 
 		MStringArray LensShaders, EnvironmentShaders;
