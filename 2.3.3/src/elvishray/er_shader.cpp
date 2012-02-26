@@ -248,7 +248,11 @@ namespace elvishray
 		}else if(liqshader->shader_type_ex == "photon"){
 			//outputIndentation(indentLevel);
 			this->shader_photon( *liqshader,   liqshader->tokenPointerArray );
-		}else{
+		}else if(liqshader->shader_type_ex == "lens"){
+			//outputIndentation(indentLevel);
+			this->shader_lens( *liqshader,   liqshader->tokenPointerArray );
+		}
+		else{
 			char errorMsg[512];
 			sprintf(errorMsg, "[liqShader::write] Unknown shader type for %s shader_type=%s", liqshader->getName().c_str(), liqshader->shader_type_ex.asChar());
 			liquidMessage( errorMsg, messageError );
@@ -274,6 +278,13 @@ namespace elvishray
 		_UserDefinedShader(shader, tokenPointerArray);
 	}
 	void Renderer::shader_photon(
+		const liqShader &shader,
+		const std::vector<liqTokenPointer> &tokenPointerArray
+		)
+	{
+		_UserDefinedShader(shader, tokenPointerArray);
+	}		
+	void Renderer::shader_lens(
 		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)

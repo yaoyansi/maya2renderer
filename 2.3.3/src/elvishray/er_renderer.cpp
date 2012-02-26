@@ -857,38 +857,21 @@ namespace elvishray
 		RtMatrix m;		
 		IfMErrorWarn(m0.asMatrix().get(m));
 
-		bool bDepthOfField = liqglo.doDof && !currentJob.isShadow;
+		bool bDepthOfField;//enable DOF on this camera?
+		liquidGetPlugValue(fnCamera,"depthOfField", bDepthOfField, status);
+		_s("Depth of Field on camera \""<<currentJob.camera[0].name<<"\" is turned "<< (bDepthOfField?"on":"off")<<" in Maya");
+		bDepthOfField = bDepthOfField && liqglo.doDof && !currentJob.isShadow;
 
 		MStringArray LensShaders, EnvironmentShaders;
 		{
+			//lens shader
 			if(bDepthOfField)
 			{
-				{
-					ei_shader("dof_shader");
-					ei_shader_param_string("desc", "simple_dof");
-					ei_shader_param_scalar("fplane", currentJob.camera[0].neardb);
-					ei_end_shader();
-				}
-				LensShaders.append("dof_shader");
-			}
+				gatherCameraShaders(LensShaders, currentJob.camera[0].name, "liqLensShader");
 
-			//env shader
-			if( 0 )
-			{
-				{
-					ei_shader("simple_env_shader");
-					ei_shader_param_string("desc", "simple_env");
-					ei_shader_param_vector("env_color", 0.0f, 0.2f, 0.8f);
-					ei_end_shader();
-				}
-				EnvironmentShaders.append("simple_env_shader");
-				{
-					ei_shader("physicalsky_shader");
-					ei_shader_param_string("desc", "physicalsky");
-					ei_end_shader();
-				}
-				EnvironmentShaders.append("physicalsky_shader");
 			}
+			//env shader
+			gatherCameraShaders(EnvironmentShaders, currentJob.camera[0].name, "liqEnvironmentShader");
 		}
 
 		_s("\n//############################### camera #");
@@ -1045,4 +1028,47 @@ namespace elvishray
 		}
 		fclose(manager_ini);
 	}
+	//
+	void Renderer::gatherCameraShaders(
+		MStringArray& cameraShaders,
+		const MString& node,
+		const std::string& plug_
+		)
+	{
+		const MString plug(plug_.c_str());
+		MString cmd;
+
+		int isShaderPlugExist;
+		cmd = "attributeQuery -node \""+node+"\" -ex \""+plug+"\"";
+		IfMErrorMsgWarn(MGlobal::executeCommand( cmd, isShaderPlugExist), cmd);
+		if(isShaderPlugExist)
+		{
+			MStringArray connectedShaders;
+			cmd = "listConnections (\""+node+"\" + \"."+plug+"\")";
+			IfMErrorMsgWarn(MGlobal::executeCommand( cmd, connectedShaders), cmd);
+
+			if( connectedShaders.length() != 0 )
+			{
+				const MString startingNode(connectedShaders[0]);
+
+				MString nodetype;
+				cmd = "nodeType \""+startingNode+"\"";
+				IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
+
+				if(nodetype=="liquidSurface"){
+					//liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
+					MObject shaderObj;
+					getDependNodeByName( shaderObj,startingNode.asChar());
+					liqShader &currentShader = liqShaderFactory::instance().getShader( shaderObj );
+					currentShader.write();
+
+					IfMErrorWarn( cameraShaders.append(startingNode) );
+				}else{
+					//convertShadingNetworkToRSL(startingNode, node);
+					liquidMessage2(messageError,"%s.%s is not liquidSurface.",node.asChar(), plug_.c_str());
+				}
+			}
+		}
+	}
+
 }//namespace

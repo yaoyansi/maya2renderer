@@ -219,6 +219,19 @@ RenderMan (R) is a registered trademark of Pixar
   - use ".rmanShaderType" in liqGetSloInfo::setShaderNode()-->shaderNode.findPlug("rmanShaderType",...);
 
 
+- Depth of Field
+  - RM 的DOF 只需在RenderSettings-->liquid-->Frame-->MotionBlur&DepthofField里勾选“Depth of Field”
+  - ER 的DOF除了需要勾选RenderSettings-->liquid-->Frame-->MotionBlur&DepthofField里勾选“Depth of Field”，
+    还需要（以test_er_dof\er_dof2.ma为例）：
+    - 选中cameraShape1节点，在Depth of Field里勾选“Depth of Field”
+    - Menu -->Liquid-->ObjectAttributes-->Create CustomShaderForERCamera,这样就在cameraShape1节点上建立了liqLensShader，liqEnvironmentShader属性
+    - 建立DOF shader。
+       - 新建liquidSurface2，将cameraShape1.liqLensShader连接到liquidSurface2上，
+       - 设置liquidSurface2的参数
+          - 设置shader=simple_dof.dll
+	  - 连接cameraShape1.nearClipPlane到liquidSurface2.fplane
+	  - 连接cameraShape1.fStop到liquidSurface2.fstop
+
   ---------------------------------------------------------------------
                               NOTES
   ---------------------------------------------------------------------

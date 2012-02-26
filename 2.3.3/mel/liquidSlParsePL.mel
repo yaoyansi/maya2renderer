@@ -392,7 +392,8 @@ global proc int isValidShaderTypeForPL(string $shaderType)
 		 // ER shader type
 		 $shaderType == "shadow"        ||
 		 $shaderType == "environment"   ||
-		 $shaderType == "photon"
+		 $shaderType == "photon"		||
+		 $shaderType == "lens"
 	)
 	{
 		liqPopIdent();

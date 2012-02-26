@@ -2506,4 +2506,60 @@ global proc liquidDeleteCustomShaderAttributes()
   } 
   liqPopIdent();
 }
+//CustomShaderForERCamera-----------------------------------------------------
+global proc liquidCreateCustomShaderAttributesForERCamera()
+{
+	liqPushIdent();
+    liqlog("liquidCreateCustomShaderAttributesForERCamera()");
+
+  string $shapes[] = `ls -selection -dag -type "camera"`;
+  for ( $currentShape in $shapes ) {
+ 	if ( !`attributeQuery -node $currentShape -ex "liqVolumeShader"` ) {
+ 	  addAttr -ln "liqVolumeShader" -usedAsColor -at "float3" -k true $currentShape;
+ 	  addAttr -ln "liqVolumeShaderred"   -at "float" -dv 1 -k true -parent "liqVolumeShader" $currentShape;
+ 	  addAttr -ln "liqVolumeShadergreen" -at "float" -dv 1 -k true -parent "liqVolumeShader" $currentShape;
+ 	  addAttr -ln "liqVolumeShaderblue"  -at "float" -dv 1 -k true -parent "liqVolumeShader" $currentShape;
+ 	}
+	if ( !`attributeQuery -node $currentShape -ex "liqEnvironmentShader"` ) {
+	  addAttr -ln "liqEnvironmentShader" -usedAsColor -at "float3" -k true $currentShape;
+	  addAttr -ln "liqEnvironmentShaderred"   -at "float" -dv 1 -k true -parent "liqEnvironmentShader" $currentShape;
+	  addAttr -ln "liqEnvironmentShadergreen" -at "float" -dv 1 -k true -parent "liqEnvironmentShader" $currentShape;
+	  addAttr -ln "liqEnvironmentShaderblue"  -at "float" -dv 1 -k true -parent "liqEnvironmentShader" $currentShape;
+	}
+	if ( !`attributeQuery -node $currentShape -ex "liqLensShader"` ) {
+	  addAttr -ln "liqLensShader" -usedAsColor -at "float3" -k true $currentShape;
+	  addAttr -ln "liqPhotonShaderred"   -at "float" -dv 1 -k true -parent "liqLensShader" $currentShape;
+	  addAttr -ln "liqPhotonShadergreen" -at "float" -dv 1 -k true -parent "liqLensShader" $currentShape;
+	  addAttr -ln "liqPhotonShaderblue"  -at "float" -dv 1 -k true -parent "liqLensShader" $currentShape;
+	}
+  }
+
+  liqPopIdent();
+}
+global proc liquidDeleteCustomShaderAttributesForERCamera()
+{
+	liqPushIdent();
+    liqlog("liquidDeleteCustomShaderAttributesForERCamera()");
+
+  string $shapes[] = `ls -selection -dag -type "camera"`;
+  string $attr[] = {
+	"liqVolumeShader",
+	"liqEnvironmentShader",
+	"liqPhotonShader"
+  };
+
+  for ( $currentShape in $shapes ) 
+  {
+	for ( $a in $attr ) 
+	{
+	  if ( `attributeQuery -node $currentShape -ex $a` ) 
+	  {
+		// philippe: this is a fix to deal with a bug with compound attributes
+		renameAttr ( $currentShape + "."+$a ) "TO_BE_DELETED";
+		deleteAttr ( $currentShape + ".TO_BE_DELETED" );
+	  }
+	}
+  } 
+  liqPopIdent();
+}
 

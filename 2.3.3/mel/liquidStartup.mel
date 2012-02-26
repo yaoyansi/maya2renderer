@@ -443,6 +443,9 @@ global proc liquidCreateObjectsAttributesMenu( string $prefix )
     menuItem -d true;
     menuItem -label "Create CustomShader" -command liquidCreateCustomShaderAttributes -ann "Add CustomShader to selected node";
 	menuItem -label "Remove CustomShader" -command liquidDeleteCustomShaderAttributes -ann "Remove CustomShader from selected node";
+    menuItem -d true;
+    menuItem -label "Create CustomShaderForERCamera" -command liquidCreateCustomShaderAttributesForERCamera -ann "Add CustomShaderForERCamera to selected node";
+	menuItem -label "Remove CustomShaderForERCamera" -command liquidDeleteCustomShaderAttributesForERCamera -ann "Remove CustomShaderForERCamera from selected node";
 
   setParent -menu ..;
   liqPopIdent();

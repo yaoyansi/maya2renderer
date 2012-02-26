@@ -257,6 +257,15 @@ namespace elvishray
 			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
 			);
+		void shader_lens(
+			const liqShader &shader,
+			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		void gatherCameraShaders(
+			MStringArray& cameraShaders,
+			const MString& node,
+			const std::string& plug_
+			);
 
 		eiContext *CONTEXT;
 	};
