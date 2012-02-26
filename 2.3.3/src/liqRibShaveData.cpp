@@ -406,28 +406,30 @@ liqRibShaveData::liqRibShaveData( MObject surface )
  */
 void liqRibShaveData::_write(const structJob &currentJob)
 {
-  LIQDEBUGPRINTF( "-> writing shave surface\n" );
+	assert(0 && "moved to renderman::Renderer::_writeObject() >> if(ribNode->object(sample)->type == MRT_Shave)");
 
-  LIQDEBUGPRINTF( "-> writing shave surface trims\n" );
-  liqRIBMsg("This is a shave object data:\n" );
- 
-  MString nodeName(objDagPath.partialPathName());
-  liqRIBMsg( "node name = %s", nodeName.asChar() );
-
-  MString frame; 
-  frame.set(liqglo.liqglo_lframe);
-  MString prefix("shv_");
-  MString shv_RibFile( liquidGetRelativePath( false, getLiquidRibName( (prefix+nodeName).asChar() ), liqglo.liqglo_ribDir ) +"."+frame+".rib" );
-
-  //1)make a reference
-  RiReadArchive( const_cast< RtToken >( shv_RibFile.asChar() ), NULL, RI_NULL );
-
-  //call shave command to write the rib file(not support motion blur)
-   MGlobal::executeCommand(
- 	  "shaveWriteRib -hairNode \""+nodeName+"\" \""+shv_RibFile+"\";"
- 	  );
- 
-  LIQDEBUGPRINTF( "-> done writing shave surface\n" );
+//   LIQDEBUGPRINTF( "-> writing shave surface\n" );
+// 
+//   LIQDEBUGPRINTF( "-> writing shave surface trims\n" );
+//   liqRIBMsg("This is a shave object data:\n" );
+//  
+//   MString nodeName(objDagPath.partialPathName());
+//   liqRIBMsg( "node name = %s", nodeName.asChar() );
+// 
+//   MString frame; 
+//   frame.set(liqglo.liqglo_lframe);
+//   MString prefix("shv_");
+//   MString shv_RibFile( liquidGetRelativePath( false, getLiquidRibName( (prefix+nodeName).asChar() ), liqglo.liqglo_ribDir ) +"."+frame+".rib" );
+// 
+//   //1)make a reference
+//   RiReadArchive( const_cast< RtToken >( shv_RibFile.asChar() ), NULL, RI_NULL );
+// 
+//   //call shave command to write the rib file(not support motion blur)
+//    MGlobal::executeCommand(
+//  	  "shaveWriteRib -hairNode \""+nodeName+"\" \""+shv_RibFile+"\";"
+//  	  );
+//  
+//   LIQDEBUGPRINTF( "-> done writing shave surface\n" );
 }
 
 unsigned liqRibShaveData::granularity() const 

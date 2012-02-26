@@ -1,6 +1,7 @@
 #include "rm_helper.h"
-
+#include<maya/MGlobal.h>
 #include "liqGlobalHelpers.h"
+#include <liqRibTranslator.h>
 
 namespace renderman
 {
@@ -153,4 +154,29 @@ namespace renderman
 
 	}
 
+	void RibDataExportHelper::exportShaveData(const liqRibShaveDataPtr& data)
+	{
+		LIQDEBUGPRINTF( "-> writing shave surface\n" );
+
+		LIQDEBUGPRINTF( "-> writing shave surface trims\n" );
+		liqRIBMsg("This is a shave object data:\n" );
+
+		MString nodeName(data->objDagPath.partialPathName());
+		liqRIBMsg( "node name = %s", nodeName.asChar() );
+
+		MString frame; 
+		frame.set(liqglo.liqglo_lframe);
+		MString prefix("shv_");
+		MString shv_RibFile( liquidGetRelativePath( false, getLiquidRibName( (prefix+nodeName).asChar() ), liqglo.liqglo_ribDir ) +"."+frame+".rib" );
+
+		//1)make a reference
+		RiReadArchive( const_cast< RtToken >( shv_RibFile.asChar() ), NULL, RI_NULL );
+
+		//call shave command to write the rib file(not support motion blur)
+		MGlobal::executeCommand(
+			"shaveWriteRib -hairNode \""+nodeName+"\" \""+shv_RibFile+"\";"
+			);
+
+		LIQDEBUGPRINTF( "-> done writing shave surface\n" );
+	}
 }

@@ -82,6 +82,7 @@ private:
 	liqRibShaveData& operator=(const liqRibShaveData&);
 
 };
+typedef boost::shared_ptr< liqRibShaveData > liqRibShaveDataPtr;
 #endif//_USE_SHAVE_
 
 #endif//#ifndef liqRibShaveData_H

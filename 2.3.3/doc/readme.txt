@@ -62,7 +62,7 @@ RenderMan (R) is a registered trademark of Pixar
                                             ...
   - build ER. copy the *.dll/*.exe to $(LiquidRoot)\dependence\elvishray\bin, and copy *.lib to $(LiquidRoot)\dependence\elvishray\bin
   - build $(LiquidRoot)\2.3.3\src\elvishray\eiSHADER_maya\build\eiSHADER_maya.sln
-  - open $(LiquidRoot)\2.3.3\include\liqConfig.h, set _USE_SHAVE_ to 1 if shave is installed, or set _USE_SHAVE_ to 0 if shave isn't installed.
+  - open $(LiquidRoot)\2.3.3\include\liqConfig.h, set _USE_SHAVE_ to 1 if shave(v61 or later) is installed, or set _USE_SHAVE_ to 0 if shave isn't installed.
   - open $(LiquidRoot)\2.3.3\src\MSVC2005\liquid.sln, choose ¡°Win32¡± and ¡°Prman2009Debug¡± in Configuration Manager£¬
     - (For renderman renderer only)
       - make sure Prman is installed, and $(RMANTREE) is set(e.g. RMANTREE=D:\Program Files\Pixar\RenderManProServer-13.5.2),

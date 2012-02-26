@@ -1115,7 +1115,18 @@ namespace renderman
 			{
 
 			}
-		}else{
+		}
+		else if(ribNode->object(sample)->type == MRT_Shave)
+		{
+			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
+			const liqRibShaveDataPtr data = 
+				boost::dynamic_pointer_cast<liqRibShaveData>(ribNode->object(sample)->getDataPtr() );
+			assert( data.get() != NULL );
+
+			RibDataExportHelper::exportShaveData(data);
+			
+		}
+		else{
 			assert(0 && "other types are not exported except Mesh and MeshLight.");
 		}
 

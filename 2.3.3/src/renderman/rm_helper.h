@@ -6,6 +6,7 @@
 #include "ri_interface.h"
 #include "liqRibLightData.h"
 #include "liqRibMeshData.h"
+#include "liqRibShaveData.h"
 
 namespace renderman
 {
@@ -37,7 +38,8 @@ namespace renderman
 			const MString& ribFile);
 		
 		static void exportMeshLight( const liqRibMeshDataPtr& meshdata );
-		
+		static void exportShaveData(const liqRibShaveDataPtr& data);
+
 		static void exportLight();
 	};
 }
