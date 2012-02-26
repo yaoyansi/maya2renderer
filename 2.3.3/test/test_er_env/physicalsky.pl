@@ -1,0 +1,22 @@
+#shaderType
+environment
+#shaderName
+physicalsky
+#Name|Details|Type|IsOutput|Defaults|ArraySizes
+sun_dir|uniform|vector|0|<<0.0, 1.0, 0.0>>|-1
+sun_disk_size|uniform|float|0|1.0|-1
+sun_disk_intensity|uniform|float|0|10.0|-1
+sun_glow_size|uniform|float|0|1.0|-1
+sun_glow_intensity|uniform|float|0|1.0|-1
+sun_glow_falloff|uniform|float|0|5.0|-1
+ground_color|uniform|color|0|<<0.200000,0.200000,0.200000>>|-1
+visibility_to_camera|uniform|float|0|1|-1
+type|uniform|float|0|0|-1
+haze|uniform|float|0|0.1|-1
+zenith_color|uniform|color|0|<<0.10900,0.10900,0.10900>>|-1
+a|uniform|float|0|-1.0|-1
+b|uniform|float|0|-0.32|-1
+c|uniform|float|0|10.0|-1
+d|uniform|float|0|-3.0|-1
+e|uniform|float|0|0.45|-1
+intensity|uniform|float|0|0.5|-1
