@@ -50,7 +50,11 @@ public: // Methods
     virtual bool       compare( const liqRibData& other ) const;
     virtual ObjectType type() const;
 
+#ifdef Refactoring 
+public:
+#else
 private: // Data
+#endif
 
     RtInt ncurves;
 	boost::shared_array< RtInt >   nverts;
@@ -64,5 +68,5 @@ private:
 	liqRibPfxHairData(const liqRibPfxHairData&);
 	liqRibPfxHairData& operator=(const liqRibPfxHairData&);
 };
-
+typedef boost::shared_ptr< liqRibPfxHairData > liqRibPfxHairDataPtr;
 #endif

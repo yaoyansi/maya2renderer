@@ -9,6 +9,7 @@
 
 // Maya headers
 #include "../common/prerequest_maya.h"
+#include "../common/mayacheck.h"
 // Liquid headers
 #include <liquid.h>
 #include <liqRibHT.h>
@@ -1052,6 +1053,7 @@ namespace renderman
 		const unsigned int msampleOn
 		)
 	{
+		MStatus status;
 
 		MString MotionPostfix;
 		unsigned int sample;
@@ -1072,6 +1074,10 @@ namespace renderman
 			liqglo.liqglo_ribDir 
 			) +"."+(int)liqglo.liqglo_lframe+MotionPostfix+".rib" 
 			);
+
+		const MObject mobject = ribNode->path().node(&status);
+		IfErrorWarn(status);
+
 
 		//=====================================================
 		// Export rib data
@@ -1124,10 +1130,30 @@ namespace renderman
 			assert( data.get() != NULL );
 
 			RibDataExportHelper::exportShaveData(data);
-			
 		}
+		else if(ribNode->object(sample)->type == MRT_PfxHair)
+		{
+			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
+			const liqRibPfxHairDataPtr data = 
+				boost::dynamic_pointer_cast<liqRibPfxHairData>(ribNode->object(sample)->getDataPtr() );
+			assert( data.get() != NULL );
+
+			RibDataExportHelper::exportPfxHairData(data);
+		}
+		//
+		else if( mobject.hasFn(MFn::kPfxGeometry) )
+		{
+			const liqRibPfxDataPtr data = 
+				boost::dynamic_pointer_cast<liqRibPfxData>(ribNode->object(sample)->getDataPtr() );
+			assert( data.get() != NULL );
+
+			RibDataExportHelper::exportPfxData(data);
+		}
+
 		else{
-			assert(0 && "other types are not exported except Mesh and MeshLight.");
+			liquidMessage2(messageError, "object type(%d) is not supported.", ribNode->object(sample)->type);
+			assert(0 && "object type is not supported. see script window for more details");
+
 		}
 
 	}

@@ -52,7 +52,11 @@ public: // Methods
   virtual bool            compare( const liqRibData& other ) const;
   virtual ObjectType      type() const;
 
+#ifdef Refactoring 
+public:
+#else
 private: // Data
+#endif
 
   unsigned                grain;
   bool                    hasFeature[ 3 ];
@@ -65,5 +69,5 @@ private:
 	liqRibPfxData(const liqRibPfxData&);
 	liqRibPfxData& operator=(const liqRibPfxData&);
 };
-
+typedef boost::shared_ptr< liqRibPfxData > liqRibPfxDataPtr;
 #endif // liqRibPfxData_H

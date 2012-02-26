@@ -449,23 +449,25 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
  */
 void liqRibPfxData::_write(const structJob &currentJob)
 {
-	LIQDEBUGPRINTF( "-> writing painteffects curves\n" );
+	assert(0 && "moved to renderman::Renderer::_writeObject() >> if( mobject.hasFn(MFn::kPfxGeometry) )");
 
-	unsigned setOn( 0 );
-	if( pfxtype == MRT_PfxLeaf )
-		setOn = 1;
-	if( pfxtype == MRT_PfxPetal )
-		setOn = 2;
-
-	if( hasFeature[ setOn ] )
-	{
-		unsigned numTokens( pfxTokenPointerArrays[ setOn ].size() );
-		scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-		scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-		assignTokenArraysV( pfxTokenPointerArrays[ setOn ], tokenArray.get(), pointerArray.get() );
-
-		RiCurvesV( "cubic", nverts[ setOn ].size(), const_cast< RtInt* >( &nverts[ setOn ][ 0 ] ), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
-	}
+// 	LIQDEBUGPRINTF( "-> writing painteffects curves\n" );
+// 
+// 	unsigned setOn( 0 );
+// 	if( pfxtype == MRT_PfxLeaf )
+// 		setOn = 1;
+// 	if( pfxtype == MRT_PfxPetal )
+// 		setOn = 2;
+// 
+// 	if( hasFeature[ setOn ] )
+// 	{
+// 		unsigned numTokens( pfxTokenPointerArrays[ setOn ].size() );
+// 		scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+// 		scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+// 		assignTokenArraysV( pfxTokenPointerArrays[ setOn ], tokenArray.get(), pointerArray.get() );
+// 
+// 		RiCurvesV( "cubic", nverts[ setOn ].size(), const_cast< RtInt* >( &nverts[ setOn ][ 0 ] ), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
+// 	}
 }
 
 

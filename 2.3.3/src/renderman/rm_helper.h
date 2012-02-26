@@ -7,6 +7,8 @@
 #include "liqRibLightData.h"
 #include "liqRibMeshData.h"
 #include "liqRibShaveData.h"
+#include "liqRibPfxHairData.h"
+#include "liqRibPfxData.h"
 
 namespace renderman
 {
@@ -39,7 +41,9 @@ namespace renderman
 		
 		static void exportMeshLight( const liqRibMeshDataPtr& meshdata );
 		static void exportShaveData(const liqRibShaveDataPtr& data);
-
+		static void exportPfxHairData(const liqRibPfxHairDataPtr& data);
+		static void exportPfxData(const liqRibPfxDataPtr& data);
+		
 		static void exportLight();
 	};
 }

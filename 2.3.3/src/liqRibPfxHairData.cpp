@@ -293,19 +293,20 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
  */
 void liqRibPfxHairData::_write(const structJob &currentJob)
 {
-  LIQDEBUGPRINTF( "-> writing pfxHair curves\n" );
-
-  if( ncurves > 0 ) 
-  {
-    unsigned numTokens( tokenPointerArray.size() );
-    scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-    scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-    assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
-
-    RiCurvesV( "cubic", ncurves, nverts.get(), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
-  } 
-  else 
-    RiIdentity(); // In case we're in a motion block!
+	assert(0 && "moved to renderman::Renderer::_writeObject() >> if(ribNode->object(sample)->type == MRT_PfxHair)");
+//   LIQDEBUGPRINTF( "-> writing pfxHair curves\n" );
+// 
+//   if( ncurves > 0 ) 
+//   {
+//     unsigned numTokens( tokenPointerArray.size() );
+//     scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+//     scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+//     assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
+// 
+//     RiCurvesV( "cubic", ncurves, nverts.get(), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
+//   } 
+//   else 
+//     RiIdentity(); // In case we're in a motion block!
 }
 
 /** Compare this curve to the other for the purpose of determining

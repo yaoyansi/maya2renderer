@@ -104,7 +104,10 @@ def test_all_scene():
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_light/rm_spotlight.ma"
     #MyTestOne.test_one_scene(testFile, "renderman")
 
-    testFile=LIQUID_ROOT+"/2.3.3/test/hair/test_shaveHair(shave_v61).ma"
+    #testFile=LIQUID_ROOT+"/2.3.3/test/hair/test_shaveHair(shave_v61).ma"
+    #MyTestOne.test_one_scene(testFile, "renderman")
+
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_pfxhair/test_pfxHair.ma"
     MyTestOne.test_one_scene(testFile, "renderman")
 
 def main():

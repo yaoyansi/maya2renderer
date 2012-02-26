@@ -1,5 +1,6 @@
 #include "rm_helper.h"
-#include<maya/MGlobal.h>
+
+#include "../common/prerequest_maya.h"
 #include "liqGlobalHelpers.h"
 #include <liqRibTranslator.h>
 
@@ -179,4 +180,42 @@ namespace renderman
 
 		LIQDEBUGPRINTF( "-> done writing shave surface\n" );
 	}
+	//
+	void RibDataExportHelper::exportPfxHairData(const liqRibPfxHairDataPtr& data)
+	{
+		LIQDEBUGPRINTF( "-> writing pfxHair curves\n" );
+
+		if( data->ncurves > 0 ) 
+		{
+			unsigned numTokens( data->tokenPointerArray.size() );
+			boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+			boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+			assignTokenArraysV( data->tokenPointerArray, tokenArray.get(), pointerArray.get() );
+
+			RiCurvesV( "cubic", data->ncurves, data->nverts.get(), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
+		} 
+		else 
+			RiIdentity(); // In case we're in a motion block!
+	}
+	void RibDataExportHelper::exportPfxData(const liqRibPfxDataPtr& data)
+	{
+		LIQDEBUGPRINTF( "-> writing painteffects curves\n" );
+
+		unsigned setOn( 0 );
+		if( data->pfxtype == MRT_PfxLeaf )
+			setOn = 1;
+		if( data->pfxtype == MRT_PfxPetal )
+			setOn = 2;
+
+		if( data->hasFeature[ setOn ] )
+		{
+			unsigned numTokens( data->pfxTokenPointerArrays[ setOn ].size() );
+			boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+			boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+			assignTokenArraysV( data->pfxTokenPointerArrays[ setOn ], tokenArray.get(), pointerArray.get() );
+
+			RiCurvesV( "cubic", data->nverts[ setOn ].size(), const_cast< RtInt* >( &data->nverts[ setOn ][ 0 ] ), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
+		}
+	}
+
 }
