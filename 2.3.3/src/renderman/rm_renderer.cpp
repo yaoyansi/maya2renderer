@@ -442,12 +442,15 @@ namespace renderman
 		const liqFloat &o_nonspecular,
 		const liqMatrix &transform)
 	{
+		liqFloat _i_coneangle     = i_coneangle * 0.5f;
+		liqFloat _i_penumbraangle = i_penumbraangle;
+
 		RiConcatTransform( * const_cast< RtMatrix* >( &transform ) );
 		return RiLightSource( "liquidspot",
 			"intensity",                    &i_intensity,
 			"lightcolor",                   &i_lightcolor,
-			"float coneangle",              &i_coneangle,
-			"float penumbraangle",          &i_penumbraangle,
+			"float coneangle",              &_i_coneangle,
+			"float penumbraangle",          &_i_penumbraangle,
 			"float dropoff",                &i_dropoff,
 			"float decay",                  &i_decay,
 

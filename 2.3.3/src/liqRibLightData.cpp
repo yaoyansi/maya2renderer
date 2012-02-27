@@ -786,7 +786,7 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
         MFnSpotLight fnSpotLight( light );
         lightType         = MRLT_Spot;
         decay             = fnSpotLight.decayRate();
-        coneAngle         = fnSpotLight.coneAngle() / 2.0;
+        coneAngle         = fnSpotLight.coneAngle();
         penumbraAngle     = fnSpotLight.penumbraAngle();
         dropOff           = fnSpotLight.dropOff();
         barnDoors         = fnSpotLight.barnDoors();
@@ -1166,8 +1166,8 @@ void liqRibLightData::_write(const structJob &currentJob)
 			{
 				liqFloat i_intensity = 1;
 				liqColor i_lightcolor;	setColor(i_lightcolor, 1.0);
-				liqFloat i_coneangle               = toRadians( 40 );
-				liqFloat i_penumbraangle           = toRadians( 0 );
+				liqFloat i_coneangle               = 40;
+				liqFloat i_penumbraangle           = 0;
 				liqFloat i_dropoff                 = 0;
 				liqFloat i_decay                   = 0;
 

@@ -311,9 +311,9 @@ namespace elvishray
 		_S( ei_shader_param_string("desc", "spotlight") ); 
 		_S( ei_shader_param_vector("lightcolor", i_lightcolor[0], i_lightcolor[1], i_lightcolor[2] ) ); 
 		_S( ei_shader_param_scalar("intensity", i_intensity ) );
-		_S( ei_shader_param_scalar("deltaangle", (eiScalar)eiPI ) );//i_coneangle*(M_PI/180.0f)
+		_S( ei_shader_param_scalar("deltaangle", (i_penumbraangle*0.5f) ) );
 		_S( ei_shader_param_vector("direction", 0.0f, 0.0f, -1.0f ) ); 
-		_S( ei_shader_param_scalar("spread", 50.2f ) );  
+		_S( ei_shader_param_scalar("spread", (i_coneangle*0.5f) ) );  
 		_S( ei_end_shader() );
 
 		std::string sLightObjectName(shaderinstanceFullPath+"_object");

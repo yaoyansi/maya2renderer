@@ -55,7 +55,7 @@ void test_liquid2er()
 	//er_shader_transparent_test();
 	//ei_displace_unittest();
 	//ei_volume_unittest();
-	ei_dof_unittest();
+	//ei_dof_unittest();
 }
 //
 int main()
