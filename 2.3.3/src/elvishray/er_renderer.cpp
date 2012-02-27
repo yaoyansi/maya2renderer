@@ -474,9 +474,6 @@ namespace elvishray
 		MIntArray triangleCounts,triangleVertices;
 		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));
 
-		MFloatVectorArray nmls;
-		IfMErrorWarn(fnMesh.getNormals(nmls));
-
 		MString currentUVsetName;
 		IfMErrorWarn(fnMesh.getCurrentUVSetName(currentUVsetName));
 
@@ -518,20 +515,26 @@ namespace elvishray
 // 			//_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
 // 		}
 
-		if(nmls.length()!=0)
-		{
-			_s("//### N");
-			_d( tag = eiNULL_TAG );
-			_S( ei_declare("N", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
-			_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
-			_s("//tag="<<tag);
-			_S( ei_variable("N", &tag) );
-			for(size_t i = 0; i<nmls.length(); ++i)
-			{
-				_S( ei_tab_add_vector(nmls[i].x, nmls[i].y, nmls[i].z) );
-			}
-			_S( ei_end_tab() );
-		}
+		// get normal for each vertex
+		// but the render result seems very weird, see test/test_er_light/output_img_std/er_pointlight.perspShape.1.elvishray_vertex_normal.bmp
+		// so I ommit this section temporarily.
+		_s("//vertex normals are not output temporarily.");
+		//if(fnMesh.numVertices()!=0)
+		//{
+		//	_s("//### N");
+		//	_d( tag = eiNULL_TAG );
+		//	_S( ei_declare("N", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
+		//	_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
+		//	_s("//tag="<<tag);
+		//	_S( ei_variable("N", &tag) );
+		//	MVector nml;
+		//	for(size_t i = 0; i<fnMesh.numVertices(); ++i)
+		//	{
+		//		IfMErrorWarn(fnMesh.getVertexNormal(i, false, nml, MSpace::kObject));
+		//		_S( ei_tab_add_vector(nml.x, nml.y, nml.z) );
+		//	}
+		//	_S( ei_end_tab() );
+		//}
 
 		if( currentUVsetName.length() != 0 )//there is a current uv set
 		{
