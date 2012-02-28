@@ -544,7 +544,105 @@ namespace renderman
 			RI_NULL );
 	}
 	//
-	void Renderer::exportOneObject(
+	void Renderer::exportOneObject_data(
+		const liqRibNodePtr &ribNode__, 
+		const structJob &currentJob__
+		)
+	{
+		// transform ////////////////////////////////////////////////////////////////////////
+		//{// transform motion blur
+		MDagPath path = ribNode__->path();
+		MObject transform = path.transform();
+		// Alf: preTransformMel
+//		liqRibTranslator::getInstancePtr()->preTransformMel(transform);
+
+		const bool bMotionBlur =
+			ribNode__->motion.transformationBlur &&
+			( ribNode__->object( 1 ) ) &&
+			//( ribNode__->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
+			( !currentJob__.isShadow || currentJob__.deepShadows );
+
+		const bool bMatrixMotionBlur = 
+			liqglo.liqglo_doMotion 
+			&& bMotionBlur;
+
+//		liqRibTranslator::getInstancePtr()->MaxtrixMotionBlur(ribNode__, path, bMatrixMotionBlur);
+
+		// Alf: postTransformMel
+//		liqRibTranslator::getInstancePtr()->postTransformMel(transform);
+		//}
+
+		//////////////////////////////////////////////////////////////////////////
+// 		if( ribNode__->rib.hasBox() ) 
+// 			RiArchiveRecord( RI_COMMENT, " RIB Box:\n%s", ribNode__->rib.box.asChar() );
+// 		if( ribNode__->rib.hasGenerator() ){
+// 			MGlobal::executeCommand( ribNode__->rib.generator, false, false );
+// 		}
+// 		if( ribNode__->rib.hasReadArchive() ) 
+// 			RiArchiveRecord( RI_VERBATIM, " ReadArchive \"%s\" \n", ribNode__->rib.readArchive.asChar() );
+// 		if( ribNode__->rib.hasDelayedReadArchive() ) 
+// 		{
+// 			RiArchiveRecord( RI_VERBATIM, " Procedural \"DelayedReadArchive\" [ \"%s\" ] [ %f %f %f %f %f %f ] \n", ribNode__->rib.delayedReadArchive.asChar(), ribNode__->bound[0],ribNode__->bound[3],ribNode__->bound[1],ribNode__->bound[4],ribNode__->bound[2],ribNode__->bound[5] );
+// 			// should be using the bounding box node - Alf
+// 		}
+
+		// Geometry ////////////////////////////////////////////////////////////////////////
+		// Alf: preShapeMel
+//		liqRibTranslator::getInstancePtr()->preShapeMel(transform);
+
+		if( !ribNode__->ignoreShapes ) 
+		{
+			liqRIBMsg("ribNode__->object(0)->type= %d, path=%s",ribNode__->object(0)->type, ribNode__->path().fullPathName().asChar() );
+			// check to see if we are writing a curve to set the proper basis
+			if( ribNode__->object(0)->type == MRT_NuCurve
+				|| ribNode__->object(0)->type == MRT_PfxHair
+				|| ribNode__->object(0)->type == MRT_PfxTube
+				|| ribNode__->object(0)->type == MRT_PfxLeaf
+				|| ribNode__->object(0)->type == MRT_PfxPetal 
+				|| ribNode__->object(0)->type == MRT_Curves )
+			{
+//				RiBasis( RiBSplineBasis, 1, RiBSplineBasis, 1 );
+			} 
+			bool hasRibBoxData=ribNode__->rib.hasGenerator()
+				|| ribNode__->rib.hasReadArchive()  
+				|| ribNode__->rib.hasDelayedReadArchive();
+			if(hasRibBoxData)
+			{
+				//if ribNode is tagged as readArchive or delayedReadArchive, 
+				//we do not output its geometry data.
+				liqRIBMsg("%s has ribbox data,so we do not output the deometry.", ribNode__->name.asChar());
+			}else{
+				bool bGeometryMotion = 
+					liqglo.liqglo_doDef 
+					&& bMotionBlur
+					&& ( ribNode__->object(0)->type != MRT_RibGen );
+
+				if( bGeometryMotion )
+				{
+//					if(liqglo.liqglo_relativeMotion)
+//						RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimesOffsets );
+//					else
+//						RiMotionBeginV( liqglo.liqglo_motionSamples, liqglo.liqglo_sampleTimes );
+
+					for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
+					{ 
+						this->_writeObject(ribNode__, currentJob__, true, msampleOn, false);
+						//_writeObject() will call Renderer::exportOneGeometry_Mesh()
+					}
+//					RiMotionEnd();
+				}else{
+					this->_writeObject(ribNode__, currentJob__, false, 0, false);
+					//_writeObject() will call Renderer::exportOneGeometry_Mesh()
+				}// if(bGeometryMotion)
+			}//if(hasRibBoxData)
+
+
+			// Alf: postShapeMel
+//			liqRibTranslator::getInstancePtr()->postShapeMel(transform);
+		} // else RiArchiveRecord( RI_COMMENT, " Shapes Ignored !!" );
+
+	}
+	void Renderer::exportOneObject_reference(
 		const liqRibNodePtr &ribNode__, 
 		const structJob &currentJob__
 		)
@@ -676,13 +774,13 @@ namespace renderman
 
 					for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
 					{ 
-						this->_writeObject(ribNode__, currentJob__, true, msampleOn);
+						this->_writeObject(ribNode__, currentJob__, true, msampleOn, true);
 						//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 					}
 					RiMotionEnd();
 #endif
 				}else{
-					this->_writeObject(ribNode__, currentJob__, false, 0);
+					this->_writeObject(ribNode__, currentJob__, false, 0, true);
 					//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 				}// if(bGeometryMotion)
 			}//if(hasRibBoxData)
@@ -1053,7 +1151,8 @@ namespace renderman
 		const liqRibNodePtr& ribNode, 
 		const structJob &currentJob,
 		const bool bGeometryMotionBlur,
-		const unsigned int msampleOn
+		const unsigned int msampleOn,
+		const bool bReference
 		)
 	{
 		MStatus status;
@@ -1096,7 +1195,14 @@ namespace renderman
 			//if( meshdata->isAreaLight() ){
 			//	RibDataExportHelper::exportMeshLight(meshdata);
 			//}else{
+			if(bReference){
+				RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
+			}else{
+				Helper o;
+				o.RiBeginRef(geometryRibFile.asChar());
 				RibDataExportHelper::exportMesh(meshdata, geometryRibFile);
+				o.RiEndRef();
+			}
 			//}
 		}
 		else if( ribNode->object(sample)->type == MRT_Light )
@@ -1110,7 +1216,11 @@ namespace renderman
 			assert( meshdata.get() != NULL );
 
 			if( meshdata->isAreaLight() ){
-				RibDataExportHelper::exportMeshLight(meshdata);
+				if(bReference){
+					RibDataExportHelper::exportMeshLight(meshdata);
+				}else{
+
+				}
 			}
 
 			//-----------------------------------------------------
@@ -1131,8 +1241,9 @@ namespace renderman
 			const liqRibShaveDataPtr data = 
 				boost::dynamic_pointer_cast<liqRibShaveData>(ribNode->object(sample)->getDataPtr() );
 			assert( data.get() != NULL );
-
-			RibDataExportHelper::exportShaveData(data);
+			if(bReference){
+				RibDataExportHelper::exportShaveData(data);
+			}else{}
 		}
 		else if(ribNode->object(sample)->type == MRT_PfxHair)
 		{
@@ -1140,8 +1251,9 @@ namespace renderman
 			const liqRibPfxHairDataPtr data = 
 				boost::dynamic_pointer_cast<liqRibPfxHairData>(ribNode->object(sample)->getDataPtr() );
 			assert( data.get() != NULL );
-
-			RibDataExportHelper::exportPfxHairData(data);
+			if(bReference){
+				RibDataExportHelper::exportPfxHairData(data);
+			}else{}
 		}
 		//
 		else if( mobject.hasFn(MFn::kPfxGeometry) )
@@ -1149,8 +1261,9 @@ namespace renderman
 			const liqRibPfxDataPtr data = 
 				boost::dynamic_pointer_cast<liqRibPfxData>(ribNode->object(sample)->getDataPtr() );
 			assert( data.get() != NULL );
-
-			RibDataExportHelper::exportPfxData(data);
+			if(bReference){
+				RibDataExportHelper::exportPfxData(data);
+			}else{}
 		}
 
 		else{

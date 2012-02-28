@@ -2242,14 +2242,14 @@ MStatus liqRibTranslator::objectNonShadowAttribute(const liqRibNodePtr &ribNode_
 //	return MS::kSuccess;
 //}
 //
-MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
+MStatus liqRibTranslator::objectBlock_reference(const structJob &currentJob)
 {
-	_logFunctionCall("liqRibTranslator::objectBlock__(");
+	_logFunctionCall("liqRibTranslator::objectBlock_reference(");
 	MStatus returnStatus = MS::kSuccess;
 	MStatus status;
 	attributeDepth = 0;
 
-	LIQDEBUGPRINTF( "-> objectBlock\n" );
+	LIQDEBUGPRINTF( "-> objectBlock_reference\n" );
 
 	if( m_ignoreSurfaces ) 
 		RiSurface( "matte", RI_NULL );
@@ -2286,7 +2286,7 @@ MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
 			continue;
 		}
 		//
-		oneObjectBlock(ribNode, currentJob );
+		oneObjectBlock_reference(ribNode, currentJob );
 
 	}//for ( RNMAP::iterator rniter(...
 	while ( attributeDepth > 0 ) 
@@ -2296,6 +2296,60 @@ MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
 	}
 	return returnStatus;
 }
+
+MStatus liqRibTranslator::objectBlock_data(const structJob &currentJob)
+{
+	_logFunctionCall("liqRibTranslator::objectBlock_data(");
+	MStatus returnStatus = MS::kSuccess;
+	MStatus status;
+	attributeDepth = 0;
+
+	LIQDEBUGPRINTF( "-> objectBlock_data\n" );
+
+	// retrieve the shadow set object
+	MObject shadowSetObj(getShadowSetObject(currentJob));
+	MFnSet shadowSet( shadowSetObj, &status );
+
+	//MMatrix matrix;
+	for ( RNMAP::iterator rniter( htable->RibNodeMap.begin() ); rniter != htable->RibNodeMap.end(); rniter++ ) 
+	{
+		LIQ_CHECK_CANCEL_REQUEST;
+
+		liqRibNodePtr ribNode( rniter->second );
+
+		if( ( !ribNode ) || ( ribNode->object(0)->type == MRT_Light ) ) 
+			continue;
+		if( ribNode->object(0)->type == MRT_Coord || ribNode->object(0)->type == MRT_ClipPlane ) 
+			continue;
+		if( ( !currentJob.isShadow ) && ( ribNode->object(0)->ignore ) ) 
+			continue;
+		if( ( currentJob.isShadow ) && ( ribNode->object(0)->ignoreShadow ) ) 
+			continue;
+		// test against the set
+		if( ( currentJob.isShadow ) 
+			&& ( currentJob.shadowObjectSet != "" ) 
+			&& ( !shadowSetObj.isNull() ) 
+			&& ( !shadowSet.isMember( ribNode->path().transform(), &status ) ) ) 
+		{
+			//cout <<"SET FILTER : object "<<ribNode->name.asChar()<<" is NOT in "<<liqglo_currentJob.shadowObjectSet.asChar()<<endl;
+			continue;
+		}
+		//
+		oneObjectBlock_data(ribNode, currentJob );
+
+	}//for ( RNMAP::iterator rniter(...
+
+	return returnStatus;
+}
+MStatus liqRibTranslator::objectBlock__(const structJob &currentJob)
+{
+	_logFunctionCall("liqRibTranslator::objectBlock__(");
+
+	objectBlock_data(currentJob);
+
+	return objectBlock_reference(currentJob);
+}
+
 //
 MStatus liqRibTranslator::worldEpilogue__()
 {
@@ -3080,12 +3134,12 @@ void liqRibTranslator::getPfxHairData(const MDagPath &path__,
 	}
 }
 //
-void liqRibTranslator::oneObjectBlock(
+void liqRibTranslator::oneObjectBlock_reference(
 	const liqRibNodePtr &ribNode,
 	const structJob &currentJob
 	)
 {
-	_logFunctionCall("liqRibTranslator::oneObjectBlock(");
+	_logFunctionCall("liqRibTranslator::oneObjectBlock_reference(");
 	MDagPath path = ribNode->path();
 	MFnDagNode dagFn;
 
@@ -3267,10 +3321,19 @@ void liqRibTranslator::oneObjectBlock(
 		}
 
 
-		liquid::RendererMgr::getInstancePtr()->getRenderer()->exportOneObject(ribNode, currentJob);
+		liquid::RendererMgr::getInstancePtr()->getRenderer()->exportOneObject_reference(ribNode, currentJob);
 
 
 		RiAttributeEnd();
+}
+void liqRibTranslator::oneObjectBlock_data(
+	const liqRibNodePtr &ribNode,
+	const structJob &currentJob
+	)
+{
+	_logFunctionCall("liqRibTranslator::oneObjectBlock_data(");
+
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->exportOneObject_data(ribNode, currentJob);
 }
 //
 MStatus liqRibTranslator::writeShader_(

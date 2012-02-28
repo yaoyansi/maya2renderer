@@ -375,7 +375,7 @@ namespace elvishray
 		return (liqLightHandle)(0);
 	}
 	//
-	void Renderer::exportOneObject(
+	void Renderer::exportOneObject_data(
 		const liqRibNodePtr &ribNode__,  
 		const structJob &currentJob__
 		)
@@ -395,6 +395,29 @@ namespace elvishray
 			&& ( ribNode__->object(0)->type != MRT_RibGen );
 
 		exportOneGeometry_Mesh(ribNode__, currentJob__ , sample_first, bGeometryMotion?sample_last:sample_first);
+		//_writeObject() will call Renderer::exportOneGeometry_Mesh()
+
+	}
+	void Renderer::exportOneObject_reference(
+		const liqRibNodePtr &ribNode__,  
+		const structJob &currentJob__
+		)
+	{
+		unsigned int sample_first = 0;
+		unsigned int sample_last = liqglo.liqglo_motionSamples -1;
+
+		const bool bMotionBlur =
+			ribNode__->motion.transformationBlur &&
+			( ribNode__->object( 1 ) ) &&
+			//( ribNode__->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
+			( !currentJob__.isShadow || currentJob__.deepShadows );
+
+		bool bGeometryMotion = 
+			liqglo.liqglo_doDef 
+			&& bMotionBlur
+			&& ( ribNode__->object(0)->type != MRT_RibGen );
+
+		//exportOneGeometry_Mesh(ribNode__, currentJob__ , sample_first, bGeometryMotion?sample_last:sample_first);
 		//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 
 		_s("//--------------------------");

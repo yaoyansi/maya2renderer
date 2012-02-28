@@ -187,7 +187,11 @@ public:
 	//
 	// Object
 	//
-	virtual void exportOneObject(
+	virtual void exportOneObject_reference(
+		const liqRibNodePtr &ribNode__, 
+		const structJob &currentJob__
+		) = 0;
+	virtual void exportOneObject_data(
 		const liqRibNodePtr &ribNode__, 
 		const structJob &currentJob__
 		) = 0;

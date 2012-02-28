@@ -175,7 +175,11 @@ namespace renderman
 		//
 		//
 		//
-		virtual void exportOneObject(
+		virtual void exportOneObject_reference(
+			const liqRibNodePtr &ribNode__, 
+			const structJob &currentJob__
+			);
+		virtual void exportOneObject_data(
 			const liqRibNodePtr &ribNode__, 
 			const structJob &currentJob__
 			);
@@ -199,7 +203,8 @@ namespace renderman
 			const liqRibNodePtr& ribNode, 
 			const structJob &currentJob,
 			const bool bGeometryMotionBlur,
-			const unsigned int msampleOn
+			const unsigned int msampleOn,
+			const bool bReference
 			);
 		virtual void shader_transformBegin(const liqString  shaderSpace);
 		virtual void shader_transformEnd(const liqString  shaderSpace);

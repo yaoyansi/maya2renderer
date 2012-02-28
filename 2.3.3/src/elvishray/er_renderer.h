@@ -183,11 +183,14 @@ namespace elvishray
 		//
 		//
 		//
-		virtual void exportOneObject(
+		virtual void exportOneObject_reference(
 			const liqRibNodePtr &ribNode__, 
-			const structJob &currentJob
+			const structJob &currentJob__
 			);
-
+		virtual void exportOneObject_data(
+			const liqRibNodePtr &ribNode__, 
+			const structJob &currentJob__
+			);
 		virtual void exportLightLinks(
 			const structJob &currentJob__,
 			const liqRibNodePtr mesh, 

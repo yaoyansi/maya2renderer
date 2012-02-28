@@ -27,9 +27,9 @@ namespace renderman
 
 		//if m_ribFileFullPath is "", write the data into the current rib file.
 		if( m_ribFile != "" ){
-			//1)make a reference
-			RiReadArchive( const_cast< RtToken >( m_ribFile.c_str() ), NULL, RI_NULL );
-			//2)write the data into another rib file.
+			//log
+			RiArchiveRecord( RI_COMMENT, "output: %s", m_ribFile.c_str() );
+			//write the data into another rib file.
 			m_contex = RiGetContext();//push context
 			liquidMessage("output geometry rib: "+ std::string(m_ribFile.c_str()) , messageInfo);
 			RiBegin( const_cast< RtToken >( m_ribFile.c_str() ) );
@@ -60,8 +60,8 @@ namespace renderman
 			return;
 		}
 
-		Helper o;
-		o.RiBeginRef( ribFile.asChar() );
+		//Helper o;
+		//o.RiBeginRef( ribFile.asChar() );
 
 		//mesh data begin
 		//
@@ -86,7 +86,7 @@ namespace renderman
 			pointerArray.get() );
 		//mesh data end
 
-		o.RiEndRef();
+		//o.RiEndRef();
 	}
 
 // 	bool RibDataExportHelper::isMeshLight()

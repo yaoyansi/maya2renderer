@@ -438,6 +438,8 @@ public:
 	MStatus lightBlock__(const structJob &currentJob);
 	MStatus coordSysBlock__(const structJob &currentJob);
 	MStatus objectBlock__(const structJob &currentJob);
+	MStatus objectBlock_data(const structJob &currentJob);
+	MStatus objectBlock_reference(const structJob &currentJob);
 	MStatus worldEpilogue__();
 	MStatus frameEpilogue__( long );
 
@@ -521,7 +523,11 @@ public:
 	//
 	MStatus _doItNewWithoutRenderScript(const MArgList& args , const MString& originalLayer );
 	MStatus _doItNewWithRenderScript(const MArgList& args , const MString& originalLayer );
-	void oneObjectBlock(
+	void oneObjectBlock_data(
+		const liqRibNodePtr &ribNode,
+		const structJob&currentJob
+		);
+	void oneObjectBlock_reference(
 		const liqRibNodePtr &ribNode,
 		const structJob&currentJob
 		);
