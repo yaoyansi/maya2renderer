@@ -38,7 +38,7 @@
   #include "ri_interface.h"
 //}
 #include <liquid.h>
-
+#include "renderman/rm_helper.h"
 
 
 
@@ -52,14 +52,31 @@ liqRibClipPlaneData::liqRibClipPlaneData( MObject coord )
   //cout <<"created clipPlane "<<this->name.asChar()<<endl;
 }
 
-/** Write the RIB for this coordinate system.
- */
-void liqRibClipPlaneData::_write(const structJob &currentJob)
+void liqRibClipPlaneData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
-  LIQDEBUGPRINTF("-> writing clipPlane");
-  RiArchiveRecord( RI_VERBATIM, "ClippingPlane 0 0 -1 0 0 0\n" );
+	if( !bReference ){//write data at first time
+		assert(m_ribFileFullPath.length()==0);
+		m_ribFileFullPath = ribFileName;
+
+		renderman::Helper o;
+		o.RiBeginRef(m_ribFileFullPath.asChar());
+		_write(currentJob);
+		o.RiEndRef();
+
+	}else{
+		//write the reference
+		assert(m_ribFileFullPath == ribFileName);
+		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+	}
 }
 
+/** Write the RIB for this coordinate system.
+*/
+void liqRibClipPlaneData::_write(const structJob &currentJob)
+{
+	LIQDEBUGPRINTF("-> writing clipPlane");
+	RiArchiveRecord( RI_VERBATIM, "ClippingPlane 0 0 -1 0 0 0\n" );
+}
 /** Compare this coordinate system to otherObj.
  *  The purpose is usually to determe if the coordinate system is animated.
  */

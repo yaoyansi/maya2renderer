@@ -38,12 +38,16 @@ public: // Methods
     explicit liqRibCurvesData( MObject curveGroup );
 	virtual ~liqRibCurvesData(){}
 
-    virtual void       _write(const structJob &currentJob);
+	virtual void write(
+		const MString &ribFileFullPath, 
+		const structJob &currentJob, 
+		const bool bReference
+		);
     virtual bool       compare( const liqRibData & other ) const;
     virtual ObjectType type() const;
 
 private: // Data
-
+    void       _write(const structJob &currentJob);
     RtInt                   ncurves;
 	boost::shared_array< RtInt >   nverts;
     boost::shared_array< RtFloat > CVs;

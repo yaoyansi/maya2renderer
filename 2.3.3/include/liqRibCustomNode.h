@@ -37,7 +37,7 @@
 #include <liquid.h>
 #include <liqRibData.h>
 #include <liqCustomNode.h>
-
+#include "../src/renderman/rm_helper.h"
 
 // This class represents a custom node that has been added to Maya through
 // the Maya API, but has also been written with the Liquid API.
@@ -54,7 +54,29 @@ public:
   }
   virtual ~liqRibCustomNode(){}
 
-  virtual void _write(const structJob &currentJob)
+  virtual void write(
+	  const MString &ribFileName, 
+	  const structJob &currentJob, 
+	  const bool bReference
+	  )
+  {
+	if( !bReference ){//write data at first time
+		assert(m_ribFileFullPath.length()==0);
+		m_ribFileFullPath = ribFileName;
+
+		renderman::Helper o;
+		o.RiBeginRef(m_ribFileFullPath.asChar());
+		_write(currentJob);
+		o.RiEndRef();
+
+	}else{
+		//write the reference
+		assert(m_ribFileFullPath == ribFileName);
+		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+	}
+  }
+
+  void _write(const structJob &currentJob)
   {
     if (customNode) {
       customNode->liquidWrite();

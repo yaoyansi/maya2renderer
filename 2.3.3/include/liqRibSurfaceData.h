@@ -44,14 +44,18 @@ public: // Methods
   explicit liqRibSurfaceData( MObject surface );
   virtual ~liqRibSurfaceData(){}
 
-  virtual void          _write(const structJob &currentJob);
+  virtual void write(
+	  const MString &ribFileName, 
+	  const structJob &currentJob, 
+	  const bool bReference
+	  );
   virtual unsigned      granularity() const;
   virtual bool          writeNextGrain();
   virtual bool          compare( const liqRibData & other ) const;
   virtual ObjectType    type() const;
 
 private: // Data
-
+  void          _write(const structJob &currentJob);
   unsigned              grain;
   bool                  hasTrims;
 

@@ -414,12 +414,12 @@ AnimType liqRibObj::compareBody( const liqRibObjPtr o ) const
  *
  *  We do not get a RIB handle in this case.
  */
-void liqRibObj::writeObject(const MString& ribFileFullPath, const structJob &currentJob) const
+void liqRibObj::writeObject(const MString& ribFileFullPath, const structJob &currentJob, const bool bReference) const
 {
 	if( data ==NULL)
 		return;
 
-	data->write(ribFileFullPath, currentJob);
+	data->write(ribFileFullPath, currentJob, bReference);
 }
 
 /** Return the granularity (number of components) the object is made of.

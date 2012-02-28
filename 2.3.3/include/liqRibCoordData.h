@@ -36,12 +36,16 @@ public: // Methods
     explicit liqRibCoordData( MObject locator );
 	virtual ~liqRibCoordData(){}
 
-    virtual void       _write(const structJob &currentJob);
+	virtual void write(
+		const MString &ribFileFullPath, 
+		const structJob &currentJob, 
+		const bool bReference
+		);
     virtual bool       compare( const liqRibData & other ) const;
     virtual ObjectType type() const;
 
 private: // Data
-
+    void       _write(const structJob &currentJob);
 	MString name;
 
 private:

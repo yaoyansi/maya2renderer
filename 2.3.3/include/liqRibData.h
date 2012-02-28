@@ -47,10 +47,10 @@ enum ObjectType;
 
 class liqRibData {
 public:
-	liqRibData(){}
+	liqRibData();
     virtual           ~liqRibData();
 	// write() is replaced by write(ribFileFullPath) in order to pass the ribFileFullPath;
-    virtual void       write(const MString &ribFileFullPath, const structJob &currentJob);
+    virtual void       write(const MString &ribFileFullPath, const structJob &currentJob, const bool bReference)=0;
     virtual unsigned   granularity() const;
 //    virtual void       writeNextGrain(const MString& ribFileFullPath, const structJob &currentJob);
     virtual bool       isNextGrainAnimated() const;
@@ -66,7 +66,6 @@ protected:
 	MString			   m_ribFileFullPath;
 
 private:
-    virtual void       _write(const structJob &currentJob) = 0;
     void               parseVectorAttributes( MFnDependencyNode &nodeFn, MStringArray & strArray, ParameterType pType );
     unsigned int       faceVaryingCount;
 

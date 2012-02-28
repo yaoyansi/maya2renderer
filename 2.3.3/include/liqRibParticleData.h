@@ -43,7 +43,11 @@ public:
   explicit liqRibParticleData( MObject curve );
   virtual ~liqRibParticleData(){}
 
-  virtual void	_write(const structJob &currentJob);
+  virtual void write(
+	  const MString &ribFileName, 
+	  const structJob &currentJob, 
+	  const bool bReference
+	  );
   virtual unsigned granularity() const;
   virtual bool writeNextGrain(const structJob &currentJob);
   virtual bool	compare( const liqRibData & other ) const;
@@ -74,6 +78,7 @@ public:
   pType particleType;
 
 private:
+  void	_write(const structJob &currentJob);
   unsigned grain;
 
   // Data storage for blobby particles

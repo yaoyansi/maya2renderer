@@ -47,7 +47,11 @@ public: // Methods
   explicit liqRibShaveData( MObject surface );
   virtual ~liqRibShaveData(){}
 
-  virtual void          _write(const structJob &currentJob);
+  virtual void write(
+	  const MString &ribFileName, 
+	  const structJob &currentJob, 
+	  const bool bReference
+	  );
   virtual unsigned      granularity() const;
   virtual bool          writeNextGrain();
   virtual bool          compare( const liqRibData & other ) const;
@@ -55,7 +59,7 @@ public: // Methods
   MStatus				test();
 
 private: // Data
-
+  //void          _write(const structJob &currentJob);
   unsigned              grain;
   bool                  hasTrims;
 

@@ -68,11 +68,16 @@ public: // Methods
     explicit liqRibGenData( MObject obj, MDagPath path );
 	virtual ~liqRibGenData(){}
 
-    virtual void       _write(const structJob &currentJob);
+	virtual void write(
+		const MString &ribFileName, 
+		const structJob &currentJob, 
+		const bool bReference
+		);
     virtual bool       compare( const liqRibData & other ) const;
     virtual ObjectType type() const;
 
 private: // Data
+    void       _write(const structJob &currentJob);
     MString 	      ribGenSoName;
     liqRibGenStatus	ribStatus;
 };

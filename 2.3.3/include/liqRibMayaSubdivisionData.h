@@ -65,11 +65,16 @@ public: // Methods
   explicit liqRibMayaSubdivisionData( MObject mesh );
   virtual ~liqRibMayaSubdivisionData(){}
 
-  virtual void       _write(const structJob &currentJob);
+  virtual void write(
+	  const MString &ribFileName, 
+	  const structJob &currentJob, 
+	  const bool bReference
+	  );
   virtual bool       compare( const liqRibData & other ) const;
   virtual ObjectType type() const;
 
 private: // Data
+  void       _write(const structJob &currentJob);
   RtInt     numFaces;
   RtInt     numPoints;
   boost::shared_array< RtInt > nverts;

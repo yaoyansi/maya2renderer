@@ -51,7 +51,7 @@
 #include <liqGlobalHelpers.h>
 #include <liqRenderer.h>
 #include <liqGlobalVariable.h>
-
+#include "renderman/rm_helper.h"
 
 using namespace boost;
 
@@ -388,6 +388,25 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
 
 
 
+
+//
+void liqRibSurfaceData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
+{
+	if( !bReference ){//write data at first time
+		assert(m_ribFileFullPath.length()==0);
+		m_ribFileFullPath = ribFileName;
+
+		renderman::Helper o;
+		o.RiBeginRef(m_ribFileFullPath.asChar());
+		_write(currentJob);
+		o.RiEndRef();
+
+	}else{
+		//write the reference
+		assert(m_ribFileFullPath == ribFileName);
+		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+	}
+}
 /** Write the RIB for this surface.
  */
 void liqRibSurfaceData::_write(const structJob &currentJob)

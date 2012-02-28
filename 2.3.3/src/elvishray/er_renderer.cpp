@@ -85,7 +85,7 @@ namespace elvishray
 		RtString RibNodeName = getLiquidRibName( ribNode->name.asChar() );
 		_s("\n// Renderer::exportLight(\""+std::string(RibNodeName)+"\");");
 		
-		ribNode->object(0)->writeObject("", currentJob);//call liqRibLightData::_write(...)
+		ribNode->object(0)->writeObject("", currentJob, false);//call liqRibLightData::_write(...)
 		ribNode->object(0)->written = 1;
 
 		return MS::kSuccess;

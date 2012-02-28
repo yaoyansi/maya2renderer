@@ -51,6 +51,7 @@
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
+#include "renderman/rm_helper.h"
 
 using namespace boost;
 
@@ -289,24 +290,42 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
   }
 }
 
+
+//
+void liqRibPfxHairData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
+{
+	if( !bReference ){//write data at first time
+		assert(m_ribFileFullPath.length()==0);
+		m_ribFileFullPath = ribFileName;
+
+		renderman::Helper o;
+		o.RiBeginRef(m_ribFileFullPath.asChar());
+		_write(currentJob);
+		o.RiEndRef();
+
+	}else{
+		//write the reference
+		assert(m_ribFileFullPath == ribFileName);
+		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+	}
+}
 /** Write the RIB for this surface
  */
 void liqRibPfxHairData::_write(const structJob &currentJob)
 {
-	assert(0 && "moved to renderman::Renderer::_writeObject() >> if(ribNode->object(sample)->type == MRT_PfxHair)");
-//   LIQDEBUGPRINTF( "-> writing pfxHair curves\n" );
-// 
-//   if( ncurves > 0 ) 
-//   {
-//     unsigned numTokens( tokenPointerArray.size() );
-//     scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-//     scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-//     assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
-// 
-//     RiCurvesV( "cubic", ncurves, nverts.get(), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
-//   } 
-//   else 
-//     RiIdentity(); // In case we're in a motion block!
+  LIQDEBUGPRINTF( "-> writing pfxHair curves\n" );
+
+  if( ncurves > 0 ) 
+  {
+    unsigned numTokens( tokenPointerArray.size() );
+    scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+    scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+    assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
+
+    RiCurvesV( "cubic", ncurves, nverts.get(), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
+  } 
+  else 
+    RiIdentity(); // In case we're in a motion block!
 }
 
 /** Compare this curve to the other for the purpose of determining

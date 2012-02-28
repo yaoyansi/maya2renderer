@@ -46,7 +46,11 @@ public: // Methods
     explicit liqRibPfxHairData( MObject curve );
 	virtual ~liqRibPfxHairData(){}
 
-    virtual void       _write(const structJob &currentJob);
+	virtual void write(
+		const MString &ribFileName, 
+		const structJob &currentJob, 
+		const bool bReference
+		);
     virtual bool       compare( const liqRibData& other ) const;
     virtual ObjectType type() const;
 
@@ -55,7 +59,7 @@ public:
 #else
 private: // Data
 #endif
-
+    void       _write(const structJob &currentJob);
     RtInt ncurves;
 	boost::shared_array< RtInt >   nverts;
     boost::shared_array< RtFloat > CVs;

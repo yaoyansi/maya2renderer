@@ -43,9 +43,16 @@ public: // Methods
     explicit liqRibLocatorData( MObject locator );
 	virtual ~liqRibLocatorData(){}
 
-    virtual void       _write(const structJob &currentJob);
+	virtual void write(
+		const MString &ribFileName, 
+		const structJob &currentJob, 
+		const bool bReference
+		);
     virtual bool       compare( const liqRibData & other ) const;
     virtual ObjectType type() const;
+
+private: // Data
+    void       _write(const structJob &currentJob);
 
 private: // Data
 	liqRibLocatorData(const liqRibLocatorData&);

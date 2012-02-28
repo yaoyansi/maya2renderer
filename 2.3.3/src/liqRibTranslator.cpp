@@ -6797,7 +6797,7 @@ MStatus liqRibTranslator::objectBlock()
 
 						for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ ){ 
 							MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".m"+(int)msampleOn+".rib" );
-							ribNode->object( msampleOn )->writeObject(geometryRibFile, liqglo_currentJob);
+							ribNode->object( msampleOn )->writeObject(geometryRibFile, liqglo_currentJob, false);
 						}
 
 						RiMotionEnd();
@@ -6806,7 +6806,7 @@ MStatus liqRibTranslator::objectBlock()
 						RiArchiveRecord( RI_COMMENT, "the the next object grain is not animated" );
 
 						MString geometryRibFile( liquidGetRelativePath( false, getLiquidRibName( ribNode->name.asChar() ), liqglo.liqglo_ribDir ) +"."+(int)liqglo.liqglo_lframe+".rib" );
-						ribNode->object( 0 )->writeObject(geometryRibFile, liqglo_currentJob);
+						ribNode->object( 0 )->writeObject(geometryRibFile, liqglo_currentJob, false);
 					}
 				}
 			} 
@@ -6885,7 +6885,7 @@ MStatus liqRibTranslator::worldPrologue()
 				matrix.get( ribMatrix );
 				RiConcatTransform( ribMatrix );
 
-				ribNode->object(0)->writeObject("", liqglo_currentJob);
+				ribNode->object(0)->writeObject("", liqglo_currentJob, false);
 				ribNode->object(0)->written = 1;
 
 				RiTransformEnd();
@@ -6976,7 +6976,7 @@ MStatus liqRibTranslator::coordSysBlock()
 		else 
 			RiTransform( ribMatrix );
 
-		ribNode->object(0)->writeObject("", liqglo_currentJob);
+		ribNode->object(0)->writeObject("", liqglo_currentJob, false);
 		ribNode->object(0)->written = 1;
 		RiAttributeEnd();
 	}
@@ -7033,7 +7033,7 @@ MStatus liqRibTranslator::lightBlock()
 				RtInt msdepth = ribNode->trace.maxSpecularDepth;
 				RiAttribute( "trace", (RtToken) "maxspeculardepth", &msdepth, RI_NULL );
 			}
-			ribNode->object(0)->writeObject("", liqglo_currentJob);
+			ribNode->object(0)->writeObject("", liqglo_currentJob, false);
 			ribNode->object(0)->written = 1;
 			// The next line pops the light...
 			RiAttributeEnd();
@@ -7214,7 +7214,7 @@ void liqRibTranslator::_writeObject(
 					liqglo.liqglo_ribDir 
 				) +"."+(int)liqglo.liqglo_lframe+MotionPostfix+".rib" 
 			);
-	ribNode->object( sample )->writeObject(geometryRibFile, currentJob);
+	ribNode->object( sample )->writeObject(geometryRibFile, currentJob, false);
 }
 //
 bool liqRibTranslator::checkSettings()

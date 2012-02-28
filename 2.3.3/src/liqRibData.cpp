@@ -50,6 +50,10 @@
 
 using namespace std;
 
+liqRibData::liqRibData()
+{
+	m_ribFileFullPath = "";
+}
 liqRibData::~liqRibData()
 {
   // clean up and additional data
@@ -277,12 +281,12 @@ void liqRibData::addAdditionalSurfaceParameters( MObject node )
   }
 }
 
-void liqRibData::write(const MString &fileName, const structJob &currentJob)
-{
-	m_ribFileFullPath = fileName;
-
-	_write(currentJob);
-}
+// void liqRibData::write(const MString &ribFileName, const structJob &currentJob,const bool bReference)
+// {
+// 	//m_ribFileFullPath = fileName;
+// 
+// 	_write(ribFileName, currentJob, bReference);
+// }
 
 const char* liqRibData::getName() const
 {

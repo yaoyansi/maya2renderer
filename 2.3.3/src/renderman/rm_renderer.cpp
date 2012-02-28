@@ -161,7 +161,7 @@ namespace renderman
 					matrix.get( ribMatrix );
 					RiConcatTransform( ribMatrix );
 
-					ribNode->object(0)->writeObject("", currentJob);
+					ribNode->object(0)->writeObject("", currentJob, false);
 					ribNode->object(0)->written = 1;
 
 					RiTransformEnd();
@@ -252,7 +252,7 @@ namespace renderman
 				RtInt msdepth = ribNode->trace.maxSpecularDepth;
 				RiAttribute( "trace", (RtToken) "maxspeculardepth", &msdepth, RI_NULL );
 			}
-			ribNode->object(0)->writeObject("", currentJob);//call liqRibLightData::_write(...)
+			ribNode->object(0)->writeObject("", currentJob, false);//call liqRibLightData::_write(...)
 			ribNode->object(0)->written = 1;
 			// The next line pops the light...
 			RiAttributeEnd();
@@ -1184,93 +1184,6 @@ namespace renderman
 		//=====================================================
 		// Export rib data
 		//=====================================================
-		//ribNode->object( sample )->writeObject(geometryRibFile, currentJob);
-		if( ribNode->object(sample)->type == MRT_Mesh)
-		{
-			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
-			const liqRibMeshDataPtr meshdata = 
-				boost::dynamic_pointer_cast<liqRibMeshData>(ribNode->object(sample)->getDataPtr() );
-			assert( meshdata.get() != NULL );
-
-			//if( meshdata->isAreaLight() ){
-			//	RibDataExportHelper::exportMeshLight(meshdata);
-			//}else{
-			if(bReference){
-				RiReadArchive( const_cast< RtToken >( geometryRibFile.asChar() ), NULL, RI_NULL );
-			}else{
-				Helper o;
-				o.RiBeginRef(geometryRibFile.asChar());
-				RibDataExportHelper::exportMesh(meshdata, geometryRibFile);
-				o.RiEndRef();
-			}
-			//}
-		}
-		else if( ribNode->object(sample)->type == MRT_Light )
-		{
-			//-----------------------------------------------------
-			// Mesh Light
-			//-----------------------------------------------------
-			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
-			const liqRibMeshDataPtr meshdata = 
-				boost::dynamic_pointer_cast<liqRibMeshData>(ribNode->object(sample)->getDataPtr() );
-			assert( meshdata.get() != NULL );
-
-			if( meshdata->isAreaLight() ){
-				if(bReference){
-					RibDataExportHelper::exportMeshLight(meshdata);
-				}else{
-
-				}
-			}
-
-			//-----------------------------------------------------
-			// Light
-			//-----------------------------------------------------
-			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
-			const liqRibLightDataPtr lightdata = 
-				boost::dynamic_pointer_cast<liqRibLightData>(ribNode->object(sample)->getDataPtr() );
-
-			if( lightdata.get() != NULL )//light
-			{
-
-			}
-		}
-		else if(ribNode->object(sample)->type == MRT_Shave)
-		{
-			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
-			const liqRibShaveDataPtr data = 
-				boost::dynamic_pointer_cast<liqRibShaveData>(ribNode->object(sample)->getDataPtr() );
-			assert( data.get() != NULL );
-			if(bReference){
-				RibDataExportHelper::exportShaveData(data);
-			}else{}
-		}
-		else if(ribNode->object(sample)->type == MRT_PfxHair)
-		{
-			// dynamics_cast means the bad smell. Review the code and make a better design. [2/5/2012 yaoyansi]
-			const liqRibPfxHairDataPtr data = 
-				boost::dynamic_pointer_cast<liqRibPfxHairData>(ribNode->object(sample)->getDataPtr() );
-			assert( data.get() != NULL );
-			if(bReference){
-				RibDataExportHelper::exportPfxHairData(data);
-			}else{}
-		}
-		//
-		else if( mobject.hasFn(MFn::kPfxGeometry) )
-		{
-			const liqRibPfxDataPtr data = 
-				boost::dynamic_pointer_cast<liqRibPfxData>(ribNode->object(sample)->getDataPtr() );
-			assert( data.get() != NULL );
-			if(bReference){
-				RibDataExportHelper::exportPfxData(data);
-			}else{}
-		}
-
-		else{
-			liquidMessage2(messageError, "object type(%d) is not supported.", ribNode->object(sample)->type);
-			assert(0 && "object type is not supported. see script window for more details");
-
-		}
-
+		ribNode->object( sample )->writeObject(geometryRibFile, currentJob, bReference);
 	}
 }//namespace

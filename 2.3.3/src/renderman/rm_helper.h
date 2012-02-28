@@ -34,17 +34,6 @@ namespace renderman
 	public:
 		RibDataExportHelper();
 		~RibDataExportHelper();
-
-		static void exportMesh( 
-			const liqRibMeshDataPtr& meshdata,
-			const MString& ribFile);
-		
-		static void exportMeshLight( const liqRibMeshDataPtr& meshdata );
-		static void exportShaveData(const liqRibShaveDataPtr& data);
-		static void exportPfxHairData(const liqRibPfxHairDataPtr& data);
-		static void exportPfxData(const liqRibPfxDataPtr& data);
-		
-		static void exportLight();
 	};
 }
 

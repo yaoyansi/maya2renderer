@@ -1186,7 +1186,7 @@ MStatus liqRibTranslator::coordSysBlock__(const structJob &currentJob)
 		else 
 			RiTransform( ribMatrix );
 
-		ribNode->object(0)->writeObject("", currentJob);
+		ribNode->object(0)->writeObject("", currentJob, false);
 		ribNode->object(0)->written = 1;
 		RiAttributeEnd();
 	}

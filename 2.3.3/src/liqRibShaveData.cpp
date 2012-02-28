@@ -57,7 +57,7 @@
 #include <liqRenderer.h>
 #include <liqGlobalVariable.h>
 #include <liqRibTranslator.h>
-
+#include "renderman/rm_helper.h"
 
 
 using namespace boost;
@@ -401,25 +401,41 @@ liqRibShaveData::liqRibShaveData( MObject surface )
 }
 
 
+void liqRibShaveData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
+{
+	if( !bReference ){//write data at first time
+		assert(m_ribFileFullPath.length()==0);
+		m_ribFileFullPath = ribFileName;
 
+		//1)make a reference
+		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+
+		//2)call shave command to write the rib file(not support motion blur)
+		MGlobal::executeCommand(
+			"shaveWriteRib -hairNode \""+objDagPath.partialPathName()+"\" \""+m_ribFileFullPath+"\";"
+		);
+	}else{
+		//write the reference
+		assert(m_ribFileFullPath == ribFileName);
+		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+	}
+}
 /** Write the RIB for this surface.
  */
-void liqRibShaveData::_write(const structJob &currentJob)
-{
-	assert(0 && "moved to renderman::Renderer::_writeObject() >> if(ribNode->object(sample)->type == MRT_Shave)");
-
+// void liqRibShaveData::_write(const structJob &currentJob)
+// {
 //   LIQDEBUGPRINTF( "-> writing shave surface\n" );
 // 
 //   LIQDEBUGPRINTF( "-> writing shave surface trims\n" );
 //   liqRIBMsg("This is a shave object data:\n" );
 //  
-//   MString nodeName(objDagPath.partialPathName());
-//   liqRIBMsg( "node name = %s", nodeName.asChar() );
-// 
-//   MString frame; 
-//   frame.set(liqglo.liqglo_lframe);
-//   MString prefix("shv_");
-//   MString shv_RibFile( liquidGetRelativePath( false, getLiquidRibName( (prefix+nodeName).asChar() ), liqglo.liqglo_ribDir ) +"."+frame+".rib" );
+//    MString nodeName(objDagPath.partialPathName());
+//    liqRIBMsg( "node name = %s", nodeName.asChar() );
+//  
+//    MString frame; 
+//    frame.set(liqglo.liqglo_lframe);
+//    MString prefix("shv_");
+//    MString shv_RibFile( liquidGetRelativePath( false, getLiquidRibName( (prefix+nodeName).asChar() ), liqglo.liqglo_ribDir ) +"."+frame+".rib" );
 // 
 //   //1)make a reference
 //   RiReadArchive( const_cast< RtToken >( shv_RibFile.asChar() ), NULL, RI_NULL );
@@ -430,7 +446,7 @@ void liqRibShaveData::_write(const structJob &currentJob)
 //  	  );
 //  
 //   LIQDEBUGPRINTF( "-> done writing shave surface\n" );
-}
+// }
 
 unsigned liqRibShaveData::granularity() const 
 {

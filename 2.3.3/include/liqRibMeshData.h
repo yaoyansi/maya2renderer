@@ -46,7 +46,11 @@ public: // Methods
   explicit liqRibMeshData( MObject mesh );
   virtual ~liqRibMeshData(){}
 
-  virtual void       _write(const structJob &currentJob);
+  virtual void write(
+	  const MString &ribFileName, 
+	  const structJob &currentJob, 
+	  const bool bReference
+	  );
   virtual void       printMesh();
   virtual bool       compare( const liqRibData & other ) const;
   virtual ObjectType type() const;
@@ -67,6 +71,7 @@ public: // Methods
   const RtFloat* getTransformationMatrixPtr() const {return &transformationMatrix[0][0]; }
 
 private: // Data
+  void       _write(const structJob &currentJob);
   RtInt     numFaces;
   RtInt     numPoints;
   RtInt     numNormals;

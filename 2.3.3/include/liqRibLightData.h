@@ -44,7 +44,11 @@ public:
   explicit liqRibLightData( const MDagPath & light );
   virtual ~liqRibLightData(){}
 
-  virtual void       _write(const structJob &currentJob);
+  virtual void write(
+	  const MString &ribFileName, 
+	  const structJob &currentJob, 
+	  const bool bReference
+	  );
   virtual bool       compare( const liqRibData & other ) const;
   virtual ObjectType type() const;
 
@@ -55,7 +59,7 @@ public:
   MString       autoShadowName( int PointLightDir = -1 ) const;
   const char* getName()const{ return lightName.asChar(); }
 private:
-
+  void       _write(const structJob &currentJob);
   MString       extraShadowName( const MFnDependencyNode & lightShaderNode, const int & index ) const;
 
   LightType     lightType;
