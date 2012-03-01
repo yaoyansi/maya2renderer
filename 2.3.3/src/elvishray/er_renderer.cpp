@@ -394,9 +394,14 @@ namespace elvishray
 			&& bMotionBlur
 			&& ( ribNode__->object(0)->type != MRT_RibGen );
 
-		exportOneGeometry_Mesh(ribNode__, currentJob__ , sample_first, bGeometryMotion?sample_last:sample_first);
-		//_writeObject() will call Renderer::exportOneGeometry_Mesh()
-
+		if( bGeometryMotion )
+		{
+			this->_writeObject(ribNode__, currentJob__, bGeometryMotion, 0/*unused*/, false);
+			//exportOneGeometry_Mesh(ribNode__, currentJob__ , sample_first, sample_last);
+		}else{
+			this->_writeObject(ribNode__, currentJob__, bGeometryMotion, 0/*unused*/, false);
+			//exportOneGeometry_Mesh(ribNode__, currentJob__ , sample_first, sample_first);
+		}
 	}
 	void Renderer::exportOneObject_reference(
 		const liqRibNodePtr &ribNode__,  
@@ -418,7 +423,6 @@ namespace elvishray
 			&& ( ribNode__->object(0)->type != MRT_RibGen );
 
 		//exportOneGeometry_Mesh(ribNode__, currentJob__ , sample_first, bGeometryMotion?sample_last:sample_first);
-		//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 
 		_s("//--------------------------");
 		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
@@ -469,143 +473,145 @@ namespace elvishray
 		m_groupMgr->addObjectInstance( currentJob__.name.asChar(), mesh->getName(), GIT_Geometry );//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
 	}
 	//
-	void Renderer::exportOneGeometry_Mesh(
-		const liqRibNodePtr &ribNode__,
-		const structJob &currentJob,
-		unsigned int sample_first,
-		unsigned int sample_last
-		)
-	{
-		_s("\n// Renderer::exportOneGeometry_Mesh("<<ribNode__->name.asChar()<<","<<sample_first<<","<<sample_last<<")");
-
-		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
-
-		//
-		liqRibNodePtr ribNode = liqRibTranslator::getInstancePtr()->htable->find(
-			mesh->objDagPath.fullPathName(), 
-			mesh->objDagPath,
-			MRT_Unknown
-			);
-		assert( ribNode!=0 );
-		assert( ribNode->path().fullPathName() == mesh->objDagPath.fullPathName() );
-
-		//
-		MStatus status;
-		MFnMesh fnMesh(mesh->objDagPath, &status);
-		IfMErrorWarn(status);
-
-		MIntArray triangleCounts,triangleVertices;
-		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));
-
-		MString currentUVsetName;
-		IfMErrorWarn(fnMesh.getCurrentUVSetName(currentUVsetName));
-
-		// geometry data (shape)
-		_s("\n//############################### mesh #");
-		_S( ei_object( getObjectName(mesh->getName()).c_str(), "poly" ) );
-		_s("{");
-		_d( eiTag tag );
-
-		//vertex position
-		_s("//### vertex positions, fnMesh.numVertices()="<<fnMesh.numVertices() );
-		_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
-		_s("//tag="<<tag);
-		_S( ei_pos_list( tag ) );
-
-		//_exportVertexFromDagNode(fnMesh);
-		_exportVertexFromNodePlug(ribNode__, sample_first);
-
-		_S( ei_end_tab() );
-
-		{//deform motion
-			if( sample_first != sample_last )
-			{
-				_s("//### vertex deform positions, " );
-				_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
-				_s("//tag="<<tag);
-				_S( ei_motion_pos_list( tag ) );
-
-				_exportVertexFromNodePlug(ribNode__, sample_last);
-
-				_S( ei_end_tab() );
-			}
-		}
-
-// 		_s("//### vertex color");
-// 		for(int i=0; i<position.length(); i++)
-// 		{
-// 			_S( ei_vertex(i) );
-// 			//_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
-// 		}
-
-		// get normal for each vertex
-		// but the render result seems very weird, see test/test_er_light/output_img_std/er_pointlight.perspShape.1.elvishray_vertex_normal.bmp
-		// so I ommit this section temporarily.
-		_s("//vertex normals are not output temporarily.");
-		//if(fnMesh.numVertices()!=0)
-		//{
-		//	_s("//### N");
-		//	_d( tag = eiNULL_TAG );
-		//	_S( ei_declare("N", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
-		//	_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
-		//	_s("//tag="<<tag);
-		//	_S( ei_variable("N", &tag) );
-		//	MVector nml;
-		//	for(size_t i = 0; i<fnMesh.numVertices(); ++i)
-		//	{
-		//		IfMErrorWarn(fnMesh.getVertexNormal(i, false, nml, MSpace::kObject));
-		//		_S( ei_tab_add_vector(nml.x, nml.y, nml.z) );
-		//	}
-		//	_S( ei_end_tab() );
-		//}
-
-		if( currentUVsetName.length() != 0 )//there is a current uv set
-		{
-			MFloatArray u_coords;
-			MFloatArray v_coords;
-
-			IfMErrorWarn( fnMesh.getUVs(u_coords,v_coords,&currentUVsetName) );
-			_s("//### UV, size="<< fnMesh.numUVs(currentUVsetName) );
-			// u
-			_d( tag = eiNULL_TAG );
-			_S( ei_declare("u", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
-			_d( tag = ei_tab(EI_DATA_TYPE_SCALAR, 1024) )
-			_s("//tag="<<tag);
-			_S( ei_variable("u", &tag) );
-			for(size_t i = 0; i<fnMesh.numUVs(currentUVsetName); ++i)
-			{
-				_S( ei_tab_add_scalar(u_coords[i]) );
-			}
-			_S( ei_end_tab() );
-			// v
-			_d( tag = eiNULL_TAG );
-			_S( ei_declare("v", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
-			_d( tag = ei_tab(EI_DATA_TYPE_SCALAR, 1024) )
-			_s("//tag="<<tag);
-			_S( ei_variable("v", &tag) );
-			for(size_t i = 0; i<fnMesh.numUVs(currentUVsetName); ++i)
-			{
-				_S( ei_tab_add_scalar(v_coords[i]) );
-			}
-			_S( ei_end_tab() );
-		}
-
-		_s("//### triangles, size="<< triangleCounts);
-		_d( tag = ei_tab(EI_DATA_TYPE_INDEX, 1024) )
-		_s("//tag="<<tag);
-		_S( ei_triangle_list( tag ) );
-		for(size_t i=0; i<triangleVertices.length(); i=i+3)
-		{
-			_S( ei_tab_add_index(triangleVertices[i])); 
-			_S( ei_tab_add_index(triangleVertices[i+1])); 
-			_S( ei_tab_add_index(triangleVertices[i+2])); 
-		}
-		_S( ei_end_tab() );
-		_s("}//"<<MString(mesh->getName())+"_object");
-		_S( ei_end_object() );
-
-
-	}
+//	void Renderer::exportOneGeometry_Mesh(
+//		const liqRibNodePtr &ribNode__,
+//		const structJob &currentJob,
+//		const bool bGeometryMotion
+//		)
+//	{
+//		unsigned int sample_first = 0;
+//		unsigned int sample_last = bGeometryMotion? (liqglo.liqglo_motionSamples - 1):sample_first;
+//
+//		_s("\n// Renderer::exportOneGeometry_Mesh("<<ribNode__->name.asChar()<<","<<sample_first<<","<<sample_last<<")");
+//
+//		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
+//
+//		//
+//// 		liqRibNodePtr ribNode = liqRibTranslator::getInstancePtr()->htable->find(
+//// 			mesh->objDagPath.fullPathName(), 
+//// 			mesh->objDagPath,
+//// 			MRT_Unknown
+//// 			);
+//// 		assert( ribNode!=0 );
+//// 		assert( ribNode->path().fullPathName() == mesh->objDagPath.fullPathName() );
+//
+//		//
+//		MStatus status;
+//		MFnMesh fnMesh(mesh->objDagPath, &status);
+//		IfMErrorWarn(status);
+//
+//		MIntArray triangleCounts,triangleVertices;
+//		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));
+//
+//		MString currentUVsetName;
+//		IfMErrorWarn(fnMesh.getCurrentUVSetName(currentUVsetName));
+//
+//		// geometry data (shape)
+//		_s("\n//############################### mesh #");
+//		_S( ei_object( getObjectName(mesh->getName()).c_str(), "poly" ) );
+//		_s("{");
+//		_d( eiTag tag );
+//
+//		//vertex position
+//		_s("//### vertex positions, fnMesh.numVertices()="<<fnMesh.numVertices() );
+//		_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
+//		_s("//tag="<<tag);
+//		_S( ei_pos_list( tag ) );
+//
+//		//_exportVertexFromDagNode(fnMesh);
+//		_exportVertexFromNodePlug(ribNode__, sample_first);
+//
+//		_S( ei_end_tab() );
+//
+//		{//deform motion
+//			if( sample_first != sample_last )
+//			{
+//				_s("//### vertex deform positions, " );
+//				_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
+//				_s("//tag="<<tag);
+//				_S( ei_motion_pos_list( tag ) );
+//
+//				_exportVertexFromNodePlug(ribNode__, sample_last);
+//
+//				_S( ei_end_tab() );
+//			}
+//		}
+//
+// 		//_s("//### vertex color");
+// 		//for(int i=0; i<position.length(); i++)
+// 		//{
+// 		//	_S( ei_vertex(i) );
+// 		//	//_S( ei_variable_color( "Cs", color( 1.0f, 0.0f, 1.0f ) ) );
+// 		//}
+//
+//		// get normal for each vertex
+//		// but the render result seems very weird, see test/test_er_light/output_img_std/er_pointlight.perspShape.1.elvishray_vertex_normal.bmp
+//		// so I ommit this section temporarily.
+//		_s("//vertex normals are not output temporarily.");
+//		//if(fnMesh.numVertices()!=0)
+//		//{
+//		//	_s("//### N");
+//		//	_d( tag = eiNULL_TAG );
+//		//	_S( ei_declare("N", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
+//		//	_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
+//		//	_s("//tag="<<tag);
+//		//	_S( ei_variable("N", &tag) );
+//		//	MVector nml;
+//		//	for(size_t i = 0; i<fnMesh.numVertices(); ++i)
+//		//	{
+//		//		IfMErrorWarn(fnMesh.getVertexNormal(i, false, nml, MSpace::kObject));
+//		//		_S( ei_tab_add_vector(nml.x, nml.y, nml.z) );
+//		//	}
+//		//	_S( ei_end_tab() );
+//		//}
+//
+//		if( currentUVsetName.length() != 0 )//there is a current uv set
+//		{
+//			MFloatArray u_coords;
+//			MFloatArray v_coords;
+//
+//			IfMErrorWarn( fnMesh.getUVs(u_coords,v_coords,&currentUVsetName) );
+//			_s("//### UV, size="<< fnMesh.numUVs(currentUVsetName) );
+//			// u
+//			_d( tag = eiNULL_TAG );
+//			_S( ei_declare("u", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
+//			_d( tag = ei_tab(EI_DATA_TYPE_SCALAR, 1024) )
+//			_s("//tag="<<tag);
+//			_S( ei_variable("u", &tag) );
+//			for(size_t i = 0; i<fnMesh.numUVs(currentUVsetName); ++i)
+//			{
+//				_S( ei_tab_add_scalar(u_coords[i]) );
+//			}
+//			_S( ei_end_tab() );
+//			// v
+//			_d( tag = eiNULL_TAG );
+//			_S( ei_declare("v", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
+//			_d( tag = ei_tab(EI_DATA_TYPE_SCALAR, 1024) )
+//			_s("//tag="<<tag);
+//			_S( ei_variable("v", &tag) );
+//			for(size_t i = 0; i<fnMesh.numUVs(currentUVsetName); ++i)
+//			{
+//				_S( ei_tab_add_scalar(v_coords[i]) );
+//			}
+//			_S( ei_end_tab() );
+//		}
+//
+//		_s("//### triangles, size="<< triangleCounts);
+//		_d( tag = ei_tab(EI_DATA_TYPE_INDEX, 1024) )
+//		_s("//tag="<<tag);
+//		_S( ei_triangle_list( tag ) );
+//		for(size_t i=0; i<triangleVertices.length(); i=i+3)
+//		{
+//			_S( ei_tab_add_index(triangleVertices[i])); 
+//			_S( ei_tab_add_index(triangleVertices[i+1])); 
+//			_S( ei_tab_add_index(triangleVertices[i+2])); 
+//		}
+//		_S( ei_end_tab() );
+//		_s("}//"<<MString(mesh->getName())+"_object");
+//		_S( ei_end_object() );
+//
+//
+//	}
 // 	void Renderer::_exportVertexFromDagNode(const MFnMesh* fnMesh)
 // 	{
 // 		MFloatPointArray position;
@@ -616,38 +622,38 @@ namespace elvishray
 // 			_S( ei_tab_add_vector( position[i][0],position[i][1],position[i][2] ) );
 // 		}
 // 	}
-	void Renderer::_exportVertexFromNodePlug(
-		const liqRibNodePtr &ribNode__,
-		unsigned int sample)
-	{	
-		MStatus status;
+	//void Renderer::_exportVertexFromNodePlug(
+	//	const liqRibNodePtr &ribNode__,
+	//	unsigned int sample)
+	//{	
+	//	MStatus status;
 
-		const liqRibDataPtr ribdata = ribNode__->object(sample)->getDataPtr();
-		liqRibMeshData* mesh = (liqRibMeshData*)(ribdata.get());
-		const std::vector<liqTokenPointer>& tokenPointerArray = mesh->tokenPointerArray;
-		
-		liqTokenPointer vertex;
-		for( std::vector< liqTokenPointer >::const_iterator iter( tokenPointerArray.begin() ); iter != tokenPointerArray.end(); ++iter ) 
-		{
-			if( "P" == const_cast< liqTokenPointer* >( &( *iter ) )->getDetailedTokenName() )// find the Position data
-			{
-				vertex = *iter;
-				break;
-			}
-		}
-		assert( !vertex.empty() );
-		const RtFloat* vertex_buf = vertex.getTokenFloatArray();
+	//	const liqRibDataPtr ribdata = ribNode__->object(sample)->getDataPtr();
+	//	liqRibMeshData* mesh = (liqRibMeshData*)(ribdata.get());
+	//	const std::vector<liqTokenPointer>& tokenPointerArray = mesh->tokenPointerArray;
+	//	
+	//	liqTokenPointer vertex;
+	//	for( std::vector< liqTokenPointer >::const_iterator iter( tokenPointerArray.begin() ); iter != tokenPointerArray.end(); ++iter ) 
+	//	{
+	//		if( "P" == const_cast< liqTokenPointer* >( &( *iter ) )->getDetailedTokenName() )// find the Position data
+	//		{
+	//			vertex = *iter;
+	//			break;
+	//		}
+	//	}
+	//	assert( !vertex.empty() );
+	//	const RtFloat* vertex_buf = vertex.getTokenFloatArray();
 
-		MFnMesh fnMesh(mesh->objDagPath, &status);
-		IfMErrorWarn(status);
+	//	MFnMesh fnMesh(mesh->objDagPath, &status);
+	//	IfMErrorWarn(status);
 
-		// add vertex position to ER
-		for(size_t i=0; i<fnMesh.numVertices(); ++i)
-		{
-			_S( ei_tab_add_vector( vertex_buf[3*i+0],vertex_buf[3*i+1],vertex_buf[3*i+2] ) );
-		}
+	//	// add vertex position to ER
+	//	for(size_t i=0; i<fnMesh.numVertices(); ++i)
+	//	{
+	//		_S( ei_tab_add_vector( vertex_buf[3*i+0],vertex_buf[3*i+1],vertex_buf[3*i+2] ) );
+	//	}
 
-	}
+	//}
 	//
 	void Renderer::ribPrologue_comment(const char* liqversion, 
 		const char* scenename, const char* user, const time_t &now)
@@ -1096,5 +1102,40 @@ namespace elvishray
 			}
 		}
 	}
+	void Renderer::_writeObject(
+		const liqRibNodePtr& ribNode, 
+		const structJob &currentJob,
+		const bool bGeometryMotion,
+		const unsigned int msampleOn,
+		const bool bReference
+		)
+	{
+		MString MotionPostfix;
+		unsigned int sample;
+		if( bGeometryMotion ){
+			MString MSampleOn;
+			MSampleOn.set((int)msampleOn);
+			MotionPostfix = ".m"+MSampleOn;
+			sample        = msampleOn;
+		}else{
+			MotionPostfix = "";
+			sample        = 0;
+		}
 
+		MString geometryRibFile( 
+			liquidGetRelativePath( 
+			false, 
+			getLiquidRibName( ribNode->name.asChar() ), 
+			liqglo.liqglo_ribDir 
+			) +"."+(int)liqglo.liqglo_lframe+MotionPostfix+".rib" 
+			);
+
+
+
+		//=====================================================
+		// Export rib data
+		//=====================================================
+		ribNode->object( sample )->writeObject(geometryRibFile, currentJob, bReference);
+
+	}
 }//namespace

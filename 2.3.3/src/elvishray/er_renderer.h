@@ -223,18 +223,24 @@ namespace elvishray
 		void dummyPhongShader();//for test only
 		void pretest();
 
-		void exportOneGeometry_Mesh(
-			const liqRibNodePtr &ribNode__,
-			const structJob &currentJob,
-			unsigned int sample_first,
-			unsigned int sample_last
-			);
+// 		void exportOneGeometry_Mesh(
+// 			const liqRibNodePtr &ribNode__,
+// 			const structJob &currentJob,
+// 			const bool bGeometryMotion
+// 			);
 //		void _exportVertexFromDagNode(const MFnMesh* fnMesh);
-		void _exportVertexFromNodePlug(
-			const liqRibNodePtr &ribNode__, unsigned int sample);
+// 		void _exportVertexFromNodePlug(
+// 			const liqRibNodePtr &ribNode__, unsigned int sample);
 		void _UserDefinedShader(
 			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
+			);
+		void _writeObject(
+			const liqRibNodePtr& ribNode, 
+			const structJob &currentJob,
+			const bool bGeometryMotion,
+			const unsigned int msampleOn,
+			const bool bReference
 			);
 		virtual void shader_transformBegin(const liqString  shaderSpace);
 		virtual void shader_transformEnd(const liqString  shaderSpace);
