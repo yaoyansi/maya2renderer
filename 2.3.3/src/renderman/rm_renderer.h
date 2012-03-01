@@ -210,7 +210,7 @@ namespace renderman
 		void _writeObject(
 			const liqRibNodePtr& ribNode, 
 			const structJob &currentJob,
-			const bool bGeometryMotionBlur,
+			const bool bGeometryMotion,
 			const unsigned int msampleOn,
 			const bool bReference
 			);

@@ -562,9 +562,9 @@ namespace renderman
 			//( ribNode__->object(0)->type != MRT_Locator ) && // Why the fuck do we not allow motion blur for locators?
 			( !currentJob__.isShadow || currentJob__.deepShadows );
 
-		const bool bMatrixMotionBlur = 
-			liqglo.liqglo_doMotion 
-			&& bMotionBlur;
+// 		const bool bMatrixMotionBlur = 
+// 			liqglo.liqglo_doMotion 
+// 			&& bMotionBlur;
 
 //		liqRibTranslator::getInstancePtr()->MaxtrixMotionBlur(ribNode__, path, bMatrixMotionBlur);
 
@@ -626,12 +626,12 @@ namespace renderman
 
 					for ( unsigned msampleOn( 0 ); msampleOn < liqglo.liqglo_motionSamples; msampleOn++ )
 					{ 
-						this->_writeObject(ribNode__, currentJob__, true, msampleOn, false);
+						this->_writeObject(ribNode__, currentJob__, bGeometryMotion, msampleOn, false);
 						//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 					}
 //					RiMotionEnd();
 				}else{
-					this->_writeObject(ribNode__, currentJob__, false, 0, false);
+					this->_writeObject(ribNode__, currentJob__, bGeometryMotion, 0, false);
 					//_writeObject() will call Renderer::exportOneGeometry_Mesh()
 				}// if(bGeometryMotion)
 			}//if(hasRibBoxData)
@@ -1150,7 +1150,7 @@ namespace renderman
 	void Renderer::_writeObject(
 		const liqRibNodePtr& ribNode, 
 		const structJob &currentJob,
-		const bool bGeometryMotionBlur,
+		const bool bGeometryMotion,
 		const unsigned int msampleOn,
 		const bool bReference
 		)
@@ -1159,7 +1159,7 @@ namespace renderman
 
 		MString MotionPostfix;
 		unsigned int sample;
-		if( bGeometryMotionBlur ){
+		if( bGeometryMotion ){
 			MString MSampleOn;
 			MSampleOn.set((int)msampleOn);
 			MotionPostfix = ".m"+MSampleOn;
@@ -1177,8 +1177,6 @@ namespace renderman
 			) +"."+(int)liqglo.liqglo_lframe+MotionPostfix+".rib" 
 			);
 
-		const MObject mobject = ribNode->path().node(&status);
-		IfErrorWarn(status);
 
 
 		//=====================================================
