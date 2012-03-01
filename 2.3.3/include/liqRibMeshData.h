@@ -71,7 +71,7 @@ public: // Methods
   const RtFloat* getTransformationMatrixPtr() const {return &transformationMatrix[0][0]; }
 
 private: // Data
-  void       _write(const structJob &currentJob);
+  //void       _write(const structJob &currentJob);
   RtInt     numFaces;
   RtInt     numPoints;
   RtInt     numNormals;

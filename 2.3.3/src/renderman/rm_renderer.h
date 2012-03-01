@@ -194,6 +194,14 @@ namespace renderman
 		// Shader
 		virtual void shader_UserDefinedShader(const liqShader* liqshader);
 		virtual void getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const;
+	
+		//mesh
+		virtual void write(
+			/*const*/ liqRibMeshData* meshdata,
+			const MString &fileName, 
+			const structJob &currentJob,
+			const bool bReference);
+
 	protected:
 		Renderer(const Renderer&);
 		Renderer& operator=(const Renderer&);

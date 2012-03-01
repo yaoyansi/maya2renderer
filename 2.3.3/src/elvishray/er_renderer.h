@@ -198,6 +198,12 @@ namespace elvishray
 		// Shader
 		virtual void shader_UserDefinedShader(const liqShader* liqshader);
 		virtual void getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const;
+		//mesh
+		virtual void write(
+			/*const*/ liqRibMeshData* meshdata,
+			const MString &fileName, 
+			const structJob &currentJob,
+			const bool bReference);
 		//
 		//std::ofstream& get() { return m_log.get(); }
  		static liquid::LogMgr m_log;

@@ -12,6 +12,7 @@
 struct structJob;
 class liqRibLightData;
 class liqShader;
+class liqRibMeshData;
 
 namespace liquid
 {
@@ -206,7 +207,12 @@ public:
 	// Shader
 	virtual void shader_UserDefinedShader(const liqShader* liqshader) = 0;
 	virtual void getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const = 0 ;
-
+	//mesh
+	virtual void write(
+		/*const*/ liqRibMeshData* meshdata,
+		const MString &fileName, 
+		const structJob &currentJob,
+		const bool bReference) = 0;
 protected:
 
 

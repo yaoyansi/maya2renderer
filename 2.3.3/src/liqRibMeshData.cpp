@@ -57,8 +57,8 @@
 #include <liqGlobalHelpers.h>
 #include <liqGlobalVariable.h>
 #include "renderermgr.h"
-#include "renderman/rm_renderer.h"
-#include "renderman/rm_helper.h"
+//#include "renderman/rm_renderer.h"
+
 
 using namespace boost;
 using namespace std;
@@ -302,101 +302,103 @@ void liqRibMeshData::printMesh()
 
 void liqRibMeshData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
-	if( !bReference ){//write data at first time
-		assert(m_ribFileFullPath.length()==0);
-		m_ribFileFullPath = ribFileName;
-
-		renderman::Helper o;
-		o.RiBeginRef(m_ribFileFullPath.asChar());
-		_write(currentJob);
-		o.RiEndRef();
-
-	}else{
-		//write the reference
-		assert(m_ribFileFullPath == ribFileName);
-		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
-	}
+	liquid::RendererMgr::getInstancePtr()->
+		getRenderer()->write(this, ribFileName, currentJob, bReference);
+// 	if( !bReference ){//write data at first time
+// 		assert(m_ribFileFullPath.length()==0);
+// 		m_ribFileFullPath = ribFileName;
+// 
+// 		renderman::Helper o;
+// 		o.RiBeginRef(m_ribFileFullPath.asChar());
+// 		_write(currentJob);
+// 		o.RiEndRef();
+// 
+// 	}else{
+// 		//write the reference
+// 		assert(m_ribFileFullPath == ribFileName);
+// 		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+// 	}
 }
 /**      Write the RIB for this mesh.
  */
-void liqRibMeshData::_write(const structJob &currentJob)
-{
-	if( this->isEmpty() )
-	{
-		liquidMessage( "Could not export degenerate mesh", messageError );
-		return;
-	}
+//void liqRibMeshData::_write(const structJob &currentJob)
+//{
+//	if( this->isEmpty() )
+//	{
+//		liquidMessage( "Could not export degenerate mesh", messageError );
+//		return;
+//	}
+////
+//	if(this->isAreaLight())
+//	{
+//		RtLightHandle handle = INVALID_LIGHT_INDEX;
 //
-	if(this->isAreaLight())
-	{
-		RtLightHandle handle = INVALID_LIGHT_INDEX;
-
-		{ // What happens if we're inside a motion block????? This whole approach of Liquid is flawed...
-			LIQDEBUGPRINTF( "-> mesh is area light\n" );
-			//	RiAttributeBegin();
-			RtString ribname = const_cast< char* >( this->getName().asChar() );
-			RiAttribute( "identifier", "name", &ribname, RI_NULL );
-			RtMatrix tmp;
-			memcpy( tmp, this->getTransformationMatrixPtr(), sizeof( RtMatrix ) );
-			RiTransform( tmp );
-			float areaIntensity = this->getAreaIntensity();
-			handle = RiAreaLightSource( "arealight", "intensity", &areaIntensity, RI_NULL );
-		}
-		//
-		//mesh data begin
-		//
-		// Each loop has one polygon, so we just want an array of 1's of
-		// the correct size. Stack version.
-		//vector< RtInt > nloops( numFaces, 1 );
-		// Alternatively (heap version):
-		boost::scoped_array< RtInt > nloops( new RtInt[ this->getNumFaces() ] );
-		std::fill( nloops.get(), nloops.get() + this->getNumFaces(), ( RtInt )1 );
-
-		unsigned numTokens( this->tokenPointerArray.size() );
-		boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-		assignTokenArraysV( this->tokenPointerArray, tokenArray.get(), pointerArray.get() );
-
-		RiPointsGeneralPolygonsV( this->getNumFaces(),
-			&nloops[ 0 ],
-			this->getNverts().get(),
-			this->getVerts().get(),
-			numTokens,
-			tokenArray.get(),
-			pointerArray.get() );
-		//mesh data end
-
-		{
-			// RiAttributeEnd();
-			RiIlluminate( handle, 1 );
-		}
-	}else{
-		//mesh data begin
-		//
-		// Each loop has one polygon, so we just want an array of 1's of
-		// the correct size. Stack version.
-		//vector< RtInt > nloops( numFaces, 1 );
-		// Alternatively (heap version):
-		boost::scoped_array< RtInt > nloops( new RtInt[ this->getNumFaces() ] );
-		std::fill( nloops.get(), nloops.get() + this->getNumFaces(), ( RtInt )1 );
-
-		unsigned numTokens( this->tokenPointerArray.size() );
-		boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-		assignTokenArraysV( this->tokenPointerArray, tokenArray.get(), pointerArray.get() );
-
-		RiPointsGeneralPolygonsV( this->getNumFaces(),
-			&nloops[ 0 ],
-			this->getNverts().get(),
-			this->getVerts().get(),
-			numTokens,
-			tokenArray.get(),
-			pointerArray.get() );
-		//mesh data end//	
-	}
-
-}
-
+//		{ // What happens if we're inside a motion block????? This whole approach of Liquid is flawed...
+//			LIQDEBUGPRINTF( "-> mesh is area light\n" );
+//			//	RiAttributeBegin();
+//			RtString ribname = const_cast< char* >( this->getName().asChar() );
+//			RiAttribute( "identifier", "name", &ribname, RI_NULL );
+//			RtMatrix tmp;
+//			memcpy( tmp, this->getTransformationMatrixPtr(), sizeof( RtMatrix ) );
+//			RiTransform( tmp );
+//			float areaIntensity = this->getAreaIntensity();
+//			handle = RiAreaLightSource( "arealight", "intensity", &areaIntensity, RI_NULL );
+//		}
+//		//
+//		//mesh data begin
+//		//
+//		// Each loop has one polygon, so we just want an array of 1's of
+//		// the correct size. Stack version.
+//		//vector< RtInt > nloops( numFaces, 1 );
+//		// Alternatively (heap version):
+//		boost::scoped_array< RtInt > nloops( new RtInt[ this->getNumFaces() ] );
+//		std::fill( nloops.get(), nloops.get() + this->getNumFaces(), ( RtInt )1 );
+//
+//		unsigned numTokens( this->tokenPointerArray.size() );
+//		boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+//		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+//		assignTokenArraysV( this->tokenPointerArray, tokenArray.get(), pointerArray.get() );
+//
+//		RiPointsGeneralPolygonsV( this->getNumFaces(),
+//			&nloops[ 0 ],
+//			this->getNverts().get(),
+//			this->getVerts().get(),
+//			numTokens,
+//			tokenArray.get(),
+//			pointerArray.get() );
+//		//mesh data end
+//
+//		{
+//			// RiAttributeEnd();
+//			RiIlluminate( handle, 1 );
+//		}
+//	}else{
+//		//mesh data begin
+//		//
+//		// Each loop has one polygon, so we just want an array of 1's of
+//		// the correct size. Stack version.
+//		//vector< RtInt > nloops( numFaces, 1 );
+//		// Alternatively (heap version):
+//		boost::scoped_array< RtInt > nloops( new RtInt[ this->getNumFaces() ] );
+//		std::fill( nloops.get(), nloops.get() + this->getNumFaces(), ( RtInt )1 );
+//
+//		unsigned numTokens( this->tokenPointerArray.size() );
+//		boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+//		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+//		assignTokenArraysV( this->tokenPointerArray, tokenArray.get(), pointerArray.get() );
+//
+//		RiPointsGeneralPolygonsV( this->getNumFaces(),
+//			&nloops[ 0 ],
+//			this->getNverts().get(),
+//			this->getVerts().get(),
+//			numTokens,
+//			tokenArray.get(),
+//			pointerArray.get() );
+//		//mesh data end//	
+//	}
+//
+//}
+//
 /** Compare this mesh to the other for the purpose of determining
  *  if it's animated.
  */

@@ -61,6 +61,8 @@ public:
     liqTokenPointer::array tokenPointerArray;
     MDagPath	       objDagPath;
 	const char* getName() const;
+	MString getRibFileFullPath()const{ return m_ribFileFullPath; }
+	void setRibFileFullPath(const MString& ribFileFullPath) { m_ribFileFullPath = ribFileFullPath; }
 
 protected:
 	MString			   m_ribFileFullPath;
