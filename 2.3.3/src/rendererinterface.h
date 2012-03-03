@@ -56,7 +56,9 @@ public:
 	//
 	// Light
 	//
-	virtual MStatus exportLight(const liqRibNodePtr& light, const structJob &currentJob) = 0;
+	virtual bool writeLight_pre(const liqRibNodePtr& ribNode, const structJob &currentJob) = 0;
+	//virtual MStatus exportLight(const liqRibNodePtr& light, const structJob &currentJob) = 0;
+	virtual void writeLight_post(const liqRibNodePtr& ribNode, const structJob &currentJob) = 0;	
 	virtual MStatus liqRibLightData_write(const liqRibLightData *lightdata, const structJob &currentJob) = 0;
 	virtual liqLightHandle exportShadowPassLight(
 		const std::string &shadertype, 

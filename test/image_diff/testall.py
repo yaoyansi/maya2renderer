@@ -103,8 +103,8 @@ def test_all_scene():
     testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_displacement/test_displacement.ma"
     MyTestOne.test_one_scene(testFile, "renderman")
 
-    #testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_light/rm_spotlight.ma"
-    #MyTestOne.test_one_scene(testFile, "renderman")
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_light/rm_spotlight.ma"
+    MyTestOne.test_one_scene(testFile, "renderman")
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/hair/test_shaveHair(shave_v61).ma"
     #MyTestOne.test_one_scene(testFile, "renderman")

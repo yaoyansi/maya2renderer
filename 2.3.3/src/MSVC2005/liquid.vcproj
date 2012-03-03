@@ -3994,6 +3994,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\renderman\rm_writeLightData.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\renderman\rm_writeMeshData.cpp"
 					>
 				</File>
@@ -4063,6 +4067,10 @@
 				</File>
 				<File
 					RelativePath="..\elvishray\er_shader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\er_writeLightData.cpp"
 					>
 				</File>
 				<File

@@ -1147,9 +1147,16 @@ MStatus liqRibTranslator::lightBlock__(const structJob &currentJob)
 			if( ribNode->object(0)->ignore || ribNode->object(0)->type != MRT_Light )
 				continue;
 
-			liquid::RendererMgr::getInstancePtr()->
-				getRenderer()->exportLight(ribNode, currentJob);
-		
+			//liquid::RendererMgr::getInstancePtr()->getRenderer()->exportLight(ribNode, currentJob);
+			liquid::RendererInterface* ri = liquid::RendererMgr::getInstancePtr()->getRenderer();
+			if( ri->writeLight_pre(ribNode, currentJob) )
+			{
+				ribNode->object(0)->writeObject("", currentJob, false);//call liqRibLightData::_write(...)
+				ribNode->object(0)->written = 1;
+
+				ri->writeLight_post(ribNode, currentJob);
+			}
+
 			nbLight++;
 		}
 	}

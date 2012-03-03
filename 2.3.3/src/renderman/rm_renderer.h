@@ -43,7 +43,9 @@ namespace renderman
 		//
 		// Light
 		//
-		virtual MStatus exportLight(const liqRibNodePtr& light, const structJob &currentJob);
+		virtual bool writeLight_pre(const liqRibNodePtr& ribNode, const structJob &currentJob);
+		//virtual MStatus exportLight(const liqRibNodePtr& light, const structJob &currentJob);
+		virtual void writeLight_post(const liqRibNodePtr& ribNode, const structJob &currentJob);			
 		virtual MStatus liqRibLightData_write(const liqRibLightData *lightdata, const structJob &currentJob);
 		virtual liqLightHandle exportShadowPassLight(
 			const std::string &shadertype, 
