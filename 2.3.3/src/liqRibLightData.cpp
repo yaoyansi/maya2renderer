@@ -644,22 +644,32 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
   shadowColor[ 1 ]  = colorVal.g;
   shadowColor[ 2 ]  = colorVal.b;
 
+#if 0 // [3/3/2012 yaoyansi] I can't find "liquidUseLightScale" plug in liquid, so I ommit this section.
   /* added the ablility to use the lights scale - Dan Kripac - 01/03/06 */
   bool useLightScale( false );
   MPlug useLightScalePlug( fnLight.findPlug( "liquidUseLightScale", &status ) );
-  if ( status == MS::kSuccess ) 
-    useLightScalePlug.getValue( useLightScale );
-  
-  MTransformationMatrix worldMatrix = light.inclusiveMatrix();
-  if ( ! useLightScalePlug ) 
+  if ( status == MS::kSuccess ) //has "liquidUseLightScale" plug
   {
-    double scale[] = { 1.0, 1.0, -1.0 };
-    worldMatrix.setScale( scale, MSpace::kTransform );
-    MMatrix worldMatrixM( worldMatrix.asMatrix() );
-    worldMatrixM.get( transformationMatrix );
-  } else 
-  	worldMatrix.asMatrix().get( transformationMatrix );
+    useLightScalePlug.getValue( useLightScale );
+	
+	MTransformationMatrix worldMatrix = light.inclusiveMatrix();
+	if ( ! useLightScalePlug ) 
+	{
+		double scale[] = { 1.0, 1.0, -1.0 };
+		worldMatrix.setScale( scale, MSpace::kTransform );
+		MMatrix worldMatrixM( worldMatrix.asMatrix() );
+		worldMatrixM.get( transformationMatrix );
+	} else 
+		worldMatrix.asMatrix().get( transformationMatrix );
+  }
+  else
+#endif
+  {//no "liquidUseLightScale" plug
+	MTransformationMatrix worldMatrix = light.inclusiveMatrix();
+	worldMatrix.asMatrix().get( transformationMatrix );
+  }
   
+
 
   if ( rmanLight ) 
     lightType  = MRLT_Rman;
