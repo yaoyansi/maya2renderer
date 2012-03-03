@@ -837,19 +837,19 @@ namespace renderman
 		MGlobal::executeCommand( displayCmd );
 		return MStatus::kSuccess;
 	}
-	MStatus Renderer::renderAll_local(const structJob& currentJob____)
+	MStatus Renderer::renderAll_local(const MString& ribFileName)
 	{
 		_logFunctionCall("rm::Renderer::renderAll_local(...)");
 
-		printf("    + '%s'\n", currentJob____.ribFileName.asChar() );
-		liquidMessage( "    + '" + std::string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
+		printf("    + '%s'\n", ribFileName.asChar() );
+		liquidMessage( "    + '" + std::string( ribFileName.asChar() ) + "'", messageInfo );
 
 #ifdef _WIN32
 		printf("1.liqProcessLauncher::execute(%s, %s %s \"%s\", \"%s\", %d)\n",
-			liqglo.liquidRenderer.renderCommand.asChar(), liqglo.liqglo_rifParams.asChar(), liqglo.liquidRenderer.renderCmdFlags.asChar(), currentJob____.ribFileName.asChar(), liqglo.liqglo_projectDir.asChar(), false);
-		liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + currentJob____.ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
+			liqglo.liquidRenderer.renderCommand.asChar(), liqglo.liqglo_rifParams.asChar(), liqglo.liquidRenderer.renderCmdFlags.asChar(), ribFileName.asChar(), liqglo.liqglo_projectDir.asChar(), false);
+		liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " \"" + ribFileName + "\"", "\"" + liqglo.liqglo_projectDir + "\"", false );
 #else
-		liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + currentJob____.ribFileName, liqglo.liqglo_projectDir, false );
+		liqProcessLauncher::execute( liqglo.liquidRenderer.renderCommand, " "+liqglo.liqglo_rifParams+" "+ liqglo.liquidRenderer.renderCmdFlags + " " + ribFileName, liqglo.liqglo_projectDir, false );
 #endif
 		/*  philippe: here we launch the liquidRenderView command which will listen to the liqmaya display driver
 		to display buckets in the renderview.
@@ -860,7 +860,7 @@ namespace renderman
 		}
 		return MStatus::kSuccess;
 	}
-	MStatus Renderer::renderAll_remote(const structJob& currentJob____)
+	MStatus Renderer::renderAll_remote(const MString& ribFileName)
 	{
 
 		return MStatus::kSuccess;

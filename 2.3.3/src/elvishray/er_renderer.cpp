@@ -549,11 +549,11 @@ namespace elvishray
 	{
 		return MStatus::kSuccess;
 	}
-	MStatus Renderer::renderAll_local(const structJob& currentJob____)
+	MStatus Renderer::renderAll_local(const MString& ribFileName)
 	{
 		return MStatus::kSuccess;
 	}
-	MStatus Renderer::renderAll_remote(const structJob& currentJob____)
+	MStatus Renderer::renderAll_remote(const MString& ribFileName)
 	{
 		return MStatus::kSuccess;
 	}

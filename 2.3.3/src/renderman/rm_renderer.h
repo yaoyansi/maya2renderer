@@ -34,8 +34,8 @@ namespace renderman
 		virtual MStatus doRenderView();
 		virtual MStatus doTextures(const std::vector<structJob> &txtList_);
 		virtual MStatus doShadows(const std::vector<structJob> &shadowList_);
-		virtual MStatus renderAll_local(const structJob& currentJob____);
-		virtual MStatus renderAll_remote(const structJob& currentJob____);
+		virtual MStatus renderAll_local(const MString& ribFileName);
+		virtual MStatus renderAll_remote(const MString& ribFileName);
 
 		virtual void openLog();
 		virtual void closeLog();

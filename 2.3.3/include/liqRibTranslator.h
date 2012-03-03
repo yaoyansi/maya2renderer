@@ -534,6 +534,13 @@ public:
 	void writeShadingGroup(const MString& meshname);
 	bool checkSettings();
 
+	//record rib file name
+	void clearRibFileList();
+	void addRibFile(const MString& ribFile);
+	std::size_t getRibFileListSize();
+	MString getRibFile(std::size_t index);
+	std::vector<MString> ribFileList;
+
 
 private:
 	liqRibTranslator(const liqRibTranslator&);

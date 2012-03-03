@@ -724,7 +724,7 @@ global proc float[] liquidPreview_getRenderViewCropWindow()
 global proc liquidmayaCmdlineRender( string $options )
 {
   liqPushIdent();
-	liqlog("liquidmayaCmdlineRender(...)");
+	liqlog("liquidmayaCmdlineRender("+$options+")");
   string $cmd = ( "liquid -GL " + $options );
   eval $cmd;
   liqPopIdent();

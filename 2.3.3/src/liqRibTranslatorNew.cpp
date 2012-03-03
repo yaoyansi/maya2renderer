@@ -463,6 +463,7 @@ TempControlBreak liqRibTranslator::processOneFrame(
 			liquid::RendererMgr::getInstancePtr()->
 				getRenderer()->setRenderScriptFormatAndCompress(liqglo__.liqglo_doBinary, liqglo__.liqglo_doCompression);
 
+			addRibFile(currentJob.ribFileName);
 			// world RiReadArchives and Rib Boxes ************************************************
 			//
 			if( /*liqglo__.liqglo_*/currentJob.isShadow && !liqglo.fullShadowRib )
@@ -2484,6 +2485,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 			MFileIO::exportAll( liqglo.tempDefname, currentFileType.asChar() );
 		}
 
+		clearRibFileList();
 
 		liqRenderScript jobScript;
 		// 		liqRenderScript::Job preJobInstance;
@@ -2493,7 +2495,8 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 
 		printFrameSequence("1");
 		// build the frame array
-		//
+		liquidMessage2(messageInfo, "liqglo.m_renderView=%d", liqglo.m_renderView );
+		liquidMessage2(messageInfo, "isBatchMode()=%d", isBatchMode() );
 		if( liqglo.m_renderView ) 
 		{
 			// if we are in renderView mode,
@@ -2547,9 +2550,9 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 		
 		structJob currentJob____ = *(jobList.rbegin());//I guess liqglo.liqglo_currentJob is jobList.rbegin()
 
-		LIQDEBUGPRINTF( "-> clearing job list.\n" );
-		jobList.clear();
-		jobScript.clear();
+// 		LIQDEBUGPRINTF( "-> clearing job list.\n" );
+// 		jobList.clear();
+// 		jobScript.clear();
 
 		// set the attributes on the liquidGlobals for the last rib file and last alfred script name
 		LIQDEBUGPRINTF( "-> setting lastAlfredScript and lastRibFile.\n" );
@@ -2582,20 +2585,33 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 				liquidMessage( "Rendering hero pass... ", messageInfo );
 				printf("[!] Rendering hero pass...\n");
 
-				//structJob &currentJob____ = *(jobList.rbegin());//I guess liqglo.liqglo_currentJob is jobList.rbegin()
-				if( currentJob____.skip ) 
+				if( isBatchMode() )//batch mode
 				{
-					printf("    - skipping '%s'\n", currentJob____.ribFileName.asChar() );
-					liquidMessage( "    - skipping '" + string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
-				} 
-				else 
-				{
-					liquid::RendererMgr::getInstancePtr()->getRenderer()->renderAll_local(currentJob____);
-				}
+					std::size_t SIZE = getRibFileListSize();
+					for(std::size_t i=0; i<SIZE; ++i)
+					{
+						liquidMessage2(messageInfo, "rendering frame %d ...", i);
+						liquid::RendererMgr::getInstancePtr()->getRenderer()->renderAll_local( getRibFile(i) );
+					}
+				}else{//interactive mode
+					//structJob &currentJob____ = *(jobList.rbegin());//I guess liqglo.liqglo_currentJob is jobList.rbegin()
+					if( currentJob____.skip ) 
+					{
+						printf("    - skipping '%s'\n", currentJob____.ribFileName.asChar() );
+						liquidMessage( "    - skipping '" + string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
+					}else {
+						liquid::RendererMgr::getInstancePtr()->getRenderer()->renderAll_local(currentJob____.ribFileName);
+					}
+				}//if( isBatchMode() )
+
 				//}//if( !exitstat )
 
 			}//if( useRenderScript ) else
 		} // if( launchRender )
+		
+		LIQDEBUGPRINTF( "-> clearing job list.\n" );
+		jobList.clear();
+		jobScript.clear();
 
 		postActions(originalLayer);
 
@@ -2729,6 +2745,7 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 			MFileIO::exportAll( liqglo.tempDefname, currentFileType.asChar() );
 		}
 
+		clearRibFileList();
 
 		liqRenderScript jobScript;
 		// 		liqRenderScript::Job preJobInstance;
@@ -3699,4 +3716,21 @@ void liqRibTranslator::writeShadingGroup(const MString& meshname)
 
 		RiReadArchive( const_cast< RtToken >((shadingGroupFileName+".rmsg").asChar()), NULL, RI_NULL );
 	}
+}
+//
+void liqRibTranslator::clearRibFileList()
+{
+	ribFileList.clear();
+}
+void liqRibTranslator::addRibFile(const MString& ribFile)
+{
+	ribFileList.push_back(ribFile);
+}
+std::size_t liqRibTranslator::getRibFileListSize()
+{
+	return ribFileList.size();
+}
+MString liqRibTranslator::getRibFile(std::size_t index)
+{
+	return ribFileList.at(index);
 }

@@ -48,8 +48,8 @@ public:
 	virtual MStatus doRenderView() = 0;
 	virtual MStatus doTextures(const std::vector<structJob> &txtList_) = 0;
 	virtual MStatus doShadows(const std::vector<structJob> &shadowList_) = 0;
-	virtual MStatus renderAll_local(const structJob& currentJob____) = 0;
-	virtual MStatus renderAll_remote(const structJob& currentJob____) = 0;
+	virtual MStatus renderAll_local(const MString& ribFileName) = 0;
+	virtual MStatus renderAll_remote(const MString& ribFileName) = 0;
 
 	virtual void openLog() = 0;
 	virtual void closeLog() = 0;
