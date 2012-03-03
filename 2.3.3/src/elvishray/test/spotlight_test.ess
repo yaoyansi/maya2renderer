@@ -1,0 +1,166 @@
+camera "GlobalCameraName0x32f24105_0x74e20f38"
+	output "spotlight_test.bmp" "bmp" "rgb"
+		output_variable "color" "vector"
+	end output
+	focal 1.000000
+	aperture 0.828427
+	aspect 1.333333
+	resolution 640 480
+end camera
+instance "GlobalCameraInstanceName0x32f24105_0x74e20f38"
+	element "GlobalCameraName0x32f24105_0x74e20f38"
+	transform 0.965926 -0.258819 -0.000000 0.000000 0.117501 0.438521 0.891007 0.000000 -0.230609 -0.860646 0.453990 0.000000 -73.653915 -319.819275 185.246506 1.000000
+end instance
+shader "Spot01{0FB5F032-55B6-4ef0-9B5F-88923A277832}_Light_Shader"
+	param_string "desc" "spotlight"
+	param_scalar "intensity" 1.000000
+	param_vector "lightcolor" 1.000000 1.000000 1.000000
+	param_scalar "deltaangle" 0.114319
+	param_scalar "spread" 0.489565
+	param_vector "direction" 0.000000 0.000000 -1.000000
+end shader
+light "Spot01{0FB5F032-55B6-4ef0-9B5F-88923A277832}_Light"
+	add_light "Spot01{0FB5F032-55B6-4ef0-9B5F-88923A277832}_Light_Shader"
+	origin 0.000000 0.000000 0.000000
+end light
+instance "Spot01{0FB5F032-55B6-4ef0-9B5F-88923A277832}"
+	element "Spot01{0FB5F032-55B6-4ef0-9B5F-88923A277832}_Light"
+	transform 0.000000 1.000000 -0.000000 0.000000 -0.801883 0.000000 0.597481 0.000000 0.597481 -0.000000 0.801883 0.000000 87.453865 -0.000006 145.018387 1.000000
+end instance
+shader "DefaultMaterialShaderName0x32f24105_0x74e20f38"
+	param_string "desc" "architectural"
+end shader
+shader "DefaultShadowShaderName0x32f24105_0x74e20f38"
+	param_string "desc" "opaque"
+end shader
+shader "DefaultPhotonShaderName0x32f24105_0x74e20f38"
+	param_string "desc" "simple_photon"
+end shader
+material "DefaultMaterialName0x32f24105_0x74e20f38"
+	add_surface "DefaultMaterialShaderName0x32f24105_0x74e20f38"
+	add_shadow "DefaultShadowShaderName0x32f24105_0x74e20f38"
+	add_photon "DefaultPhotonShaderName0x32f24105_0x74e20f38"
+end material
+shader "Material_01 - Default{DF326DF2-0B3E-4253-8BA8-51216B388623}_Surface"
+	param_string "desc" "architectural"
+	param_vector "surface_color" 0.588235 0.588235 0.588235
+	param_vector "specular" 0.000000 0.000000 0.000000
+end shader
+shader "Material_01 - Default{DF326DF2-0B3E-4253-8BA8-51216B388623}_Shadow"
+	param_string "desc" "opaque"
+end shader
+shader "Material_01 - Default{DF326DF2-0B3E-4253-8BA8-51216B388623}_Photon"
+	param_string "desc" "simple_photon"
+	param_vector "diffuse" 1.000000 1.000000 1.000000
+	param_vector "specular" 0.000000 0.000000 0.000000
+	param_scalar "transp" 0.000000
+	param_scalar "ior" 1.500000
+end shader
+material "Material_01 - Default{DF326DF2-0B3E-4253-8BA8-51216B388623}"
+	add_surface "Material_01 - Default{DF326DF2-0B3E-4253-8BA8-51216B388623}_Surface"
+	add_shadow "Material_01 - Default{DF326DF2-0B3E-4253-8BA8-51216B388623}_Shadow"
+	add_photon "Material_01 - Default{DF326DF2-0B3E-4253-8BA8-51216B388623}_Photon"
+end material
+
+object "Plane01{6D02046A-C349-4409-B63F-7A41BABA6737}_Object" "poly"
+	pos_list 25
+	-122.330475 -116.084732 0.000000
+	-61.165237 -116.084732 0.000000
+	0.000000 -116.084732 0.000000
+	61.165237 -116.084732 0.000000
+	122.330475 -116.084732 0.000000
+	-122.330475 -58.042366 0.000000
+	-61.165237 -58.042366 0.000000
+	0.000000 -58.042366 0.000000
+	61.165237 -58.042366 0.000000
+	122.330475 -58.042366 0.000000
+	-122.330475 0.000000 0.000000
+	-61.165237 0.000000 0.000000
+	0.000000 0.000000 0.000000
+	61.165237 0.000000 0.000000
+	122.330475 0.000000 0.000000
+	-122.330475 58.042366 0.000000
+	-61.165237 58.042366 0.000000
+	0.000000 58.042366 0.000000
+	61.165237 58.042366 0.000000
+	122.330475 58.042366 0.000000
+	-122.330475 116.084732 0.000000
+	-61.165237 116.084732 0.000000
+	0.000000 116.084732 0.000000
+	61.165237 116.084732 0.000000
+	122.330475 116.084732 0.000000
+	nrm_list 25
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	0.000000, 0.000000, 1.000000
+	triangle_list 96
+	5 0 6
+	1 6 0
+	6 1 7
+	2 7 1
+	7 2 8
+	3 8 2
+	8 3 9
+	4 9 3
+	10 5 11
+	6 11 5
+	11 6 12
+	7 12 6
+	12 7 13
+	8 13 7
+	13 8 14
+	9 14 8
+	15 10 16
+	11 16 10
+	16 11 17
+	12 17 11
+	17 12 18
+	13 18 12
+	18 13 19
+	14 19 13
+	20 15 21
+	16 21 15
+	21 16 22
+	17 22 16
+	22 17 23
+	18 23 17
+	23 18 24
+	19 24 18
+end object
+instance "Plane01{6D02046A-C349-4409-B63F-7A41BABA6737}"
+	add_material "Material_01 - Default{DF326DF2-0B3E-4253-8BA8-51216B388623}"
+	element "Plane01{6D02046A-C349-4409-B63F-7A41BABA6737}_Object"
+	transform 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 5.742889 6.604416 0.000000 1.000000
+end instance
+options "GlobalOptionsName0x32f24105_0x74e20f38"
+	samples 0 2
+	contrast 0.050000 0.050000 0.050000 0.050000
+end options
+instgroup "GlobalInstGroupName0x32f24105_0x74e20f38"
+	add_instance "GlobalCameraInstanceName0x32f24105_0x74e20f38"
+	add_instance "Spot01{0FB5F032-55B6-4ef0-9B5F-88923A277832}"
+	add_instance "Plane01{6D02046A-C349-4409-B63F-7A41BABA6737}"
+end instgroup
+render "GlobalInstGroupName0x32f24105_0x74e20f38" "GlobalCameraInstanceName0x32f24105_0x74e20f38" "GlobalOptionsName0x32f24105_0x74e20f38"

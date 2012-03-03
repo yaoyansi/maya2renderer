@@ -200,6 +200,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\er_spotlight_test.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\er_spotlight_test2.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\er_volume_test.cpp"
 				>
 			</File>

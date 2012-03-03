@@ -662,9 +662,9 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
 	} else 
 		worldMatrix.asMatrix().get( transformationMatrix );
   }
-  else
+  else //no "liquidUseLightScale" plug
 #endif
-  {//no "liquidUseLightScale" plug
+  {
 	MTransformationMatrix worldMatrix = light.inclusiveMatrix();
 	worldMatrix.asMatrix().get( transformationMatrix );
   }
