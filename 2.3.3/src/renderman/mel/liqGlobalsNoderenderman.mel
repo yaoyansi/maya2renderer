@@ -1,11 +1,156 @@
 source xxliquidutility.mel;
+source liqGlobalsNodeRenderer.mel;
+
+global string $gWindow_renderman="liqGlobalWindow_renderman";
+global string $gGlobalNode_renderman="liqGlobalsNodeRenderer_renderman";
+global string $gGlobalValue_renderman[]=
+{
+	"testBool0",            "bool",			true
+	,"testBool1",            "bool",			false
+	,"testString0",            "string",		"string_test_value0renderman"
+	,"testString1",            "string",		"string_test_value1renderman"
+	,"testColor0",            "color",		"1.0|1.0|0.0"
+	,"testColor1",            "color",		"1.9|9.0|2.0"
+	,"testInt0",            "long",		"0"
+	,"testInt1",            "long",		"10"
+	,"testFloat0",          "float",	"0.0"
+	,"testFloat1",            "float",	"10.0"
+	,"testIntMenu0",           "long",	"0"
+	,"testIntMenu1",           "long",	"1"
+	//,"testStringArray",      "stringArray",  "xx|yyy|zzzzzz|aaa"//,
+	//long
+	//float
+	//boolArray,""
+
+
+};
 
 proc sayHello()
 {
 	liqlog("Hi, this is renderman global panel.");
 }
-
-global proc liqGlobalsNoderenderman()
+//
+proc createGlobalNode_renderman()
 {
+	liqPushIdent();
+	liqlog("createGlobalNode_renderman()");
+	global string $gGlobalNode_renderman;
+	global string $gGlobalValue_renderman[];
+
+    string $gGlobal = xxu_getSingletonNode2( "liqGlobalsNodeRenderer", getGlobalNodeName() );
+	liqAssert($gGlobal==$gGlobalNode_renderman,"global node name error");
+
+	//add global values 
+	liquidAddGlobals2($gGlobalNode_renderman, $gGlobalValue_renderman);
+
+	liqPopIdent();
+}
+// modified from liquidGlobalsFrameTab()
+proc liquidGlobalsTab_renderman_AA( string $prefix )
+{
+  liqPushIdent();
+	liqlog("liquidGlobalsTab_renderman_AA("+$prefix+")");
+	global string $gGlobalNode_renderman;
+	string $n = $gGlobalNode_renderman;
+  ////setUITemplate -pushTemplate attributeEditorTemplate;
+  string $previousParent = `setParent -q`;
+
+  columnLayout -adj true -vis false ($prefix + "liquidGlobalsFrameSet"+liqGetRendererName());
+    frameLayout -bs "etchedIn" -l "frameLayout0" -cll true -cl false;
+      columnLayout -adj true ;
+        liquidShowBoolGlobal2($n, "testBool0", "testBool0L", $prefix);
+        liquidShowStringGlobal2($n, "testString0", "testString0L", $prefix);
+        liquidShowIntGlobal2($n, "testInt0", "testInt0L");
+        liquidShowFloatGlobal2($n, "testFloat0", "testFloat0L");
+        liquidShowColorGlobal2($n, "testColor0", "testColor0L");
+        liquidShowIntGlobalMenu2($n, "testIntMenu0", "Preview Type", {"A", "B C", "DE"}, $prefix);
+
+      setParent ..;
+    setParent ..;
+
+    frameLayout -bs "etchedIn" -l "frameLayout1" -cll true -cl false;
+      columnLayout -adj true ;
+        liquidShowBoolGlobal2($n, "testBool1", "testBool1", $prefix);
+        liquidShowStringGlobal2($n, "testString1", "testString1L", $prefix);
+        liquidShowIntGlobal2($n, "testInt1", "testInt1L");
+        liquidShowFloatGlobal2($n, "testFloat1", "testFloat1L");
+        liquidShowColorGlobal2($n, "testColor1", "testColor1L");
+      setParent ..;
+    setParent ..;
+
+  setParent ..;
+  //setParent ..;
+
+  columnLayout -e -vis true ($prefix + "liquidGlobalsFrameSet"+liqGetRendererName());
+  setParent $previousParent;
+
+  //if ( `layout -q -ex liquidGlobalsTab` ) setParent liquidGlobalsTab;
+  ////setUITemplate -popTemplate;
+  liqPopIdent();
+}
+//
+proc createGlobalNodeWindow_renderman2()
+{
+	liqPushIdent();
+	liqlog("createGlobalNodeWindow_renderman2()");
+	
+	global string $gWindow_renderman;
+
+	//string $currentParent = `setParent -q`;
+
+		$rnd = `getAttr liquidGlobals.renderer`;
+		window 
+			-title ($rnd+" Global Values")
+			-iconName "Short Name"
+			-widthHeight 200 55
+			$gWindow_renderman;
+
+		columnLayout;
+
+		xxu_getSingletonNode2( "liqGlobalsNodeRenderer", getGlobalNodeName() );
+		liquidGlobalsTab_renderman_AA( "" );
+		//liquidCreateGlobalsTab_renderman( $prefix, "BB",
+		//	"liquidGlobalsTab_renderman_BB( \""+$prefix+"\");");
+		
+
+
+	//setParent $currentParent;
+	liqPopIdent();
+}
+//
+proc showGlobalNodeWindow_renderman()
+{
+	global string $gWindow_renderman;
+	showWindow $gWindow_renderman;
+}
+proc hideGlobalNodeWindow_renderman()
+{
+
+}
+proc getSingletonWindow(string $window)
+{
+	liqPushIdent();
+	liqlog("getSingletonWindow("+$window+")");
+
+	if(`window -q -exists $window`)
+	{
+		liqlog($window +" already exists.\n");
+	}else{
+		createGlobalNodeWindow_renderman2();
+	}
+	showWindow $window;
+
+	liqPopIdent();
+}
+global proc liqGlobalsNode_renderman()
+{
+	global string $gWindow_renderman;
+
 	sayHello();
+	
+	createGlobalNode_renderman();
+
+	getSingletonWindow($gWindow_renderman);
+
+	showGlobalNodeWindow_renderman();
 }

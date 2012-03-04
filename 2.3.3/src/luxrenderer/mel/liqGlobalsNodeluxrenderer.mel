@@ -5,7 +5,7 @@ proc sayHello()
 	liqlog("Hi, this is luxrenderer global panel.");
 }
 
-global proc liqGlobalsNodeluxrenderer()
+global proc liqGlobalsNode_luxrenderer()
 {
 	sayHello();
 }

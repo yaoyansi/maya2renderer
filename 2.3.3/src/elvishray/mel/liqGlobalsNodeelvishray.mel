@@ -39,13 +39,13 @@ proc createGlobalNode_elvishray()
     string $gGlobal = xxu_getSingletonNode2( "liqGlobalsNodeRenderer", getGlobalNodeName() );
 	liqAssert($gGlobal==$gGlobalNode_elvishray,"global node name error");
 
-
+	//add global values 
 	liquidAddGlobals2($gGlobalNode_elvishray, $gGlobalValue_elvishray);
 
 	liqPopIdent();
 }
 // modified from liquidGlobalsFrameTab()
-global proc liquidGlobalsTab_elvishray_AA( string $prefix )
+proc liquidGlobalsTab_elvishray_AA( string $prefix )
 {
   liqPushIdent();
 	liqlog("liquidGlobalsTab_elvishray_AA("+$prefix+")");
@@ -183,7 +183,7 @@ proc createGlobalNodeWindow_elvishray2()
 
 		$rnd = `getAttr liquidGlobals.renderer`;
 		window 
-			-title $rnd
+			-title ($rnd+" Global Values")
 			-iconName "Short Name"
 			-widthHeight 200 55
 			$gWindow_elvishray;

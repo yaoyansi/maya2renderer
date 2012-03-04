@@ -45,26 +45,26 @@ global proc string getGlobalNodeName()
     return "liqGlobalsNodeRenderer_"+`getAttr liquidGlobals.renderer`;
 }
 
-global proc addParameter(string $node, string $attrName, string $attrType, string $attrValue)
-{
-	string $cplug = $node+"."+$attrName;
+// global proc addParameter(string $node, string $attrName, string $attrType, string $attrValue)
+// {
+// 	string $cplug = $node+"."+$attrName;
+// 
+//     if( `attributeQuery -node $node -ex $attrName` ){
+//          liqlog($cplug+" already exists.");
+//          return;
+//     }
+// 
+//     addAttr -longName $attrName -dt "string" $node;
+//     setAttr $cplug -type "string" $attrValue;
+// }
 
-    if( `attributeQuery -node $node -ex $attrName` ){
-         liqlog($cplug+" already exists.");
-         return;
-    }
-
-    addAttr -longName $attrName -dt "string" $node;
-    setAttr $cplug -type "string" $attrValue;
-}
-
-global proc test()
-{
-    string $gGlobal = xxu_getSingletonNode2( "liqGlobalsNodeRenderer", getGlobalNodeName() );
-
-	addParameter($gGlobal, "tStringAttr", "string", "tDefaultVale");
-	addParameter($gGlobal, "tStringAttr1", "string", "tDefaultVale1");
-}
+// global proc test()
+// {
+//     string $gGlobal = xxu_getSingletonNode2( "liqGlobalsNodeRenderer", getGlobalNodeName() );
+// 
+// 	addParameter($gGlobal, "tStringAttr", "string", "tDefaultVale");
+// 	addParameter($gGlobal, "tStringAttr1", "string", "tDefaultVale1");
+// }
 
 global proc liqGlobalsNodeRendererMain()
 {
