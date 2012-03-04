@@ -1,0 +1,11 @@
+source xxliquidutility.mel;
+
+proc sayHello()
+{
+	liqlog("Hi, this is renderman global panel.");
+}
+
+global proc liqGlobalsNoderenderman()
+{
+	sayHello();
+}

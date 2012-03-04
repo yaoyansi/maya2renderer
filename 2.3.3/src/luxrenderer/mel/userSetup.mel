@@ -3,3 +3,4 @@ print "This is luxrenderer /2.3.3/src/luxrenderer/mel/usersetup.mel.\n";
 
 source lux_AEliquidInstanceFlags.mel;
 source lux_CreateMenus.mel;
+source liqGlobalsNodeluxrenderer.mel;

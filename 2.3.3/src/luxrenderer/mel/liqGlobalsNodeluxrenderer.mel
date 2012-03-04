@@ -1,0 +1,11 @@
+source xxliquidutility.mel;
+
+proc sayHello()
+{
+	liqlog("Hi, this is luxrenderer global panel.");
+}
+
+global proc liqGlobalsNodeluxrenderer()
+{
+	sayHello();
+}

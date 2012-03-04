@@ -72,6 +72,7 @@
 #include <liqGlobalHelpers.h>
 #include <liqMayaRenderView.h>
 #include <liqGlobalsNode.h>
+#include "liqGlobalNodeRenderer.h"
 //#include <liqJobList.h>
 #include <liqRiCommands.h>
 #include <liqBoundingBoxLocator.h>
@@ -459,6 +460,11 @@ LIQUID_EXPORT MStatus initializePlugin(MObject obj)
   status = MSwatchRenderRegister::registerSwatchRender( "liqCoShaderSwatch", liqNodeSwatch::creator );
   LIQCHECKSTATUS( status, "Can't register liquidCoShader swatch" );
 
+  // register the liqGlobalsNodeRenderer node
+  status = plugin.registerNode( "liqGlobalsNodeRenderer", liqGlobalsNodeRenderer::id, liqGlobalsNodeRenderer::creator, liqGlobalsNodeRenderer::initialize, MPxNode::kDependNode );
+  LIQCHECKSTATUS( status, "Can't register liqGlobalsNodeRenderer node" );
+  status.clear();
+
   // setup all of the base liquid interface
   MString sourceLine("source ");
   char *tmphomeChar;
@@ -743,6 +749,9 @@ LIQUID_EXPORT MStatus uninitializePlugin(MObject obj)
 
   status = plugin.deregisterNode( liqBoundingBoxLocator::id );
   LIQCHECKSTATUS( status, "Can't deregister liquidBoundingBox node" );
+
+  status = plugin.deregisterNode( liqGlobalsNodeRenderer::id );
+  LIQCHECKSTATUS( status, "Can't deregister liqGlobalsNodeRenderer node" );
 
   status = plugin.deregisterNode( liqGlobalsNode::id );
   LIQCHECKSTATUS( status, "Can't deregister liquidGlobals node" );

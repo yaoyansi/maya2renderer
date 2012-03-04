@@ -11,6 +11,7 @@ def configMayaEnv():
     #liquid maya
     os.environ["LIQUID_ROOT"]    = "E:/dev/autodesk/maya/myplugin/project/liquid_"
     os.environ["LIQUID_MEL"]     = os.environ["LIQUID_ROOT"]+"/2.3.3/mel"
+    os.environ["LIQUID_RM_MEL"]  = os.environ["LIQUID_ROOT"]+"/2.3.3/src/renderman/mel"
     os.environ["LIQUID_ER_MEL"]  = os.environ["LIQUID_ROOT"]+"/2.3.3/src/elvishray/mel"
     os.environ["LIQUID_LUX_MEL"] = os.environ["LIQUID_ROOT"]+"/2.3.3/src/luxrenderer/mel"
     os.environ["LIQUID_GEN"]     = os.environ["LIQUID_ROOT"]+"/2.3.3/lib/plugins"
@@ -25,9 +26,9 @@ def configMayaEnv():
     os.environ["PATH"] = os.environ["ELVISHRAY_BIN"]+";"+os.environ["PATH"]
     # MAYA_SCRIPT_PATH
     if os.environ.get('MAYA_SCRIPT_PATH') == None:
-        os.environ["MAYA_SCRIPT_PATH"] =os.environ["LIQUID_ER_MEL"]+";"+os.environ["LIQUID_LUX_MEL"]+";"+os.environ["LIQUID_GEN"]+";"+os.environ["LIQUID_MEL"];
+        os.environ["MAYA_SCRIPT_PATH"] =os.environ["LIQUID_RM_MEL"]+";"+os.environ["LIQUID_ER_MEL"]+";"+os.environ["LIQUID_LUX_MEL"]+";"+os.environ["LIQUID_GEN"]+";"+os.environ["LIQUID_MEL"];
     else:
-        os.environ["MAYA_SCRIPT_PATH"] =os.environ["LIQUID_ER_MEL"]+";"+os.environ["LIQUID_LUX_MEL"]+";"+os.environ["LIQUID_GEN"]+";"+os.environ["LIQUID_MEL"]+";"+os.environ["MAYA_SCRIPT_PATH"];
+        os.environ["MAYA_SCRIPT_PATH"] =os.environ["LIQUID_RM_MEL"]+";"+os.environ["LIQUID_ER_MEL"]+";"+os.environ["LIQUID_LUX_MEL"]+";"+os.environ["LIQUID_GEN"]+";"+os.environ["LIQUID_MEL"]+";"+os.environ["MAYA_SCRIPT_PATH"];
     # MAYA_PLUG_IN_PATH
     if os.environ.get('MAYA_PLUG_IN_PATH') == None:
         os.environ["MAYA_PLUG_IN_PATH"]=os.environ["LIQUID_MLL"]

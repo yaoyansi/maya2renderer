@@ -1,2 +1,4 @@
 
 print "This is renderman /2.3.3/src/renderman/mel/usersetup.mel.\n";
+
+source liqGlobalsNoderenderman.mel;

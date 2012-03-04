@@ -1,0 +1,11 @@
+source xxliquidutility.mel;
+
+proc sayHello()
+{
+	liqlog("Hi, this is elvishray global panel.");
+}
+
+global proc liqGlobalsNodeelvishray()
+{
+	sayHello();
+}

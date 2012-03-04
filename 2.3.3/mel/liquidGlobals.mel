@@ -2630,6 +2630,7 @@ global proc liquidGlobalsFrameTab( string $prefix )
 			  -parent ($prefix + "LG_RendererButtonCtl") -b 1 
 			  -pmc ( "liquidBuildRendererMenu \""+$prefix+"\"" ) 
 			  ($prefix+"LG_RendererMenuCtl");
+		  button -label "show global node panel"  -rs true -c "liqGlobalsNodeRendererMain()";
       setParent ..;
     setParent ..;
 

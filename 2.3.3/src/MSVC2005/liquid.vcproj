@@ -3017,6 +3017,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqGlobalNodeRenderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\liqGlobalNodeRenderer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\liqGlobalsNode.cpp"
 				>
 			</File>
@@ -3691,6 +3699,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\mel\liqGlobalsNodeRenderer.mel"
+				>
+			</File>
+			<File
 				RelativePath="..\..\mel\liquid_FE.mel"
 				>
 			</File>
@@ -4025,6 +4037,10 @@
 					Name="mel"
 					>
 					<File
+						RelativePath="..\renderman\mel\liqGlobalsNoderenderman.mel"
+						>
+					</File>
+					<File
 						RelativePath="..\renderman\mel\userSetup.mel"
 						>
 					</File>
@@ -4149,6 +4165,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\elvishray\mel\liqGlobalsNodeelvishray.mel"
+						>
+					</File>
+					<File
 						RelativePath="..\elvishray\mel\userSetup.mel"
 						>
 					</File>
@@ -4160,6 +4180,10 @@
 				<Filter
 					Name="mel"
 					>
+					<File
+						RelativePath="..\luxrenderer\mel\liqGlobalsNodeluxrenderer.mel"
+						>
+					</File>
 					<File
 						RelativePath="..\luxrenderer\mel\lux_AEliquidInstanceFlags.mel"
 						>
