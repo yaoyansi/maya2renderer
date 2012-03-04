@@ -423,31 +423,31 @@ global proc liquidShowColorGlobal2( string $node, string $name, string $label )
   liqPopIdent();
 }
 //
-//proc liquidShowIntGlobalMenu( string $name, string $label, string $items[], string $prefix )
-//{
-//  liqPushIdent();
-//	liqlog("liquidShowIntGlobalMenu(...)");
-//  if (size($items) == 0) {
-//    warning( "empty list specified in liquidShowIntGlobalMenu() for attribute " + $name + "\n");
-//    liqPopIdent();
-//	return;
-//  }
-//  if ( objExists( ("liquidGlobals."+$name) ) ) {
-//    //setUITemplate -pst attributeEditorTemplate;
-//    string $menu = `optionMenuGrp -cal 1 "right" -label $label`;
-//    int $i;
-//    for( $i = 0; $i < size( $items ); ++$i ) {
-//      menuItem -data $i -label $items[ $i ] ( $name + "_" + `liquidSubstituteAll "[^a-zA-Z]" $items[ $i ] ""` );
-//    }
-//    connectControl -index 2 $menu ("liquidGlobals." + $name);
-//    popupMenu -pmc ("liquidGlobalsRenderLayerOverrideUpdateMenu \""+$name+"\" \""+$prefix+"\"");
-//    menuItem -l "Create Layer Override" ($prefix+"liquidGlobalsOverride_"+$name);
-//    //setUITemplate -ppt;
-//  } else {
-//    warning ( "global attribute " + $name + " does not exist\n" );
-//  }
-//  liqPopIdent();
-//}
+global proc liquidShowIntGlobalMenu2(string $node, string $name, string $label, string $items[], string $prefix )
+{
+  liqPushIdent();
+	liqlog("liquidShowIntGlobalMenu2("+$node+","+$name+","+$label+",$item[],"+$prefix+")");
+  if (size($items) == 0) {
+    warning( "empty list specified in liquidShowIntGlobalMenu2() for attribute " + $name + "\n");
+    liqPopIdent();
+	return;
+  }
+  if ( objExists( ($node+"."+$name) ) ) {
+    //setUITemplate -pst attributeEditorTemplate;
+    string $menu = `optionMenuGrp -cal 1 "right" -label $label`;
+    int $i;
+    for( $i = 0; $i < size( $items ); ++$i ) {
+      menuItem -data $i -label $items[ $i ] ( $name + "_" + `liquidSubstituteAll "[^a-zA-Z]" $items[ $i ] ""` );
+    }
+    connectControl -index 2 $menu ($node+"." + $name);
+    popupMenu -pmc ("liquidGlobalsRenderLayerOverrideUpdateMenu \""+$name+"\" \""+$prefix+"\"");
+    menuItem -l "Create Layer Override" ($prefix+"liquidGlobalsOverride_"+$name);
+    //setUITemplate -ppt;
+  } else {
+    warning ( "global attribute " + $name + " does not exist\n" );
+  }
+  liqPopIdent();
+}
 //
 //// proc to update the enable state of menu items
 //// REVIEW : unused for the time being
@@ -482,37 +482,37 @@ global proc liquidShowColorGlobal2( string $node, string $name, string $label )
 //
 //// creates an option menu based on renderer capacities.
 //// links to an int attribute.
-//proc liquidShowBitsIntGlobalMenuPlus( string $name, string $label, string $attr, string $callback, string $prefix )
-//{
-//  liqPushIdent();
-//	liqlog("liquidShowBitsIntGlobalMenuPlus(...)");
-//  if ( `attributeQuery -node liquidGlobals -ex $attr` ) {
-//    //setUITemplate -pst attributeEditorTemplate;
-//    string $menu = `optionMenuGrp -cal 1 "right" -label $label ($name+"_LRG_optionMenu")`;
-//    if ( $callback != "" ) optionMenuGrp -e -cc $callback $menu;
-//    string $children[] = `attributeQuery -n liquidGlobals -listChildren $attr`;
-//    int $i;
-//    for( $i = 0; $i < size( $children ); ++$i ) {
-//      int $enabled = `getAttr ("liquidGlobals."+$attr+"."+$children[ $i ])`;
-//      menuItem -data $i -label (liquidToUI($children[ $i ])) -en $enabled ( $name + "_" + `liquidSubstituteAll "[^a-zA-Z]" $children[ $i ] ""` );
-//    }
-//    connectControl -index 2 $menu ("liquidGlobals." + $name);
-//    popupMenu -postMenuCommand ("liquidGlobalsRenderLayerOverrideUpdateMenu \""+$name+"\" \""+$prefix+"\"");
-//    menuItem -l "Create Layer Override" ($prefix+"liquidGlobalsOverride_"+$name);
-//    //setUITemplate -ppt;
-//  } else {
-//    warning ( "global attribute " + $name + " does not exist\n" );
-//  }
-//  liqPopIdent();
-//}
+proc liquidShowBitsIntGlobalMenuPlus2(string $node, string $name, string $label, string $attr, string $callback, string $prefix )
+{
+  liqPushIdent();
+	liqlog("liquidShowBitsIntGlobalMenuPlus2("+$node+","+$name+","+$label+","+$attr+","+$callback+","+$prefix+")");
+  if ( `attributeQuery -node $node -ex $attr` ) {
+    //setUITemplate -pst attributeEditorTemplate;
+    string $menu = `optionMenuGrp -cal 1 "right" -label $label ($name+"_LRG_optionMenu")`;
+    if ( $callback != "" ) optionMenuGrp -e -cc $callback $menu;
+    string $children[] = `attributeQuery -n $node -listChildren $attr`;
+    int $i;
+    for( $i = 0; $i < size( $children ); ++$i ) {
+      int $enabled = `getAttr ($node+"."+$attr+"."+$children[ $i ])`;
+      menuItem -data $i -label (liquidToUI($children[ $i ])) -en $enabled ( $name + "_" + `liquidSubstituteAll "[^a-zA-Z]" $children[ $i ] ""` );
+    }
+    connectControl -index 2 $menu ($node+"." + $name);
+    popupMenu -postMenuCommand ("liquidGlobalsRenderLayerOverrideUpdateMenu \""+$name+"\" \""+$prefix+"\"");
+    menuItem -l "Create Layer Override" ($prefix+"liquidGlobalsOverride_"+$name);
+    //setUITemplate -ppt;
+  } else {
+    warning ( "global attribute " + $name + " does not exist\n" );
+  }
+  liqPopIdent();
+}
 //
-//proc liquidShowBitsIntGlobalMenu( string $name, string $label, string $attr, string $prefix )
-//{
-//  liqPushIdent();
-//	liqlog("liquidShowBitsIntGlobalMenu(...)");
-//  liquidShowBitsIntGlobalMenuPlus( $name, $label, $attr, "", $prefix );
-//  liqPopIdent();
-//}
+global proc liquidShowBitsIntGlobalMenu2(string $node,  string $name, string $label, string $attr, string $prefix )
+{
+  liqPushIdent();
+	liqlog("liquidShowBitsIntGlobalMenu2(...)");
+  liquidShowBitsIntGlobalMenuPlus2( $node, $name, $label, $attr, "", $prefix );
+  liqPopIdent();
+}
 //
 //// end of local procs ---------------------------------------------------------
 //
