@@ -61,6 +61,12 @@ global proc liqTrace(string $log)
 {
 	trace($log);
 }
+global proc liqAssert(int $condition, string $msg)
+{
+	if($condition == false){
+		warning ($msg +"\n");
+	}
+}
 
 global proc liqPushIdent()
 {

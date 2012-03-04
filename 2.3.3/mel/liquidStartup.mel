@@ -113,6 +113,7 @@ global proc liquidLoadScripts()
     "liquidFluid.mel",
     "liquidFluidOutliner.mel",
     "liquidGlobals.mel",
+    "liquidGlobalsEx.mel",
     "liquidHelpers.mel",
     "liquidMenuHelp.mel",
     "liquidPaintEffects.mel",

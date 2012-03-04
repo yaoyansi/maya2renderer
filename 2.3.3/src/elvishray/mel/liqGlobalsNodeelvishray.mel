@@ -1,11 +1,238 @@
 source xxliquidutility.mel;
+source liqGlobalsNodeRenderer.mel;
 
+global string $gWindow_elvishray="liqGlobalWindow_elvishray";
+global string $gGlobalNode_elvishray="liqGlobalsNodeRenderer_elvishray";
+global string $gGlobalValue_elvishray[]=
+{
+	"testBool0",            "bool",			true
+	,"testBool1",            "bool",			false
+	,"testString0",            "string",		"string_test_value0"
+	,"testString1",            "string",		"string_test_value1"
+	,"testColor0",            "color",		"1.0|1.0|0.0"
+	,"testColor1",            "color",		"1.9|9.0|2.0"
+	,"testInt0",            "long",		"0"
+	,"testInt1",            "long",		"10"
+	,"testFloat0",          "float",	"0.0"
+	,"testFloat1",            "float",	"10.0"
+	//,"testStringArray",      "stringArray",  "xx|yyy|zzzzzz|aaa"//,
+	//long
+	//float
+	//boolArray,""
+
+
+};
 proc sayHello()
 {
 	liqlog("Hi, this is elvishray global panel.");
 }
-
-global proc liqGlobalsNodeelvishray()
+//
+proc createGlobalNode_elvishray()
 {
+	liqPushIdent();
+	liqlog("createGlobalNode_elvishray()");
+	global string $gGlobalNode_elvishray;
+	global string $gGlobalValue_elvishray[];
+
+    string $gGlobal = xxu_getSingletonNode2( "liqGlobalsNodeRenderer", getGlobalNodeName() );
+	liqAssert($gGlobal==$gGlobalNode_elvishray,"global node name error");
+
+
+	liquidAddGlobals2($gGlobalNode_elvishray, $gGlobalValue_elvishray);
+
+	liqPopIdent();
+}
+// modified from liquidGlobalsFrameTab()
+global proc liquidGlobalsTab_elvishray_AA( string $prefix )
+{
+  liqPushIdent();
+	liqlog("liquidGlobalsTab_elvishray_AA("+$prefix+")");
+	global string $gGlobalNode_elvishray;
+	string $n = $gGlobalNode_elvishray;
+  ////setUITemplate -pushTemplate attributeEditorTemplate;
+  string $previousParent = `setParent -q`;
+
+  columnLayout -adj true -vis false ($prefix + "liquidGlobalsFrameSet"+liqGetRendererName());
+    frameLayout -bs "etchedIn" -l "frameLayout0" -cll true -cl false;
+      columnLayout -adj true ;
+        liquidShowBoolGlobal2($n, "testBool0", "testBool0L", $prefix);
+        liquidShowStringGlobal2($n, "testString0", "testString0L", $prefix);
+        liquidShowIntGlobal2($n, "testInt0", "testInt0L");
+        liquidShowFloatGlobal2($n, "testFloat0", "testFloat0L");
+        liquidShowColorGlobal2($n, "testColor0", "testColor0L");
+      setParent ..;
+    setParent ..;
+
+    frameLayout -bs "etchedIn" -l "frameLayout1" -cll true -cl false;
+      columnLayout -adj true ;
+        liquidShowBoolGlobal2($n, "testBool1", "testBool1", $prefix);
+        liquidShowStringGlobal2($n, "testString1", "testString1L", $prefix);
+        liquidShowIntGlobal2($n, "testInt1", "testInt1L");
+        liquidShowFloatGlobal2($n, "testFloat1", "testFloat1L");
+        liquidShowColorGlobal2($n, "testColor1", "testColor1L");
+      setParent ..;
+    setParent ..;
+
+  setParent ..;
+  //setParent ..;
+
+  columnLayout -e -vis true ($prefix + "liquidGlobalsFrameSet"+liqGetRendererName());
+  setParent $previousParent;
+
+  //if ( `layout -q -ex liquidGlobalsTab` ) setParent liquidGlobalsTab;
+  ////setUITemplate -popTemplate;
+  liqPopIdent();
+}
+// modified from liquidCreateMayaGlobalsTab()
+proc liquidCreateGlobalsTab_elvishray( string $prefix, string $name, string $tabCallback )
+{
+  liqPushIdent();
+	liqlog("liquidCreateGlobalsTab_elvishray("+$prefix+","+$name+")");
+  // sanity check : we need valid globals
+  xxu_getSingletonNode2( "liqGlobalsNodeRenderer", getGlobalNodeName() );
+
+  string $theTabLayout = ( $prefix + "liquidGlobalNode_elvishray_TabLayout" );
+
+  setParent $theTabLayout;
+  evalEcho($tabCallback); //evalEcho ("liquidGlobals"+$name+"Tab_"+liqGetRendererName()+"( \""+$prefix+"\");");//tab callback
+  string $newlayout = ($prefix+"liquidGlobals"+$name+"Set"+liqGetRendererName());
+  if ( `layout -q -ex $newlayout` ) tabLayout -e -tabLabel $newlayout $name $theTabLayout;
+
+  liqPopIdent();
+}
+// modified from liquidCreateGlobalsTab()
+//proc createGlobalNodeWindow_elvishray()
+//{
+//	liqPushIdent();
+//	liqlog("createGlobalNodeWindow_elvishray()");
+//	
+//	global string $gWindow_elvishray;
+//
+//	string $currentParent = `setParent -q`;
+//
+//		$rnd = `getAttr liquidGlobals.renderer`;
+//		window 
+//			-title $rnd
+//			-iconName "Short Name"
+//			-widthHeight 200 55
+//			$gWindow_elvishray;
+//
+//		//setParent $unifiedRendererTabName;
+//		string $prefix = `liquidGetCurrentRenderLayerName`;
+//		// create the main tab layout
+//		if ( `about -win` == true ) {
+//			columnLayout -adjustableColumn false ($prefix+"liquidTabColumn"+$rnd);
+//		} else {
+//			columnLayout -adjustableColumn true ($prefix+"liquidTabColumn"+$rnd);
+//		}
+//		// build the content of the globals
+//		string $theTabLayout = ( $prefix + "liquidGlobalNode_elvishray_TabLayout" );
+//
+//		string $cmd;
+//		if ( `about -win` == true ) {
+//			$cmd = ("evalDeferred -lp \"tabLayout -e -w (`window -q -w unifiedRenderGlobalsWindow`-12) -h (`window -q -h unifiedRenderGlobalsWindow`-200) "+$theTabLayout+"\";");
+//		} else {
+//			$cmd = ("tabLayout -e -w (`window -q -w unifiedRenderGlobalsWindow`) -h (`window -q -h unifiedRenderGlobalsWindow`-170) "+$theTabLayout+";");
+//		}
+//		tabLayout -scrollable true -minChildWidth 200
+//				//-cc $cmd  -sc $cmd  -dcc $cmd
+//				$theTabLayout;
+//
+//		string $LAYOUT = "liquidTabLayout_elvishray";
+//		if ( `layout -q -ex $LAYOUT` ) layout -e -vis false $LAYOUT;
+//
+//
+//
+//		liquidCreateGlobalsTab_elvishray( $prefix, "AA", 
+//			"liquidGlobalsTab_elvishray_AA( \""+$prefix+"\");" );
+//		//liquidCreateGlobalsTab_elvishray( $prefix, "BB",
+//		//	"liquidGlobalsTab_elvishray_BB( \""+$prefix+"\");");
+//		
+//		// set up the tab so that it may resize and auto-build.
+//		if ( `layout -q -ex $LAYOUT` ) {
+//			tabLayout -e 
+//				//-cc $cmd -sc $cmd -dcc $cmd 
+//				$LAYOUT;
+//		}
+//		tabLayout -e 
+//			//-psc ("liquidCreateMayaGlobalsTabContent( \""+$prefix+"\" );") 
+//			$theTabLayout;
+//
+//		if ( `layout -q -ex $LAYOUT` ) 
+//			layout 
+//				-e 
+//				-vis true 
+//				$LAYOUT;
+//
+//	setParent $currentParent;
+//	liqPopIdent();
+//}
+//
+proc createGlobalNodeWindow_elvishray2()
+{
+	liqPushIdent();
+	liqlog("createGlobalNodeWindow_elvishray2()");
+	
+	global string $gWindow_elvishray;
+
+	//string $currentParent = `setParent -q`;
+
+		$rnd = `getAttr liquidGlobals.renderer`;
+		window 
+			-title $rnd
+			-iconName "Short Name"
+			-widthHeight 200 55
+			$gWindow_elvishray;
+
+		columnLayout;
+
+		xxu_getSingletonNode2( "liqGlobalsNodeRenderer", getGlobalNodeName() );
+		liquidGlobalsTab_elvishray_AA( "" );
+		//liquidCreateGlobalsTab_elvishray( $prefix, "BB",
+		//	"liquidGlobalsTab_elvishray_BB( \""+$prefix+"\");");
+		
+
+
+	//setParent $currentParent;
+	liqPopIdent();
+}
+//
+proc showGlobalNodeWindow_elvishray()
+{
+	global string $gWindow_elvishray;
+	showWindow $gWindow_elvishray;
+}
+proc hideGlobalNodeWindow_elvishray()
+{
+
+}
+//
+proc getSingletonWindow(string $window)
+{
+	liqPushIdent();
+	liqlog("getSingletonWindow("+$window+")");
+
+	if(`window -q -exists $window`)
+	{
+		liqlog($window +" already exists.\n");
+	}else{
+		//createGlobalNodeWindow_elvishray();
+		createGlobalNodeWindow_elvishray2();
+	}
+	showWindow $window;
+
+	liqPopIdent();
+}
+//
+global proc liqGlobalsNode_elvishray()
+{
+	global string $gWindow_elvishray;
+
 	sayHello();
+	
+	createGlobalNode_elvishray();
+
+	getSingletonWindow($gWindow_elvishray);
+
+	showGlobalNodeWindow_elvishray();
 }

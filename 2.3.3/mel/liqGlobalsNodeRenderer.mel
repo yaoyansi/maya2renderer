@@ -35,6 +35,11 @@
 //
 source xxliquidutility.mel;
 
+global proc string liqGetRendererName()
+{
+	return  `getAttr liquidGlobals.renderer`;
+}
+
 global proc string getGlobalNodeName()
 {
     return "liqGlobalsNodeRenderer_"+`getAttr liquidGlobals.renderer`;
@@ -63,18 +68,23 @@ global proc test()
 
 global proc liqGlobalsNodeRendererMain()
 {
-	$rnd = `getAttr liquidGlobals.renderer`;
+	liqPushIdent();
+	liqlog("liqGlobalsNodeRendererMain()");
+
+	$rnd = liqGetRendererName();
 
 	if($rnd=="renderman"){
-		liqGlobalsNoderenderman();
+		liqGlobalsNode_renderman();
 	}
 	else if($rnd=="luxrenderer"){
-		liqGlobalsNodeluxrenderer();
+		liqGlobalsNode_luxrenderer();
 	}
 	else if($rnd=="elvishray"){
-		liqGlobalsNodeelvishray();
+		liqGlobalsNode_elvishray();
 	}
 	else{
 		liqError("Unkown renderer.");
 	}
+
+	liqPopIdent();
 }

@@ -3767,6 +3767,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\mel\liquidGlobalsEx.mel"
+				>
+			</File>
+			<File
 				RelativePath="..\..\mel\liquidHelpers.mel"
 				>
 			</File>
