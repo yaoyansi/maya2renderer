@@ -371,7 +371,8 @@ namespace elvishray
 //		_S("ei_motion_Segments( int num );");
 
 		//	Trace Depth:
-		_S( ei_trace_depth(	4,4,4  ) );
+		MVector tracedepth(m_gnode->getVector("trace_depth"));
+		_S( ei_trace_depth(	tracedepth.x, tracedepth.y, tracedepth.z ) );
 
 		//	Shadow:
 //		_S("ei_Shadow( int type );");
@@ -390,8 +391,33 @@ namespace elvishray
 // 		_S("ei_lens( int type );");
 // 		_S( ei_volume( name, ei_end );");
 // 		_S("ei_geometry( int type );");
- 		_S( ei_displace( on ) );
- 		_S( ei_max_displace(1.0f) );
+
+		bool displace = m_gnode->getBool("displace");
+ 		_S( ei_displace( displace ) );
+		if(displace)
+		{
+			float max_displace = m_gnode->getFloat("max_displace");
+ 			_S( ei_max_displace(max_displace) );
+			
+			eiApprox	approx;
+			approx.method	= m_gnode->getInt("approx_method") ;//EI_APPROX_METHOD_LENGTH
+			approx.any		= m_gnode->getInt("approx_any");
+			approx.view_dep = m_gnode->getInt("approx_view_dep");//eiTRUE
+			MFloatPoint args(m_gnode->getVector("approx_args"));
+			approx.args[0]	= args.x;//2.0f
+			approx.args[1]	= args.y;
+			approx.args[2]	= args.z;
+			approx.args[3]	= args.w;
+			approx.sharp	= m_gnode->getFloat("approx_sharp");
+			approx.min_subdiv		= m_gnode->getInt("approx_min_subdiv");
+			approx.max_subdiv		= m_gnode->getInt("approx_max_subdiv");
+			approx.max_grid_size	= m_gnode->getInt("approx_max_grid_size");
+			approx.motion_factor	= m_gnode->getFloat("approx_motion_factor");//16.0f
+			
+			_S( ei_approx(&approx) );
+		}
+
+
 // 		_S("ei_imager( name , ei_end);");
 // 		_S("ei_imager( type );");
 		//	Caustics:
@@ -424,18 +450,13 @@ namespace elvishray
 // 		_S("ei_frame_buffer( const char *name, int datatype, int interpolation );");
 
 		//	Miscellaneous:
-		_S( ei_face( EI_FACE_BOTH ) );
+		int face = m_gnode->getInt("face");
+		assert( (face!=EI_FACE_NONE) && (face<EI_FACE_COUNT) );
+		_S( ei_face( face ) );
 //		_S( ei_memory( int size ) );
 		//_S( ei_ambient( 0.12f, 0.13f, 0.05f ) );
 		
-		//eiApprox
-		eiApprox	approx;
-		ei_approx_set_defaults(&approx);
-		approx.method					= EI_APPROX_METHOD_LENGTH;
-		approx.view_dep					= eiTRUE;
-		approx.args[ EI_APPROX_LENGTH ] = 2.0f;
-		approx.motion_factor			= 16.0f;
-		_S( ei_approx(&approx) );
+
 
 		_S( ei_end_options() );
 

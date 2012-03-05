@@ -12,7 +12,21 @@ global string $gGlobalValue_elvishray[]=
 	,"samples",			"string",		"0|2"//,
 	,"filterType",			"long",		"4"//,
 	,"filterSize",			"float",	"3.0"//,
-	//,"testBool0",            "bool",			true
+	//,"motion",			"bool",			"0"
+	,"trace_depth",			"string",		"4|4|4"//,
+	,"displace",            "bool",			false
+	,"max_displace",        "float",		false
+	,"face",				"long",		"3"//,
+
+	,"approx_method",			"long",		"1"//,
+	,"approx_any",				"long",		"0"//,
+	,"approx_view_dep",			"long",		"0"//,
+	,"approx_args",				"string",	"0|0|0|0"//,
+	,"approx_sharp",			"float",	"0.0"//,
+	,"approx_min_subdiv",		"long",		"0"//,
+	,"approx_max_subdiv",		"long",		"5"//,
+	,"approx_max_grid_size",	"long",		"4096"//,
+	,"approx_motion_factor",	"float",	"16.0"//,
 	//,"testBool1",            "bool",			false
 	//,"testString0",            "string",		"string_test_value0"
 	//,"testString1",            "string",		"string_test_value1"
@@ -95,14 +109,35 @@ proc liquidGlobalsTab_elvishray_AA( string $prefix )
 		"EI_FILTER_GAUSSIAN",
 		"EI_FILTER_SINC"}, $prefix);
         liquidShowFloatGlobal2($n, "filterSize", "filterSize");
-      setParent ..;
+		//liquidShowBoolGlobal2($n, "motion", "motion", $prefix);
+        liquidShowTextGlobal2($n, "motion", "see RenderSettings->liquid->Frame->MotionBlur&DepthOfField");
+        liquidShowStringGlobal2($n, "trace_depth",	"trace_depth",	$prefix);
+		liquidShowBoolGlobal2($n,	"displace",		"displace",		$prefix);
+		liquidShowFloatGlobal2($n,	"max_displace", "max_displace");
+        liquidShowIntGlobalMenu2($n, "face", "face",
+		{"EI_FACE_FRONT",
+		"EI_FACE_BACK",
+		"EI_FACE_BOTH"}, $prefix);
+	  setParent ..;
     setParent ..;
 
-    frameLayout -bs "etchedIn" -l "frameLayout1" -cll true -cl false;
+    frameLayout -bs "etchedIn" -l "approx" -cll true -cl false;
       columnLayout -adj true ;
+        liquidShowIntGlobalMenu2($n, "approx_method", "method",
+		{"EI_APPROX_METHOD_NONE",
+		"EI_APPROX_METHOD_REGULAR",
+		"EI_APPROX_METHOD_LENGTH"}, $prefix);
+		liquidShowIntGlobal2($n,	"approx_any",		"any");
+		liquidShowIntGlobal2($n,	"approx_view_dep",	"view_dep");
+        liquidShowStringGlobal2($n, "approx_args",		"args[0~4]",	$prefix);
+        liquidShowFloatGlobal2($n,	"approx_sharp",		"sharp");
+		liquidShowIntGlobal2($n,	"approx_min_subdiv",	"min_subdiv");
+		liquidShowIntGlobal2($n,	"approx_max_subdiv",	"max_subdiv");
+		liquidShowIntGlobal2($n,	"approx_max_grid_size",	"max_grid_size");
+        liquidShowFloatGlobal2($n,	"approx_motion_factor", "motion_factor");
         //liquidShowBoolGlobal2($n, "testBool1", "testBool1", $prefix);
         //liquidShowStringGlobal2($n, "testString1", "testString1L", $prefix);
-        //liquidShowIntGlobal2($n, "testInt1", "testInt1L");
+
         //liquidShowFloatGlobal2($n, "testFloat1", "testFloat1L");
         //liquidShowColorGlobal2($n, "testColor1", "testColor1L");
       setParent ..;

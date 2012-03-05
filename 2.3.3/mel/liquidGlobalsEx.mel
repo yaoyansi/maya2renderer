@@ -514,6 +514,14 @@ global proc liquidShowBitsIntGlobalMenu2(string $node,  string $name, string $la
   liqPopIdent();
 }
 //
+global proc liquidShowTextGlobal2(string $node,  string $name, string $msg )
+{
+  liqPushIdent();
+	liqlog("liquidShowTextGlobal2("+$node+","+$name+","+$msg+")");
+  text -label ($name+":"+$msg);
+  liqPopIdent();
+}
+//
 //// end of local procs ---------------------------------------------------------
 //
 //
