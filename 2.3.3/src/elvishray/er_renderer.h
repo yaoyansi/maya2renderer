@@ -10,6 +10,7 @@ namespace liquid{
 
 struct eiContext;
 class MFnMEsh;
+class liqGlobalNodeHelper;
 
 namespace elvishray
 {
@@ -275,6 +276,9 @@ namespace elvishray
 			const MString& node,
 			const std::string& plug_
 			);
+
+
+		liqGlobalNodeHelper *m_gnode;
 
 		eiContext *CONTEXT;
 	};

@@ -5,18 +5,25 @@ global string $gWindow_elvishray="liqGlobalWindow_elvishray";
 global string $gGlobalNode_elvishray="liqGlobalsNodeRenderer_elvishray";
 global string $gGlobalValue_elvishray[]=
 {
-	"testBool0",            "bool",			true
-	,"testBool1",            "bool",			false
-	,"testString0",            "string",		"string_test_value0"
-	,"testString1",            "string",		"string_test_value1"
-	,"testColor0",            "color",		"1.0|1.0|0.0"
-	,"testColor1",            "color",		"1.9|9.0|2.0"
-	,"testInt0",            "long",		"0"
-	,"testInt1",            "long",		"10"
-	,"testFloat0",          "float",	"0.0"
-	,"testFloat1",            "float",	"10.0"
-	,"testIntMenu0",           "long",	"0"
-	,"testIntMenu1",           "long",	"1"
+	"verbose",          "long",	"6"
+	,"link",			"string",		"eiIMG|eiSHADER|eiSHADER_maya"//,
+	//options
+	,"contrast",		"string",		"0.05|0.05|0.05|0.05"//,
+	,"samples",			"string",		"0|2"//,
+	,"filterType",			"long",		"4"//,
+	,"filterSize",			"float",	"3.0"//,
+	//,"testBool0",            "bool",			true
+	//,"testBool1",            "bool",			false
+	//,"testString0",            "string",		"string_test_value0"
+	//,"testString1",            "string",		"string_test_value1"
+	//,"testColor0",            "color",		"1.0|1.0|0.0"
+	//,"testColor1",            "color",		"1.9|9.0|2.0"
+	//,"testInt0",            "long",		"0"
+	//,"testInt1",            "long",		"10"
+	//,"testFloat0",          "float",	"0.0"
+	//,"testFloat1",            "float",	"10.0"
+	//,"testIntMenu0",           "long",	"0"
+	//,"testIntMenu1",           "long",	"1"
 	//,"testStringArray",      "stringArray",  "xx|yyy|zzzzzz|aaa"//,
 	//long
 	//float
@@ -55,25 +62,49 @@ proc liquidGlobalsTab_elvishray_AA( string $prefix )
   string $previousParent = `setParent -q`;
 
   columnLayout -adj true -vis false ($prefix + "liquidGlobalsFrameSet"+liqGetRendererName());
-    frameLayout -bs "etchedIn" -l "frameLayout0" -cll true -cl false;
+    frameLayout -bs "etchedIn" -l "verbose & link" -cll true -cl false;
       columnLayout -adj true ;
-        liquidShowBoolGlobal2($n, "testBool0", "testBool0L", $prefix);
-        liquidShowStringGlobal2($n, "testString0", "testString0L", $prefix);
-        liquidShowIntGlobal2($n, "testInt0", "testInt0L");
-        liquidShowFloatGlobal2($n, "testFloat0", "testFloat0L");
-        liquidShowColorGlobal2($n, "testColor0", "testColor0L");
-        liquidShowIntGlobalMenu2($n, "testIntMenu0", "Preview Type", {"A", "B C", "DE"}, $prefix);
+        liquidShowIntGlobalMenu2($n, "verbose", "verbose", 
+		{"EI_VERBOSE_NONE",
+		"EI_VERBOSE_FATAL",
+		"EI_VERBOSE_ERROR",
+		"EI_VERBOSE_WARNING",
+		"EI_VERBOSE_INFO",
+		"EI_VERBOSE_DEBUG",
+		"EI_VERBOSE_ALL"}, $prefix);
+        liquidShowStringGlobal2($n, "link",		"link",		$prefix);
+        //liquidShowBoolGlobal2($n, "testBool0", "testBool0L", $prefix);
+        //liquidShowStringGlobal2($n, "testString0", "testString0L", $prefix);
+        //liquidShowIntGlobal2($n, "testInt0", "testInt0L");
+        //liquidShowFloatGlobal2($n, "testFloat0", "testFloat0L");
+        //liquidShowColorGlobal2($n, "testColor0", "testColor0L");
+        //liquidShowIntGlobalMenu2($n, "testIntMenu0", "Preview Type", {"A", "B C", "DE"}, $prefix);
 
+      setParent ..;
+    setParent ..;
+
+    frameLayout -bs "etchedIn" -l "options" -cll true -cl false;
+      columnLayout -adj true ;
+        liquidShowStringGlobal2($n, "contrast",	"contrast",			$prefix);
+        liquidShowStringGlobal2($n, "samples",	"samples(min,max)",	$prefix);
+        liquidShowIntGlobalMenu2($n, "filterType", "filterType", 
+		{"EI_FILTER_NONE",
+		"EI_FILTER_BOX",
+		"EI_FILTER_TRIANGLE",
+		"EI_FILTER_CATMULLROM",
+		"EI_FILTER_GAUSSIAN",
+		"EI_FILTER_SINC"}, $prefix);
+        liquidShowFloatGlobal2($n, "filterSize", "filterSize");
       setParent ..;
     setParent ..;
 
     frameLayout -bs "etchedIn" -l "frameLayout1" -cll true -cl false;
       columnLayout -adj true ;
-        liquidShowBoolGlobal2($n, "testBool1", "testBool1", $prefix);
-        liquidShowStringGlobal2($n, "testString1", "testString1L", $prefix);
-        liquidShowIntGlobal2($n, "testInt1", "testInt1L");
-        liquidShowFloatGlobal2($n, "testFloat1", "testFloat1L");
-        liquidShowColorGlobal2($n, "testColor1", "testColor1L");
+        //liquidShowBoolGlobal2($n, "testBool1", "testBool1", $prefix);
+        //liquidShowStringGlobal2($n, "testString1", "testString1L", $prefix);
+        //liquidShowIntGlobal2($n, "testInt1", "testInt1L");
+        //liquidShowFloatGlobal2($n, "testFloat1", "testFloat1L");
+        //liquidShowColorGlobal2($n, "testColor1", "testColor1L");
       setParent ..;
     setParent ..;
 

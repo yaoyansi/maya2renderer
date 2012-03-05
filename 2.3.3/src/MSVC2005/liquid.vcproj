@@ -3959,6 +3959,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\liqGlobalNodeHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\liqGlobalNodeHelper.h"
+				>
+			</File>
+			<File
 				RelativePath="..\liqtypes.cpp"
 				>
 			</File>
@@ -4059,6 +4067,14 @@
 				</File>
 				<File
 					RelativePath="..\elvishray\er_factory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\er_GlobalNodeHelper.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\er_GlobalNodeHelper.h"
 					>
 				</File>
 				<File

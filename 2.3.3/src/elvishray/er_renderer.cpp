@@ -31,6 +31,7 @@
 #include "MayaConnection.h"
 #include "er_groupmgr.h"
 #include "log_helper.h"
+#include "er_GlobalNodeHelper.h"
 
 namespace elvishray
 {
@@ -43,13 +44,16 @@ namespace elvishray
 // 		liquid::RendererMgr::getInstancePtr()->registerRenderer(
 // 			"elvishray", this
 // 			);
+		m_gnode = new GlobalNodeHelper("liqGlobalsNodeRenderer_elvishray");
 	}
 	//
 	Renderer::~Renderer()
 	{
+		delete m_gnode;
+		m_gnode = 0;
+
 		delete m_groupMgr; 
 		m_groupMgr = 0;
-
 	}
 	//
 	void Renderer::test()
@@ -264,10 +268,15 @@ namespace elvishray
 
 		_S( ei_connection(&(MayaConnection::getInstance()->connection.base)) );
 
-		_S( ei_verbose(	EI_VERBOSE_ALL ) );
-		_S( ei_link( "eiIMG" ) );
-		_S( ei_link( "eiSHADER" ) );
-		_S( ei_link( "eiSHADER_maya" ) );
+		//verbose
+		_S( ei_verbose(	m_gnode->getInt("verbose") ) );
+
+		//link
+		MStringArray link(m_gnode->getStringArray("link"));
+		for(std::size_t i=0; i< link.length(); ++i)
+		{
+			_S( ei_link( link[i].asChar() ) );
+		}
 
 		m_root_group = currentJob.name.asChar();
 		m_groupMgr->createGroup(m_root_group);//
@@ -327,15 +336,24 @@ namespace elvishray
 		//ei_incremental_options( const char *name );
 
 		//	Sampling Quality:
-		_S( ei_contrast(  0.05f, 0.05f, 0.05f, 0.05f ) );
+		MFloatPoint contrast(m_gnode->getVector("contrast"));
+		_S( ei_contrast( contrast.x, contrast.y, contrast.z, contrast.w ) );
+		
 		if( currentJob.isShadow ){
+			_s("//this is a shadow pass, how to deal with the samples and filter?");
 			_S( ei_samples( currentJob.shadowPixelSamples, currentJob.shadowPixelSamples ) );
 			_S( ei_filter( EI_FILTER_BOX, 1 ) );
 			//_S( ei_shading_rate( currentJob.shadingRateFactor ) );
 
 		}else{
-			_S( ei_samples(0,2) );//_S("ei_Samples("<< liqglo.pixelSamples<<","<<liqglo.pixelSamples<<");");//4,4
-			_S( ei_filter( EI_FILTER_GAUSSIAN, 3.0f ) );
+			//sample
+			MFloatPoint sample(m_gnode->getVector("samples"));
+			_S( ei_samples(sample.x, sample.y) );//_S("ei_Samples("<< liqglo.pixelSamples<<","<<liqglo.pixelSamples<<");");//4,4
+			
+			//filter
+			eiInt filterType = m_gnode->getInt("filterType");
+			eiScalar filterSize = m_gnode->getFloat("filterSize");
+			_S( ei_filter( filterType, filterSize ) );
 			//_S( ei_shading_rate( liqglo.shadingRate ) );
 		}
 //		_S("ei_bucket_Size( int size );");

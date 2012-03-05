@@ -83,7 +83,7 @@ global proc liqGlobalsNodeRendererMain()
 		liqGlobalsNode_elvishray();
 	}
 	else{
-		liqError("Unkown renderer.");
+		liqError("Unkown renderer("+$rnd+").");
 	}
 
 	liqPopIdent();
