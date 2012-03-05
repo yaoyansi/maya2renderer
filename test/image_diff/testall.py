@@ -116,10 +116,14 @@ def test_all_scene():
     #MyTestOne.test_one_scene(testFile, "renderman")
 
     #animation
-    testFile=LIQUID_ROOT+"/2.3.3/test/test_animation/checker_anim.ma"
-    MyTestOne.test_one_scene(testFile, "renderman")
+    #testFile=LIQUID_ROOT+"/2.3.3/test/test_animation/checker_anim.ma"
+    #MyTestOne.test_one_scene(testFile, "renderman")
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_animation/er_anim.ma"
     #MyTestOne.test_one_scene(testFile, "elvishray")
+
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_simple.ma"
+    MyTestOne.test_one_scene(testFile, "elvishray")
+    MyTestOne.test_one_scene(testFile, "renderman")
 
 def main():
     configMayaEnv()

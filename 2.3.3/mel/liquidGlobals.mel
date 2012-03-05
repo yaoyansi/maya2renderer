@@ -1558,7 +1558,7 @@ global proc liquidBuildRendererMenu( string $prefix )
 
   for ( $i=0; $i<size($renderer); $i++ ) {
     menuItem -parent ($prefix+"LG_RendererMenuCtl") -label $renderer[$i] 
-	         -c ("{setAttr -type \"string\" liquidGlobals.renderer "+$renderer[$i]+";}");
+	         -c ("{setAttr -type \"string\" liquidGlobals.renderer "+$renderer[$i]+";liqGlobalsNodeRendererMain(\"create\");}");
   }
   liqPopIdent();
 }
@@ -2630,7 +2630,7 @@ global proc liquidGlobalsFrameTab( string $prefix )
 			  -parent ($prefix + "LG_RendererButtonCtl") -b 1 
 			  -pmc ( "liquidBuildRendererMenu \""+$prefix+"\"" ) 
 			  ($prefix+"LG_RendererMenuCtl");
-		  button -label "show global node panel"  -rs true -c "liqGlobalsNodeRendererMain()";
+		  button -label "show global node panel"  -rs true -c "liqGlobalsNodeRendererMain(\"show\")";
       setParent ..;
     setParent ..;
 

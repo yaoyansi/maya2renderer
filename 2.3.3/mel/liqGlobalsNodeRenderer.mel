@@ -66,21 +66,21 @@ global proc string getGlobalNodeName()
 // 	addParameter($gGlobal, "tStringAttr1", "string", "tDefaultVale1");
 // }
 
-global proc liqGlobalsNodeRendererMain()
+global proc liqGlobalsNodeRendererMain(string $cmd)
 {
 	liqPushIdent();
-	liqlog("liqGlobalsNodeRendererMain()");
+	liqlog("liqGlobalsNodeRendererMain("+$cmd+")");
 
 	$rnd = liqGetRendererName();
 
 	if($rnd=="renderman"){
-		liqGlobalsNode_renderman();
+		liqGlobalsNode_renderman($cmd);
 	}
 	else if($rnd=="luxrenderer"){
-		liqGlobalsNode_luxrenderer();
+		liqGlobalsNode_luxrenderer($cmd);
 	}
 	else if($rnd=="elvishray"){
-		liqGlobalsNode_elvishray();
+		liqGlobalsNode_elvishray($cmd);
 	}
 	else{
 		liqError("Unkown renderer("+$rnd+").");

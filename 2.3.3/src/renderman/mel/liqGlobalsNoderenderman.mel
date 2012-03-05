@@ -118,15 +118,6 @@ proc createGlobalNodeWindow_renderman2()
 	liqPopIdent();
 }
 //
-proc showGlobalNodeWindow_renderman()
-{
-	global string $gWindow_renderman;
-	showWindow $gWindow_renderman;
-}
-proc hideGlobalNodeWindow_renderman()
-{
-
-}
 proc getSingletonWindow(string $window)
 {
 	liqPushIdent();
@@ -138,19 +129,46 @@ proc getSingletonWindow(string $window)
 	}else{
 		createGlobalNodeWindow_renderman2();
 	}
-	showWindow $window;
+	//showWindow $window;
 
 	liqPopIdent();
 }
-global proc liqGlobalsNode_renderman()
+//
+proc showGlobalNodeWindow_renderman()
 {
+	liqPushIdent();
+	liqlog("showGlobalNodeWindow_renderman()");
+
+	global string $gWindow_renderman;
+
+	getSingletonWindow($gWindow_renderman);
+	showWindow $gWindow_renderman;
+
+	liqPopIdent();
+}
+//
+proc hideGlobalNodeWindow_renderman()
+{
+	liqPushIdent();
+	liqlog("hideGlobalNodeWindow_renderman()");
+	liqPopIdent();
+}
+//
+global proc liqGlobalsNode_renderman(string $cmd)
+{
+	liqPushIdent();
+	liqlog("liqGlobalsNode_renderman("+$cmd+")");
+
 	global string $gWindow_renderman;
 
 	sayHello();
 	
-	createGlobalNode_renderman();
+	if($cmd=="create") {
+		createGlobalNode_renderman();	
+	}
+	else if($cmd=="show"){
+		showGlobalNodeWindow_renderman();
+	}
 
-	getSingletonWindow($gWindow_renderman);
-
-	showGlobalNodeWindow_renderman();
+	liqPopIdent();
 }
