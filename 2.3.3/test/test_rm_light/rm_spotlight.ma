@@ -1,6 +1,6 @@
 //Maya ASCII 2009 scene
 //Name: rm_spotlight.ma
-//Last modified: Tue, Mar 06, 2012 08:49:04 PM
+//Last modified: Tue, Mar 06, 2012 09:36:57 PM
 //Codeset: 936
 requires maya "2009";
 requires "liquid_2009x32d" "2.3.5 (buildtime=18:08:51.37)";

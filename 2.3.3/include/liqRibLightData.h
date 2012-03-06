@@ -37,6 +37,7 @@
 #include <liquid.h>
 #include <liqRibData.h>
 #include <liqShader.h>
+#include "../src/liqtypes.h"
 
 class liqRibLightData : public liqRibData {
 public:
@@ -58,6 +59,11 @@ public:
 
   MString       autoShadowName( int PointLightDir = -1 ) const;
   const char* getName()const{ return lightName.asChar(); }
+
+#ifdef Refactoring
+  static void scaleZ_forRenderman(liqMatrix& desMatrix, const liqMatrix& srcMatrix);
+#endif
+
 private:
   void       _write(const structJob &currentJob);
   MString       extraShadowName( const MFnDependencyNode & lightShaderNode, const int & index ) const;

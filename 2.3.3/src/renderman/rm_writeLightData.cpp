@@ -54,7 +54,11 @@ namespace renderman
 		const liqColor & color,
 		const liqMatrix &transform)
 	{
-		RiConcatTransform( * const_cast< RtMatrix* >( &transform ) );
+		liqMatrix transformationMatrixScaledZ;
+		liqRibLightData::scaleZ_forRenderman(
+			transformationMatrixScaledZ, transform
+			);
+		RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrixScaledZ ) );
 		return RiLightSource( "ambientlight",
 			"intensity",  &intensity,
 			"lightcolor", color,
@@ -81,7 +85,11 @@ namespace renderman
 		const liqFloat &o_nonspecular,
 		const liqMatrix &transform)
 	{
-		RiConcatTransform( * const_cast< RtMatrix* >( &transform ) );
+		liqMatrix transformationMatrixScaledZ;
+		liqRibLightData::scaleZ_forRenderman(
+			transformationMatrixScaledZ, transform
+			);
+		RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrixScaledZ ) );
 		return RiLightSource( 
 			"liquiddistant",
 			"intensity",              &i_intensity,
@@ -130,7 +138,11 @@ namespace renderman
 		const liqFloat &o_nonspecular,
 		const liqMatrix &transform)
 	{
-		RiConcatTransform( * const_cast< RtMatrix* >( &transform ) );
+		liqMatrix transformationMatrixScaledZ;
+		liqRibLightData::scaleZ_forRenderman(
+			transformationMatrixScaledZ, transform
+			);
+		RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrixScaledZ ) );
 		return RiLightSource( "liquidpoint",
 			"intensity",                  &i_intensity,
 			"lightcolor",                 &i_lightcolor,
@@ -208,7 +220,11 @@ namespace renderman
 		liqFloat _i_coneangle     = i_coneangle * 0.5f;
 		liqFloat _i_penumbraangle = i_penumbraangle;
 
-		RiConcatTransform( * const_cast< RtMatrix* >( &transform ) );
+		liqMatrix transformationMatrixScaledZ;
+		liqRibLightData::scaleZ_forRenderman(
+			transformationMatrixScaledZ, transform
+			);
+		RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrixScaledZ ) );
 		return RiLightSource( "liquidspot",
 			"intensity",                    &i_intensity,
 			"lightcolor",                   &i_lightcolor,
@@ -282,7 +298,11 @@ namespace renderman
 		const liqColor &o_arealightColor,
 		const liqMatrix &transform)
 	{
-		RiConcatTransform( * const_cast< RtMatrix* >( &transform ) );
+		liqMatrix transformationMatrixScaledZ;
+		liqRibLightData::scaleZ_forRenderman(
+			transformationMatrixScaledZ, transform
+			);
+		RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrixScaledZ ) );
 		return RiLightSource( "liquidarea",
 			"float intensity",            &i_intensity,
 			"color lightcolor",           &i_lightcolor,

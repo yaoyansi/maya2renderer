@@ -62,7 +62,9 @@
 #include <liqGlobalVariable.h>
 #include "renderermgr.h"
 #include "renderman/rm_helper.h"
-
+#ifdef Refactoring
+#include "liqRibTranslator.h"
+#endif
 using namespace std;
 
 /** Create a RIB compatible representation of a Maya light.
@@ -1364,7 +1366,11 @@ void liqRibLightData::_write(const structJob &currentJob)
           RtString shaderName = const_cast< RtString >( assignedRManShader.asChar() );
           handle = RiLightSourceV( shaderName, numTokens, tokenArray.get(), pointerArray.get() );
           */
-			RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrix ) );
+			liqMatrix transformationMatrixScaledZ;
+			liqRibLightData::scaleZ_forRenderman(
+				transformationMatrixScaledZ, transformationMatrix
+				);
+			RiConcatTransform( * const_cast< RtMatrix* >( &transformationMatrixScaledZ ) );
           rmanLightShader.write();
  		  #ifdef RIBLIB_AQSIS
  		  handle = reinterpret_cast<RtLightHandle>(static_cast<ptrdiff_t>(rmanLightShader.shaderHandler.asInt()));
@@ -1655,6 +1661,16 @@ MString liqRibLightData::extraShadowName( const MFnDependencyNode & lightShaderN
 
   return shadowName;
 }
-
-
+#ifdef Refactoring
+void liqRibLightData::scaleZ_forRenderman(liqMatrix& desMatrix, const liqMatrix& srcMatrix)
+{
+	liqRIBMsg("scale z in transform matrix");
+	MMatrix tmpM(srcMatrix);
+	MTransformationMatrix worldMatrix = tmpM;
+	double scale[] = { 1.0, 1.0, -1.0 };
+	worldMatrix.setScale( scale, MSpace::kTransform );
+	MMatrix worldMatrixM( worldMatrix.asMatrix() );
+	worldMatrixM.get( desMatrix );
+}
+#endif
 
