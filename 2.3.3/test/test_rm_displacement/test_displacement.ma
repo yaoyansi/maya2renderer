@@ -1,9 +1,9 @@
 //Maya ASCII 2009 scene
 //Name: test_displacement.ma
-//Last modified: Sun, Feb 26, 2012 08:12:07 PM
+//Last modified: Tue, Mar 06, 2012 08:16:52 PM
 //Codeset: 936
 requires maya "2009";
-requires "liquid_2009x32d" "2.3.5 (buildtime=19:44:06.79)";
+requires "liquid_2009x32d" "2.3.5 (buildtime=18:08:51.37)";
 requires "stereoCamera" "10.0";
 currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
@@ -319,6 +319,59 @@ createNode shadingEngine -n "lambert2SG";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
 createNode materialInfo -n "materialInfo5";
+createNode liqGlobalsNodeRenderer -n "liqGlobalsNodeRenderer_elvishray";
+	addAttr -ci true -h true -sn "verbose" -ln "verbose" -dv 6 -at "long";
+	addAttr -ci true -h true -sn "link" -ln "link" -dt "string";
+	addAttr -ci true -h true -sn "contrast" -ln "contrast" -dt "string";
+	addAttr -ci true -h true -sn "samples" -ln "samples" -dt "string";
+	addAttr -ci true -h true -sn "filterType" -ln "filterType" -dv 4 -at "long";
+	addAttr -ci true -h true -sn "filterSize" -ln "filterSize" -dv 3 -at "float";
+	addAttr -ci true -h true -sn "trace_depth" -ln "trace_depth" -dt "string";
+	addAttr -ci true -h true -sn "displace" -ln "displace" -min 0 -max 1 -at "bool";
+	addAttr -ci true -h true -sn "max_displace" -ln "max_displace" -at "float";
+	addAttr -ci true -h true -sn "face" -ln "face" -dv 3 -at "long";
+	addAttr -ci true -h true -sn "approx_method" -ln "approx_method" -dv 1 -at "long";
+	addAttr -ci true -h true -sn "approx_any" -ln "approx_any" -at "long";
+	addAttr -ci true -h true -sn "approx_view_dep" -ln "approx_view_dep" -at "long";
+	addAttr -ci true -h true -sn "approx_args" -ln "approx_args" -dt "string";
+	addAttr -ci true -h true -sn "approx_sharp" -ln "approx_sharp" -at "float";
+	addAttr -ci true -h true -sn "approx_min_subdiv" -ln "approx_min_subdiv" -at "long";
+	addAttr -ci true -h true -sn "approx_max_subdiv" -ln "approx_max_subdiv" -dv 5 -at "long";
+	addAttr -ci true -h true -sn "approx_max_grid_size" -ln "approx_max_grid_size" -dv 
+		4096 -at "long";
+	addAttr -ci true -h true -sn "approx_motion_factor" -ln "approx_motion_factor" -dv 
+		16 -at "float";
+	setAttr ".link" -type "string" "eiIMG|eiSHADER|eiSHADER_maya";
+	setAttr ".contrast" -type "string" "0.05|0.05|0.05|0.05";
+	setAttr ".samples" -type "string" "0|2";
+	setAttr ".trace_depth" -type "string" "4|4|4";
+	setAttr ".approx_args" -type "string" "0|0|0|0";
+createNode liqGlobalsNodeRenderer -n "liqGlobalsNodeRenderer_renderman";
+	addAttr -ci true -h true -sn "testBool0" -ln "testBool0" -min 0 -max 1 -at "bool";
+	addAttr -ci true -h true -sn "testBool1" -ln "testBool1" -min 0 -max 1 -at "bool";
+	addAttr -ci true -h true -sn "testString0" -ln "testString0" -dt "string";
+	addAttr -ci true -h true -sn "testString1" -ln "testString1" -dt "string";
+	addAttr -ci true -uac -h true -sn "testColor0" -ln "testColor0" -at "float3" -nc 
+		3;
+	addAttr -ci true -sn "testColor0R" -ln "testColor0R" -at "float" -p "testColor0";
+	addAttr -ci true -sn "testColor0G" -ln "testColor0G" -at "float" -p "testColor0";
+	addAttr -ci true -sn "testColor0B" -ln "testColor0B" -at "float" -p "testColor0";
+	addAttr -ci true -uac -h true -sn "testColor1" -ln "testColor1" -at "float3" -nc 
+		3;
+	addAttr -ci true -sn "testColor1R" -ln "testColor1R" -at "float" -p "testColor1";
+	addAttr -ci true -sn "testColor1G" -ln "testColor1G" -at "float" -p "testColor1";
+	addAttr -ci true -sn "testColor1B" -ln "testColor1B" -at "float" -p "testColor1";
+	addAttr -ci true -h true -sn "testInt0" -ln "testInt0" -at "long";
+	addAttr -ci true -h true -sn "testInt1" -ln "testInt1" -dv 10 -at "long";
+	addAttr -ci true -h true -sn "testFloat0" -ln "testFloat0" -at "float";
+	addAttr -ci true -h true -sn "testFloat1" -ln "testFloat1" -dv 10 -at "float";
+	addAttr -ci true -h true -sn "testIntMenu0" -ln "testIntMenu0" -at "long";
+	addAttr -ci true -h true -sn "testIntMenu1" -ln "testIntMenu1" -dv 1 -at "long";
+	setAttr ".testBool0" yes;
+	setAttr ".testString0" -type "string" "string_test_value0renderman";
+	setAttr ".testString1" -type "string" "string_test_value1renderman";
+	setAttr ".testColor0" -type "float3" 1 1 0 ;
+	setAttr ".testColor1" -type "float3" 1.9 9 2 ;
 select -ne :time1;
 	setAttr ".o" 1;
 select -ne :renderPartition;
