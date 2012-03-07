@@ -102,8 +102,8 @@ def test_all_scene():
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_er_env/er_env_simple_env.ma"
     #MyTestOne.test_one_scene(testFile, "elvishray")
-    #testFile=LIQUID_ROOT+"/2.3.3/test/test_er_env/er_env_physicalsky.ma"
-    #MyTestOne.test_one_scene(testFile, "elvishray")
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_er_env/er_env_physicalsky.ma"
+    MyTestOne.test_one_scene(testFile, "elvishray")
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_displacement/test_displacement.ma"
     #MyTestOne.test_one_scene(testFile, "renderman")

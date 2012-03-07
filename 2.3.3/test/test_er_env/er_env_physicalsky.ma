@@ -1,9 +1,9 @@
 //Maya ASCII 2009 scene
 //Name: er_env_physicalsky.ma
-//Last modified: Tue, Mar 06, 2012 08:16:00 PM
+//Last modified: Wed, Mar 07, 2012 11:32:55 PM
 //Codeset: 936
 requires maya "2009";
-requires "liquid_2009x32d" "2.3.5 (buildtime=18:08:51.37)";
+requires "liquid_2009x32d" "2.3.5 (buildtime=22:27:50.67)";
 requires "stereoCamera" "10.0";
 currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
@@ -116,6 +116,10 @@ createNode transform -n "pCube2";
 	setAttr ".r" -type "double3" 10.432042626644748 48.986400556424663 7.0332577059692278 ;
 	setAttr ".s" -type "double3" 12.892554075397044 0.50627139591860237 12.892554075397044 ;
 createNode mesh -n "pCubeShape2" -p "pCube2";
+	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
+	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
+	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
+	addAttr -ci true -sn "mmd" -ln "miMaxDisplace" -min 0 -smx 1 -at "float";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
 	setAttr ".vif" yes;
@@ -163,8 +167,8 @@ createNode camera -n "cameraShape2" -p "camera2";
 	setAttr ".man" -type "string" "camera2_mask";
 	setAttr -k on ".liqEnvironmentShader";
 createNode lightLinker -n "lightLinker1";
-	setAttr -s 6 ".lnk";
-	setAttr -s 6 ".slnk";
+	setAttr -s 7 ".lnk";
+	setAttr -s 7 ".slnk";
 createNode displayLayerManager -n "layerManager";
 createNode displayLayer -n "defaultLayer";
 createNode renderLayerManager -n "renderLayerManager";
@@ -423,7 +427,7 @@ createNode liquidSurface -n "liquidSurface4";
 	setAttr ".rpr" -type "stringArray" 17 "sun_dir" "sun_disk_size" "sun_disk_intensity" "sun_glow_size" "sun_glow_intensity" "sun_glow_falloff" "ground_color" "visibility_to_camera" "type" "haze" "zenith_color" "a" "b" "c" "d" "e" "intensity"  ;
 	setAttr ".rdt" -type "stringArray" 17 "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform"  ;
 	setAttr ".rty" -type "stringArray" 17 "vector" "float" "float" "float" "float" "float" "color" "float" "float" "float" "color" "float" "float" "float" "float" "float" "float"  ;
-	setAttr ".rdf" -type "stringArray" 17 "0.0:1.0:0.0" "1.0" "10.0" "1.0" "1.0" "5.0" "0.2000000.2000000.200000" "1" "0" "0.1" "0.109000.109000.10900" "-1.0" "-0.32" "10.0" "-3.0" "0.45" "0.5"  ;
+	setAttr ".rdf" -type "stringArray" 17 "0.577:0.577:0.577" "2.0" "7.0" "1.0" "1.0" "5.0" "0.2000000.2000000.200000" "1" "0" "5.0" "0.109000.109000.10900" "-1.0" "-0.32" "10.0" "-3.0" "0.45" "0.5"  ;
 	setAttr ".ras" -type "Int32Array" 17 -1 -1 -1 -1 -1 -1
 		 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 ;
 	setAttr ".rlc" -type "stringArray" 17 "liquidAE_LifVector( \"sun_dir\", -1, \"vector\", \"sun_dir\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_disk_size\", -1, \"float\", \"sun_disk_size\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_disk_intensity\", -1, \"float\", \"sun_disk_intensity\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_glow_size\", -1, \"float\", \"sun_glow_size\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_glow_intensity\", -1, \"float\", \"sun_glow_intensity\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_glow_falloff\", -1, \"float\", \"sun_glow_falloff\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifColor( \"ground_color\", -1, \"color\", \"ground_color\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"visibility_to_camera\", -1, \"float\", \"visibility_to_camera\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"type\", -1, \"float\", \"type\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"haze\", -1, \"float\", \"haze\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifColor( \"zenith_color\", -1, \"color\", \"zenith_color\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"a\", -1, \"float\", \"a\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"b\", -1, \"float\", \"b\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"c\", -1, \"float\", \"c\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"d\", -1, \"float\", \"d\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"e\", -1, \"float\", \"e\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"intensity\", -1, \"float\", \"intensity\", {\"0\", \"0\"}, \"\", 14 );"  ;
@@ -503,13 +507,82 @@ createNode liqGlobalsNodeRenderer -n "liqGlobalsNodeRenderer_elvishray";
 	setAttr ".samples" -type "string" "0|2";
 	setAttr ".trace_depth" -type "string" "4|4|4";
 	setAttr ".approx_args" -type "string" "0|0|0|0";
+createNode liquidSurface -n "liquidSurface5";
+	addAttr -ci true -h true -k true -sn "sun_dir" -ln "sun_dir" -at "double3" -nc 
+		3;
+	addAttr -ci true -h true -k true -sn "sun_dira" -ln "sun_dira" -at "double" -p "sun_dir";
+	addAttr -ci true -h true -k true -sn "sun_dirb" -ln "sun_dirb" -at "double" -p "sun_dir";
+	addAttr -ci true -h true -k true -sn "sun_dirc" -ln "sun_dirc" -at "double" -p "sun_dir";
+	addAttr -ci true -h true -sn "sun_disk_size" -ln "sun_disk_size" -at "double";
+	addAttr -ci true -h true -sn "sun_disk_intensity" -ln "sun_disk_intensity" -at "double";
+	addAttr -ci true -h true -sn "sun_glow_size" -ln "sun_glow_size" -at "double";
+	addAttr -ci true -h true -sn "sun_glow_intensity" -ln "sun_glow_intensity" -at "double";
+	addAttr -ci true -h true -sn "sun_glow_falloff" -ln "sun_glow_falloff" -at "double";
+	addAttr -ci true -uac -h true -k true -sn "ground_color" -ln "ground_color" -at "float3" 
+		-nc 3;
+	addAttr -ci true -h true -k true -sn "ground_colora" -ln "ground_colora" -at "float" 
+		-p "ground_color";
+	addAttr -ci true -h true -k true -sn "ground_colorb" -ln "ground_colorb" -at "float" 
+		-p "ground_color";
+	addAttr -ci true -h true -k true -sn "ground_colorc" -ln "ground_colorc" -at "float" 
+		-p "ground_color";
+	addAttr -ci true -h true -sn "visibility_to_camera" -ln "visibility_to_camera" -at "double";
+	addAttr -ci true -h true -sn "type" -ln "type" -at "double";
+	addAttr -ci true -h true -sn "haze" -ln "haze" -at "double";
+	addAttr -ci true -uac -h true -k true -sn "zenith_color" -ln "zenith_color" -at "float3" 
+		-nc 3;
+	addAttr -ci true -h true -k true -sn "zenith_colora" -ln "zenith_colora" -at "float" 
+		-p "zenith_color";
+	addAttr -ci true -h true -k true -sn "zenith_colorb" -ln "zenith_colorb" -at "float" 
+		-p "zenith_color";
+	addAttr -ci true -h true -k true -sn "zenith_colorc" -ln "zenith_colorc" -at "float" 
+		-p "zenith_color";
+	addAttr -ci true -h true -sn "a" -ln "a" -at "double";
+	addAttr -ci true -h true -sn "b" -ln "b" -at "double";
+	addAttr -ci true -h true -sn "c" -ln "c" -at "double";
+	addAttr -ci true -h true -sn "d" -ln "d" -at "double";
+	addAttr -ci true -h true -sn "e" -ln "e" -at "double";
+	addAttr -ci true -h true -sn "intensity" -ln "intensity" -at "double";
+	setAttr ".rms" -type "string" "physicalsky";
+	setAttr ".rst" -type "string" "environment";
+	setAttr ".rml" -type "string" "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/test/test_er_env/physicalsky.dll";
+	setAttr ".rpr" -type "stringArray" 17 "sun_dir" "sun_disk_size" "sun_disk_intensity" "sun_glow_size" "sun_glow_intensity" "sun_glow_falloff" "ground_color" "visibility_to_camera" "type" "haze" "zenith_color" "a" "b" "c" "d" "e" "intensity"  ;
+	setAttr ".rdt" -type "stringArray" 17 "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform"  ;
+	setAttr ".rty" -type "stringArray" 17 "vector" "float" "float" "float" "float" "float" "color" "float" "float" "float" "color" "float" "float" "float" "float" "float" "float"  ;
+	setAttr ".rdf" -type "stringArray" 17 "0.577:0.577:0.577" "2.0" "7.0" "1.0" "1.0" "5.0" "0.2000000.2000000.200000" "1" "0" "5.0" "0.109000.109000.10900" "-1.0" "-0.32" "10.0" "-3.0" "0.45" "0.5"  ;
+	setAttr ".ras" -type "Int32Array" 17 -1 -1 -1 -1 -1 -1
+		 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 ;
+	setAttr ".rlc" -type "stringArray" 17 "liquidAE_LifVector( \"sun_dir\", -1, \"vector\", \"sun_dir\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_disk_size\", -1, \"float\", \"sun_disk_size\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_disk_intensity\", -1, \"float\", \"sun_disk_intensity\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_glow_size\", -1, \"float\", \"sun_glow_size\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_glow_intensity\", -1, \"float\", \"sun_glow_intensity\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"sun_glow_falloff\", -1, \"float\", \"sun_glow_falloff\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifColor( \"ground_color\", -1, \"color\", \"ground_color\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"visibility_to_camera\", -1, \"float\", \"visibility_to_camera\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"type\", -1, \"float\", \"type\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"haze\", -1, \"float\", \"haze\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifColor( \"zenith_color\", -1, \"color\", \"zenith_color\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"a\", -1, \"float\", \"a\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"b\", -1, \"float\", \"b\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"c\", -1, \"float\", \"c\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"d\", -1, \"float\", \"d\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"e\", -1, \"float\", \"e\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"intensity\", -1, \"float\", \"intensity\", {\"0\", \"0\"}, \"\", 14 );"  ;
+	setAttr ".rmt" -type "stringArray" 0  ;
+	setAttr ".rio" -type "Int32Array" 17 0 0 0 0 0 0
+		 0 0 0 0 0 0 0 0 0 0 0 ;
+	setAttr -k on ".sun_dir" -type "double3" 0.577 0.577 0.577 ;
+	setAttr ".sun_disk_size" 2;
+	setAttr ".sun_disk_intensity" 7;
+	setAttr ".sun_glow_size" 1;
+	setAttr ".sun_glow_intensity" 1;
+	setAttr ".sun_glow_falloff" 5;
+	setAttr -k on ".ground_color" -type "float3" 0.2 0.2 0.2 ;
+	setAttr ".visibility_to_camera" 1;
+	setAttr ".haze" 5;
+	setAttr -k on ".zenith_color" -type "float3" 0.109 0.109 0.109 ;
+	setAttr ".a" -1;
+	setAttr ".b" -0.32;
+	setAttr ".c" 10;
+	setAttr ".d" -3;
+	setAttr ".e" 0.45;
+	setAttr ".intensity" 0.5;
+createNode shadingEngine -n "liquidSurface5SG";
+	setAttr ".ihi" 0;
+	setAttr ".ro" yes;
+createNode materialInfo -n "materialInfo5";
 select -ne :time1;
 	setAttr ".o" 1;
 select -ne :renderPartition;
-	setAttr -s 6 ".st";
+	setAttr -s 7 ".st";
 select -ne :renderGlobalsList1;
 select -ne :defaultShaderList1;
-	setAttr -s 5 ".s";
+	setAttr -s 6 ".s";
 select -ne :postProcessList1;
 	setAttr -s 2 ".p";
 select -ne :defaultRenderUtilityList1;
@@ -537,7 +610,7 @@ select -ne :defaultHardwareRenderGlobals;
 	setAttr ".res" -type "string" "ntsc_4d 646 485 1.333";
 connectAttr "liquidSurface3.oc" "cameraShape1.liqEnvironmentShader";
 connectAttr "polyCube2.out" "pCubeShape2.i";
-connectAttr "liquidSurface4.oc" "cameraShape2.liqEnvironmentShader";
+connectAttr "liquidSurface5.oc" "cameraShape2.liqEnvironmentShader";
 connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[0].llnk";
 connectAttr ":initialShadingGroup.msg" "lightLinker1.lnk[0].olnk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[1].llnk";
@@ -550,6 +623,8 @@ connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[4].llnk";
 connectAttr "liquidSurface3SG.msg" "lightLinker1.lnk[4].olnk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[5].llnk";
 connectAttr "liquidSurface4SG.msg" "lightLinker1.lnk[5].olnk";
+connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[6].llnk";
+connectAttr "liquidSurface5SG.msg" "lightLinker1.lnk[6].olnk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[0].sllk";
 connectAttr ":initialShadingGroup.msg" "lightLinker1.slnk[0].solk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[1].sllk";
@@ -562,6 +637,8 @@ connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[4].sllk";
 connectAttr "liquidSurface3SG.msg" "lightLinker1.slnk[4].solk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[5].sllk";
 connectAttr "liquidSurface4SG.msg" "lightLinker1.slnk[5].solk";
+connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[6].sllk";
+connectAttr "liquidSurface5SG.msg" "lightLinker1.slnk[6].solk";
 connectAttr "layerManager.dli[0]" "defaultLayer.id";
 connectAttr "renderLayerManager.rlmi[0]" "defaultRenderLayer.rlid";
 connectAttr "place2dTexture1.c" "file1.c";
@@ -598,13 +675,19 @@ connectAttr "liquidSurface4.oc" "liquidSurface4SG.ss";
 connectAttr "liquidSurface4SG.msg" "materialInfo4.sg";
 connectAttr "liquidSurface4.msg" "materialInfo4.m";
 connectAttr "liquidSurface4.msg" "materialInfo4.t" -na;
+connectAttr "liquidSurface5.oc" "liquidSurface5SG.ss";
+connectAttr "liquidSurface5SG.msg" "materialInfo5.sg";
+connectAttr "liquidSurface5.msg" "materialInfo5.m";
+connectAttr "liquidSurface5.msg" "materialInfo5.t" -na;
 connectAttr "liquidSurface1SG.pa" ":renderPartition.st" -na;
 connectAttr "liquidSurface2SG.pa" ":renderPartition.st" -na;
 connectAttr "liquidSurface3SG.pa" ":renderPartition.st" -na;
 connectAttr "liquidSurface4SG.pa" ":renderPartition.st" -na;
+connectAttr "liquidSurface5SG.pa" ":renderPartition.st" -na;
 connectAttr "liquidSurface1.msg" ":defaultShaderList1.s" -na;
 connectAttr "liquidSurface3.msg" ":defaultShaderList1.s" -na;
 connectAttr "liquidSurface4.msg" ":defaultShaderList1.s" -na;
+connectAttr "liquidSurface5.msg" ":defaultShaderList1.s" -na;
 connectAttr "place2dTexture1.msg" ":defaultRenderUtilityList1.u" -na;
 connectAttr "place2dTexture2.msg" ":defaultRenderUtilityList1.u" -na;
 connectAttr "lightLinker1.msg" ":lightList1.ln" -na;

@@ -3,16 +3,16 @@ environment
 #shaderName
 physicalsky
 #Name|Details|Type|IsOutput|Defaults|ArraySizes
-sun_dir|uniform|vector|0|<<0.0, 1.0, 0.0>>|-1
-sun_disk_size|uniform|float|0|1.0|-1
-sun_disk_intensity|uniform|float|0|10.0|-1
+sun_dir|uniform|vector|0|<<0.577, 0.577, 0.577>>|-1
+sun_disk_size|uniform|float|0|2.0|-1
+sun_disk_intensity|uniform|float|0|7.0|-1
 sun_glow_size|uniform|float|0|1.0|-1
 sun_glow_intensity|uniform|float|0|1.0|-1
 sun_glow_falloff|uniform|float|0|5.0|-1
 ground_color|uniform|color|0|<<0.200000,0.200000,0.200000>>|-1
 visibility_to_camera|uniform|float|0|1|-1
 type|uniform|float|0|0|-1
-haze|uniform|float|0|0.1|-1
+haze|uniform|float|0|5.0|-1
 zenith_color|uniform|color|0|<<0.10900,0.10900,0.10900>>|-1
 a|uniform|float|0|-1.0|-1
 b|uniform|float|0|-0.32|-1
