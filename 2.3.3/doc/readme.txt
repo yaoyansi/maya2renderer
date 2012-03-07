@@ -60,8 +60,14 @@ RenderMan (R) is a registered trademark of Pixar
                                             +-- eiCOMMON/
                                             +-- eiCORE/
                                             ...
-  - build ER. copy the *.dll/*.exe to $(LiquidRoot)\dependence\elvishray\bin, and copy *.lib to $(LiquidRoot)\dependence\elvishray\bin
-  - build $(LiquidRoot)\2.3.3\src\elvishray\eiSHADER_maya\build\eiSHADER_maya.sln
+  - build ER. 
+    - When you configure cmake for ER, set CMAKE_INSTALL_PREFIX to $(LiquidRoot)\dependence\elvishray, so ER will copy *.dll to $(LiquidRoot)\dependence\elvishray\bin\$(ConfigurationName)
+    - select a ConfigurationName, e.g. Release. 
+    - build ER, and copy generated *.lib to $(LiquidRoot)\dependence\elvishray\bin\$(ConfigurationName)
+  - build $(LiquidRoot)\2.3.3\src\elvishray\eiSHADER_maya\build\eiSHADER_maya.sln. eiSHADER_maya.dll will be generated at $(LiquidRoot)\dependence\elvishray\bin\$(ConfigurationName)
+    NOTE: you'd better set the ConfigurationName same with ER project. e.g. Release.
+  - copy $(LiquidRoot)\dependence\elvishray\bin\$(ConfigurationName)\*.* to $(LiquidRoot)\dependence\elvishray\bin\$(ConfigurationName)\*.*
+    e.g. you can choose Release as the ConfigurationName.
   - open $(LiquidRoot)\2.3.3\include\liqConfig.h, set _USE_SHAVE_ to 1 if shave(v61 or later) is installed, or set _USE_SHAVE_ to 0 if shave isn't installed.
   - open $(LiquidRoot)\2.3.3\src\MSVC2005\liquid.sln, choose ¡°Win32¡± and ¡°Prman2009Debug¡± in Configuration Manager£¬
     - (For renderman renderer only)

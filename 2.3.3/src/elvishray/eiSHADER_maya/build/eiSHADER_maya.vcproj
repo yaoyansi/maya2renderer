@@ -83,7 +83,7 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				AdditionalOptions=" /STACK:10000000 /machine:I386 /debug"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib ../../../../../dependence/elvishray/bin/eiCORE.lib ../../../../../dependence/elvishray/bin/eiAPI.lib &quot;D:\Program Files\Microsoft SDKs\Windows\v6.1\Lib\WS2_32.Lib&quot; $(NOINHERIT)"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib ../../../../../dependence/elvishray/bin/$(ConfigurationName)/eiCORE.lib ../../../../../dependence/elvishray/bin/$(ConfigurationName)/eiAPI.lib &quot;D:\Program Files\Microsoft SDKs\Windows\v6.1\Lib\WS2_32.Lib&quot; $(NOINHERIT)"
 				OutputFile="$(ProjectDir)/../bin/$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.0"
 				LinkIncremental="2"
@@ -112,14 +112,14 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="copy eiSHADER_maya.dll/.pdb to ER/bin/"
-				CommandLine="copy $(TargetDir)\$(TargetFileName) E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\elvishray\bin\$(TargetFileName)&#x0D;&#x0A;copy $(TargetDir)\$(TargetName).pdb E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\elvishray\bin\$(TargetName).pdb&#x0D;&#x0A;"
+				Description="copy eiSHADER_maya.dll/.pdb to ER/bin/Debug"
+				CommandLine="copy $(TargetDir)\$(TargetFileName) ..\..\..\..\..\dependence\elvishray\bin\$(ConfigurationName)\$(TargetFileName)&#x0D;&#x0A;copy $(TargetDir)\$(TargetName).pdb ..\..\..\..\..\dependence\elvishray\bin\$(ConfigurationName)\$(TargetName).pdb&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="eiSHADER.dir\Release"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectName).dir\$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -156,13 +156,13 @@
 				Optimization="2"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="E:\dev\Autodesk\maya\myplugin\project\liquid_\dependence\elvishray\trunk;"
-				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,_CRT_SECURE_NO_DEPRECATE,_CRT_SECURE_NO_WARNINGS,_SCL_SECURE_NO_DEPRECATE,_SCL_SECURE_NO_WARNINGS,_SECURE_SCL=0,CMAKE_INTDIR=\&quot;Release\&quot;,eiSHADER_EXPORTS"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;_SECURE_SCL=0;CMAKE_INTDIR=\&quot;Release\&quot;;eiSHADER_EXPORTS"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				AssemblerListingLocation="Release"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="D:/Program Files/CMake 2.8/bin/Release/eiSHADER.pdb"
+				ProgramDataBaseFileName="$(ProjectDir)/../bin/$(ConfigurationName)/$(ProjectName).pdb"
 				WarningLevel="3"
 				CompileAs="2"
 			/>
@@ -181,13 +181,13 @@
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="false"
 				AdditionalOptions=" /STACK:10000000 /machine:I386"
-				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  ..\eiCORE\Release\eiCORE.lib ..\eiAPI\Release\eiAPI.lib ..\eiCORE\Release\eiCORE.lib &quot;D:\Program Files\Microsoft SDKs\Windows\v6.1\Lib\WS2_32.Lib&quot; "
-				OutputFile="D:\Program Files\CMake 2.8\bin\Release\eiSHADER.dll"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib ../../../../../dependence/elvishray/bin/$(ConfigurationName)/eiCORE.lib ../../../../../dependence/elvishray/bin/$(ConfigurationName)/eiAPI.lib &quot;D:\Program Files\Microsoft SDKs\Windows\v6.1\Lib\WS2_32.Lib&quot; $(NOINHERIT)"
+				OutputFile="$(ProjectDir)/../bin/$(ConfigurationName)\$(ProjectName).dll"
 				Version="0.0"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=""
-				ProgramDatabaseFile="D:\Program Files\CMake 2.8\bin\Release\eiSHADER.pdb"
-				ImportLibrary="E:\dev\render\elvishrender_build2\eiSHADER\Release\eiSHADER.lib"
+				ProgramDatabaseFile="$(ProjectDir)/../bin/$(ConfigurationName)/$(ProjectName).pdb"
+				ImportLibrary="$(ProjectDir)/../bin/$(ConfigurationName)\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -209,6 +209,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="copy eiSHADER_maya.dll/.pdb to ER/bin/Release"
+				CommandLine="copy $(TargetDir)\$(TargetFileName) ..\..\..\..\..\dependence\elvishray\bin\$(ConfigurationName)\$(TargetFileName)&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
