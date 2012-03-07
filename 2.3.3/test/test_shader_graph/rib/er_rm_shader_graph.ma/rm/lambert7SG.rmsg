@@ -1,0 +1,6 @@
+##RenderMan RIB-Structure 1.0
+version 3.03
+#shading group: lambert7SG
+Surface "E:/MyDocuments/maya/projects/default/generatedShader/lambert7" 
+#no volume shader.
+#no displacement shader.

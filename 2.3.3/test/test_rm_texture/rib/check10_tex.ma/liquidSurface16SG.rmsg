@@ -1,0 +1,6 @@
+##RenderMan RIB-Structure 1.0
+version 3.03
+#shading group: liquidSurface16SG
+Surface "D:/Program Files/Pixar/RenderManProServer-13.5.2/lib/shaders/texmap" "uniform string texname" [ "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/test/test_rm_texture/textures/check10.tex" ] "uniform float maptype" [ 3.000000 ] "uniform point maporigin" [ 0.000000 0.000000 0.000000 ] "uniform point xaxis" [ 1.000000 0.000000 0.000000 ] "uniform point yaxis" [ 0.000000 1.000000 0.000000 ] "uniform point zaxis" [ 0.000000 0.000000 1.000000 ] "uniform float s1" [ 0.000000 ] "uniform float t1" [ 0.000000 ] "uniform float s2" [ 1.000000 ] "uniform float t2" [ 0.000000 ] "uniform float s3" [ 0.000000 ] "uniform float t3" [ 1.000000 ] "uniform float s4" [ 1.000000 ] "uniform float t4" [ 1.000000 ] "uniform float Ka" [ 1.000000 ] "uniform float Kd" [ 1.000000 ] "uniform float Ks" [ 0.000000 ] "uniform float roughness" [ 0.250000 ] "uniform color specularcolor" [ 1.000000 1.000000 1.000000 ] 
+#no volume shader.
+#no displacement shader.

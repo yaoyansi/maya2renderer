@@ -1,0 +1,309 @@
+shader_obj 5.0 1 0
+lambert9 66 14 19 41 105 0 0 0 0 0 13 1
+13 181
+rgb
+current
+!!anyspace!!
+E:/MyDocuments/maya/projects/default
+.:
+E:\MYDOCU~1\maya\projects\default\GENERA~1\lambert9.sl_my
+lambert11
+lambert10
+lambert13
+lambert12
+lambert9
+surface
+
+14
+0.8000000119
+1
+0
+0.01374999993
+0.5
+0
+0
+0
+0.4796670079
+0.5
+0
+0.5
+0.5
+0.5
+0
+66
+$result_surface 0 15 -1 0 3 0 0 0 0 0 0
+$S0 6 2 -1 0 3 0 0 0 0 0 0
+$S2 6 2 -1 1 3 0 0 0 0 0 0
+$S6 6 2 -1 2 3 0 0 0 0 0 0
+$srcDir 6 2 -1 3 3 0 0 0 0 0 0
+$includePath 6 2 -1 4 3 0 0 0 0 0 0
+Cs 3 10 0 0 2 0 0 0 0 20 101
+Os 3 10 0 0 2 0 0 0 0 14 95
+N 22 10 1 0 2 0 0 0 0 10 91
+Oi 3 10 0 0 2 0 0 14 95 20 101
+Ci 3 10 0 0 2 0 0 22 103 0 0
+$S7 6 2 -1 5 3 0 0 0 0 1 105
+$C3 4 2 -1 0 3 0 0 0 0 8 88
+$C4 4 2 -1 1 3 0 0 0 0 12 93
+$S8 6 2 -1 6 3 0 0 3 3 0 0
+$1_inColor 21 3 1 0 2 0 0 4 4 18 18
+$1_transparency 21 3 1 0 2 0 0 5 5 11 11
+$1_ambientColor 21 3 1 0 2 0 0 6 6 17 17
+$1_incandescence 21 3 1 0 2 0 0 7 7 19 19
+$1_diffusion 4 3 -1 0 2 0 0 8 8 16 16
+$1_outTransparency 21 3 1 0 2 0 0 9 11 12 12
+$1_Nn 22 3 1 0 2 0 0 10 10 15 15
+$S9 6 2 -1 7 3 0 0 24 24 0 0
+$2_transparency 21 3 1 0 2 0 0 25 25 31 31
+$2_ambientColor 21 3 1 0 2 0 0 26 26 37 37
+$2_incandescence 21 3 1 0 2 0 0 27 27 39 39
+$2_diffusion 4 3 -1 0 2 0 0 28 28 36 36
+$2_outTransparency 21 3 1 0 2 0 0 29 31 32 32
+$2_Nn 22 3 1 0 2 0 0 30 30 35 35
+$S10 6 2 -1 8 3 0 0 44 44 0 0
+$3_inColor 21 3 1 0 2 0 0 45 45 59 59
+$3_transparency 21 3 1 0 2 0 0 46 46 52 52
+$3_ambientColor 21 3 1 0 2 0 0 47 47 58 58
+$3_incandescence 21 3 1 0 2 0 0 48 48 60 60
+$3_diffusion 4 3 -1 0 2 0 0 49 49 57 57
+$3_outTransparency 21 3 1 0 2 0 0 50 52 53 53
+$3_Nn 22 3 1 0 2 0 0 51 51 56 56
+$S11 6 2 -1 9 3 0 0 65 65 0 0
+$4_inColor 21 3 1 0 2 0 0 66 66 79 79
+$4_ambientColor 21 3 1 0 2 0 0 67 67 78 78
+$4_incandescence 21 3 1 0 2 0 0 68 68 80 80
+$4_diffusion 4 3 -1 0 2 0 0 69 69 77 77
+$4_outTransparency 21 3 1 0 2 0 0 70 72 73 73
+$4_Nn 22 3 1 0 2 0 0 71 71 76 76
+$S12 6 2 -1 10 3 0 0 85 85 0 0
+$5_inColor 21 3 1 0 2 0 0 86 86 99 99
+$5_incandescence 21 3 1 0 2 0 0 87 87 100 100
+$5_diffusion 4 3 -1 0 2 0 0 88 88 97 97
+$5_outColor 21 3 1 0 2 0 0 89 100 102 102
+$5_outTransparency 21 3 1 0 2 0 0 90 92 93 93
+$5_Nn 22 3 1 0 2 0 0 91 91 96 96
+$S13 6 2 -1 11 3 0 0 1 1 0 0
+$7_lambert11_outColor 21 3 1 0 2 0 0 19 19 21 38
+$7_lambert10_outColor 21 3 1 0 2 0 0 39 39 41 92
+$7_lambert13_outColor 21 3 1 0 2 0 0 60 60 62 72
+$7_lambert12_outColor 21 3 1 0 2 0 0 80 80 82 98
+surface 13 8 -1 0 2 1 0 0 0 0 105
+$CT0 21 2 -1 2 3 0 0 0 0 4 4
+$CT1 21 2 -1 5 3 0 0 0 0 5 90
+$T0 3 4 0 0 2 0 0 13 101 14 103
+$T1 21 4 1 0 2 0 0 12 98 13 99
+$T3 21 4 1 0 2 0 0 16 99 17 100
+$T7 3 4 0 0 2 0 0 21 102 22 103
+$S14 6 2 -1 12 3 0 0 23 105 0 0
+$CT2 21 2 -1 8 3 0 0 0 0 45 45
+$CT3 21 2 -1 11 3 0 0 0 0 66 86
+236
+51 
+14 
+15 57 
+16 58 
+17 58 
+18 58 
+19 12 
+20 58 
+21 8 
+20 16 
+60 13 20 
+59 60 
+9 7 59 
+60 21 
+61 19 60 
+60 61 17 
+61 15 60 
+52 18 61 
+59 6 9 
+62 52 
+10 59 62 
+63 
+22 
+23 58 
+24 58 
+25 58 
+26 12 
+27 58 
+28 8 
+27 23 
+60 13 27 
+59 60 
+9 7 59 
+60 28 
+61 26 60 
+60 61 24 
+61 52 60 
+53 25 61 
+59 6 9 
+62 53 
+10 59 62 
+63 
+29 
+30 64 
+31 58 
+32 58 
+33 58 
+34 12 
+35 58 
+36 8 
+35 31 
+60 13 35 
+59 60 
+9 7 59 
+60 36 
+61 34 60 
+60 61 32 
+61 30 60 
+54 33 61 
+59 6 9 
+62 54 
+10 59 62 
+63 
+37 
+38 65 
+39 58 
+40 58 
+41 12 
+42 58 
+43 8 
+42 54 
+60 13 42 
+59 60 
+9 7 59 
+60 43 
+61 41 60 
+60 61 39 
+61 38 60 
+55 40 61 
+59 6 9 
+62 55 
+10 59 62 
+63 
+44 
+45 65 
+46 58 
+47 12 
+48 58 
+49 58 
+50 8 
+49 53 
+60 13 49 
+59 60 
+9 7 59 
+60 50 
+61 47 60 
+60 61 55 
+61 45 60 
+48 46 61 
+59 6 9 
+62 48 
+10 59 62 
+63 
+63 
+_enterproc 	1 0  5 110 0
+_lightingstart 	0 -1  5 117 0
+_enterproc 	1 1  5 117 0
+_assign 	2 2  5 5 0
+_assign 	2 4  5 6 0
+_assign 	2 6  5 7 0
+_assign 	2 8  5 8 0
+_assign 	2 10  5 9 0
+_assign 	2 12  5 10 0
+normalize 	2 14  5 12 0
+_assign 	2 16  5 13 0
+_subtract 	3 18  5 14 0
+_assign 	2 21  5 14 0
+_multiply 	3 23  5 14 0
+diffuse 	2 26  5 17 0
+_scale		3 28  5 17 0
+_add		3 31  5 18 0
+_multiply 	3 34  5 18 0
+_add		3 37  5 18 0
+_multiply 	3 40  5 19 0
+_assign 	2 43  5 19 0
+_multiply 	3 45  5 19 0
+_enterproc 	1 48  5 117 0
+_enterproc 	1 49  5 121 0
+_assign 	2 50  5 28 0
+_assign 	2 52  5 29 0
+_assign 	2 54  5 30 0
+_assign 	2 56  5 31 0
+_assign 	2 58  5 32 0
+normalize 	2 60  5 34 0
+_assign 	2 62  5 35 0
+_subtract 	3 64  5 36 0
+_assign 	2 67  5 36 0
+_multiply 	3 69  5 36 0
+diffuse 	2 72  5 39 0
+_scale		3 74  5 39 0
+_add		3 77  5 40 0
+_multiply 	3 80  5 40 0
+_add		3 83  5 40 0
+_multiply 	3 86  5 41 0
+_assign 	2 89  5 41 0
+_multiply 	3 91  5 41 0
+_enterproc 	1 94  5 121 0
+_enterproc 	1 95  5 125 0
+_assign 	2 96  5 48 0
+_assign 	2 98  5 49 0
+_assign 	2 100  5 50 0
+_assign 	2 102  5 51 0
+_assign 	2 104  5 52 0
+_assign 	2 106  5 53 0
+normalize 	2 108  5 55 0
+_assign 	2 110  5 56 0
+_subtract 	3 112  5 57 0
+_assign 	2 115  5 57 0
+_multiply 	3 117  5 57 0
+diffuse 	2 120  5 60 0
+_scale		3 122  5 60 0
+_add		3 125  5 61 0
+_multiply 	3 128  5 61 0
+_add		3 131  5 61 0
+_multiply 	3 134  5 62 0
+_assign 	2 137  5 62 0
+_multiply 	3 139  5 62 0
+_enterproc 	1 142  5 125 0
+_enterproc 	1 143  5 129 0
+_assign 	2 144  5 70 0
+_assign 	2 146  5 72 0
+_assign 	2 148  5 73 0
+_assign 	2 150  5 74 0
+_assign 	2 152  5 75 0
+normalize 	2 154  5 77 0
+_assign 	2 156  5 78 0
+_subtract 	3 158  5 79 0
+_assign 	2 161  5 79 0
+_multiply 	3 163  5 79 0
+diffuse 	2 166  5 82 0
+_scale		3 168  5 82 0
+_add		3 171  5 83 0
+_multiply 	3 174  5 83 0
+_add		3 177  5 83 0
+_multiply 	3 180  5 84 0
+_assign 	2 183  5 84 0
+_multiply 	3 185  5 84 0
+_enterproc 	1 188  5 129 0
+_enterproc 	1 189  5 133 0
+_assign 	2 190  5 92 0
+_assign 	2 192  5 95 0
+_assign 	2 194  5 96 0
+_assign 	2 196  5 97 0
+_assign 	2 198  5 98 0
+normalize 	2 200  5 100 0
+_assign 	2 202  5 101 0
+_subtract 	3 204  5 102 0
+_assign 	2 207  5 102 0
+_multiply 	3 209  5 102 0
+diffuse 	2 212  5 105 0
+_scale		3 214  5 105 0
+_add		3 217  5 106 0
+_multiply 	3 220  5 106 0
+_add		3 223  5 106 0
+_multiply 	3 226  5 107 0
+_assign 	2 229  5 107 0
+_multiply 	3 231  5 107 0
+_enterproc 	1 234  5 133 0
+_enterproc 	1 235  5 110 0

@@ -1,0 +1,3 @@
+ei_material("blinn2SG");
+ei_add_surface("blinn2");
+ei_end_material();

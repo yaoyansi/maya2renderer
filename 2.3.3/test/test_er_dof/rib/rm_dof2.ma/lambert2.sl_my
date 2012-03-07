@@ -1,0 +1,74 @@
+void place2dTexture3 (
+ output float outUV[];
+)
+{
+ float repeatUV[2] = { 16, 16 };
+ extern float s, t;
+ outUV[ 0 ] = mod( t * repeatUV[ 0 ], 1 );
+ outUV[ 1 ] = mod( s * repeatUV[ 1 ], 1 );
+}
+
+void checker2 (
+ float uvCoord[];
+ output vector outColor;
+)
+{
+ float color1R = float 1;
+ float color1G = float 1;
+ float color1B = float 1;
+ vector color1 = vector ( color1R, color1G, color1B );
+ float color2R = float 0;
+ float color2G = float 0;
+ float color2B = float 0;
+ vector color2 = vector ( color2R, color2G, color2B );
+//checker2.uvCoord <-- place2dTexture3.outUV
+ float ss = uvCoord[0];
+ float tt = uvCoord[1];
+ if( floor( ss * 2 ) == floor( tt * 2 ) )
+ {
+  outColor = color1;
+ }else{
+  outColor = color2;
+ }
+}
+
+void lambert2 (
+ vector inColor;
+)
+{
+//lambert2.color <-- checker2.outColor
+ vector transparency = vector (0,0,0);
+ vector ambientColor = vector (0,0,0);
+ vector incandescence = vector (0,0,0);
+ float diffusion = float 0.8;
+ vector outColor = vector (0,0,0);
+ vector outTransparency = vector (0,0,0);
+ extern normal N;
+ normal Nn = normalize( N );
+ outTransparency = transparency;
+ Oi = Os * color ( 1 - outTransparency );
+ outColor = incandescence +
+            ( inColor * ( diffusion * 
+                          vector diffuse( Nn ) +
+                          ambientColor ) );
+ Ci = Cs * Oi * color outColor;
+}
+
+surface lambert2()
+{
+ float place2dTexture3_outUV[2];
+ vector checker2_outColor;
+
+ place2dTexture3(place2dTexture3_outUV);
+//input: 
+//output:place2dTexture3_outUV,
+
+ checker2(place2dTexture3_outUV, checker2_outColor);
+//input: place2dTexture3_outUV,
+//output:checker2_outColor,
+
+ lambert2(checker2_outColor);
+//input: checker2_outColor,
+//output:
+
+}

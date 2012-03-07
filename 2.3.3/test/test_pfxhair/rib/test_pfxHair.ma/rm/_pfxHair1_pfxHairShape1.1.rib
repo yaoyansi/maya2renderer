@@ -1,0 +1,3 @@
+##RenderMan RIB-Structure 1.0
+version 3.03
+Curves "cubic" [ 4 ] "nonperiodic" "P" [ 0.113355 -1.500000 1.202670 0.216729 0.000000 1.120273 0.320103 1.500000 1.037876 0.423477 3.000000 0.955479 ] "varying normal N" [ 0.000000 0.000000 -1.000000 0.000000 0.000000 -1.000000 ] "varying float width" [ 0.001500 0.001500 ] "varying color Cs" [ 0.259716 0.216430 0.129858 0.259716 0.216430 0.129858 ] "varying color Os" [ 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 ] "varying float pfxflatness" [ 0.000000 0.000000 ] "varying color pfxincandescence" [ 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 ] "constant float pfxelement" [ 0.000000 ] 

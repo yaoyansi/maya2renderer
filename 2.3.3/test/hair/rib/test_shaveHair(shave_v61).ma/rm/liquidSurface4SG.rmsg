@@ -1,0 +1,5 @@
+##RenderMan RIB-Structure 1.0
+version 3.03
+#shading group: liquidSurface4SG
+#no volume shader.
+#no displacement shader.

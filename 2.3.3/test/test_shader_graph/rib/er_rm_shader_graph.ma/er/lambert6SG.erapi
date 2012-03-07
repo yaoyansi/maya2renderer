@@ -1,0 +1,3 @@
+ei_material("lambert6SG");
+ei_add_surface("lambert6");
+ei_end_material();
