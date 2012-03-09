@@ -1,0 +1,29 @@
+*.bak
+*.lnk
+*.slo
+*.dep
+*.pyc
+er_library_mode_test/
+2.3.3/src/elvishray/test/Debug/*
+############# MSVC
+*.user
+*.ncb
+*.suo
+############# build
+*.htm
+*.manifest
+*.idb
+*.obj
+*.exp
+*.lib
+*.pdb
+*.exe
+*.ilk
+*.res
+############# Maya
+.mayaSwatches/
+############# ER
+dependence/elvishray/trunk/*
+dependence/elvishray/bin/*.*
+dependence/elvishray/trunk/trunk_r1185_build2/*
+trunk_r1185_build2/
