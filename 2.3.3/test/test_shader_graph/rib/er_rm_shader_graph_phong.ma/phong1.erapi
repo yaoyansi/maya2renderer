@@ -1,7 +1,22 @@
+ei_shader("place2dTexture1");
+ei_shader_param_string("desc", "maya_place2dTexture");
+ei_shader_param_vector("repeatUV", 1, 1, 4.5499e+174);
+ei_shader_param_vector("outUV", 0, 0, 4.5499e+174);
+ei_end_shader();
+
+ei_texture("E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/test/test_shader_graph/texture/check112.bmp");
+ei_file_texture("E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/test/test_shader_graph/texture/check112.bmp.tex", eiFALSE);
+ei_end_texture();
+ei_shader("file1");
+ei_shader_param_string("desc", "maya_file");
+ei_shader_link_param("uvCoord", "place2dTexture1", "outUV");
+ei_shader_param_texture("fileTextureName", "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/test/test_shader_graph/texture/check112.bmp");
+ei_end_shader();
+
 ei_shader("phong1");
 ei_shader_param_string("desc", "maya_phong");
-ei_shader_param_vector("color_", 0.579, 0.235462, 0.124485);
-ei_shader_param_vector("transparency", 0.77686, 0.77686, 0.77686);
+ei_shader_link_param("color_", "file1", "outColor");
+ei_shader_param_vector("transparency", 0.1405, 0.1405, 0.1405);
 ei_shader_param_vector("ambientColor", 0, 0, 0);
 ei_shader_param_vector("incandescence", 0, 0, 0);
 ei_shader_param_vector("normalCamera", 1, 1, 1);
@@ -14,6 +29,6 @@ ei_shader_param_vector("specularColor", 0, 0, 0);
 ei_shader_param_scalar("reflectivity", 6e-005);
 ei_shader_param_vector("reflectedColor", 0.16528, 0.16528, 0.16528);
 ei_shader_param_vector("outColor", 0, 0, 0);
-ei_shader_param_vector("outTransparency", 0.77686, 0.77686, 0.77686);
+ei_shader_param_vector("outTransparency", 0.1405, 0.1405, 0.1405);
 ei_end_shader();
 

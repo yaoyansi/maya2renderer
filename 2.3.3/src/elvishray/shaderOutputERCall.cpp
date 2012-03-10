@@ -157,19 +157,19 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 			MString srcAttr(src[1]);
 			rslShaderBody +="//"+plug+" <-- "+srcPlug[0]+"\n";
 			
-			// if the srcNode is a texture
-			if( is2DTexture(srcNode) || is3DTexture(srcNode) ){
-				if( is2DFileTexture(srcNode) ){
-					MString fileTextureName;
-					IfMErrorWarn(MGlobal::executeCommand("getAttr \""+srcNode+".fileTextureName\"", fileTextureName));
-					ei_shader_param_texture((rslName+"_tex").asChar(), fileTextureName.asChar());
-				}else{
-					//ei_shader_param_texture((rslName+"_tex").asChar(), srcNode.asChar());
-					ei_shader_link_param(rslName.asChar(), srcNode.asChar(), srcAttr.asChar());
-				}
-			}
-			//the srcNode is NOT a texture
-			else{
+			//// if the srcNode is a texture
+			//if( is2DTexture(srcNode) || is3DTexture(srcNode) ){
+			//	if( is2DFileTexture(srcNode) ){
+			//		MString fileTextureName;
+			//		IfMErrorWarn(MGlobal::executeCommand("getAttr \""+srcNode+".fileTextureName\"", fileTextureName));
+			//		ei_shader_param_texture((rslName+"_tex").asChar(), fileTextureName.asChar());
+			//	}else{
+			//		//ei_shader_param_texture((rslName+"_tex").asChar(), srcNode.asChar());
+			//		ei_shader_link_param(rslName.asChar(), srcNode.asChar(), srcAttr.asChar());
+			//	}
+			//}
+			//else//the srcNode is NOT a texture
+			{
 				ei_shader_link_param( rslName.asChar(), srcNode.asChar(), srcAttr.asChar() );
 			}
 		}

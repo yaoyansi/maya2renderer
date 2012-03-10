@@ -147,19 +147,19 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 			MString srcAttr(src[1]);
 			rslShaderBody +="//"+plug+" <-- "+srcPlug[0]+"\n";
 
-			// if the srcNode is a texture
-			if( is2DTexture(srcNode) || is3DTexture(srcNode) ){
-				if( is2DFileTexture(srcNode) ){
-					MString fileTextureName;
-					IfMErrorWarn(MGlobal::executeCommand("getAttr \""+srcNode+".fileTextureName\"", fileTextureName));
-					file<<"ei_shader_param_texture(\""<<rslName<<"_tex\", \""<<fileTextureName<<"\");"<<std::endl;
-				}else{
-					//file<<"ei_shader_param_texture(\""<<rslName<<"_tex\", \""<<srcNode<<"\");"<<std::endl;
-					file<<"ei_shader_link_param(\""<<rslName<<"\", \""<<srcNode<<"\", \""<<srcAttr<<"\");"<<std::endl;
-				}
-			}
-			//the srcNode is NOT a texture
-			else{
+			//// if the srcNode is a texture
+			//if( is2DTexture(srcNode) || is3DTexture(srcNode) ){
+			//	if( is2DFileTexture(srcNode) ){
+			//		MString fileTextureName;
+			//		IfMErrorWarn(MGlobal::executeCommand("getAttr \""+srcNode+".fileTextureName\"", fileTextureName));
+			//		file<<"ei_shader_param_texture(\""<<rslName<<"_tex\", \""<<fileTextureName<<"\");"<<std::endl;
+			//	}else{
+			//		//file<<"ei_shader_param_texture(\""<<rslName<<"_tex\", \""<<srcNode<<"\");"<<std::endl;
+			//		file<<"ei_shader_link_param(\""<<rslName<<"\", \""<<srcNode<<"\", \""<<srcAttr<<"\");"<<std::endl;
+			//	}
+			//}
+			//else//the srcNode is NOT a texture
+			{
 				file<<"ei_shader_link_param(\""<<rslName<<"\", \""<<srcNode<<"\", \""<<srcAttr<<"\");"<<std::endl;
 			}
 		}

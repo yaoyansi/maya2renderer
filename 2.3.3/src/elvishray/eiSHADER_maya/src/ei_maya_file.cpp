@@ -29,7 +29,9 @@ SURFACE(maya_file)
 		
 		if (tex != eiNULL_TAG)
 		{
-			outColor() = color_texture(tex, 0, uvCoord().x, uvCoord().y);
+			//outColor() = color_texture(tex, 0, uvCoord().x, uvCoord().y);
+			//outColor() = color_texture(tex, 0, get_state()->bary.x, get_state()->bary.y);
+			outColor() = color_texture(tex, 0, u(), v());
 		}
 	}
 

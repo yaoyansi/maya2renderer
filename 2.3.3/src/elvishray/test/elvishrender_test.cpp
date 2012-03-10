@@ -51,7 +51,7 @@ void test_liquid2er()
 //#include"ei_scene_unittest.esa"//<----- use your own elvishender api script file here.
 	
 	//ei_face_color_unittest(NULL, "suffix");
-//	ei_shader_graph_unittest(true, "suffix");
+	ei_shader_graph_unittest(true, "suffix");
 	//ei_shader_link_test(false, "suffix");
 	//ei_checker_uv();
 	//er_shader_transparent_test();
@@ -59,7 +59,7 @@ void test_liquid2er()
 	//ei_volume_unittest();
 	//ei_dof_unittest();
 	//spotlight_test();
-	spotlight_test2();
+	//spotlight_test2();
 }
 //
 int main()

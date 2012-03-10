@@ -127,8 +127,9 @@ void ei_shader_graph_unittest(const eiBool texturing, const char *suffix)
 
 	ei_shader("phong_shader");
 	ei_shader_param_string("desc", "plastic");
-	ei_shader_param_vector("Cs", 1.0f, 0.2f, 0.3f);
-	ei_shader_link_param("Cs", "checker_shader", "result");
+	//ei_shader_param_vector("Cs", 1.0f, 0.2f, 0.3f);
+	//ei_shader_link_param("Cs", "checker_shader", "result");
+	ei_shader_link_param("Cs", "simple_tex_shader1", "result");
 	ei_shader_param_vector("Kd", 0.7f, 1.0f, 1.0f);
 	ei_shader_param_scalar("Ks", 1.0f);
 	ei_shader_param_scalar("roughness", 0.2f);
