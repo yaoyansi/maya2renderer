@@ -47,6 +47,8 @@ SURFACE(maya_phong)
 	//output
 	PARAM(color, outColor);
 	PARAM(color, outTransparency);
+	
+	scalar tiling; //for test only.
 
 	void parameters(int pid)
 	{
@@ -81,32 +83,183 @@ SURFACE(maya_phong)
 		//output
 		DECLARE_COLOR(	outColor,					0.0f, 0.0f, 0.0f);
 		DECLARE_COLOR(	outTransparency,			0.0f, 0.0f, 0.0f);
+	
+		tiling = 4.0f;
 	}
-
+	void init()	{}
+	void exit()	{}
 	color specularbrdf(const vector & vL, const normal & vN, const vector & V, scalar roughness)
 	{
-		//vector	H = normalize(vL + V);
-		//scalar	dotNH = vN % H;
-		//return pow(max(eiSCALAR_EPS, dotNH), 1.0f / roughness);
-		return color(0.0f, 1.0f, 0.0f);
+		vector	H = normalize(vL + V);
+		scalar	dotNH = vN % H;
+		return pow(max(eiSCALAR_EPS, dotNH), 1.0f / roughness);
 	}
 
-	void init()
-	{
-	}
 
-	void exit()
+	//
+	color sampler2D(const eiTag& tex)
 	{
+		//const scalar tiling = 4.0f;
+
+		scalar s = fmodf(u() * tiling, 1.0f);
+		scalar t = fmodf(v() * tiling, 1.0f);
+
+		scalar dsdx, dsdy, dtdx, dtdy;
+		Dxy(u, dsdx, dsdy);
+		Dxy(v, dtdx, dtdy);
+		dsdx = dsdx * tiling;
+		dsdy = dsdy * tiling;
+		dtdx = dtdx * tiling;
+		dtdy = dtdy * tiling;
+		
+		return color_texture(tex, 0, s, t, dsdx, dsdy, dtdx, dtdy, 8.0f);
+	}
+	scalar sampler1D(const eiTag& tex)
+	{
+		//const scalar tiling = 4.0f;
+
+		scalar s = fmodf(u() * tiling, 1.0f);
+		scalar t = fmodf(v() * tiling, 1.0f);
+
+		scalar dsdx, dsdy, dtdx, dtdy;
+		Dxy(u, dsdx, dsdy);
+		Dxy(v, dtdx, dtdy);
+		dsdx = dsdx * tiling;
+		dsdy = dsdy * tiling;
+		dtdx = dtdx * tiling;
+		dtdy = dtdy * tiling;
+
+		return scalar_texture(tex, 0, s, t, dsdx, dsdy, dtdx, dtdy, 8.0f);
+	}
+	//
+	color get(const color& channel, const eiTag& tex) 
+	{
+		if( tex != eiNULL_TAG )
+		{
+			return sampler2D(tex);
+		}else{
+			return channel;
+		}
+	}
+	scalar get(const scalar& channel, const eiTag& tex)
+	{
+		if( tex != eiNULL_TAG )
+		{
+			return sampler1D(tex);
+		}else{
+			return channel;
+		}
+	}
+	//
+	//Common Material Attributes
+	color _color()
+	{
+		return get( color_(), color_link() );
+	}
+	color _transparency()
+	{
+		return get( transparency(), transparency_link() );
+	}
+	color _ambientColor()
+	{
+		return get( ambientColor(), ambientColor_link());
+	}
+	color _incandescence()
+	{
+		return get( incandescence(), incandescence_link());
+	}
+	color _normalCamera()
+	{
+		return get( normalCamera(), normalCamera_link());
+	}
+	scalar _diffuse()
+	{
+		return get( diffuse(), diffuse_link());
+	}
+	scalar _translucence()
+	{
+		return get( translucence(), translucence_link());
+	}
+	scalar _translucenceDepth()
+	{
+		return get( translucenceDepth(), translucenceDepth_link());
+	}
+	scalar _translucenceFocus()
+	{
+		return get( translucenceFocus(), translucenceFocus_link());
+	}
+	//Specular Shading
+	scalar _cosinePower()
+	{
+		return get( cosinePower(), cosinePower_link());
+	}
+	color _specularColor()
+	{
+		return get( specularColor(), specularColor_link());
+	}
+	scalar _reflectivity()
+	{
+		return get( reflectivity(), reflectivity_link());
+	}
+	color _reflectedColor()
+	{
+		return get( reflectedColor(), reflectedColor_link());
 	}
 
 	void main(void *arg)
 	{
+		// cook thee variables here
+		color Kd = color(_diffuse(), _diffuse(), _diffuse());
+		color  _color         ( _color()         );
+		scalar _cosinePower   ( _cosinePower()   );
+		color  _specularColor ( _specularColor() );
+		color  _transparency  ( _transparency()  );
+		//
+
 		normal Nf = faceforward(normalize(N()), I());
 		vector V = -normalize(I());
 
-		Ci() = color(0.0f, 1.0f, 0.0f);
-		Oi() = color(1.0f);
 
+
+		while (illuminance(P(), Nf, PI / 2.0f))
+		{
+			color	lastC = 0.0f;
+			color	localC = 0.0f;
+			int		num_samples = 0;
+
+			while (sample_light())
+			{
+				localC += Cl() * (
+									_color * Kd * (normalize(L()) % Nf) 
+									+ _cosinePower * _specularColor * specularbrdf(normalize(L()), Nf, V, 0.1f/*roughness()*/)
+					);
+
+				++ num_samples;
+
+				if ((num_samples % 4) == 0)
+				{
+					color	thisC = localC * (1.0f / (scalar)num_samples);
+
+					if (converged(thisC, lastC)){
+						break;
+					}
+					lastC = thisC;
+				}
+			}
+
+			localC *= (1.0f / (scalar)num_samples);
+			Ci() += localC;
+		}
+
+		Ci() += Kd * irradiance();
+		if ( len( &_transparency ) > 0.0f )
+		{
+			Ci() = Ci() * ( 1.0f - _transparency ) + trace_transparent() * _transparency;
+		}
+		setOutputForMaya();
+	}
+	void setOutputForMaya()
+	{
 		outColor() = Ci();
 		outTransparency() = Oi();
 	}
