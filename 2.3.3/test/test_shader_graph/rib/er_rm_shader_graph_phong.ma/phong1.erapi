@@ -1,0 +1,19 @@
+ei_shader("phong1");
+ei_shader_param_string("desc", "maya_phong");
+ei_shader_param_vector("color_", 0.579, 0.235462, 0.124485);
+ei_shader_param_vector("transparency", 0.77686, 0.77686, 0.77686);
+ei_shader_param_vector("ambientColor", 0, 0, 0);
+ei_shader_param_vector("incandescence", 0, 0, 0);
+ei_shader_param_vector("normalCamera", 1, 1, 1);
+ei_shader_param_scalar("diffuse", 0.82642);
+ei_shader_param_scalar("translucence", 0);
+ei_shader_param_scalar("translucenceDepth", 0);
+ei_shader_param_scalar("translucenceFocus", 8e-005);
+ei_shader_param_scalar("cosinePower", 26.3);
+ei_shader_param_vector("specularColor", 0, 0, 0);
+ei_shader_param_scalar("reflectivity", 6e-005);
+ei_shader_param_vector("reflectedColor", 0.16528, 0.16528, 0.16528);
+ei_shader_param_vector("outColor", 0, 0, 0);
+ei_shader_param_vector("outTransparency", 0.77686, 0.77686, 0.77686);
+ei_end_shader();
+
