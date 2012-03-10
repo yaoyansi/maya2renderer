@@ -59,6 +59,23 @@ void ShaderValidConnection::setValidConnection()
 	//ocean shader
 
 	//phong
+	validConnection.clear();
+	validConnection.append("color");
+	validConnection.append("transparency");
+	validConnection.append("ambientColor");
+	validConnection.append("incandescence");
+	validConnection.append("normalCamera");
+	validConnection.append("diffuse");
+	validConnection.append("translucence");
+	validConnection.append("translucenceDepth");
+	validConnection.append("translucenceFocus");
+	validConnection.append("cosinePower");
+	validConnection.append("specularColor");
+	validConnection.append("reflectivity");
+	validConnection.append("reflectedColor");
+	validConnection.append("outColor");
+	validConnection.append("outTransparency");
+	validConnectionMap.insert(std::make_pair("phong", validConnection));	
 
 	//phongE
 

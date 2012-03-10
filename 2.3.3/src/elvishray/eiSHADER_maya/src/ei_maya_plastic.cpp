@@ -318,12 +318,12 @@ END(simple_displace)
 
 
 SURFACE(maya_lambert_transparent)
-	PARAM(color, Cs);
-	PARAM(color, Kd);
-	PARAM(scalar, Ks);
+	PARAM(color, Cs);//color 
+	PARAM(color, Kd);//diffuse float
+	PARAM(scalar, Ks);//specular float(Cosine Power)
 	PARAM(scalar, roughness);
-	PARAM(color, specularcolor);
-	PARAM(scalar, transparency);
+	PARAM(color, specularcolor);//specular color
+	PARAM(scalar, transparency);//transparency
 	PARAM(eiTag, Cs_tex);
 
 	void parameters(int pid)

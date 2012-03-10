@@ -83,6 +83,8 @@ def test_all_scene():
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_graph/er_rm_shader_graph.ma"
     #MyTestOne.test_one_scene(testFile, "")
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_graph/er_rm_shader_graph_phong.ma"
+    MyTestOne.test_one_scene(testFile, "elvishray")
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_er_shader/three_boxes.ma"
     #MyTestOne.test_one_scene(testFile, "")
@@ -112,8 +114,8 @@ def test_all_scene():
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_light/rm_spotlight.ma"
     #MyTestOne.test_one_scene(testFile, "renderman")
-    testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_light/rm_directlight.ma"
-    MyTestOne.test_one_scene(testFile, "renderman")
+    #testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_light/rm_directlight.ma"
+    #MyTestOne.test_one_scene(testFile, "renderman")
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/hair/test_shaveHair(shave_v61).ma"
     #MyTestOne.test_one_scene(testFile, "renderman")

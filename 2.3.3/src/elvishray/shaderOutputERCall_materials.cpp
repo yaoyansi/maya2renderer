@@ -77,7 +77,30 @@ void Visitor::visitOceanShader(const char* node)
 // @node	maya shader node name
 void Visitor::visitPhong(const char* node)
 {
+	OutputHelper o;
+	o.beginRSL(node);
 
+	ei_shader_param_string("desc", "maya_phong");
+	//Common Material Attributes
+	o.addRSLVariable("vector", "color_",		"color",		node);
+	o.addRSLVariable("vector", "transparency",	"transparency", node);
+	o.addRSLVariable("vector", "ambientColor",	"ambientColor", node);
+	o.addRSLVariable("vector", "incandescence",	"incandescence",node);
+	o.addRSLVariable("vector", "normalCamera",	"normalCamera",	node);
+	o.addRSLVariable("float",  "diffuse",		"diffuse",		node);
+	o.addRSLVariable("float",  "translucence",			"translucence",		node);
+	o.addRSLVariable("float",  "translucenceDepth",		"translucenceDepth",node);
+	o.addRSLVariable("float",  "translucenceFocus",		"translucenceFocus",node);
+	//Specular Shading
+	o.addRSLVariable("float",	"cosinePower",			"cosinePower",		node);
+	o.addRSLVariable("vector",	"specularColor",		"specularColor",	node);
+	o.addRSLVariable("float",	"reflectivity",			"reflectivity",		node);
+	o.addRSLVariable("vector",	"reflectedColor",		"reflectedColor",	node);
+	//output
+	o.addRSLVariable("vector", "outColor",		"outColor",		node);
+	o.addRSLVariable("vector", "outTransparency","outTransparency",node);
+
+	o.endRSL();
 }
 // @node	maya shader node name
 void Visitor::visitPhongE(const char* node)

@@ -429,6 +429,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ei_maya_phong.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\ei_maya_place2dTexture.cpp"
 				>
 			</File>
