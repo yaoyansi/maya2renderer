@@ -20,6 +20,7 @@
 - (done)更新er 1185，编译release版
 
 - rm phong shader 的导出
+- bug:phong如果只有透明值，而没有透明贴图时，最终颜色几乎显示不出来（几乎成半透明的白色）
 - vertex normal 导出的时机，什么时候需要导出？参考rm mesh的导出；给Elvic提bug，关于vertex list可以和pos list不等长
 - update test case for jpg maketexture
 -distantlight

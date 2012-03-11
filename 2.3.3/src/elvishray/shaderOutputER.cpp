@@ -79,36 +79,36 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 			rslShaderBody +="\""+val+"\"";
 			file<<"ei_shader_param_texture(\""<<rslName<<"\", \""<<val<<"\");"<<endl;
 		}
-		//else if(rslType=="int"){
-		//	int val;
-		//	IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
-		//	MString sVal; sVal.set(val);
-		//	rslShaderBody +="\""+sVal+"\"";
-		//	file<<"ei_shader_param_int(\""<<rslName<<"\", "<<val<<");"<<endl;
-		//}
-		//else if(rslType=="index"){
-		//	int val;
-		//	IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
-		//	MString sVal; sVal.set(val);
-		//	rslShaderBody +="\""+sVal+"\"";
-		//	file<<"ei_shader_param_index(\""<<rslName<<"\", "<<val<<");"<<endl;
-		//}
-		//else if(rslType=="bool"){
-		//	int val;
-		//	IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
-		//	MString sVal; sVal.set(val);
-		//	rslShaderBody +="\""+sVal+"\"";
-		//	file<<"ei_shader_param_bool(\""<<rslName<<"\", "<<val<<");"<<endl;
-		//}
-		//else if(rslType=="tag"){
-		//	liquidMessage2(messageError,MString(rslType+" is not implemented yet.").asChar() );
-		//}
-		//else if(rslType=="node"){
-		//	liquidMessage2(messageError,MString(rslType+" is not implemented yet.").asChar() );
-		//}
-		//else if(rslType=="vector4"){
-		//	liquidMessage2(messageError,MString(rslType+" is not implemented yet.").asChar() );
-		//}
+		else if(rslType=="int"){
+			int val;
+			IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
+			MString sVal; sVal.set(val);
+			rslShaderBody +="\""+sVal+"\"";
+			file<<"ei_shader_param_int(\""<<rslName<<"\", "<<val<<");"<<endl;
+		}
+		else if(rslType=="index"){
+			int val;
+			IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
+			MString sVal; sVal.set(val);
+			rslShaderBody +="\""+sVal+"\"";
+			file<<"ei_shader_param_index(\""<<rslName<<"\", "<<val<<");"<<endl;
+		}
+		else if(rslType=="bool"){
+			int val;
+			IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
+			MString sVal; sVal.set(val);
+			rslShaderBody +="\""+sVal+"\"";
+			file<<"ei_shader_param_bool(\""<<rslName<<"\", "<<val<<");"<<endl;
+		}
+		else if(rslType=="tag"){
+			liquidMessage2(messageError,MString(rslType+" is not implemented yet.").asChar() );
+		}
+		else if(rslType=="node"){
+			liquidMessage2(messageError,MString(rslType+" is not implemented yet.").asChar() );
+		}
+		else if(rslType=="vector4"){
+			liquidMessage2(messageError,MString(rslType+" is not implemented yet.").asChar() );
+		}
 		else if(rslType=="float"){
 			if(rslTypeSize == 1){
 				double val;
