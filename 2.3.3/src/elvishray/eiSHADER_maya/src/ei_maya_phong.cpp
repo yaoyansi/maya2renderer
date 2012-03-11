@@ -34,20 +34,6 @@ SURFACE(maya_phong)
 	//output
 	PARAM(color, outColor);
 	PARAM(color, outTransparency);
-	//PARAM(eiTag, color_link);
-	//PARAM(eiTag, transparency_link);
-	//PARAM(eiTag, ambientColor_link);
-	//PARAM(eiTag, incandescence_link);
-	//PARAM(eiTag, normalCamera_link);
-	//PARAM(eiTag, diffuse_link);
-	//PARAM(eiTag, translucence_link);
-	//PARAM(eiTag, translucenceDepth_link);
-	//PARAM(eiTag, translucenceFocus_link);
-	//PARAM(eiTag, cosinePower_link);
-	//PARAM(eiTag, specularColor_link);
-	//PARAM(eiTag, reflectivity_link);
-	//PARAM(eiTag, reflectedColor_link);
-	//scalar tiling; //for test only.
 
 	void parameters(int pid)
 	{
@@ -69,20 +55,6 @@ SURFACE(maya_phong)
 		//output
 		DECLARE_COLOR(	outColor,					0.0f, 0.0f, 0.0f);
 		DECLARE_COLOR(	outTransparency,			0.0f, 0.0f, 0.0f);
-		//DECLARE_TAG(	color_link,					eiNULL_TAG);
-		//DECLARE_TAG(	transparency_link,			eiNULL_TAG);
-		//DECLARE_TAG(	ambientColor_link,			eiNULL_TAG);
-		//DECLARE_TAG(	incandescence_link,			eiNULL_TAG);
-		//DECLARE_TAG(	normalCamera_link,			eiNULL_TAG);
-		//DECLARE_TAG(	diffuse_link,				eiNULL_TAG);
-		//DECLARE_TAG(	translucence_link,			eiNULL_TAG);
-		//DECLARE_TAG(	translucenceDepth_link,		eiNULL_TAG);
-		//DECLARE_TAG(	translucenceFocus_link,		eiNULL_TAG);
-		//DECLARE_TAG(	cosinePower_link,			eiNULL_TAG);	
-		//DECLARE_TAG(	specularColor_link,			eiNULL_TAG);
-		//DECLARE_TAG(	reflectivity_link,			eiNULL_TAG);
-		//DECLARE_TAG(	reflectedColor_link,		eiNULL_TAG);
-	//	tiling = 4.0f;
 	}
 	void init()	{}
 	void exit()	{}
@@ -92,117 +64,6 @@ SURFACE(maya_phong)
 		scalar	dotNH = vN % H;
 		return pow(max(eiSCALAR_EPS, dotNH), 1.0f / roughness);
 	}
-
-
-	//
-	//color sampler2D(const eiTag& tex)
-	//{
-	//	//const scalar tiling = 4.0f;
-
-	//	scalar s = fmodf(u() * tiling, 1.0f);
-	//	scalar t = fmodf(v() * tiling, 1.0f);
-
-	//	scalar dsdx, dsdy, dtdx, dtdy;
-	//	Dxy(u, dsdx, dsdy);
-	//	Dxy(v, dtdx, dtdy);
-	//	dsdx = dsdx * tiling;
-	//	dsdy = dsdy * tiling;
-	//	dtdx = dtdx * tiling;
-	//	dtdy = dtdy * tiling;
-	//	
-	//	return color_texture(tex, 0, s, t, dsdx, dsdy, dtdx, dtdy, 8.0f);
-	//}
-	//scalar sampler1D(const eiTag& tex)
-	//{
-	//	//const scalar tiling = 4.0f;
-
-	//	scalar s = fmodf(u() * tiling, 1.0f);
-	//	scalar t = fmodf(v() * tiling, 1.0f);
-
-	//	scalar dsdx, dsdy, dtdx, dtdy;
-	//	Dxy(u, dsdx, dsdy);
-	//	Dxy(v, dtdx, dtdy);
-	//	dsdx = dsdx * tiling;
-	//	dsdy = dsdy * tiling;
-	//	dtdx = dtdx * tiling;
-	//	dtdy = dtdy * tiling;
-
-	//	return scalar_texture(tex, 0, s, t, dsdx, dsdy, dtdx, dtdy, 8.0f);
-	//}
-	////
-	//color get(const color& channel, const eiTag& tex) 
-	//{
-	//	if( tex != eiNULL_TAG )
-	//	{
-	//		return sampler2D(tex);
-	//	}else{
-	//		return channel;
-	//	}
-	//}
-	//scalar get(const scalar& channel, const eiTag& tex)
-	//{
-	//	if( tex != eiNULL_TAG )
-	//	{
-	//		return sampler1D(tex);
-	//	}else{
-	//		return channel;
-	//	}
-	//}
-	//
-	//Common Material Attributes
-	//color _color()
-	//{
-	//	return get( color_(), color_link() );
-	//}
-	//color _transparency()
-	//{
-	//	return get( transparency(), transparency_link() );
-	//}
-	//color _ambientColor()
-	//{
-	//	return get( ambientColor(), ambientColor_link());
-	//}
-	//color _incandescence()
-	//{
-	//	return get( incandescence(), incandescence_link());
-	//}
-	//color _normalCamera()
-	//{
-	//	return get( normalCamera(), normalCamera_link());
-	//}
-	//scalar _diffuse()
-	//{
-	//	return get( diffuse(), diffuse_link());
-	//}
-	//scalar _translucence()
-	//{
-	//	return get( translucence(), translucence_link());
-	//}
-	//scalar _translucenceDepth()
-	//{
-	//	return get( translucenceDepth(), translucenceDepth_link());
-	//}
-	//scalar _translucenceFocus()
-	//{
-	//	return get( translucenceFocus(), translucenceFocus_link());
-	//}
-	////Specular Shading
-	//scalar _cosinePower()
-	//{
-	//	return get( cosinePower(), cosinePower_link());
-	//}
-	//color _specularColor()
-	//{
-	//	return get( specularColor(), specularColor_link());
-	//}
-	//scalar _reflectivity()
-	//{
-	//	return get( reflectivity(), reflectivity_link());
-	//}
-	//color _reflectedColor()
-	//{
-	//	return get( reflectedColor(), reflectedColor_link());
-	//}
 
 	void main(void *arg)
 	{
