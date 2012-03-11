@@ -173,7 +173,7 @@ namespace elvishray
 			MFloatArray v_coords;
 
 			IfMErrorWarn( fnMesh.getUVs(u_coords,v_coords,&currentUVsetName) );
-			_s("//### UV, size="<< fnMesh.numUVs(currentUVsetName) );
+			_s("//### UV("<<currentUVsetName<<"), size="<< fnMesh.numUVs(currentUVsetName) );
 			// u
 			_d( tag = eiNULL_TAG );
 			_S( ei_declare("u", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
