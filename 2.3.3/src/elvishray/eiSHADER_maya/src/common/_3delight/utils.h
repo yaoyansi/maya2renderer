@@ -12,9 +12,9 @@
 #define LOG05 -0.693147180559945  /* log(0.5) */
 #define UNDEFINED_UV -10000000
 
-#define ISUVDEFINED(U, V) ( abs(U) < 10000 && abs(V) < 10000 )
+#define ISUVDEFINED(U, V) ( abs(U) < 10000.0f && abs(V) < 10000.0f )
 
-#define WRAPMAX (1.000001)
+#define WRAPMAX (1.000001f)
 #define EPSILON 1e-6
 
 float

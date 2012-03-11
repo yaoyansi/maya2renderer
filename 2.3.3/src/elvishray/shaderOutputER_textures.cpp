@@ -85,10 +85,25 @@ void Visitor::visitFile(const char* node)
 	o.beginRSL(node);
 
 	o.addToRSL("ei_shader_param_string(\"desc\", \"maya_file\");");
+	//input
+	//o.addRSLVariable("float",  "alphaGain",	"alphaGain",	node);
+	//o.addRSLVariable("bool",  "alphaIsLuminance",	"alphaIsLuminance",	node);
+	//o.addRSLVariable("float",  "alphaOffset",	"alphaOffset",	node);
+	//o.addRSLVariable("color",  "colorGain",	"colorGain",	node);
+	//o.addRSLVariable("color",  "colorOffset",	"colorOffset",	node);
+	//o.addRSLVariable("color",  "defaultColor",	"defaultColor",	node);
 	o.addRSLVariable("vector",  "uvCoord",	"uvCoord",	node);
 	o.addRSLVariable("texture", "fileTextureName",	"fileTextureName",	node);
-//	o.addRSLVariable("vector", "outColor",	"outColor",	node);
-//	o.addToRSL("ei_shader_param_texture(\"fileTextureName\", texturename1)");
+	//o.addRSLVariable("index", "filterType",	"filterType",	node);
+	//o.addRSLVariable("float",  "filter",	"filter",	node);
+	//o.addRSLVariable("float",  "filterOffset",	"filterOffset",	node);
+	//o.addRSLVariable("bool",  "invert",	"invert",	node);
+	//o.addRSLVariable("bool",  "fileHasAlpha",	"fileHasAlpha",	node);
+	////o.addRSLVariable("index", "num_channels",	"num_channels",	node);
+	//output
+	//o.addRSLVariable("float", "outAlpha",	"outAlpha",	node);
+	//o.addRSLVariable("color", "outColor",	"outColor",	node);
+	//o.addRSLVariable("color", "outTransparency",	"outTransparency",	node);
 	o.endRSL();
 }
 //

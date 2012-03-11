@@ -84,7 +84,46 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 			{
 				ei_shader_param_texture(rslName.asChar(),val.asChar());
 			}
-		}else if(rslType=="float"){
+		}
+		//else if(rslType=="int"){
+		//	int val;
+		//	IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
+		//	MString sVal; sVal.set(val);
+		//	rslShaderBody +="\""+sVal+"\"";
+		//	{
+		//		ei_shader_param_int(rslName.asChar(),val);
+		//	}
+		//}
+		//else if(rslType=="index"){
+		//	int val;
+		//	IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
+		//	MString sVal; sVal.set(val);
+		//	rslShaderBody +="\""+sVal+"\"";
+		//	{
+		//		eiIndex iVal = val;
+		//		ei_shader_param_index(rslName.asChar(), iVal);
+		//	}
+		//}
+		//else if(rslType=="bool"){
+		//	int val;
+		//	IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
+		//	MString sVal; sVal.set(val);
+		//	rslShaderBody +="\""+sVal+"\"";
+		//	{
+		//		eiBool bVal = val;
+		//		ei_shader_param_bool(rslName.asChar(), bVal );
+		//	}
+		//}
+		//else if(rslType=="tag"){
+		//	liquidMessage2(messageError,MString(rslType+" is not implemented yet.").asChar() );
+		//}
+		//else if(rslType=="node"){
+		//	liquidMessage2(messageError,MString(rslType+" is not implemented yet.").asChar() );
+		//}
+		//else if(rslType=="vector4"){
+		//	liquidMessage2(messageError,MString(rslType+" is not implemented yet.").asChar() );
+		//}
+		else if(rslType=="float"){
 			if(rslTypeSize == 1){
 				double val;
 				IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
