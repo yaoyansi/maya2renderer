@@ -67,13 +67,7 @@ SURFACE(maya_phong)
 
 	void main(void *arg)
 	{
-		// cook thee variables here
 		color Kd = color(diffuse(), diffuse(), diffuse());
-		color  _color         ( color_()         );
-		scalar _cosinePower   ( cosinePower()   );
-		color  _specularColor ( specularColor() );
-		color  _transparency  ( transparency()  );
-		//
 
 		normal Nf = faceforward(normalize(N()), I());
 		vector V = -normalize(I());
@@ -89,8 +83,8 @@ SURFACE(maya_phong)
 			while (sample_light())
 			{
 				localC += Cl() * (
-									_color * Kd * (normalize(L()) % Nf) 
-									+ _cosinePower * _specularColor * specularbrdf(normalize(L()), Nf, V, 0.1f/*roughness()*/)
+									color_() * Kd * (normalize(L()) % Nf) 
+									+ cosinePower() * specularColor() * specularbrdf(normalize(L()), Nf, V, 0.1f/*roughness()*/)
 					);
 
 				++ num_samples;
@@ -111,9 +105,9 @@ SURFACE(maya_phong)
 		}
 
 		Ci() += Kd * irradiance();
-		if ( len( &_transparency ) > 0.0f )
+		if ( almost_zerov( &transparency(), 0.001f ) )
 		{
-			Ci() = Ci() * ( 1.0f - _transparency ) + trace_transparent() * _transparency;
+			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
 		}
 		setOutputForMaya();
 	}

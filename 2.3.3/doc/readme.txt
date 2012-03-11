@@ -277,6 +277,7 @@ RenderMan (R) is a registered trademark of Pixar
   - 编译er，编译eiSHADER_maya.sln，编译liquid.sln
 
 - 设置帧序列时，一定要记得把Animation选项勾上，否则只输出当前帧。
+- maya_phong 里判断transparency是否为0：if ( almost_zerov( &transparency(), 0.001f ) )
 
   ---------------------------------------------------------------------
                               F.A.Q.
