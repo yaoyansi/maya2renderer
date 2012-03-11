@@ -277,7 +277,15 @@ RenderMan (R) is a registered trademark of Pixar
   - 编译er，编译eiSHADER_maya.sln，编译liquid.sln
 
 - 设置帧序列时，一定要记得把Animation选项勾上，否则只输出当前帧。
+
 - maya_phong 里判断transparency是否为0：if ( almost_zerov( &transparency(), 0.001f ) )
+
+- may file node
+  - num_channels暂不考虑，以后判断texture file是否是单通道纹理后，参照3delight的实现再修改
+  - 若干输入参数没有用到，以后参照3delight的实现再修改
+  - color_texture/scalar_texture的参数dsdx, dsdy, dtdx, dtdy不知道如何设置
+  - liquid里  ei_make_texture(..., ..., eiInt swrap, eiInt twrap,
+	eiInt filter, eiScalar swidth, eiScalar twidth);时这几个参数如何设置
 
   ---------------------------------------------------------------------
                               F.A.Q.

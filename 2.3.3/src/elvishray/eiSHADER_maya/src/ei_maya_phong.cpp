@@ -105,10 +105,10 @@ SURFACE(maya_phong)
 		}
 
 		Ci() += Kd * irradiance();
-		if ( almost_zerov( &transparency(), 0.001f ) )
-		{
+		if ( ! almost_zerov( &transparency(), 0.001f ) )
+		{//transparent
 			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
-		}
+		}//else{ opacity }
 		setOutputForMaya();
 	}
 	void setOutputForMaya()
