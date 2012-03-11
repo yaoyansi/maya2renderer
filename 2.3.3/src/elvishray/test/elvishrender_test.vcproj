@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ei_img_uv.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ei_shader_graph_unittest.cpp"
 				>
 			</File>
