@@ -86,7 +86,7 @@ void Visitor::visitPhong(const char* node)
 	o.addRSLVariable("vector", "transparency",	"transparency", node);
 	o.addRSLVariable("vector", "ambientColor",	"ambientColor", node);
 	o.addRSLVariable("vector", "incandescence",	"incandescence",node);
-	o.addRSLVariable("vector", "normalCamera",	"normalCamera",	node);
+	o.addRSLVariable("normal", "normalCamera",	"normalCamera",	node);
 	o.addRSLVariable("float",  "diffuse",		"diffuse",		node);
 	o.addRSLVariable("float",  "translucence",			"translucence",		node);
 	o.addRSLVariable("float",  "translucenceDepth",		"translucenceDepth",node);
@@ -96,6 +96,9 @@ void Visitor::visitPhong(const char* node)
 	o.addRSLVariable("vector",	"specularColor",		"specularColor",	node);
 	o.addRSLVariable("float",	"reflectivity",			"reflectivity",		node);
 	o.addRSLVariable("vector",	"reflectedColor",		"reflectedColor",	node);
+	//Matte Opacity
+	o.addRSLVariable("index",	"matteOpacityMode",		"matteOpacityMode",	node);
+	o.addRSLVariable("float",	"matteOpacity",			"matteOpacity",		node);
 	//output
 	o.addRSLVariable("vector", "outColor",		"outColor",		node);
 	o.addRSLVariable("vector", "outTransparency","outTransparency",node);

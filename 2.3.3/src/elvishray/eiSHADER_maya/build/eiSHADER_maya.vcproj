@@ -460,6 +460,17 @@
 				Name="_3delight"
 				>
 				<File
+					RelativePath="..\src\common\_3delight\shading_utils.h"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\src\common\_3delight\utils.h"
 					>
 				</File>
