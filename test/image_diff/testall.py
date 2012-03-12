@@ -83,7 +83,9 @@ def test_all_scene():
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_graph/er_rm_shader_graph.ma"
     #MyTestOne.test_one_scene(testFile, "")
-    testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_graph/er_rm_shader_graph_phong.ma"
+    #testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_graph/er_rm_shader_graph_phong.ma"
+    #MyTestOne.test_one_scene(testFile, "elvishray")
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_graph/er_rm_shader_graph_phong_transparent.ma"
     MyTestOne.test_one_scene(testFile, "elvishray")
 
     #testFile=LIQUID_ROOT+"/2.3.3/test/test_er_shader/three_boxes.ma"

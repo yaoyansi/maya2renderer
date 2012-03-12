@@ -1,0 +1,3 @@
+ei_material("phong4SG");
+ei_add_surface("phong4");
+ei_end_material();

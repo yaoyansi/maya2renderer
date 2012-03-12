@@ -1,0 +1,34 @@
+##RenderMan RIB-Structure 1.0
+version 3.03
+AttributeBegin
+Attribute "identifier" "name" [ "_pPlane1_pPlaneShape1" ] 
+GeometricApproximation "motionfactor" 1.000000
+Color [ 0.000000 0.000000 0.000000 ]
+Opacity [ 1.000000 1.000000 1.000000 ]
+#use Shading Group reference:
+ReadArchive "E:/MyDocuments/maya/projects/default/generatedShader/phong1SG.rmsg"
+AttributeEnd
+AttributeBegin
+Attribute "identifier" "name" [ "_pPlane2_pPlaneShape2" ] 
+GeometricApproximation "motionfactor" 1.000000
+Color [ 0.000000 0.000000 0.000000 ]
+Opacity [ 1.000000 1.000000 1.000000 ]
+#use Shading Group reference:
+ReadArchive "E:/MyDocuments/maya/projects/default/generatedShader/phong4SG.rmsg"
+AttributeEnd
+AttributeBegin
+Attribute "identifier" "name" [ "_pPlane3_pPlaneShape3" ] 
+GeometricApproximation "motionfactor" 1.000000
+Color [ 0.000000 1.000000 0.000000 ]
+Opacity [ 0.528920 0.528920 0.528920 ]
+#use Shading Group reference:
+ReadArchive "E:/MyDocuments/maya/projects/default/generatedShader/phong5SG.rmsg"
+AttributeEnd
+AttributeBegin
+Attribute "identifier" "name" [ "_pPlane4_pPlaneShape4" ] 
+GeometricApproximation "motionfactor" 1.000000
+Color [ 1.000000 1.000000 0.000000 ]
+Opacity [ 1.000000 1.000000 1.000000 ]
+#use Shading Group reference:
+ReadArchive "E:/MyDocuments/maya/projects/default/generatedShader/phong6SG.rmsg"
+AttributeEnd
