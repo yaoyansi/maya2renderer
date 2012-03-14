@@ -16,6 +16,10 @@
 #include <eiAPI/ei_shaderx.h>
 #include "common/_3delight/shading_utils.h"
 #include "common/_3delight/utils.h"
+#define SAMPLE_LIGHT(value, cmd)	\
+	while(my_sample_light( value )){\
+		cmd;						\
+	}my_sample_light_get( value );
 
 SURFACE(maya_phong)
 	//Common Material Attributes
@@ -167,13 +171,12 @@ SURFACE(maya_phong)
 			reset_sample_light();
 			color	localC = 0.0f;
 
-			while (my_sample_light(localC))
-			{
-				localC += Cl() * (
-					color_() * Kd * (normalize(L()) % Nf) 
-					+ cosinePower() * specularColor() * specularbrdf(normalize(L()), Nf, V, 0.1f/*roughness()*/)
-					);
-			}my_sample_light_get(localC);
+			SAMPLE_LIGHT( localC,
+ 				localC += Cl() * (
+ 					color_() * Kd * (normalize(L()) % Nf) 
+ 					+ cosinePower() * specularColor() * specularbrdf(normalize(L()), Nf, V, 0.1f/*roughness()*/)
+ 					);
+			);
 
 			Ci() += localC;
 		}
