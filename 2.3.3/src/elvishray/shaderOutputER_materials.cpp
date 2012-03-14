@@ -108,6 +108,8 @@ void Visitor::visitPhong(const char* node)
 	//Matte Opacity
 	o.addRSLVariable("index",	"matteOpacityMode",		"matteOpacityMode",	node);
 	o.addRSLVariable("float",	"matteOpacity",			"matteOpacity",		node);
+	//Raytrace Options
+	o.addRSLVariable("index",	"reflectionLimit",		"reflectionLimit",	node);
 	//output
 	o.addRSLVariable("vector", "outColor",		"outColor",		node);
 	o.addRSLVariable("vector", "outTransparency","outTransparency",node);

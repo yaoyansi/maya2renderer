@@ -16,6 +16,7 @@
 #include <eiAPI/ei_shaderx.h>
 #include "common/_3delight/shading_utils.h"
 #include "common/_3delight/utils.h"
+
 #define SAMPLE_LIGHT(value, cmd)	\
 	while(my_sample_light( value )){\
 		cmd;						\
@@ -39,7 +40,9 @@ SURFACE(maya_phong)
 	PARAM(color, reflectedColor);
 	//Matte Opacity
 	PARAM(eiIndex,matteOpacityMode);
-	PARAM(scalar,matteOpacity);
+	PARAM(scalar, matteOpacity);
+	//Raytrace Options
+	PARAM(eiIndex,reflectionLimit);
 	//output
 	PARAM(color, outColor);
 	PARAM(color, outTransparency);
@@ -69,6 +72,8 @@ SURFACE(maya_phong)
 		//Matte Opacity
 		DECLARE_INDEX( matteOpacityMode,			2);
 		DECLARE_SCALAR(	matteOpacity,				1.0f);
+		//Raytrace Options
+		DECLARE_INDEX( reflectionLimit,				1);
 		//output
 		DECLARE_COLOR(	outColor,					0.0f, 0.0f, 0.0f);
 		DECLARE_COLOR(	outTransparency,			0.0f, 0.0f, 0.0f);
@@ -93,7 +98,8 @@ SURFACE(maya_phong)
 	void main(void *arg)
 	{
 		//main1(arg);
-		main1_2(arg);
+		main2(arg);
+		//main1_2(arg);
 	}
 	eiBool my_sample_light(const color& value)
 	{
@@ -171,12 +177,12 @@ SURFACE(maya_phong)
 			reset_sample_light();
 			color	localC = 0.0f;
 
-			SAMPLE_LIGHT( localC,
+			//SAMPLE_LIGHT( localC,
  				localC += Cl() * (
  					color_() * Kd * (normalize(L()) % Nf) 
  					+ cosinePower() * specularColor() * specularbrdf(normalize(L()), Nf, V, 0.1f/*roughness()*/)
  					);
-			);
+			//);
 
 			Ci() += localC;
 		}
@@ -189,7 +195,200 @@ SURFACE(maya_phong)
 		setOutputForMaya();
 	}
 	//////////////////////////////////////////////////////////////////////////
+	normal ShadingNormal(const normal& i_N)
+	{
+		normal Nf = i_N;
 
+		const float sides = 2;
+		if( sides == 2 )
+		{
+			Nf = faceforward(Nf, I());
+		}
+		return Nf;
+	}
+	color getDiffuse(const normal& i_N,const eiBool keyLightsOnly,const eiBool unshadowed )
+	{
+		eiBool isKeyLight = eiTRUE;
+
+		reset_sample_light();
+		color C = 0;
+
+		while ( illuminance( P(), i_N, PI/2.0f ) )
+		{
+
+			//if( keyLightsOnly != eiFALSE )
+			//{
+			//	lightsource( "iskeylight", isKeyLight );
+			//}
+
+			if( isKeyLight != eiFALSE )
+			{
+				float nondiffuse = 0.0f;
+				//lightsource( "__nondiffuse", nondiffuse );
+
+				if( nondiffuse < 1.0f )
+				{
+					//SAMPLE_LIGHT( C,
+						C += Cl() * (normalize(L()) % i_N) * (1.0f-nondiffuse);
+					//);
+
+				}
+			}
+		}
+
+		return C;
+	}
+
+
+	color getPhong(
+		const normal& i_N, const vector& i_V, const float i_size, 
+		const eiBool i_keyLightsOnly, const eiBool unshadowed)
+	{
+		reset_sample_light();
+		color C = 0;
+		vector R = reflect( -normalize(i_V), normalize(i_N) );
+
+		while( illuminance( P(), i_N, PI/2.0f ) )
+		{
+			float isKeyLight = 1;
+
+			//if( i_keyLightsOnly != 0 )
+			//{
+			//	lightsource( "iskeylight", isKeyLight );
+			//}
+
+			if( isKeyLight != 0 )
+			{
+				const float nonspecular = 0.0f;
+				//lightsource( "__nonspecular", nonspecular );
+
+				if( nonspecular < 1 )
+				{
+					//SAMPLE_LIGHT(C,
+						vector Ln = normalize( L() );
+						C += Cl() * pow( max<float>(0.0f, R%Ln), i_size) * (1.0f-nonspecular);
+					//);
+				}
+			}
+		}
+		return C;
+	}
+	color getTranslucence(const normal& i_N, 
+		const float i_translucence,
+		const float i_translucenceDepth,
+		const float i_translucenceFocus)
+	{
+		/*
+		A translucence focus of 1 leads to a division by zero and an effective
+		focus of 0. Clamping it like this yields about the same result as maya.
+		*/
+		float focus = min( i_translucenceFocus, 0.99999f );
+
+		reset_sample_light();
+		color C = 0.0f;
+
+		if( i_translucence > 0.0f )
+		{
+			while( illuminance( P() ) )
+			{
+				float nondiffuse = 0.0f;
+				//lightsource( "__nondiffuse", nondiffuse );
+
+				if( nondiffuse < 1.0f )
+				{
+					//SAMPLE_LIGHT( C,
+ 						float costheta = normalize(L()) % normalize(I());
+ 						float a = (1.0f + costheta) * 0.5f;
+ 						float trs = pow( pow(a, focus), 1.0f/(1.0f-focus) );
+ 						C += Cl() * trs * (1.0f-nondiffuse);
+					//);
+				}
+			}
+		}
+
+		return C * i_translucence;
+	}
+
+	color getReflection(
+		const normal& i_N,
+		const vector& i_I,
+		const color& i_specularColor,
+		const float i_reflectivity,
+		const color& i_reflectedColor,
+		//const float i_maxDistance, const float i_samples, const float i_blur, const float i_noiseAmp, const float i_noiseFreq,
+		const eiIndex i_reflectionLimit )
+	{
+		color ray_coloration = i_specularColor * i_reflectivity;
+		color reflected = i_reflectedColor;
+
+		if( /*ray_coloration != color(0)*/!almost_zerov(&ray_coloration, EPSILON) &&
+			/*raySpecularDepth() < i_reflectionLimit*/eiTRUE )
+		{
+			vector R = reflect( i_I, i_N );
+
+			//if( i_noiseAmp != 0 && i_noiseFreq != 0)
+			//{
+			//	point Pobj = transform("object", P);
+			//	R = mix( R, R * noise( Pobj * i_noiseFreq ), i_noiseAmp );
+			//}
+			//color rc = trace_probe(P(), R,i_maxDistance);
+			color rc = trace_reflection(R);
+			color trs = trace_transmission(R);
+
+			reflected *= trs;
+			reflected += rc;
+		}
+		return reflected * ray_coloration;
+	}
+	void main2(void *arg)
+	{
+		color Kd = color(diffuse(), diffuse(), diffuse());
+
+		vector In = normalize( I() );
+		normal Nn = normalize( normalCamera() );
+		normal Nf = ShadingNormal(Nn);
+		
+		vector V = -normalize(I());
+
+	
+		color Cdiffuse = diffuse() * getDiffuse(Nf, eiFALSE, eiFALSE);
+		color Cambient = ambientColor() + getAmbient(Nf);
+		color Cspecular = getPhong(Nf, -In, cosinePower(), eiFALSE, eiFALSE) * specularColor();
+		color Ctransl = getTranslucence(Nf, translucence(), translucenceDepth(), translucenceFocus());
+ 		color Creflect = getReflection(
+ 			Nf, In, specularColor(), reflectivity(), reflectedColor(),
+ 			//i_reflectionMaxDistance, i_reflectionSamples, i_reflectionBlur, i_reflectionNoiseAmplitude, i_reflectionNoiseFrequency,
+ 			reflectionLimit() );
+		outColor() = color_() * Ci();
+		computeSurface(
+			outColor(),
+			transparency(),
+			matteOpacityMode(),
+			matteOpacity(),
+			outColor(),
+			outTransparency() );
+
+
+		color refraction;
+		//doRefraction(
+		//	Nn(),
+		//	I(),
+		//	refractions,
+		//	refractiveIndex,
+		//	refractionLimit,
+		//	lightAbsorbance,
+		//	shadowAttenuation,
+		//	outTransparency(),
+		//	refraction );
+
+
+		outColor() *= (Cdiffuse + Cambient + Ctransl);
+		outColor() += Creflect +  Cspecular + incandescence() + refraction;
+
+		//computeShadowPass(Nf);
+
+		//setOutputForMaya();
+	}
 	void setOutputForMaya()
 	{
 		outColor() = Ci();
