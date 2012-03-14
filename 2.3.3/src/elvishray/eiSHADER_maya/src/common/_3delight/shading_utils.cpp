@@ -2,15 +2,8 @@
 	Copyright (c) 2006 soho vfx inc.
 	Copyright (c) 2006 The 3Delight Team.
 */
-
-#ifndef _shading_utils_h
-#define _shading_utils_h
-
-#include <eiAPI/ei_shaderx.h>
-
-#define SQR(i) ( (i) * (i) )
-
-#define GET_CL( CL ) { CL = Cl; }
+#include "shading_utils.h"
+#include "utils.h"
 
 /*
 	ShadingNormal
@@ -53,7 +46,10 @@
 /*
 	Maya's ambient function
 */
-color getAmbient( const normal& i_N );
+color getAmbient( const normal& i_N )
+{
+	return color(0.0f, 0.0f, 0.0f);
+}
 
 //color getAmbientUnshadowed( normal i_N )
 //{
@@ -306,7 +302,26 @@ computeSurfaceTransparency(
 	const eiIndex i_matteOpacityMode,
 	const eiScalar i_matteOpacity,
 	const color& i_transparency,
-	color &o_outTransparency );
+	color &o_outTransparency )
+{
+	if( i_matteOpacityMode == 0 )
+	{
+		// This is the "Black Hole" Maya setting
+		o_outTransparency = 0.0f;
+	}
+	else if( i_matteOpacityMode == 1 )
+	{
+		// This is the "Solid Matte" Maya setting
+		o_outTransparency = i_matteOpacity;
+	}
+	else
+	{
+		// This is the "Opacity Gain" Maya setting (and the default value)
+		o_outTransparency = (1.0f - i_transparency) * i_matteOpacity;
+	}
+
+	o_outTransparency = 1.0f - o_outTransparency;
+}
 
 void computeSurface(
 	const color& i_surfaceColor,
@@ -315,7 +330,14 @@ void computeSurface(
 	const float i_matteOpacity,
 	color &o_outColor,
 	color &o_outTransparency
-	);
+	)
+{
+	computeSurfaceTransparency(
+		i_matteOpacityMode, i_matteOpacity, i_transparency, o_outTransparency );
+
+	o_outColor = i_surfaceColor * (1.0f - o_outTransparency);
+	o_outColor = clamp(o_outColor, color(0.0f), color(eiMAX_SCALAR));
+}
 
 //float raySpecularDepth()
 //{
@@ -651,7 +673,9 @@ void computeSurface(
 
 // I  - eye to surface point
 // nN - normalized normal at surface point
-vector reflect(const vector& I, const vector& nN);
+vector reflect(const vector& I, const vector& nN)
+{
+	return  I - 2.0f * ((I % nN) * nN);
+}
 
-#endif /* _shading_utils_h */
 

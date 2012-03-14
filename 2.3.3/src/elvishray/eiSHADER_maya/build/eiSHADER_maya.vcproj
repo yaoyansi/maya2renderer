@@ -460,6 +460,10 @@
 				Name="_3delight"
 				>
 				<File
+					RelativePath="..\src\common\_3delight\shading_utils.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\src\common\_3delight\shading_utils.h"
 					>
 					<FileConfiguration
@@ -469,6 +473,10 @@
 							Name="VCCustomBuildTool"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\src\common\_3delight\utils.cpp"
+					>
 				</File>
 				<File
 					RelativePath="..\src\common\_3delight\utils.h"
