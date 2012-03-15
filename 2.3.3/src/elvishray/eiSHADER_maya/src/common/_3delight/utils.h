@@ -15,7 +15,7 @@
 #define ISUVDEFINED(U, V) ( abs(U) < 10000.0f && abs(V) < 10000.0f )
 
 #define WRAPMAX (1.000001f)
-#define EPSILON 1e-6
+//#define EPSILON 1e-6   //we use eiSCALAR_EPS(1.0e-5f) instead.
 
 float
 luminance( color i_color );

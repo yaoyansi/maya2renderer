@@ -21,9 +21,12 @@
 
 - rm phong shader 的导出
 - bug:phong如果只有透明值，而没有透明贴图时，最终颜色几乎显示不出来（几乎成半透明的白色）
+- bump2d node
+-bug: maya_phong 高光的位置不正确
 - vertex normal 导出的时机，什么时候需要导出？参考rm mesh的导出；给Elvic提bug，关于vertex list可以和pos list不等长
 - update test case for jpg maketexture
 -distantlight
+
 
 -bug：er的maya预览图里最底部的一行像素是空的；但在输出的图片文件里，最底一行的像素没有问题。
 -bug:自定义shader 的参数无法从pl文件里update ，必须删掉该节点，然后重新建立
