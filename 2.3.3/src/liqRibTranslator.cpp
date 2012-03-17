@@ -7225,4 +7225,5 @@ bool liqRibTranslator::checkSettings()
 		liquidMessage2(messageError,"liqglo.m_displays[ 0 ].name is empty. Please set the output image and render the scene again.");
 		return false;
 	}
+	return true;
 }
