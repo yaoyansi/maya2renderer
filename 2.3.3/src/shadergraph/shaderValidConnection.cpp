@@ -26,7 +26,7 @@ void ShaderValidConnection::setValidConnection()
 	/// surface ///
 	//anisotropic
 
-	//Hair Tube shader
+	//hairTubeShader
 
 	//lambert
 	validConnection.clear();
@@ -56,7 +56,7 @@ void ShaderValidConnection::setValidConnection()
 	validConnection.append("outColor");
 	validConnectionMap.insert(std::make_pair("blinn", validConnection));	
 
-	//ocean shader
+	//oceanShader 
 
 	//phong
 	validConnection.clear();
@@ -73,36 +73,37 @@ void ShaderValidConnection::setValidConnection()
 	validConnection.append("specularColor");
 	validConnection.append("reflectivity");
 	validConnection.append("reflectedColor");
+	validConnection.append("matteOpacityMode");
+	validConnection.append("matteOpacity");
+	validConnection.append("reflectionLimit");
 	validConnection.append("outColor");
 	validConnection.append("outTransparency");
 	validConnectionMap.insert(std::make_pair("phong", validConnection));	
 
 	//phongE
 
-	//ramp shader
+	//rampShader
 
-	//shading map
+	//shadingMap
 
-	//surface shader
+	//surfaceShader
 
-	//use background
+	//useBackground
 
 	/// Volumetric ///
-	//EnvFog
+	//envFog
 
-	//Fluid Shape
+	//fluidShape
 
-	//LightFog
+	//lightFog
 
-	//ParticleCloud
+	//particleCloud
 
-	//VolumeFog
+	//volumeFog
 
-	//VolumeShader
+	//volumeShader
 
 	/// DISPLACEMENT ///
-	//c muscle shader
-
 	//displacement
 
 	/// 2D Texture (normal)///
@@ -131,14 +132,27 @@ void ShaderValidConnection::setValidConnection()
 
 	// file
 	validConnection.clear();
+	validConnection.append("alphaGain");
+	validConnection.append("alphaIsLuminance");
+	validConnection.append("alphaOffset");
+	validConnection.append("colorGain");
+	validConnection.append("colorOffset");
+	validConnection.append("defaultColor");
+	validConnection.append("fileTextureName");
+	validConnection.append("filterType");
+	validConnection.append("filter");
+	validConnection.append("filterOffset");
+	validConnection.append("invert");
 	validConnection.append("uvCoord");
+	validConnection.append("fileHasAlpha");
+	validConnection.append("outAlpha");
 	validConnection.append("outColor");
 	validConnection.append("outTransparency");
 	validConnectionMap.insert(std::make_pair("file", validConnection));	
 
-	//FluidTexture2D
+	//fluidTexture2D
 
-	//Fractal
+	//fractal
 
 	//grid
 
@@ -150,20 +164,20 @@ void ShaderValidConnection::setValidConnection()
 
 	//ocean
 
-	//psd file
+	//psdFileTex
 
 	//ramp
 
 	//water
 
 	/// 3D Textures ///
-	//Brownian
+	//brownian
 
 	//cloud
 
 	//crater
 
-	//Fluid Texture 3D
+	//fluidTexture3D
 
 	//granite
 
@@ -214,6 +228,16 @@ void ShaderValidConnection::setValidConnection()
 	//arrayMapper
 
 	//bump2d
+	validConnection.clear();
+	validConnection.append("bumpValue");
+	validConnection.append("bumpDepth");
+	validConnection.append("bumpInterp");
+	validConnection.append("bumpFilter");
+	validConnection.append("bumpFilterOffset");
+	validConnection.append("normalCamera");
+	validConnection.append("bumpNormal");
+	validConnection.append("outNormal");
+	validConnectionMap.insert(std::make_pair("bump2d", validConnection));
 
 	//bump3d
 
@@ -262,7 +286,7 @@ void ShaderValidConnection::setValidConnection()
 
 	//gammaCorrect
 
-	//hsv to rgb
+	//hsvToRgb
 
 	//luminance
 
@@ -272,29 +296,29 @@ void ShaderValidConnection::setValidConnection()
 
 	//remapValue
 
-	//rgb to hsv
+	//rgbToHsv
 
 	//smear
 
 	//surfaceLuminance
 
 	/// switch utilities ///
-	//double switch
+	//doubleShadingSwitch
 
-	//quad switch
+	//quadShadingSwitch
 
-	//single switch
+	//singleShadingSwitch
 
-	//triple switch
+	//tripleShadingSwitch
 
 	/// particle utilities ///
-	//particle sampler
+	//particleSamplerInfo
 
 	/// image planes ///
-	//image plane
+	//imagePlane
 
 	/// glow ///
-	//optical FX
+	//opticalFX
 
 
 

@@ -34,6 +34,7 @@ ConvertShadingNetwork::ConvertShadingNetwork()
 		convertibleNodeTypes.push_back("solidFractal");
 		convertibleNodeTypes.push_back("grid");
 		//Utilities.
+		convertibleNodeTypes.push_back("bump2d");
 		convertibleNodeTypes.push_back("condition");
 		convertibleNodeTypes.push_back("multiplyDivide");
 		convertibleNodeTypes.push_back("place2dTexture");

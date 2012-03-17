@@ -152,4 +152,6 @@ void printFrameSequence(const char* prefix);
 void getlistConnections(const MString& shadingGroupNode,
 						const MString& plug, 
 						MStringArray& connections );
+bool doesPlugExist(const MString& node, const MString& plug);
+
 #endif

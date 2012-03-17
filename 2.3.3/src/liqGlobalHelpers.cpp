@@ -1483,3 +1483,11 @@ void getlistConnections(const MString& shadingGroupNode,
 		IfMErrorMsgWarn(MGlobal::executeCommand( cmd, connections), cmd);
 	}
 }
+bool doesPlugExist(const MString& node, const MString& plug)
+{
+	int bExist;
+	MString cmd = "attributeQuery -node \""+node+"\" -ex \""+plug+"\"";
+	IfMErrorMsgWarn(MGlobal::executeCommand( cmd, bExist), cmd);
+
+	return (bExist!=0);
+}

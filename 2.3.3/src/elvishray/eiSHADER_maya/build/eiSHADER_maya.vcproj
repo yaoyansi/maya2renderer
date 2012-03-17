@@ -413,6 +413,10 @@
 			Name="Source Files"
 			>
 			<File
+				RelativePath="..\src\ei_maya_bump2d.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\ei_maya_checker.cpp"
 				>
 			</File>
@@ -456,6 +460,10 @@
 		<Filter
 			Name="common"
 			>
+			<File
+				RelativePath="..\src\common\my_math.h"
+				>
+			</File>
 			<Filter
 				Name="_3delight"
 				>
