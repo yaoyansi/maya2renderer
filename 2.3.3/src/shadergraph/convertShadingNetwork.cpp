@@ -19,34 +19,6 @@ void connectMStringArray(MString& des, const MStringArray& src)
 
 ConvertShadingNetwork::ConvertShadingNetwork()
 {
-	{// init convertibleNodeTypes
-		//Materials.
-		convertibleNodeTypes.push_back("blinn");
-		convertibleNodeTypes.push_back("layeredShader");
-		convertibleNodeTypes.push_back("lambert");
-		convertibleNodeTypes.push_back("phong");
-		//Textures.
-		convertibleNodeTypes.push_back("checker");
-		convertibleNodeTypes.push_back("cloth");
-		convertibleNodeTypes.push_back("file");
-		convertibleNodeTypes.push_back("fractal");
-		convertibleNodeTypes.push_back("snow");
-		convertibleNodeTypes.push_back("solidFractal");
-		convertibleNodeTypes.push_back("grid");
-		//Utilities.
-		convertibleNodeTypes.push_back("bump2d");
-		convertibleNodeTypes.push_back("condition");
-		convertibleNodeTypes.push_back("multiplyDivide");
-		convertibleNodeTypes.push_back("place2dTexture");
-		convertibleNodeTypes.push_back("reverse");
-		convertibleNodeTypes.push_back("samplerInfo");
-		convertibleNodeTypes.push_back("blendColors");
-		convertibleNodeTypes.push_back("gammaCorrect");
-		convertibleNodeTypes.push_back("hsvToRgb");
-		convertibleNodeTypes.push_back("luminance");
-		convertibleNodeTypes.push_back("rgbToHsv");
-		convertibleNodeTypes.push_back("clamp");
-	}
 }
 //
 ConvertShadingNetwork::~ConvertShadingNetwork()
@@ -83,7 +55,8 @@ bool ConvertShadingNetwork::nodeIsConvertible ( const MString& node ) const
 	MString nodetype;
 	cmd = "nodeType \""+node+"\"";
 	IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
-	return (convertibleNodeTypes.end()!=std::find(convertibleNodeTypes.begin(), convertibleNodeTypes.end(), nodetype.asChar() ) );
+	
+	return ShaderMgr::getSingletonPtr()->hasShaderType(nodetype.asChar());
 }
 //
 bool ConvertShadingNetwork::ensurePlugExists(const MString& plug) const

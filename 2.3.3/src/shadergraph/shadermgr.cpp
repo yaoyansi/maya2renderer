@@ -38,5 +38,9 @@ const MStringArray& ShaderMgr::getValidConnectionRef(const char* shadertype) con
 {
 	return shaderValidConnection.getValidConnectionRef(shadertype);
 }
+bool ShaderMgr::hasShaderType(const char* shadertype)const
+{
+	return shaderValidConnection.hasShaderType(shadertype);
+}
 
 }//namespace liquidmaya

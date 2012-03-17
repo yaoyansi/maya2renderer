@@ -16,10 +16,11 @@ public:
 
 	// @shadertype	e.g. "lambert","blinn",.... lowercase is prefered.
 	const MStringArray& getValidConnectionRef(const char* shadertype)const;
+	bool hasShaderType(const char* shadertype)const;
 
 protected:
 	void setValidConnection();
-	bool hasShaderType(const char* shadertype)const;
+
 
 	std::map<const std::string, MStringArray> validConnectionMap;
 

@@ -26,6 +26,7 @@ namespace liquidmaya
 
 		// @shadertype	e.g. "lambert","blinn",.... lowercase is prefered.
 		const MStringArray& getValidConnectionRef(const char* shadertype) const;
+		bool hasShaderType(const char* shadertype)const;
 
 	private:
 		ShaderMgr();
