@@ -96,17 +96,18 @@ SURFACE(maya_bump2d)
 
 		o_outNormal = normalize(o_outNormal);
 	}
-	void main(void *arg)
+	void main_3delight(void *arg)
 	{
 		if( bumpInterp() == 0 )
 		{
+			normal n = outNormal();
 			/* Bump. */
 			do_bump_map(
 				//bumpValue(),
 				//bumpDepth(),
 				normalCamera(),
-				outNormal() );
-
+				n );
+			outNormal() = n;
 		}
 		else if( bumpInterp() == 1 )
 		{
@@ -146,7 +147,20 @@ SURFACE(maya_bump2d)
 			/* Object Space Normals. This needs some work. */
 			//outNormal() = ntransform( "object", "current", bumpNormal() - 0.5f );
 			//outNormal() = normalize(outNormal());
+			matrix toObject = to_object();
+			vector tmp = (bumpNormal() - normal(0.5f,0.5f,0.5f)) * toObject;
+			outNormal() = normalize(tmp);
 		}
+	}
+	void main_hack(void *arg)
+	{
+		//outNormal() = normalCamera();
+		outNormal() = bumpNormal();
+	}
+	void main(void *arg)
+	{
+		main_3delight(arg);
+		//main_hack(arg);
 	}
 
 END(maya_bump2d)

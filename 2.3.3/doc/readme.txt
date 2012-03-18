@@ -245,6 +245,7 @@ RenderMan (R) is a registered trademark of Pixar
   注意：参数如果是默认值，就不被输出到rib文件里。
   你可以更改参数的值，看看是否仍然没有输出到rib文件里
 
+
 - 自定义shader里string类型参数的命名限制。
   对于自定义shader（比如liquidSurfaceShader）参数列表里的string类型参数(string a, string b)。
    - 如果该参数制定纹理名(string a="/texturepath/a.tex"),
@@ -263,6 +264,7 @@ RenderMan (R) is a registered trademark of Pixar
     //   DO NOT let the attribute name starts with 'texname'.
    - 字符串里不能包含'|'(即$gSeperator)字符
 
+
 - *.pl 文件里matrix array没有实现
 
 
@@ -276,9 +278,12 @@ RenderMan (R) is a registered trademark of Pixar
     - Maya2009\bin\manager.ini里searchpath的路径
   - 编译er，编译eiSHADER_maya.sln，编译liquid.sln
 
+
 - 设置帧序列时，一定要记得把Animation选项勾上，否则只输出当前帧。
 
+
 - maya_phong 里判断transparency是否为0：if ( almost_zerov( &transparency(), 0.001f ) )
+
 
 - may file node
   - num_channels暂不考虑，以后判断texture file是否是单通道纹理后，参照3delight的实现再修改
@@ -286,6 +291,17 @@ RenderMan (R) is a registered trademark of Pixar
   - color_texture/scalar_texture的参数dsdx, dsdy, dtdx, dtdy不知道如何设置
   - liquid里  ei_make_texture(..., ..., eiInt swrap, eiInt twrap,
 	eiInt filter, eiScalar swidth, eiScalar twidth);时这几个参数如何设置
+
+- Bump channel in Phong shader(for er)
+  I make a hack to achieve the bump effect.The following steps will deliver (bump)file.outColor to phong.normalCamera
+  - create bump2d.bumpNormal
+  - file.outColor --> bump2d.bumpNormal
+  - set bump2d.bumpInterp=2
+  - in maya_bump2d: if(bumpInterp==2) outNormal()=bumpNormal();
+  todo: 
+  - delete bump2d.bumpNormal
+  - recover bump2d.bumpInterp
+
 
   ---------------------------------------------------------------------
                               F.A.Q.
