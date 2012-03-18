@@ -13,7 +13,7 @@ float D_clamp(const float x, const float LOW, const float HEIGHT)
 		return 1.0f;
 	
 	//if(LOW==x || x==HEIGHT){
-	printf("D_clamp(%f,%f,%f) is undefined, return 0.0f;\n", x, LOW,HEIGHT);
+	//printf("D_clamp(%f,%f,%f) is undefined, return 0.0f;\n", x, LOW,HEIGHT);
 	return 0.0f;
 	//}
 }
@@ -27,7 +27,7 @@ float D_abs(const float x)
 		return -1.0f;
 
 	//if(x==0.0f){
-	printf("D_abs(0.0) is undefined, return 0.0f;\n");
+	//printf("D_abs(0.0) is undefined, return 0.0f;\n");
 	return 0.0f;
 	//}
 }
