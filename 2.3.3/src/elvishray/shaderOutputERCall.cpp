@@ -160,7 +160,10 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 		// Note if it's connected as an output.
 		if(connected == 2){
 			rslShaderHeader += "output ";
-			if( rslType=="vector")
+			if(   rslType=="color"
+				||rslType=="point"
+				||rslType=="normal"
+				||rslType=="vector")
 			{
 				MDoubleArray val; val.setLength(3);
 				IfMErrorWarn(MGlobal::executeCommand("getAttr \""+plug+"\"", val));
