@@ -1,7 +1,7 @@
 #include "shaderOutputER.h"
 #include <liqlog.h>
 #include "../common/mayacheck.h"
-#include "er_GlobalNodeHelper.h"
+//#include "../shadergraph/convertShadingNetwork.h"
 //#include "../shadergraph/shadermgr.h"
 
 namespace ER
@@ -18,45 +18,6 @@ void Visitor::visitArrayMapper(const char* node)
 // @node	maya shader node name
 void Visitor::visitBump2d(const char* node)
 {
-	std::vector<MString> deferedCmd;
-	{
-		//add bumpNormal
-		MString attr("bumpNormal");
-		MString cmd;
-		cmd ="addAttr -hidden true -k true -longName \""+attr+"\" -at \"double3\" \""+MString(node)+"\";\n";
-		cmd+="addAttr -hidden true -k true -longName (\""+attr+"a\") -at \"double\" -parent \""+attr+"\" \""+MString(node)+"\";\n";
-		cmd+="addAttr -hidden true -k true -longName (\""+attr+"b\") -at \"double\" -parent \""+attr+"\" \""+MString(node)+"\";\n";
-		cmd+="addAttr -hidden true -k true -longName (\""+attr+"c\") -at \"double\" -parent \""+attr+"\" \""+MString(node)+"\";\n";
-		cmd+="setAttr (\""+MString(node)+".bumpNormal\") -type \"double3\" -1 -1 -1;\n";
-		liquidMessage2(messageInfo,"cmd:%s", cmd.asChar());
-		IfMErrorMsgWarn(MGlobal::executeCommand(cmd), cmd);
-		//deferedCmd.push_back("myDeleteAttr(\""+MString(node)+"\",\""+attr+"\", 1)");
-		
-		//
-		MStringArray srcNode;
-		IfMErrorWarn(MGlobal::executeCommand("listConnections -source true "+MString(node)+".bumpValue", srcNode));
-		assert(srcNode.length()==1);
-		//connect file.outColor to bumpNormal
-		cmd="connectAttr -f "+srcNode[0]+".outColor "+MString(node)+".bumpNormal";
-		IfMErrorMsgWarn(MGlobal::executeCommand(cmd), cmd);
-		//deferedCmd.push_back("disconnectAttr "+srcNode[0]+".outColor "+MString(node)+".bumpNormal");
-
-		//set bumpInterp to ObjectSpaceNormals(2) if it is not.
-		elvishray::GlobalNodeHelper h(node);
-		std::size_t bumpInterp = h.getInt("bumpInterp");
-
-		if( 2 != bumpInterp ){//ObjectSpaceNormals
-			//backup the current bumpInterp value
-			MString bumpInterpStr;
-			bumpInterpStr.set(bumpInterp);
-			//deferedCmd.push_back("setAttr "+MString(node)+".bumpInterp "+bumpInterpStr );
-
-			bumpInterpStr.set(2);
-			cmd="setAttr "+MString(node)+".bumpInterp "+bumpInterpStr;
-			IfMErrorMsgWarn(MGlobal::executeCommand(cmd), cmd);
-		}
-	}
-
 	OutputHelper o(file);
 	o.beginRSL(node);
 	o.addToRSL("ei_shader_param_string(\"desc\", \"maya_bump2d\");");
@@ -74,19 +35,6 @@ void Visitor::visitBump2d(const char* node)
 	o.addRSLVariable("normal",  "outNormal",		"outNormal",	node);
 
 	o.endRSL();
-
-	{
-		//recover bumpInterp
-		//disconnect  file.outColor with bumpNormal
-		//delete bumpNormal
- 		std::vector<MString>::reverse_iterator i = deferedCmd.rbegin();
- 		std::vector<MString>::reverse_iterator re = deferedCmd.rend();
- 		for(; i!=re; ++i)
- 		{
- 			liquidMessage2(messageInfo,"deferedCmd:%s", i->asChar());
- 			IfMErrorMsgWarn(MGlobal::executeCommand(*i), *i);
- 		}
-	}
 }
 // @node	maya shader node name
 void Visitor::visitBump3d(const char* node)
