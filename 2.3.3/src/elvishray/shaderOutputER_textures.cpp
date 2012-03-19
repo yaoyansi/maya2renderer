@@ -21,11 +21,25 @@ void Visitor::visitChecker(const char* node)
 
 	o.beginRSL(node);
 
-	o.addToRSL("ei_shader_param_string(\"desc\", \"maya_checker_uv\");");
-	o.addRSLVariable("color",  "color1",	"color1",	node);
-	o.addRSLVariable("color",  "color2",	"color2",	node);
-	o.addRSLVariable("vector", "uvCoord",	"uvCoord",	node);
-	o.addRSLVariable("color",  "outColor",	"outColor",	node);
+	o.addToRSL("ei_shader_param_string(\"desc\", \"maya_checker\");");
+	// Inputs:
+	o.addRSLVariable("float",	"alphaGain",		"alphaGain",		node);
+	o.addRSLVariable("bool",	"alphaIsLuminance",	"alphaIsLuminance",	node);
+	o.addRSLVariable("float",	"alphaOffset",		"alphaOffset",		node);
+	o.addRSLVariable("color",	"color1",			"color1",			node);
+	o.addRSLVariable("color",	"color2",			"color2",			node);
+	o.addRSLVariable("color",	"colorGain",		"colorGain",		node);
+	o.addRSLVariable("color",	"colorOffset",		"colorOffset",		node);
+	o.addRSLVariable("float",	"contrast",			"contrast",			node);
+	o.addRSLVariable("color",	"defaultColor",		"defaultColor",		node);
+	o.addRSLVariable("float",	"filter",			"filter",			node);
+	o.addRSLVariable("float",	"filterOffset",		"filterOffset",		node);
+	o.addRSLVariable("bool",	"invert",			"invert",			node);
+	o.addRSLVariable("vector",	"uvCoord",			"uvCoord",			node);
+	// Outputs:
+	o.addRSLVariable("float",	"outAlpha",			"outAlpha",			node);
+	o.addRSLVariable("color",	"outColor",			"outColor",			node);
+
 
 	o.endRSL();
 }

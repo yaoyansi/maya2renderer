@@ -71,20 +71,20 @@ void
 colorBalance(
 	/*output*/ color &io_outColor,
 	/*output*/ float &io_outAlpha,
-	/*uniform*/const float i_alphaIsLuminance,
+	/*uniform*/const eiBool i_alphaIsLuminance,
 	float i_alphaGain,
 	float i_alphaOffset,
 	color i_colorGain,
 	color i_colorOffset,
-	/*uniform*/const float i_invert )
+	/*uniform*/const eiBool i_invert )
 {
-	if(i_invert != 0.0f)
+	if(i_invert != eiFALSE)
 	{
 		io_outColor = 1 - io_outColor;
 		io_outAlpha = 1 - io_outAlpha;
 	}
 
-	if(i_alphaIsLuminance != 0.0f)
+	if(i_alphaIsLuminance != eiFALSE)
 	{
 		io_outAlpha = luminance( io_outColor );
 	}

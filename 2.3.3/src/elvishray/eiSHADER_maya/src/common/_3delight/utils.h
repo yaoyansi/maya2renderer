@@ -38,12 +38,12 @@ void
 colorBalance(
 	/*output*/ color &io_outColor,
 	/*output*/ float &io_outAlpha,
-	/*uniform*/const float i_alphaIsLuminance,
+	/*uniform*/const eiBool i_alphaIsLuminance,
 	float i_alphaGain,
 	float i_alphaOffset,
 	color i_colorGain,
 	color i_colorOffset,
-	/*uniform*/const float i_invert );
+	/*uniform*/const eiBool i_invert );
 
 
 #endif
