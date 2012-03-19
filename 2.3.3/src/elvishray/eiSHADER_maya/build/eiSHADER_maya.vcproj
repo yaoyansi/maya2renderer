@@ -612,6 +612,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ei_maya_bump3d.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\ei_maya_checker.cpp"
 				>
 			</File>
@@ -655,6 +659,10 @@
 		<Filter
 			Name="common"
 			>
+			<File
+				RelativePath="..\src\common\my_math.cpp"
+				>
+			</File>
 			<File
 				RelativePath="..\src\common\my_math.h"
 				>

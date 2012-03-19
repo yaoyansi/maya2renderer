@@ -26,7 +26,12 @@
 - vertex normal 导出的时机，什么时候需要导出？参考rm mesh的导出；给Elvic提bug，关于vertex list可以和pos list不等长
 - update test case for jpg maketexture
 -distantlight
-
+- Bump channel in Phong shader(for er)
+  -先搞清楚bump2d.bumpValue是不是指高度图的值？还是指normalMap的值？
+  如果是后者，那么就需要hack。目前虽然做了在visitbump2d（）里做了hack，但应该在整个导出流程之前做hack，并在渲染结束后恢复原先的状态。
+  - delete bump2d.bumpNormal
+  - recover bump2d.bumpInterp
+- bump2d/bump3d for rm
 
 -bug：er的maya预览图里最底部的一行像素是空的；但在输出的图片文件里，最底一行的像素没有问题。
 -bug:自定义shader 的参数无法从pl文件里update ，必须删掉该节点，然后重新建立

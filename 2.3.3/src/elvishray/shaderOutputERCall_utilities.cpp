@@ -40,7 +40,21 @@ void Visitor::visitBump2d(const char* node)
 // @node	maya shader node name
 void Visitor::visitBump3d(const char* node)
 {
+	OutputHelper o;
 
+	o.beginRSL(node);
+
+	ei_shader_param_string("desc", "maya_bump3d");
+	//input
+	o.addRSLVariable("scalar",  "bumpValue",		"bumpValue",	node);
+	o.addRSLVariable("scalar",  "bumpDepth",		"bumpDepth",	node);
+	o.addRSLVariable("scalar",  "bumpFilter",		"bumpFilter",	node);
+	o.addRSLVariable("scalar",  "bumpFilterOffset",	"bumpFilterOffset",	node);
+	o.addRSLVariable("normal",  "normalCamera",		"normalCamera",	node);
+	//output
+	o.addRSLVariable("normal",  "outNormal",		"outNormal",	node);
+	
+	o.endRSL();
 }
 // @node	maya shader node name
 void Visitor::visitCondition(const char* node)

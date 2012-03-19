@@ -41,7 +41,15 @@ void Visitor::visitBump3d(const char* node)
 {
 	OutputHelper o(file);
 	o.beginRSL(node);
-	o.addToRSL("//the type of node '"+MString(node)+"' is not implemented yet. And don't forget to add the valid connections of this type to ShaderValidConnection::setValidConnection()");
+	o.addToRSL("ei_shader_param_string(\"desc\", \"maya_bump3d\");");
+	//input
+	o.addRSLVariable("scalar",  "bumpValue",		"bumpValue",	node);
+	o.addRSLVariable("scalar",  "bumpDepth",		"bumpDepth",	node);
+	o.addRSLVariable("scalar",  "bumpFilter",		"bumpFilter",	node);
+	o.addRSLVariable("scalar",  "bumpFilterOffset",	"bumpFilterOffset",	node);
+	o.addRSLVariable("normal",  "normalCamera",		"normalCamera",	node);
+	//output
+	o.addRSLVariable("normal",  "outNormal",		"outNormal",	node);
 	o.endRSL();
 }
 // @node	maya shader node name

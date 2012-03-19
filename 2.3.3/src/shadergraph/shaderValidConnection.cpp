@@ -240,6 +240,14 @@ void ShaderValidConnection::setValidConnection()
 	validConnectionMap.insert(std::make_pair("bump2d", validConnection));
 
 	//bump3d
+	validConnection.clear();
+	validConnection.append("bumpValue");
+	validConnection.append("bumpDepth");
+	validConnection.append("bumpFilter");
+	validConnection.append("bumpFilterOffset");
+	validConnection.append("normalCamera");
+	validConnection.append("outNormal");
+	validConnectionMap.insert(std::make_pair("bump3d", validConnection));
 
 	//condition
 
