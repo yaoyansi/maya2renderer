@@ -272,7 +272,24 @@ void ShaderValidConnection::setValidConnection()
 
 	//place2dTexture
 	validConnection.clear();
-	validConnection.append("repeatUV");
+	validConnection.append("uvCoord");
+	validConnection.append("coverageU");
+	validConnection.append("coverageV");
+	validConnection.append("mirrorU");
+	validConnection.append("mirrorV");
+	validConnection.append("noiseU");
+	validConnection.append("noiseV");
+	validConnection.append("offsetU");
+	validConnection.append("offsetV");
+	validConnection.append("repeatU");
+	validConnection.append("repeatV");
+	validConnection.append("rotateFrame");
+	validConnection.append("rotateUV");
+	validConnection.append("stagger");
+	validConnection.append("translateFrameU");
+	validConnection.append("translateFrameV");
+	validConnection.append("wrapU");
+	validConnection.append("wrapV");
 	validConnection.append("outUV");
 	validConnectionMap.insert(std::make_pair("place2dTexture", validConnection));	
 

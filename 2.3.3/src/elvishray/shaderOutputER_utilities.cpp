@@ -92,18 +92,37 @@ void Visitor::visitMultiplyDivide(const char* node)
 	o.addToRSL("//the type of node '"+MString(node)+"' is not implemented yet. And don't forget to add the valid connections of this type to ShaderValidConnection::setValidConnection()");
 	o.endRSL();
 }
-	void Visitor::visitPlace2dTexture(const char* node)
-	{
-		OutputHelper o(file);
+void Visitor::visitPlace2dTexture(const char* node)
+{
+	OutputHelper o(file);
 
-		o.beginRSL(node);
+	o.beginRSL(node);
 
-		o.addToRSL("ei_shader_param_string(\"desc\", \"maya_place2dTexture\");");
-		o.addRSLVariable("vector",  "repeatUV",	"repeatUV",	node);
-		o.addRSLVariable("vector",  "outUV",	"outUV",	node);
+	o.addToRSL("ei_shader_param_string(\"desc\", \"maya_place2dTexture\");");
+	//Inputs
+	o.addRSLVariable("vector",  "uvCoord",		"uvCoord",		node);
+	o.addRSLVariable("float",	"coverageU",	"coverageU",	node);
+	o.addRSLVariable("float",	"coverageV",	"coverageV",	node);
+	o.addRSLVariable("bool",	"mirrorU",		"mirrorU",		node);
+	o.addRSLVariable("bool",	"mirrorV",		"mirrorV",		node);
+	o.addRSLVariable("float",	"noiseU",		"noiseU",		node);
+	o.addRSLVariable("float",	"noiseV",		"noiseV",		node);
+	o.addRSLVariable("float",	"offsetU",		"offsetU",		node);
+	o.addRSLVariable("float",	"offsetV",		"offsetV",		node);
+	o.addRSLVariable("float",	"repeatU",		"repeatU",		node);
+	o.addRSLVariable("float",	"repeatV",		"repeatV",		node);
+	o.addRSLVariable("float",	"rotateFrame",	"rotateFrame",	node);
+	o.addRSLVariable("float",	"rotateUV",		"rotateUV",		node);
+	o.addRSLVariable("bool",	"stagger",		"stagger",		node);
+	o.addRSLVariable("float",	"translateFrameU",	"translateFrameU",	node);
+	o.addRSLVariable("float",	"translateFrameV",	"translateFrameV",	node);
+	o.addRSLVariable("float",	"wrapU",		"wrapU",		node);
+	o.addRSLVariable("float",	"wrapV",		"wrapV",		node);
+	//Outputs
+	o.addRSLVariable("vector",  "outUV",		"outUV",		node);
 
-		o.endRSL();
-	}
+	o.endRSL();
+}
 // @node	maya shader node name
 void Visitor::visitPlace3dTexture(const char* node)
 {

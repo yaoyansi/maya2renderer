@@ -671,6 +671,14 @@
 				Name="_3delight"
 				>
 				<File
+					RelativePath="..\src\common\_3delight\noise_utils.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\src\common\_3delight\noise_utils.h"
+					>
+				</File>
+				<File
 					RelativePath="..\src\common\_3delight\shading_utils.cpp"
 					>
 				</File>
