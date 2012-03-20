@@ -303,6 +303,13 @@ RenderMan (R) is a registered trademark of Pixar
   - recover bump2d.bumpInterp
 
 
+- vertex normal 
+  - smooth normal, like a sphere: fnMesh.getVertexNormal(vertex i, false, normal, MSpace::kObject)
+  - sharp edge, like a cube
+    in this case, like a cube, a vertex has a specified normal corresponding to each adjacent polygon.
+    but elvishray's only allow a vertex to be assigned only one normal.
+    so I can't generate the normal list for this case.
+
   ---------------------------------------------------------------------
                               F.A.Q.
   ---------------------------------------------------------------------

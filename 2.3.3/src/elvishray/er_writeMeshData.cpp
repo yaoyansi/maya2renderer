@@ -150,22 +150,26 @@ namespace elvishray
 		// but the render result seems very weird, see test/test_er_light/output_img_std/er_pointlight.perspShape.1.elvishray_vertex_normal.bmp
 		// so I ommit this section temporarily.
 		_s("//vertex normals are not output temporarily.");
-		//if(fnMesh.numVertices()!=0)
-		//{
-		//	_s("//### N");
-		//	_d( tag = eiNULL_TAG );
-		//	_S( ei_declare("N", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
-		//	_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
-		//	_s("//tag="<<tag);
-		//	_S( ei_variable("N", &tag) );
-		//	MVector nml;
-		//	for(size_t i = 0; i<fnMesh.numVertices(); ++i)
-		//	{
-		//		IfMErrorWarn(fnMesh.getVertexNormal(i, false, nml, MSpace::kObject));
-		//		_S( ei_tab_add_vector(nml.x, nml.y, nml.z) );
-		//	}
-		//	_S( ei_end_tab() );
-		//}
+		if(fnMesh.numVertices() == fnMesh.numNormals())//smooth normal, like a sphere
+		{
+			_s("//### N");
+			_d( tag = eiNULL_TAG );
+			_S( ei_declare("N", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
+			_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
+			_s("//tag="<<tag);
+			_S( ei_variable("N", &tag) );
+			MVector nml;
+			for(size_t i = 0; i<fnMesh.numVertices(); ++i)
+			{
+				IfMErrorWarn(fnMesh.getVertexNormal(i, false, nml, MSpace::kObject));
+				_S( ei_tab_add_vector(nml.x, nml.y, nml.z) );
+			}
+			_S( ei_end_tab() );
+		}else{//sharp edge, like a cube
+			// in this case, like a cube, a vertex has a specified normal corresponding to each adjacent polygon.
+			// but elvishray's only allow a vertex to be assigned only one normal.
+			// so I can't generate the normal list for this case.
+		}
 
 		if( currentUVsetName.length() != 0 )//there is a current uv set
 		{
