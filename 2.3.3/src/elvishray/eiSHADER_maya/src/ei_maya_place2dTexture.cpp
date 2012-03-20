@@ -4,7 +4,7 @@
 
 SURFACE(maya_place2dTexture)
 	// Inputs
-	PARAM(vector, uvCoord);//float2
+	//PARAM(vector, uvCoord);//float2. //elvishray generates uv internally.
 	PARAM(scalar, coverageU);
 	PARAM(scalar, coverageV);
 	PARAM(eiBool, mirrorU);
@@ -28,7 +28,7 @@ SURFACE(maya_place2dTexture)
 	void parameters(int pid)
 	{
 		// Inputs
-		DECLARE_VECTOR(uvCoord, 0.0f, 0.0f, 0.0f);//float2
+		//DECLARE_VECTOR(uvCoord, 0.0f, 0.0f, 0.0f);//float2
 		DECLARE_SCALAR(coverageU, 1.0f);
 		DECLARE_SCALAR(coverageV, 1.0f);
 		DECLARE_BOOL(mirrorU, eiFALSE);

@@ -89,7 +89,7 @@ void Visitor::visitPlace2dTexture(const char* node)
 
 	ei_shader_param_string("desc", "maya_place2dTexture");
 	//Inputs
-	o.addRSLVariable("vector",  "uvCoord",		"uvCoord",		node);
+	//o.addRSLVariable("vector",  "uvCoord",		"uvCoord",		node);//elvishray generates uv internally, see SURFACE(maya_place2dTexture)
 	o.addRSLVariable("float",	"coverageU",	"coverageU",	node);
 	o.addRSLVariable("float",	"coverageV",	"coverageV",	node);
 	o.addRSLVariable("bool",	"mirrorU",		"mirrorU",		node);
