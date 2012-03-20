@@ -66,7 +66,7 @@ SURFACE(maya_checker)
 
 	void main(void *arg)
 	{
-		scalar alpha = 0.0f;
+		scalar alpha = outAlpha();
 
 		if(ISUVDEFINED(uvCoord().x, uvCoord().y))
 		{
@@ -74,9 +74,10 @@ SURFACE(maya_checker)
 			uvCoord().y = fmodf(uvCoord().y, WRAPMAX);
 
 			/* compute 'ss' and 'tt' filter widths */
-			vector dXdu, dXdv, dYdu, dYdv;
-			float dss = abs(Du(ss) * du) + abs(Dv(ss) * dv);
-			float dtt = abs(Du(tt) * du) + abs(Dv(tt) * dv);
+			vector dUVdu, dUVdv;
+			Duv(uvCoord, dUVdu, dUVdv);
+			float dss = abs(dUVdu.x * du()) + abs(dUVdv.x * dv());
+			float dtt = abs(dUVdu.y * du()) + abs(dUVdv.y * dv());
 
 
 			/* Add in "Effects" filter values. We multiplie the i_filterOffset
@@ -86,8 +87,8 @@ SURFACE(maya_checker)
 
 			/* compute separation: 0 for half the squares, 1 for the others. */
 			float f = 0.5f - 2.0f *
-				(filteredpulsetrain(0.5f, 1.0f, ss, dss) - 0.5f) *
-				(filteredpulsetrain(0.5f, 1.0f, tt, dtt) - 0.5f);
+				(filteredpulsetrain(0.5f, 1.0f, uvCoord().x, dss) - 0.5f) *
+				(filteredpulsetrain(0.5f, 1.0f, uvCoord().y, dtt) - 0.5f);
 
 			/* contrast interpolates the separation from 0.5 to its normal value. */
 			f = 0.5f + (f - 0.5f) * contrast();

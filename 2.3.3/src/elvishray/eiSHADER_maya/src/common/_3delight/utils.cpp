@@ -80,8 +80,8 @@ colorBalance(
 {
 	if(i_invert != eiFALSE)
 	{
-		io_outColor = 1 - io_outColor;
-		io_outAlpha = 1 - io_outAlpha;
+		io_outColor = 1.0f - io_outColor;
+		io_outAlpha = 1.0f - io_outAlpha;
 	}
 
 	if(i_alphaIsLuminance != eiFALSE)

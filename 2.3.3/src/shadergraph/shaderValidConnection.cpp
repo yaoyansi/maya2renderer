@@ -111,18 +111,29 @@ void ShaderValidConnection::setValidConnection()
 
 	//checker
 	validConnection.clear();
-	validConnection.append("color1");
+	validConnection.append("alphaGain");
+	validConnection.append("alphaIsLuminance");
+	validConnection.append("alphaOffset");
+	validConnection.append("color1");//color1
 	validConnection.append("color1R");
 	validConnection.append("color1G");
 	validConnection.append("color1B");
-	validConnection.append("color2");
+	validConnection.append("color2");//color2
 	validConnection.append("color2R");
 	validConnection.append("color2G");
 	validConnection.append("color2B");
-	validConnection.append("uvCoord");
+	validConnection.append("colorGain");
+	validConnection.append("colorOffset");
+	validConnection.append("contrast");
+	validConnection.append("defaultColor");
+	validConnection.append("filter");
+	validConnection.append("filterOffset");
+	validConnection.append("invert");
+	validConnection.append("uvCoord");//uvCoord
 	validConnection.append("uCoord");
 	validConnection.append("vCoord");
-	validConnection.append("outColor");
+	validConnection.append("outAlpha");
+	validConnection.append("outColor");//outColor
 	validConnection.append("outColorR");
 	validConnection.append("outColorG");
 	validConnection.append("outColorB");
