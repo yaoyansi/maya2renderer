@@ -310,6 +310,11 @@ RenderMan (R) is a registered trademark of Pixar
     but elvishray's only allow a vertex to be assigned only one normal.
     so I can't generate the normal list for this case.
 
+
+- place2dTexture
+  - repeatUV is an output plug, so it is not set in OutputHelper::addRSLVariable()
+    but repeatUV is set in maya directly. So repeateUV must be set manully. see RSL::Visitor::visitPlace2dTexture()
+
   ---------------------------------------------------------------------
                               F.A.Q.
   ---------------------------------------------------------------------

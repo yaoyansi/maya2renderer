@@ -6,6 +6,7 @@
 //#include "../shadergraph/convertShadingNetwork.h"
 //#include "../shadergraph/shadermgr.h"
 #include "ri_interface.h"
+#include <liqGlobalHelpers.h>
 
 namespace RSL
 {
@@ -77,13 +78,27 @@ void Visitor::visitMultiplyDivide(const char* node)
 // @node	maya shader node name
 void Visitor::visitPlace2dTexture(const char* node)
 {
+	MString repeatU, repeatV;
+	{
+		MObject m_node;
+		MStatus status;
+		float fvalue;
+
+		getDependNodeByName(m_node, node);
+		liquidGetPlugValue(m_node, "repeatU", fvalue, status);  repeatU.set(fvalue);
+		liquidGetPlugValue(m_node, "repeatV", fvalue, status);  repeatV.set(fvalue);
+	}
+
 	OutputHelper o(RSLfile);
 
 	o.beginRSL(node);
 
-	o.addRSLVariable("float2", "repeatUV", "repeatUV", node);
+	o.addRSLVariable("float2", "repeatUV", "repeatUV", node);//repeatUV is out variable, so it will not be set.
 	o.addRSLVariable("float2", "outUV", "outUV", node);
 
+	//repeatUV is out variable, it will not be set in o.addRSLVariable(), so I set it manully.
+	o.addToRSL("repeatUV[ 0 ] = "+repeatU+";");
+	o.addToRSL("repeatUV[ 1 ] = "+repeatV+";");
 	o.addToRSL("extern float s, t;");
 	o.addToRSL("outUV[ 0 ] = mod( s * repeatUV[ 0 ], 1 );");
 	o.addToRSL("outUV[ 1 ] = mod( t * repeatUV[ 1 ], 1 );");
