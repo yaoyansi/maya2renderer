@@ -130,7 +130,43 @@ void Visitor::visitPhong(const char* node)
 {
 	OutputHelper o(RSLfile);
 	o.beginRSL(node);
-	o.addToRSL("//the type of node '"+MString(node)+"' is not implemented yet. And don't forget to add the valid connections of this type to ShaderValidConnection::setValidConnection()");
+
+	o.addRSLVariable( "vector", "inColor",			"color",		node);
+	o.addRSLVariable( "vector", "transparency",		"transparency", node);
+	o.addRSLVariable( "vector", "ambColor",			"ambientColor", node);
+	o.addRSLVariable( "vector", "incandescence",	"incandescence",node);
+	o.addRSLVariable( "float",  "diffusion",		"diffuse",		node);
+	o.addRSLVariable( "float",  "cosinePower",		"cosinePower",	node);
+	o.addRSLVariable( "vector", "specColor",		"specularColor",node);
+	o.addRSLVariable( "vector", "outColor",			"outColor",		node);
+	o.addRSLVariable( "vector", "outTransparency",	"outTransparency", node);
+
+	o.addToRSL("extern normal N;");
+	o.addToRSL("normal Nn = normalize( N );");
+	o.addToRSL("outTransparency = transparency;");
+	o.addToRSL("Oi = Os * color ( 1 - outTransparency );");
+	o.addToRSL("vector Cdiffuse;");
+	o.addToRSL("Cdiffuse = incandescence +");
+	o.addToRSL("           ( inColor * ( diffusion * ");
+	o.addToRSL("                         vector diffuse( Nn ) +");
+	o.addToRSL("                         ambColor ) );");
+	o.addToRSL("vector Cspecular;");
+	o.addToRSL("Cspecular = vector phong( Nn,");
+	o.addToRSL("                          normalize( -I ),");
+	o.addToRSL("                          cosinePower );");
+
+	MStringArray con;
+	IfMErrorWarn(MGlobal::executeCommand( ("listConnections(\""+MString(node)+"\" + \".reflectedColor\")"), con));
+	if( con.length() != 0 )
+	{
+		o.addRSLVariable("float", "reflectivity", "reflectivity", node);
+		o.addRSLVariable("vector", "refColor", "reflectedColor", node);
+		o.addToRSL("Cspecular += ( reflectivity * refColor );");
+	}
+	o.addToRSL("Cspecular *= specColor;");
+	o.addToRSL("outColor = Cdiffuse + Cspecular;");
+	o.addToRSL("Ci = Cs * Oi * color outColor;");
+
 	o.endRSL();
 }
 // @node	maya shader node name

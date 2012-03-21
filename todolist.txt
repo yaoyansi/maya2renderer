@@ -19,6 +19,7 @@
 - (done)backup rib files of  all test cases
 - (done)更新er 1185，编译release版
 
+- bug: rm phong ,if the color is connect to a file texture, nothing can be rendered. (Because Ci is ZERO)
 - rm phong shader 的导出
 - bug:phong如果只有透明值，而没有透明贴图时，最终颜色几乎显示不出来（几乎成半透明的白色）
 - bump2d node
