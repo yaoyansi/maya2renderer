@@ -162,8 +162,8 @@ global proc writeRSL_place2dTexture (
     addRSLVariable "float2" "outUV" "outUV" $node;
 
     addToRSL "extern float s, t;";
-    addToRSL "outUV[ 0 ] = mod( t * repeatUV[ 0 ], 1 );";
-    addToRSL "outUV[ 1 ] = mod( s * repeatUV[ 1 ], 1 );";
+    addToRSL "outUV[ 0 ] = mod( s * repeatUV[ 0 ], 1 );";
+    addToRSL "outUV[ 1 ] = mod( t * repeatUV[ 1 ], 1 );";
 
     endRSL;
   liqPopIdent();

@@ -85,8 +85,8 @@ void Visitor::visitPlace2dTexture(const char* node)
 	o.addRSLVariable("float2", "outUV", "outUV", node);
 
 	o.addToRSL("extern float s, t;");
-	o.addToRSL("outUV[ 0 ] = mod( t * repeatUV[ 0 ], 1 );");
-	o.addToRSL("outUV[ 1 ] = mod( s * repeatUV[ 1 ], 1 );");
+	o.addToRSL("outUV[ 0 ] = mod( s * repeatUV[ 0 ], 1 );");
+	o.addToRSL("outUV[ 1 ] = mod( t * repeatUV[ 1 ], 1 );");
 
 	o.endRSL();
 }
