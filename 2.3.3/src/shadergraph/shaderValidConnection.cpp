@@ -283,6 +283,7 @@ void ShaderValidConnection::setValidConnection()
 	validConnection.append("offsetV");
 	validConnection.append("repeatU");
 	validConnection.append("repeatV");
+	validConnection.append("repeatUV");
 	validConnection.append("rotateFrame");
 	validConnection.append("rotateUV");
 	validConnection.append("stagger");
