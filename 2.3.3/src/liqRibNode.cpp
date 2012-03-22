@@ -1292,7 +1292,8 @@ AttributeState liqRibNode::getColor( MObject& shader, MColor& color )
 
   MFnDependencyNode fnNode( shader );
   MPlug plug = fnNode.findPlug( plugName, true, &stat );
-  if(stat==MS::kFailure){
+  IfMErrorMsgWarn(stat, fnNode.name()+"."+plugName);
+  if(stat!=MS::kSuccess){
 	  return AS_NotEXist;
   }
 
@@ -1302,22 +1303,22 @@ AttributeState liqRibNode::getColor( MObject& shader, MColor& color )
   }
   else if( plug.connectedTo(array, false, true, &stat) ){
 	  MPlug tmpPlug;
-	  tmpPlug = plug.child(0,&stat); IfErrorWarn(stat);//child 0
-	  IfErrorWarn(tmpPlug.getValue( color.r ));
-	  tmpPlug = plug.child(1,&stat); IfErrorWarn(stat);//child 1
-	  IfErrorWarn(tmpPlug.getValue( color.g ));
-	  tmpPlug = plug.child(2,&stat); IfErrorWarn(stat);//child 2
-	  IfErrorWarn(tmpPlug.getValue( color.b ));
+	  tmpPlug = plug.child(0,&stat); IfMErrorWarn(stat);//child 0
+	  IfMErrorWarn(tmpPlug.getValue( color.r ));
+	  tmpPlug = plug.child(1,&stat); IfMErrorWarn(stat);//child 1
+	  IfMErrorWarn(tmpPlug.getValue( color.g ));
+	  tmpPlug = plug.child(2,&stat); IfMErrorWarn(stat);//child 2
+	  IfMErrorWarn(tmpPlug.getValue( color.b ));
 	  return AS_ConnectedAsSrc;
   }
   else{
 	  MPlug tmpPlug;
-	  tmpPlug = plug.child(0,&stat); IfErrorWarn(stat);//child 0
-	  IfErrorWarn(tmpPlug.getValue( color.r ));
-	  tmpPlug = plug.child(1,&stat); IfErrorWarn(stat);//child 1
-	  IfErrorWarn(tmpPlug.getValue( color.g ));
-	  tmpPlug = plug.child(2,&stat); IfErrorWarn(stat);//child 2
-	  IfErrorWarn(tmpPlug.getValue( color.b ));
+	  tmpPlug = plug.child(0,&stat); IfMErrorWarn(stat);//child 0
+	  IfMErrorWarn(tmpPlug.getValue( color.r ));
+	  tmpPlug = plug.child(1,&stat); IfMErrorWarn(stat);//child 1
+	  IfMErrorWarn(tmpPlug.getValue( color.g ));
+	  tmpPlug = plug.child(2,&stat); IfMErrorWarn(stat);//child 2
+	  IfMErrorWarn(tmpPlug.getValue( color.b ));
 	  return AS_NotConnected;
   }
 }
@@ -1331,7 +1332,8 @@ AttributeState liqRibNode::getOpacity( MObject& shader, MColor& opacity )
 
   MFnDependencyNode fnNode( shader );
   MPlug plug = fnNode.findPlug( plugName, true, &stat );
-  if(stat==MS::kFailure){
+  IfMErrorMsgWarn(stat, fnNode.name()+"."+plugName);
+  if(stat!=MS::kSuccess){
 	  return AS_NotEXist;
   }
 
@@ -1342,12 +1344,12 @@ AttributeState liqRibNode::getOpacity( MObject& shader, MColor& opacity )
   else if( plug.connectedTo(array, false, true, &stat) ){
 	  MPlug tmpPlug;
 	  MColor transparency;
-	  tmpPlug = plug.child(0,&stat); IfErrorWarn(stat);//child 0
-	  IfErrorWarn(tmpPlug.getValue( transparency.r ));
-	  tmpPlug = plug.child(1,&stat); IfErrorWarn(stat);//child 1
-	  IfErrorWarn(tmpPlug.getValue( transparency.g ));
-	  tmpPlug = plug.child(2,&stat); IfErrorWarn(stat);//child 2
-	  IfErrorWarn(tmpPlug.getValue( transparency.b ));
+	  tmpPlug = plug.child(0,&stat); IfMErrorWarn(stat);//child 0
+	  IfMErrorWarn(tmpPlug.getValue( transparency.r ));
+	  tmpPlug = plug.child(1,&stat); IfMErrorWarn(stat);//child 1
+	  IfMErrorWarn(tmpPlug.getValue( transparency.g ));
+	  tmpPlug = plug.child(2,&stat); IfMErrorWarn(stat);//child 2
+	  IfMErrorWarn(tmpPlug.getValue( transparency.b ));
 	  opacity.r = 1. - transparency.r;
 	  opacity.g = 1. - transparency.g;
 	  opacity.b = 1. - transparency.b;
@@ -1356,12 +1358,12 @@ AttributeState liqRibNode::getOpacity( MObject& shader, MColor& opacity )
   else{
 	  MPlug tmpPlug;
 	  MColor transparency;
-	  tmpPlug = plug.child(0,&stat); IfErrorWarn(stat);//child 0
-	  IfErrorWarn(tmpPlug.getValue( transparency.r ));
-	  tmpPlug = plug.child(1,&stat); IfErrorWarn(stat);//child 1
-	  IfErrorWarn(tmpPlug.getValue( transparency.g ));
-	  tmpPlug = plug.child(2,&stat); IfErrorWarn(stat);//child 2
-	  IfErrorWarn(tmpPlug.getValue( transparency.b ));
+	  tmpPlug = plug.child(0,&stat); IfMErrorWarn(stat);//child 0
+	  IfMErrorWarn(tmpPlug.getValue( transparency.r ));
+	  tmpPlug = plug.child(1,&stat); IfMErrorWarn(stat);//child 1
+	  IfMErrorWarn(tmpPlug.getValue( transparency.g ));
+	  tmpPlug = plug.child(2,&stat); IfMErrorWarn(stat);//child 2
+	  IfMErrorWarn(tmpPlug.getValue( transparency.b ));
 	  opacity.r = 1. - transparency.r;
 	  opacity.g = 1. - transparency.g;
 	  opacity.b = 1. - transparency.b;
