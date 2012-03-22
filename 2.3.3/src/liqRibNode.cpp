@@ -786,12 +786,12 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
       assignedShader.setObject( surfaceShader );
       assignedDisp.setObject( findDisp( shadingGroup ) );
       assignedVolume.setObject( findVolume( shadingGroup ) );
-      if( ( surfaceShader == MObject::kNullObj ) || !getColor( surfaceShader, color ) ) 
+      if( ( surfaceShader == MObject::kNullObj ) || AS_NotEXist==getColor( surfaceShader, color ) ) 
       {
         // This is how we specify that the color was not found.
         color.r = -1.0;
       }
-      if( ( surfaceShader == MObject::kNullObj ) || !getOpacity( surfaceShader, opacity ) ) 
+      if( ( surfaceShader == MObject::kNullObj ) || AS_NotEXist==getOpacity( surfaceShader, opacity ) ) 
       {
         // This is how we specify that the opacity was not found.
         //
@@ -1267,7 +1267,7 @@ void liqRibNode::getLinkLights( MObjectArray& linkLights, bool exclusive )
 /**
  * Get the color & opacity of the given shading node.
  */
-bool liqRibNode::getColor( MObject& shader, MColor& color )
+AttributeState liqRibNode::getColor( MObject& shader, MColor& color )
 {
   LIQDEBUGPRINTF( "-> getting a shader color\n");
   MStatus stat = MS::kSuccess;
@@ -1302,14 +1302,14 @@ bool liqRibNode::getColor( MObject& shader, MColor& color )
       if(stat == MS::kSuccess) tmpPlug.getValue( color.g );
       tmpPlug = colorPlug.child(2,&stat);
       if(stat == MS::kSuccess) tmpPlug.getValue( color.b );
-        return false;
+        return AS_NotEXist;
     }
   }
-  return true;
+  return AS_Exist;
 }
 
 
-bool liqRibNode::getOpacity( MObject& shader, MColor& opacity )
+AttributeState liqRibNode::getOpacity( MObject& shader, MColor& opacity )
 {
   LIQDEBUGPRINTF( "-> getting a shader opacity\n");
   MStatus stat = MS::kSuccess;
@@ -1356,10 +1356,10 @@ bool liqRibNode::getOpacity( MObject& shader, MColor& opacity )
       opacity.r = 1. - opacity.r;
       opacity.g = 1. - opacity.g;
       opacity.b = 1. - opacity.b;
-      return false;
+      return AS_NotEXist;
     }
   }
-  return true;
+  return AS_Exist;
 }
 
 

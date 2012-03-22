@@ -57,7 +57,14 @@
 class liqRibNode;
 typedef boost::shared_ptr< liqRibNode > liqRibNodePtr;
 
+enum AttributeState{
+	AS_Exist = 1,
+	AS_NotEXist = 0,
+	AS_LinkedIn = -2,
+	AS_LinkedOut = -3,
 
+	AS_Num
+};
 
 class liqRibNode {
   public:
@@ -102,8 +109,6 @@ class liqRibNode {
 //  void     getIgnoredLights( MObject& group, MObjectArray& lights );
     void     getLinkLights( MObjectArray& lights, bool exclusive );
     void     getSetLights( MObjectArray& lights );
-    bool     getColor( MObject& shader, MColor& color );
-    bool     getOpacity( MObject& shader, MColor& opacity );
     bool     getMatteMode( MObject& shader );
     bool     hasRibGen();
     void     doRibGen();
@@ -328,6 +333,8 @@ private:
     bool        hasRibGenAttr;
     bool        overrideColor;
     void        parseVectorAttributes( const MFnDependencyNode&, const MStringArray&, const ParameterType& );
+	AttributeState     getColor( MObject& shader, MColor& color );
+	AttributeState     getOpacity( MObject& shader, MColor& opacity );
 
 
 private:
