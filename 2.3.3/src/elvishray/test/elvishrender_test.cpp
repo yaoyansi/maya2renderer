@@ -43,6 +43,7 @@ extern void ei_dof_unittest();
 extern void spotlight_test();
 extern void spotlight_test2();
 extern void ei_img_uv(const eiBool texturing, const char *suffix);
+extern void ei_env_test(const char *env_shader_name);
 
 void test_liquid2er()
 {
@@ -61,7 +62,8 @@ void test_liquid2er()
 	//ei_dof_unittest();
 	//spotlight_test();
 	//spotlight_test2();
-	ei_img_uv(true, "suffix");
+	//ei_img_uv(true, "suffix");
+	ei_env_test("physicalsky");//"simple_env" //""
 }
 //
 int main()

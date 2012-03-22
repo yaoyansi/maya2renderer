@@ -172,6 +172,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ei_env_test.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ei_face_color_unittest.cpp"
 				>
 			</File>
