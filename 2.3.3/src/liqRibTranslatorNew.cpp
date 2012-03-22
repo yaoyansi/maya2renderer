@@ -3089,7 +3089,7 @@ void liqRibTranslator::F2(
 			rColor[2] = ribNode__->shading.color[2];
 			RiColor( rColor );
 		} 
-		else if( ( ribNode__->color.r != -1.0 ) ) 
+		else if( ( ribNode__->color.r != AS_NotEXist )&&( ribNode__->color.r != AS_ConnectedAsDes )) 
 		{
 			RtColor rColor;
 			rColor[0] = ribNode__->color[0];
@@ -3106,7 +3106,7 @@ void liqRibTranslator::F2(
 			rOpacity[2] = ribNode__->shading.opacity[2];
 			RiOpacity( rOpacity );
 		} 
-		else if( ( ribNode__->opacity.r != -1.0 ) ) 
+		else if( ( ribNode__->opacity.r != AS_NotEXist )&&( ribNode__->opacity.r != AS_ConnectedAsDes )) 
 		{	
 			RtColor rOpacity;
 			rOpacity[0] = ribNode__->opacity[0];

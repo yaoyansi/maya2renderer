@@ -58,10 +58,13 @@ class liqRibNode;
 typedef boost::shared_ptr< liqRibNode > liqRibNodePtr;
 
 enum AttributeState{
-	AS_Exist = 1,
-	AS_NotEXist = 0,
-	AS_LinkedIn = -2,
-	AS_LinkedOut = -3,
+	//not exist
+	AS_NotEXist = -1,
+	//exist
+		AS_NotConnected =-4,
+		//connected
+			AS_ConnectedAsDes = -2,
+			AS_ConnectedAsSrc = -3,
 
 	AS_Num
 };

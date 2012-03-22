@@ -64,7 +64,7 @@
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
 #include <liqGlobalVariable.h>
-
+#include "common/mayacheck.h"
 using namespace std;
 using namespace boost;
 
@@ -786,17 +786,34 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
       assignedShader.setObject( surfaceShader );
       assignedDisp.setObject( findDisp( shadingGroup ) );
       assignedVolume.setObject( findVolume( shadingGroup ) );
-      if( ( surfaceShader == MObject::kNullObj ) || AS_NotEXist==getColor( surfaceShader, color ) ) 
-      {
-        // This is how we specify that the color was not found.
-        color.r = -1.0;
-      }
-      if( ( surfaceShader == MObject::kNullObj ) || AS_NotEXist==getOpacity( surfaceShader, opacity ) ) 
-      {
-        // This is how we specify that the opacity was not found.
-        //
-        opacity.r = -1.0;
-      }
+
+	//color
+	AttributeState colorState = getColor( surfaceShader, color );
+	if( surfaceShader == MObject::kNullObj ){
+		color.r = AS_NotEXist;
+	}else{
+		if( AS_NotEXist==colorState || AS_ConnectedAsDes==colorState ){
+			color.r = color.g = color.b = colorState;
+		} else if ( AS_NotConnected==colorState ||  AS_ConnectedAsSrc==colorState){
+			// keep the color value
+		}else{
+			assert(0&&"can't handle this AttributeState");
+		}
+	}
+	//opacity
+	AttributeState opacityState = getOpacity( surfaceShader, opacity );
+	if( surfaceShader == MObject::kNullObj ){
+	  opacity.r = AS_NotEXist;
+	}else{
+	  if( AS_NotEXist==opacityState || AS_ConnectedAsDes==opacityState ){
+		  opacity.r = opacity.g = opacity.b = opacityState;
+	  } else if ( AS_NotConnected==opacityState ||  AS_ConnectedAsSrc==opacityState){
+		  // keep the opacity value
+	  }else{
+		  assert(0&&"can't handle this AttributeState");
+	  }
+	}
+
       mayaMatteMode = getMatteMode( surfaceShader );
     } 
     else 
@@ -1270,96 +1287,87 @@ void liqRibNode::getLinkLights( MObjectArray& linkLights, bool exclusive )
 AttributeState liqRibNode::getColor( MObject& shader, MColor& color )
 {
   LIQDEBUGPRINTF( "-> getting a shader color\n");
+  const MString plugName("color");
   MStatus stat = MS::kSuccess;
-  switch ( shader.apiType() )
-  {
-    case MFn::kLambert :
-    {
-      MFnLambertShader fnShader( shader );
-      color = fnShader.color();
-      break;
-    }
-    case MFn::kBlinn :
-    {
-      MFnBlinnShader fnShader( shader );
-      color = fnShader.color();
-      break;
-    }
-    case MFn::kPhong :
-    {
-      MFnPhongShader fnShader( shader );
-      color = fnShader.color();
-      break;
-    }
-    default:
-    {
-      MFnDependencyNode fnNode( shader );
-      MPlug colorPlug = fnNode.findPlug( "outColor" );
-      MPlug tmpPlug;
-      tmpPlug = colorPlug.child(0,&stat);
-      if(stat == MS::kSuccess) tmpPlug.getValue( color.r );
-      tmpPlug = colorPlug.child(1,&stat);
-      if(stat == MS::kSuccess) tmpPlug.getValue( color.g );
-      tmpPlug = colorPlug.child(2,&stat);
-      if(stat == MS::kSuccess) tmpPlug.getValue( color.b );
-        return AS_NotEXist;
-    }
+
+  MFnDependencyNode fnNode( shader );
+  MPlug plug = fnNode.findPlug( plugName, true, &stat );
+  if(stat==MS::kFailure){
+	  return AS_NotEXist;
   }
-  return AS_Exist;
+
+  MPlugArray array;
+  if( plug.connectedTo(array, true, false, &stat) ){
+	  return AS_ConnectedAsDes;
+  }
+  else if( plug.connectedTo(array, false, true, &stat) ){
+	  MPlug tmpPlug;
+	  tmpPlug = plug.child(0,&stat); IfErrorWarn(stat);//child 0
+	  IfErrorWarn(tmpPlug.getValue( color.r ));
+	  tmpPlug = plug.child(1,&stat); IfErrorWarn(stat);//child 1
+	  IfErrorWarn(tmpPlug.getValue( color.g ));
+	  tmpPlug = plug.child(2,&stat); IfErrorWarn(stat);//child 2
+	  IfErrorWarn(tmpPlug.getValue( color.b ));
+	  return AS_ConnectedAsSrc;
+  }
+  else{
+	  MPlug tmpPlug;
+	  tmpPlug = plug.child(0,&stat); IfErrorWarn(stat);//child 0
+	  IfErrorWarn(tmpPlug.getValue( color.r ));
+	  tmpPlug = plug.child(1,&stat); IfErrorWarn(stat);//child 1
+	  IfErrorWarn(tmpPlug.getValue( color.g ));
+	  tmpPlug = plug.child(2,&stat); IfErrorWarn(stat);//child 2
+	  IfErrorWarn(tmpPlug.getValue( color.b ));
+	  return AS_NotConnected;
+  }
 }
 
 
 AttributeState liqRibNode::getOpacity( MObject& shader, MColor& opacity )
 {
   LIQDEBUGPRINTF( "-> getting a shader opacity\n");
+  const MString plugName("transparency");
   MStatus stat = MS::kSuccess;
-  switch ( shader.apiType() )
-  {
-    case MFn::kLambert :
-    {
-      MFnLambertShader fnShader( shader );
-      opacity = fnShader.transparency();
-      opacity.r = 1. - opacity.r;
-      opacity.g = 1. - opacity.g;
-      opacity.b = 1. - opacity.b;
-      break;
-    }
-    case MFn::kBlinn :
-    {
-      MFnBlinnShader fnShader( shader );
-      opacity = fnShader.transparency();
-      opacity.r = 1. - opacity.r;
-      opacity.g = 1. - opacity.g;
-      opacity.b = 1. - opacity.b;
-      break;
-    }
-    case MFn::kPhong :
-    {
-      MFnPhongShader fnShader( shader );
-      opacity = fnShader.transparency();
-      opacity.r = 1. - opacity.r;
-      opacity.g = 1. - opacity.g;
-      opacity.b = 1. - opacity.b;
-      break;
-    }
-    default:
-    {
-      MFnDependencyNode fnNode( shader );
-      MPlug colorPlug = fnNode.findPlug( "outTransparency" );
-      MPlug tmpPlug;
-      tmpPlug = colorPlug.child(0,&stat);
-      if(stat == MS::kSuccess) tmpPlug.getValue( opacity.r );
-      tmpPlug = colorPlug.child(1,&stat);
-      if(stat == MS::kSuccess) tmpPlug.getValue( opacity.g );
-      tmpPlug = colorPlug.child(2,&stat);
-      if(stat == MS::kSuccess) tmpPlug.getValue( opacity.b );
-      opacity.r = 1. - opacity.r;
-      opacity.g = 1. - opacity.g;
-      opacity.b = 1. - opacity.b;
-      return AS_NotEXist;
-    }
+
+  MFnDependencyNode fnNode( shader );
+  MPlug plug = fnNode.findPlug( plugName, true, &stat );
+  if(stat==MS::kFailure){
+	  return AS_NotEXist;
   }
-  return AS_Exist;
+
+  MPlugArray array;
+  if( plug.connectedTo(array, true, false, &stat) ){
+	  return AS_ConnectedAsDes;
+  }
+  else if( plug.connectedTo(array, false, true, &stat) ){
+	  MPlug tmpPlug;
+	  MColor transparency;
+	  tmpPlug = plug.child(0,&stat); IfErrorWarn(stat);//child 0
+	  IfErrorWarn(tmpPlug.getValue( transparency.r ));
+	  tmpPlug = plug.child(1,&stat); IfErrorWarn(stat);//child 1
+	  IfErrorWarn(tmpPlug.getValue( transparency.g ));
+	  tmpPlug = plug.child(2,&stat); IfErrorWarn(stat);//child 2
+	  IfErrorWarn(tmpPlug.getValue( transparency.b ));
+	  opacity.r = 1. - transparency.r;
+	  opacity.g = 1. - transparency.g;
+	  opacity.b = 1. - transparency.b;
+	  return AS_ConnectedAsSrc;
+  }
+  else{
+	  MPlug tmpPlug;
+	  MColor transparency;
+	  tmpPlug = plug.child(0,&stat); IfErrorWarn(stat);//child 0
+	  IfErrorWarn(tmpPlug.getValue( transparency.r ));
+	  tmpPlug = plug.child(1,&stat); IfErrorWarn(stat);//child 1
+	  IfErrorWarn(tmpPlug.getValue( transparency.g ));
+	  tmpPlug = plug.child(2,&stat); IfErrorWarn(stat);//child 2
+	  IfErrorWarn(tmpPlug.getValue( transparency.b ));
+	  opacity.r = 1. - transparency.r;
+	  opacity.g = 1. - transparency.g;
+	  opacity.b = 1. - transparency.b;
+	  return AS_NotConnected;
+  }
+
 }
 
 

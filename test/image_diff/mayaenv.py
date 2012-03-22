@@ -2,7 +2,7 @@ import os
 
 def configMayaEnv():
     #liquid maya
-    os.environ["LIQUID_ROOT"]    = "E:/dev/autodesk/maya/myplugin/project/liquid_"
+    os.environ["LIQUID_ROOT"]    = "G:/Home/MyComputer/E/dev/autodesk/maya/myplugin/project/liquid_"
     os.environ["LIQUID_MEL"]     = os.environ["LIQUID_ROOT"]+"/2.3.3/mel"
     os.environ["LIQUID_RM_MEL"]  = os.environ["LIQUID_ROOT"]+"/2.3.3/src/renderman/mel"
     os.environ["LIQUID_ER_MEL"]  = os.environ["LIQUID_ROOT"]+"/2.3.3/src/elvishray/mel"
