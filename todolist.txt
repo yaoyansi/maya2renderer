@@ -21,6 +21,7 @@
 
 - (done)bug: rm phong ,if the color is connect to a file texture, nothing can be rendered. (Because Ci is ZERO)
 - (done)rm phong shader 的导出
+- bug: XP下maketexture出的tex文件，在win7下渲染不出来。见er_rm_shader_graph_phong.ma,(check112.bmp.tex)
 - bug:phong如果只有透明值，而没有透明贴图时，最终颜色几乎显示不出来（几乎成半透明的白色）
 - bump2d node
 -bug: maya_phong 高光的位置不正确
@@ -34,6 +35,9 @@
   - recover bump2d.bumpInterp
 - bump2d/bump3d for rm
 -重构：使用er时，不输出rib文件
+-重构：logsystem，对所有renderer，提供统一的接口。
+-导出shdergraph时，一个shadernode会被导出多次。
+  解决方法：第一步先记录待导出的shader node，第二步再导出这些shader node
 
 -bug：er的maya预览图里最底部的一行像素是空的；但在输出的图片文件里，最底一行的像素没有问题。
 -bug:自定义shader 的参数无法从pl文件里update ，必须删掉该节点，然后重新建立
