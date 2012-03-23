@@ -775,55 +775,54 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
         status.clear();
 	}
 
-  // Get the object's color
-  if( objType != MRT_Shader ) 
-  {
-    MObject shadingGroup = findShadingGroup( path, objType );
-    if( shadingGroup != MObject::kNullObj ) 
-    {
-      assignedShadingGroup.setObject( shadingGroup );
-      MObject surfaceShader = findShader( shadingGroup );
-      assignedShader.setObject( surfaceShader );
-      assignedDisp.setObject( findDisp( shadingGroup ) );
-      assignedVolume.setObject( findVolume( shadingGroup ) );
+	// Get the object's color
+	if( objType != MRT_Shader ) 
+	{
+		MObject shadingGroup = findShadingGroup( path, objType );
+		if( shadingGroup != MObject::kNullObj ) 
+		{
+			assignedShadingGroup.setObject( shadingGroup );
+			MObject surfaceShader = findShader( shadingGroup );
+			assignedShader.setObject( surfaceShader );
+			assignedDisp.setObject( findDisp( shadingGroup ) );
+			assignedVolume.setObject( findVolume( shadingGroup ) );
 
-	//color
-	AttributeState colorState = getColor( surfaceShader, color );
-	if( surfaceShader == MObject::kNullObj ){
-		color.r = AS_NotEXist;
-	}else{
-		if( AS_NotEXist==colorState || AS_ConnectedAsDes==colorState ){
-			color.r = color.g = color.b = colorState;
-		} else if ( AS_NotConnected==colorState ||  AS_ConnectedAsSrc==colorState){
-			// keep the color value
-		}else{
-			assert(0&&"can't handle this AttributeState");
+			//color
+			AttributeState colorState = getColor( surfaceShader, color );
+			if( surfaceShader == MObject::kNullObj ){
+				color.r = AS_NotEXist;
+			}else{
+				if( AS_NotEXist==colorState || AS_ConnectedAsDes==colorState ){
+					color.r = color.g = color.b = colorState;
+				} else if ( AS_NotConnected==colorState ||  AS_ConnectedAsSrc==colorState){
+					// keep the color value
+				}else{
+					assert(0&&"can't handle this AttributeState");
+				}
+			}
+			//opacity
+			AttributeState opacityState = getOpacity( surfaceShader, opacity );
+			if( surfaceShader == MObject::kNullObj ){
+				opacity.r = AS_NotEXist;
+			}else{
+				if( AS_NotEXist==opacityState || AS_ConnectedAsDes==opacityState ){
+					opacity.r = opacity.g = opacity.b = opacityState;
+				} else if ( AS_NotConnected==opacityState ||  AS_ConnectedAsSrc==opacityState){
+					// keep the opacity value
+				}else{
+					assert(0&&"can't handle this AttributeState");
+				}
+			}
+			mayaMatteMode = getMatteMode( surfaceShader );
+		} //if( shadingGroup != MObject::kNullObj )  
+		else 
+		{
+			color.r = AS_NotEXist;
+			opacity.r = AS_NotEXist;
 		}
+		doubleSided = isObjectTwoSided( path );
+		reversedNormals = isObjectReversed( path );
 	}
-	//opacity
-	AttributeState opacityState = getOpacity( surfaceShader, opacity );
-	if( surfaceShader == MObject::kNullObj ){
-	  opacity.r = AS_NotEXist;
-	}else{
-	  if( AS_NotEXist==opacityState || AS_ConnectedAsDes==opacityState ){
-		  opacity.r = opacity.g = opacity.b = opacityState;
-	  } else if ( AS_NotConnected==opacityState ||  AS_ConnectedAsSrc==opacityState){
-		  // keep the opacity value
-	  }else{
-		  assert(0&&"can't handle this AttributeState");
-	  }
-	}
-
-      mayaMatteMode = getMatteMode( surfaceShader );
-    } 
-    else 
-    {
-      color.r = -1.0;
-      opacity.r = -1.0;
-    }
-    doubleSided = isObjectTwoSided( path );
-    reversedNormals = isObjectReversed( path );
-  }
 
   // Check to see if the object should have its color overridden
   // (if possible).
