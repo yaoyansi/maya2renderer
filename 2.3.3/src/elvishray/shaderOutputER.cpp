@@ -3,12 +3,13 @@
 #include "../common/mayacheck.h"
 #include "../shadergraph/convertShadingNetwork.h"
 #include "../shadergraph/shadermgr.h"
+#include "er_renderer.h"
 
 namespace ER
 {
 
 OutputHelper::OutputHelper(std::ofstream& file_)
-:file(file_)
+:file(elvishray::Renderer::m_log.get())
 {
 	assert(file.is_open());
 }
@@ -232,7 +233,7 @@ void Visitor::preOutput(const char* shaderNodeName)
 }
 void Visitor::outputBegin(const char* startingNode)
 {
-	file.open( (getShaderDirectory()+startingNode+".erapi").asChar() );
+	//file.open( (getShaderDirectory()+startingNode+".erapi").asChar() );
 }
 void Visitor::outputUpstreamShader(const char* shaderNodeName)
 {
@@ -252,7 +253,7 @@ void Visitor::outputShaderMethod(const char* shaderName,
 }
 void Visitor::outputEnd()
 {
-	file.close();
+	//file.close();
 }
 void Visitor::postOutput()
 {
@@ -284,8 +285,11 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	// Work out where to put it & make sure the directory exists
 	MString shadingGroupFileName(getShaderDirectory()+shadingGroupNode);
 
-	std::ofstream shadingGroupFile;
-	shadingGroupFile.open((shadingGroupFileName+".erapi").asChar());
+// 	std::ofstream shadingGroupFile;
+// 	shadingGroupFile.open((shadingGroupFileName+".erapi").asChar());
+	std::ofstream &shadingGroupFile=elvishray::Renderer::m_log.get();
+	assert(shadingGroupFile.is_open());
+
 	shadingGroupFile<<"ei_material(\""<<shadingGroupNode<<"\");"<<std::endl;
 	if( surfaceShaders[0].length() != 0 ){
 		shadingGroupFile<<"ei_add_surface(\""<<surfaceShaders[0].asChar()<<"\");"<<std::endl;
@@ -306,7 +310,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 		shadingGroupFile<<"ei_add_photon(\""<<photonShaders[0].asChar()<<"\");"<<std::endl;
 	}
 	shadingGroupFile<<"ei_end_material();"<<std::endl;
-	shadingGroupFile.close();
+//	shadingGroupFile.close();
 
 	
 }

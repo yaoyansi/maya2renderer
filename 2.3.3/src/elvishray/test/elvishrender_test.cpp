@@ -49,7 +49,7 @@ void test_liquid2er()
 {
 //#include"cornellbox.esa"
 //#include "./liq_er_displace_good.er"
-//#include "d:/script.er"
+#include "d:/script.er"
 //#include"ei_scene_unittest.esa"//<----- use your own elvishender api script file here.
 	
 	//ei_face_color_unittest(NULL, "suffix");
@@ -63,7 +63,7 @@ void test_liquid2er()
 	//spotlight_test();
 	//spotlight_test2();
 	//ei_img_uv(true, "suffix");
-	ei_env_test("physicalsky");//"simple_env" //""
+	//ei_env_test("physicalsky");//"simple_env" //""
 }
 //
 int main()
