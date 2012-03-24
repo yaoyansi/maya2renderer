@@ -1,3 +1,0 @@
-ei_material("initialShadingGroup");
-ei_add_surface("lambert1");
-ei_end_material();

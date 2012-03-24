@@ -1032,10 +1032,6 @@ namespace renderman
 		const structJob &currentJob 
 		)
 	{
-		liqRIBMsg("I bet it will never goes here.Renderer::writeShader_RegularShader(ribNode=%s,currentJob=%s)", ribNode__->name.asChar() ,currentJob.name.asChar());
-		assert(0 && "I bet it will never goes here.rm::Renderer::writeShader_RegularShader()" );
-
-
 		//liqShader& currentShader( liqGetShader( ribNode__->assignedShader.object() ) );
 		liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
 
@@ -1079,9 +1075,6 @@ namespace renderman
 
 		if( !liqRibTranslator::getInstancePtr()->m_ignoreSurfaces ) 
 		{
-			liqRIBMsg("I bet it will never goes here.Renderer::writeShader_HasNoSurfaceShaderORIngoreSurface(ribNode=%s,)", ribNode__->name.asChar() );
-			assert(0 && "I bet it will never goes here.rm::Renderer::writeShader_HasNoSurfaceShaderORIngoreSurface()" );
-
 			MObject shadingGroup = ribNode__->assignedShadingGroup.object();
 			MObject shader = ribNode__->findShader( shadingGroup );
 			//

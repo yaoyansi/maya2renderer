@@ -1,3 +1,0 @@
-ei_material("liquidSurface3SG");
-ei_add_surface("liquidSurface3");
-ei_end_material();

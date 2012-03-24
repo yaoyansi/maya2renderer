@@ -22,7 +22,11 @@
 - (done)bug: rm phong ,if the color is connect to a file texture, nothing can be rendered. (Because Ci is ZERO)
 - (done)rm phong shader 的导出
 - 整理er_rm_shader_graph_phong.ma test记录 rib/image
+- test all cases for the lastest code
 - framelog， allLog
+
+
+- shadow pass
 - bug: XP下maketexture出的tex文件，在win7下渲染不出来。见er_rm_shader_graph_phong.ma,(check112.bmp.tex)
 - bug:phong如果只有透明值，而没有透明贴图时，最终颜色几乎显示不出来（几乎成半透明的白色）
 - bump2d node
@@ -103,7 +107,7 @@ er::Renderer::exportLight(),
 - 动画序列里，（er/rm）shader是否能正确输出
 
 - transparent shader
-- shadow pass
+
 - pass list/ pass graph
 - AO pass
 

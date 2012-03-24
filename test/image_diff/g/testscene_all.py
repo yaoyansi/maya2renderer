@@ -85,3 +85,6 @@ def test_all_scene():
    
     testFile=LIQUID_ROOT+"/2.3.3/test/test_er_vertex_normal/er_vertex_normal.ma"
     MyTestOne.test_one_scene(testFile, "elvishray")
+
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_er_volume/er_volume.ma"
+    MyTestOne.test_one_scene(testFile, "elvishray")

@@ -812,8 +812,6 @@ namespace elvishray
 	{
 		assert( m_log.get().is_open() );
 
-		_s("//I bet it will never goes here.Renderer::writeShader_RegularShader(ribNode="<<ribNode__->name<<",currentJob="<<currentJob.name<<")");
-		assert(0 && "I bet it will never goes here.er::Renderer::writeShader_RegularShader()" );
 	}
 	void Renderer::oneObjectBlock_reference_attribute_block2_writeShader_HasNoSurfaceShaderORIngoreSurface(
 		const liqRibNodePtr &ribNode__, const MDagPath &path__, const bool m_shaderDebug
