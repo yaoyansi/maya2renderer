@@ -208,6 +208,36 @@ namespace elvishray
 			const structJob &currentJob,
 			const bool bReference);
 		//
+		virtual bool isHeroPassReady(const structJob &currentJob);
+		virtual void HeroPassBegin(const structJob &currentJob);
+		virtual void HeroPassEnd(const structJob &currentJob);
+		virtual void oneObjectBlock_reference_attribute_begin(
+			const liqRibNodePtr &ribNode,
+			const structJob &currentJob
+			);
+		virtual void oneObjectBlock_reference_attribute_end(
+			const liqRibNodePtr &ribNode,
+			const structJob &currentJob
+			);
+		virtual void oneObjectBlock_reference_attribute_block0(
+			const liqRibNodePtr &ribNode,
+			const structJob &currentJob );
+		virtual void oneObjectBlock_reference_attribute_block1(
+			const liqRibNodePtr &ribNode,
+			const structJob &currentJob );
+		virtual void logFrame(const char* msg);
+		virtual void oneObjectBlock_reference_attribute_block2_writeShader_RibBox(const char* msg);
+		virtual void oneObjectBlock_reference_attribute_block2_writeShader_RegularShader(
+			const liqRibNodePtr &ribNode,
+			const structJob &currentJob 
+			);
+		virtual void oneObjectBlock_reference_attribute_block2_writeShader_HasNoSurfaceShaderORIngoreSurface(
+			const liqRibNodePtr &ribNode, const MDagPath &path__, const bool m_shaderDebug
+			);
+		virtual void oneObjectBlock_reference_attribute_block3_ShadingGroup(
+			const MString& meshname
+			);
+		//
 		//std::ofstream& get() { return m_log.get(); }
  		static liquid::LogMgr m_log;
 

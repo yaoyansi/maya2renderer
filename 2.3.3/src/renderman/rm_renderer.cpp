@@ -929,4 +929,220 @@ namespace renderman
 		//=====================================================
 		ribNode->object( sample )->writeObject(geometryRibFile, currentJob, bReference);
 	}
+	//
+	bool Renderer::isHeroPassReady(const structJob &currentJob)
+	{
+		return true;
+	}
+	void Renderer::HeroPassBegin(const structJob &currentJob___)
+	{
+#ifndef RENDER_PIPE
+		liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
+		RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
+#else//RENDER_PIPE
+		liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
+		if( liqglo___.liqglo_ribFP ) 
+		{
+			RtInt ribFD = fileno( liqglo___.liqglo_ribFP );
+			RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
+		} 
+		else
+		{
+			liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
+		}
+
+		liquidMessage( "Beginning RI output directly to renderer", messageInfo );
+		RiBegin( RI_NULL );
+#endif//RENDER_PIPE
+	}
+	void Renderer::HeroPassEnd(const structJob &currentJob)
+	{
+		RiEnd();
+	}
+	//
+	void Renderer::oneObjectBlock_reference_attribute_begin(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob )
+	{
+		if( liqglo.m_outputComments ) 
+			RiArchiveRecord( RI_COMMENT, "Name: %s", ribNode->name.asChar(), RI_NULL );
+
+		RiAttributeBegin();
+	}
+	void Renderer::oneObjectBlock_reference_attribute_end(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob )
+	{
+		RiAttributeEnd();
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block0(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob )
+	{
+		RiAttribute( "identifier", "name", &getLiquidRibName( ribNode->name.asChar() ), RI_NULL );
+
+		if( !ribNode->grouping.membership.empty() ) 
+		{
+			RtString members( const_cast< char* >( ribNode->grouping.membership.c_str() ) );
+			RiAttribute( "grouping", "membership", &members, RI_NULL );
+		}
+
+		if( ribNode->shading.matte || ribNode->mayaMatteMode ) 
+			RiMatte( RI_TRUE );
+
+		// If this is a single sided object, then turn that on (RMan default is Sides 2)
+		if( !ribNode->doubleSided ) 
+			RiSides( 1 );
+
+		if( ribNode->reversedNormals ) 
+			RiReverseOrientation();
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block1(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob )
+	{
+		// displacement bounds
+		liqRibTranslator::getInstancePtr()->displacementBounds(ribNode);
+
+		LIQDEBUGPRINTF( "-> writing node attributes\n" );
+		// if the node's shading rate == -1,
+		// it means it hasn't been overriden by a liqShadingRate attribute.
+		// No need to output it then.
+		if( ribNode->shading.shadingRate > 0 )
+			RiShadingRate ( ribNode->shading.shadingRate );
+
+		if( currentJob.isShadow ) 
+		{
+			liqRibTranslator::getInstancePtr()->objectShadowAttribute(ribNode);
+		}else{
+			liqRibTranslator::getInstancePtr()->objectNonShadowAttribute(ribNode);
+		}
+	}
+	void Renderer::logFrame(const char* msg)
+	{
+		RiArchiveRecord( RI_COMMENT, "\t\t\t\t[DEBUG] %s", msg );
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block2_writeShader_RibBox(const char* msg)
+	{
+		RiArchiveRecord( RI_VERBATIM, ( char* )msg );
+		RiArchiveRecord( RI_VERBATIM, "\n" );
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block2_writeShader_RegularShader(
+		const liqRibNodePtr &ribNode__,
+		const structJob &currentJob 
+		)
+	{
+		liqRIBMsg("I bet it will never goes here.Renderer::writeShader_RegularShader(ribNode=%s,currentJob=%s)", ribNode__->name.asChar() ,currentJob.name.asChar());
+		assert(0 && "I bet it will never goes here.rm::Renderer::writeShader_RegularShader()" );
+
+
+		//liqShader& currentShader( liqGetShader( ribNode__->assignedShader.object() ) );
+		liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode__->assignedShader.object() );
+
+		liqRibTranslator::getInstancePtr()->F1(ribNode__, currentShader);
+
+		liqRIBMsg("[2] liqglo_currentJob.isShadow=%d, currentShader.outputInShadow=%d", currentJob.isShadow, currentShader.outputInShadow );
+		// per shader shadow pass override
+		if( !currentJob.isShadow || currentShader.outputInShadow )
+		{
+			//currentShader.write();//use ShadingGroup file reference(e.g. *.erapi/*.rmsg) instead.
+		}
+
+		//if( outputSurfaceShader )
+		//{
+		//	scoped_array< RtToken > tokenArray( new RtToken[ currentShader.tokenPointerArray.size() ] );
+		//	scoped_array< RtPointer > pointerArray( new RtPointer[ currentShader.tokenPointerArray.size() ] );
+		//	assignTokenArrays( currentShader.tokenPointerArray.size(), &currentShader.tokenPointerArray[ 0 ], tokenArray.get(), pointerArray.get() );
+
+		//	char* shaderFileName;
+		//	LIQ_GET_SHADER_FILE_NAME( shaderFileName, liqglo_shortShaderNames, currentShader );
+
+		//	// check shader space transformation
+		//	if( currentShader.shaderSpace != "" )
+		//	{
+		//		RiTransformBegin();
+		//		RiCoordSysTransform( ( RtString )currentShader.shaderSpace.asChar() );
+		//	}
+		//	// output shader
+		//	// its one less as the tokenPointerArray has a preset size of 1 not 0
+		//	int shaderParamCount = currentShader.tokenPointerArray.size() - 1;
+		//	RiSurfaceV ( shaderFileName, shaderParamCount, tokenArray.get(), pointerArray.get() );
+		//	if( currentShader.shaderSpace != "" )
+		//		RiTransformEnd();
+		//}
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block2_writeShader_HasNoSurfaceShaderORIngoreSurface(
+		const liqRibNodePtr &ribNode__, const MDagPath &path__, const bool m_shaderDebug
+		)
+	{
+		liqRibTranslator::getInstancePtr()->F2(m_shaderDebug, ribNode__);
+
+		if( !liqRibTranslator::getInstancePtr()->m_ignoreSurfaces ) 
+		{
+			liqRIBMsg("I bet it will never goes here.Renderer::writeShader_HasNoSurfaceShaderORIngoreSurface(ribNode=%s,)", ribNode__->name.asChar() );
+			assert(0 && "I bet it will never goes here.rm::Renderer::writeShader_HasNoSurfaceShaderORIngoreSurface()" );
+
+			MObject shadingGroup = ribNode__->assignedShadingGroup.object();
+			MObject shader = ribNode__->findShader( shadingGroup );
+			//
+			// here we check for regular shader nodes first
+			// and assign default shader to shader-less nodes.
+			//
+			if( m_shaderDebug ) {
+				liqRIBMsg("shader debug is turned on, so the surface is constant.");
+				RiSurface( "constant", RI_NULL );
+				LIQDEBUGPRINTF("add more constant parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorBlinn.sl as an example.(?)");
+			}
+			//else if( shader.apiType() == MFn::kLambert ){ 
+			//	RiSurface( "matte", RI_NULL );
+			//	LIQDEBUGPRINTF("add more lambert parameters here. take //RMS-1.0.1-Maya2008/lib/shaders/src/mtorLambert.sl as an example.");
+			//}else if( shader.apiType() == MFn::kPhong ) {
+			//	RiSurface( "plastic", RI_NULL );
+			//	LIQDEBUGPRINTF("add more phong parameters here. take /RMS-1.0.1-Maya2008/lib/shaders/src/mtorPhong.sl as an example.");
+			//}
+			else if( path__.hasFn( MFn::kPfxHair ) ) 
+			{
+				// get some of the hair system parameters
+				RtFloat translucence = 0, specularPower = 0;
+				RtColor specularColor;
+
+				liqRibTranslator::getInstancePtr()->getPfxHairData(path__, translucence, specularPower, specularColor);
+
+				RiSurface(  "liquidpfxhair",
+					"float specularpower", &specularPower,
+					"float translucence",  &translucence,
+					"color specularcolor", &specularColor,
+					RI_NULL );
+			} 
+			else if( path__.hasFn( MFn::kPfxToon ) ) {
+				RiSurface( "liquidpfxtoon", RI_NULL );
+			}else if( path__.hasFn( MFn::kPfxGeometry ) ){
+				RiSurface( "liquidpfx", RI_NULL );
+			}else {
+				//RiSurface( "plastic", RI_NULL );
+				//MFnDependencyNode shaderFn(shader);
+				//RiSurface( const_cast<char*>(shaderFn.name().asChar()), RI_NULL );//use ShadingGroup file reference(e.g. *.erapi/*.rmsg) instead.
+			}
+		}
+
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block3_ShadingGroup(
+		const MString& meshname
+		)
+	{
+		_logFunctionCall("liqRibTranslator::writeShadingGroup(");
+		RiArchiveRecord( RI_COMMENT, "use Shading Group reference:" );
+		{
+			MStringArray shadingGroupNode;
+			{
+				MString cmd = "listConnections -type \"shadingEngine\" -destination on (\""+meshname+"\" + \".instObjGroups\")";
+				IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNode));
+			}
+
+			MString shadingGroupFileName(getShaderDirectory()+shadingGroupNode[0]);
+
+			RiReadArchive( const_cast< RtToken >((shadingGroupFileName+".rmsg").asChar()), NULL, RI_NULL );
+		}
+	}
+
 }//namespace

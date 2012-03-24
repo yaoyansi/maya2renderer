@@ -215,6 +215,40 @@ public:
 		const MString &fileName, 
 		const structJob &currentJob,
 		const bool bReference) = 0;
+
+	virtual bool isHeroPassReady(const structJob &currentJob) = 0;
+	virtual void HeroPassBegin(const structJob &currentJob) = 0;
+	virtual void HeroPassEnd(const structJob &currentJob) = 0;
+
+	virtual void oneObjectBlock_reference_attribute_begin(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob
+		) = 0;
+	virtual void oneObjectBlock_reference_attribute_end(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob
+		) = 0;
+	virtual void oneObjectBlock_reference_attribute_block0(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob
+		) = 0;
+	virtual void oneObjectBlock_reference_attribute_block1(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob
+		) = 0;
+
+	virtual void logFrame(const char* msg) = 0;
+	virtual void oneObjectBlock_reference_attribute_block2_writeShader_RibBox(const char* msg) = 0;
+	virtual void oneObjectBlock_reference_attribute_block2_writeShader_RegularShader(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob 
+		) = 0;
+	virtual void oneObjectBlock_reference_attribute_block2_writeShader_HasNoSurfaceShaderORIngoreSurface(
+		const liqRibNodePtr &ribNode, const MDagPath &path__, const bool m_shaderDebug
+		) = 0;
+	virtual void oneObjectBlock_reference_attribute_block3_ShadingGroup(
+		const MString& meshname
+		) = 0;
 protected:
 
 

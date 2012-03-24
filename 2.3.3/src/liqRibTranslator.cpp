@@ -6375,14 +6375,14 @@ MStatus liqRibTranslator::objectBlock()
 						else
 							;// Should never happen in theory ... but what is the way to report a problem ???
 					}
-					else
+					else//hasCustomSurfaceShader==liqRibBoxShader
 					{ 
 						// Default : just write the contents of the rib box
 						RiArchiveRecord( RI_VERBATIM, ( char* )shaderRibBox.asChar() );
 						RiArchiveRecord( RI_VERBATIM, "\n" );
 					}
 				}
-				else
+				else//hasCustomSurfaceShader==liqRegularShaderNode
 				{
 					//liqShader& currentShader( liqGetShader( ribNode->assignedShader.object() ) );
 					liqShader& currentShader = liqShaderFactory::instance().getShader( ribNode->assignedShader.object() );

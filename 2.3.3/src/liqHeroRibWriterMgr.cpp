@@ -25,24 +25,7 @@ struct liqGlobalVariable &liqglo___,
 	//,std::vector<structJob>  jobList__
 	)
 {
-#ifndef RENDER_PIPE
-	liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
-	RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
-#else//RENDER_PIPE
-	liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
-	if( liqglo___.liqglo_ribFP ) 
-	{
-		RtInt ribFD = fileno( liqglo___.liqglo_ribFP );
-		RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
-	} 
-	else
-	{
-		liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
-	}
-
-	liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-	RiBegin( RI_NULL );
-#endif//RENDER_PIPE
+	//RiBegin() is moved to RM::Renderer::HeroPassBegin()
 	// full beauty/shadow rib generation
 	//
 	/* cout <<"  * build full rib"<<endl; */
@@ -72,7 +55,7 @@ struct liqGlobalVariable &liqglo___,
 		// output info when done with the rib - Alf
 		printf("Finished RIB generation %s\n", currentJob___.ribFileName.asChar());
 	}
-	RiEnd();
+	//RiEnd() is moved to RM::Renderer::HeroPassEnd()
 
 	return TCB_OK;
 }

@@ -531,7 +531,6 @@ public:
 		const liqRibNodePtr &ribNode,
 		const structJob&currentJob
 		);
-	void writeShadingGroup(const MString& meshname);
 	bool checkSettings();
 
 	//record rib file name

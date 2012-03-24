@@ -96,11 +96,11 @@ namespace elvishray
 	//}
 	void Renderer::openLog()
 	{
-		m_log.open("d:/script.er");
+
 	}
 	void Renderer::closeLog()
 	{
-		m_log.close();
+
 	}
 
 	liqLightHandle Renderer::exportShadowPassLight(
@@ -755,6 +755,80 @@ namespace elvishray
 		// Export rib data
 		//=====================================================
 		ribNode->object( sample )->writeObject(geometryRibFile, currentJob, bReference);
+
+	}
+	//
+	bool Renderer::isHeroPassReady(const structJob &currentJob)
+	{
+		return true;
+	}
+	void Renderer::HeroPassBegin(const structJob &currentJob___)
+	{
+		m_log.open((currentJob___.ribFileName+".er").asChar());
+	}
+	void Renderer::HeroPassEnd(const structJob &currentJob)
+	{
+		m_log.close();
+	}
+	//
+	void Renderer::oneObjectBlock_reference_attribute_begin(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob )
+	{
+
+	}
+	void Renderer::oneObjectBlock_reference_attribute_end(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob )
+	{
+
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block0(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob )
+	{
+
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block1(
+		const liqRibNodePtr &ribNode,
+		const structJob &currentJob )
+	{
+
+	}
+	void Renderer::logFrame(const char* msg)
+	{
+		assert( m_log.get().is_open() );
+		_s("//"<<msg);
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block2_writeShader_RibBox(const char* msg)
+	{
+		assert( m_log.get().is_open() );
+		_s("//writeShaderRibBox()");
+		_s(msg);
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block2_writeShader_RegularShader(
+		const liqRibNodePtr &ribNode__,
+		const structJob &currentJob )
+	{
+		assert( m_log.get().is_open() );
+
+		_s("//I bet it will never goes here.Renderer::writeShader_RegularShader(ribNode="<<ribNode__->name<<",currentJob="<<currentJob.name<<")");
+		assert(0 && "I bet it will never goes here.er::Renderer::writeShader_RegularShader()" );
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block2_writeShader_HasNoSurfaceShaderORIngoreSurface(
+		const liqRibNodePtr &ribNode__, const MDagPath &path__, const bool m_shaderDebug
+		)
+	{
+		assert( m_log.get().is_open() );
+
+		//_s("//I bet it will never goes here.Renderer::writeShader_HasNoSurfaceShaderORIngoreSurface(ribNode="<<ribNode__->name <<",)" );
+		//assert(0 && "I bet it will never goes here.rm::Renderer::writeShader_HasNoSurfaceShaderORIngoreSurface()" );
+
+	}
+	void Renderer::oneObjectBlock_reference_attribute_block3_ShadingGroup(
+		const MString& meshname
+		)
+	{
 
 	}
 }//namespace
