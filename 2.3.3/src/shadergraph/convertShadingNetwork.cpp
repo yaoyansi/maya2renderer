@@ -40,6 +40,8 @@ void ConvertShadingNetwork::exportShaderGraph()
 //
 bool ConvertShadingNetwork::beforeExport()
 {
+	exportedShader.clear();
+	exportedShadingGroup.clear();
 	return true;
 }
 //
