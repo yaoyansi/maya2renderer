@@ -39,6 +39,7 @@
 
 #include <liquid.h>
 #include <liqRibCoordData.h>
+#include <liqGlobalVariable.h>
 #include "renderman/rm_helper.h"
 
 /** Create a RIB compatible representation of a Maya coordinate system.
@@ -53,6 +54,8 @@ liqRibCoordData::liqRibCoordData( MObject coord )
 
 void liqRibCoordData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	assert(liqglo.m_ribFileOpen&&"liqRibCoordData.cpp");
+
 	if( !bReference ){//write data at first time
 		assert(m_ribFileFullPath.length()==0);
 		m_ribFileFullPath = ribFileName;

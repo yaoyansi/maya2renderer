@@ -1485,6 +1485,8 @@ void liqRibLightData::_write(const structJob &currentJob)
 //
 void liqRibLightData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	//assert(liqglo.m_ribFileOpen&&"liqRibLightData.cpp");//er also goes here , refactoring is needed.
+
 	if( !bReference ){//write data at first time
 		assert(m_ribFileFullPath.length()==0);
 		m_ribFileFullPath = ribFileName;

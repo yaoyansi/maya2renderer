@@ -392,6 +392,8 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
 //
 void liqRibSurfaceData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	assert(liqglo.m_ribFileOpen&&"liqRibSurfaceData");
+
 	if( !bReference ){//write data at first time
 		assert(m_ribFileFullPath.length()==0);
 		m_ribFileFullPath = ribFileName;

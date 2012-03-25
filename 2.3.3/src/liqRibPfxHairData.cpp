@@ -51,6 +51,7 @@
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
+#include <liqGlobalVariable.h>
 #include "renderman/rm_helper.h"
 
 using namespace boost;
@@ -294,6 +295,8 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
 //
 void liqRibPfxHairData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	assert(liqglo.m_ribFileOpen&&"liqRibPfxHairData.cpp");
+
 	if( !bReference ){//write data at first time
 		assert(m_ribFileFullPath.length()==0);
 		m_ribFileFullPath = ribFileName;

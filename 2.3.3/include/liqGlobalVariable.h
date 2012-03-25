@@ -254,6 +254,8 @@ struct liqGlobalVariable
 
 	//debug
 	bool m_logFunctionCall;//enable logFunctionCall
+
+	bool m_ribFileOpen;//is the rib file open? for renderman only.
 };
 
 extern struct liqGlobalVariable liqglo;

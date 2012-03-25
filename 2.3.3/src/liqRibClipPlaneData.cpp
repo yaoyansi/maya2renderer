@@ -38,6 +38,7 @@
   #include "ri_interface.h"
 //}
 #include <liquid.h>
+#include <liqGlobalVariable.h>
 #include "renderman/rm_helper.h"
 
 
@@ -54,6 +55,8 @@ liqRibClipPlaneData::liqRibClipPlaneData( MObject coord )
 
 void liqRibClipPlaneData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	assert(liqglo.m_ribFileOpen&&"liqRibClipPlaneData.cpp");
+
 	if( !bReference ){//write data at first time
 		assert(m_ribFileFullPath.length()==0);
 		m_ribFileFullPath = ribFileName;

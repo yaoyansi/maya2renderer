@@ -353,6 +353,9 @@ void initOtherParameters()
 
 	//debug
 	liqglo.m_logFunctionCall = false;
+
+	liqglo.m_ribFileOpen     = false;
+
 }
 void getOtherParameters(const MFnDependencyNode& rGlobalNode)
 {

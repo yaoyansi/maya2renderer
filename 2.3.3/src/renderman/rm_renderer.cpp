@@ -939,6 +939,7 @@ namespace renderman
 #ifndef RENDER_PIPE
 		liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
 		RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
+		liqglo.m_ribFileOpen = true;
 #else//RENDER_PIPE
 		liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
 		if( liqglo___.liqglo_ribFP ) 
@@ -958,6 +959,7 @@ namespace renderman
 	void Renderer::HeroPassEnd(const structJob &currentJob)
 	{
 		RiEnd();
+		liqglo.m_ribFileOpen = false;
 	}
 	//
 	void Renderer::oneObjectBlock_reference_attribute_begin(

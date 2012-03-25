@@ -1,5 +1,6 @@
 #include "rm_renderer.h"
 #include <liqRibMeshData.h>
+#include <liqGlobalVariable.h>
 #include "rm_helper.h"
 
 namespace renderman
@@ -12,6 +13,8 @@ namespace renderman
 		const structJob &currentJob,
 		const bool bReference)
 	{
+		assert(liqglo.m_ribFileOpen&&"rm_writeMeshData.cpp");
+
 	 	if( !bReference ){//write data at first time
 	 		assert(pData->getRibFileFullPath().length()==0);
 	 		pData->setRibFileFullPath(ribFileName);
