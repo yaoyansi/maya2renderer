@@ -131,61 +131,6 @@ ei_end_shader();
 ei_material("initialShadingGroup");
 ei_add_surface("lambert2");
 ei_end_material();
-ei_shader("place2dTexture2");
-ei_shader_param_string("desc", "maya_place2dTexture");
-ei_shader_param_scalar("coverageU", 1);
-ei_shader_param_scalar("coverageV", 1);
-ei_shader_param_bool("mirrorU", 0);
-ei_shader_param_bool("mirrorV", 0);
-ei_shader_param_scalar("noiseU", 0);
-ei_shader_param_scalar("noiseV", 0);
-ei_shader_param_scalar("offsetU", 0);
-ei_shader_param_scalar("offsetV", 0);
-ei_shader_param_scalar("repeatU", 5);
-ei_shader_param_scalar("repeatV", 5);
-ei_shader_param_scalar("rotateFrame", 0);
-ei_shader_param_scalar("rotateUV", 0);
-ei_shader_param_bool("stagger", 0);
-ei_shader_param_scalar("translateFrameU", 0);
-ei_shader_param_scalar("translateFrameV", 0);
-ei_shader_param_scalar("wrapU", 1);
-ei_shader_param_scalar("wrapV", 1);
-ei_shader_param_vector("outUV", 0, 0, 4.5499e+174);
-ei_end_shader();
-
-ei_shader("checker1");
-ei_shader_param_string("desc", "maya_checker");
-ei_shader_param_scalar("alphaGain", 1);
-ei_shader_param_bool("alphaIsLuminance", 0);
-ei_shader_param_scalar("alphaOffset", 0);
-ei_shader_param_vector("color1", 1, 1, 1);
-ei_shader_param_vector("color2", 0, 0, 0);
-ei_shader_param_vector("colorGain", 1, 1, 1);
-ei_shader_param_vector("colorOffset", 0, 0, 0);
-ei_shader_param_scalar("contrast", 1);
-ei_shader_param_vector("defaultColor", 0.5, 0.5, 0.5);
-ei_shader_param_scalar("filter", 1);
-ei_shader_param_scalar("filterOffset", 0);
-ei_shader_param_bool("invert", 0);
-ei_shader_link_param("uvCoord", "place2dTexture2", "outUV");
-ei_shader_param_scalar("outAlpha", 0.5);
-ei_shader_param_vector("outColor", 0.5, 0.5, 0.5);
-ei_end_shader();
-
-ei_shader("lambert2");
-ei_shader_param_string("desc", "maya_lambert_transparent");
-ei_shader_link_param("Cs", "checker1", "outColor");
-ei_shader_param_vector("transparency", 0, 0, 0);
-ei_shader_param_vector("ambientColor", 0, 0, 0);
-ei_shader_param_vector("incandescence", 0, 0, 0);
-ei_shader_param_scalar("diffusion", 0.8);
-ei_shader_param_vector("outColor", 0, 0, 0);
-ei_shader_param_vector("outTransparency", 0, 0, 0);
-ei_end_shader();
-
-ei_material("initialShadingGroup");
-ei_add_surface("lambert2");
-ei_end_material();
 
 //worldPrologue
 

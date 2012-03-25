@@ -14,7 +14,7 @@ def test_all_scene():
     MyTestOne.test_one_scene(testFile, "renderman")
 
     testFile=LIQUID_ROOT+"/2.3.3/test/test_animation/checker_anim.ma"
-    MyTestOne.test_one_scene(testFile, "renderman")
+    MyTestOne.test_one_scene(testFile, "")
 
     testFile=LIQUID_ROOT+"/2.3.3/test/test_shader_pl/test_shader_pl.ma"
     MyTestOne.test_one_scene(testFile, "elvishray")
