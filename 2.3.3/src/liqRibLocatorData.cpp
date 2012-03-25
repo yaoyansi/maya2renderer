@@ -48,6 +48,7 @@
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
 #include "renderman/rm_helper.h"
+#include "renderermgr.h"
 
 /** Create a RIB compatible representation of a Maya locator.
  */
@@ -57,28 +58,30 @@ liqRibLocatorData::liqRibLocatorData( MObject /*locator*/ )
 }
 void liqRibLocatorData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
-	if( !bReference ){//write data at first time
-		assert(m_ribFileFullPath.length()==0);
-		m_ribFileFullPath = ribFileName;
-
-		renderman::Helper o;
-		o.RiBeginRef(m_ribFileFullPath.asChar());
-		_write(currentJob);
-		o.RiEndRef();
-
-	}else{
-		//write the reference
-		assert(m_ribFileFullPath == ribFileName);
-		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
-	}
+	liquid::RendererMgr::getInstancePtr()->
+		getRenderer()->write(this, ribFileName, currentJob, bReference);
+// 	if( !bReference ){//write data at first time
+// 		assert(m_ribFileFullPath.length()==0);
+// 		m_ribFileFullPath = ribFileName;
+// 
+// 		renderman::Helper o;
+// 		o.RiBeginRef(m_ribFileFullPath.asChar());
+// 		_write(currentJob);
+// 		o.RiEndRef();
+// 
+// 	}else{
+// 		//write the reference
+// 		assert(m_ribFileFullPath == ribFileName);
+// 		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+// 	}
 }
 /** Write the RIB for this locator.
  */
-void liqRibLocatorData::_write(const structJob &currentJob)
-{
-  RiTranslate( 0., 0., 0. );
-  LIQDEBUGPRINTF( "-> writing locator" );
-}
+//void liqRibLocatorData::_write(const structJob &currentJob)
+//{
+//  RiTranslate( 0., 0., 0. );
+//  LIQDEBUGPRINTF( "-> writing locator" );
+//}
 
 /** Compare this locator to the other for the purpose of determining
  *  if its animated.

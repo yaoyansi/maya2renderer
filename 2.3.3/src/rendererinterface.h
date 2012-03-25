@@ -13,6 +13,7 @@ struct structJob;
 class liqRibLightData;
 class liqShader;
 class liqRibMeshData;
+class liqRibLocatorData;
 
 namespace liquid
 {
@@ -212,6 +213,11 @@ public:
 	//mesh
 	virtual void write(
 		/*const*/ liqRibMeshData* meshdata,
+		const MString &fileName, 
+		const structJob &currentJob,
+		const bool bReference) = 0;
+	virtual void write(
+		/*const*/ liqRibLocatorData* meshdata,
 		const MString &fileName, 
 		const structJob &currentJob,
 		const bool bReference) = 0;

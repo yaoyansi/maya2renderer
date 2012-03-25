@@ -216,6 +216,11 @@ namespace elvishray
 		_s("}//"<<MString(mesh->getName())+"_object");
 		_S( ei_end_object() );
 
+		//debug
+		if( MString(mesh->getName()) == "Man:groundShape"){
+			_s("//break here");
+		}
+
 
 	}
-}//namespace renderman
+}//namespace elvishray
