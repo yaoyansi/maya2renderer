@@ -513,17 +513,26 @@ void ConvertShadingNetwork::__export()
 
 		if( sgNodes.length() !=0 )
 		{
-			//get the shader plugs in ShadingGroup
-			std::vector<std::string> plugs;
-			liquid::RendererMgr::getInstancePtr()->
-				getRenderer()->getValidShaderPlugsInShadingGroup(plugs);
-			//export the plugs
-			for_each(plugs.begin(), plugs.end(),
-				boost::bind( &ConvertShadingNetwork::exportShaderInShadingGroup, this, node, sgNodes[0], _1 )
-			);
-
-			//
-			outputShadingGroup(sgNodes[0]);
+			if( canShadingGroupExported(sgNodes[0]) )
+			{
+				//1.shaders must be exported before shading group
+				{
+					//get the shader plugs in ShadingGroup
+					std::vector<std::string> plugs;
+					liquid::RendererMgr::getInstancePtr()->
+						getRenderer()->getValidShaderPlugsInShadingGroup(plugs);
+					//export the plugs
+					for_each(plugs.begin(), plugs.end(),
+						boost::bind( &ConvertShadingNetwork::exportShaderInShadingGroup, this, node, sgNodes[0], _1 )
+					);
+				}
+				//2.begin
+				exportShadingGroupBegin(sgNodes[0]);
+				//3.export shading group
+				outputShadingGroup(sgNodes[0]);
+				//4.end
+				exportShadingGroupEnd(sgNodes[0]);
+			}
 		}else{
 			liquidMessage2(messageInfo, ("\""+node +"\" has not shading group, skip.").asChar() );
 		}
@@ -558,24 +567,84 @@ void ConvertShadingNetwork::exportShaderInShadingGroup(
 		{
 			const MString startingNode(shaders[0]);
 
-			MString nodetype;
-			cmd = "nodeType \""+startingNode+"\"";
-			IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
+			if( canShaderExported(startingNode) )
+			{
+				//1.begin
+				exportShaderBegin(startingNode);
 
-			if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
-				//liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
-				MObject shaderObj;
-				getDependNodeByName( shaderObj,startingNode.asChar());
-				liqShader &currentShader = liqShaderFactory::instance().getShader( shaderObj );
-				currentShader.write();
-			}else{
-				convertShadingNetworkToRSL(startingNode, node);
+				//2.export shader
+				MString nodetype;
+				cmd = "nodeType \""+startingNode+"\"";
+				IfMErrorWarn(MGlobal::executeCommand( cmd, nodetype));
+
+				if(nodetype=="liquidSurface"||nodetype=="liquidVolume"||nodetype=="liquidDisplacement"){
+					//liquidMessage2(messageInfo, (startingNode+"'s type is "+nodetype+", no need to convert").asChar());
+					MObject shaderObj;
+					getDependNodeByName( shaderObj,startingNode.asChar());
+					liqShader &currentShader = liqShaderFactory::instance().getShader( shaderObj );
+					currentShader.write();
+				}else{
+					convertShadingNetworkToRSL(startingNode, node);
+				}
+
+				//3.end
+				exportShaderEnd(startingNode);
 			}
 		}
 	}
 }
+//
+bool ConvertShadingNetwork::canShaderExported(const MString& shaderName)
+{
+	if(shaderName.length()==0)
+	{
+		liquidMessage2(messageInfo, ("shader name is empty,") );
+		return false;
+	}
+	if(exportedShader.end() != std::find(exportedShader.begin(), exportedShader.end(), shaderName) )
+	{
+		liquidMessage2(messageInfo, ("\""+shaderName+"\" is already exported, skip.").asChar() );
+		return false;
+	}
 
+	return true;
+}
+void ConvertShadingNetwork::exportShaderBegin(const MString& shaderName)
+{
+}
+//void ConvertShadingNetwork::exportShader(const MString& shaderName){}
+void ConvertShadingNetwork::exportShaderEnd(const MString& shaderName)
+{
+	// if shaderName already exists in exportedShader, 
+	//canShaderExported() will return false, and exportShaderEnd() will not called.
+	exportedShader.push_back(shaderName);
+}
+//
+bool ConvertShadingNetwork::canShadingGroupExported(const MString& shadingGroupName)
+{
+	if(shadingGroupName.length()==0)
+	{
+		liquidMessage2(messageInfo, ("shading group name is empty,") );
+		return false;
+	}
+	if(exportedShadingGroup.end() != std::find(exportedShadingGroup.begin(), exportedShadingGroup.end(), shadingGroupName) )
+	{
+		liquidMessage2(messageInfo, ("\""+shadingGroupName+"\" is already exported, skip.").asChar() );
+		return false;
+	}
 
+	return true;
+}
+void ConvertShadingNetwork::exportShadingGroupBegin(const MString& shadingGroupName)
+{
 
+}
+//void ConvertShadingNetwork::exportShadingGroup(const MString& shadingGroupName){}
+void ConvertShadingNetwork::exportShadingGroupEnd(const MString& shadingGroupName)
+{
+	// if shadingGroupName already exists in exportedShadingGroup, 
+	//canShadingGroupExported() will return false, and exportShadingGroupEnd() will not called.
+	exportedShadingGroup.push_back(shadingGroupName);
+}
 
 }//namespace liquidmaya

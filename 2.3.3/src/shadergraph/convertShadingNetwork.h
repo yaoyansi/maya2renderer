@@ -106,9 +106,23 @@ protected:
 	static const int SHADER_NAME_I = 2;
 
 	void exportShaderInShadingGroup(
-		const MString& node, 
-		const MString& sgNode, 
-		const std::string& plug_);
+		const MString& node, //geometry node(can be removed in future)
+		const MString& sgNode, //shading group node
+		const std::string& plug_);//plug in shading group, e.g. surface, displacement, volume,...
+
+	//
+	bool canShaderExported(const MString& shaderName);
+	void exportShaderBegin(const MString& shaderName);
+	//void exportShader(const MString& shaderName);
+	void exportShaderEnd(const MString& shaderName);
+	std::vector<MString> exportedShader;
+
+	//
+	bool canShadingGroupExported(const MString& shadingGroupName);
+	void exportShadingGroupBegin(const MString& shadingGroupName);
+	//void exportShadingGroup(const MString& shadingGroupName);
+	void exportShadingGroupEnd(const MString& shadingGroupName);
+	std::vector<MString> exportedShadingGroup;
 
 private:
 	ConvertShadingNetwork(const ConvertShadingNetwork&);
