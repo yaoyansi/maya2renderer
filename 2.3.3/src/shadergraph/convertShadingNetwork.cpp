@@ -492,7 +492,7 @@ void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNo
 //
 void ConvertShadingNetwork::__export()
 {
-	_logFunctionCall("ConvertShadingNetwork::__export()");
+	CM_TRACE_FUNC("ConvertShadingNetwork::__export()");
 
 	MString cmd;
 

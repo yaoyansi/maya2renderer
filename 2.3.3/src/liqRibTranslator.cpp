@@ -175,7 +175,7 @@ void liqRibTranslator::printProgress( unsigned stat, unsigned numFrames, unsigne
 */
 bool liqRibTranslator::liquidInitGlobals()
 {
-	_logFunctionCall("liqRibTranslator::liquidInitGlobals()");
+	CM_TRACE_FUNC("liqRibTranslator::liquidInitGlobals()");
 	MStatus status;
 	MSelectionList rGlobalList;
 	status = rGlobalList.add( "liquidGlobals" );
@@ -434,7 +434,7 @@ void liqRibTranslatorErrorHandler( RtInt code, RtInt severity, const char* messa
 
 MSyntax liqRibTranslator::syntax()
 {
-	_logFunctionCall("liqRibTranslator::syntax()");
+	CM_TRACE_FUNC("liqRibTranslator::syntax()");
 	MSyntax syntax;
 
 	syntax.addFlag("lr",    "launchRender");
@@ -517,7 +517,7 @@ MSyntax liqRibTranslator::syntax()
 */
 MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 {
-	_logFunctionCall("liqRibTranslator::liquidDoArgs()");
+	//CM_TRACE_FUNC("liqRibTranslator::liquidDoArgs()");
 	MStatus status;
 	MString argValue;
 
@@ -1050,7 +1050,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 */
 void liqRibTranslator::liquidReadGlobals()
 {
-	_logFunctionCall("liqRibTranslator::liquidReadGlobals()");
+	CM_TRACE_FUNC("liqRibTranslator::liquidReadGlobals()");
 	MStatus gStatus;
 	MPlug gPlug;
 	MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
@@ -1691,7 +1691,7 @@ void liqRibTranslator::liquidReadGlobals()
 
 bool liqRibTranslator::verifyOutputDirectories()
 {
-	_logFunctionCall("liqRibTranslator::verifyOutputDirectories()");
+	CM_TRACE_FUNC("liqRibTranslator::verifyOutputDirectories()");
 #ifdef _WIN32
 	int dirMode = 6; // dummy arg
 	int mkdirMode = 0;
@@ -1809,7 +1809,7 @@ bool liqRibTranslator::verifyOutputDirectories()
 
 MString liqRibTranslator::generateRenderScriptName() const
 {
-	_logFunctionCall("liqRibTranslator::generateRenderScriptName()");
+	CM_TRACE_FUNC("liqRibTranslator::generateRenderScriptName()");
 	MString renderScriptName;
 	renderScriptName = m_tmpDir;
 	if( m_userRenderScriptFileName != MString( "" ) )
@@ -1841,7 +1841,7 @@ MString liqRibTranslator::generateRenderScriptName() const
 
 MString liqRibTranslator::generateTempMayaSceneName() const
 {
-	_logFunctionCall("liqRibTranslator::generateTempMayaSceneName()");
+	CM_TRACE_FUNC("liqRibTranslator::generateTempMayaSceneName()");
 	MString tempDefname = m_tmpDir;
 	tempDefname += liquidTransGetSceneName();
 #ifndef _WIN32
@@ -1887,7 +1887,7 @@ MString liqRibTranslator::generateTempMayaSceneName() const
 
 MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& job )
 {
-	_logFunctionCall("liqRibTranslator::generateFileName()");
+	CM_TRACE_FUNC("liqRibTranslator::generateFileName()");
 	MString filename;
 	MString debug;
 	switch( mode )
@@ -2016,7 +2016,14 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 */
 MStatus liqRibTranslator::doIt( const MArgList& args )
 {
-	_logFunctionCall("liqRibTranslator::doIt()");
+	char logFileName[128] = { 0 };
+	{
+		time_t curTime;
+		time(&curTime);
+		strftime(logFileName, sizeof(logFileName),"d:/liq_trace_%Y%m%d_%H%M%S.log", localtime(&curTime));
+	}
+	CM_TRACE_FILE(logFileName);
+	CM_TRACE_FUNC( ( boost::format("%s") % "liqRibTranslator::doIt()" ) );
 	MStatus status;
 
 	// check if we need to switch to a specific render layer
@@ -2094,7 +2101,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 //
 MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalLayer )
 {
-	_logFunctionCall("liqRibTranslator::_doIt()");
+	CM_TRACE_FUNC("liqRibTranslator::_doIt()");
 	MStatus status;
 	MString lastRibName;
 	bool hashTableInited = false;

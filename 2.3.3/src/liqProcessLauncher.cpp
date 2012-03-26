@@ -75,7 +75,7 @@ bool liqProcessLauncher::_execute( const MString &command, const MString &argume
 
 bool liqProcessLauncher::_execute( const MString &command, const MString &arguments, const MString &path, const bool wait )
 {
-	_logFunctionCall("liqProcessLauncher::_execute(...)");
+	CM_TRACE_FUNC("liqProcessLauncher::_execute(...)");
 
   if ( !wait ) {
     printf( "::=> Render (no wait) %s %s %s\n", command.asChar(), arguments.asChar(), path.asChar() );
@@ -184,7 +184,7 @@ bool liqProcessLauncher::_execute( const MString &command, const MString &argume
 
 bool liqProcessLauncher::execute( const MString &command, const MString &arguments, const MString &path, const bool wait )
 {
-	_logFunctionCall("liqProcessLauncher::execute(...)");
+	CM_TRACE_FUNC("liqProcessLauncher::execute(...)");
 
 	if( isBatchMode() ){
 		printf("// in batch mode.\n");

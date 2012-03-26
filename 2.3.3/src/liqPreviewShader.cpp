@@ -193,7 +193,7 @@ void liquidNewPreview( const liqPreviewShaderOptions& options )
 
 MStatus	liqPreviewShader::doIt( const MArgList& args )
 {
-	CM_TRACE_FUNC("liqPreviewShader::doIt()");
+	CM_TRACE_FUNC("liqPreviewShader::doIt(...)");
 
   MStatus status;
 

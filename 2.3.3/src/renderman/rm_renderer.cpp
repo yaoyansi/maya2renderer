@@ -768,8 +768,8 @@ namespace renderman
 	}
 	//
 	MStatus Renderer::doTextures(const std::vector<structJob> &txtList_)
-	{
-		_logFunctionCall("rm::Renderer::doTextures(...)");
+	{ 
+		CM_TRACE_FUNC(boost::format("rm::Renderer::doTextures(txtList.size()=%d)") % txtList_.size());
 
 		std::vector<structJob>::const_iterator iter = txtList_.begin();
 		while ( iter != txtList_.end() ) 
@@ -794,7 +794,7 @@ namespace renderman
 	}
 	MStatus Renderer::doShadows(const std::vector<structJob> &shadowList_)
 	{
-		_logFunctionCall("rm::Renderer::doShadows(...)");
+		CM_TRACE_FUNC(boost::format("rm::Renderer::doShadows(shadowList_.size()=%d)")%shadowList_.size());
 
 		liquidMessage( "Rendering shadow maps... ", messageInfo );
 		liquidMessage( "[!] Rendering shadow maps... ", messageInfo );
@@ -839,7 +839,7 @@ namespace renderman
 	}
 	MStatus Renderer::renderAll_local(const MString& ribFileName)
 	{
-		_logFunctionCall("rm::Renderer::renderAll_local(...)");
+		CM_TRACE_FUNC(boost::format("rm::Renderer::renderAll_local(%s)")%ribFileName.asChar());
 
 		printf("    + '%s'\n", ribFileName.asChar() );
 		liquidMessage( "    + '" + std::string( ribFileName.asChar() ) + "'", messageInfo );
@@ -1125,7 +1125,7 @@ namespace renderman
 		const MString& meshname
 		)
 	{
-		_logFunctionCall("liqRibTranslator::writeShadingGroup(");
+		CM_TRACE_FUNC(boost::format("liqRibTranslator::writeShadingGroup(%s)")%meshname.asChar());
 		RiArchiveRecord( RI_COMMENT, "use Shading Group reference:" );
 		{
 			MStringArray shadingGroupNode;

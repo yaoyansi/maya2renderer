@@ -60,4 +60,5 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/algorithm.hpp>
 
+#include <boost/format.hpp>
 #endif//_PREREQUEST_STD_H_
