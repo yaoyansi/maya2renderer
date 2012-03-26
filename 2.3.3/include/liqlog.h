@@ -1,7 +1,9 @@
 #ifndef liqLog_H
 #define liqLog_H
 
+#include <trace/trace.hpp>
 #include <liqGlobalHelpers.h>
+
 
 #define LOG_BUFFER_LEN 1024
 

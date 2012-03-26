@@ -2799,7 +2799,7 @@
 				AdditionalOptions="/Zm800 "
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="../../include;&quot;$(MAYA_PATH2009)/include&quot;;&quot;$(BOOST_ROOT)&quot;;../../../dependence/zlib/include;../../../dependence/aqsis/1.6.0/src/include/;../../../dependence/aqsis/1.6.0/build/include;../../../dependence/elvishray/trunk"
+				AdditionalIncludeDirectories="../../include;&quot;$(MAYA_PATH2009)/include&quot;;&quot;$(BOOST_ROOT)&quot;;../../../dependence/zlib/include;../../../dependence/aqsis/1.6.0/src/include/;../../../dependence/aqsis/1.6.0/build/include;../../../dependence/elvishray/trunk;../../../dependence/"
 				PreprocessorDefinitions="_CRT_SECURE_NO_DEPRECATE;PRMAN;_DEBUG;WIN32;_WINDOWS;_USRDLL;_BOOL;_WIN32;NT_PLUGIN;REQUIRE_IOSTREAM;HAVE_ZLIB;_USE_MATH_DEFINES;BOOST_LIB_DIAGNOSTIC"
 				StringPooling="true"
 				RuntimeLibrary="3"
@@ -4254,6 +4254,22 @@
 				RelativePath="..\common\prerequest_std.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="dependence"
+			>
+			<Filter
+				Name="trace"
+				>
+				<File
+					RelativePath="..\..\..\dependence\trace\trace.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\dependence\trace\trace.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
