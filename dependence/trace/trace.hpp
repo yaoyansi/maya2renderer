@@ -33,7 +33,7 @@ class's constructor and destructor. This rational is simple enough, but this way
 
 #define CM_TRACE_FILE(trace_file)	cm::Trace::LogToFile(trace_file)
 
-#define CM_TRACE_FUNC(func_name)    cm::Trace __CM_TRACE__(func_name, "()")
+#define CM_TRACE_FUNC(func_name)    std::stringstream __CM_TRACE_SSTR; __CM_TRACE_SSTR<<func_name; cm::Trace __CM_TRACE__(__CM_TRACE_SSTR.str())
 #define CM_TRACE_FUNC_ARG1(func_name, argfmt, arg)   \
 	cm::Trace __CM_TRACE__(func_name, argfmt, arg)
 #define CM_TRACE_FUNC_ARG2(func_name, argfmt, arg1, arg2)   \
@@ -45,14 +45,9 @@ namespace	cm
 	class	Trace
 	{
 	public:
-		explicit Trace(const char *func_name, const char* argsfmt, ...)
+		explicit Trace(std::string msg)
 		{
-			char fmt[256] ={0};
-			sprintf(fmt, "%s%s", func_name, argsfmt);
-			va_list arglist;
-			va_start(arglist, argsfmt);
-			LogMsg(depth_, depth_ * 2, fmt,  arglist);
-			va_end(arglist);
+			LogMsg(depth_, depth_ * 2, msg.c_str());
 			++depth_;
 		}
 
@@ -68,7 +63,7 @@ namespace	cm
 		}
 
 	private:
-		void LogMsg(int depth, int align, const char *fmt, va_list args)
+		void LogMsg(int depth, int align, const char *msg)
 		{
 			FILE	*fp = fopen(trace_file_.c_str(), "a+");
 			if (fp == NULL)
@@ -77,28 +72,12 @@ namespace	cm
 				return;
 			}
 
-			time_t		curTime;
-			time(&curTime);
-
-			char	timeStamp[32] = { 0 };
-			strftime(timeStamp, sizeof(timeStamp), 
-				"%Y%m%d.%H%M%S", localtime(&curTime));
-
+			std::string indent(4*depth, ' ');
 			// only log the timestamp when the time changes
-			unsigned int len = fprintf( fp, "%s %*.*s> (%d)",
-								(last_invoke_time_ != curTime) ? 
-								timeStamp : "               ",
-								2 * depth,
-								2 * depth,
-								nest_,
-								depth);
-			last_invoke_time_ = curTime;
-			len += vfprintf(fp, fmt, args);
-			len += fwrite("\n", 1, 1, fp);
+			unsigned int len = fprintf( fp, "%s>(%d)%s\n", indent.c_str(), depth, msg);
 			fflush(fp);
 			fclose(fp);
 		}
-
 	private:
 		// the debug trace filename
 		static std::string	trace_file_;
