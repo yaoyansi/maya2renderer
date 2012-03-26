@@ -175,7 +175,7 @@ void liqRibTranslator::printProgress( unsigned stat, unsigned numFrames, unsigne
 */
 bool liqRibTranslator::liquidInitGlobals()
 {
-	CM_TRACE_FUNC("liqRibTranslator::liquidInitGlobals()");
+	//trace log is not created, can't call CM_TRACE_FUNC("liqRibTranslator::liquidInitGlobals()");
 	MStatus status;
 	MSelectionList rGlobalList;
 	status = rGlobalList.add( "liquidGlobals" );
@@ -434,7 +434,6 @@ void liqRibTranslatorErrorHandler( RtInt code, RtInt severity, const char* messa
 
 MSyntax liqRibTranslator::syntax()
 {
-	CM_TRACE_FUNC("liqRibTranslator::syntax()");
 	MSyntax syntax;
 
 	syntax.addFlag("lr",    "launchRender");
@@ -517,7 +516,6 @@ MSyntax liqRibTranslator::syntax()
 */
 MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 {
-	//CM_TRACE_FUNC("liqRibTranslator::liquidDoArgs()");
 	MStatus status;
 	MString argValue;
 
@@ -1050,7 +1048,7 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 */
 void liqRibTranslator::liquidReadGlobals()
 {
-	CM_TRACE_FUNC("liqRibTranslator::liquidReadGlobals()");
+	//trace log is not created, can't call CM_TRACE_FUNC("liqRibTranslator::liquidReadGlobals()");
 	MStatus gStatus;
 	MPlug gPlug;
 	MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
@@ -1887,7 +1885,7 @@ MString liqRibTranslator::generateTempMayaSceneName() const
 
 MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& job )
 {
-	CM_TRACE_FUNC("liqRibTranslator::generateFileName()");
+	CM_TRACE_FUNC(boost::format("liqRibTranslator::generateFileName(%d,%s)")%mode%job.name.asChar());
 	MString filename;
 	MString debug;
 	switch( mode )
@@ -2016,14 +2014,6 @@ MString liqRibTranslator::generateFileName( fileGenMode mode, const structJob& j
 */
 MStatus liqRibTranslator::doIt( const MArgList& args )
 {
-	char logFileName[128] = { 0 };
-	{
-		time_t curTime;
-		time(&curTime);
-		strftime(logFileName, sizeof(logFileName),"d:/liq_trace_%Y%m%d_%H%M%S.log", localtime(&curTime));
-	}
-	CM_TRACE_FILE(logFileName);
-	CM_TRACE_FUNC( ( boost::format("%s") % "liqRibTranslator::doIt()" ) );
 	MStatus status;
 
 	// check if we need to switch to a specific render layer
@@ -2070,6 +2060,8 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 
 	if ( checkSettings() )
 	{
+		CM_TRACE_OPEN(getFunctionTraceLogFileName().c_str());
+		CM_TRACE_FUNC("liqRibTranslator::doIt()-->checkSettings()==true");
 		{//set renderer
 			MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 			MString renderer;
@@ -2093,6 +2085,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 			liquid::RendererMgr::getInstancePtr()->uninstall();
 			liquid::RendererMgr::getInstancePtr()->deleteFactory();
 		}
+		CM_TRACE_CLOSE();
 	}
 
 
@@ -2101,7 +2094,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 //
 MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalLayer )
 {
-	CM_TRACE_FUNC("liqRibTranslator::_doIt()");
+	CM_TRACE_FUNC(boost::format("liqRibTranslator::_doIt(args,%s)")%originalLayer.asChar());
 	MStatus status;
 	MString lastRibName;
 	bool hashTableInited = false;
@@ -7093,6 +7086,7 @@ void liqRibTranslator::setOutDirs()
 
 void liqRibTranslator::setSearchPaths()
 {
+	//trace log is not created, can't call CM_TRACE_FUNC()
 	liqglo.liqglo_shaderPath = "&:@:.:~:rmanshader";
 	liqglo.liqglo_texturePath = "&:@:.:~"; // :rmantex
 	liqglo.liqglo_archivePath = "&:@:.:~"; // :rib
@@ -7233,4 +7227,27 @@ bool liqRibTranslator::checkSettings()
 		return false;
 	}
 	return true;
+}
+
+std::string liqRibTranslator::getFunctionTraceLogFileName() const
+{
+	std::stringstream sslogFileName;
+	{
+		//time
+		char strtime[32] = { 0 };
+		time_t curTime;
+		time(&curTime);
+		strftime(strtime, sizeof(strtime),"%H%M%S", localtime(&curTime));
+
+		//fullpath name
+#ifndef _DEBUG
+		liquidMessage2(messageError, "liqglo.liqglo_lframe is not initilized in Release mode.");
+#endif
+		MString imageName( liqglo.liqglo_projectDir+liqglo.m_pixDir );
+		imageName += parseString( liqglo.m_displays[ 0 ].name, false );
+
+
+		sslogFileName << boost::format("%s_%s.log")%imageName.asChar()%strtime;
+	}
+	return sslogFileName.str();
 }

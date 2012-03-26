@@ -540,6 +540,8 @@ public:
 	MString getRibFile(std::size_t index);
 	std::vector<MString> ribFileList;
 
+	std::string getFunctionTraceLogFileName() const;
+
 
 private:
 	liqRibTranslator(const liqRibTranslator&);

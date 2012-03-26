@@ -29,9 +29,12 @@ class's constructor and destructor. This rational is simple enough, but this way
 #include <stdlib.h>
 #include <time.h>
 #include <stdarg.h>
+#include <cassert>
 #include <string>
+#include <fstream>
 
-#define CM_TRACE_FILE(trace_file)	cm::Trace::LogToFile(trace_file)
+#define CM_TRACE_OPEN(trace_file)	cm::Trace::openFile(trace_file)
+#define CM_TRACE_CLOSE()			cm::Trace::closeFile()
 
 #define CM_TRACE_FUNC(func_name)    std::stringstream __CM_TRACE_SSTR; __CM_TRACE_SSTR<<func_name; cm::Trace __CM_TRACE__(__CM_TRACE_SSTR.str())
 #define CM_TRACE_FUNC_ARG1(func_name, argfmt, arg)   \
@@ -45,39 +48,16 @@ namespace	cm
 	class	Trace
 	{
 	public:
-		explicit Trace(std::string msg)
-		{
-			LogMsg(depth_, depth_ * 2, msg.c_str());
-			++depth_;
-		}
-
-		~Trace()
-		{
-			--depth_;
-		}
+		explicit Trace(std::string msg);
+		~Trace();
 
 		/// special the global log file.
-		void static LogToFile(const char *trace_file)
-		{
-			trace_file_ = trace_file;
-		}
+		void static openFile(const char *trace_file);
+		void static closeFile();
 
 	private:
-		void LogMsg(int depth, int align, const char *msg)
-		{
-			FILE	*fp = fopen(trace_file_.c_str(), "a+");
-			if (fp == NULL)
-			{
-				printf("[cm::Trace] can't open file: %s.\n", trace_file_.c_str() );
-				return;
-			}
+		void LogMsg(int depth, int align, const char *msg);
 
-			std::string indent(4*depth, ' ');
-			// only log the timestamp when the time changes
-			unsigned int len = fprintf( fp, "%s>(%d)%s\n", indent.c_str(), depth, msg);
-			fflush(fp);
-			fclose(fp);
-		}
 	private:
 		// the debug trace filename
 		static std::string	trace_file_;
@@ -86,6 +66,7 @@ namespace	cm
 		static int			depth_;
 		static const char*  nest_;
 		static time_t       last_invoke_time_;
+		static std::ofstream m_logfile;
 	};
 
 }	// end namespace cm
