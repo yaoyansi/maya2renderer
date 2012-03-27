@@ -6,6 +6,7 @@ namespace renderman
 {
 	bool Renderer::writeLight_pre(const liqRibNodePtr& ribNode, const structJob& currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::writeLight_pre("<<ribNode->name<<","<<currentJob.name<<")");
 
 		RtInt on( 1 );
 		// We need to enclose lights in attribute blocks because of the
@@ -41,6 +42,8 @@ namespace renderman
 	//
 	void Renderer::writeLight_post(const liqRibNodePtr& ribNode, const structJob& currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::writeLight_post("<<ribNode->name<<","<<currentJob.name<<")");
+
 		// The next line pops the light...
 		RiAttributeEnd();
 		// close light by default // [1/30/2012 yaoyansi]
@@ -54,6 +57,8 @@ namespace renderman
 		const liqColor & color,
 		const liqMatrix &transform)
 	{
+		CM_TRACE_FUNC("Renderer::exportAmbientLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		liqMatrix transformationMatrixScaledZ;
 		liqRibLightData::scaleZ_forRenderman(
 			transformationMatrixScaledZ, transform
@@ -85,6 +90,8 @@ namespace renderman
 		const liqFloat &o_nonspecular,
 		const liqMatrix &transform)
 	{
+		CM_TRACE_FUNC("Renderer::exportDistantLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		liqMatrix transformationMatrixScaledZ;
 		liqRibLightData::scaleZ_forRenderman(
 			transformationMatrixScaledZ, transform
@@ -138,6 +145,8 @@ namespace renderman
 		const liqFloat &o_nonspecular,
 		const liqMatrix &transform)
 	{
+		CM_TRACE_FUNC("Renderer::exportPointLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		liqMatrix transformationMatrixScaledZ;
 		liqRibLightData::scaleZ_forRenderman(
 			transformationMatrixScaledZ, transform
@@ -217,6 +226,8 @@ namespace renderman
 		const liqFloat &o_nonspecular,
 		const liqMatrix &transform)
 	{
+		CM_TRACE_FUNC("Renderer::exportSpotLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		liqFloat _i_coneangle     = i_coneangle * 0.5f;
 		liqFloat _i_penumbraangle = i_penumbraangle;
 
@@ -298,6 +309,8 @@ namespace renderman
 		const liqColor &o_arealightColor,
 		const liqMatrix &transform)
 	{
+		CM_TRACE_FUNC("Renderer::exportAreaLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		liqMatrix transformationMatrixScaledZ;
 		liqRibLightData::scaleZ_forRenderman(
 			transformationMatrixScaledZ, transform

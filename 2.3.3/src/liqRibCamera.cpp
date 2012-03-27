@@ -28,6 +28,8 @@ void tRibCameraMgr::gatherDataForJob(
 	const bool m_outputHeroPass_
 	)
 {
+	CM_TRACE_FUNC("tRibCameraMgr::gatherDataForJob(liqglo___, "<<thisJob___.name<<",jobList__,"<<m_outputShadowPass_<<","<<m_outputHeroPass_<<")");
+
 	// Determine which cameras to render
 	// it will either traverse the dag and find all the renderable cameras or
 	// grab the current view and render that as a camera - both get added to the
@@ -72,6 +74,8 @@ void tRibCameraMgr::gatherDataForJob(
 //
 void tRibCameraMgr::framePrologue_camera(long lframe, const structJob &currentJob)
 {
+	CM_TRACE_FUNC("tRibCameraMgr::framePrologue_camera("<<lframe<<",job.title="<<currentJob.name<<")");
+
 	LIQDEBUGPRINTF( "-> Setting Resolution\n" );
 	// philippe : Rotated Camera Case
 	if( /*liqglo.liqglo_*/currentJob.isShadow == false && liqglo.liqglo_rotateCamera  == true ) 

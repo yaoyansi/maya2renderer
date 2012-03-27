@@ -23,6 +23,8 @@ namespace renderman
 	//
 	void Helper::RiBeginRef(const std::string& ribFile)
 	{
+		CM_TRACE_FUNC("Helper::RiBeginRef("<<ribFile<<")");
+
 		m_ribFile = ribFile;
 
 		//if m_ribFileFullPath is "", write the data into the current rib file.
@@ -38,6 +40,8 @@ namespace renderman
 	//
 	void Helper::RiEndRef()
 	{
+		CM_TRACE_FUNC("Helper::RiEndRef()");
+
 		if( m_ribFile != "" ){
 			RiEnd();
 			RiContext(m_contex);//pop context

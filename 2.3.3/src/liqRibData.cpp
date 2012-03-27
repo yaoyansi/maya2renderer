@@ -81,6 +81,8 @@ inline bool liqRibData::isNextGrainAnimated() const
 
 void liqRibData::parseVectorAttributes( MFnDependencyNode & nodeFn, MStringArray & strArray, ParameterType pType )
 {
+	CM_TRACE_FUNC("liqRibData::parseVectorAttributes(&nodeFn, &strArray, pType="<<pType<<")");
+
   MStatus status;
   if ( strArray.length() > 0 ) 
   {
@@ -132,6 +134,8 @@ void liqRibData::parseVectorAttributes( MFnDependencyNode & nodeFn, MStringArray
 
 void liqRibData::addAdditionalSurfaceParameters( MObject node )
 {
+	CM_TRACE_FUNC("liqRibData::addAdditionalSurfaceParameters("<<MFnDependencyNode(node).name()<<")");
+
   LIQDEBUGPRINTF("-> scanning for additional rman surface attributes \n");
   MStatus status( MS::kSuccess );
 

@@ -385,6 +385,7 @@ MStatus	liqPreviewShader::doIt( const MArgList& args )
  */
 int liquidOutputPreviewShader( const string& fileName, const liqPreviewShaderOptions& options )
 {
+	CM_TRACE_FUNC("liquidOutputPreviewShader("<<fileName<<", options)");
   // Get the Pathes in globals node
   MObject globalObjNode;
   MString liquidShaderPath = "",liquidTexturePath = "",liquidProceduralPath = "";

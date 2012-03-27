@@ -35,22 +35,28 @@ namespace liquid
 	//
 	void RendererMgr::test()
 	{
+		CM_TRACE_FUNC("RendererMgr::test()");
+
 		assert(m_renderer);
 		m_renderer->test();
 	}
 	void RendererMgr::prologue()
 	{
+		CM_TRACE_FUNC("RendererMgr::prologue()");
 		assert(m_renderer);
 		getRenderer()->openLog();
 	}
 	void RendererMgr::epilogue()
 	{
+		CM_TRACE_FUNC("RendererMgr::epilogue()");
 		assert(m_renderer);
 		getRenderer()->closeLog();
 	}
 	//
 	void RendererMgr::createFactory(const std::string& renderername)
 	{
+		CM_TRACE_FUNC("RendererMgr::createFactory("<<renderername<<")");
+
 		if(renderername=="renderman"){
 			m_factory = new renderman::Factory();
 		}
@@ -63,12 +69,15 @@ namespace liquid
 	}
 	void RendererMgr::deleteFactory()
 	{
+		CM_TRACE_FUNC("RendererMgr::deleteFactory()");
+
 		delete m_factory;
 		m_factory = 0;
 	}
 	//
 	void RendererMgr::install()
 	{
+		CM_TRACE_FUNC("RendererMgr::install()");
 		assert(m_factory);
 
 		m_renderer = m_factory->createRenderer();
@@ -77,6 +86,7 @@ namespace liquid
 	}
 	void RendererMgr::uninstall()
 	{
+		CM_TRACE_FUNC("RendererMgr::uninstall()");
 		assert(m_factory);
 		m_factory->deleteOutputReceiver();
 		m_factory->deleteRenderer();

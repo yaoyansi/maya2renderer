@@ -38,6 +38,8 @@
 #include <maya/MPlugArray.h>
 #include <maya/MFnDagNode.h>
 #include <maya/MObjectArray.h>
+#include <trace/trace.hpp>
+
 
 liqLightNodeBehavior::liqLightNodeBehavior()
 {
@@ -59,6 +61,8 @@ void *liqLightNodeBehavior::creator()
 
 bool liqLightNodeBehavior::shouldBeUsedFor( MObject &sourceNode, MObject &destinationNode, MPlug &sourcePlug, MPlug &destinationPlug)
 {
+	CM_TRACE_FUNC("liqLightNodeBehavior::shouldBeUsedFor("<<sourceNode.apiTypeStr()<<","<<destinationNode.apiTypeStr()<<","<<sourcePlug.name()<<","<<destinationPlug.name()<<")");
+
   bool result = false;
 
   if(MFnDependencyNode(sourceNode).typeName() == "liquidLight") 
@@ -75,6 +79,8 @@ bool liqLightNodeBehavior::shouldBeUsedFor( MObject &sourceNode, MObject &destin
 
 MStatus liqLightNodeBehavior::connectNodeToNode( MObject &sourceNode, MObject &destinationNode, bool force )
 {
+	CM_TRACE_FUNC("liqLightNodeBehavior::connectNodeToNode("<<sourceNode.apiTypeStr()<<","<< destinationNode.apiTypeStr()<<","<<force<<")");
+
   MStatus result = MS::kFailure;
   MFnDependencyNode src(sourceNode);
 
@@ -130,6 +136,8 @@ MStatus liqLightNodeBehavior::connectNodeToNode( MObject &sourceNode, MObject &d
 
 MStatus liqLightNodeBehavior::connectNodeToAttr( MObject &sourceNode, MPlug &destinationPlug, bool force )
 {
+	CM_TRACE_FUNC("liqLightNodeBehavior::connectNodeToAttr("<<sourceNode.apiTypeStr()<<","<< destinationPlug.name()<<","<<force<<")");
+
   MStatus result = MS::kFailure;
   MFnDependencyNode src(sourceNode);
 

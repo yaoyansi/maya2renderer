@@ -54,6 +54,8 @@ liqRibCoordData::liqRibCoordData( MObject coord )
 
 void liqRibCoordData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibCoordData::write("<<ribFileName<<","<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibCoordData.cpp");
 
 	if( !bReference ){//write data at first time
@@ -76,6 +78,8 @@ void liqRibCoordData::write(const MString &ribFileName, const structJob &current
  */
 void liqRibCoordData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibCoordData::_write("<<currentJob.name<<")");
+
   LIQDEBUGPRINTF("-> writing coord"); 
   RiCoordinateSystem( const_cast<char *> ( name.asChar() ) );
 }
@@ -85,6 +89,8 @@ void liqRibCoordData::_write(const structJob &currentJob)
  */
 bool liqRibCoordData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibCoordData::compare("<<otherObj.getName()<<")");
+
   LIQDEBUGPRINTF("-> comparing coord\n");
   return ( otherObj.type() != MRT_Coord )? false : true;
 }

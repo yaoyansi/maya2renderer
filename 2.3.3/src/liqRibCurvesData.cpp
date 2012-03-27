@@ -67,6 +67,8 @@ liqRibCurvesData::liqRibCurvesData( MObject curveGroup )
   CVs(),
   NuCurveWidth()
 {
+	CM_TRACE_FUNC("liqRibCurvesData::liqRibCurvesData("<<curveGroup.apiTypeStr()<<")");
+
 	LIQDEBUGPRINTF( "-> creating nurbs curve group\n" );
 
 	MStatus status( MS::kSuccess );
@@ -220,6 +222,8 @@ liqRibCurvesData::liqRibCurvesData( MObject curveGroup )
 
 void liqRibCurvesData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibCurvesData::write("<<ribFileName<<","<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibCurvesData.cpp");
 
 	if( !bReference ){//write data at first time
@@ -241,6 +245,8 @@ void liqRibCurvesData::write(const MString &ribFileName, const structJob &curren
 //  Write the RIB for this curve.
 void liqRibCurvesData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibCurvesData::_write("<<currentJob.name<<")");
+
 	LIQDEBUGPRINTF( "-> writing nurbs curve group\n" );
 
 	// don't write if empty group
@@ -262,6 +268,8 @@ void liqRibCurvesData::_write(const structJob &currentJob)
 
 bool liqRibCurvesData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibClipPlaneData::compare("<<otherObj.getName()<<")");
+
 	LIQDEBUGPRINTF( "-> comparing nurbs curve\n");
 	if ( otherObj.type() != MRT_Curves )
 		return false;

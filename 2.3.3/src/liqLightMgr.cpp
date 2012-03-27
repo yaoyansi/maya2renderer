@@ -28,6 +28,8 @@ void tLightMgr::scanScene(const float lframe__, const int sample__,
 						  int &count__,
 						  MStatus &returnStatus__)
 {
+	CM_TRACE_FUNC("tJobScriptMgr::scanScene("<<lframe__<<","<<sample__<<", htable__, count, returnStatus__)");
+
 	MItDag dagLightIterator( MItDag::kDepthFirst, MFn::kLight, &returnStatus__);
 
 	for (; !dagLightIterator.isDone(); dagLightIterator.next()) 
@@ -108,6 +110,8 @@ MStatus tLightMgr::buildShadowJob(
 	structJob &thisJob___, bool m_lazyCompute__
 	)
 {
+	CM_TRACE_FUNC("tJobScriptMgr::buildShadowJob(thisJob___, "<<m_lazyCompute__<<")");
+
 	MStatus returnStatus__;
 	MStatus status__;
 	MDagPath lightPath__;
@@ -290,6 +294,8 @@ MStatus tLightMgr::buildShadowCameraJob(
 	structJob &thisJob___, bool m_lazyCompute__
 	)
 {
+	CM_TRACE_FUNC("tJobScriptMgr::buildShadowCameraJob(thisJob___, "<<m_lazyCompute__<<")");
+
 	MStatus returnStatus__ = MS::kSuccess;
 	MStatus status__;
 
@@ -363,6 +369,8 @@ void tLightMgr::buildShadowJob_SpotAndDirectionLight(
 	const bool m_lazyCompute__
 	)
 {
+	CM_TRACE_FUNC("tJobScriptMgr::buildShadowJob_SpotAndDirectionLight(thisJob___, shadowCamPath, "<<fnLightNode.name()<<","<<lightPath__.fullPathName()<<","<<m_lazyCompute__<<")");
+
 	MStatus status__;
 
 	bool computeShadow = true;
@@ -448,6 +456,8 @@ void tLightMgr::buildShadowJob_PointLight(
 	const bool m_lazyCompute__
 	)
 {
+	CM_TRACE_FUNC("tJobScriptMgr::buildShadowJob_PointLight(thisJob___, shadowCamPath, "<<fnLightNode.name()<<","<<lightPath__.fullPathName()<<","<<m_lazyCompute__<<")");
+
 	MStatus status__;
 
 	for ( unsigned dirOn( 0 ); dirOn < 6; dirOn++ ) 

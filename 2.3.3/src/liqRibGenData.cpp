@@ -73,6 +73,8 @@ using namespace std;
  */
 liqRibGenData::liqRibGenData( MObject obj, MDagPath path )
 {
+	CM_TRACE_FUNC("liqRibGenData::liqRibGenData(obj, "<<path.fullPathName()<<")");
+
   LIQDEBUGPRINTF( "-> creating ribgen\n" );
   MFnDependencyNode fnNode( obj );
   MPlug ribGenNodePlug = fnNode.findPlug( "liquidRibGen" );
@@ -109,6 +111,8 @@ liqRibGenData::liqRibGenData( MObject obj, MDagPath path )
 
 void liqRibGenData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibGenData::_write(job.title= "<<currentJob.name<<")");
+
   LIQDEBUGPRINTF( "-> writing ribgen\n" ); // || defined( GENERIC_RIBLIB )
 #if defined( PRMAN ) || defined( DELIGHT ) || defined( GENERIC_RIBLIB )
 #ifndef _WIN32
@@ -235,6 +239,8 @@ void liqRibGenData::_write(const structJob &currentJob)
 
 void liqRibGenData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibGenData::write("<<ribFileName<<","<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibGenData.cpp");
 
 	if( !bReference ){//write data at first time
@@ -259,6 +265,8 @@ bool liqRibGenData::compare( const liqRibData & otherObj ) const
 //      if its animated
 //
 {
+	CM_TRACE_FUNC("liqRibGenData::compare("<<otherObj.getName()<<")");
+
   LIQDEBUGPRINTF( "-> comparing RIBGen\n" );
   return ( otherObj.type() != MRT_RibGen )? false : true;
 }
@@ -306,6 +314,8 @@ void  liqRibGenStatus::ReportError( RenderingError e, const char *fmt, ... )
 
 MCommandResult * liqRibGenStatus::ExecuteHostCmd( const char *cmd, std::string &errstr )
 { 
+	CM_TRACE_FUNC("liqRibGenData::ExecuteHostCmd("<<cmd<<")");
+
   MStatus stat;
   MCommandResult* ret = NULL;
   

@@ -32,6 +32,7 @@
 -lambert shader
 -blinn shader
 - framelog， allLog
+-liqMayaRenderView里的getNode（）可被重构去掉
 
 
 - shadow pass

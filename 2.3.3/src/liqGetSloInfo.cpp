@@ -254,6 +254,8 @@ void liqGetSloInfo::resetIt()
 
 int liqGetSloInfo::setShader( MString shaderFileName )
 {
+	CM_TRACE_FUNC("liqGetSloInfo::setShader("<<shaderFileName<<")");
+
   assert(0&&"liqGetSloInfo::setShader() seems nerver been used.");
   int rstatus = 0;
   resetIt();
@@ -413,6 +415,8 @@ int liqGetSloInfo::setShader( MString shaderFileName )
 
 int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
 {
+	CM_TRACE_FUNC("liqGetSloInfo::setShaderNode("<<shaderNode.name()<<")");
+
   int rstatus = 0;
   MStatus stat;
   resetIt();
@@ -692,6 +696,8 @@ int liqGetSloInfo::setShaderNode( MFnDependencyNode &shaderNode )
 
 MStatus liqGetSloInfo::doIt( const MArgList& args )
 {
+	CM_TRACE_FUNC("liqGetSloInfo::doIt(args)");
+
   assert(0&&"liqGetSloInfo::doIt() seems nerver been used.");
 
   MStatus     status;

@@ -39,7 +39,7 @@
 #include <maya/MArgList.h>
 #include <maya/MString.h>
 #include <maya/MSelectionList.h>
-
+#include <trace/trace.hpp>
 
 
 void* liqGetAttr::creator()
@@ -61,6 +61,7 @@ liqGetAttr::~liqGetAttr()
 
 MStatus	liqGetAttr::doIt( const MArgList& args )
 {
+	CM_TRACE_FUNC("liqGetAttr::doIt(args)");
 
 	MStatus					status;
 	unsigned				i;

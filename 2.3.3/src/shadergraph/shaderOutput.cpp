@@ -14,6 +14,7 @@ namespace liquidmaya{
 	}
 	void ShaderOutputVisitor::_outputUpstreamShader(const char* shaderNodeName, const char* nodetype)
 	{	
+		CM_TRACE_FUNC("ShaderOutputVisitor::_outputUpstreamShader("<<shaderNodeName<<","<<nodetype<<")");
 		// MATERIAL -----------------------------------
 		/// surface ///
 		if( strcmp("anisotropic", nodetype) == 0 ){

@@ -13,6 +13,8 @@ namespace renderman
 		const structJob &currentJob,
 		const bool bReference)
 	{
+		CM_TRACE_FUNC("Renderer::write("<<pData->getName()<<","<<ribFileName<<","<<currentJob.name<<",ref="<<bReference<<")");
+
 		assert(liqglo.m_ribFileOpen&&"rm_writeMeshData.cpp");
 
 	 	if( !bReference ){//write data at first time
@@ -33,6 +35,8 @@ namespace renderman
 	//
 	static void _write(liqRibMeshData* pData, const structJob &currentJob)
 	{
+		CM_TRACE_FUNC("_write("<<pData->getName()<<","<<currentJob.name<<")");
+
 		if( pData->isEmpty() )
 		{
 			liquidMessage( "Could not export degenerate mesh", messageError );

@@ -69,6 +69,8 @@ MSyntax liqJobList::syntax()
 
 MStatus liqJobList::doIt(const MArgList& args)
 {
+	CM_TRACE_FUNC("liqJobList::doIt(args)");
+
   MStatus status;
   MArgParser argParser(syntax(), args);
 
@@ -118,6 +120,7 @@ MStatus liqJobList::doIt(const MArgList& args)
 
 MStatus liqJobList::redoIt()
 {
+	CM_TRACE_FUNC("liqJobList::redoIt(args)");
   if ( debug ) printf("redoIt\n");
   clearResult();
   MStatus status;

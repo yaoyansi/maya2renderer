@@ -18,14 +18,17 @@ tFrameScriptJobMgr::~tFrameScriptJobMgr()
 //
 void tFrameScriptJobMgr::setCommonParameters(const std::string &title )
 { 
-	m_frameScriptJob.title = title;
+	CM_TRACE_FUNC("tFrameScriptJobMgr::setCommonParameters("<<title<<")");
 
+	m_frameScriptJob.title = title;
 }
 //
 void tFrameScriptJobMgr::addInstanceJob(  const bool isInstance,
 					const std::string &title
 					)
 { 
+	CM_TRACE_FUNC("tFrameScriptJobMgr::addInstanceJob("<<isInstance<<","<<title<<")");
+
 	liqRenderScript::Job instanceJob__;
 	instanceJob__.isInstance = isInstance;
 	instanceJob__.title = title;
@@ -50,6 +53,8 @@ void tFrameScriptJobMgr::makeTexture(
 	bool &alf_refmaps__
 )
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::makeTexture(txtList___,"<<alf_textures__<<","<<alf_shadows__<<","<<alf_refmaps__<<")");
+
 	if( txtList___.size() ) 
 	{
 		liqRenderScript::Job textureJob;
@@ -68,6 +73,8 @@ void tFrameScriptJobMgr::makeTexturePass(
 									   bool &alf_refmaps__
 									   )
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::makeTexturePass(txtList___,textureJob__,"<<alf_textures__<<","<<alf_shadows__<<","<<alf_refmaps__<<")");
+
 	std::vector<structJob>::iterator iter = txtList__.begin();
 
 	alf_textures__ = true;
@@ -109,6 +116,8 @@ void tFrameScriptJobMgr::makeShadow(
 				const int currentBlock__
 				)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::makeShadow(shadowList__,"<<alf_textures__<<","<<alf_shadows__<<","<<alf_refmaps__<<","<<currentBlock__<<")");
+
 	const MString framePreCommand(parseString( liqglo.m_preCommand, false));
 	const MString frameRenderCommand( parseString( liqglo.liquidRenderer.renderCommand + " " + liqglo.liquidRenderer.renderCmdFlags, false ));
 
@@ -135,6 +144,9 @@ void tFrameScriptJobMgr::makeShadowPass(
 										const int currentBlock__
 										)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::makeShadowPass(shadowList__,shadowJob__,"<<alf_textures__<<","<<alf_shadows__<<","<<alf_refmaps__<<","
+		<<framePreCommand__<<", "<<frameRenderCommand__<<", "<<currentBlock__<<")");
+
 	std::vector< structJob >::iterator iter = shadowList__.begin();
 
 	alf_shadows__ = true;
@@ -214,6 +226,8 @@ void tFrameScriptJobMgr::makeReflection(
 					bool &alf_refmaps__
 					)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::makeReflection(refList__,"<<alf_textures__<<","<<alf_shadows__<<","<<alf_refmaps__<<")");
+
 	if( refList__.size() ) 
 	{	
 		liqRenderScript::Job reflectJob;
@@ -232,6 +246,8 @@ void tFrameScriptJobMgr::makeReflectionPass(
 	bool &alf_refmaps__
 	)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::makeReflectionPass(refList__,reflectJob__,"<<alf_textures__<<","<<alf_shadows__<<","<<alf_refmaps__<<")");
+
 	LIQDEBUGPRINTF( "-> Generating job for ReflectionMap pass\n" );
 	std::vector<structJob>::iterator iter = refList__.begin();
 
@@ -289,6 +305,8 @@ void tFrameScriptJobMgr::makeReflectionPass(
 
 void tFrameScriptJobMgr::try_addPreFrameCommand(const MString &framePreFrameCommand__)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::try_addPreFrameCommand("<<framePreFrameCommand__<<")");
+
 	if( framePreFrameCommand__ != MString("") ) 
 	{
 		liqRenderScript::Cmd cmd(framePreFrameCommand__.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
@@ -300,6 +318,8 @@ void tFrameScriptJobMgr::try_addPreFrameCommand(const MString &framePreFrameComm
 //
 void tFrameScriptJobMgr::try_addPostFrameCommand(const MString &framePostFrameCommand__)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::try_addPostFrameCommand("<<framePostFrameCommand__<<")");
+
 	if( framePostFrameCommand__ != MString("") ) 
 	{
 		liqRenderScript::Cmd cmd(framePostFrameCommand__.asChar(), (liqglo.remoteRender && !liqglo.useNetRman));
@@ -313,6 +333,8 @@ void tFrameScriptJobMgr::addHeroPass(
 	const MString &frameRenderCommand__
 )
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::addHeroPass("<<ribFileName__t<<","<<framePreCommand__<<","<<frameRenderCommand__<<")");
+
 	std::stringstream ss;
 	MString ribFileName__ = ribFileName__t;
 	if ( liqglo.m_dirmaps.length() )
@@ -351,6 +373,8 @@ void tFrameScriptJobMgr::addShadowPass(
 				   const MString &frameRenderCommand__
 				   )
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::addShadowPass("<<ribFileName__<<","<<framePreCommand__<<","<<frameRenderCommand__<<")");
+
 	std::stringstream ss;
 	if( liqglo.useNetRman ) 
 	{
@@ -379,6 +403,8 @@ void tFrameScriptJobMgr::cleanHeroPass(const MString &framePreCommand__,
 									   const MString &ribFileName__
 									   )
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::cleanHeroPass("<<framePreCommand__<<","<<ribFileName__<<")");
+
 	std::stringstream ss;
 #ifdef _WIN32
 	ss << framePreCommand__.asChar() << " " << RM_CMD << " \"" << ribFileName__.asChar() << "\"";
@@ -392,6 +418,8 @@ void tFrameScriptJobMgr::cleanHeroPass(const MString &framePreCommand__,
 void tFrameScriptJobMgr::cleanShadowPass(const MString &framePreCommand__,
 										 const MString &ribFileName__)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::cleanShadowPass("<<framePreCommand__<<","<<ribFileName__<<")");
+
 	std::stringstream ss;
 #ifdef _WIN32
 	ss << framePreCommand__.asChar() << " " << RM_CMD << " \"" << ribFileName__.asChar() << "\"";
@@ -405,6 +433,8 @@ void tFrameScriptJobMgr::cleanShadowPass(const MString &framePreCommand__,
 void tFrameScriptJobMgr::cleanShadowRibGen(const MString &framePreCommand__,
 										   const MString &ribFileName__)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::cleanShadowRibGen("<<framePreCommand__<<","<<ribFileName__<<")");
+
 	std::stringstream ss;
 #ifdef _WIN32
 	ss << framePreCommand__.asChar() << " " << RM_CMD << " \"" << ribFileName__.asChar() << "\"";
@@ -417,10 +447,14 @@ void tFrameScriptJobMgr::cleanShadowRibGen(const MString &framePreCommand__,
 //
 void tFrameScriptJobMgr::viewHeroPassImage(const MString &imageName__)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::viewHeroPassImage("<<imageName__<<")");
+
 	m_frameScriptJob.chaserCommand = (std::string( "sho \"" ) + imageName__.asChar() + "\"" );
 }
 //
 void tFrameScriptJobMgr::viewShadowPassImage(const MString &imageName__)
 {
+	CM_TRACE_FUNC("tFrameScriptJobMgr::viewShadowPassImage("<<imageName__<<")");
+
 	m_frameScriptJob.chaserCommand = (std::string( "sho \"" ) + imageName__.asChar() + "\"" );
 }

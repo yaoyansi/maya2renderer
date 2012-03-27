@@ -226,11 +226,15 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 //
 void OutputHelper::beginRSL (const MString& name)
 {
+	CM_TRACE_FUNC("OutputHelper::beginRSL("<<name<<")");
+
 	ei_shader( name.asChar() );
 }
 //
 void OutputHelper::endRSL ()
 {
+	CM_TRACE_FUNC("OutputHelper::endRSL()");
+
 	ei_end_shader();
 }
 //////////////////////////////////////////////////////////////////////////
@@ -248,13 +252,16 @@ Visitor::~Visitor()
 //
 void Visitor::preOutput(const char* shaderNodeName)
 {
+	CM_TRACE_FUNC("Visitor::preOutput("<<shaderNodeName<<")");
 }
 void Visitor::outputBegin(const char* startingNode)
 {
-
+	CM_TRACE_FUNC("Visitor::outputBegin("<<startingNode<<")");
 }
 void Visitor::outputUpstreamShader(const char* shaderNodeName)
 {
+	CM_TRACE_FUNC("Visitor::outputUpstreamShader("<<shaderNodeName<<")");
+
 	MString nodetype;
 	IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+MString(shaderNodeName)+"\""), nodetype));
 
@@ -262,16 +269,21 @@ void Visitor::outputUpstreamShader(const char* shaderNodeName)
 }
 void Visitor::outputShaderMethod(const char* shaderName,
 						const char* shaderMethodVariavles,const char* shaderMethodBody)
-{
+{	
+	CM_TRACE_FUNC("Visitor::outputShaderMethod("<<shaderName<<","<<shaderMethodVariavles<<","<<shaderMethodBody<<")");
 }
 void Visitor::outputEnd()
 {
+	CM_TRACE_FUNC("Visitor::outputEnd()");
 }
 void Visitor::postOutput()
 {
+	CM_TRACE_FUNC("Visitor::postOutput()");
 }
 void Visitor::outputShadingGroup(const char* shadingGroupNode)
 {
+	CM_TRACE_FUNC("Visitor::outputShadingGroup("<<shadingGroupNode<<")");
+
 	MString cmd;
 
 	MStringArray surfaceShaders;

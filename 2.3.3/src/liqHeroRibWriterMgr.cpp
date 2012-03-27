@@ -25,6 +25,8 @@ struct liqGlobalVariable &liqglo___,
 	//,std::vector<structJob>  jobList__
 	)
 {
+	CM_TRACE_FUNC("tHeroRibWriterMgr::write(liqglo___,"<<currentJob___.name<<","<<scanTime__<<","<<m_outputLightsInDeepShadows__<<")");
+	
 	//RiBegin() is moved to RM::Renderer::HeroPassBegin()
 	// full beauty/shadow rib generation
 	//
@@ -63,11 +65,15 @@ struct liqGlobalVariable &liqglo___,
 //
 void tHeroRibWriterMgr::ribPrologue_samples(RtFloat xsamples, RtFloat ysamples)
 {
+	CM_TRACE_FUNC("tHeroRibWriterMgr::ribPrologue_samples("<<xsamples<<","<<ysamples<<")");
+
 	RiPixelSamples( xsamples, ysamples );
 }
 //
 void tHeroRibWriterMgr::ribPrologue_shadingrate(RtFloat size)
 {
+	CM_TRACE_FUNC("tHeroRibWriterMgr::ribPrologue_shadingrate("<<size<<")");
+
 	RiShadingRate( size );
 }
 //
@@ -75,6 +81,8 @@ void tHeroRibWriterMgr::ribPrologue_filter(
 	liquidlong m_rFilter,
 	RtFloat m_rFilterX, RtFloat m_rFilterY)
 {
+	CM_TRACE_FUNC("tHeroRibWriterMgr::ribPrologue_filter("<<m_rFilter<<","<<m_rFilterX<<","<<m_rFilterY<<")");
+
 		switch (m_rFilter) 
 		{
 		case pfBoxFilter:
@@ -123,6 +131,8 @@ void tHeroRibWriterMgr::ribPrologue_filter(
 //
 void tHeroRibWriterMgr::ribPrologue_hider(HiderType hidertype)
 {
+	CM_TRACE_FUNC("tHeroRibWriterMgr::ribPrologue_hider("<<hidertype<<")");
+
 	RtString hiderName;
 	switch( hidertype ) 
 	{
@@ -152,11 +162,15 @@ void tHeroRibWriterMgr::ribPrologue_hider(HiderType hidertype)
 //
 void tHeroRibWriterMgr::ribPrologue_pass(RtString pass)
 {
+	CM_TRACE_FUNC("tHeroRibWriterMgr::ribPrologue_pass("<<pass<<")");
+
 	RiOption( "user", "string pass", ( RtPointer )&pass, RI_NULL );	
 }
 //
 void tHeroRibWriterMgr::framePrologue_display(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("tHeroRibWriterMgr::framePrologue_display("<<currentJob.name<<")");
+
 			// Smooth Shading
 			RiShadingInterpolation( "smooth" );
 			// Quantization

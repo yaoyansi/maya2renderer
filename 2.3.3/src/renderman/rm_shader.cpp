@@ -6,11 +6,15 @@ namespace renderman
 {
 	void Renderer::shader_transformBegin(const liqString  shaderSpace)
 	{
+		CM_TRACE_FUNC("Renderer::shader_transformBegin("<<shaderSpace<<")");
+
 		RiTransformBegin();
 		RiCoordSysTransform( /*( RtString )*/shaderSpace );
 	}
 	void Renderer::shader_transformEnd(const liqString  shaderSpace)
 	{
+		CM_TRACE_FUNC("Renderer::shader_transformEnd("<<shaderSpace<<")");
+
 		RiTransformEnd();
 	}
 	void Renderer::shader_surface(
@@ -18,6 +22,8 @@ namespace renderman
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
+		CM_TRACE_FUNC("Renderer::shader_surface("<<shader.getName()<<", tokenPointerArray)");
+
 		int shaderParamCount = tokenPointerArray.size() - 1;
 		boost::scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
 		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
@@ -31,6 +37,8 @@ namespace renderman
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
+		CM_TRACE_FUNC("Renderer::shader_light("<<shader.getName()<<", tokenPointerArray)");
+
 		int shaderParamCount = tokenPointerArray.size() - 1;
 		boost::scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
 		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
@@ -43,6 +51,8 @@ namespace renderman
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
+		CM_TRACE_FUNC("Renderer::shader_displacement("<<shader.getName()<<", tokenPointerArray)");
+
 		int shaderParamCount = tokenPointerArray.size() - 1;
 		boost::scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
 		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
@@ -56,6 +66,8 @@ namespace renderman
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
+		CM_TRACE_FUNC("Renderer::shader_volume("<<shader.getName()<<", tokenPointerArray)");
+
 		int shaderParamCount = tokenPointerArray.size() - 1;
 		boost::scoped_array< RtToken > tokenArray( new RtToken[ tokenPointerArray.size() ] );
 		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ tokenPointerArray.size() ] );
@@ -66,6 +78,7 @@ namespace renderman
 	}
 	void Renderer::shader_UserDefinedShader(const liqShader* liqshader)
 	{
+		CM_TRACE_FUNC("Renderer::shader_UserDefinedShader("<<liqshader->getName()<<")");
 
 		// write co-shaders before
 		unsigned int i; 
@@ -125,6 +138,8 @@ namespace renderman
 	//
 	void Renderer::getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const
 	{
+		CM_TRACE_FUNC("Renderer::getValidShaderPlugsInShadingGroup()");
+
 		plugs.clear();
 		plugs.push_back("surfaceShader");
 		plugs.push_back("displacementShader");
@@ -133,7 +148,7 @@ namespace renderman
 	//
 	void Renderer::writeAsCoShader(const liqShader* liqshader)
 	{
-
+		CM_TRACE_FUNC("Renderer::writeAsCoShader("<<liqshader->getName()<<")");
 		//	unsigned int indentLevel = 0;
 
 		MFnDependencyNode node(liqshader->m_mObject);

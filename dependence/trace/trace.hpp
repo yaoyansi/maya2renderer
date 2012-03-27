@@ -32,6 +32,7 @@ class's constructor and destructor. This rational is simple enough, but this way
 #include <cassert>
 #include <string>
 #include <fstream>
+#include <sstream>
 
 #define CM_TRACE_OPEN(trace_file)	cm::Trace::openFile(trace_file)
 #define CM_TRACE_CLOSE()			cm::Trace::closeFile()

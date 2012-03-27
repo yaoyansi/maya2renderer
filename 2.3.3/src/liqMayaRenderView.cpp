@@ -115,6 +115,8 @@ liqMayaRenderCmd::~liqMayaRenderCmd()
 
 MStatus liqMayaRenderCmd::doIt( const MArgList& args)
 {
+	CM_TRACE_FUNC("liqMayaRenderCmd::doIt(args)");
+
 	MStatus stat = MS::kSuccess;
 	MArgDatabase argData(syntax(), args);
 
@@ -160,6 +162,8 @@ MStatus liqMayaRenderCmd::doIt( const MArgList& args)
 
 MStatus liqMayaRenderCmd::redoIt()
 {
+	CM_TRACE_FUNC("liqMayaRenderCmd::redoIt()");
+
 	MStatus retStatus;
 
 	//get the camera
@@ -334,6 +338,7 @@ MStatus liqMayaRenderCmd::redoIt()
 }
 //read a bucket from the connection, bucket should have been allocated before.
 MStatus liqMayaRenderCmd::getBucket(const int socket,const unsigned int numChannels,bucket* b,bool &theEnd){
+	CM_TRACE_FUNC("liqMayaRenderCmd::getBucket("<<socket<<","<<numChannels<<"b, theEnd)");
 
 	int stat;
 	MStatus status = MS::kSuccess;
@@ -425,6 +430,8 @@ MStatus liqMayaRenderCmd::getBucket(const int socket,const unsigned int numChann
 }
 
 MStatus liqMayaRenderCmd::renderBucket(const bucket* b,const imageInfo &imgInfo){
+	CM_TRACE_FUNC("liqMayaRenderCmd::renderBucket(b,imgInfo)");
+
 	MStatus status;
 	unsigned int nPixels,lineSize,n, x,y;
 
@@ -519,6 +526,7 @@ MSyntax liqMayaRenderCmd::newSyntax()
 
 
 int liqMayaRenderCmd::createSocket(const char *hostname,const unsigned int port) {
+	CM_TRACE_FUNC("liqMayaRenderCmd::createSocket("<<hostname<<","<<port<<")");
 
 	int backlog = 5;
 	int serverSocket = 0,on = 1 ,status = 0;
@@ -584,6 +592,7 @@ int liqMayaRenderCmd::createSocket(const char *hostname,const unsigned int port)
 
 
 MObject getNode(MString name,MStatus *returnStatus){
+	CM_TRACE_FUNC("getNode("<<name<<")");
 	MObject node;
 	MSelectionList list;
 
@@ -609,6 +618,8 @@ MObject getNode(MString name,MStatus *returnStatus){
 
 
 MStatus liqMayaRenderCmd::writeBuckets(const char* file, const vector<bucket*> &buckets,const imageInfo &info) const{
+	CM_TRACE_FUNC("liqMayaRenderCmd::writeBuckets("<<file<<"buckets, info)");
+
 	MStatus status;
 	unsigned int i;
 	FILE *fh = fopen(file,"wb");
@@ -660,6 +671,8 @@ MStatus liqMayaRenderCmd::writeBuckets(const char* file, const vector<bucket*> &
 
 
 MStatus liqMayaRenderCmd::readBuckets(const char* file,vector<bucket*> &buckets, imageInfo &imgInfo) const{
+	CM_TRACE_FUNC("liqMayaRenderCmd::readBuckets("<<file<<"buckets, info)");
+
 	MStatus status;
 	FILE *fh = fopen(file,"rb");
 	if(!fh) 
@@ -723,6 +736,8 @@ inline int quantize(const float value, const float zero,const float one,const fl
 
 int waitSocket(const int fd,const int seconds, const bool check_readable)
 {
+	CM_TRACE_FUNC("waitSocket("<<fd<<","<<seconds<<","<<check_readable<<")");
+
 	fd_set fds;
 	struct timeval tv;
 	FD_ZERO(&fds);
@@ -747,6 +762,8 @@ int waitSocket(const int fd,const int seconds, const bool check_readable)
 
 int readSockData(int s,char *data,int n) 
 {
+	CM_TRACE_FUNC("readSockData("<<s<<",data,"<<n<<")");
+
 	int	i,j;
 
 	j	= n;

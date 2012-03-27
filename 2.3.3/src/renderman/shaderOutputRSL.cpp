@@ -145,16 +145,20 @@ void OutputHelper::addToRSL(const MString& code)
 	rslShaderBody += (" "+code+"\n");
 }
 //
-void OutputHelper::beginRSL (const MString& $name)
+void OutputHelper::beginRSL (const MString& name)
 {
+	CM_TRACE_FUNC("OutputHelper::beginRSL("<<name<<")");
+
 	// "Open" the header and body.
 	//
-	rslShaderHeader = ( "void " + $name + " (\n" );
+	rslShaderHeader = ( "void " + name + " (\n" );
 	rslShaderBody = "{\n";
 }
 //
 void OutputHelper::endRSL ()
 {
+	CM_TRACE_FUNC("OutputHelper::endRSL()");
+
 	// "Close" the header and body.
 	//
 	rslShaderHeader += ")\n";
@@ -175,14 +179,20 @@ Visitor::~Visitor()
 //
 void Visitor::preOutput(const char* shaderNodeName)
 {
+	CM_TRACE_FUNC("Visitor::preOutput("<<shaderNodeName<<")");
+
 	this->shaderNodeName = shaderNodeName;
 }
 void Visitor::outputBegin(const char* shaderNodeName)
 {
+	CM_TRACE_FUNC("Visitor::outputBegin("<<shaderNodeName<<")");
+
 	RSLfile.open( (getShaderDirectory()+shaderNodeName+".sl_my").asChar() );
 }
 void Visitor::outputUpstreamShader(const char* shaderNodeName)
 {
+	CM_TRACE_FUNC("Visitor::outputUpstreamShader("<<shaderNodeName<<")");
+
 	MString nodetype;
 	IfMErrorWarn(MGlobal::executeCommand( ("nodeType \""+MString(shaderNodeName)+"\""), nodetype));
 
@@ -191,6 +201,8 @@ void Visitor::outputUpstreamShader(const char* shaderNodeName)
 void Visitor::outputShaderMethod(const char* shaderName,
 						const char* shaderMethodVariavles,const char* shaderMethodBody)
 {
+	CM_TRACE_FUNC("Visitor::outputShaderMethod("<<shaderName<<","<<shaderMethodVariavles<<","<<shaderMethodBody<<")");
+
 	RSLfile << "surface " << shaderName << "()\n{\n";
 	RSLfile << shaderMethodVariavles;
 	RSLfile << "\n";
@@ -199,10 +211,13 @@ void Visitor::outputShaderMethod(const char* shaderName,
 }
 void Visitor::outputEnd()
 {
+	CM_TRACE_FUNC("Visitor::outputEnd()");
 	RSLfile.close();
 }
 void Visitor::postOutput()
 {
+	CM_TRACE_FUNC("Visitor::postOutput()");
+
 	//compile the shader
 	MString shaderdir(getShaderDirectory());
 	MString outSLO(shaderdir+shaderNodeName.c_str()+".slo");
@@ -214,6 +229,8 @@ void Visitor::postOutput()
 }
 void Visitor::outputShadingGroup(const char* shadingGroupNode)
 {
+	CM_TRACE_FUNC("Visitor::outputShadingGroup("<<shadingGroupNode<<")");
+
 	MString cmd;
 
 	MStringArray surfaceShaders;
@@ -284,9 +301,6 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 		RiEnd();
 	}
 	RiContext(c);//pop context
-
-
-
 }
 //
 }//namespace RSL

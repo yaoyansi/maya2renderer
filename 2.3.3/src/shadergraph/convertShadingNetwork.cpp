@@ -30,6 +30,8 @@ ConvertShadingNetwork::~ConvertShadingNetwork()
 //
 void ConvertShadingNetwork::exportShaderGraph()
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::exportShaderGraph()");
+
 	if( beforeExport() )
 	{
 		__export();
@@ -40,6 +42,8 @@ void ConvertShadingNetwork::exportShaderGraph()
 //
 bool ConvertShadingNetwork::beforeExport()
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::beforeExport()");
+
 	exportedShader.clear();
 	exportedShadingGroup.clear();
 	return true;
@@ -47,11 +51,14 @@ bool ConvertShadingNetwork::beforeExport()
 //
 void ConvertShadingNetwork::afterExport()
 {
+	CM_TRACE_FUNC(" ConvertShadingNetwork::afterExport()");
 
 }
 //
 bool ConvertShadingNetwork::nodeIsConvertible ( const MString& node ) const
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::nodeIsConvertible("<<node<<")");
+
 	MString cmd;
 
 	MString nodetype;
@@ -62,7 +69,9 @@ bool ConvertShadingNetwork::nodeIsConvertible ( const MString& node ) const
 }
 //
 bool ConvertShadingNetwork::ensurePlugExists(const MString& plug) const
-{
+{	
+	CM_TRACE_FUNC("ConvertShadingNetwork::ensurePlugExists("<<plug<<")");
+
 	MStringArray components;
 	plug.split('.', components);
 	MString node(components[0]);
@@ -84,6 +93,8 @@ bool ConvertShadingNetwork::ensurePlugExists(const MString& plug) const
 //
 int ConvertShadingNetwork::convertibleConnection(const MString& plug) const
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::convertibleConnection("<<plug<<")");
+
 	// Check to see if the plug even exists!
 	if( !ensurePlugExists(plug) )
 		return 0;
@@ -123,6 +134,8 @@ int ConvertShadingNetwork::convertibleConnection(const MString& plug) const
 int ConvertShadingNetwork::getUpstreamConvertibleNodes ( const MString& currentNode, 
 								 MStringArray& nodes, MIntArray& numConnections)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::getUpstreamConvertibleNodes("<<currentNode<<", nodes, numConnections)");
+
 	// If the current node has already been visited
 	for(std::size_t i=0; i<nodes.length(); ++i)
 	{
@@ -197,6 +210,8 @@ int ConvertShadingNetwork::getUpstreamConvertibleNodes ( const MString& currentN
 //
 void ConvertShadingNetwork::addNodeInputVariable(const MString& plug, MStringArray& inputVars)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::addNodeInputVariable("<<plug<<", inputVars)");
+
 	MString cmd;
 
 	MStringArray inputPlugs;
@@ -257,6 +272,8 @@ void ConvertShadingNetwork::addNodeOutputVariable(
 	const MString& plug, MStringArray& outputVars,
 	MStringArray& shaderData)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::addNodeOutputVariable("<<node<<","<<validConnection<<","<<plug<<", outputVars, shaderData)");
+	
 	MString cmd;
 
 	MString type_;
@@ -292,6 +309,8 @@ MString ConvertShadingNetwork::getNodeVariables(
 	const MString& node, const MStringArray& validConnections, MStringArray& shaderData,
 	MStringArray& inputVars, MStringArray& outputVars)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::getNodeVariables("<<node<<", validConnections, shaderData, inputVars, outputVars)");
+
 	MStringArray vars;
 	MString varString;
 	int connectionType = 0;
@@ -342,6 +361,8 @@ void ConvertShadingNetwork::decrementDownstreamConnections(
 	MIntArray& numConnections, const MStringArray& validConnections
 	)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::decrementDownstreamConnections("<<node<<", nodes, numConnections, validConnections)");
+
 	std::set<const std::string> downstreamNodes;
 
 	// Get the list of down stream nodes along supported connections
@@ -383,6 +404,8 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 	const MStringArray& nodes, MIntArray& numConnections,
 	MStringArray& shaderData)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)");
+
 	MString cmd;
 
 	//test
@@ -446,6 +469,8 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 //
 void ConvertShadingNetwork::outputShaderMethod( const MStringArray& shaderData )
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::outputShaderMethod(shaderData)");
+
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
 		outputShaderMethod(
 		shaderData[SHADER_NAME_I].asChar(),
@@ -457,6 +482,8 @@ void ConvertShadingNetwork::outputShaderMethod( const MStringArray& shaderData )
 //
 void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNode, const MString& node)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::convertShadingNetworkToRSL("<<startingNode<<","<<node<<")");
+
 	MString cmd;
 
 	MStringArray nodes;
@@ -544,6 +571,8 @@ void ConvertShadingNetwork::__export()
 //
 void ConvertShadingNetwork::outputShadingGroup(const MString& shadingGroupNode)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::outputShadingGroup("<<shadingGroupNode<<")");
+
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
 		outputShadingGroup(shadingGroupNode.asChar());
 }
@@ -553,6 +582,8 @@ void ConvertShadingNetwork::exportShaderInShadingGroup(
 	const MString& sgNode, 
 	const std::string& plug_)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::exportShaderInShadingGroup("<<node<<","<<sgNode<<","<<plug_<<")");
+
 	const MString plug(plug_.c_str());
 	MString cmd;
 
@@ -598,6 +629,8 @@ void ConvertShadingNetwork::exportShaderInShadingGroup(
 //
 bool ConvertShadingNetwork::canShaderExported(const MString& shaderName)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::canShaderExported("<<shaderName<<")");
+
 	if(shaderName.length()==0)
 	{
 		liquidMessage2(messageInfo, ("shader name is empty,") );
@@ -613,10 +646,12 @@ bool ConvertShadingNetwork::canShaderExported(const MString& shaderName)
 }
 void ConvertShadingNetwork::exportShaderBegin(const MString& shaderName)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::exportShaderBegin("<<shaderName<<")");
 }
 //void ConvertShadingNetwork::exportShader(const MString& shaderName){}
 void ConvertShadingNetwork::exportShaderEnd(const MString& shaderName)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::exportShaderEnd("<<shaderName<<")");
 	// if shaderName already exists in exportedShader, 
 	//canShaderExported() will return false, and exportShaderEnd() will not called.
 	exportedShader.push_back(shaderName);
@@ -624,6 +659,8 @@ void ConvertShadingNetwork::exportShaderEnd(const MString& shaderName)
 //
 bool ConvertShadingNetwork::canShadingGroupExported(const MString& shadingGroupName)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::canShadingGroupExported("<<shadingGroupName<<")");
+
 	if(shadingGroupName.length()==0)
 	{
 		liquidMessage2(messageInfo, ("shading group name is empty,") );
@@ -639,11 +676,12 @@ bool ConvertShadingNetwork::canShadingGroupExported(const MString& shadingGroupN
 }
 void ConvertShadingNetwork::exportShadingGroupBegin(const MString& shadingGroupName)
 {
-
+	CM_TRACE_FUNC("ConvertShadingNetwork::exportShadingGroupBegin("<<shadingGroupName<<")");
 }
 //void ConvertShadingNetwork::exportShadingGroup(const MString& shadingGroupName){}
 void ConvertShadingNetwork::exportShadingGroupEnd(const MString& shadingGroupName)
 {
+	CM_TRACE_FUNC("ConvertShadingNetwork::exportShadingGroupEnd("<<shadingGroupName<<")");
 	// if shadingGroupName already exists in exportedShadingGroup, 
 	//canShadingGroupExported() will return false, and exportShadingGroupEnd() will not called.
 	exportedShadingGroup.push_back(shadingGroupName);

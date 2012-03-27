@@ -23,6 +23,8 @@ liqRenderScript::liqRenderScript()
 //
 int liqRenderScript::addJob(const Job &job, unsigned int parentJobID)
 {
+	CM_TRACE_FUNC("liqRenderScript::addJob(job.title="<<job.title<<","<<parentJobID<<")");
+
 	int jobId = popNextJobID();
 	assert(jobId > 0);
 
@@ -50,6 +52,8 @@ void liqRenderScript::clear()
 //
 std::string liqRenderScript::getALF() const
 {
+	CM_TRACE_FUNC("liqRenderScript::getALF()");
+
 	std::stringstream ss;
 
 	ss << "##AlfredToDo 3.0" << std::endl;
@@ -80,6 +84,8 @@ std::string liqRenderScript::getALF() const
 //
 std::string liqRenderScript::getXML() const
 {
+	CM_TRACE_FUNC("liqRenderScript::getXML()");
+
 	std::stringstream ss;
 
 	ss << "<?xml version=\"1.0\"?>" << std::endl;
@@ -113,6 +119,8 @@ std::string liqRenderScript::getXML() const
 //
 bool liqRenderScript::writeALF(const std::string &filename) const
 {
+	CM_TRACE_FUNC("liqRenderScript::writeALF("<<filename<<")");
+
 	std::ofstream outFile(filename.c_str());
 	if (!outFile) {
 		return false;
@@ -124,6 +132,8 @@ bool liqRenderScript::writeALF(const std::string &filename) const
 //
 bool liqRenderScript::writeXML(const std::string &filename) const
 {
+	CM_TRACE_FUNC("liqRenderScript::writeXML("<<filename<<")");
+
 	std::ofstream outFile(filename.c_str());
 	LIQDEBUGPRINTF( "Writing XML Render Script to: %s!\n", filename.c_str() );	  
 	if (!outFile) {
@@ -137,6 +147,8 @@ bool liqRenderScript::writeXML(const std::string &filename) const
 //
 void liqRenderScript::addLeafDependency(const Job &job)
 {
+	CM_TRACE_FUNC("liqRenderScript::addLeafDependency(job.title="<<job.title<<")");
+
 	for(std::map<const int, Job>::iterator j=jobs.begin(); j!=jobs.end(); ++j) {
 		if ((!j->second.isInstance) && (j->second.title != "liquid pre-job")) {
 			j->second.addLeafDependency(job);
@@ -146,6 +158,7 @@ void liqRenderScript::addLeafDependency(const Job &job)
 //
 int liqRenderScript::popNextJobID()
 {
+	CM_TRACE_FUNC("liqRenderScript::popNextJobID()");
 	return nextJobID++;
 }
 //-------------------------------------------------------------------
@@ -192,6 +205,8 @@ void liqRenderScript::Cmd::Swap(liqRenderScript::Cmd& o)
 //
 std::string liqRenderScript::Cmd::getALF() const
 {
+	CM_TRACE_FUNC("liqRenderScript::Cmd::getALF()");
+
 	std::stringstream ss;
 
 	if (remote) {
@@ -216,6 +231,8 @@ std::string liqRenderScript::Cmd::getALF() const
 //
 std::string liqRenderScript::Cmd::getXML() const
 {
+	CM_TRACE_FUNC("liqRenderScript::Cmd::getXML()");
+
 	std::stringstream ss;
 
 	ss << "<command remote=\"" << remote << "\"";
@@ -272,6 +289,8 @@ void liqRenderScript::Job::Swap(liqRenderScript::Job& o)
 //
 std::string liqRenderScript::Job::getALF(unsigned int indentLevel) const
 {
+	CM_TRACE_FUNC("liqRenderScript::Job::getALF("<<indentLevel<<")");
+
 	std::stringstream ss;
 
 	// setup the correct indentation amount to prepend onto each line
@@ -324,6 +343,8 @@ std::string liqRenderScript::Job::getALF(unsigned int indentLevel) const
 //
 std::string liqRenderScript::Job::getXML(unsigned int indentLevel) const
 {
+	CM_TRACE_FUNC("liqRenderScript::Job::getXML("<<indentLevel<<")");
+
 	std::stringstream ss;
 
 	std::string indent;
@@ -373,6 +394,8 @@ std::string liqRenderScript::Job::getXML(unsigned int indentLevel) const
 //
 void liqRenderScript::Job::addLeafDependency(const liqRenderScript::Job &job)
 {
+	CM_TRACE_FUNC("liqRenderScript::Job::addLeafDependency(job.title"<<job.title<<")");
+
 	bool hasChildren = false;
 	for(std::vector<Job>::iterator child=childJobs.begin(); child!=childJobs.end(); ++child) {
 		if (!child->isInstance) {

@@ -61,6 +61,8 @@ liqRenderer::~liqRenderer()
 
 MStatus liqRenderer::setRenderer()
 {
+	CM_TRACE_FUNC("liqRenderer::setRenderer()");
+
   MStatus status;
   MFnDependencyNode globalsNode( initGlobals() );
   MPlug gPlug;
@@ -241,6 +243,8 @@ MStatus liqRenderer::setRenderer()
 
 MObject liqRenderer::initGlobals()
 {
+	CM_TRACE_FUNC("liqRenderer::initGlobals()");
+
   MStatus status;
   MObject renderGlobalsObj;
   MSelectionList rGlobalList;

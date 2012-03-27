@@ -38,6 +38,8 @@ liqExpression::liqExpression( const std::string& str1, const std::string& objNam
   type( exp_None ),
   object_name("")
 {
+	CM_TRACE_FUNC("liqExpression::liqExpression("<<str1<<","<<objName<<")");
+
   const char* str( str1.c_str() );
   if ( IS_EXPRESSION( str ) ) 
   {
@@ -84,6 +86,8 @@ liqExpression::liqExpression( const std::string& str1, const std::string& objNam
 
 MString	liqExpression::CalcValue( )
 {
+	CM_TRACE_FUNC("liqExpression::CalcValue()");
+
   int i;
 
   switch( type ) 
@@ -174,6 +178,8 @@ MString	liqExpression::CalcValue( )
 
 MString	liqExpression::GetCmd( void )
 {
+	CM_TRACE_FUNC("liqExpression::GetCmd()");
+
   MString cmd;
 
   switch( type ) 
