@@ -37,11 +37,7 @@ class's constructor and destructor. This rational is simple enough, but this way
 #define CM_TRACE_CLOSE()			cm::Trace::closeFile()
 
 #define CM_TRACE_FUNC(func_name)    std::stringstream __CM_TRACE_SSTR; __CM_TRACE_SSTR<<func_name; cm::Trace __CM_TRACE__(__CM_TRACE_SSTR.str())
-#define CM_TRACE_FUNC_ARG1(func_name, argfmt, arg)   \
-	cm::Trace __CM_TRACE__(func_name, argfmt, arg)
-#define CM_TRACE_FUNC_ARG2(func_name, argfmt, arg1, arg2)   \
-	cm::Trace __CM_TRACE__(func_name, argfmt, arg1, arg2)
-// more macros define....
+
 
 namespace	cm
 {
