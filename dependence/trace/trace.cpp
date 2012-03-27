@@ -41,6 +41,6 @@ namespace	cm
 		std::string indent(4*depth, ' ');
 		// only log the timestamp when the time changes
 		//unsigned int len = fprintf( fp, "%s>(%d)%s\n", indent.c_str(), depth, msg);
-		m_logfile<<indent<<">"<<"("<<depth<<")"<<msg<<std::endl;
+		m_logfile<<indent<<">"<<depth<<" "<<msg<<std::endl;
 	}
 }
