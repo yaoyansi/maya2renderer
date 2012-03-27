@@ -1,4 +1,5 @@
 #include "trace.hpp"
+#include <liqlog.h>
 
 namespace	cm
 {
@@ -6,10 +7,6 @@ namespace	cm
 	int         Trace::depth_       = 0;
 	std::ofstream Trace::m_logfile;
 
-	// arbitrarily support nesting 34 deep for no particular reason
-	const char* Trace::nest_        = 
-		"| | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | ";
-	time_t      Trace::last_invoke_time_ = 0;
 	//////////////////////////////////////////////////////////////////////////
 
 	Trace::Trace(std::string msg)
@@ -28,8 +25,8 @@ namespace	cm
 		m_logfile.open(trace_file_.c_str());
 		if( !m_logfile.is_open() )
 		{
-			assert(0&&"[cm::Trace] can't open file.");
-			printf("[cm::Trace] can't open file: %s.\n", trace_file_.c_str() );
+			liquidMessage2(messageError,"[cm::Trace] can't open file: %s.\n", trace_file_.c_str() );
+			assert(0&&"[cm::Trace] can't open file. see script editor for more details.");
 		}
 	}
 	void Trace::closeFile()

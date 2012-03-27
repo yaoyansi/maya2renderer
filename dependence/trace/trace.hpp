@@ -64,8 +64,6 @@ namespace	cm
 
 		// function call stack depth
 		static int			depth_;
-		static const char*  nest_;
-		static time_t       last_invoke_time_;
 		static std::ofstream m_logfile;
 	};
 
