@@ -7,6 +7,8 @@ namespace elvishray
 {
 	bool Renderer::writeLight_pre(const liqRibNodePtr& ribNode, const structJob &currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::writeLight_pre("<<ribNode->name<<","<<currentJob.name<<")");
+
 		RtString RibNodeName = getLiquidRibName( ribNode->name.asChar() );
 		_s("\n// Renderer::exportLight(\""+std::string(RibNodeName)+"\");");
 
@@ -15,7 +17,7 @@ namespace elvishray
 	//
 	void Renderer::writeLight_post(const liqRibNodePtr& ribNode, const structJob &currentJob)
 	{
-
+		CM_TRACE_FUNC("Renderer::writeLight_post("<<ribNode->name<<","<<currentJob.name<<")");
 	}
 	//
 	liqLightHandle Renderer::exportAmbientLight(
@@ -25,6 +27,8 @@ namespace elvishray
 		const liqColor & color,
 		const liqMatrix &t)
 	{
+		CM_TRACE_FUNC("Renderer::exportAmbientLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		_s("\n// Renderer::exportAmbientLight()");
 		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
 
@@ -67,6 +71,8 @@ namespace elvishray
 		const liqFloat &o_nonspecular,
 		const liqMatrix &t)
 	{
+		CM_TRACE_FUNC("Renderer::exportDistantLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		_s("// Renderer::exportDistantLight()");
 		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
 
@@ -118,6 +124,8 @@ namespace elvishray
 		const liqFloat &o_nonspecular,
 		const liqMatrix &t)
 	{
+		CM_TRACE_FUNC("Renderer::exportPointLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		_s("\n// Renderer::exportPointLight()");
 		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
 
@@ -190,6 +198,8 @@ namespace elvishray
 		const liqFloat &o_nonspecular,
 		const liqMatrix &t)
 	{
+		CM_TRACE_FUNC("Renderer::exportSpotLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		_s("\n// Renderer::exportSpotLight()");
 		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
 
@@ -241,6 +251,8 @@ namespace elvishray
 		const liqColor &o_arealightColor,
 		const liqMatrix &t)
 	{
+		CM_TRACE_FUNC("Renderer::exportAreaLight("<<shadertype<<","<<shaderinstance<<",...)");
+
 		_s("\n// Renderer::exportAreaLight()");
 		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
 

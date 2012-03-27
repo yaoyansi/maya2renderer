@@ -19,17 +19,21 @@ namespace elvishray
 	//////////////////////////////////////////////////////////////////////////
 	void Renderer::shader_transformBegin(const liqString  shaderSpace)
 	{
+		CM_TRACE_FUNC("Renderer::shader_transformBegin("<<shaderSpace<<")");
 
 	}
 	void Renderer::shader_transformEnd(const liqString  shaderSpace)
 	{
+		CM_TRACE_FUNC("Renderer::shader_transformEnd("<<shaderSpace<<")");
 
 	}
 	void Renderer::_UserDefinedShader(
 		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
-	{
+	{	
+		CM_TRACE_FUNC("Renderer::_UserDefinedShader("<<shader.getName()<<", tokenPointerArray)");
+
 		std::string const& liquidShaderName=shader.getName();
 		std::string const& rmSloFilePath=shader.getShaderFileName();
 		std::string const& mayaShaderName=rmSloFilePath.substr(rmSloFilePath.find_last_of('/')+1);
@@ -112,6 +116,8 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
+		CM_TRACE_FUNC("Renderer::shader_surface("<<shader.getName()<<", tokenPointerArray)");
+
 		_UserDefinedShader(shader, tokenPointerArray);
 	}
 	liqLightHandle Renderer::shader_light(
@@ -119,6 +125,8 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
+		CM_TRACE_FUNC("Renderer::shader_light("<<shader.getName()<<", tokenPointerArray)");
+
 		_UserDefinedShader(shader, tokenPointerArray);
 
 		return (liqLightHandle)0;//dummy value
@@ -128,6 +136,8 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
+		CM_TRACE_FUNC("Renderer::shader_displacement("<<shader.getName()<<", tokenPointerArray)");
+
 		_UserDefinedShader(shader, tokenPointerArray);
 	}
 	void Renderer::shader_volume(
@@ -135,11 +145,15 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 	)
 	{
+		CM_TRACE_FUNC("Renderer::shader_volume("<<shader.getName()<<", tokenPointerArray)");
+
 		_UserDefinedShader(shader, tokenPointerArray);
 	}
 
 	void Renderer::dummyPhongShader()
 	{
+		CM_TRACE_FUNC("Renderer::dummyPhongShader()");
+
 		_s("//----------------phong_shader_for_test begin---");
 		_S( ei_shader("phong_shader_for_test") );
 		_S( ei_shader_param_string("desc", "plastic") );
@@ -163,6 +177,8 @@ namespace elvishray
 
 	void shader_surface_lambert(MString const& mayaShaderName)
 	{
+		CM_TRACE_FUNC("shader_surface_lambert("<<mayaShaderName<<")");
+
 // 		MDoubleArray color;
 // 		IfMErrorWarn( MGlobal::executeCommand( ("getAttr \""+mayaShaderName+".color\""), color) );
 // 		
@@ -193,6 +209,7 @@ namespace elvishray
 	//
 	void Renderer::shader_UserDefinedShader(const liqShader* liqshader)
 	{
+		CM_TRACE_FUNC("shader_UserDefinedShader("<<liqshader->getName()<<")");
 
 		// write co-shaders before
 		unsigned int i; 
@@ -268,6 +285,8 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
+		CM_TRACE_FUNC("Renderer::shader_shadow("<<shader.getName()<<",tokenPointerArray)");
+
 		_UserDefinedShader(shader, tokenPointerArray);
 	}
 	void Renderer::shader_environment(
@@ -275,6 +294,8 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
+		CM_TRACE_FUNC("Renderer::shader_environment("<<shader.getName()<<",tokenPointerArray)");
+
 		_UserDefinedShader(shader, tokenPointerArray);
 	}
 	void Renderer::shader_photon(
@@ -282,6 +303,8 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
+		CM_TRACE_FUNC("Renderer::shader_photon("<<shader.getName()<<",tokenPointerArray)");
+
 		_UserDefinedShader(shader, tokenPointerArray);
 	}		
 	void Renderer::shader_lens(
@@ -289,10 +312,14 @@ namespace elvishray
 		const std::vector<liqTokenPointer> &tokenPointerArray
 		)
 	{
+		CM_TRACE_FUNC("Renderer::shader_lens("<<shader.getName()<<",tokenPointerArray)");
+
 		_UserDefinedShader(shader, tokenPointerArray);
 	}
 	void Renderer::getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const
 	{
+		CM_TRACE_FUNC("Renderer::getValidShaderPlugsInShadingGroup()");
+
 		plugs.clear();
 		plugs.push_back("surfaceShader");
 		plugs.push_back("displacementShader");

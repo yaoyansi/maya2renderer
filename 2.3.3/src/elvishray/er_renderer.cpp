@@ -64,11 +64,13 @@ namespace elvishray
 	//
 	void Renderer::setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress)
 	{
+		CM_TRACE_FUNC("Renderer::setRenderScriptFormatAndCompress("<<bbinary<<","<<bcompress<<")");
 		//todo...
 	}
 	//
 	MStatus Renderer::worldPrologue(const structJob& currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::worldPrologue("<<currentJob.name<<")");
 
 		_s("\n//worldPrologue");
 
@@ -79,6 +81,7 @@ namespace elvishray
 	//
 	MStatus Renderer::worldEpilogue()
 	{
+		CM_TRACE_FUNC("Renderer::worldEpilogue()");
 		_s("\n//Renderer::worldEpilogue()");
 
 		return MS::kSuccess;
@@ -96,11 +99,11 @@ namespace elvishray
 	//}
 	void Renderer::openLog()
 	{
-
+		CM_TRACE_FUNC("Renderer::openLog()");
 	}
 	void Renderer::closeLog()
 	{
-
+		CM_TRACE_FUNC("Renderer::closeLog()");
 	}
 
 	liqLightHandle Renderer::exportShadowPassLight(
@@ -109,7 +112,9 @@ namespace elvishray
 		const liqString & shadowname,
 		const liqMatrix &t)
 	{
+		CM_TRACE_FUNC("Renderer::exportShadowPassLight("<<shadertype<<","<<shaderinstance<<","<<shadowname<<",liqMatrix t)");
 		_s("\n// Renderer::exportShadowPassLight()");
+
 		std::string shaderinstanceFullPath( toFullDagPath(shaderinstance) );
 
 		std::string sShaderInstanceName(shaderinstanceFullPath+"_shader");
@@ -133,10 +138,11 @@ namespace elvishray
 
 	void Renderer::transform_(const liqMatrix& transform)
 	{
-
+		CM_TRACE_FUNC("Renderer::transform_(liqMatrix transform)");
 	}
 	MStatus Renderer::liqRibLightData_write(const liqRibLightData *lightdata, const structJob &currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::liqRibLightData_write("<<lightdata->getName()<<","<<currentJob.name<<")");
 		return MS::kSuccess;
 	}
 
@@ -146,6 +152,8 @@ namespace elvishray
 		const structJob &currentJob__
 		)
 	{
+		CM_TRACE_FUNC("Renderer::exportOneObject_data("<<ribNode__->name<<","<<currentJob__.name<<")");
+
 		unsigned int sample_first = 0;
 		unsigned int sample_last = liqglo.liqglo_motionSamples -1;
 
@@ -174,6 +182,8 @@ namespace elvishray
 		const structJob &currentJob__
 		)
 	{
+		CM_TRACE_FUNC("Renderer::exportOneObject_reference("<<ribNode__->name<<","<<currentJob__.name<<")");
+
 		unsigned int sample_first = 0;
 		unsigned int sample_last = liqglo.liqglo_motionSamples -1;
 
@@ -242,6 +252,8 @@ namespace elvishray
 	void Renderer::ribPrologue_comment(const char* liqversion, 
 		const char* scenename, const char* user, const time_t &now)
 	{
+		CM_TRACE_FUNC("Renderer::ribPrologue_comment("<<liqversion<<","<<scenename<<","<<user<<",time)");
+
 		pretest();
 		// general info for traceability
 		//
@@ -257,6 +269,8 @@ namespace elvishray
 	//
 	MStatus Renderer::ribPrologue_begin(const structJob& currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::ribPrologue_begin("<<currentJob.name<<")");
+
 		if( false )
 		{
 			_S( ei_make_texture( currentJob.imageName.asChar(), currentJob.texName.asChar() , EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f ) );
@@ -287,6 +301,8 @@ namespace elvishray
 	}
 	MStatus Renderer::ribPrologue_end(const structJob& currentJob)
 	{ 
+		CM_TRACE_FUNC("Renderer::ribPrologue_end("<<currentJob.name<<")");
+
 		cookInstanceGroup();
 
 		assert(!m_root_group.empty());
@@ -328,6 +344,8 @@ namespace elvishray
 	//
 	MStatus Renderer::ribPrologue_options(const structJob& currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::ribPrologue_options("<<currentJob.name<<")");
+
 		_s("\n//############################### option #");
 		std::string tmp( currentJob.path.fullPathName().asChar() );//_s( (MString("// current job path = ")+).asChar() );
 
@@ -465,12 +483,16 @@ namespace elvishray
 	//
 	MStatus Renderer::framePrologue(long lframe, const structJob &currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::framePrologue("<<lframe<<","<<currentJob.name<<")");
+
 		framePrologue_camera(lframe, currentJob);
 
 		return MStatus::kSuccess;
 	}
 	MStatus Renderer::framePrologue_camera(long lframe, const structJob &currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::framePrologue_camera("<<lframe<<","<<currentJob.name<<")");
+
 		MStatus status;
 		MFnCamera fnCamera(currentJob.path, &status);
 		IfMErrorWarn(status);
@@ -573,31 +595,40 @@ namespace elvishray
 	//
 	MStatus Renderer::frameEpilogue(const long scanTime)
 	{
+		CM_TRACE_FUNC("Renderer::frameEpilogue("<<scanTime<<")");
+
 		return MStatus::kSuccess;
 	}
 	//
 	MStatus Renderer::doTextures(const std::vector<structJob> &txtList_)
 	{
+		CM_TRACE_FUNC("Renderer::frameEpilogue(txtList_.size="<<txtList_.size()<<")");
 		return MStatus::kSuccess;
 	}
 	MStatus Renderer::doShadows(const std::vector<structJob> &shadowList_)
 	{
+		CM_TRACE_FUNC("Renderer::doShadows(shadowList_.size="<<shadowList_.size()<<")");
 		return MStatus::kSuccess;
 	}
 	MStatus Renderer::doRenderView()
 	{
+		CM_TRACE_FUNC("Renderer::doRenderView()");
 		return MStatus::kSuccess;
 	}
 	MStatus Renderer::renderAll_local(const MString& ribFileName)
 	{
+		CM_TRACE_FUNC("Renderer::renderAll_local("<<ribFileName<<")");
 		return MStatus::kSuccess;
 	}
 	MStatus Renderer::renderAll_remote(const MString& ribFileName)
 	{
+		CM_TRACE_FUNC("Renderer::renderAll_remote("<<ribFileName<<")");
 		return MStatus::kSuccess;
 	}
 	void Renderer::cookInstanceGroup()
 	{
+		CM_TRACE_FUNC("Renderer::cookInstanceGroup()");
+
 		std::map<GroupID, Group>::iterator group_i = m_groupMgr->groups.begin();
 		std::map<GroupID, Group>::iterator group_e = m_groupMgr->groups.end();
 		for(; group_i!=group_e; ++group_i)
@@ -642,6 +673,8 @@ namespace elvishray
 		const liqRibNodePtr mesh, 
 		const MStringArray& lightedByWhichLightShapes)
 	{
+		CM_TRACE_FUNC("Renderer::exportLightLinks("<<currentJob__.name<<","<<mesh->name<<",lightedByWhichLightShapes.size="<<lightedByWhichLightShapes.length()<<")");
+
 		if(lightedByWhichLightShapes.length() == 0){
 			_s( mesh->name << " is not lighted." );
 			return;
@@ -660,6 +693,8 @@ namespace elvishray
 
 	void Renderer::pretest()
 	{
+		CM_TRACE_FUNC("Renderer::pretest()");
+
 		MString MAYA_PATH2009;
 		IfMErrorWarn(MGlobal::executeCommand( "getenv(\"MAYA_PATH2009\")", MAYA_PATH2009));
 		MString manager_ini_path(MAYA_PATH2009+"/bin/manager.ini");
@@ -686,6 +721,8 @@ namespace elvishray
 		const std::string& plug_
 		)
 	{
+		CM_TRACE_FUNC("Renderer::gatherCameraShaders(cameraShaders.size="<<cameraShaders.length()<<","<<node<<","<<plug_<<")");
+
 		const MString plug(plug_.c_str());
 		MString cmd;
 
@@ -729,6 +766,8 @@ namespace elvishray
 		const bool bReference
 		)
 	{
+		CM_TRACE_FUNC("Renderer::_writeObject("<<ribNode->name<<","<<currentJob.name<<","<<bGeometryMotion<<","<<msampleOn<<","<<bReference<<")");
+
 		MString MotionPostfix;
 		unsigned int sample;
 		if( bGeometryMotion ){
@@ -760,14 +799,20 @@ namespace elvishray
 	//
 	bool Renderer::isHeroPassReady(const structJob &currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::isHeroPassReady("<<currentJob.name<<")");
+
 		return true;
 	}
 	void Renderer::HeroPassBegin(const structJob &currentJob___)
 	{
+		CM_TRACE_FUNC("Renderer::HeroPassBegin("<<currentJob___.name<<")");
+
 		m_log.open((currentJob___.ribFileName+".er").asChar());
 	}
 	void Renderer::HeroPassEnd(const structJob &currentJob)
 	{
+		CM_TRACE_FUNC("Renderer::HeroPassEnd("<<currentJob.name<<")");
+
 		m_log.close();
 	}
 	//
@@ -775,33 +820,37 @@ namespace elvishray
 		const liqRibNodePtr &ribNode,
 		const structJob &currentJob )
 	{
-
+		CM_TRACE_FUNC("Renderer::oneObjectBlock_reference_attribute_begin("<<ribNode->name<<","<<currentJob.name<<")");
 	}
 	void Renderer::oneObjectBlock_reference_attribute_end(
 		const liqRibNodePtr &ribNode,
 		const structJob &currentJob )
 	{
-
+		CM_TRACE_FUNC("Renderer::oneObjectBlock_reference_attribute_end("<<ribNode->name<<","<<currentJob.name<<")");
 	}
 	void Renderer::oneObjectBlock_reference_attribute_block0(
 		const liqRibNodePtr &ribNode,
 		const structJob &currentJob )
 	{
-
+		CM_TRACE_FUNC("Renderer::oneObjectBlock_reference_attribute_block0("<<ribNode->name<<","<<currentJob.name<<")");
 	}
 	void Renderer::oneObjectBlock_reference_attribute_block1(
 		const liqRibNodePtr &ribNode,
 		const structJob &currentJob )
 	{
-
+		CM_TRACE_FUNC("Renderer::oneObjectBlock_reference_attribute_block1("<<ribNode->name<<","<<currentJob.name<<")");
 	}
 	void Renderer::logFrame(const char* msg)
 	{
+		CM_TRACE_FUNC("Renderer::logFrame("<<msg<<")");
+
 		assert( m_log.get().is_open() );
 		_s("//"<<msg);
 	}
 	void Renderer::oneObjectBlock_reference_attribute_block2_writeShader_RibBox(const char* msg)
 	{
+		CM_TRACE_FUNC("Renderer::oneObjectBlock_reference_attribute_block2_writeShader_RibBox("<<msg<<")");
+
 		assert( m_log.get().is_open() );
 		_s("//writeShaderRibBox()");
 		_s(msg);
@@ -809,7 +858,9 @@ namespace elvishray
 	void Renderer::oneObjectBlock_reference_attribute_block2_writeShader_RegularShader(
 		const liqRibNodePtr &ribNode__,
 		const structJob &currentJob )
-	{
+	{	
+		CM_TRACE_FUNC("Renderer::oneObjectBlock_reference_attribute_block2_writeShader_RegularShader("<<ribNode__->name<<","<<currentJob.name<<")");
+
 		assert( m_log.get().is_open() );
 
 	}
@@ -817,6 +868,9 @@ namespace elvishray
 		const liqRibNodePtr &ribNode__, const MDagPath &path__, const bool m_shaderDebug
 		)
 	{
+		CM_TRACE_FUNC("Renderer::oneObjectBlock_reference_attribute_block2_writeShader_HasNoSurfaceShaderORIngoreSurface("
+			<<ribNode__->name<<","<<path__.fullPathName()<<","<<m_shaderDebug<<")");
+
 		assert( m_log.get().is_open() );
 
 		//_s("//I bet it will never goes here.Renderer::writeShader_HasNoSurfaceShaderORIngoreSurface(ribNode="<<ribNode__->name <<",)" );
@@ -827,6 +881,6 @@ namespace elvishray
 		const MString& meshname
 		)
 	{
-
+		CM_TRACE_FUNC("Renderer::oneObjectBlock_reference_attribute_block3_ShadingGroup("<<meshname<<")");
 	}
 }//namespace

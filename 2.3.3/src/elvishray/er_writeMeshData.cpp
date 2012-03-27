@@ -17,6 +17,8 @@ namespace elvishray
 		const structJob &currentJob,
 		const bool bReference)
 	{
+		CM_TRACE_FUNC("Renderer::write("<<pData->getName()<<","<<fileName<<","<<currentJob.name<<",ref="<<bReference<<")");
+
 		if( !bReference ){//write data at first time
 			assert(pData->getRibFileFullPath().length()==0);
 			pData->setRibFileFullPath(fileName);
@@ -37,6 +39,8 @@ namespace elvishray
 		const liqRibNodePtr &ribNode__,
 		unsigned int sample)
 	{	
+		CM_TRACE_FUNC("_exportVertexFromNodePlug("<<ribNode__->name<<","<<sample<<")");
+
 		MStatus status;
 
 		const liqRibDataPtr ribdata = ribNode__->object(sample)->getDataPtr();
@@ -68,6 +72,8 @@ namespace elvishray
 	//
 	static void _write(liqRibMeshData* pData, const structJob &currentJob__)
 	{
+		CM_TRACE_FUNC("_write("<<pData->getName()<<","<<currentJob__.name<<")");
+
  		liqRibNodePtr ribNode__ = liqRibTranslator::getInstancePtr()->htable->find(
  			pData->objDagPath.fullPathName(), 
  			pData->objDagPath,
@@ -215,12 +221,5 @@ namespace elvishray
 		_S( ei_end_tab() );
 		_s("}//"<<MString(mesh->getName())+"_object");
 		_S( ei_end_object() );
-
-		//debug
-		if( MString(mesh->getName()) == "Man:groundShape"){
-			_s("//break here");
-		}
-
-
 	}
 }//namespace elvishray
