@@ -71,6 +71,8 @@ liqRibSubdivisionData::liqRibSubdivisionData( MObject mesh )
     uvDetail( rFaceVarying ),
     trueFacevarying( false )
 {
+	CM_TRACE_FUNC("liqRibSubdivisionData::liqRibSubdivisionData("<<MFnDagNode(mesh).fullPathName()<<")");
+
   LIQDEBUGPRINTF( "-> creating subdivision surface\n" );
   MFnMesh fnMesh( mesh );
   name = fnMesh.name();
@@ -217,6 +219,8 @@ liqRibSubdivisionData::liqRibSubdivisionData( MObject mesh )
 //
 void liqRibSubdivisionData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibSubdivisionData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	if( !bReference ){//write data at first time
 		assert(m_ribFileFullPath.length()==0);
 		m_ribFileFullPath = ribFileName;
@@ -236,6 +240,8 @@ void liqRibSubdivisionData::write(const MString &ribFileName, const structJob &c
  */
 void liqRibSubdivisionData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibSubdivisionData::_write(job="<<currentJob.name<<")");
+
   LIQDEBUGPRINTF( "-> writing subdivision surface\n" );
 
   unsigned numTokens( tokenPointerArray.size() );
@@ -255,6 +261,8 @@ void liqRibSubdivisionData::_write(const structJob &currentJob)
  */
 bool liqRibSubdivisionData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibSubdivisionData::compare("<<otherObj.getName()<<")");
+
   unsigned i;
   unsigned numFaceVertices = 0;
 
@@ -293,6 +301,8 @@ bool liqRibSubdivisionData::compare( const liqRibData & otherObj ) const
  */
 ObjectType liqRibSubdivisionData::type() const
 {
+	//CM_TRACE_FUNC("liqRibSubdivisionData::type()");
+
   LIQDEBUGPRINTF( "-> returning subdivision surface type\n" );
   return MRT_Subdivision;
 }
@@ -305,7 +315,10 @@ ObjectType liqRibSubdivisionData::type() const
 // If global flag liqglo_useMtorSubdiv is set, then procedure looks also
 // for analog mtor attributes
 //
-void liqRibSubdivisionData::checkExtraTags( MObject &mesh ) {
+void liqRibSubdivisionData::checkExtraTags( MObject &mesh )
+{
+	CM_TRACE_FUNC("liqRibSubdivisionData::checkExtraTags("<<MFnDependencyNode(mesh).name()<<")");
+
 	MStatus status = MS::kSuccess;
 	MPlugArray array;
 	MFnMesh    fnMesh( mesh );
@@ -434,6 +447,8 @@ void liqRibSubdivisionData::checkExtraTags( MObject &mesh ) {
 
 void liqRibSubdivisionData::addExtraTags( MObject &mesh, SBD_EXTRA_TAG extraTag )
 {
+	CM_TRACE_FUNC("liqRibSubdivisionData::addExtraTags("<<MFnDagNode(mesh).fullPathName()<<","<<extraTag<<")");
+
 	MStatus status;
 	MFnMesh fnMesh( mesh );
 	MUintArray ids;
@@ -478,6 +493,8 @@ void liqRibSubdivisionData::addExtraTags( MObject &mesh, SBD_EXTRA_TAG extraTag 
 
 void liqRibSubdivisionData::addExtraTags( MObject &dstNode, float extraTagValue, SBD_EXTRA_TAG extraTag )
 {
+	CM_TRACE_FUNC("liqRibSubdivisionData::addExtraTags("<<MFnDependencyNode(dstNode).name()<<","<<extraTagValue<<","<<extraTag<<")");
+
 	if( TAG_BOUNDARY == extraTag )
 	{
 		v_tags.push_back( "interpolateboundary" );

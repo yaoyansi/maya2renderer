@@ -77,6 +77,8 @@ liqRibMayaSubdivisionData::liqRibMayaSubdivisionData( MObject subd )
 	uvDetail( rFaceVarying ),
 	trueFacevarying( false )
 {
+	CM_TRACE_FUNC("liqRibMayaSubdivisionData::liqRibMayaSubdivisionData("<<MFnDagNode(subd).fullPathName()<<")");
+
 	LIQDEBUGPRINTF( "-> creating subdivision surface\n" );
 	MFnSubd fnSubd( subd );
 
@@ -193,6 +195,8 @@ liqRibMayaSubdivisionData::liqRibMayaSubdivisionData( MObject subd )
 
 void liqRibMayaSubdivisionData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibMayaSubdivisionData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibMayaSubdivisionData.cpp");
 
 	if( !bReference ){//write data at first time
@@ -214,6 +218,8 @@ void liqRibMayaSubdivisionData::write(const MString &ribFileName, const structJo
  */
 void liqRibMayaSubdivisionData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibMayaSubdivisionData::_write(job="<<currentJob.name<<")");
+
 	LIQDEBUGPRINTF( "-> writing subdivision surface\n" );
 
 	unsigned numTokens( tokenPointerArray.size() );
@@ -233,6 +239,8 @@ void liqRibMayaSubdivisionData::_write(const structJob &currentJob)
  */
 bool liqRibMayaSubdivisionData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibMayaSubdivisionData::compare("<<otherObj.getName()<<")");
+
   unsigned i;
   unsigned numFaceVertices = 0;
 
@@ -277,6 +285,8 @@ ObjectType liqRibMayaSubdivisionData::type() const
 
 void liqRibMayaSubdivisionData::checkExtraTags( MObject &subd )
 {
+	CM_TRACE_FUNC("liqRibMayaSubdivisionData::checkExtraTags("<<MFnDagNode(subd).fullPathName()<<")");
+
 	MStatus status = MS::kSuccess;
 	MFnSubd fnSubd( subd );
 
@@ -329,6 +339,8 @@ void liqRibMayaSubdivisionData::checkExtraTags( MObject &subd )
 
 void liqRibMayaSubdivisionData::addExtraTags( MObject &subd, int extraTagValue, SBD_EXTRA_TAG extraTag )
 {
+	CM_TRACE_FUNC("liqRibMayaSubdivisionData::addExtraTags("<<MFnDagNode(subd).fullPathName()<<","<<extraTagValue<<","<<extraTag<<")");
+
 	MStatus status;
 	MFnSubd fnSubd( subd );
 	MFnSubdNames subNames;

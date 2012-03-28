@@ -58,6 +58,8 @@ liqRibLocatorData::liqRibLocatorData( MObject /*locator*/ )
 }
 void liqRibLocatorData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibLocatorData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	liquid::RendererMgr::getInstancePtr()->
 		getRenderer()->write(this, ribFileName, currentJob, bReference);
 // 	if( !bReference ){//write data at first time
@@ -88,6 +90,8 @@ void liqRibLocatorData::write(const MString &ribFileName, const structJob &curre
  */
 bool liqRibLocatorData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibLocatorData::compare("<<otherObj.getName()<<")");
+
   LIQDEBUGPRINTF( "-> comparing locator\n" );
   if ( otherObj.type() != MRT_Locator ) return false;
   return true;

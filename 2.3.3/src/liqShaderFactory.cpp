@@ -54,6 +54,8 @@ liqShaderFactory::~liqShaderFactory()
 
 void liqShaderFactory::clearShaders()
 {
+	CM_TRACE_FUNC("liqShaderFactory::clearShaders()");
+
 	vector<liqShader*>::iterator iter;
 	vector<liqShader*>::iterator end = m_shaders.end();
 	for( iter=m_shaders.begin(); iter!=end; iter++ )
@@ -70,6 +72,8 @@ void liqShaderFactory::clearShaders()
 
 liqShader &liqShaderFactory::getShader( MObject shaderObj )
 {
+	CM_TRACE_FUNC("liqShaderFactory::getShader("<<MFnDependencyNode(shaderObj).name()<<")");
+
 	MString rmShaderStr;
 	MFnDependencyNode shaderNode( shaderObj );
 	MPlug rmanShaderNamePlug = shaderNode.findPlug( MString( "rmanShaderLong" ) );
@@ -98,6 +102,8 @@ liqShader &liqShaderFactory::getShader( MObject shaderObj )
 
 MString liqShaderFactory::getShaderId( MObject shaderObj )
 {
+	CM_TRACE_FUNC("liqShaderFactory::getShader("<<MFnDependencyNode(shaderObj).name()<<")");
+
 	liqShader &shader = liqShaderFactory::getShader( shaderObj );
 	return shader.shaderHandler;
 }
@@ -105,6 +111,8 @@ MString liqShaderFactory::getShaderId( MObject shaderObj )
 
 MString liqShaderFactory::getUniqueShaderHandler()
 {
+	CM_TRACE_FUNC("liqShaderFactory::getUniqueShaderHandler()");
+
 	shaderHandlerId++;
 	//char shaderHandler[512];
 	// sprintf(shaderHandler, "CO_SHADER_%d", shaderHandlerId);

@@ -75,6 +75,8 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
     cvColor(),
     cvOpacity()
 {
+	CM_TRACE_FUNC("liqRibPfxToonData::liqRibPfxToonData("<<MFnDagNode(pfxToon).fullPathName()<<")");
+
   LIQDEBUGPRINTF( "-> creating pfxToon curves\n" );
   MStatus status( MS::kSuccess );
 
@@ -295,6 +297,8 @@ liqRibPfxToonData::liqRibPfxToonData( MObject pfxToon )
 //
 void liqRibPfxToonData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibPfxToonData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibPfxToonData");
 
 	if( !bReference ){//write data at first time
@@ -316,6 +320,8 @@ void liqRibPfxToonData::write(const MString &ribFileName, const structJob &curre
  */
 void liqRibPfxToonData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibPfxToonData::_write(job="<<currentJob.name<<")");
+
   LIQDEBUGPRINTF( "-> writing pfxToon curve\n" );
 
   if ( 0 < ncurves  ) 
@@ -336,6 +342,8 @@ void liqRibPfxToonData::_write(const structJob &currentJob)
  */
 bool liqRibPfxToonData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibPfxToonData::compare("<<otherObj.getName()<<")");
+
   LIQDEBUGPRINTF( "-> comparing pfxToon curves\n");
   if ( otherObj.type() != MRT_PfxToon ) 
     return false;
@@ -354,6 +362,8 @@ bool liqRibPfxToonData::compare( const liqRibData & otherObj ) const
  */
 ObjectType liqRibPfxToonData::type() const
 {
+	CM_TRACE_FUNC("liqRibPfxToonData::type()");
+
   LIQDEBUGPRINTF( "-> returning pfxToon curve type\n" );
   return MRT_PfxToon;
 }

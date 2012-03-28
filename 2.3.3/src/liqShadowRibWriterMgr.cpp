@@ -23,6 +23,8 @@ TempControlBreak tShadowRibWriterMgr::write(
 	std::vector<structJob>  jobList__
 	)
 {
+	CM_TRACE_FUNC("tShadowRibWriterMgr::write(liqglo___,"<<currentJob___.name<<","<<scanTime__<<","<<m_outputLightsInDeepShadows__<<",jobList__.size="<<jobList__.size()<<")");
+
 	MString     baseShadowName__(getBaseShadowName(currentJob___));
 
 	if( !currentJob___.shadowArchiveRibDone ) 
@@ -124,11 +126,15 @@ TempControlBreak tShadowRibWriterMgr::write(
 //
 void tShadowRibWriterMgr::ribPrologue_samples(RtFloat xsamples, RtFloat ysamples)
 {
+	CM_TRACE_FUNC("tShadowRibWriterMgr::ribPrologue_samples("<<xsamples<<","<<ysamples<<")");
+
 	RiPixelSamples( xsamples, ysamples );
 }
 //
 void tShadowRibWriterMgr::ribPrologue_shadingrate(RtFloat size)
 {
+	CM_TRACE_FUNC("tShadowRibWriterMgr::ribPrologue_shadingrate("<<size<<")");
+
 	RiShadingRate( size );
 }
 //
@@ -136,6 +142,8 @@ void tShadowRibWriterMgr::ribPrologue_filter(
 	liquidlong m_rFilter,
 	RtFloat m_rFilterX, RtFloat m_rFilterY)
 {
+	CM_TRACE_FUNC("tShadowRibWriterMgr::ribPrologue_filter("<<m_rFilter<<","<<m_rFilterX<<","<<m_rFilterY<<")");
+
 	switch (m_rFilter) 
 	{
 	case pfBoxFilter:
@@ -183,11 +191,15 @@ void tShadowRibWriterMgr::ribPrologue_filter(
 //
 void tShadowRibWriterMgr::ribPrologue_pass(RtString pass)
 {
+	CM_TRACE_FUNC("tShadowRibWriterMgr::ribPrologue_pass("<<pass<<")");
+
 	RiOption( "user", "string pass", ( RtPointer )&pass, RI_NULL );	
 }
 //
 void tShadowRibWriterMgr::framePrologue_display(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("tShadowRibWriterMgr::framePrologue_display(job="<<currentJob.name<<")");
+
 			if( !/*liqglo.liqglo_*/currentJob.deepShadows || /*liqglo.liqglo_*/currentJob.shadowPixelSamples == 1)
 			{
 				if( liqglo.liquidRenderer.renderName == MString("Pixie") )

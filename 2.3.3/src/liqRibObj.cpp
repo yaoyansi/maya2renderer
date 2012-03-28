@@ -78,6 +78,8 @@ liqRibObj::liqRibObj( const MDagPath &path, ObjectType objType )
   referenceCount( 0 ),
   data()
 {
+	CM_TRACE_FUNC("liqRibObj::liqRibObj("<<path.fullPathName()<<","<<objType<<")");
+
   LIQDEBUGPRINTF( "-> creating dag node handle rep\n");
   MString pathName(path.fullPathName()); //debug
   MStatus status;
@@ -362,6 +364,8 @@ inline RtObjectHandle liqRibObj::handle() const
  */
 inline void liqRibObj::setHandle( RtObjectHandle handle )
 {
+	CM_TRACE_FUNC("liqRibObj::setHandle("<<handle<<")");
+
   objectHandle = handle;
 }
 
@@ -387,6 +391,8 @@ RtLightHandle liqRibObj::lightHandle() const
  */
 AnimType liqRibObj::compareMatrix( const liqRibObjPtr o, int instance ) const
 {
+	CM_TRACE_FUNC("liqRibObj::compareMatrix(liqRibObjPtr o,"<<instance<<")");
+
   LIQDEBUGPRINTF( "-> comparing rib node handle rep matrix\n");
   return (matrix( instance ) == o->matrix( instance ) ? MRX_Const : MRX_Animated);
 }
@@ -397,6 +403,8 @@ AnimType liqRibObj::compareMatrix( const liqRibObjPtr o, int instance ) const
  */
 AnimType liqRibObj::compareBody( const liqRibObjPtr o ) const
 {
+	CM_TRACE_FUNC("liqRibObj::compareBody(liqRibObjPtr o)");
+
   LIQDEBUGPRINTF( "-> comparing rib node handle body\n");
   //cout <<"-> comparing rib node handle body"<<endl;
   AnimType cmp( MRX_Const );
@@ -416,6 +424,8 @@ AnimType liqRibObj::compareBody( const liqRibObjPtr o ) const
  */
 void liqRibObj::writeObject(const MString& ribFileFullPath, const structJob &currentJob, const bool bReference) const
 {
+	CM_TRACE_FUNC("liqRibObj::writeObject("<<ribFileFullPath<<","<<currentJob.name<<","<<bReference<<")");
+
 	if( data ==NULL)
 		return;
 

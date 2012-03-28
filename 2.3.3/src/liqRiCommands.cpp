@@ -37,6 +37,7 @@
 
 #include <fstream>
 #include <boost/scoped_array.hpp>
+#include <trace/trace.hpp>
 using namespace boost;
 using namespace std;
 
@@ -61,6 +62,8 @@ const char *inlineFlag = "-i", *inlineLongFlag = "-inline";
 
 MSyntax RIArchiveBegin::newSyntax()
 {
+	//CM_TRACE_FUNC("RIArchiveBegin::newSyntax()");
+
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -70,6 +73,8 @@ MSyntax RIArchiveBegin::newSyntax()
 
 MStatus RIArchiveBegin::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIArchiveBegin::doIt(args)");
+
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -115,6 +120,8 @@ MStatus RIArchiveBegin::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIArchiveEnd::newSyntax()
 {
+	//CM_TRACE_FUNC("RIArchiveEnd::newSyntax()");
+
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -123,6 +130,8 @@ MSyntax RIArchiveEnd::newSyntax()
 
 MStatus RIArchiveEnd::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIArchiveEnd::doIt(args)");
+
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -156,6 +165,8 @@ MStatus RIArchiveEnd::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIArchiveRecord::newSyntax()
 {
+	//CM_TRACE_FUNC("RIArchiveRecord::newSyntax()");
+
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -166,6 +177,8 @@ MSyntax RIArchiveRecord::newSyntax()
 
 MStatus RIArchiveRecord::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIArchiveRecord::doIt(args)");
+
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -234,6 +247,8 @@ MStatus RIArchiveRecord::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIAtmosphere::newSyntax()
 {
+	//CM_TRACE_FUNC("RIAtmosphere::newSyntax()");
+
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -249,6 +264,8 @@ MSyntax RIAtmosphere::newSyntax()
 
 MStatus RIAtmosphere::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIAtmosphere::doIt(args)");
+
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -325,6 +342,7 @@ MStatus RIAtmosphere::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIAttribute::newSyntax()
 {
+	//CM_TRACE_FUNC("RIAttribute::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -340,6 +358,8 @@ MSyntax RIAttribute::newSyntax()
 
 MStatus RIAttribute::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIAttribute::doIt(args)");
+
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -417,7 +437,9 @@ MStatus RIAttribute::redoIt() { return dgMod.doIt(); }
 // ++++++++++++++++++++++++++
 
 MSyntax RIAttributeBegin::newSyntax()
-{
+{	
+	//CM_TRACE_FUNC("RIAttributeBegin::newSyntax()");
+
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -425,7 +447,9 @@ MSyntax RIAttributeBegin::newSyntax()
 }
 
 MStatus RIAttributeBegin::doIt( const MArgList &args )
-{
+{	
+	CM_TRACE_FUNC("RIAttributeBegin::doIt(args)");
+
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -459,6 +483,7 @@ MStatus RIAttributeBegin::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIAttributeEnd::newSyntax()
 {
+	//CM_TRACE_FUNC("RIAttributeEnd::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -467,6 +492,7 @@ MSyntax RIAttributeEnd::newSyntax()
 
 MStatus RIAttributeEnd::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIAttributeEnd::doIt(args)");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -500,6 +526,7 @@ MStatus RIAttributeEnd::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIClipping::newSyntax()
 {
+	//CM_TRACE_FUNC("RIClipping::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -510,6 +537,7 @@ MSyntax RIClipping::newSyntax()
 
 MStatus RIClipping::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIClipping::doIt(args)");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -556,6 +584,7 @@ MStatus RIClipping::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIColor::newSyntax()
 {
+	//CM_TRACE_FUNC("RIColor::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -567,6 +596,7 @@ MSyntax RIColor::newSyntax()
 
 MStatus RIColor::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIColor::doIt(args)");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -621,6 +651,7 @@ MStatus RIColor::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIConcatTransform::newSyntax()
 {
+	//CM_TRACE_FUNC("RIConcatTransform::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -645,6 +676,7 @@ MSyntax RIConcatTransform::newSyntax()
 
 MStatus RIConcatTransform::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIConcatTransform::doIt(args)");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -699,6 +731,7 @@ MStatus RIConcatTransform::redoIt() { return dgMod.doIt(); }
 
 MSyntax RICropWindow::newSyntax()
 {
+	//CM_TRACE_FUNC("RICropWindow::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -711,6 +744,7 @@ MSyntax RICropWindow::newSyntax()
 
 MStatus RICropWindow::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RICropWindow::doIt(args)");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -769,6 +803,7 @@ MStatus RICropWindow::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIDepthOfField::newSyntax()
 {
+	//CM_TRACE_FUNC("RIDepthOfField::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -780,6 +815,7 @@ MSyntax RIDepthOfField::newSyntax()
 
 MStatus RIDepthOfField::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIDepthOfField::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -832,6 +868,7 @@ MStatus RIDepthOfField::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIDetail::newSyntax()
 {
+	//CM_TRACE_FUNC("RIDetail::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -846,6 +883,7 @@ MSyntax RIDetail::newSyntax()
 
 MStatus RIDetail::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIDetail::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -918,6 +956,7 @@ MStatus RIDetail::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIDetailRange::newSyntax()
 {
+	//CM_TRACE_FUNC("RIDetailRange::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -930,6 +969,7 @@ MSyntax RIDetailRange::newSyntax()
 
 MStatus RIDetailRange::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIDetailRange::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -988,6 +1028,7 @@ MStatus RIDetailRange::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIDisplacement::newSyntax()
 {
+	//CM_TRACE_FUNC("RIDisplacement::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -1003,6 +1044,7 @@ MSyntax RIDisplacement::newSyntax()
 
 MStatus RIDisplacement::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIDisplacement::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1079,6 +1121,7 @@ MStatus RIDisplacement::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIDisplay::newSyntax()
 {
+	//CM_TRACE_FUNC("RIDisplay::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -1096,6 +1139,7 @@ MSyntax RIDisplay::newSyntax()
 
 MStatus RIDisplay::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIDisplay::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1184,6 +1228,7 @@ MStatus RIDisplay::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIDisplayChannel::newSyntax()
 {
+	//CM_TRACE_FUNC("RIDisplayChannel::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -1199,6 +1244,7 @@ MSyntax RIDisplayChannel::newSyntax()
 
 MStatus RIDisplayChannel::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIDisplayChannel::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1275,6 +1321,7 @@ MStatus RIDisplayChannel::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIExterior::newSyntax()
 {
+	//CM_TRACE_FUNC("RIExterior::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -1290,6 +1337,7 @@ MSyntax RIExterior::newSyntax()
 
 MStatus RIExterior::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIExterior::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1366,6 +1414,7 @@ MStatus RIExterior::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIFormat::newSyntax()
 {
+	//CM_TRACE_FUNC("RIFormat::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -1377,6 +1426,7 @@ MSyntax RIFormat::newSyntax()
 
 MStatus RIFormat::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIFormat::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1430,6 +1480,7 @@ MStatus RIFormat::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIFrameBegin::newSyntax()
 {
+	//CM_TRACE_FUNC("RIFrameBegin::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -1439,6 +1490,7 @@ MSyntax RIFrameBegin::newSyntax()
 
 MStatus RIFrameBegin::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIFrameBegin::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1480,6 +1532,7 @@ MStatus RIFrameBegin::redoIt() { return dgMod.doIt(); }
 
 MSyntax RIFrameEnd::newSyntax()
 {
+	//CM_TRACE_FUNC("RIFrameEnd::newSyntax()");
 	MSyntax syntax;
 	syntax.addFlag( helpFlag, helpLongFlag );
 	syntax.addFlag( testModeFlag, testModeLongFlag );
@@ -1488,6 +1541,7 @@ MSyntax RIFrameEnd::newSyntax()
 
 MStatus RIFrameEnd::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIFrameEnd::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1531,6 +1585,7 @@ MSyntax RIGeometricApproximation::newSyntax()
 
 MStatus RIGeometricApproximation::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIGeometricApproximation::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1593,6 +1648,7 @@ MSyntax RIGeometry::newSyntax()
 
 MStatus RIGeometry::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIGeometry::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1684,6 +1740,7 @@ MSyntax RIHider::newSyntax()
 
 MStatus RIHider::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIHider::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1768,6 +1825,7 @@ MSyntax RIIdentity::newSyntax()
 
 MStatus RIIdentity::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIIdentity::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1810,6 +1868,7 @@ MSyntax RIIlluminate::newSyntax()
 
 MStatus RIIlluminate::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIIlluminate::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1872,6 +1931,7 @@ MSyntax RIInterior::newSyntax()
 
 MStatus RIInterior::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIInterior::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -1964,6 +2024,7 @@ MSyntax RILightSource::newSyntax()
 
 MStatus RILightSource::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RILightSource::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2056,6 +2117,7 @@ MSyntax RIMatte::newSyntax()
 
 MStatus RIMatte::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIMatte::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2105,6 +2167,7 @@ MSyntax RIMotionBegin::newSyntax()
 
 MStatus RIMotionBegin::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIMotionBegin::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2163,6 +2226,7 @@ MSyntax RIMotionEnd::newSyntax()
 
 MStatus RIMotionEnd::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIMotionEnd::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2204,6 +2268,7 @@ MSyntax RIObjectBegin::newSyntax()
 
 MStatus RIObjectBegin::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIObjectBegin::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2245,6 +2310,7 @@ MSyntax RIObjectEnd::newSyntax()
 
 MStatus RIObjectEnd::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIObjectEnd::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2289,6 +2355,7 @@ MSyntax RIOpacity::newSyntax()
 
 MStatus RIOpacity::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIOpacity::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2358,6 +2425,7 @@ MSyntax RIOption::newSyntax()
 
 MStatus RIOption::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIOption::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2444,6 +2512,7 @@ MSyntax RIOrientation::newSyntax()
 
 MStatus RIOrientation::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIOrientation::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2499,6 +2568,7 @@ MSyntax RIPixelSamples::newSyntax()
 
 MStatus RIPixelSamples::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIPixelSamples::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2562,6 +2632,7 @@ MSyntax RIProcedural::newSyntax()
 
 MStatus RIProcedural::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIProcedural::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2665,6 +2736,7 @@ MSyntax RIProjection::newSyntax()
 
 MStatus RIProjection::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIProjection::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2747,6 +2819,7 @@ MSyntax RIReadArchive::newSyntax()
 
 MStatus RIReadArchive::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIReadArchive::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2833,6 +2906,7 @@ MSyntax RIRelativeDetail::newSyntax()
 
 MStatus RIRelativeDetail::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIRelativeDetail::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2889,6 +2963,7 @@ MSyntax RIResource::newSyntax()
 
 MStatus RIResource::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIResource::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -2979,6 +3054,7 @@ MSyntax RIResourceBegin::newSyntax()
 
 MStatus RIResourceBegin::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIResourceBegin::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3022,6 +3098,7 @@ MSyntax RIResourceEnd::newSyntax()
 
 MStatus RIResourceEnd::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIResourceEnd::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3065,6 +3142,7 @@ MSyntax RIReverseOrientation::newSyntax()
 
 MStatus RIReverseOrientation::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIReverseOrientation::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3109,6 +3187,7 @@ MSyntax RIRotate::newSyntax()
 
 MStatus RIRotate::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIRotate::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3178,6 +3257,7 @@ MSyntax RIScale::newSyntax()
 
 MStatus RIScale::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIScale::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3242,6 +3322,7 @@ MSyntax RIScreenWindow::newSyntax()
 
 MStatus RIScreenWindow::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIScreenWindow::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3309,6 +3390,7 @@ MSyntax RIShadingInterpolation::newSyntax()
 
 MStatus RIShadingInterpolation::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIShadingInterpolation::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3358,6 +3440,7 @@ MSyntax RIShadingRate::newSyntax()
 
 MStatus RIShadingRate::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIShadingRate::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3408,6 +3491,7 @@ MSyntax RIShutter::newSyntax()
 
 MStatus RIShutter::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIShutter::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3463,6 +3547,7 @@ MSyntax RISides::newSyntax()
 
 MStatus RISides::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RISides::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3518,6 +3603,7 @@ MSyntax RISkew::newSyntax()
 
 MStatus RISkew::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RISkew::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3602,6 +3688,7 @@ MSyntax RISolidBegin::newSyntax()
 
 MStatus RISolidBegin::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RISolidBegin::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3656,6 +3743,7 @@ MSyntax RISolidEnd::newSyntax()
 
 MStatus RISolidEnd::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RISolidEnd::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3707,6 +3795,7 @@ MSyntax RISphere::newSyntax()
 
 MStatus RISphere::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RISphere::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3816,6 +3905,7 @@ MSyntax RISurface::newSyntax()
 
 MStatus RISurface::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RISurface::doIt()");
 	MStatus status( MS::kSuccess );
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3900,6 +3990,7 @@ MSyntax RITransformBegin::newSyntax()
 
 MStatus RITransformBegin::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RITransformBegin::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3941,6 +4032,7 @@ MSyntax RITransformEnd::newSyntax()
 
 MStatus RITransformEnd::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RITransformEnd::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -3985,6 +4077,7 @@ MSyntax RITranslate::newSyntax()
 
 MStatus RITranslate::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RITranslate::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -4045,6 +4138,7 @@ MSyntax RIWorldBegin::newSyntax()
 
 MStatus RIWorldBegin::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIWorldBegin::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );
@@ -4086,6 +4180,7 @@ MSyntax RIWorldEnd::newSyntax()
 
 MStatus RIWorldEnd::doIt( const MArgList &args )
 {
+	CM_TRACE_FUNC("RIWorldEnd::doIt()");
 	MStatus status;
 	MArgList argList;
 	MArgDatabase argData( syntax(), args );

@@ -110,6 +110,8 @@ public:
 liqRibParticleData::liqRibParticleData( MObject partobj )
   : grain( 0 )
 {
+	CM_TRACE_FUNC("liqRibParticleData::liqRibParticleData("<<MFnDagNode(partobj).fullPathName()<<")");
+
   LIQDEBUGPRINTF( "-> creating particles\n");
   MStatus status( MS::kSuccess );
   MFnParticleSystem fnNode;
@@ -1079,6 +1081,8 @@ liqRibParticleData::liqRibParticleData( MObject partobj )
 //
 void liqRibParticleData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibParticleData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibParticleData.cpp");
 
 	if( !bReference ){//write data at first time
@@ -1100,6 +1104,8 @@ void liqRibParticleData::write(const MString &ribFileName, const structJob &curr
  */
 void liqRibParticleData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibParticleData::_write(job="<<currentJob.name<<")");
+
   LIQDEBUGPRINTF( "-> writing particles\n");
 
 #ifdef DEBUG
@@ -1322,7 +1328,10 @@ void liqRibParticleData::_write(const structJob &currentJob)
   }
 }
 
-unsigned liqRibParticleData::granularity() const {
+unsigned liqRibParticleData::granularity() const 
+{
+	CM_TRACE_FUNC("liqRibParticleData::granularity()");
+
   switch (particleType) 
   {
     case MPTBlobbies:
@@ -1356,6 +1365,8 @@ unsigned liqRibParticleData::granularity() const {
  */
 bool liqRibParticleData::writeNextGrain(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibParticleData::writeNextGrain(job="<<currentJob.name<<")");
+
   LIQDEBUGPRINTF( "-> writing particles\n");
 
 #ifdef DEBUG
@@ -1574,6 +1585,8 @@ bool liqRibParticleData::writeNextGrain(const structJob &currentJob)
  */
 bool liqRibParticleData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibParticleData::compare("<<otherObj.getName()<<")");
+
   LIQDEBUGPRINTF( "-> comparing particles\n");
 
   if ( otherObj.type() != MRT_Particles )
@@ -1592,6 +1605,7 @@ bool liqRibParticleData::compare( const liqRibData & otherObj ) const
  */
 ObjectType liqRibParticleData::type() const
 {
+	//CM_TRACE_FUNC("liqRibParticleData::type()");
   LIQDEBUGPRINTF( "-> returning particle type\n");
   return MRT_Particles;
 }
@@ -1602,6 +1616,8 @@ ObjectType liqRibParticleData::type() const
  */
 void liqRibParticleData::addAdditionalParticleParameters( MObject node )
 {
+	CM_TRACE_FUNC("liqRibParticleData::addAdditionalParticleParameters("<<MFnDependencyNode(node).name()<<")");
+
   LIQDEBUGPRINTF("-> scanning for additional rman surface attributes \n");
 
   MFnDependencyNode nodeFn( node );
@@ -1615,6 +1631,8 @@ void liqRibParticleData::addAdditionalParticleParameters( MObject node )
 
 void liqRibParticleData::addAdditionalFloatParameters( MFnDependencyNode nodeFn )
 {
+	CM_TRACE_FUNC("liqRibParticleData::addAdditionalFloatParameters("<<nodeFn.name()<<")");
+
   MStringArray foundAttributes = findAttributesByPrefix( "rmanF", nodeFn );
   MStatus  status;
 
@@ -1657,6 +1675,8 @@ void liqRibParticleData::addAdditionalFloatParameters( MFnDependencyNode nodeFn 
 
 void liqRibParticleData::addAdditionalVectorParameters( MFnDependencyNode nodeFn, const string& prefix, ParameterType type )
 {
+	CM_TRACE_FUNC("liqRibParticleData::addAdditionalVectorParameters("<<nodeFn.name()<<","<<prefix<<","<<type<<")");
+
   MStringArray foundAttributes = findAttributesByPrefix( prefix.c_str(), nodeFn );
   MStatus  status;
 

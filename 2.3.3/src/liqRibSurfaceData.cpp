@@ -75,6 +75,8 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
     w()
 
 {
+	CM_TRACE_FUNC("liqRibSurfaceData::liqRibSurfaceData("<<MFnDependencyNode(surface).name()<<")");
+
   LIQDEBUGPRINTF( "-> creating nurbs surface\n" );
   if ( debugMode ) {
     MFnDependencyNode myDep( surface );
@@ -392,6 +394,8 @@ liqRibSurfaceData::liqRibSurfaceData( MObject surface )
 //
 void liqRibSurfaceData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibSurfaceData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibSurfaceData");
 
 	if( !bReference ){//write data at first time
@@ -413,6 +417,8 @@ void liqRibSurfaceData::write(const MString &ribFileName, const structJob &curre
  */
 void liqRibSurfaceData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibSurfaceData::_write(job="<<currentJob.name<<")");
+
   LIQDEBUGPRINTF( "-> writing nurbs surface\n" );
 
   LIQDEBUGPRINTF( "-> writing nurbs surface trims\n" );
@@ -460,6 +466,8 @@ void liqRibSurfaceData::_write(const structJob &currentJob)
 
 unsigned liqRibSurfaceData::granularity() const 
 {
+	CM_TRACE_FUNC("liqRibSurfaceData::granularity()");
+
   if ( hasTrims && !tokenPointerArray.empty() ) 
   {
     return 2;
@@ -472,6 +480,8 @@ unsigned liqRibSurfaceData::granularity() const
 
 bool liqRibSurfaceData::writeNextGrain()
 {
+	CM_TRACE_FUNC("liqRibSurfaceData::writeNextGrain()");
+
   if ( hasTrims && ( 0 == grain ) ) 
   {
     RiTrimCurve( nloops,
@@ -517,6 +527,8 @@ bool liqRibSurfaceData::writeNextGrain()
  */
 bool liqRibSurfaceData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibSurfaceData::compare("<<otherObj.getName()<<")");
+
   LIQDEBUGPRINTF( "-> comparing nurbs surface\n" );
   if ( otherObj.type() != MRT_Nurbs ) return false;
 
@@ -565,6 +577,7 @@ bool liqRibSurfaceData::compare( const liqRibData & otherObj ) const
  */
 ObjectType liqRibSurfaceData::type() const
 {
+	//CM_TRACE_FUNC("liqRibSurfaceData::type()");
   LIQDEBUGPRINTF( "-> returning nurbs surface type\n" );
   return MRT_Nurbs;
 }

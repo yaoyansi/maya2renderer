@@ -120,7 +120,7 @@ MStatus liqJobList::doIt(const MArgList& args)
 
 MStatus liqJobList::redoIt()
 {
-	CM_TRACE_FUNC("liqJobList::redoIt(args)");
+	CM_TRACE_FUNC("liqJobList::redoIt()");
   if ( debug ) printf("redoIt\n");
   clearResult();
   MStatus status;

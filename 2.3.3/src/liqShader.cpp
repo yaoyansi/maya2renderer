@@ -53,6 +53,8 @@
 
 liqShader::liqShader()
 {
+	CM_TRACE_FUNC("liqShader::liqShader()");
+
   //numTPV                = 0;
   name                  = "";
   file                  = "";
@@ -78,6 +80,7 @@ liqShader::liqShader()
 
 liqShader::liqShader( const liqShader& src )
 {
+	CM_TRACE_FUNC("liqShader::liqShader("<<src.name<<")");
   //numTPV               = src.numTPV;
   tokenPointerArray    = src.tokenPointerArray;
   name                 = src.name;
@@ -104,6 +107,7 @@ liqShader::liqShader( const liqShader& src )
 
 liqShader & liqShader::operator=( const liqShader & src )
 {
+	//CM_TRACE_FUNC("liqShader::operator=(src)");
   //numTPV = src.numTPV;
   tokenPointerArray     = src.tokenPointerArray;
   name                  = src.name;
@@ -132,6 +136,8 @@ liqShader & liqShader::operator=( const liqShader & src )
 
 liqShader::liqShader( MObject shaderObj )
 {
+	CM_TRACE_FUNC("liqShader::liqShader("<<MFnDependencyNode(shaderObj).name()<<")");
+
 	MString rmShaderStr;
 	MStatus status;
 	MFnDependencyNode shaderNode( shaderObj );
@@ -612,11 +618,14 @@ liqShader::liqShader( MObject shaderObj )
 
 liqShader::~liqShader()
 {
+//	CM_TRACE_FUNC("liqShader::~liqShader()");
 }
 
 
 void liqShader::appendCoShader(MObject coshader, MPlug plug)
 {
+	CM_TRACE_FUNC("liqShader::appendCoShader("<<MFnDependencyNode(coshader).name()<<","<<plug.name()<<")");
+
 	// test if it's really a co-shader
 	int isLiquidShader = 0;
 	MFn::Type objectType = coshader.apiType();
@@ -644,6 +653,8 @@ void liqShader::appendCoShader(MObject coshader, MPlug plug)
 
 MStatus liqShader::liqShaderParseVectorAttr ( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType )
 {
+	CM_TRACE_FUNC("liqShader::liqShaderParseVectorAttr("<<shaderNode.name()<<","<<argName<<","<<pType<<")");
+
 	MStatus status( MS::kSuccess );
 
 	MPlug triplePlug( shaderNode.findPlug( argName.c_str(), &status ) );
@@ -664,6 +675,8 @@ MStatus liqShader::liqShaderParseVectorAttr ( const MFnDependencyNode& shaderNod
 // philippe : multi attr support
 MStatus liqShader::liqShaderParseVectorArrayAttr ( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType, unsigned int arraySize )
 {
+	CM_TRACE_FUNC("liqShader::liqShaderParseVectorArrayAttr("<<shaderNode.name()<<","<<argName<<","<<pType<<","<<arraySize<<")");
+
   MStatus status( MS::kSuccess );
 
   MPlug triplePlug( shaderNode.findPlug( argName.c_str(), true, &status ) );
@@ -690,6 +703,8 @@ MStatus liqShader::liqShaderParseVectorArrayAttr ( const MFnDependencyNode& shad
 
 void liqShader::write(/*, */)
 {
+	CM_TRACE_FUNC("liqShader::write()");
+
 	//bool shortShaderNames  = ;
 	//unsigned int indentLevel = 0;
 
@@ -715,6 +730,7 @@ void liqShader::write(/*, */)
 
 MStatus liqShader::liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNode, const std::string& argName, ParameterType pType )
 {
+	CM_TRACE_FUNC("liqShader::liqShaderParseMatrixAttr("<<shaderNode.name()<<","<<argName<<","<<pType<<")");
 	MStatus status( MS::kSuccess );
 
 	MPlug matrixPlug( shaderNode.findPlug( argName.c_str(), &status ) );
@@ -755,12 +771,16 @@ MStatus liqShader::liqShaderParseMatrixAttr ( const MFnDependencyNode& shaderNod
 //
 void liqShader::buildJobs()
 {
+	CM_TRACE_FUNC("liqShader::buildJobs()");
+
 	scanExpressions(*this);
 }
 // check shaders to see if "string" parameters are expression
 // replace expression with calculated values
 void liqShader::scanExpressions( liqShader & currentShader )
 {
+	CM_TRACE_FUNC("liqShader::scanExpressions("<<currentShader.name<<")");
+
 	for ( std::vector< liqTokenPointer >::iterator it( currentShader.tokenPointerArray.begin() ); 
 		it != currentShader.tokenPointerArray.end(); 
 		it++ ) 
@@ -772,6 +792,8 @@ void liqShader::scanExpressions( liqShader & currentShader )
 //
 const std::string removeRedundentExtsion(std::string const& texturepath)//texturepath=e:/a.b\c.d.bmp.tex
 {
+	CM_TRACE_FUNC("removeRedundentExtsion("<<texturepath<<")");
+
 	std::string texpath(texturepath);
 	std::replace(texpath.begin(), texpath.end(), '\\', '/');//texpath=e:/a.b/c.d.bmp.tex
 
@@ -803,6 +825,8 @@ const std::string removeRedundentExtsion(std::string const& texturepath)//textur
 //
 void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *light )
 {
+	CM_TRACE_FUNC("liqShader::processExpression("<<token->getTokenName()<<","<<light->getName()<<")");
+
 	if( token != NULL ) 
 	{
 		std::string strValue( token->getTokenString() );
@@ -891,11 +915,14 @@ void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *ligh
 
 std::string liqShader::getName() const
 {
+	CM_TRACE_FUNC("liqShader::getName()");
 	return name;
 }
 
 std::string liqShader::getShaderFileName() const
 {
+	CM_TRACE_FUNC("liqShader::getShaderFileName()");
+
 	return liqglo.liqglo_shortShaderNames ? 
 		basename( file.c_str() ) : file.c_str();
 

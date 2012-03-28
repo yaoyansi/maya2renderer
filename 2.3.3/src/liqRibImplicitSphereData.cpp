@@ -62,6 +62,8 @@ using namespace boost;
  */
 liqRibImplicitSphereData::liqRibImplicitSphereData( MObject daSphere )
 {
+	CM_TRACE_FUNC("liqRibImplicitSphereData::liqRibImplicitSphereData("<<MFnDagNode(daSphere).fullPathName()<<")");
+
   LIQDEBUGPRINTF( "-> creating implicit sphere\n" );
   MStatus status( MS::kSuccess );
   MFnDagNode sphere( daSphere );
@@ -77,6 +79,8 @@ liqRibImplicitSphereData::liqRibImplicitSphereData( MObject daSphere )
 }
 void liqRibImplicitSphereData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibImplicitSphereData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibImplicitSphereData.cpp");
 
 	if( !bReference ){//write data at first time
@@ -98,6 +102,8 @@ void liqRibImplicitSphereData::write(const MString &ribFileName, const structJob
  */
 void liqRibImplicitSphereData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibImplicitSphereData::_write("<<currentJob.name<<")");
+
   unsigned numTokens( tokenPointerArray.size() );
   scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
   scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
@@ -112,6 +118,8 @@ void liqRibImplicitSphereData::_write(const structJob &currentJob)
  */
 bool liqRibImplicitSphereData::compare( const liqRibData& otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibImplicitSphereData::_write("<<otherObj.getName()<<")");
+
   LIQDEBUGPRINTF( "-> comparing locator\n" );
   if( otherObj.type() == MRT_ImplicitSphere ) 
   {

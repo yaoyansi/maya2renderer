@@ -529,6 +529,8 @@ MStatus liqSurfaceNode::initialize()
 
 MStatus liqSurfaceNode::compute( const MPlug& plug, MDataBlock& block )
 {
+	//CM_TRACE_FUNC("liqSurfaceNode::compute(job="<<plug.name()<<",block)");
+
   // outColor or individual R, G, B channel
   if( (plug == aOutColor) || (plug.parent() == aOutColor) ) {
 

@@ -75,6 +75,8 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
     nverts(),
     CVs()
 {
+	CM_TRACE_FUNC("liqRibPfxData::liqRibPfxData("<<MFnDagNode(pfxGeo).fullPathName()<<","<<type<<")");
+
 	LIQDEBUGPRINTF( "-> creating painteffects curves\n" );
 	MStatus status( MS::kSuccess );
 	pfxtype = type;
@@ -447,6 +449,8 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
 
 void liqRibPfxData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibPfxData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibPfxData.cpp");
 
 	if( !bReference ){//write data at first time
@@ -469,6 +473,8 @@ void liqRibPfxData::write(const MString &ribFileName, const structJob &currentJo
  */
 void liqRibPfxData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibPfxData::write(job="<<currentJob.name<<")");
+
 	LIQDEBUGPRINTF( "-> writing painteffects curves\n" );
 
 	unsigned setOn( 0 );
@@ -491,6 +497,8 @@ void liqRibPfxData::_write(const structJob &currentJob)
 
 unsigned liqRibPfxData::granularity() const
 {
+	CM_TRACE_FUNC("liqRibPfxData::granularity()");
+
 	unsigned i( 0 );
 	unsigned setOn( 0 );
 	if( pfxtype == MRT_PfxLeaf )
@@ -505,6 +513,8 @@ unsigned liqRibPfxData::granularity() const
 
 bool liqRibPfxData::writeNextGrain()
 {
+	CM_TRACE_FUNC("liqRibPfxData::writeNextGrain()");
+
 	LIQDEBUGPRINTF( "-> writing painteffects curves\n" );
 
 	if( hasFeature[ grain ] )
@@ -532,6 +542,8 @@ bool liqRibPfxData::writeNextGrain()
  */
 bool liqRibPfxData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibPfxData::compare("<<otherObj.getName()<<")");
+
 	LIQDEBUGPRINTF( "-> comparing painteffects curves\n");
 
 	if ( MRT_PfxTube != otherObj.type() && MRT_PfxLeaf != otherObj.type() && MRT_PfxPetal != otherObj.type()  )
@@ -562,6 +574,7 @@ bool liqRibPfxData::compare( const liqRibData & otherObj ) const
  */
 ObjectType liqRibPfxData::type() const
 {
+	CM_TRACE_FUNC("liqRibPfxData::type()");
 	LIQDEBUGPRINTF( "-> returning painteffects curves type\n" );
 	return pfxtype;
 }

@@ -71,6 +71,8 @@ using namespace std;
  */
 liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
 {
+	CM_TRACE_FUNC("liqRibLightData::liqRibLightData("<<light.fullPathName()<<")");
+
 	// Init
 	lightType = MRLT_Unknown;
 	color[0] = 0;
@@ -987,6 +989,8 @@ liqRibLightData::liqRibLightData( const MDagPath & light ) : rmanLightShader()
  */
 void liqRibLightData::_write(const structJob &currentJob)
 {
+	CM_TRACE_FUNC("liqRibLightData::_write(job="<<currentJob.name<<")");
+
   if ( !excludeFromRib ) 
   {
     LIQDEBUGPRINTF( "-> writing light %s \n", lightName.asChar());
@@ -1485,6 +1489,8 @@ void liqRibLightData::_write(const structJob &currentJob)
 //
 void liqRibLightData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibLightData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	//assert(liqglo.m_ribFileOpen&&"liqRibLightData.cpp");//er also goes here , refactoring is needed.
 
 	if( !bReference ){//write data at first time
@@ -1506,6 +1512,8 @@ void liqRibLightData::write(const MString &ribFileName, const structJob &current
  */
 bool liqRibLightData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibLightData::compare("<<otherObj.getName()<<")");
+
   otherObj.type(); // reference it to avoid unused param compiler warning
   LIQDEBUGPRINTF( "-> comparing light\n" );
   return true;
@@ -1527,6 +1535,8 @@ RtLightHandle liqRibLightData::lightHandle() const
 
 MString liqRibLightData::autoShadowName( int PointLightDir ) const
 {
+	CM_TRACE_FUNC("liqRibLightData::autoShadowName("<<PointLightDir<<")");
+
   MString frame;
   MString shadowName;
 
@@ -1596,6 +1606,8 @@ MString liqRibLightData::autoShadowName( int PointLightDir ) const
 
 MString liqRibLightData::extraShadowName( const MFnDependencyNode & lightShaderNode, const int & index ) const
 {
+	CM_TRACE_FUNC("liqRibLightData::extraShadowName("<<lightShaderNode.name()<<","<<index<<")");
+
   MString frame;
   MString shadowName        = "";
   MStatus status;

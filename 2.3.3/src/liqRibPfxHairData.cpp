@@ -67,6 +67,8 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
     cvColor(),
     cvOpacity()
 {
+	CM_TRACE_FUNC("liqRibPfxHairData::liqRibPfxHairData("<<MFnDagNode(pfxHair).fullPathName()<<")");
+
   LIQDEBUGPRINTF( "-> creating pfxHair curve\n" );
   MStatus status( MS::kSuccess );
 
@@ -295,6 +297,8 @@ liqRibPfxHairData::liqRibPfxHairData( MObject pfxHair )
 //
 void liqRibPfxHairData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibPfxHairData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibPfxHairData.cpp");
 
 	if( !bReference ){//write data at first time
@@ -316,7 +320,7 @@ void liqRibPfxHairData::write(const MString &ribFileName, const structJob &curre
  */
 void liqRibPfxHairData::_write(const structJob &currentJob)
 {
-  LIQDEBUGPRINTF( "-> writing pfxHair curves\n" );
+	CM_TRACE_FUNC("liqRibPfxHairData::_write(job="<<currentJob.name<<")");
 
   if( ncurves > 0 ) 
   {
@@ -336,6 +340,8 @@ void liqRibPfxHairData::_write(const structJob &currentJob)
  */
 bool liqRibPfxHairData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibPfxHairData::compare("<<otherObj.getName()<<")");
+
   LIQDEBUGPRINTF( "-> comparing pfxHair curves\n");
   //cout << "-> comparing pfxHair curves..." << endl;
 
@@ -353,6 +359,8 @@ bool liqRibPfxHairData::compare( const liqRibData & otherObj ) const
  */
 ObjectType liqRibPfxHairData::type() const
 {
+	CM_TRACE_FUNC("liqRibPfxHairData::compare()");
+
   LIQDEBUGPRINTF( "-> returning pfxHair curve type\n" );
   return MRT_PfxHair;
 }

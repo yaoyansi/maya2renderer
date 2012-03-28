@@ -133,6 +133,8 @@ void *liqRibTranslator::creator()
 
 MStatus liqRibTranslator::liqShaderParseVectorAttr ( liqShader & currentShader, MFnDependencyNode & shaderNode, const char * argName, ParameterType pType )
 {
+	CM_TRACE_FUNC("liqRibTranslator::liqShaderParseVectorAttr(&currentShader,&shaderNode,"<<argName<<","<<pType<<")");
+
 	MStatus status = MS::kSuccess;
 	MPlug triplePlug = shaderNode.findPlug( argName, &status );
 	if( status == MS::kSuccess ) 
@@ -156,6 +158,8 @@ void liqRibTranslator::printProgress( unsigned stat, unsigned numFrames, unsigne
 // TODO - should be able to set the progress output format somehow to cater for
 // different render pipelines - with a user-specifiable string in printf format?
 {
+	//CM_TRACE_FUNC("liqRibTranslator::printProgress("<<stat<<","<<numFrames<<","<<where<<")");
+
 	float statSize   = ( ( 1 / ( float )( numFrames + 1 ) ) / 4 ) * ( float )stat * 100.0;
 	float progressf  = ( ( ( float )where / ( float )( numFrames + 1 ) ) * 100.0 ) + statSize;
 	int progress     = ( int ) progressf;
@@ -175,6 +179,8 @@ void liqRibTranslator::printProgress( unsigned stat, unsigned numFrames, unsigne
 */
 bool liqRibTranslator::liquidInitGlobals()
 {
+	//CM_TRACE_FUNC("liqRibTranslator::liquidInitGlobals()");
+
 	//trace log is not created, can't call CM_TRACE_FUNC("liqRibTranslator::liquidInitGlobals()");
 	MStatus status;
 	MSelectionList rGlobalList;
@@ -196,6 +202,8 @@ bool liqRibTranslator::liquidInitGlobals()
 */
 liqRibTranslator::liqRibTranslator()
 {
+	//CM_TRACE_FUNC("liqRibTranslator::liqRibTranslator()");
+
 	char* envTmp;
 	if( ( envTmp = getenv( "TMP" ) ) ||
 		( envTmp = getenv( "TEMP" ) ) ||
@@ -413,6 +421,8 @@ liqRibTranslator::liqRibTranslator()
 */
 liqRibTranslator::~liqRibTranslator()
 {
+	//CM_TRACE_FUNC("liqRibTranslator::~liqRibTranslator()");
+
 	//delete mInstance;
 	//mInstance = NULL;
 }
@@ -434,6 +444,8 @@ void liqRibTranslatorErrorHandler( RtInt code, RtInt severity, const char* messa
 
 MSyntax liqRibTranslator::syntax()
 {
+	//CM_TRACE_FUNC("liqRibTranslator::syntax()");
+
 	MSyntax syntax;
 
 	syntax.addFlag("lr",    "launchRender");
@@ -516,6 +528,8 @@ MSyntax liqRibTranslator::syntax()
 */
 MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 {
+	//CM_TRACE_FUNC("liqRibTranslator::liquidDoArgs(args)");
+
 	MStatus status;
 	MString argValue;
 
@@ -1048,6 +1062,8 @@ MStatus liqRibTranslator::liquidDoArgs( MArgList args )
 */
 void liqRibTranslator::liquidReadGlobals()
 {
+	//CM_TRACE_FUNC("liqRibTranslator::liquidReadGlobals()");
+
 	//trace log is not created, can't call CM_TRACE_FUNC("liqRibTranslator::liquidReadGlobals()");
 	MStatus gStatus;
 	MPlug gPlug;
@@ -2061,7 +2077,7 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 	if ( checkSettings() )
 	{
 		CM_TRACE_OPEN(getFunctionTraceLogFileName().c_str());
-		CM_TRACE_FUNC("liqRibTranslator::doIt()-->checkSettings()==true");
+		CM_TRACE_FUNC("liqRibTranslator::doIt()-->if(checkSettings()==true)");
 		{//set renderer
 			MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
 			MString renderer;
@@ -3160,6 +3176,7 @@ void liqRibTranslator::portFieldOfView( int port_width, int port_height,
 									   double& vertical,
 									   MFnCamera& fnCamera )
 {
+	CM_TRACE_FUNC("liqRibTranslator::portFieldOfView("<<port_width<<","<<port_height<<",&horizontal,&vertical,&fnCamera)");
 	// note : works well - api tested
 	double left, right, bottom, top;
 	double aspect = (double) port_width / port_height;
@@ -3180,6 +3197,8 @@ void liqRibTranslator::computeViewingFrustum ( double     window_aspect,
 											  double&    top,
 											  MFnCamera& cam )
 {
+	CM_TRACE_FUNC("liqRibTranslator::computeViewingFrustum("<<window_aspect<<","<<",&left,&right,&bottom,&top,&cam)");
+
 	double film_aspect   = cam.aspectRatio();
 	double aperture_x    = cam.horizontalFilmAperture();
 	double aperture_y    = cam.verticalFilmAperture();
@@ -3240,6 +3259,8 @@ void liqRibTranslator::computeViewingFrustum ( double     window_aspect,
 */
 void liqRibTranslator::getCameraInfo( MFnCamera& cam )
 {
+	CM_TRACE_FUNC("liqRibTranslator::getCameraInfo("<<",&cam)");
+
 	// Resolution can change if camera film-gate clips image
 	// so we must keep camera width/height separate from render
 	// globals width/height.
@@ -3345,6 +3366,8 @@ void liqRibTranslator::getCameraInfo( MFnCamera& cam )
 */
 MStatus liqRibTranslator::buildJobs()
 {
+	CM_TRACE_FUNC("liqRibTranslator::buildJobs()");
+
 	LIQDEBUGPRINTF( "-> beginning to build job list\n" );
 	MStatus returnStatus = MS::kSuccess;
 	MStatus status;
@@ -3889,6 +3912,8 @@ MStatus liqRibTranslator::buildJobs()
 */
 MStatus liqRibTranslator::ribPrologue()
 {
+	CM_TRACE_FUNC("liqRibTranslator::ribPrologue()");
+
 	if( !liqglo.m_exportReadArchive ) 
 	{
 		LIQDEBUGPRINTF( "-> beginning to write prologue\n" );
@@ -4120,6 +4145,8 @@ MStatus liqRibTranslator::ribPrologue()
 */
 MStatus liqRibTranslator::ribEpilogue()
 {
+	CM_TRACE_FUNC("liqRibTranslator::ribEpilogue()");
+
 	if(ribStatus == kRibBegin) 
 		ribStatus = kRibOK;
 	return (ribStatus == kRibOK ? MS::kSuccess : MS::kFailure);
@@ -4130,6 +4157,8 @@ MStatus liqRibTranslator::ribEpilogue()
 */
 MStatus liqRibTranslator::scanSceneNodes( MObject &currentNode, MDagPath &path, float lframe, int sample, int &count, MStatus& returnStatus ) 
 {
+	CM_TRACE_FUNC("liqRibTranslator::scanSceneNodes(&currentNode, &path,"<<lframe<<","<<sample<<",&count)");
+
 	MFnDagNode dagNode;
 	returnStatus = dagNode.setObject( currentNode );
 	if(MS::kSuccess != returnStatus)
@@ -4295,6 +4324,8 @@ MStatus liqRibTranslator::scanSceneNodes( MObject &currentNode, MDagPath &path, 
 */
 MStatus liqRibTranslator::scanScene(float lframe, int sample )
 {
+	CM_TRACE_FUNC("liqRibTranslator::scanScene("<<lframe<<","<<sample<<")");
+
 	int count =0;
 
 	MTime mt( ( double )lframe, MTime::uiUnit() );
@@ -4875,6 +4906,8 @@ MStatus liqRibTranslator::scanScene(float lframe, int sample )
 */
 void liqRibTranslator::doAttributeBlocking( const MDagPath& newPath, const MDagPath& previousPath )
 {
+	CM_TRACE_FUNC("liqRibTranslator::doAttributeBlocking("<<MFnDagNode(newPath).fullPathName()<<","<<previousPath.fullPathName()<<")");
+
 	int newDepth = newPath.length();
 	int prevDepth = 0;
 	MFnDagNode dagFn( newPath );
@@ -4940,6 +4973,8 @@ void liqRibTranslator::doAttributeBlocking( const MDagPath& newPath, const MDagP
 */
 MStatus liqRibTranslator::framePrologue( long lframe )
 {
+	CM_TRACE_FUNC("liqRibTranslator::framePrologue("<<lframe<<")");
+
 	LIQDEBUGPRINTF( "-> Beginning Frame Prologue\n" );
 	ribStatus = kRibFrame;
 
@@ -5505,6 +5540,8 @@ MStatus liqRibTranslator::framePrologue( long lframe )
 */
 MStatus liqRibTranslator::frameEpilogue( long )
 {
+	CM_TRACE_FUNC("liqRibTranslator::frameEpilogue()");
+
 	if(ribStatus == kRibFrame) 
 	{
 		ribStatus = kRibBegin;
@@ -5520,6 +5557,8 @@ MStatus liqRibTranslator::frameEpilogue( long )
 */
 MStatus liqRibTranslator::objectBlock()
 {
+	CM_TRACE_FUNC("liqRibTranslator::objectBlock()");
+
 	MStatus returnStatus = MS::kSuccess;
 	MStatus status;
 	attributeDepth = 0;
@@ -6849,6 +6888,8 @@ MStatus liqRibTranslator::objectBlock()
 */
 MStatus liqRibTranslator::worldPrologue()
 {
+	CM_TRACE_FUNC("liqRibTranslator::worldPrologue()");
+
 	MStatus returnStatus = MS::kSuccess;
 	LIQDEBUGPRINTF( "-> Writing world prologue.\n" );
 	// if this is a readArchive that we are exporting then ingore this header information
@@ -6940,6 +6981,8 @@ MStatus liqRibTranslator::worldPrologue()
 */
 MStatus liqRibTranslator::worldEpilogue()
 {
+	CM_TRACE_FUNC("liqRibTranslator::worldEpilogue()");
+
 	return liquid::RendererMgr::getInstancePtr()->getRenderer()->worldEpilogue();
 }
 
@@ -6950,6 +6993,8 @@ MStatus liqRibTranslator::worldEpilogue()
 */
 MStatus liqRibTranslator::coordSysBlock()
 {
+	CM_TRACE_FUNC("liqRibTranslator::coordSysBlock()");
+
 	MStatus returnStatus = MS::kSuccess;
 	LIQDEBUGPRINTF( "-> Writing coordinate systems.\n" );
 	RNMAP::iterator rniter;
@@ -6990,6 +7035,8 @@ MStatus liqRibTranslator::coordSysBlock()
 */
 MStatus liqRibTranslator::lightBlock()
 {
+	CM_TRACE_FUNC("liqRibTranslator::lightBlock()");
+
 	MStatus returnStatus = MS::kSuccess;
 	LIQDEBUGPRINTF( "-> Writing lights.\n" );
 	// If this is a readArchive that we are exporting then ignore this header information
@@ -7051,6 +7098,8 @@ MStatus liqRibTranslator::lightBlock()
 
 void liqRibTranslator::setOutDirs()
 {
+//	CM_TRACE_FUNC("liqRibTranslator::setOutDirs()");
+
 	MStatus gStatus;
 	MPlug gPlug;
 	MFnDependencyNode rGlobalNode( liqglo.rGlobalObj );
@@ -7086,6 +7135,8 @@ void liqRibTranslator::setOutDirs()
 
 void liqRibTranslator::setSearchPaths()
 {
+//	CM_TRACE_FUNC("liqRibTranslator::setSearchPaths()");
+
 	//trace log is not created, can't call CM_TRACE_FUNC()
 	liqglo.liqglo_shaderPath = "&:@:.:~:rmanshader";
 	liqglo.liqglo_texturePath = "&:@:.:~"; // :rmantex
@@ -7181,6 +7232,8 @@ void liqRibTranslator::setSearchPaths()
 
 bool liqRibTranslator::renderFrameSort( const structJob& a, const structJob& b )
 {
+	CM_TRACE_FUNC("liqRibTranslator::renderFrameSort("<<a.name<<","<<b.name<<")");
+
 	long v1 = ( a.isShadow )? a.renderFrame : 100000000;
 	long v2 = ( b.isShadow )? b.renderFrame : 100000000;
 	return v1 < v2;
@@ -7193,6 +7246,8 @@ void liqRibTranslator::_writeObject(
 	const unsigned int msampleOn
 	)
 {
+	CM_TRACE_FUNC("liqRibTranslator::_writeObject("<<ribNode->name<<","<<currentJob.name<<","<<bGeometryMotionBlur<<","<<msampleOn<<")");
+
 // 	MString frame; 
 // 	frame.set(liqglo.liqglo_lframe);
 
@@ -7220,6 +7275,8 @@ void liqRibTranslator::_writeObject(
 //
 bool liqRibTranslator::checkSettings()
 {
+	//CM_TRACE_FUNC("liqRibTranslator::checkSettings()");
+
 	if( liqglo.m_displays[0].name.length()==0 )
 	{
 		assert(0&&"liqglo.m_displays[ 0 ].name is empty. Please set the output image and render the scene again.");
@@ -7231,6 +7288,8 @@ bool liqRibTranslator::checkSettings()
 
 std::string liqRibTranslator::getFunctionTraceLogFileName() const
 {
+	//CM_TRACE_FUNC("liqRibTranslator::getFunctionTraceLogFileName()");
+
 	std::stringstream sslogFileName;
 	{
 		//time

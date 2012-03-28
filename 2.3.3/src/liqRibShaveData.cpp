@@ -87,6 +87,8 @@ liqRibShaveData::liqRibShaveData( MObject surface )
     w()
 
 {
+	CM_TRACE_FUNC("liqRibShaveData::liqRibShaveData("<<MFnDagNode(surface).fullPathName()<<")");
+
   LIQDEBUGPRINTF( "-> creating shave surface\n" );
 //  if ( debugMode ) {
     MFnDependencyNode myDep( surface );
@@ -403,6 +405,8 @@ liqRibShaveData::liqRibShaveData( MObject surface )
 
 void liqRibShaveData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
+	CM_TRACE_FUNC("liqRibShaveData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+
 	assert(liqglo.m_ribFileOpen&&"liqRibShaveData");
 
 	if( !bReference ){//write data at first time
@@ -452,6 +456,8 @@ void liqRibShaveData::write(const MString &ribFileName, const structJob &current
 
 unsigned liqRibShaveData::granularity() const 
 {
+	CM_TRACE_FUNC("liqRibShaveData::granularity()");
+
   if ( hasTrims && !tokenPointerArray.empty() ) 
   {
     return 2;
@@ -464,6 +470,8 @@ unsigned liqRibShaveData::granularity() const
 
 bool liqRibShaveData::writeNextGrain()
 {
+	CM_TRACE_FUNC("liqRibShaveData::writeNextGrain()");
+
   if ( hasTrims && ( 0 == grain ) ) 
   {
     RiTrimCurve( nloops,
@@ -509,6 +517,8 @@ bool liqRibShaveData::writeNextGrain()
  */
 bool liqRibShaveData::compare( const liqRibData & otherObj ) const
 {
+	CM_TRACE_FUNC("liqRibShaveData::compare("<<otherObj.getName()<<")");
+
   LIQDEBUGPRINTF( "-> comparing shave surface\n" );
   if ( otherObj.type() != MRT_Shave ) 
 	  return false;
@@ -558,6 +568,8 @@ bool liqRibShaveData::compare( const liqRibData & otherObj ) const
  */
 ObjectType liqRibShaveData::type() const
 {
+	CM_TRACE_FUNC("liqRibShaveData::type()");
+
   LIQDEBUGPRINTF( "-> returning shave type\n" );
   return MRT_Shave;
 }

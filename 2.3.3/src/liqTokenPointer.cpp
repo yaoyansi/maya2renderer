@@ -58,6 +58,8 @@ const string liqTokenPointer::detailType[] = {
 
 liqTokenPointer::liqTokenPointer()
 {
+	//CM_TRACE_FUNC("liqTokenPointer::liqTokenPointer()");
+
 	m_pType        = rFloat;
 	m_isArray      = false;
 	m_isUArray     = false;
@@ -73,6 +75,7 @@ liqTokenPointer::liqTokenPointer()
 
 liqTokenPointer::liqTokenPointer( const liqTokenPointer &src )
 {
+	//CM_TRACE_FUNC("liqTokenPointer::liqTokenPointer(src)");
 	LIQDEBUGPRINTF( "-> copy constructing additional ribdata: %s\n", src.m_tokenName.c_str() );
 
 	m_isArray       = false;
@@ -107,6 +110,7 @@ liqTokenPointer::liqTokenPointer( const liqTokenPointer &src )
 
 liqTokenPointer & liqTokenPointer::operator=( const liqTokenPointer &src)
 {
+	//CM_TRACE_FUNC("liqTokenPointer::operator=(src)");
 	LIQDEBUGPRINTF("-> copying additional ribdata: %s\n", src.m_tokenName.c_str() );
 
 	reset();
@@ -128,6 +132,7 @@ liqTokenPointer & liqTokenPointer::operator=( const liqTokenPointer &src)
 
 liqTokenPointer::~liqTokenPointer()
 {
+	//CM_TRACE_FUNC("liqTokenPointer::~liqTokenPointer()");
 	LIQDEBUGPRINTF("-> freeing additional ribdata: %s\n ", m_tokenName.c_str() );
 
 	//if( m_tokenFloats ) { lfree( m_tokenFloats ); m_tokenFloats = NULL; }
@@ -137,6 +142,7 @@ liqTokenPointer::~liqTokenPointer()
 
 void liqTokenPointer::reset()
 {
+	//CM_TRACE_FUNC("liqTokenPointer::reset()");
 	//if( m_tokenFloats ) { lfree( m_tokenFloats ); m_tokenFloats = NULL; }
 	m_tokenFloats.reset();
 	m_tokenString.clear();
@@ -156,16 +162,19 @@ void liqTokenPointer::reset()
 
 bool liqTokenPointer::set( const string& name, ParameterType ptype )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:set("<<name<<","<<ptype<<")");
 	return set( name, ptype, 0, 0 );
 }
 
 bool liqTokenPointer::set( const string& name, ParameterType ptype, unsigned int arraySize )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:set("<<name<<","<<ptype<<","<<arrraySize<<")");
 	return set( name, ptype, arraySize, 0 );
 }
 
 bool liqTokenPointer::set( const string& name, ParameterType ptype, bool asArray, bool asUArray, unsigned int arraySize )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:set("<<name<<","<<ptype<<","<<asArray<<","<<asUArray<<","<<arrraySize<<")");
 	// philippe : passing arraySize when asUArray is true fixed the float array export problem
 	// TO DO : replace occurences of this function with non-obsolete ones
 	//return set( name, ptype, arraySize, asUArray ? 2 : 0 );
@@ -175,6 +184,8 @@ bool liqTokenPointer::set( const string& name, ParameterType ptype, bool asArray
 
 bool liqTokenPointer::set( const string& name, ParameterType ptype, unsigned int arraySize, unsigned int uArraySize )
 {
+	CM_TRACE_FUNC("liqTokenPointer:set("<<name<<","<<ptype<<","<<arraySize<<","<<uArraySize<<")");
+
 	setTokenName( name );
 	m_pType = ptype;
 
@@ -270,6 +281,8 @@ bool liqTokenPointer::set( const string& name, ParameterType ptype, unsigned int
 
 int liqTokenPointer::reserve( unsigned int size )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:reserve("<<size<<")");
+
 	if( m_pType != rString ) {
 
 		if( m_arraySize != size )
@@ -294,33 +307,41 @@ int liqTokenPointer::reserve( unsigned int size )
 
 void liqTokenPointer::setDetailType( DetailType dType )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:setDetailType("<<dType<<")");
+
 	m_dType = dType;
 }
 
 DetailType liqTokenPointer::getDetailType() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:getDetailType()");
+
 	return m_dType;
 }
 
 ParameterType liqTokenPointer::getParameterType() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:getParameterType()");
 	return m_pType;
 }
 
 void liqTokenPointer::setTokenFloat( unsigned int i, RtFloat val )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:setTokenFloat(<<i<<","<<val<<)");
 	assert( m_tokenSize > i );
 	m_tokenFloats[i] = val;
 }
 
 void liqTokenPointer::setTokenFloat( unsigned int i, unsigned int uIndex, RtFloat val )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:setTokenFloat(<<i<<","<<uIndex<<","<<val<<)");
 	assert( m_tokenSize > ( i * m_uArraySize + uIndex ) );
 	setTokenFloat( i * m_uArraySize + uIndex, val );
 }
 
 void liqTokenPointer::setTokenFloat( unsigned int i, RtFloat x, RtFloat y , RtFloat z )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:setTokenFloat(<<i<<","<<x<<","<<y<<","<<z<<")");
 	assert( m_tokenSize > ( m_eltSize * i + 2 ) );
 	m_tokenFloats[ m_eltSize * i + 0 ] = x;
 	m_tokenFloats[ m_eltSize * i + 1 ] = y;
@@ -329,6 +350,7 @@ void liqTokenPointer::setTokenFloat( unsigned int i, RtFloat x, RtFloat y , RtFl
 
 void liqTokenPointer::setTokenFloats( const RtFloat* vals )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:setTokenFloats(const RtFloat* vals)");
 	LIQDEBUGPRINTF( "-> copying data\n" );
 	if( m_isArray || m_isUArray ) {
 		//m_tokenFloats = shared_array< RtFloat >( new RtFloat[ m_tokenSize ] );
@@ -341,21 +363,29 @@ void liqTokenPointer::setTokenFloats( const RtFloat* vals )
 
 void liqTokenPointer::setTokenFloats( const shared_array< RtFloat > vals )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:setTokenFloats(const shared_array< RtFloat > vals)");
+
 	m_tokenFloats = vals;
 }
 
 const RtFloat* liqTokenPointer::getTokenFloatArray() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:getTokenFloatArray()");
+
 	return m_tokenFloats.get();
 }
 
 const shared_array< RtFloat > liqTokenPointer::getTokenFloatSharedArray() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:getTokenFloatSharedArray()");
+
 	return m_tokenFloats;
 }
 
 void liqTokenPointer::setTokenFloat( unsigned int i, RtFloat x, RtFloat y , RtFloat z, RtFloat w )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:setTokenFloat(<<i<<","<<x<<","<<y<<","<<z<<","<<w<<")");
+
 	assert( m_tokenSize > ( m_eltSize * i + 3 ) );
 	m_tokenFloats[ m_eltSize * i + 0 ] = x;
 	m_tokenFloats[ m_eltSize * i + 1 ] = y;
@@ -366,11 +396,15 @@ void liqTokenPointer::setTokenFloat( unsigned int i, RtFloat x, RtFloat y , RtFl
 
 string liqTokenPointer::getTokenString() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:getTokenString()");
+
 	return m_tokenString[0];
 }
 
 void liqTokenPointer::setTokenString( unsigned int i, const string& str )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:setTokenString("<<i<<","<<str<<")");
+
 	if( m_isArray ){//as for array, the array allocate memroy first, then fill the data. so 'i' will less than 'm_arraySize'.
 	}else{
 		assert( i >= m_arraySize );
@@ -381,23 +415,28 @@ void liqTokenPointer::setTokenString( unsigned int i, const string& str )
 
 void liqTokenPointer::resetTokenString()
 {
+	//CM_TRACE_FUNC("liqTokenPointer:resetTokenString()");
+
 	m_tokenString.clear();
 	m_tokenStringArray.reset();
 }
 
 void liqTokenPointer::setTokenName( const string& name )
 {
+	//CM_TRACE_FUNC("liqTokenPointer:setTokenName("<<name<<")");
 	m_tokenName = name;
 }
 
 string liqTokenPointer::getTokenName() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:getTokenName()");
 	// Hmmmm should we handle token without name ?
 	return m_tokenName;
 }
 
 const string& liqTokenPointer::getDetailedTokenName()
 {
+	//CM_TRACE_FUNC("liqTokenPointer:getDetailedTokenName()");
 	// Hmmmm should we handle token without name ?
 #ifdef PRMAN
 	// Philippe : in PRMAN, declaring P as a vertex point is not necessary and it make riCurves generation fail.
@@ -417,6 +456,7 @@ const string& liqTokenPointer::getDetailedTokenName()
 
 const RtPointer liqTokenPointer::getRtPointer()
 {
+	//CM_TRACE_FUNC("liqTokenPointer:getRtPointer()");
 	if( m_pType == rString ) {
 		m_tokenStringArray = shared_array< RtString >( new RtString[ m_tokenString.size() ] );
 
@@ -431,6 +471,7 @@ const RtPointer liqTokenPointer::getRtPointer()
 
 string liqTokenPointer::getRiDeclare() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:getRiDeclare()");
 	string type;
 	switch ( m_pType )
 	{
@@ -490,16 +531,19 @@ string liqTokenPointer::getRiDeclare() const
 
 liqTokenPointer::operator bool() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:operator bool()");
 	return m_tokenFloats;
 }
 
 bool liqTokenPointer::empty() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:empty()");
 	return !m_tokenFloats;
 }
 
 bool liqTokenPointer::isBasicST() const
 {
+	//CM_TRACE_FUNC("liqTokenPointer:isBasicST()");
 	// Not st or, if it is, face varying
 	if( m_tokenName[0] != 's' || m_tokenName[1] != 't' || m_tokenName.length() != 2 || m_dType == rFaceVarying || m_dType == rFaceVertex ) {
 		return false;
