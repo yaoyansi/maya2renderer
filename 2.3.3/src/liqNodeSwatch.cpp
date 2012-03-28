@@ -58,7 +58,7 @@
 
 bool liqNodeSwatch::doIteration () 
 {
-	CM_TRACE_FUNC("liqNodeSwatch::doIteration()");
+	//CM_TRACE_FUNC("liqNodeSwatch::doIteration()");
 
   MStatus status;
   MImage &img = image();
