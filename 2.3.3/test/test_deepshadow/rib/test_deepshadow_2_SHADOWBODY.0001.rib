@@ -1,0 +1,29 @@
+##RenderMan RIB-Structure 1.0
+version 3.03
+WorldBegin
+    TransformBegin
+        CoordinateSystem "worldspace"
+    TransformEnd
+    TransformBegin
+        Rotate -90.000000 1.000000 0.000000 0.000000
+        CoordinateSystem "_environment"
+    TransformEnd
+    ReverseOrientation
+    #output: E:/MyDocuments/maya/projects/default/rib/_pPlane5_pPlaneShape5.1.rib
+    #output: E:/MyDocuments/maya/projects/default/rib/_pCube53_pCubeShape53.1.rib
+    AttributeBegin
+        Attribute "identifier" "name" [ "_pPlane5_pPlaneShape5" ] 
+        Color [ 1.000000 0.000000 0.000000 ]
+        Opacity [ 1.000000 1.000000 1.000000 ]
+        Transform [ 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.825916 0.000000 -0.977651 1.000000 ]
+        ReadArchive "E:/MyDocuments/maya/projects/default/rib/_pPlane5_pPlaneShape5.1.rib"
+    AttributeEnd
+    AttributeBegin
+        Attribute "identifier" "name" [ "_pCube53_pCubeShape53" ] 
+        ShadingRate 1.000000
+        Color [ 1.000000 1.000000 1.000000 ]
+        Opacity [ 1.000000 1.000000 1.000000 ]
+        Transform [ 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.932855 1.904980 -1.509530 1.000000 ]
+        ReadArchive "E:/MyDocuments/maya/projects/default/rib/_pCube53_pCubeShape53.1.rib"
+    AttributeEnd
+WorldEnd
