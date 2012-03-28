@@ -42,7 +42,7 @@ namespace	cm
 			liquidMessage2(messageError,"[cm::Trace] can't open file: %s.\n", trace_file_.c_str() );
 			assert(m_logfile.is_open()&&"[cm::Trace] file is not open. see script editor for more details.");
 		}
-		std::string indent(4*depth, ' ');
+		std::string indent(2*depth, ' ');
 		// only log the timestamp when the time changes
 		//unsigned int len = fprintf( fp, "%s>(%d)%s\n", indent.c_str(), depth, msg);
 		m_logfile<<indent<<">"<<depth<<" "<<msg<<std::endl;
