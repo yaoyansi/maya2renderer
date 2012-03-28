@@ -18,9 +18,11 @@ namespace renderman
 		assert(liqglo.m_ribFileOpen &&"rm_writeLocatorData.cpp");
 
 	 	if( !bReference ){//write data at first time
-	 		assert(pData->getRibFileFullPath().length()==0);
-	 		pData->setRibFileFullPath(ribFileName);
-	 
+			if( !currentJob.isShadow ){
+				assert(pData->getRibFileFullPath().length()==0&&"rm_writeLocatorData.cpp");
+			}
+			pData->setRibFileFullPath(ribFileName);
+
 	 		renderman::Helper o;
 	 		o.RiBeginRef(pData->getRibFileFullPath().asChar());
 	 		_write(pData, currentJob);

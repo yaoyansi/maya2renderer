@@ -35,6 +35,7 @@ TempControlBreak tShadowRibWriterMgr::write(
 #ifndef RENDER_PIPE
 		liquidMessage( "Beginning RIB output to '" + std::string( baseShadowName__.asChar() ) + "'", messageInfo );
 		RiBegin( const_cast< RtToken >( baseShadowName__.asChar() ) );
+		liqglo.m_ribFileOpen = true;
 #else
 		liqglo__.liqglo_ribFP = fopen( baseShadowName.asChar(), "w" );
 		if( liqglo__.liqglo_ribFP ) {
@@ -61,6 +62,7 @@ TempControlBreak tShadowRibWriterMgr::write(
 		if( liqRibTranslator::getInstancePtr()->worldEpilogue__() != MS::kSuccess ) 
 			return TCB_Break;//break;
 		RiEnd();
+		liqglo.m_ribFileOpen = false;
 #ifdef RENDER_PIPE  
 		fclose( liqglo___.liqglo_ribFP );
 #endif
@@ -87,6 +89,7 @@ TempControlBreak tShadowRibWriterMgr::write(
 #ifndef RENDER_PIPE
 	liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
 	RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
+	liqglo.m_ribFileOpen = true;
 #else//RENDER_PIPE
 	liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
 	if( liqglo___.liqglo_ribFP ) 
@@ -117,6 +120,7 @@ TempControlBreak tShadowRibWriterMgr::write(
 		liqRibTranslator::getInstancePtr()->ribEpilogue__(currentJob___);
 	}
 	RiEnd();
+	liqglo.m_ribFileOpen = false;
 	//------------------------------------------------------------
 
 	return TCB_OK;

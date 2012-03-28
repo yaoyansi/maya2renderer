@@ -24,6 +24,11 @@
 - (done)整理er_rm_shader_graph_phong.ma test记录 rib/image
 - (done)test all cases for the lastest code
 
+-测试test_deepshadow_2.ma时，rm_writeMeshData.cpp/rm_writeLightData.cpp报assert错误：
+	assert(pData->getRibFileFullPath().length()==0。。。）；
+	原因是先执行了shadowPass,pData->m_ribFileFullPath不为空。
+ 尝试解决这个问题
+
 -RiBegin()/RiEnd()时用变量标记，在Ri×时检查该标记
 - 重构Renderer::_writeObject(），现在只导出了mesh和light；dynamic_pointer_cast也需要重构
 -导出shdergraph时，一个shadernode会被导出多次。
