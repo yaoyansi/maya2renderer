@@ -823,9 +823,9 @@ const std::string removeRedundentExtsion(std::string const& texturepath)//textur
 	}
 }
 //
-void liqShader::processExpression( liqTokenPointer *token, liqRibLightData *light )
+void liqShader::processExpression( liqTokenPointer *token, const liqRibLightData *light )
 {
-	CM_TRACE_FUNC("liqShader::processExpression("<<token->getTokenName()<<","<<light->getName()<<")");
+	CM_TRACE_FUNC("liqShader::processExpression("<<token->getTokenName()<<",*light)");
 
 	if( token != NULL ) 
 	{

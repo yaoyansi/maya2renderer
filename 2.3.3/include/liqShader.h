@@ -62,7 +62,7 @@ public :
 
 	void buildJobs();
 	void scanExpressions( liqShader & currentShader );
-	void processExpression( liqTokenPointer *token, liqRibLightData *light = NULL );
+	void processExpression( liqTokenPointer *token, const liqRibLightData *light = NULL );
 
     // void freeShader( void ); -- not needed anymore. vector calls the dtors itself when going out of scope
     // int numTPV; -- handled by tokenPointerArray.size() now
