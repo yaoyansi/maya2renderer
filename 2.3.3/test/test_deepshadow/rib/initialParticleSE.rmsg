@@ -1,7 +1,0 @@
-##RenderMan RIB-Structure 1.0
-version 3.03
-#shading group: initialParticleSE
-Surface "E:/MyDocuments/maya/projects/default/generatedShader/lambert1" 
-#I'm not sure which one should be used for the volume shader, RiAtmosphere(), RiInterior(), or RiExterior().
-Atmosphere "E:/MyDocuments/maya/projects/default/generatedShader/particleCloud1" 
-#no displacement shader.

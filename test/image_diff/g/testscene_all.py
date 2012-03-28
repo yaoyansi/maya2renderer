@@ -88,3 +88,6 @@ def test_all_scene():
 
     testFile=LIQUID_ROOT+"/2.3.3/test/test_er_volume/er_volume.ma"
     MyTestOne.test_one_scene(testFile, "elvishray")
+
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_deepshadow/test_deepshadow_2.ma"
+    MyTestOne.test_one_scene(testFile, "renderman")

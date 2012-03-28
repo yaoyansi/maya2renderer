@@ -13,8 +13,8 @@ WorldBegin
     #output: E:/MyDocuments/maya/projects/default/rib/_pCube53_pCubeShape53.1.rib
     AttributeBegin
         Attribute "identifier" "name" [ "_pPlane5_pPlaneShape5" ] 
-        Color [ 1.000000 0.000000 0.000000 ]
-        Opacity [ 1.000000 1.000000 1.000000 ]
+        Color [ 0.504140 0.504140 0.504140 ]
+        Opacity [ 0.495860 0.495860 0.495860 ]
         Transform [ 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.825916 0.000000 -0.977651 1.000000 ]
         ReadArchive "E:/MyDocuments/maya/projects/default/rib/_pPlane5_pPlaneShape5.1.rib"
     AttributeEnd

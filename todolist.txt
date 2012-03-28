@@ -28,6 +28,7 @@
 	assert(pData->getRibFileFullPath().length()==0。。。）；
 	原因是先执行了shadowPass,pData->m_ribFileFullPath不为空。
  尝试解决这个问题
+-bug：test_deepshadow_2.ma，阴影里没有物体的透明度。
 
 -RiBegin()/RiEnd()时用变量标记，在Ri×时检查该标记
 - 重构Renderer::_writeObject(），现在只导出了mesh和light；dynamic_pointer_cast也需要重构
