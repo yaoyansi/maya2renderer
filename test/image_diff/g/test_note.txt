@@ -1,0 +1,20 @@
+check10_tex.ma  纹理显示不出来 
+是因为使用了Prman的shader，而该shader在win7的这台机器上找不到路径（prman安装路径不一致）
+
+
+three_boxes lambert2 为什么变成了plastic
+lambert2。slo找不到，所以liqShader::liqShader( MObject shaderObj )里
+执行了：
+	int success = ( shaderInfo.setShaderNode( shaderNode ) );
+	if ( !success )
+	{
+		liquidMessage( "Problem using shader '" + std::string( shaderNode.name().asChar() ) + "'", messageError );
+		rmColor[0] = 1.0;
+		rmColor[1] = 0.0;
+		rmColor[2] = 0.0;
+		name = "plastic";
+//		numTPV = 0;
+		hasErrors = true;
+	}
+
+er_vertex_normal.ma 抱怨 E:/MyDocuments/maya/projects/default//rmantex/check12.bmp找不到
