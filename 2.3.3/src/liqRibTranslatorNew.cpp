@@ -2619,24 +2619,25 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 				liquidMessage( "Rendering hero pass... ", messageInfo );
 				printf("[!] Rendering hero pass...\n");
 
-				if( isBatchMode() )//batch mode
-				{
-					std::size_t SIZE = getRibFileListSize();
-					for(std::size_t i=0; i<SIZE; ++i)
-					{
-						liquidMessage2(messageInfo, "rendering frame %d ...", i);
-						liquid::RendererMgr::getInstancePtr()->getRenderer()->renderAll_local( getRibFile(i) );
-					}
-				}else{//interactive mode
-					//structJob &currentJob____ = *(jobList.rbegin());//I guess liqglo.liqglo_currentJob is jobList.rbegin()
-					if( currentJob____.skip ) 
-					{
-						printf("    - skipping '%s'\n", currentJob____.ribFileName.asChar() );
-						liquidMessage( "    - skipping '" + string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
-					}else {
-						liquid::RendererMgr::getInstancePtr()->getRenderer()->renderAll_local(currentJob____.ribFileName);
-					}
-				}//if( isBatchMode() )
+// moved to ...
+// 				if( isBatchMode() )//batch mode
+// 				{
+// 					std::size_t SIZE = getRibFileListSize();
+// 					for(std::size_t i=0; i<SIZE; ++i)
+// 					{
+// 						liquidMessage2(messageInfo, "rendering frame %d ...", i);
+// 						liquid::RendererMgr::getInstancePtr()->getRenderer()->renderAll_local( getRibFile(i) );
+// 					}
+// 				}else{//interactive mode
+// 					//structJob &currentJob____ = *(jobList.rbegin());//I guess liqglo.liqglo_currentJob is jobList.rbegin()
+// 					if( currentJob____.skip ) 
+// 					{
+// 						printf("    - skipping '%s'\n", currentJob____.ribFileName.asChar() );
+// 						liquidMessage( "    - skipping '" + string( currentJob____.ribFileName.asChar() ) + "'", messageInfo );
+// 					}else {
+// 						liquid::RendererMgr::getInstancePtr()->getRenderer()->renderAll_local(currentJob____.ribFileName);
+// 					}
+// 				}//if( isBatchMode() )
 
 				//}//if( !exitstat )
 
@@ -3661,7 +3662,7 @@ void liqRibTranslator::clearRibFileList()
 }
 void liqRibTranslator::addRibFile(const MString& ribFile)
 {
-	//CM_TRACE_FUNC("liqRibTranslatorNew::addRibFile("<<ribFile<<")");
+	CM_TRACE_FUNC("liqRibTranslatorNew::addRibFile("<<ribFile<<")");
 
 	ribFileList.push_back(ribFile);
 }
@@ -3673,7 +3674,7 @@ std::size_t liqRibTranslator::getRibFileListSize()
 }
 MString liqRibTranslator::getRibFile(std::size_t index)
 {
-	//CM_TRACE_FUNC("liqRibTranslatorNew::getRibFile("<<index<<")");
+	CM_TRACE_FUNC("liqRibTranslatorNew::getRibFile("<<index<<")");
 
 	return ribFileList.at(index);
 }

@@ -4,6 +4,7 @@
 
 #include <liqGlobalVariable.h>
 #include <liqRibTranslator.h>
+#include <liqProcessLauncher.h>
 
 tShadowRibWriterMgr::tShadowRibWriterMgr()
 {
@@ -122,7 +123,15 @@ TempControlBreak tShadowRibWriterMgr::write(
 	RiEnd();
 	liqglo.m_ribFileOpen = false;
 	//------------------------------------------------------------
-
+	//rendering
+#ifdef _WIN32
+	printf("shadow.liqProcessLauncher::execute(%s, %s %s \"%s\", \"%s\", %d)\n",
+		liqglo.liquidRenderer.renderCommand.asChar(), liqglo___.liqglo_rifParams.asChar(), liqglo___.liquidRenderer.renderCmdFlags.asChar(), currentJob___.ribFileName.asChar(), liqglo___.liqglo_projectDir.asChar(), false);
+	liqProcessLauncher::execute( liqglo___.liquidRenderer.renderCommand, " "+liqglo___.liqglo_rifParams+" "+ liqglo___.liquidRenderer.renderCmdFlags + " \"" + currentJob___.ribFileName + "\"", "\"" + liqglo___.liqglo_projectDir + "\"", false );
+#else
+	liqProcessLauncher::execute( liqglo___.liquidRenderer.renderCommand, " "+liqglo___.liqglo_rifParams+" "+ liqglo___.liquidRenderer.renderCmdFlags + " " + currentJob___.ribFileName, liqglo___.liqglo_projectDir, false );
+#endif
+	//------------------------------------------------------------
 	return TCB_OK;
 }
 

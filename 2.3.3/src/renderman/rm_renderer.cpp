@@ -1003,6 +1003,15 @@ namespace renderman
 
 		RiEnd();
 		liqglo.m_ribFileOpen = false;
+
+		//
+		if( currentJob.skip ) 
+		{
+			printf("    - skipping '%s'\n", currentJob.ribFileName.asChar() );
+			liquidMessage( "    - skipping '" + std::string( currentJob.ribFileName.asChar() ) + "'", messageInfo );
+		}else {
+			renderAll_local(currentJob.ribFileName);
+		}
 	}
 	//
 	void Renderer::oneObjectBlock_reference_attribute_begin(
