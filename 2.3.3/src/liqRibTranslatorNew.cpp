@@ -99,6 +99,8 @@
 #include "renderermgr.h"
 #include "shadergraph/shadermgr.h"
 
+#define _Refactor_doTexure_doShadow
+
 using namespace boost;
 using namespace std;
 
@@ -447,6 +449,21 @@ TempControlBreak liqRibTranslator::processOneFrame(
 				// mark the frame as already scanned
 				lastScannedFrame = scanTime;
 				//liqglo__.liqglo_currentJob = *iter;
+			}
+
+			if( liqglo.launchRender ) 
+			{
+#ifdef _Refactor_doTexure_doShadow
+				// write out make texture pass
+				doTextures(txtList);
+
+				if( liqglo.liqglo_doShadows ) 
+				{
+					doShadows(shadowList);
+				}
+#endif
+			}else{
+				liquidMessage2(messageWarning, "liqglo.launchRender is false, skip doTextures()/doShadows()");
 			}
 			//
 			// start scene parsing ------------------------------------------------------------------
@@ -2589,7 +2606,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 				// launch renders directly
 				liquidMessage( string(), messageInfo ); // emit a '\n'
 				//int exitstat = 0;
-
+#ifndef _Refactor_doTexure_doShadow
 				// write out make texture pass
 				doTextures(txtList);
 
@@ -2597,7 +2614,7 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 				{
 					doShadows(shadowList);
 				}
-
+#endif
 				//if( !exitstat ){
 				liquidMessage( "Rendering hero pass... ", messageInfo );
 				printf("[!] Rendering hero pass...\n");

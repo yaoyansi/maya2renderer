@@ -3,9 +3,11 @@ void place2dTexture2 (
 )
 {
  float repeatUV[2] = { 5, 5 };
+ repeatUV[ 0 ] = 5;
+ repeatUV[ 1 ] = 5;
  extern float s, t;
- outUV[ 0 ] = mod( t * repeatUV[ 0 ], 1 );
- outUV[ 1 ] = mod( s * repeatUV[ 1 ], 1 );
+ outUV[ 0 ] = mod( s * repeatUV[ 0 ], 1 );
+ outUV[ 1 ] = mod( t * repeatUV[ 1 ], 1 );
 }
 
 void checker1 (

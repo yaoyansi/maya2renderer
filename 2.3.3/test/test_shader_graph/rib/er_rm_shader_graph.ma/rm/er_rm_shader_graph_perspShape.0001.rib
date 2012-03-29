@@ -102,7 +102,6 @@ Display "E:/MyDocuments/maya/projects/default/rmanpix/er_rm_shader_graph_perspSh
             Illuminate 2 1
             GeometricApproximation "motionfactor" 1.000000
             Color [ 0.500000 0.500000 0.500000 ]
-            Opacity [ 1.000000 1.000000 1.000000 ]
             #use Shading Group reference:
             ReadArchive "E:/MyDocuments/maya/projects/default/generatedShader/blinn2SG.rmsg"
             Transform [ 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -0.056294 1.595837 13.449421 1.000000 ]
@@ -114,7 +113,6 @@ Display "E:/MyDocuments/maya/projects/default/rmanpix/er_rm_shader_graph_perspSh
             Illuminate 2 1
             GeometricApproximation "motionfactor" 1.000000
             Color [ 0.500000 0.500000 0.500000 ]
-            Opacity [ 1.000000 1.000000 1.000000 ]
             #use Shading Group reference:
             ReadArchive "E:/MyDocuments/maya/projects/default/generatedShader/lambert7SG.rmsg"
             Transform [ 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 28.642151 2.337779 5.163940 1.000000 ]
