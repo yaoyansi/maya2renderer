@@ -5,6 +5,7 @@
 #include <liqGlobalVariable.h>
 #include <liqRibTranslator.h>
 #include <liqProcessLauncher.h>
+#include "renderermgr.h"
 
 tShadowRibWriterMgr::tShadowRibWriterMgr()
 {
@@ -26,31 +27,14 @@ TempControlBreak tShadowRibWriterMgr::write(
 {
 	CM_TRACE_FUNC("tShadowRibWriterMgr::write(liqglo___,"<<currentJob___.name<<","<<scanTime__<<","<<m_outputLightsInDeepShadows__<<",jobList__.size="<<jobList__.size()<<")");
 
-	MString     baseShadowName__(getBaseShadowName(currentJob___));
-
-	if( !currentJob___.shadowArchiveRibDone ) 
+	// BaseShadow------------------------------------------------------------
+	if( liquid::RendererMgr::getInstancePtr()->
+		getRenderer()->isBaseShadowReady(currentJob___) ) 
 	{
+		//begin
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->BaseShadowBegin(currentJob___);
 		//
-		//  create the read-archive shadow files
-		//
-#ifndef RENDER_PIPE
-		liquidMessage( "Beginning RIB output to '" + std::string( baseShadowName__.asChar() ) + "'", messageInfo );
-		RiBegin( const_cast< RtToken >( baseShadowName__.asChar() ) );
-		liqglo.m_ribFileOpen = true;
-#else
-		liqglo__.liqglo_ribFP = fopen( baseShadowName.asChar(), "w" );
-		if( liqglo__.liqglo_ribFP ) {
-			LIQDEBUGPRINTF( "-> setting pipe option\n" );
-			RtInt ribFD( fileno( liqglo__.liqglo_ribFP ) );
-			RiOption( "rib", "pipe", &ribFD, RI_NULL );
-		}
-		else
-		{
-			liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
-		}
-		liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-		RiBegin( RI_NULL );
-#endif
 		if( liqRibTranslator::getInstancePtr()->worldPrologue__(currentJob___) != MS::kSuccess )
 			return TCB_Break;//break;
 		if( currentJob___.isShadow && currentJob___.deepShadows && m_outputLightsInDeepShadows__ ) 
@@ -62,13 +46,11 @@ TempControlBreak tShadowRibWriterMgr::write(
 			return TCB_Break;//break;
 		if( liqRibTranslator::getInstancePtr()->worldEpilogue__() != MS::kSuccess ) 
 			return TCB_Break;//break;
-		RiEnd();
-		liqglo.m_ribFileOpen = false;
-#ifdef RENDER_PIPE  
-		fclose( liqglo___.liqglo_ribFP );
-#endif
-		liqglo___.liqglo_ribFP = NULL;
+		//end
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->BaseShadowEnd(currentJob___);
 
+		//------------------------------------------------------------
 		// mark all other jobs with the same set as done
 		std::vector<structJob>::iterator iterCheck = jobList__.begin();
 		while ( iterCheck != jobList__.end() ) 
@@ -80,58 +62,43 @@ TempControlBreak tShadowRibWriterMgr::write(
 				iterCheck->shadowArchiveRibDone = true;
 			++iterCheck;
 		}
-
-		liqglo___.m_alfShadowRibGen = true;
-	}//  !liqglo_currentJob.shadowArchiveRibDone  
+		liqglo.m_alfShadowRibGen = true;
+		//------------------------------------------------------------
+	}
 	else{
 		//todo....
 	}
-	//----------------------------------------------------------------
-#ifndef RENDER_PIPE
-	liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
-	RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
-	liqglo.m_ribFileOpen = true;
-#else//RENDER_PIPE
-	liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
-	if( liqglo___.liqglo_ribFP ) 
+	//////////////////////////////////////////////////////////////////////////
+	//ShadowPass----------------------------------------------------------------
+	if( liquid::RendererMgr::getInstancePtr()->
+		getRenderer()->isShadowPassReady(currentJob___) ) 
 	{
-		RtInt ribFD = fileno( liqglo___.liqglo_ribFP );
-		RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
-	} 
-	else
-	{
-		liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
+		//begin
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->ShadowPassBegin(currentJob___);
+
+		// reference the correct shadow archive
+		if( liqRibTranslator::getInstancePtr()->ribPrologue__(currentJob___) == MS::kSuccess ) 
+		{
+			if( liqRibTranslator::getInstancePtr()->framePrologue__( scanTime__, currentJob___) != MS::kSuccess ) 
+				return TCB_Break;//break;
+			
+			//MString realShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, baseShadowName, liqglo_projectDir ) ) );
+			MString     baseShadowName__(getBaseShadowName(currentJob___));
+
+			RiArchiveRecord( RI_COMMENT, "Read Archive Data:\n" );
+			RiReadArchive( const_cast< RtToken >( baseShadowName__.asChar() ), NULL, RI_NULL );
+			if( liqRibTranslator::getInstancePtr()->frameEpilogue__( scanTime__ ) != MS::kSuccess ) 
+				return TCB_Break;//break;
+			liqRibTranslator::getInstancePtr()->ribEpilogue__(currentJob___);
+		}
+
+		//end
+		liquid::RendererMgr::getInstancePtr()->
+			getRenderer()->ShadowPassEnd(currentJob___);
 	}
 
-	liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-	RiBegin( RI_NULL );
-#endif//RENDER_PIPE
-	// reference the correct shadow archive
-	//
-	/* cout <<"  * referencing shadow archive "<<baseShadowName.asChar()<<endl; */
-	if( liqRibTranslator::getInstancePtr()->ribPrologue__(currentJob___) == MS::kSuccess ) 
-	{
-		if( liqRibTranslator::getInstancePtr()->framePrologue__( scanTime__, currentJob___) != MS::kSuccess ) 
-			return TCB_Break;//break;
-		//MString realShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, baseShadowName, liqglo_projectDir ) ) );
-		RiArchiveRecord( RI_COMMENT, "Read Archive Data:\n" );
-		RiReadArchive( const_cast< RtToken >( baseShadowName__.asChar() ), NULL, RI_NULL );
-		if( liqRibTranslator::getInstancePtr()->frameEpilogue__( scanTime__ ) != MS::kSuccess ) 
-			return TCB_Break;//break;
-		liqRibTranslator::getInstancePtr()->ribEpilogue__(currentJob___);
-	}
-	RiEnd();
-	liqglo.m_ribFileOpen = false;
-	//------------------------------------------------------------
-	//rendering
-#ifdef _WIN32
-	printf("shadow.liqProcessLauncher::execute(%s, %s %s \"%s\", \"%s\", %d)\n",
-		liqglo.liquidRenderer.renderCommand.asChar(), liqglo___.liqglo_rifParams.asChar(), liqglo___.liquidRenderer.renderCmdFlags.asChar(), currentJob___.ribFileName.asChar(), liqglo___.liqglo_projectDir.asChar(), false);
-	liqProcessLauncher::execute( liqglo___.liquidRenderer.renderCommand, " "+liqglo___.liqglo_rifParams+" "+ liqglo___.liquidRenderer.renderCmdFlags + " \"" + currentJob___.ribFileName + "\"", "\"" + liqglo___.liqglo_projectDir + "\"", false );
-#else
-	liqProcessLauncher::execute( liqglo___.liquidRenderer.renderCommand, " "+liqglo___.liqglo_rifParams+" "+ liqglo___.liquidRenderer.renderCmdFlags + " " + currentJob___.ribFileName, liqglo___.liqglo_projectDir, false );
-#endif
-	//------------------------------------------------------------
+
 	return TCB_OK;
 }
 

@@ -226,6 +226,14 @@ public:
 	virtual void HeroPassBegin(const structJob &currentJob) = 0;
 	virtual void HeroPassEnd(const structJob &currentJob) = 0;
 
+	virtual bool isBaseShadowReady(const structJob &currentJob) = 0;
+	virtual void BaseShadowBegin(const structJob &currentJob) = 0;
+	virtual void BaseShadowEnd(const structJob &currentJob) = 0;
+
+	virtual bool isShadowPassReady(const structJob &currentJob) = 0;
+	virtual void ShadowPassBegin(const structJob &currentJob) = 0;
+	virtual void ShadowPassEnd(const structJob &currentJob) = 0;
+
 	virtual void oneObjectBlock_reference_attribute_begin(
 		const liqRibNodePtr &ribNode,
 		const structJob &currentJob

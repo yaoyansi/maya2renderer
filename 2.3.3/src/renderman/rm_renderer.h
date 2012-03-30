@@ -212,6 +212,15 @@ namespace renderman
 		virtual bool isHeroPassReady(const structJob &currentJob);
 		virtual void HeroPassBegin(const structJob &currentJob);
 		virtual void HeroPassEnd(const structJob &currentJob);
+		
+		virtual bool isBaseShadowReady(const structJob &currentJob);
+		virtual void BaseShadowBegin(const structJob &currentJob);
+		virtual void BaseShadowEnd(const structJob &currentJob);
+
+		virtual bool isShadowPassReady(const structJob &currentJob);
+		virtual void ShadowPassBegin(const structJob &currentJob);
+		virtual void ShadowPassEnd(const structJob &currentJob);
+
 		virtual void oneObjectBlock_reference_attribute_begin(
 			const liqRibNodePtr &ribNode,
 			const structJob &currentJob

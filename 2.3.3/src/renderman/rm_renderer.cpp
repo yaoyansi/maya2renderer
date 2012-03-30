@@ -1014,6 +1014,95 @@ namespace renderman
 		}
 	}
 	//
+
+	bool Renderer::isBaseShadowReady(const structJob &currentJob___)
+	{
+		CM_TRACE_FUNC("Renderer::isBaseShadowReady("<<currentJob___.name<<")");
+
+		return !currentJob___.shadowArchiveRibDone;
+	}
+	void Renderer::BaseShadowBegin(const structJob &currentJob___)
+	{
+		CM_TRACE_FUNC("Renderer::BaseShadowBegin("<<currentJob___.name<<")");
+
+		MString     baseShadowName__(getBaseShadowName(currentJob___));
+		//
+		//  create the read-archive shadow files
+		//
+#ifndef RENDER_PIPE
+		liquidMessage( "Beginning RIB output to '" + std::string( baseShadowName__.asChar() ) + "'", messageInfo );
+		RiBegin( const_cast< RtToken >( baseShadowName__.asChar() ) );
+		liqglo.m_ribFileOpen = true;
+#else
+		liqglo__.liqglo_ribFP = fopen( baseShadowName.asChar(), "w" );
+		if( liqglo__.liqglo_ribFP ) {
+			LIQDEBUGPRINTF( "-> setting pipe option\n" );
+			RtInt ribFD( fileno( liqglo__.liqglo_ribFP ) );
+			RiOption( "rib", "pipe", &ribFD, RI_NULL );
+		}
+		else
+		{
+			liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
+		}
+		liquidMessage( "Beginning RI output directly to renderer", messageInfo );
+		RiBegin( RI_NULL );
+#endif
+	}
+	void Renderer::BaseShadowEnd(const structJob &currentJob___)
+	{
+		CM_TRACE_FUNC("Renderer::BaseShadowEnd("<<currentJob___.name<<")");
+
+		RiEnd();
+		liqglo.m_ribFileOpen = false;
+#ifdef RENDER_PIPE  
+		fclose( liqglo.liqglo_ribFP );
+#endif
+		liqglo.liqglo_ribFP = NULL;
+	}
+
+	bool Renderer::isShadowPassReady(const structJob &currentJob___)
+	{
+		CM_TRACE_FUNC("Renderer::isShadowPassReady("<<currentJob___.name<<")");
+
+		return true;
+	}
+	void Renderer::ShadowPassBegin(const structJob &currentJob___)
+	{
+		CM_TRACE_FUNC("Renderer::ShadowPassBegin("<<currentJob___.name<<")");
+
+#ifndef RENDER_PIPE
+		liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
+		RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
+		liqglo.m_ribFileOpen = true;
+#else//RENDER_PIPE
+	liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
+	if( liqglo___.liqglo_ribFP ) 
+	{
+		RtInt ribFD = fileno( liqglo___.liqglo_ribFP );
+		RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
+	} 
+	else
+	{
+		liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
+	}
+
+	liquidMessage( "Beginning RI output directly to renderer", messageInfo );
+		RiBegin( RI_NULL );
+#endif//RENDER_PIPE
+	}
+	void Renderer::ShadowPassEnd(const structJob &currentJob___)
+	{
+		CM_TRACE_FUNC("Renderer::ShadowPassEnd("<<currentJob___.name<<")");
+
+		RiEnd();
+		liqglo.m_ribFileOpen = false;
+		//------------------------------------------------------------
+		//rendering
+		this->renderAll_local(currentJob___.ribFileName);
+		//------------------------------------------------------------
+	}
+
+	//
 	void Renderer::oneObjectBlock_reference_attribute_begin(
 		const liqRibNodePtr &ribNode,
 		const structJob &currentJob )

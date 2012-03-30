@@ -816,6 +816,39 @@ namespace elvishray
 		m_log.close();
 	}
 	//
+	bool Renderer::isBaseShadowReady(const structJob &currentJob)
+	{
+		CM_TRACE_FUNC("Renderer::isBaseShadowReady("<<currentJob.name<<")");
+
+		return true;
+	}
+	void Renderer::BaseShadowBegin(const structJob &currentJob)
+	{
+		CM_TRACE_FUNC("Renderer::BaseShadowBegin("<<currentJob.name<<")");
+
+	}
+	void Renderer::BaseShadowEnd(const structJob &currentJob)
+	{
+		CM_TRACE_FUNC("Renderer::BaseShadowEnd("<<currentJob.name<<")");
+
+	}
+
+	bool Renderer::isShadowPassReady(const structJob &currentJob)
+	{
+		CM_TRACE_FUNC("Renderer::isShadowPassReady("<<currentJob.name<<")");
+		return true;
+	}
+	void Renderer::ShadowPassBegin(const structJob &currentJob)
+	{
+		CM_TRACE_FUNC("Renderer::ShadowPassBegin("<<currentJob.name<<")");
+
+	}
+	void Renderer::ShadowPassEnd(const structJob &currentJob)
+	{
+		CM_TRACE_FUNC("Renderer::ShadowPassEnd("<<currentJob.name<<")");
+
+	}
+	//
 	void Renderer::oneObjectBlock_reference_attribute_begin(
 		const liqRibNodePtr &ribNode,
 		const structJob &currentJob )
