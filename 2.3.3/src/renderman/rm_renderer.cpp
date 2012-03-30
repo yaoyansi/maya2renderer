@@ -271,11 +271,11 @@ namespace renderman
 //	}
 	void Renderer::openLog()
 	{
-		CM_TRACE_FUNC("Renderer::openLog()");
+		CM_TRACE_FUNC("Renderer::openLog()(but do nothing now)");
 	}
 	void Renderer::closeLog()
 	{
-		CM_TRACE_FUNC("Renderer::closeLog()");
+		CM_TRACE_FUNC("Renderer::closeLog()(but do nothing now)");
 	}
 	liqLightHandle Renderer::exportShadowPassLight(
 		const std::string &shadertype, 
@@ -599,14 +599,38 @@ namespace renderman
 
 	}
 	//
-	MStatus Renderer::ribPrologue_begin(const structJob& currentJob)
+	MStatus Renderer::ribPrologue_begin(const structJob& currentJob___)
 	{
-		CM_TRACE_FUNC("Renderer::ribPrologue_begin("<<currentJob.name<<")");
+		CM_TRACE_FUNC("Renderer::ribPrologue_begin("<<currentJob___.name<<")");
+
+#ifndef RENDER_PIPE
+		liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
+		RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
+		liqglo.m_ribFileOpen = true;
+#else//RENDER_PIPE
+		liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
+		if( liqglo___.liqglo_ribFP ) 
+		{
+			RtInt ribFD = fileno( liqglo___.liqglo_ribFP );
+			RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
+		} 
+		else
+		{
+			liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
+		}
+
+		liquidMessage( "Beginning RI output directly to renderer", messageInfo );
+		RiBegin( RI_NULL );
+#endif//RENDER_PIPE
 		return MS::kSuccess;
 	}
 	MStatus Renderer::ribPrologue_end(const structJob& currentJob)
 	{
 		CM_TRACE_FUNC("Renderer::ribPrologue_end("<<currentJob.name<<")");
+		
+		RiEnd();
+		liqglo.m_ribFileOpen = false;
+
 		return MS::kSuccess;
 	}
 	//
@@ -977,32 +1001,13 @@ namespace renderman
 	{
 		CM_TRACE_FUNC("Renderer::HeroPassBegin("<<currentJob___.name<<")");
 
-#ifndef RENDER_PIPE
-		liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
-		RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
-		liqglo.m_ribFileOpen = true;
-#else//RENDER_PIPE
-		liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
-		if( liqglo___.liqglo_ribFP ) 
-		{
-			RtInt ribFD = fileno( liqglo___.liqglo_ribFP );
-			RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
-		} 
-		else
-		{
-			liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
-		}
 
-		liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-		RiBegin( RI_NULL );
-#endif//RENDER_PIPE
 	}
 	void Renderer::HeroPassEnd(const structJob &currentJob)
 	{
 		CM_TRACE_FUNC("Renderer::HeroPassEnd("<<currentJob.name<<")");
 
-		RiEnd();
-		liqglo.m_ribFileOpen = false;
+
 
 		//
 		if( currentJob.skip ) 
@@ -1070,32 +1075,14 @@ namespace renderman
 	{
 		CM_TRACE_FUNC("Renderer::ShadowPassBegin("<<currentJob___.name<<")");
 
-#ifndef RENDER_PIPE
-		liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
-		RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
-		liqglo.m_ribFileOpen = true;
-#else//RENDER_PIPE
-	liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
-	if( liqglo___.liqglo_ribFP ) 
-	{
-		RtInt ribFD = fileno( liqglo___.liqglo_ribFP );
-		RiOption( ( RtToken )"rib", ( RtToken )"pipe", &ribFD, RI_NULL );
-	} 
-	else
-	{
-		liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
-	}
-
-	liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-		RiBegin( RI_NULL );
-#endif//RENDER_PIPE
+		//move RiBegin() to ribPrologue_begin()
 	}
 	void Renderer::ShadowPassEnd(const structJob &currentJob___)
 	{
 		CM_TRACE_FUNC("Renderer::ShadowPassEnd("<<currentJob___.name<<")");
+		
+		//move RiEnd() to ribPrologue_end()
 
-		RiEnd();
-		liqglo.m_ribFileOpen = false;
 		//------------------------------------------------------------
 		//rendering
 		this->renderAll_local(currentJob___.ribFileName);

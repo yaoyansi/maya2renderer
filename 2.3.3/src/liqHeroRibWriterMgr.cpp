@@ -27,7 +27,7 @@ struct liqGlobalVariable &liqglo___,
 {
 	CM_TRACE_FUNC("tHeroRibWriterMgr::write(liqglo___,"<<currentJob___.name<<","<<scanTime__<<","<<m_outputLightsInDeepShadows__<<")");
 	
-	//RiBegin() is moved to RM::Renderer::HeroPassBegin()
+	//RiBegin() is moved to RM::Renderer::ribPrologue_begin()
 	// full beauty/shadow rib generation
 	//
 	/* cout <<"  * build full rib"<<endl; */
@@ -57,7 +57,7 @@ struct liqGlobalVariable &liqglo___,
 		// output info when done with the rib - Alf
 		printf("Finished RIB generation %s\n", currentJob___.ribFileName.asChar());
 	}
-	//RiEnd() is moved to RM::Renderer::HeroPassEnd()
+	//RiEnd() is moved to RM::Renderer::ribPrologue_end()
 
 	return TCB_OK;
 }

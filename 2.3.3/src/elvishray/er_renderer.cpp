@@ -99,11 +99,11 @@ namespace elvishray
 	//}
 	void Renderer::openLog()
 	{
-		CM_TRACE_FUNC("Renderer::openLog()");
+		CM_TRACE_FUNC("Renderer::openLog()(but do nothing now)");
 	}
 	void Renderer::closeLog()
 	{
-		CM_TRACE_FUNC("Renderer::closeLog()");
+		CM_TRACE_FUNC("Renderer::closeLog()(but do nothing now)");
 	}
 
 	liqLightHandle Renderer::exportShadowPassLight(
@@ -271,6 +271,11 @@ namespace elvishray
 	{
 		CM_TRACE_FUNC("Renderer::ribPrologue_begin("<<currentJob.name<<")");
 
+		//////////////////////////////////////////////////////////////////////////
+		//open script log file
+		m_log.open((currentJob.ribFileName+".er").asChar());
+		//////////////////////////////////////////////////////////////////////////
+
 		if( false )
 		{
 			_S( ei_make_texture( currentJob.imageName.asChar(), currentJob.texName.asChar() , EI_TEX_WRAP_CLAMP, EI_TEX_WRAP_CLAMP, EI_FILTER_BOX, 1.0f, 1.0f ) );
@@ -338,7 +343,10 @@ namespace elvishray
 			}
 			MayaConnection::delInstance();
 		}
-
+		//////////////////////////////////////////////////////////////////////////
+		//close script log file
+		m_log.close();
+		//////////////////////////////////////////////////////////////////////////
 		return MS::kSuccess;
 	}
 	//
@@ -807,13 +815,13 @@ namespace elvishray
 	{
 		CM_TRACE_FUNC("Renderer::HeroPassBegin("<<currentJob___.name<<")");
 
-		m_log.open((currentJob___.ribFileName+".er").asChar());
+		//m_log.open() is moved to ribPrologue_begin()
 	}
 	void Renderer::HeroPassEnd(const structJob &currentJob)
 	{
 		CM_TRACE_FUNC("Renderer::HeroPassEnd("<<currentJob.name<<")");
 
-		m_log.close();
+		//m_log.close() is moved to ribPrologue_end()
 	}
 	//
 	bool Renderer::isBaseShadowReady(const structJob &currentJob___)

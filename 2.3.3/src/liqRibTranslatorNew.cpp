@@ -481,7 +481,6 @@ TempControlBreak liqRibTranslator::processOneFrame(
 			liquid::RendererMgr::getInstancePtr()->
 				getRenderer()->setRenderScriptFormatAndCompress(liqglo__.liqglo_doBinary, liqglo__.liqglo_doCompression);
 
-			addRibFile(currentJob.ribFileName);
 			// world RiReadArchives and Rib Boxes ************************************************
 			//
 			if( /*liqglo__.liqglo_*/currentJob.isShadow && !liqglo.fullShadowRib )
@@ -1097,6 +1096,8 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 		return MS::kSuccess;
 	}
 
+	liquid::RendererMgr::getInstancePtr()->getRenderer()->ribPrologue_begin(currentJob);
+
 	//user
 	char* user = NULL;
 #ifndef _WIN32
@@ -1117,7 +1118,6 @@ MStatus liqRibTranslator::ribPrologue__(const structJob &currentJob)
 		user, now
 		);
 
-	liquid::RendererMgr::getInstancePtr()->getRenderer()->ribPrologue_begin(currentJob);
 
 	liquid::RendererMgr::getInstancePtr()->getRenderer()->ribPrologue_options(currentJob);
 
@@ -2519,7 +2519,6 @@ MStatus liqRibTranslator::_doItNewWithoutRenderScript(
 			MFileIO::exportAll( liqglo.tempDefname, currentFileType.asChar() );
 		}
 
-		clearRibFileList();
 
 		liqRenderScript jobScript;
 		// 		liqRenderScript::Job preJobInstance;
@@ -2780,7 +2779,6 @@ MStatus liqRibTranslator::_doItNewWithRenderScript(
 			MFileIO::exportAll( liqglo.tempDefname, currentFileType.asChar() );
 		}
 
-		clearRibFileList();
 
 		liqRenderScript jobScript;
 		// 		liqRenderScript::Job preJobInstance;
@@ -3654,27 +3652,3 @@ MStatus liqRibTranslator::writeShader_forShadow(
 	return MS::kSuccess;
 }
 //
-void liqRibTranslator::clearRibFileList()
-{
-	//CM_TRACE_FUNC("liqRibTranslatorNew::clearRibFileList()");
-
-	ribFileList.clear();
-}
-void liqRibTranslator::addRibFile(const MString& ribFile)
-{
-	CM_TRACE_FUNC("liqRibTranslatorNew::addRibFile("<<ribFile<<")");
-
-	ribFileList.push_back(ribFile);
-}
-std::size_t liqRibTranslator::getRibFileListSize()
-{
-	//CM_TRACE_FUNC("liqRibTranslatorNew::getRibFileListSize()");
-
-	return ribFileList.size();
-}
-MString liqRibTranslator::getRibFile(std::size_t index)
-{
-	CM_TRACE_FUNC("liqRibTranslatorNew::getRibFile("<<index<<")");
-
-	return ribFileList.at(index);
-}
