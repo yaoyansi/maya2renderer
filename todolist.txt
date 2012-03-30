@@ -28,19 +28,19 @@
 	assert(pData->getRibFileFullPath().length()==0。。。）；
 	原因是先执行了shadowPass,pData->m_ribFileFullPath不为空。
  尝试解决这个问题
--bug：test_deepshadow_2.ma，阴影里没有物体的透明度。
--重构：Renderer::renderAll_local()里对于shadow pass不要调用doRenderView();
--重构：shadowPass 过程里包含basePass的过程，需要testcase验证
--er渲染时，shadowpass的数据输出到哪里？
+- bug：test_deepshadow_2.ma，阴影里没有物体的透明度。
+- 重构：Renderer::renderAll_local()里对于shadow pass不要调用doRenderView();
+- 重构：shadowPass 过程里包含basePass的过程，需要testcase验证
+- er渲染时，shadowpass的数据输出到哪里？
 
 
--RiBegin()/RiEnd()时用变量标记，在Ri×时检查该标记
+- RiBegin()/RiEnd()时用变量标记，在Ri×时检查该标记
 - 重构Renderer::_writeObject(），现在只导出了mesh和light；dynamic_pointer_cast也需要重构
--导出shdergraph时，一个shadernode会被导出多次。
+- (done)导出shdergraph时，一个shadernode会被导出多次。
   解决方法：第一步先记录待导出的shader node，第二步再导出这些shader node
 
--lambert shader
--blinn shader
+- lambert shader
+- blinn shader
 - framelog， allLog
 -liqMayaRenderView里的getNode（）可被重构去掉
 
