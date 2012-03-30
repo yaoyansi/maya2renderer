@@ -816,20 +816,25 @@ namespace elvishray
 		m_log.close();
 	}
 	//
-	bool Renderer::isBaseShadowReady(const structJob &currentJob)
+	bool Renderer::isBaseShadowReady(const structJob &currentJob___)
 	{
-		CM_TRACE_FUNC("Renderer::isBaseShadowReady("<<currentJob.name<<")");
+		CM_TRACE_FUNC("Renderer::isBaseShadowReady("<<currentJob___.name<<")");
 
-		return true;
+		return !currentJob___.shadowArchiveRibDone;
 	}
-	void Renderer::BaseShadowBegin(const structJob &currentJob)
+	void Renderer::BaseShadowBegin(const structJob &currentJob___)
 	{
-		CM_TRACE_FUNC("Renderer::BaseShadowBegin("<<currentJob.name<<")");
+		CM_TRACE_FUNC("Renderer::BaseShadowBegin("<<currentJob___.name<<")");
 
+		MString     baseShadowName__(getBaseShadowName(currentJob___));
+		liquidMessage2(messageInfo, "open base shadow file %s\n", baseShadowName__.asChar());
 	}
-	void Renderer::BaseShadowEnd(const structJob &currentJob)
+	void Renderer::BaseShadowEnd(const structJob &currentJob___)
 	{
-		CM_TRACE_FUNC("Renderer::BaseShadowEnd("<<currentJob.name<<")");
+		CM_TRACE_FUNC("Renderer::BaseShadowEnd("<<currentJob___.name<<")");
+	
+		MString     baseShadowName__(getBaseShadowName(currentJob___));
+		liquidMessage2(messageInfo, "close base shadow file %s\n", baseShadowName__.asChar());
 
 	}
 
@@ -838,14 +843,21 @@ namespace elvishray
 		CM_TRACE_FUNC("Renderer::isShadowPassReady("<<currentJob.name<<")");
 		return true;
 	}
-	void Renderer::ShadowPassBegin(const structJob &currentJob)
+	void Renderer::ShadowPassBegin(const structJob &currentJob___)
 	{
-		CM_TRACE_FUNC("Renderer::ShadowPassBegin("<<currentJob.name<<")");
-
+		CM_TRACE_FUNC("Renderer::ShadowPassBegin("<<currentJob___.name<<")");
+	
+		liquidMessage2(messageInfo, "open shadow pass file %s\n", currentJob___.ribFileName.asChar() );
 	}
-	void Renderer::ShadowPassEnd(const structJob &currentJob)
+	void Renderer::ShadowPassEnd(const structJob &currentJob___)
 	{
-		CM_TRACE_FUNC("Renderer::ShadowPassEnd("<<currentJob.name<<")");
+		CM_TRACE_FUNC("Renderer::ShadowPassEnd("<<currentJob___.name<<")");
+
+		liquidMessage2(messageInfo, "close shadow pass file %s\n", currentJob___.ribFileName.asChar() );
+	}
+	void Renderer::readBaseShadow(const structJob &currentJob___)
+	{
+		CM_TRACE_FUNC("Renderer::readBaseShadow("<<currentJob___.name<<")");
 
 	}
 	//

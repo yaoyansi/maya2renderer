@@ -219,6 +219,7 @@ namespace renderman
 
 		virtual bool isShadowPassReady(const structJob &currentJob);
 		virtual void ShadowPassBegin(const structJob &currentJob);
+		virtual void readBaseShadow(const structJob &currentJob);
 		virtual void ShadowPassEnd(const structJob &currentJob);
 
 		virtual void oneObjectBlock_reference_attribute_begin(

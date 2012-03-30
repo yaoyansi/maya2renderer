@@ -232,6 +232,7 @@ public:
 
 	virtual bool isShadowPassReady(const structJob &currentJob) = 0;
 	virtual void ShadowPassBegin(const structJob &currentJob) = 0;
+	virtual void readBaseShadow(const structJob &currentJob) = 0;
 	virtual void ShadowPassEnd(const structJob &currentJob) = 0;
 
 	virtual void oneObjectBlock_reference_attribute_begin(

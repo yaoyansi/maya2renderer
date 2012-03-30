@@ -1101,7 +1101,17 @@ namespace renderman
 		this->renderAll_local(currentJob___.ribFileName);
 		//------------------------------------------------------------
 	}
+	void Renderer::readBaseShadow(const structJob &currentJob___)
+	{
+		CM_TRACE_FUNC("Renderer::readBaseShadow("<<currentJob___.name<<")");
+		
+		//MString realShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, baseShadowName, liqglo_projectDir ) ) );
+		MString     baseShadowName__(getBaseShadowName(currentJob___));
 
+		RiArchiveRecord( RI_COMMENT, "Read Archive Data:\n" );
+		RiReadArchive( const_cast< RtToken >( baseShadowName__.asChar() ), NULL, RI_NULL );
+
+	}
 	//
 	void Renderer::oneObjectBlock_reference_attribute_begin(
 		const liqRibNodePtr &ribNode,

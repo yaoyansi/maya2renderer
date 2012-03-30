@@ -77,17 +77,15 @@ TempControlBreak tShadowRibWriterMgr::write(
 		liquid::RendererMgr::getInstancePtr()->
 			getRenderer()->ShadowPassBegin(currentJob___);
 
-		// reference the correct shadow archive
 		if( liqRibTranslator::getInstancePtr()->ribPrologue__(currentJob___) == MS::kSuccess ) 
 		{
 			if( liqRibTranslator::getInstancePtr()->framePrologue__( scanTime__, currentJob___) != MS::kSuccess ) 
 				return TCB_Break;//break;
 			
-			//MString realShadowName( liquidSanitizePath( liquidGetRelativePath( liqglo_relativeFileNames, baseShadowName, liqglo_projectDir ) ) );
-			MString     baseShadowName__(getBaseShadowName(currentJob___));
+			// reference the correct shadow archive
+			liquid::RendererMgr::getInstancePtr()->
+				getRenderer()->readBaseShadow(currentJob___);
 
-			RiArchiveRecord( RI_COMMENT, "Read Archive Data:\n" );
-			RiReadArchive( const_cast< RtToken >( baseShadowName__.asChar() ), NULL, RI_NULL );
 			if( liqRibTranslator::getInstancePtr()->frameEpilogue__( scanTime__ ) != MS::kSuccess ) 
 				return TCB_Break;//break;
 			liqRibTranslator::getInstancePtr()->ribEpilogue__(currentJob___);
