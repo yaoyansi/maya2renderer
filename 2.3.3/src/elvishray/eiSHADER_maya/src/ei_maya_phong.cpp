@@ -16,6 +16,7 @@
 #include <eiAPI/ei_shaderx.h>
 #include "common/_3delight/shading_utils.h"
 #include "common/_3delight/utils.h"
+#include "common/my_utils.h"
 
 #define TEST_CASE 1
 
@@ -296,11 +297,11 @@ SURFACE(maya_phong)
 #ifdef USE_SAMPLE_LIGHT
 					SAMPLE_LIGHT(C,
 						vector Ln = normalize( L() );
-						C += Cl() * pow( max<float>(eiSCALAR_EPS, R%Ln), cosinePower) * (1.0f-nonspecular);
+						C += Cl() * pow( max<float>(0.0f, R%Ln), cosinePower) * (1.0f-nonspecular);
 					);
 #else
 					vector Ln = normalize( L() );
-					C += Cl() * pow( max<float>(eiSCALAR_EPS, R%Ln), cosinePower) * (1.0f-nonspecular);
+					C += Cl() * pow( max<float>(0.0f, R%Ln), cosinePower) * (1.0f-nonspecular);
 #endif
 				}
 			}
@@ -340,10 +341,10 @@ SURFACE(maya_phong)
 					vector Ln = normalize(L());
 #ifdef USE_SAMPLE_LIGHT
 					//SAMPLE_LIGHT(C,
-						C += Cl()  * pow( max<float>(eiSCALAR_EPS,  i_N%H /* R%Ln */ ), cosinePower) * (1.0f-nonspecular);
+						C += Cl()  * pow( max<float>(0.0f,  i_N%H /* R%Ln */ ), cosinePower) * (1.0f-nonspecular);
 					//);
 #else
-						C += Cl()  * pow( max<float>(eiSCALAR_EPS,  i_N%H /* R%Ln */ ), cosinePower) * (1.0f-nonspecular);
+						C += Cl()  * pow( max<float>(0.0f,  i_N%H /* R%Ln */ ), cosinePower) * (1.0f-nonspecular);
 #endif
 				}
 			}
@@ -410,7 +411,7 @@ SURFACE(maya_phong)
 		color ray_coloration = i_specularColor * i_reflectivity;
 		color reflected = i_reflectedColor;
 
-		if( /*ray_coloration != color(0)*/!almost_zerov(&ray_coloration, eiSCALAR_EPS) &&
+		if( /*ray_coloration != color(0)*/!less_than(&ray_coloration, LIQ_SCALAR_ALMOST_ZERO) &&
 			/*raySpecularDepth() < i_reflectionLimit*/eiTRUE )
 		{
 			vector R = reflect( i_I, i_N );
@@ -481,7 +482,7 @@ SURFACE(maya_phong)
 		Ci() *= (Cdiffuse + Cambient + Ctransl);
 		Ci() += Creflect +  Cspecular + incandescence() + refraction;
 
-		if ( ! almost_zerov( &transparency(), eiSCALAR_EPS ) )
+		if ( ! less_than( &transparency(), LIQ_SCALAR_ALMOST_ZERO ) )
 		{//transparent
 			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
 		}//else{ opacity }

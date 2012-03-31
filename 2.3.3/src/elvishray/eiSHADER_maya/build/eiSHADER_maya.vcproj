@@ -671,6 +671,14 @@
 				RelativePath="..\src\common\my_math.h"
 				>
 			</File>
+			<File
+				RelativePath="..\src\common\my_utils.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\common\my_utils.h"
+				>
+			</File>
 			<Filter
 				Name="_3delight"
 				>
