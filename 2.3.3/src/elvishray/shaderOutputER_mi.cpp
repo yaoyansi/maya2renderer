@@ -20,8 +20,8 @@ void Visitor::visit_mib_amb_occlusion(const char* node)
 	o.addRSLVariable("index",	"samples",		"samples",		node);
 	o.addRSLVariable("color",	"bright",		"bright",		node);
 	o.addRSLVariable("color",	"dark",			"dark",			node);
-	o.addRSLVariable("scalar",	"spread",		"spread",		node);
-	o.addRSLVariable("scalar",	"max_distance",	"max_distance",	node);
+	o.addRSLVariable("float",	"spread",		"spread",		node);
+	o.addRSLVariable("float",	"max_distance",	"max_distance",	node);
 	o.addRSLVariable("bool",	"reflective",	"reflective",	node);
 	//o.addRSLVariable("color",	"outValue",		"outValue",		node);
 
