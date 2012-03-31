@@ -231,6 +231,10 @@ public:
 	// @node	maya shader node name
 	virtual void visitOpticalFX(const char* node) = 0;
 
+	///mentalray shaders
+	/// mib_amb_occlusion ///
+	virtual void visit_mib_amb_occlusion(const char* node) = 0;
+
 protected:
 	void _outputUpstreamShader(const char* shaderNodeName, const char* nodetype);
 

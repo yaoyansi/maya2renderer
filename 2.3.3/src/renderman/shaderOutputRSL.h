@@ -276,6 +276,10 @@ public:
 	// @node	maya shader node name
 	virtual void visitOpticalFX(const char* node);
 
+	///mentalray shaders
+	/// mib_amb_occlusion ///
+	virtual void visit_mib_amb_occlusion(const char* node);
+
 protected:
 	std::ofstream RSLfile;
 private:

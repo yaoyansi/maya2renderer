@@ -632,6 +632,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ei_maya_mib_amb_occlusion.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\ei_maya_phong.cpp"
 				>
 			</File>

@@ -49,7 +49,7 @@ void test_liquid2er()
 {
 //#include"cornellbox.esa"
 //#include "./liq_er_displace_good.er"
-#include "d:/script.er"
+#include "E:/MyDocuments/maya/projects/default/rib/mib_amb_occlusion_perspShape.0010.er"
 //#include"ei_scene_unittest.esa"//<----- use your own elvishender api script file here.
 	
 	//ei_face_color_unittest(NULL, "suffix");

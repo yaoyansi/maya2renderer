@@ -20,6 +20,7 @@ public:
 
 protected:
 	void setValidConnection();
+	void setValidConnection_mi();
 
 
 	std::map<const std::string, MStringArray> validConnectionMap;

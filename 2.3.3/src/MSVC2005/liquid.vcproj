@@ -3287,6 +3287,10 @@
 					RelativePath="..\shadergraph\shaderValidConnection.h"
 					>
 				</File>
+				<File
+					RelativePath="..\shadergraph\shaderValidConnection_mi.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -4042,6 +4046,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\renderman\shaderOutputRSL_mi.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\renderman\shaderOutputRSL_textures.cpp"
 					>
 				</File>
@@ -4154,6 +4162,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\elvishray\shaderOutputER_mi.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\elvishray\shaderOutputER_textures.cpp"
 					>
 				</File>
@@ -4171,6 +4183,10 @@
 				</File>
 				<File
 					RelativePath="..\elvishray\shaderOutputERCall_materials.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\shaderOutputERCall_mi.cpp"
 					>
 				</File>
 				<File

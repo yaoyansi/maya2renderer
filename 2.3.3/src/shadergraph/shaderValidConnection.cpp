@@ -357,7 +357,7 @@ void ShaderValidConnection::setValidConnection()
 	/// glow ///
 	//opticalFX
 
-
+	setValidConnection_mi();
 
 
 }

@@ -338,6 +338,9 @@ namespace liquidmaya{
 		else if( strcmp("opticalFX", nodetype) == 0 ){
 			visitOpticalFX(shaderNodeName);
 		}
+		else if( strcmp("mib_amb_occlusion", nodetype) == 0 ){
+			visit_mib_amb_occlusion(shaderNodeName);
+		}
 		else{
 			liquidMessage2(messageError, ("shader type <"+std::string(nodetype)+"> is not supported.").c_str() );
 			assert( 0 && "shader type is not support.");
