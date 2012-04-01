@@ -397,10 +397,10 @@ SURFACE(maya_phong)
 		Ci() *= (Cdiffuse + Cambient + Ctransl);
 		Ci() += Creflect +  Cspecular + incandescence() + refraction;
 
-		//if ( ! less_than( &transparency(), LIQ_SCALAR_ALMOST_ZERO ) )
-		//{//transparent
-		//	Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
-		//}//else{ opacity }
+		if ( ! less_than( &transparency(), LIQ_SCALAR_ALMOST_ZERO ) )
+		{//transparent
+			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
+		}//else{ opacity }
 
 		//computeShadowPass(Nf);
 
