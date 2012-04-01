@@ -650,8 +650,6 @@ namespace elvishray
 				_s("//camera");
 				_S( ei_add_instance( group.getCamera().c_str()) );
 
-				//add the dummy light for test
-				_S( ei_add_instance("|pointLight1|pointLightShape1") );
 
 				//mesh and light link
 				std::map<MeshName, LightNames>::iterator mesh_i 
@@ -667,7 +665,7 @@ namespace elvishray
 					LightNames::iterator light_e = mesh_i->second.end();
 					for(; light_i!=light_e; ++light_i)// has light link
 					{
-						//_S( ei_add_instance( light_i->c_str()) );
+						_S( ei_add_instance( light_i->c_str()) );
 					}
 
 					// init object
