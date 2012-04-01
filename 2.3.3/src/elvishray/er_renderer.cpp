@@ -684,7 +684,7 @@ namespace elvishray
 		CM_TRACE_FUNC("Renderer::exportLightLinks("<<currentJob__.name<<","<<mesh->name<<",lightedByWhichLightShapes.size="<<lightedByWhichLightShapes.length()<<")");
 
 		if(lightedByWhichLightShapes.length() == 0){
-			_s( mesh->name << " is not lighted." );
+			_s("//"<< mesh->name << " is not lighted." );
 			return;
 		}
 
