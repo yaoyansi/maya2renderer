@@ -46,6 +46,7 @@
 				RuntimeLibrary="3"
 				WarningLevel="3"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4305"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -112,11 +113,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="E:\dev\render\elvishrender\"
+				AdditionalIncludeDirectories="../../../../dependence/elvishray/trunk"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				WarningLevel="3"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4305"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -130,7 +132,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="eiAPI.lib eiCORE.lib eiIMG.lib eiSHADER.lib"
-				AdditionalLibraryDirectories="E:\dev\render\elvishrender\build\r990\x86\lib"
+				AdditionalLibraryDirectories="../../../../dependence/elvishray/bin"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
