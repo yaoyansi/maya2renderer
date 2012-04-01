@@ -39,6 +39,27 @@
 		cmd;						\
 	}my_sample_light_get( value );
 
+#define SAMPLE_LIGHT_2(T, name, default_value, cmd)	\
+	T last_##name = default_value;					\
+	int num_samples_##name = 0;						\
+	const int sample_slot = 4;						\
+	while( sample_light() ){						\
+		cmd;										\
+		++ num_samples_##name;						\
+		if ((num_samples_##name % sample_slot) == 0){		\
+			const color current =							\
+				name * (1.0f / (scalar)num_samples_##name);	\
+			if (converged(current, last_##name))	\
+				break;								\
+			last_##name = current;					\
+		}											\
+	}												\
+	name *= (1.0f / (scalar)num_samples_##name);
+
+
+
+
+
 SURFACE(maya_phong)
 	//Common Material Attributes
 	PARAM(color, color_);
@@ -116,7 +137,8 @@ SURFACE(maya_phong)
 	{
 		//main1(arg);
 		//main1_2(arg);
-		main2(arg);
+		main1_3(arg);
+		//main2(arg);
 
 	}
 	eiBool my_sample_light(const color& value)
@@ -148,13 +170,13 @@ SURFACE(maya_phong)
 
 		while (illuminance(P(), Nf, PI / 2.0f))
 		{
-			color	lastC = 0.0f;
-			color	localC = 0.0f;
+			color	C = 0.0f;
+			color	last = 0.0f;
 			int		num_samples = 0;
 
 			while (sample_light())
 			{
-				localC += Cl() * (
+				C += Cl() * (
 					color_() * Kd * (normalize(L()) % Nf) 
 					+ cosinePower() * specularColor() * specularbrdf(normalize(L()), Nf, V, 0.1f/*roughness()*/)
 					);
@@ -163,21 +185,21 @@ SURFACE(maya_phong)
 
 				if ((num_samples % 4) == 0)
 				{
-					color	thisC = localC * (1.0f / (scalar)num_samples);
+					color	current = C * (1.0f / (scalar)num_samples);
 
-					if (converged(thisC, lastC)){
+					if (converged(current, last)){
 						break;
 					}
-					lastC = thisC;
+					last = current;
 				}
 			}
 
-			localC *= (1.0f / (scalar)num_samples);
-			Ci() += localC;
+			C *= (1.0f / (scalar)num_samples);
+			Ci() += C;
 		}
 
 		Ci() += Kd * irradiance();
-		if ( ! almost_zerov( &transparency(), 0.001f ) )
+		if ( ! less_than( &transparency(), LIQ_SCALAR_ALMOST_ZERO ) )
 		{//transparent
 			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
 		}//else{ opacity }
@@ -206,7 +228,34 @@ SURFACE(maya_phong)
 		}
 
 		Ci() += Kd * irradiance();
-		if ( ! almost_zerov( &transparency(), 0.001f ) )
+		if ( ! less_than( &transparency(), LIQ_SCALAR_ALMOST_ZERO ) )
+		{//transparent
+			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
+		}//else{ opacity }
+		setOutputForMaya();
+	}
+	void main1_3(void *arg)
+	{
+		color Kd = color(diffuse(), diffuse(), diffuse());
+
+		normal Nf = faceforward(normalize(N()), I());
+		vector V = -normalize(I());
+
+		while (illuminance(P(), Nf, PI / 2.0f))
+		{
+			color C = 0.0f;
+			SAMPLE_LIGHT_2(color, C, 0.0f,
+				C += Cl() * (
+					color_() * Kd * (normalize(L()) % Nf) 
+					+ cosinePower() * specularColor() * specularbrdf(normalize(L()), Nf, V, 0.1f/*roughness()*/)
+					)
+				);
+
+			Ci() += C;
+		}
+
+		Ci() += Kd * irradiance();
+		if ( ! less_than( &transparency(), LIQ_SCALAR_ALMOST_ZERO ) )
 		{//transparent
 			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
 		}//else{ opacity }
@@ -217,14 +266,17 @@ SURFACE(maya_phong)
 	{
 		normal Nf = i_N;
 
-		const float sides = 2;
-		if( sides == 2 )
+		//const int sides = 2;
+		if( true/*sides == 2*/ )
 		{
 			Nf = faceforward(Nf, I());
 		}
 		return Nf;
 	}
-	color getDiffuse(const normal& i_N,const eiBool keyLightsOnly,const eiBool unshadowed )
+	color getDiffuse(
+		const normal& i_N,
+		const eiBool keyLightsOnly,
+		const eiBool unshadowed )
 	{
 		eiBool isKeyLight = eiTRUE;
 #ifdef RESET_OUTER
