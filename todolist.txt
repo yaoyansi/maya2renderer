@@ -24,6 +24,9 @@
 - (done)整理er_rm_shader_graph_phong.ma test记录 rib/image
 - (done)test all cases for the lastest code
 
+-更新er代码，回归测试
+  添加er light group的支持
+  测试trex
 - er 函数调用输出时，对于float型，应加f后缀，否则输出的脚本在执行时会提示double转float型的警告。
 -bug: mib_amb_occlusion的spread和max_distance未输出
 -测试test_deepshadow_2.ma时，rm_writeMeshData.cpp/rm_writeLightData.cpp报assert错误：
