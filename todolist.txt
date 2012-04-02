@@ -24,7 +24,9 @@
 - (done)整理er_rm_shader_graph_phong.ma test记录 rib/image
 - (done)test all cases for the lastest code
 
+-physicalsky需要修改为maya可用的
 -更新er代码，回归测试
+ shader里默认坐标系改为什么？更新shader
   添加er light group的支持
   测试trex
 - er 函数调用输出时，对于float型，应加f后缀，否则输出的脚本在执行时会提示double转float型的警告。
