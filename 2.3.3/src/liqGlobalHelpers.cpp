@@ -1491,3 +1491,8 @@ bool doesPlugExist(const MString& node, const MString& plug)
 
 	return (bExist!=0);
 }
+//
+MString getLightGroupName(const MString& meshShapeNodes)
+{
+	return meshShapeNodes+"_lightgroup";
+}

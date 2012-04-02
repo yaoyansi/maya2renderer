@@ -1,10 +1,30 @@
 #include "er_renderer.h"
+#include "../common/prerequest_maya.h"
+#include "../common/mayacheck.h"
 #include <liqRibLightData.h>
 #include "ercall.h"
 #include "log_helper.h"
 
 namespace elvishray
 {
+	//
+	void addLightGroupForLight(const MString& lightTransformNode)
+	{
+		CM_TRACE_FUNC("addLightGroupForLight("<<lightTransformNode<<")");
+
+		MStringArray meshShapeNodes;
+		IfMErrorWarn(MGlobal::executeCommand( "lightlink -q -set 0 -shapes 1 -transforms 0 -light "+lightTransformNode, meshShapeNodes));
+
+		_s("{");
+			_d( eiTag tag = 0 );
+			for(std::size_t i=0; i<meshShapeNodes.length();++i)
+			{
+				const MString lightGroupName( getLightGroupName(meshShapeNodes[i]) );
+				_S( ei_declare(lightGroupName.asChar(), eiCONSTANT, EI_DATA_TYPE_INT, &tag) );
+			}
+		_s("}");
+	}
+	//
 	bool Renderer::writeLight_pre(const liqRibNodePtr& ribNode, const structJob &currentJob)
 	{
 		CM_TRACE_FUNC("Renderer::writeLight_pre("<<ribNode->name<<","<<currentJob.name<<")");
@@ -46,6 +66,7 @@ namespace elvishray
 
 		_S( ei_instance(  shaderinstanceFullPath.c_str()) );
 		_S( ei_element(	 sLightObjectName.c_str()));
+		addLightGroupForLight(shaderinstanceFullPath.c_str());
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -93,6 +114,7 @@ namespace elvishray
 		_S( ei_instance( shaderinstanceFullPath.c_str()) );
 		_S( ei_element(	sLightObjectName.c_str()) );
 		_S( ei_transform( t[0][0], t[0][1], t[0][2], t[0][3],   t[1][0], t[1][1], t[1][2], t[1][3],   t[2][0], t[2][1], t[2][2], t[2][3],   t[3][0], t[3][1], t[3][2], t[3][3] ) );
+		addLightGroupForLight(shaderinstanceFullPath.c_str());
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -145,6 +167,7 @@ namespace elvishray
 		_S( ei_instance( shaderinstanceFullPath.c_str() ) );
 		_S( ei_element( sLightObjectName.c_str() ) );
 		_S( ei_transform( t[0][0], t[0][1], t[0][2], t[0][3],   t[1][0], t[1][1], t[1][2], t[1][3],   t[2][0], t[2][1], t[2][2], t[2][3],   t[3][0], t[3][1], t[3][2], t[3][3] ) );
+		addLightGroupForLight(shaderinstanceFullPath.c_str());
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -223,6 +246,7 @@ namespace elvishray
 		_S( ei_instance( shaderinstanceFullPath.c_str() ) );
 		_S( ei_element(	sLightObjectName.c_str() ) );
 		_S( ei_transform( t[0][0], t[0][1], t[0][2], t[0][3],   t[1][0], t[1][1], t[1][2], t[1][3],   t[2][0], t[2][1], t[2][2], t[2][3],   t[3][0], t[3][1], t[3][2], t[3][3] ) );
+		addLightGroupForLight(shaderinstanceFullPath.c_str());
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);
@@ -271,6 +295,7 @@ namespace elvishray
 
 		_S( ei_instance( shaderinstanceFullPath.c_str() ) );
 		_S( ei_element(	 sLightObjectName.c_str() ) );
+		addLightGroupForLight(shaderinstanceFullPath.c_str());
 		_S( ei_end_instance() );
 
 		return (liqLightHandle)(0);

@@ -243,6 +243,10 @@ namespace elvishray
 		_s("//ribNode->doDef="<<ribNode__->doDef<<", ribNode->doMotion="<<ribNode__->doMotion);
 		_S( ei_motion( bMotion ) );
 
+		//light group(light-link group)
+		_s("//ei_XXXX(\"lightgroup\", ei_token(\""<<getLightGroupName(mesh->getName())<<"\"));");
+
+
 		_S( ei_end_instance() );
 		_s("//");
 		//
@@ -649,28 +653,26 @@ namespace elvishray
 				//camera
 				_s("//camera");
 				_S( ei_add_instance( group.getCamera().c_str()) );
-
-
-				//mesh and light link
-				std::map<MeshName, LightNames>::iterator mesh_i 
-					= group.lightlink.begin();
-				std::map<MeshName, LightNames>::iterator mesh_e 
-					= group.lightlink.end();
-				for(; mesh_i!=mesh_e; ++mesh_i)
+				
+				//light(s)
+				_s("//light(s)");
+				elvishray::LightNames lights = group.gatherLights();
+				elvishray::LightNames::iterator l_i = lights.begin();
+				elvishray::LightNames::iterator l_e = lights.end();
+				for(; l_i != l_e; ++l_i)
 				{
-					if( mesh_i->second.size() ){
-						_s("//lightlinks and meshes");
-					}
-					LightNames::iterator light_i = mesh_i->second.begin();
-					LightNames::iterator light_e = mesh_i->second.end();
-					for(; light_i!=light_e; ++light_i)// has light link
-					{
-						_S( ei_add_instance( light_i->c_str()) );
-					}
+					_S( ei_add_instance( (*l_i).c_str()) );
+				}
 
-					// init object
-					_S( ei_add_instance( mesh_i->first.c_str() ) );
-				}//for mesh
+				//mesh(s)
+				_s("//mesh(s)");
+				elvishray::MeshNames meshs = group.gatherMeshs();
+				elvishray::MeshNames::iterator m_i = meshs.begin();
+				elvishray::MeshNames::iterator m_e = meshs.end();
+				for(; m_i != m_e; ++m_i)
+				{
+					_S( ei_add_instance( (*m_i).c_str()) );
+				}
 			}
 			_S( ei_end_instgroup() );
 		}//for group

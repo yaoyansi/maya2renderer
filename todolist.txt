@@ -24,6 +24,7 @@
 - (done)整理er_rm_shader_graph_phong.ma test记录 rib/image
 - (done)test all cases for the lastest code
 
+-ei_instance 使用trasform node name，而不是shape ndoe name
 -physicalsky需要修改为maya可用的
 -更新er代码，回归测试
  shader里默认坐标系改为什么？更新shader
