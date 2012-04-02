@@ -226,7 +226,7 @@ SURFACE(maya_phong)
 		const eiBool i_keyLightsOnly, const eiBool unshadowed)
 	{
 		color C = 0;
-		vector R = reflect( -normalize(i_V), normalize(i_N) );
+		vector R = reflect( normalize(i_V), normalize(i_N) );
 
 		while( illuminance( P(), i_N, PI/2.0f ) )
 		{
@@ -255,7 +255,7 @@ SURFACE(maya_phong)
 		const eiBool i_keyLightsOnly, const eiBool unshadowed)
 	{
 		color C  = 0.0f;
-		vector R = reflect( -normalize(i_V), normalize(i_N) );
+		vector R = reflect( normalize(i_V), normalize(i_N) );
 		vector H = normalize(normalize(L()) + i_V);
 
 		while( illuminance( P(), i_N, PI/2.0f ) )

@@ -104,7 +104,7 @@ SURFACE(maya_mib_amb_occlusion)
 		normal Nn = normalize(Nf);
 
 		if(reflective() != eiFALSE)
-			Nn = reflect( I(), Nn );
+			Nn = reflect( -I(), Nn );
 
 		const scalar occ = 1.0f - occlusion(P(), Nn, 
 									samples(),

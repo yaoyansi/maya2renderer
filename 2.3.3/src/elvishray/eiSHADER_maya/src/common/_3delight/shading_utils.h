@@ -649,9 +649,10 @@ void computeSurface(
 //
 //#define END_PHOTON_CASE } /* This closes the brace above. */
 
-// I  - eye to surface point
-// nN - normalized normal at surface point
-vector reflect(const vector& I, const vector& nN);
+//use reflect(wo,H), where wo=-I, H=N
+//// I  - eye to surface point
+//// nN - normalized normal at surface point
+//vector reflect(const vector& I, const vector& nN);
 
 #endif /* _shading_utils_h */
 
