@@ -7292,12 +7292,6 @@ std::string liqRibTranslator::getFunctionTraceLogFileName() const
 
 	std::stringstream sslogFileName;
 	{
-		//time
-		char strtime[32] = { 0 };
-		time_t curTime;
-		time(&curTime);
-		strftime(strtime, sizeof(strtime),"%H%M%S", localtime(&curTime));
-
 		//fullpath name
 #ifndef _DEBUG
 		liquidMessage2(messageError, "liqglo.liqglo_lframe is not initilized in Release mode. so when the program goes here liqglo.liqglo_lframe is random value, I set it to 0 manully. You can ingore this error.");
@@ -7307,7 +7301,7 @@ std::string liqRibTranslator::getFunctionTraceLogFileName() const
 		imageName += parseString( liqglo.m_displays[ 0 ].name, false );
 
 
-		sslogFileName << boost::format("%s_%s.log")%imageName.asChar()%strtime;
+		sslogFileName << boost::format("%s.log")%imageName.asChar();
 	}
 	return sslogFileName.str();
 }
