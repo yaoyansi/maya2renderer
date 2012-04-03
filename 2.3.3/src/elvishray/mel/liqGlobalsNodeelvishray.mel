@@ -115,7 +115,8 @@ proc liquidGlobalsTab_elvishray_AA( string $prefix )
 		liquidShowBoolGlobal2($n,	"displace",		"displace",		$prefix);
 		liquidShowFloatGlobal2($n,	"max_displace", "max_displace");
         liquidShowIntGlobalMenu2($n, "face", "face",
-		{"EI_FACE_FRONT",
+		{"EI_FACE_NONE",
+		"EI_FACE_FRONT",
 		"EI_FACE_BACK",
 		"EI_FACE_BOTH"}, $prefix);
 	  setParent ..;
