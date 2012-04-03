@@ -24,11 +24,13 @@
 - (done)整理er_rm_shader_graph_phong.ma test记录 rib/image
 - (done)test all cases for the lastest code
 
+- (done)更新test case的数据
+
 -liqRibTranslator::checkSettings()里检查 er face设置。
 int face = m_gnode->getInt("face");
 		assert( (face!=EI_FACE_NONE) && (face<EI_FACE_COUNT) );
 -er global node ui,数据更新有问题
--更新test case的数据
+
 -ei_instance 使用trasform node name，而不是shape ndoe name
 -physicalsky需要修改为maya可用的
 -更新er代码，回归测试

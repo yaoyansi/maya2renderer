@@ -12,6 +12,7 @@ namespace renderman
 		Renderer();
 		virtual ~Renderer();
 		virtual void test();
+		virtual bool canExport();
 
 		virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress);
 		

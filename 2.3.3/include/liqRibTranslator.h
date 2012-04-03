@@ -531,7 +531,7 @@ public:
 		const liqRibNodePtr &ribNode,
 		const structJob&currentJob
 		);
-	bool checkSettings();
+	bool canExport();
 
 
 	std::string getFunctionTraceLogFileName() const;

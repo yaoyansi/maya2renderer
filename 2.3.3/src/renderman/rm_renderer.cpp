@@ -1294,5 +1294,12 @@ namespace renderman
 			RiReadArchive( const_cast< RtToken >((shadingGroupFileName+".rmsg").asChar()), NULL, RI_NULL );
 		}
 	}
+	//
+	bool Renderer::canExport()
+	{
+		CM_TRACE_FUNC("Renderer::canExport()");
+
+		return true;
+	}
 
 }//namespace

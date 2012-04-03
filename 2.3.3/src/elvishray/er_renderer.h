@@ -23,6 +23,7 @@ namespace elvishray
 		virtual ~Renderer();
 
 		virtual void test();
+		virtual bool canExport();
 
 		virtual void setRenderScriptFormatAndCompress(const bool bbinary, const bool bcompress);
 		//		virtual MStatus ribPrologue(const structJob& currentJob);
@@ -269,7 +270,6 @@ namespace elvishray
  		//void _Script(const std::string &data){ m_log.log___(data); }
 		void cookInstanceGroup();
 		void dummyPhongShader();//for test only
-		void pretest();
 
 		void _UserDefinedShader(
 			const liqShader &shader,
