@@ -942,6 +942,12 @@ namespace elvishray
 		fclose(manager_ini);
 
 		//-------------------------------------
+		int face = m_gnode->getInt("face");
+		if( face<=EI_FACE_NONE || EI_FACE_COUNT<=face ){
+			liquidMessage2(messageError,"face(%d), must in scope (%d,%d).", face, EI_FACE_NONE, EI_FACE_COUNT);
+			assert( 0 && "face is invalid." );
+			return false;
+		}
 
 		return true;
 	}
