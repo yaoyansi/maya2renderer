@@ -29,6 +29,12 @@
 - (done)liqRibTranslator::checkSettings()里检查 er face设置。
 	int face = m_gnode->getInt("face");
 	assert( (face!=EI_FACE_NONE) && (face<EI_FACE_COUNT) );
+-liquid 暂不支持multiple material per mesh
+  1.选择liquidSurfaceShader赋给facet时，
+     liquidAssignSurfaceShaderToSelected（）
+     {  size(`ls -geometry -dag -sl`) 值为0，无法赋给物体
+  2.er解析
+  3.rm如何支持multiple material per mesh
 -er global node ui,数据更新有问题
 
 - (done)做测试场景 测试multiy shapes under a transform node 
