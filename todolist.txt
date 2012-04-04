@@ -31,7 +31,7 @@
 	assert( (face!=EI_FACE_NONE) && (face<EI_FACE_COUNT) );
 -er global node ui,数据更新有问题
 
-做测试场景 测试multiy shapes under a transform node 
+- (done)做测试场景 测试multiy shapes under a transform node 
 -ei_instance 使用trasform node name，而不是shape ndoe name
  
 
