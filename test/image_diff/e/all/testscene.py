@@ -96,3 +96,12 @@ def test_all_scene():
 
     #testFile=LIQUID_ROOT+"/test/animation_test/Trex/Trex/scenes/TrexAnimation_liq_anim.ma"
     #MyTestOne.test_one_scene(testFile, "elvishray")
+
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_multiple_shapes/test_multiple_shapes_simple.ma"
+    MyTestOne.test_one_scene(testFile, "")
+
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_multiple_shapes/test_multiple_shapes.ma"
+    MyTestOne.test_one_scene(testFile, "")
+
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_multiple_shapes/test_multiple_shapes_mb.ma"
+    MyTestOne.test_one_scene(testFile, "")

@@ -183,6 +183,7 @@ namespace elvishray
 		)
 	{
 		CM_TRACE_FUNC("Renderer::exportOneObject_reference("<<ribNode__->name<<","<<currentJob__.name<<")");
+		MStatus status;
 
 		unsigned int sample_first = 0;
 		unsigned int sample_last = liqglo.liqglo_motionSamples -1;
@@ -201,6 +202,36 @@ namespace elvishray
 		//exportOneGeometry_Mesh(ribNode__, currentJob__ , sample_first, bGeometryMotion?sample_last:sample_first);
 
 		_s("//--------------------------");
+		{
+			_s("//ribNode->name="<<ribNode__->name);
+			MDagPath& dagPath = ribNode__->path();
+			MObject transformNode = dagPath.transform(&status);
+			IfMErrorMsgWarn(status, dagPath.fullPathName()+".transform(), error.");
+			MFnDagNode transform(transformNode, &status);
+			IfMErrorMsgWarn(status, dagPath.fullPathName()+".transform() constructs MFnDagNode, error.");
+			_s("//ribNode->path().transform().fullPathName()="<<transform.fullPathName());
+			//print children
+			unsigned int childCount = transform.childCount(&status);
+			IfMErrorMsgWarn(status, transform.fullPathName()+".childCount(), error.");
+			_s("//childCount="<<childCount);
+			if( childCount != 1 )
+			{
+				for(int i=0; i<childCount; ++i){
+					MObject child = transform.child(i, &status);
+					if (!status) {
+						PrintError((status).errorString() + MString(" : ") + (transform.fullPathName()+".child(i), error."));
+						_s("//"<<transform.fullPathName()+".child(i), error.");
+						continue;
+					}
+					MFnDagNode childTfm(child, &status);
+					_s( "//child("<<i<<"):"<<childTfm.fullPathName() );
+				}
+				assert(0 && "childCount != 1" );
+			}
+			_s("//ribNode->object("<<sample_first<<")->getDataPtr()->getName()="<<ribNode__->object(sample_first)->getDataPtr()->getName());
+		
+		}
+
 		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
 		_S( ei_instance( mesh->getName() ) );//shape node
 		//_S( ei_visible( on ) );
