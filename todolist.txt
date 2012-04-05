@@ -170,3 +170,4 @@ er
 - myDeleteAttr();--fail
 - er 网络渲染
 - 粒子，流体等vfx的导出
+- 设置新project路径后，用er渲染会崩溃，原因是rib，generatedShader，rmanpix等目录未创建
