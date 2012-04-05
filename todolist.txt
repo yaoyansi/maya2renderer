@@ -25,7 +25,7 @@ liq
 - (done)做测试场景 测试multiy shapes under a transform node
 - (done)导出shdergraph时，一个shadernode会被导出多次。
 - （done）渲染前检查相机是否设置
-
+- (done)MString liqRibNode::getTransformNodeFullPath(), MStringArray liqRibNode::getChildrenNameOfTransformNode()
 
 rm
 ------------
@@ -87,7 +87,7 @@ liq
   // Warning: file: E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/mel/liquidStartup.mel line 160: "E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/src/renderman/mel/liqGlobalsNoderenderman.mel" line 26.2 : Global variable is already initialized; this occurrence is ignored. // 
 - liqGlobalsNodeRenderer.mel;liqGlobalsNodeluxrenderer。mel,liqGlobalsNoderenderman.mel,liqGlobalsNodeelvishray.mel
   能否重构，使得去掉函数/变量的后缀（luxrendere/renderman/elvishray）
-- 单个mesh上贴多个material
+- 单个mesh上贴多个material（暂时不考虑实现该功能）
 - 重构convertShaderGraph
 - 重构 void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNode, const MString& node)
   把这个函数的node参数去掉。
@@ -106,7 +106,7 @@ rm
 - liqMayaRenderView里的getNode（）可被重构去掉
 - shadow pass
 - bump2d/bump3d for rm
-
+- blinn shader无法编译
 
 er
 ------------
@@ -126,7 +126,6 @@ er
   尝试解决这个问题
 - er渲染时，shadowpass的数据输出到哪里？
 - lambert shader,现在用的是maya_lambert_transparent
-- blinn shader
 - framelog， allLog
 - bug: XP下maketexture出的tex文件，在win7下渲染不出来。见er_rm_shader_graph_phong.ma,(check112.bmp.tex,这个tex可能是rm生成的)
 - bug:phong如果只有透明值，而没有透明贴图时，最终颜色几乎显示不出来（几乎成半透明的白色）

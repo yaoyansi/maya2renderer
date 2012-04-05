@@ -204,29 +204,16 @@ namespace elvishray
 		_s("//--------------------------");
 		{
 			_s("//ribNode->name="<<ribNode__->name);
-			MDagPath& dagPath = ribNode__->path();
-			MObject transformNode = dagPath.transform(&status);
-			IfMErrorMsgWarn(status, dagPath.fullPathName()+".transform(), error.");
-			MFnDagNode transform(transformNode, &status);
-			IfMErrorMsgWarn(status, dagPath.fullPathName()+".transform() constructs MFnDagNode, error.");
-			_s("//ribNode->path().transform().fullPathName()="<<transform.fullPathName());
+			_s("//ribNode's transform node="<<ribNode__->getTransformNodeFullPath());
 			//print children
-			unsigned int childCount = transform.childCount(&status);
-			IfMErrorMsgWarn(status, transform.fullPathName()+".childCount(), error.");
-			_s("//childCount="<<childCount);
+			MStringArray childrenMsg(ribNode__->getChildrenMsgOfTransformNode());
+			unsigned int childCount = ribNode__->getChildrenCountOfTransformNode();
 			if( childCount != 1 )
 			{
+				_s("//childCount="<<childCount);
 				for(int i=0; i<childCount; ++i){
-					MObject child = transform.child(i, &status);
-					if (!status) {
-						PrintError((status).errorString() + MString(" : ") + (transform.fullPathName()+".child(i), error."));
-						_s("//"<<transform.fullPathName()+".child(i), error.");
-						continue;
-					}
-					MFnDagNode childTfm(child, &status);
-					_s( "//child("<<i<<"):"<<childTfm.fullPathName() );
+					_s( "//child("<<i<<"):"<<childrenMsg[i] );
 				}
-				assert(0 && "childCount != 1" );
 			}
 			_s("//ribNode->object("<<sample_first<<")->getDataPtr()->getName()="<<ribNode__->object(sample_first)->getDataPtr()->getName());
 		
@@ -250,6 +237,7 @@ namespace elvishray
 		}
 		
 		//element
+		_s("//shape name="<<mesh->getName());
 		_S( ei_element( getObjectName(mesh->getName()).c_str() ) );
 		
 		MMatrix matrix;

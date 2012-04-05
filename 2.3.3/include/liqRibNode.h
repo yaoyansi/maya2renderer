@@ -90,6 +90,11 @@ class liqRibNode {
   //liqRibObj *        no;
 
     MDagPath&          path();
+	const MDagPath&    path() const;
+	MObject			   getTransformNode() const;
+	MString			   getTransformNodeFullPath() const;
+	unsigned int	   getChildrenCountOfTransformNode() const;
+    MStringArray       getChildrenMsgOfTransformNode() const;
 
     MColor             color;
     MColor             opacity;
