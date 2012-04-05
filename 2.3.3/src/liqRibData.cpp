@@ -297,3 +297,8 @@ const char* liqRibData::getName() const
 	MFnDagNode fnDepNode(objDagPath);
 	return fnDepNode.name().asChar();
 }
+const char* liqRibData::getFullPathName() const
+{
+	MFnDagNode fnDepNode(objDagPath);
+	return fnDepNode.fullPathName().asChar();
+}

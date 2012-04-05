@@ -238,6 +238,7 @@ namespace elvishray
 		
 		//element
 		_s("//shape name="<<mesh->getName());
+		_s("//shape full path name="<<mesh->getFullPathName());
 		_S( ei_element( getObjectName(mesh->getName()).c_str() ) );
 		
 		MMatrix matrix;
