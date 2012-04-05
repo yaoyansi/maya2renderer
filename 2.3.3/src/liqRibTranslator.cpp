@@ -2495,7 +2495,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 						//
 #ifndef RENDER_PIPE
 						liquidMessage( "Beginning RIB output to '" + string( baseShadowName.asChar() ) + "'", messageInfo );
-						RiBegin( const_cast< RtToken >( baseShadowName.asChar() ) );
+						RiBegin_liq( const_cast< RtToken >( baseShadowName.asChar() ) );
 #else
 						liqglo.liqglo_ribFP = fopen( baseShadowName.asChar(), "w" );
 						if( liqglo.liqglo_ribFP ) {
@@ -2508,7 +2508,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 							liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
 						}
 						liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-						RiBegin( RI_NULL );
+						RiBegin_liq( RI_NULL );
 #endif
 						if( worldPrologue() != MS::kSuccess ) 
 							break;
@@ -2544,7 +2544,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 
 #ifndef RENDER_PIPE
 					liquidMessage( "Beginning RIB output to '" + string( liqglo_currentJob.ribFileName.asChar() ) + "'", messageInfo );
-					RiBegin( const_cast< RtToken >( liqglo_currentJob.ribFileName.asChar() ) );
+					RiBegin_liq( const_cast< RtToken >( liqglo_currentJob.ribFileName.asChar() ) );
 
 #ifdef DELIGHT
 					LIQDEBUGPRINTF( "-> setting binary option\n" );
@@ -2568,7 +2568,7 @@ MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalL
 					}
 
 					liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-					RiBegin( RI_NULL );
+					RiBegin_liq( RI_NULL );
 #endif
 					if( liqglo_currentJob.isShadow && !liqglo.fullShadowRib ) 
 					{

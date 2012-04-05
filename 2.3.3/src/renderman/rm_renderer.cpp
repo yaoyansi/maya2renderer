@@ -605,7 +605,7 @@ namespace renderman
 
 #ifndef RENDER_PIPE
 		liquidMessage( "Beginning RIB output to '" + std::string( currentJob___.ribFileName.asChar() ) + "'", messageInfo );
-		RiBegin( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
+		RiBegin_liq( const_cast< RtToken >( currentJob___.ribFileName.asChar() ) );
 		liqglo.m_ribFileOpen = true;
 #else//RENDER_PIPE
 		liqglo___.liqglo_ribFP = fopen( currentJob___.ribFileName.asChar(), "w" );
@@ -620,7 +620,7 @@ namespace renderman
 		}
 
 		liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-		RiBegin( RI_NULL );
+		RiBegin_liq( RI_NULL );
 #endif//RENDER_PIPE
 		return MS::kSuccess;
 	}
@@ -1036,7 +1036,7 @@ namespace renderman
 		//
 #ifndef RENDER_PIPE
 		liquidMessage( "Beginning RIB output to '" + std::string( baseShadowName__.asChar() ) + "'", messageInfo );
-		RiBegin( const_cast< RtToken >( baseShadowName__.asChar() ) );
+		RiBegin_liq( const_cast< RtToken >( baseShadowName__.asChar() ) );
 		liqglo.m_ribFileOpen = true;
 #else
 		liqglo__.liqglo_ribFP = fopen( baseShadowName.asChar(), "w" );
@@ -1050,7 +1050,7 @@ namespace renderman
 			liquidMessage( "Error opening RIB -- writing to stdout.\n", messageError );
 		}
 		liquidMessage( "Beginning RI output directly to renderer", messageInfo );
-		RiBegin( RI_NULL );
+		RiBegin_liq( RI_NULL );
 #endif
 	}
 	void Renderer::BaseShadowEnd(const structJob &currentJob___)

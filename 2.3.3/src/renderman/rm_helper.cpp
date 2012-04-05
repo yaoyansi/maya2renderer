@@ -34,7 +34,7 @@ namespace renderman
 			//write the data into another rib file.
 			m_contex = RiGetContext();//push context
 			liquidMessage("output geometry rib: "+ std::string(m_ribFile.c_str()) , messageInfo);
-			RiBegin( const_cast< RtToken >( m_ribFile.c_str() ) );
+			RiBegin_liq( const_cast< RtToken >( m_ribFile.c_str() ) );
 		}
 	}
 	//

@@ -252,7 +252,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	//RiOption( tokenCast("RI2RIB_Output"), "Type", (RtPointer)tokenCast("Ascii"),RI_NULL );
 	RtContextHandle c = RiGetContext();//push context;
 	{
-		RiBegin( const_cast<RtToken>((shadingGroupFileName+".rmsg").asChar()));
+		RiBegin_liq( const_cast<RtToken>((shadingGroupFileName+".rmsg").asChar()));
 		RiArchiveRecord(RI_COMMENT, "shading group: %s", shadingGroupNode);
 		//surface shader
 		if( surfaceShaders[0].length() != 0 ){

@@ -410,14 +410,14 @@ int liquidOutputPreviewShader( const string& fileName, const liqPreviewShaderOpt
   }
   if( fileName.empty() ) 
 	{
-    RiBegin( NULL );
+    RiBegin_liq( NULL );
 #ifdef DELIGHT
     //RtPointer callBack( progressCallBack );
     //RiOption( "statistics", "progresscallback", &callBack, RI_NULL );
 #endif
   } 
 	else {
-    RiBegin( (RtToken)fileName.c_str() );
+    RiBegin_liq( (RtToken)fileName.c_str() );
   }
 
   string shaderPath( "&:@:.:~:" + liquidSanitizeSearchPath( getEnvironment( "LIQUIDHOME" ) ) + "/lib/shaders" );

@@ -17,7 +17,7 @@
 #	include "../riblib/ri.h"
 #endif
 //-------------------------------------------------------
-
-
+RtVoid RiBegin_liq(RtToken name);
+//-------------------------------------------------------
 
 #endif//liqRiInterface_H
