@@ -220,7 +220,8 @@ namespace elvishray
 		}
 
 		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
-		_S( ei_instance( mesh->getName() ) );//shape node
+		std::string instanceName(mesh->getName());//shape node
+		_S( ei_instance( instanceName.c_str() ) );
 		//_S( ei_visible( on ) );
 		// 		ei_shadow( on );
 		// 		ei_trace( on );
@@ -239,8 +240,9 @@ namespace elvishray
 		//element
 		_s("//shape name="<<mesh->getName());
 		_s("//shape full path name="<<mesh->getFullPathName());
-		_S( ei_element( getObjectName(mesh->getName()).c_str() ) );
-		
+		const std::string objectName(getObjectName(mesh->getName()));
+		_S( ei_element( objectName.c_str() ) );
+
 		MMatrix matrix;
 		matrix = ribNode__->object( sample_first )->matrix( ribNode__->path().instanceNumber() );
 		RtMatrix m;		
@@ -270,7 +272,7 @@ namespace elvishray
 		_S( ei_end_instance() );
 		_s("//");
 		//
-		m_groupMgr->addObjectInstance( currentJob__.name.asChar(), mesh->getName(), GIT_Geometry );//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
+		m_groupMgr->addObjectInstance( currentJob__.name.asChar(), instanceName, GIT_Geometry );//_S( ei_init_instance( currentJob.camera[0].name.asChar() ) );
 	}
 	//
 	void Renderer::ribPrologue_comment(const char* liqversion, 

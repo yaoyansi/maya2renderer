@@ -118,7 +118,8 @@ namespace elvishray
 		_s("\n//############################### mesh #");
 		_s("//shape name="<<mesh->getName());
 		_s("//shape full path name="<<mesh->getFullPathName());
-		_S( ei_object( getObjectName(mesh->getName()).c_str(), "poly" ) );
+		const std::string objectName(getObjectName(mesh->getName()));
+		_S( ei_object( objectName.c_str(), "poly" ) );
 		_s("{");
 		_d( eiTag tag );
 
@@ -221,7 +222,7 @@ namespace elvishray
 			_S( ei_tab_add_index(triangleVertices[i+2])); 
 		}
 		_S( ei_end_tab() );
-		_s("}//"<<MString(mesh->getName())+"_object");
+		_s("}//"<<objectName);
 		_S( ei_end_object() );
 	}
 }//namespace elvishray
