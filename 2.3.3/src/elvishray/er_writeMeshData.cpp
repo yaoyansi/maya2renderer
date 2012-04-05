@@ -116,6 +116,7 @@ namespace elvishray
 
 		// geometry data (shape)
 		_s("\n//############################### mesh #");
+		_s("//shape name="<<mesh->getName());
 		_S( ei_object( getObjectName(mesh->getName()).c_str(), "poly" ) );
 		_s("{");
 		_d( eiTag tag );

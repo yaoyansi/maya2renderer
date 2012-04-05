@@ -989,9 +989,63 @@ void liqRibNode::set( const MDagPath &path, int sample, ObjectType objType, int 
 /**
  * Return the path in the DAG to the instance that this node represents.
  */
-MDagPath & liqRibNode::path()
+MDagPath& liqRibNode::path()
 {
   return DagPath;
+}
+const MDagPath& liqRibNode::path() const
+{
+	return DagPath;
+}
+
+MObject liqRibNode::getTransformNode() const
+{
+	MStatus status;
+	MObject transformNode = this->path().transform(&status);
+	IfMErrorMsgWarn(status, path().fullPathName()+".transform(), error.");
+	return transformNode;
+}
+MString liqRibNode::getTransformNodeFullPath()const
+{
+	MStatus status;
+	MFnDagNode transform(this->getTransformNode(), &status);
+	IfMErrorMsgWarn(status, path().fullPathName()+".transform() constructs MFnDagNode, error.");
+	return transform.fullPathName();
+}
+unsigned int liqRibNode::getChildrenCountOfTransformNode() const
+{
+	MStatus status;
+	
+	MFnDagNode transform(this->getTransformNode(), &status);
+	IfMErrorMsgWarn(status, path().fullPathName()+".transform() constructs MFnDagNode, error.");
+
+	const unsigned int childCount = transform.childCount(&status);
+	IfMErrorMsgWarn(status, transform.fullPathName()+".childCount(), error.");
+	return childCount;
+}
+MStringArray liqRibNode::getChildrenMsgOfTransformNode() const
+{
+	MStatus status;
+	MStringArray children;
+
+	MFnDagNode transform(this->getTransformNode(), &status);
+	IfMErrorMsgWarn(status, path().fullPathName()+".transform() constructs MFnDagNode, error.");
+
+	const unsigned int childCount = getChildrenCountOfTransformNode();
+	MString sI;
+	for(int i=0; i<childCount; ++i)
+	{
+		sI.set(i);
+		MObject child = transform.child(i, &status);
+		if (!status) {
+			children.append( "error:"+status.errorString()+",("+transform.fullPathName()+").child("+sI+")" );
+			continue;
+		}
+		MFnDagNode childTfm(child, &status);
+		children.append( childTfm.fullPathName() );
+	}
+	
+	return children;
 }
 
 
