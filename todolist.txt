@@ -1,120 +1,155 @@
+==================================  DONE LIST  ==============================================
+liq
+------------
 - (done)motion blur
-
 - (done)整理david的问题到doc里
 - (done)motion blur相关文档，包括scanScene， sample，scanScene时mesh数据存储到哪里，scanScane时时间轴进动(这个问题今后有什么方法改进)
 - (done)暂停（终止）渲染
 - (done)在opengpu上发帖，关于liquid的一些开发思路
 - (done)条件编译shave相关文件
-- (done)bug E:\dev\Autodesk\maya\myplugin\project\liquid_\2.3.3\test\test_rm_texture\check10_tex.ma和check11_bmp.ma在rm渲染时错误
 - (done)自动化测试时重要的log输出到liqTestLog.log文件
 - (done)convertShaderGraph时打印出的各种error
 - (done)更新test case的场景
    - (done)rmanShaderType for liquidSurface
    - (done)output image name (ddisplayImage[0])
-
-- (done)implement an assert window with mel.
 - (done)pl文件里支持各种数据类型(float array---ok)，可使用test\test_shader_pl\test_shader_pl.ma
--（done）更新test case
-- (done)bug: rm的spotlight不正确，参见/2.3.3/test/test_er_light/er_spotlight.ma
 - (done)backup rib files of  all test cases
-- (done)更新er 1185，编译release版
-
-- (done)bug: rm phong ,if the color is connect to a file texture, nothing can be rendered. (Because Ci is ZERO)
-- (done)rm phong shader 的导出
+-（done）更新test case
 - (done)整理er_rm_shader_graph_phong.ma test记录 rib/image
 - (done)test all cases for the lastest code
+- (done)自动化测试
+- (done)batchrender 时，rm/er输出的图片名应该相同
+- (done)toggle _logFunctionCall() ---ok
+- (done)toggle logRIBMsg---ok
+- (done)maya shaders的接口---ok
+- (done)做测试场景 测试multiy shapes under a transform node
+- (done)导出shdergraph时，一个shadernode会被导出多次。
+- （done）渲染前检查相机是否设置
+- (done)MString liqRibNode::getTransformNodeFullPath(), MStringArray liqRibNode::getChildrenNameOfTransformNode()
 
-- (done)更新test case的数据
+rm
+------------
+- (done)bug E:\dev\Autodesk\maya\myplugin\project\liquid_\2.3.3\test\test_rm_texture\check10_tex.ma和check11_bmp.ma在rm渲染时错误
+- (done)bug: rm的spotlight不正确，参见/2.3.3/test/test_er_light/er_spotlight.ma
+- (done)bug: rm phong ,if the color is connect to a file texture, nothing can be rendered. (Because Ci is ZERO)
+- (done)rm phong shader 的导出
+- (done)rm 的批渲染
 
+
+er
+------------
+- (done)更新er 1185，编译release版
+- (done)vertex normal 导出的时机，什么时候需要导出？参考rm mesh的导出；给Elvic提bug，关于vertex list可以和pos list不等长
+- (done)重构：使用er时，不输出rib文件
+- (done)er gloabal variables and UI.
+- (done)er volume shader
+- (done)liqShader shaderType如何是‘shadow’
+  - (done)重构 标记有//  [2/14/2012 yaoyansi]的地方
+  - (done)重构er/rm::Renderer::shader_surface()/shader_light()...,变为protected,
+-(done)dof
+  - (done)在camera shape节点上增加lens shader/env shader 属性
+  - (done)这些属性是否象shader graph那样解析？还是只考虑简单情况？
+-(done)env
+- custom defined shader for er
+  - (done)framework---ok
+  - (done)clean code---ok
+  - (done)恢复注释掉的代码，标记有// - omitted by yaoyansi---ok
+  - (done)支持matrix类型---ok
+  - (done)bug: shader 参数列表里的string类型的变量s0，在rib里s0的值会被添加“.tex”后缀--0k
+  - (done)自定义参数的生成ui的步骤 写成文档---ok
 - (done)liqRibTranslator::checkSettings()里检查 er face设置。
 	int face = m_gnode->getInt("face");
 	assert( (face!=EI_FACE_NONE) && (face<EI_FACE_COUNT) );
--er global node ui,数据更新有问题
+- (done)er light shader
+  - (done)point light 
+  - (done)spot light( see elvishray\trunk\connections\max\con_light.cpp)
+- (done)把er的erscript输出到单一一个文件里
+  解决方法：第一步先记录待导出的shader node，第二步再导出这些shader node
+- （done）重构 liqRibLightData::_write()里的scaleZ_forRenderman（）应该被转移到rm模块
+- （done）bug: user-defined shader 会输出多次
+- (done)重构：导出er时，没有rib数据导出
 
-做测试场景 测试multiy shapes under a transform node 
--ei_instance 使用trasform node name，而不是shape ndoe name
- 
 
--physicalsky需要修改为maya可用的
--更新er代码，回归测试
- shader里默认坐标系改为什么？更新shader
-  添加er light group的支持
-  测试trex
-- er 函数调用输出时，对于float型，应加f后缀，否则输出的脚本在执行时会提示double转float型的警告。
--bug: mib_amb_occlusion的spread和max_distance未输出
--测试test_deepshadow_2.ma时，rm_writeMeshData.cpp/rm_writeLightData.cpp报assert错误：
-	assert(pData->getRibFileFullPath().length()==0。。。）；
-	原因是先执行了shadowPass,pData->m_ribFileFullPath不为空。
- 尝试解决这个问题
-- bug：test_deepshadow_2.ma，阴影里没有物体的透明度。
+
+
+===================================  TODO LIST  =============================================
+liq
+------------
 - 重构：Renderer::renderAll_local()里对于shadow pass不要调用doRenderView();
 - 重构：shadowPass 过程里包含basePass的过程，需要testcase验证
-- er渲染时，shadowpass的数据输出到哪里？
-
-
-- RiBegin()/RiEnd()时用变量标记，在Ri×时检查该标记
 - 重构Renderer::_writeObject(），现在只导出了mesh和light；dynamic_pointer_cast也需要重构
-- (done)导出shdergraph时，一个shadernode会被导出多次。
-  解决方法：第一步先记录待导出的shader node，第二步再导出这些shader node
+- 重构：logsystem，对所有renderer，提供统一的接口。liquidMessage2也写到log文件里
+- 重构 light的导出需要重构。  er::Renderer::exportLight(),
+- doc, 自动化测试所需的python环境
+- liq×Shader里使用统一的方式，支持自定义shader（rm的slo/er的dll）格式
+- 启动时，source mel时，总会有warning：
+  // Warning: file: E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/mel/liquidStartup.mel line 160: };
+  // Warning: file: E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/mel/liquidStartup.mel line 160: "E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/src/renderman/mel/liqGlobalsNoderenderman.mel" line 26.2 : Global variable is already initialized; this occurrence is ignored. // 
+- liqGlobalsNodeRenderer.mel;liqGlobalsNodeluxrenderer。mel,liqGlobalsNoderenderman.mel,liqGlobalsNodeelvishray.mel
+  能否重构，使得去掉函数/变量的后缀（luxrendere/renderman/elvishray）
+- 单个mesh上贴多个material（暂时不考虑实现该功能）
+  1.选择liquidSurfaceShader赋给facet时，
+     liquidAssignSurfaceShaderToSelected（）
+     {  size(`ls -geometry -dag -sl`) 值为0，无法赋给物体
+  2.er解析
+  3.rm如何支持multiple material per mesh
+- 重构convertShaderGraph
+- 重构 void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNode, const MString& node)
+  把这个函数的node参数去掉。
+- rm/er batch render 重构(::execute(),   )
+- 动画序列里，（er/rm）shader是否能正确输出
+- 重构 : move m_outputDebugMsgToRib to liqGlobalVariable,
+   - remove in liqribshavedata.cpp
+   - (done)rm mesh数据导出应该放在rm::exportOneGeometry_Mesh()里，而不是liqRibMeshData
+- implement an assert window with mel.(for now, liqAssert only invokes warning(), but not pop a window)
 
-- lambert shader
-- blinn shader
-- framelog， allLog
--liqMayaRenderView里的getNode（）可被重构去掉
 
-
+rm
+------------
+- bug：test_deepshadow_2.ma，阴影里没有物体的透明度。
+- RiBegin()/RiEnd()时用变量标记，在Ri×时检查该标记
+- liqMayaRenderView里的getNode（）可被重构去掉
 - shadow pass
-- bug: XP下maketexture出的tex文件，在win7下渲染不出来。见er_rm_shader_graph_phong.ma,(check112.bmp.tex)
+- bump2d/bump3d for rm
+- blinn shader无法编译
+
+er
+------------
+- er global node ui,数据更新有问题
+- ei_instance 使用trasform node name，而不是shape ndoe name
+- physicalsky需要修改为maya可用的
+- 更新er代码，回归测试
+  shader里默认坐标系改为什么？更新shader
+  添加er light group的支持
+    - 更新到最新的er，修改light-link
+  测试trex
+- er 函数调用输出时，对于float型，应加f后缀，否则输出的脚本在执行时会提示double转float型的警告。
+- bug: mib_amb_occlusion的spread和max_distance未输出
+- 测试test_deepshadow_2.ma时，rm_writeMeshData.cpp/rm_writeLightData.cpp报assert错误：
+	assert(pData->getRibFileFullPath().length()==0。。。）；
+	原因是先执行了shadowPass,pData->m_ribFileFullPath不为空。
+  尝试解决这个问题
+- er渲染时，shadowpass的数据输出到哪里？
+- lambert shader,现在用的是maya_lambert_transparent
+- framelog， allLog
+- bug: XP下maketexture出的tex文件，在win7下渲染不出来。见er_rm_shader_graph_phong.ma,(check112.bmp.tex,这个tex可能是rm生成的)
 - bug:phong如果只有透明值，而没有透明贴图时，最终颜色几乎显示不出来（几乎成半透明的白色）
 - bump2d node
--bug: maya_phong 高光的位置不正确
-- (done)vertex normal 导出的时机，什么时候需要导出？参考rm mesh的导出；给Elvic提bug，关于vertex list可以和pos list不等长
-- update test case for jpg maketexture
--distantlight
 - Bump channel in Phong shader(for er)
   -先搞清楚bump2d.bumpValue是不是指高度图的值？还是指normalMap的值？
   如果是后者，那么就需要hack。目前虽然做了在visitbump2d（）里做了hack，但应该在整个导出流程之前做hack，并在渲染结束后恢复原先的状态。
   - delete bump2d.bumpNormal
   - recover bump2d.bumpInterp
-- bump2d/bump3d for rm
--(done)重构：使用er时，不输出rib文件
--重构：logsystem，对所有renderer，提供统一的接口。liquidMessage2也写到log文件里
-
--bug：er的maya预览图里最底部的一行像素是空的；但在输出的图片文件里，最底一行的像素没有问题。
--bug:自定义shader 的参数无法从pl文件里update ，必须删掉该节点，然后重新建立
--重构 liqRibLightData::_write()里的scaleZ_forRenderman（）应该被转移到rm模块
-
+- update test case for jpg maketexture
+- bug：er的maya预览图里最底部的一行像素是空的；但在输出的图片文件里，最底一行的像素没有问题。
+- bug:自定义shader 的参数无法从pl文件里update ，必须删掉该节点，然后重新建立
 - bug：物体A绑定到物体B上，B有移动，A相对B静止（无动画数据），导出的数据里B有motion数据，但A没有motion数据
   参见liquid_\2.3.3\test\hair\test_shaveHair(shave_v61).ma, NoEibBox_MotionBlur层
-- 重构 light的导出需要重构。
-er::Renderer::exportLight(),
-
-
+  注意：对一般物体而言，是有mb的，见testcase test_multiple_shapes.ma
 - hair
-- (done)er gloabal variables and UI.
-- doc, 自动化测试所需的python环境
-
-- 更新到最新的er，修改light-link
-- liq×Shader里使用统一的方式，支持自定义shader（rm的slo/er的dll）格式
-- 把er的erscript输出到单一一个文件里
-- bug: user-defined shader 会输出多次
-
--doc: global node 每加一个attr都要更新所有test case
--渲染前检查相机是否设置
--启动时，source mel时，总会有warning：
-// Warning: file: E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/mel/liquidStartup.mel line 160: };
- // 
-// Warning: file: E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/mel/liquidStartup.mel line 160: "E:/dev/autodesk/maya/myplugin/project/liquid_/2.3.3/src/renderman/mel/liqGlobalsNoderenderman.mel" line 26.2 : Global variable is already initialized; this occurrence is ignored. // 
-- liqGlobalsNodeRenderer.mel;liqGlobalsNodeluxrenderer。mel,liqGlobalsNoderenderman.mel,liqGlobalsNodeelvishray.mel
-能否重构，使得去掉函数/变量的后缀（luxrendere/renderman/elvishray）
-
-- er light shader
-  - (done)point light 
-  - spot light( see elvishray\trunk\connections\max\con_light.cpp)
+- doc: global node 每加一个attr都要更新所有test case
 - pl文件里支持matrix array- 
-- er displace shader(issue 14)
-
-
+- bug:er displace shader(issue 14)
 - er shader
   - checker
   - file texture
@@ -123,63 +158,21 @@ er::Renderer::exportLight(),
 	  - color_texture/scalar_texture的参数dsdx, dsdy, dtdx, dtdy不知道如何设置
 	  - liquid里  ei_make_texture(..., ..., eiInt swrap, eiInt twrap,
 		eiInt filter, eiScalar swidth, eiScalar twidth);时这几个参数如何设置
-  - blinn, phong
+  - blinn, phong（reflect,doRefraction）
+  - bug: maya_phong 高光的位置不正确
   - transparent shader渲染不正确,参见lambert_transparent.ma 
   - area light
   - object light
-
-- uv
-- vertex normal
+  - distantlight
+- uv，多个UVset
 - aov
-- 单个mesh上贴多个material
-
-- (done)er volume shader
-
-- 重构：导出er时，没有rib数据导出
-- 重构convertShaderGraph
-- 重构 void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNode, const MString& node)
-  把这个函数的node参数去掉。
-- 动画序列里，（er/rm）shader是否能正确输出
-
-- transparent shader
-
 - pass list/ pass graph
 - AO pass
-
-- rm/er batch render 重构(::execute(),   )
-- 重构 : move m_outputDebugMsgToRib to liqGlobalVariable,
-   - remove in liqribshavedata.cpp
-   - rm mesh数据导出应该放在rm::exportOneGeometry_Mesh()里，而不是liqRibMeshData
-
-- (done)rm 的批渲染
-- (done)自动化测试
-- (done)liqShader shaderType如何是‘shadow’
-  - (done)重构 标记有//  [2/14/2012 yaoyansi]的地方
-  - (done)重构er/rm::Renderer::shader_surface()/shader_light()...,变为protected,
-
-
-- (done)rm batch render----ok
-- (done)batchrender 时，rm/er输出的图片名应该相同
-- (done)toggle _logFunctionCall() ---ok
-- (done)toggle logRIBMsg---ok
-- (done)maya shaders的接口---ok
-
-
 - custom defined shader for er
-  - (done)framework---ok
-  - (done)clean code---ok
-  - (done)恢复注释掉的代码，标记有// - omitted by yaoyansi---ok
   - 支持各种数据类型(float array---ok)，可使用test\test_shader_pl\test_shader_pl.ma
-  - (done)支持matrix类型---ok
   - ei_link(user-defined shader)
   - 如何在不改变maya文件的前提下，同时使用liquidSurfaceShader指定rm和er的user-defined shader
-
-  - (done)bug: shader 参数列表里的string类型的变量s0，在rib里s0的值会被添加“.tex”后缀--0k
-  - (done)自定义参数的生成ui的步骤 写成文档---ok
-
--(done)dof
-  - (done)在camera shape节点上增加lens shader/env shader 属性
-  - (done)这些属性是否象shader graph那样解析？还是只考虑简单情况？
--(done)env
-
 - myDeleteAttr();--fail
+- er 网络渲染
+- 粒子，流体等vfx的导出
+- 设置新project路径后，用er渲染会崩溃，原因是rib，generatedShader，rmanpix等目录未创建
