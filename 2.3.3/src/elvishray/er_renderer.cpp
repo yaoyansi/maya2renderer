@@ -221,6 +221,7 @@ namespace elvishray
 
 		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
 		std::string instanceName(mesh->getName());//shape node
+		//std::string instanceName(ribNode__->getTransformNodeFullPath().asChar());//transform node
 		_S( ei_instance( instanceName.c_str() ) );
 		//_S( ei_visible( on ) );
 		// 		ei_shadow( on );
@@ -241,6 +242,7 @@ namespace elvishray
 		_s("//shape name="<<mesh->getName());
 		_s("//shape full path name="<<mesh->getFullPathName());
 		const std::string objectName(getObjectName(mesh->getName()));
+		//const std::string objectName(mesh->getFullPathName());
 		_S( ei_element( objectName.c_str() ) );
 
 		MMatrix matrix;
