@@ -102,7 +102,7 @@ liq
    - remove in liqribshavedata.cpp
    - (done)rm mesh数据导出应该放在rm::exportOneGeometry_Mesh()里，而不是liqRibMeshData
 - implement an assert window with mel.(for now, liqAssert only invokes warning(), but not pop a window)
-
+- 全部使用fullPathName()(比如，liqRibDataPtr::getFullPathName()替代 liqRibDataPtr::getName() )
 
 rm
 ------------
@@ -112,6 +112,7 @@ rm
 - shadow pass
 - bump2d/bump3d for rm
 - blinn shader无法编译
+- rmsg文件路径有':',则无法输出
 
 er
 ------------
@@ -176,3 +177,8 @@ er
 - er 网络渲染
 - 粒子，流体等vfx的导出
 - 设置新project路径后，用er渲染会崩溃，原因是rib，generatedShader，rmanpix等目录未创建
+- 导出前，检查物体名字长度是否大于EI_MAX_NODE_NAME_LEN，param名称长度是否大于EI_MAX_PARAM_NAME_LEN
+
+- 哪里有cg制作规范
+
+

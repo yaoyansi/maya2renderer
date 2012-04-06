@@ -327,6 +327,15 @@ namespace elvishray
 
 		eiContext *CONTEXT;
 	};
+
+#define TRANSFORM_SHAPE_PAIR
+// if we define TRANSFORM_SHAPE_PAIR:
+//		ei_instance(transform node name);
+//			ei_add_element(shape node name);
+// if we NOT define TRANSFORM_SHAPE_PAIR:
+//		ei_instance(shape node name);
+//			ei_add_element(shape node name+"_object");
+
 }//namespace elvishray
 
 

@@ -118,8 +118,11 @@ namespace elvishray
 		_s("\n//############################### mesh #");
 		_s("//shape name="<<mesh->getName());
 		_s("//shape full path name="<<mesh->getFullPathName());
-		const std::string objectName(getObjectName(mesh->getName()));
-		//const std::string objectName(mesh->getFullPathName());
+#ifdef TRANSFORM_SHAPE_PAIR
+		const std::string objectName(ribNode__->name.asChar());//shape
+#else// SHAPE SHAPE_object PAIR
+		const std::string objectName(getObjectName(ribNode__->name.asChar()));//shape+"_object"
+#endif
 		_S( ei_object( objectName.c_str(), "poly" ) );
 		_s("{");
 		_d( eiTag tag );

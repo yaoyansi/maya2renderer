@@ -220,8 +220,11 @@ namespace elvishray
 		}
 
 		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
-		std::string instanceName(mesh->getName());//shape node
-		//std::string instanceName(ribNode__->getTransformNodeFullPath().asChar());//transform node
+#ifdef TRANSFORM_SHAPE_PAIR
+		std::string instanceName(ribNode__->getTransformNodeFullPath().asChar());//transform
+#else// SHAPE SHAPE_object PAIR
+		std::string instanceName(ribNode__->name.asChar());//shape
+#endif
 		_S( ei_instance( instanceName.c_str() ) );
 		//_S( ei_visible( on ) );
 		// 		ei_shadow( on );
@@ -241,8 +244,11 @@ namespace elvishray
 		//element
 		_s("//shape name="<<mesh->getName());
 		_s("//shape full path name="<<mesh->getFullPathName());
-		const std::string objectName(getObjectName(mesh->getName()));
-		//const std::string objectName(mesh->getFullPathName());
+#ifdef TRANSFORM_SHAPE_PAIR
+		const std::string objectName(ribNode__->name.asChar());//shape
+#else// SHAPE SHAPE_object PAIR
+		const std::string objectName(getObjectName(ribNode__->name.asChar()));//shape+"_object"
+#endif
 		_S( ei_element( objectName.c_str() ) );
 
 		MMatrix matrix;
@@ -704,20 +710,27 @@ namespace elvishray
 
 	void Renderer::exportLightLinks(
 		const structJob &currentJob__,
-		const liqRibNodePtr mesh, 
+		const liqRibNodePtr ribNode__, 
 		const MStringArray& lightedByWhichLightShapes)
 	{
-		CM_TRACE_FUNC("Renderer::exportLightLinks("<<currentJob__.name<<","<<mesh->name<<",lightedByWhichLightShapes.size="<<lightedByWhichLightShapes.length()<<")");
+		CM_TRACE_FUNC("Renderer::exportLightLinks("<<currentJob__.name<<","<<ribNode__->name<<",lightedByWhichLightShapes.size="<<lightedByWhichLightShapes.length()<<")");
 
 		if(lightedByWhichLightShapes.length() == 0){
-			_s("//"<< mesh->name << " is not lighted." );
+			_s("//"<< ribNode__->name << " is not lighted." );
 			return;
 		}
+
+		const liqRibDataPtr mesh = ribNode__->object(0)->getDataPtr();
+#ifdef TRANSFORM_SHAPE_PAIR
+		std::string instanceName(ribNode__->getTransformNodeFullPath().asChar());//transform
+#else// SHAPE SHAPE_object PAIR
+		std::string instanceName(ribNode__->name.asChar());//shape
+#endif
 
 		for(size_t i=0; i<lightedByWhichLightShapes.length(); ++i)
 		{
 			m_groupMgr->addLightLink(currentJob__.name.asChar(), 
-				mesh->object(0)->getDataPtr()->getName(),
+				instanceName,
 				lightedByWhichLightShapes[i].asChar()
 				);
 		}
