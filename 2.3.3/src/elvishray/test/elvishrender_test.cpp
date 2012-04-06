@@ -49,7 +49,7 @@ void test_liquid2er()
 {
 //#include"cornellbox.esa"
 //#include "./liq_er_displace_good.er"
-#include "E:/MyDocuments/maya/projects/default/rib/TrexAnimation_liq_RenderCamShape.0354.rib_onelight.er"
+#include "E:/MyDocuments/maya/projects/default/rib/box.rib.er"
 //#include"ei_scene_unittest.esa"//<----- use your own elvishender api script file here.
 	
 	//ei_face_color_unittest(NULL, "suffix");

@@ -68,7 +68,7 @@ er
 - （done）重构 liqRibLightData::_write()里的scaleZ_forRenderman（）应该被转移到rm模块
 - （done）bug: user-defined shader 会输出多次
 - (done)重构：导出er时，没有rib数据导出
-
+- (done)ei_instance 使用trasform node name，而不是shape ndoe name
 
 
 
@@ -118,7 +118,6 @@ rm
 er
 ------------
 - er global node ui,数据更新有问题
-- ei_instance 使用trasform node name，而不是shape ndoe name
 - physicalsky需要修改为maya可用的
 - 更新er代码，回归测试
   shader里默认坐标系改为什么？更新shader
@@ -180,6 +179,9 @@ er
 - 设置新project路径后，用er渲染会崩溃，原因是rib，generatedShader，rmanpix等目录未创建
 - 导出前，检查物体名字长度是否大于EI_MAX_NODE_NAME_LEN，param名称长度是否大于EI_MAX_PARAM_NAME_LEN,、
   向Elvic说明这个bug
+  - EI_MAX_NODE_NAME_LEN=128时，渲染MoxMotionMeetsFBIK_NoAux.ma（短名），OK
+  - EI_MAX_NODE_NAME_LEN=1024时，渲染MoxMotionMeetsFBIK_NoAux.ma（长名），崩溃
+    再渲染MoxMotionMeetsFBIK_NoAux_shortname.rib.er试试，如果还是崩溃，说明EI_MAX_NODE_NAME_LEN改为1024后产生了bug
 - 哪里有cg制作规范
 - displacement shader 测试不正确
 
