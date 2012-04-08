@@ -291,7 +291,6 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	MStringArray displacementShaders;
 	MStringArray shadowShaders;
 	MStringArray environmentShaders;
-	MStringArray photonShaders;
 	{
 		getlistConnections(shadingGroupNode, "surfaceShader", surfaceShaders);
 
@@ -302,8 +301,6 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 		getlistConnections(shadingGroupNode, "liqShadowShader", shadowShaders);
 
 		getlistConnections(shadingGroupNode, "liqEnvironmentShader", environmentShaders);
-
-		getlistConnections(shadingGroupNode, "liqPhotonShader", photonShaders);
 	}
 
 	ei_material( shadingGroupNode );
@@ -321,9 +318,6 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 	}
 	if( environmentShaders[0].length() != 0 ){
 		ei_add_environment( environmentShaders[0].asChar() );
-	}
-	if( photonShaders[0].length() != 0 ){
-		ei_add_photon( photonShaders[0].asChar() );
 	}
 	ei_end_material();
 

@@ -262,9 +262,6 @@ namespace elvishray
 		}else if(liqshader->shader_type_ex == "environment"){
 			//outputIndentation(indentLevel);
 			this->shader_environment( *liqshader,   liqshader->tokenPointerArray );
-		}else if(liqshader->shader_type_ex == "photon"){
-			//outputIndentation(indentLevel);
-			this->shader_photon( *liqshader,   liqshader->tokenPointerArray );
 		}else if(liqshader->shader_type_ex == "lens"){
 			//outputIndentation(indentLevel);
 			this->shader_lens( *liqshader,   liqshader->tokenPointerArray );
@@ -297,16 +294,7 @@ namespace elvishray
 		CM_TRACE_FUNC("Renderer::shader_environment("<<shader.getName()<<",tokenPointerArray)");
 
 		_UserDefinedShader(shader, tokenPointerArray);
-	}
-	void Renderer::shader_photon(
-		const liqShader &shader,
-		const std::vector<liqTokenPointer> &tokenPointerArray
-		)
-	{
-		CM_TRACE_FUNC("Renderer::shader_photon("<<shader.getName()<<",tokenPointerArray)");
-
-		_UserDefinedShader(shader, tokenPointerArray);
-	}		
+	}	
 	void Renderer::shader_lens(
 		const liqShader &shader,
 		const std::vector<liqTokenPointer> &tokenPointerArray
@@ -326,7 +314,6 @@ namespace elvishray
 		plugs.push_back("volumeShader");
 		plugs.push_back("liqShadowShader");
 		plugs.push_back("liqEnvironmentShader");
-		plugs.push_back("liqPhotonShader");
 	}
 
 }//namespace elvishray

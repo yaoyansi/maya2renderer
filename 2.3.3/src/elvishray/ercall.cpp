@@ -303,35 +303,10 @@ namespace elvishray
 		_s("ei_caustic("<<type<<")");
 		_e( ei_caustic(type));
 	}
-	void my_ei_caustic_photons( int photons )
-	{
-		_s("ei_caustic_photons("<<photons<<")");
-		_e( ei_caustic_photons(photons));
-	}
 	void my_ei_caustic_accuracy( int samples, float radius )
 	{
 		_s("ei_caustic_accuracy("<<samples<<","<<radius<<")");
 		_e( ei_caustic_accuracy(samples, radius));
-	}
-	void my_ei_caustic_scale( float r, float g, float b )
-	{
-		_s("ei_caustic_scale("<<r<<","<<g<<","<<b<<")");
-		_e( ei_caustic_scale(r, g, b));
-	}
-	void my_ei_caustic_filter( int filter, float filter_const )
-	{
-		_s("ei_caustic_filter("<<filter<<","<<filter_const<<")");
-		_e( ei_caustic_filter(filter, filter_const));
-	}
-	void my_ei_photon_trace_depth( int reflect, int refract, int sum )
-	{
-		_s("ei_photon_trace_depth("<<reflect<<","<<refract<<","<<sum<<")");
-		_e( ei_photon_trace_depth(reflect, refract, sum));
-	}
-	void my_ei_photon_decay( float decay )
-	{
-		_s("ei_photon_decay("<<decay<<")");
-		_e( ei_photon_decay(decay));
 	}
 	//	Global Illumination:
 	void my_ei_globillum( int type )
@@ -339,65 +314,15 @@ namespace elvishray
 		_s("ei_globillum("<<type<<")");
 		_e( ei_globillum(type));
 	}
-	void my_ei_globillum_photons( int photons )
-	{
-		_s("ei_globillum_photons("<<photons<<")");
-		_e( ei_globillum_photons(photons));
-	}
 	void my_ei_globillum_accuracy( int samples, float radius )
 	{
 		_s("ei_globillum_accuracy("<<samples<<","<<radius<<")");
 		_e( ei_globillum_accuracy(samples, radius));
 	}
-	void my_ei_globillum_scale( float r, float g, float b )
-	{
-		_s("ei_globillum_scale("<<r<<","<<g<<","<<b<<")");
-		_e( ei_globillum_scale(r, g, b));	
-	}
 	void my_ei_photonvol_accuracy( int samples, float radius )
 	{
 		_s("ei_photonvol_accuracy("<<samples<<","<<radius<<")");
 		_e( ei_photonvol_accuracy(samples, radius));
-	}
-	void my_ei_finalgather( int type )	
-	{
-		_s("ei_finalgather("<<type<<")");
-		_e( ei_finalgather(type));
-	}
-// 	void my_ei_finalgather_precompute( int type )
-// 	{
-// 		_s("ei_finalgather_precompute("<<type<<")");
-// 		_e( ei_finalgather_precompute(type));
-// 	}
-	void my_ei_finalgather_accuracy( int rays, int samples, float density, float radius )
-	{
-		_s("ei_finalgather_accuracy("<<rays<<","<<samples<<","<<density<<","<<radius<<")");
-		_e( ei_finalgather_accuracy(rays,samples, density, radius));
-	}
-	void my_ei_finalgather_falloff( int type )
-	{
-		_s("ei_finalgather_falloff("<<type<<")");
-		_e( ei_finalgather_falloff(type));
-	}
-	void my_ei_finalgather_falloff_range( float start, float stop )
-	{
-		_s("ei_finalgather_falloff_range("<<start<<","<<stop<<")");
-		_e( ei_finalgather_falloff_range(start, stop));
-	}
-	void my_ei_finalgather_filter( float size )
-	{
-		_s("ei_finalgather_filter("<<size<<")");
-		_e( ei_finalgather_filter(size));
-	}
-	void my_ei_finalgather_trace_depth( int reflect, int refract, int diffuse, int sum )
-	{
-		_s("ei_finalgather_trace_depth("<<reflect<<","<<refract<<","<<diffuse<<","<<sum<<")");
-		_e( ei_finalgather_trace_depth(reflect,  refract, diffuse, sum));
-	}
-	void my_ei_finalgather_scale( float r, float g, float b )
-	{
-		_s("ei_finalgather_scale("<<r<<","<<g<<","<<b<<")");
-		_e( ei_finalgather_scale(r,g,b));
 	}
 
 	//	Frame Buffer Control:
@@ -599,11 +524,6 @@ namespace elvishray
 		_s("ei_add_environment(\""<<shader_name <<"\")");
 		_e( ei_add_environment(shader_name ));
 	}
-	void my_ei_add_photon( const char *shader_name )
-	{
-		_s("ei_add_photon(\""<<shader_name <<"\")");
-		_e( ei_add_photon(shader_name ));
-	}
 
 	void my_ei_end_material()
 	{
@@ -645,11 +565,6 @@ namespace elvishray
 // 		_s("ei_spread( "<<spread<<" )");
 // 		_e( ei_spread(spread));
 // 	}
-	void my_ei_energy( float r, float g, float b )
-	{
-		_s("ei_energy( "<<r<<","<<g<<","<<b<<" )");
-		_e( ei_energy(r,g,b));
-	}
 // 	void my_ei_decay( float exp )
 // 	{
 // 		_s("ei_decay( "<<exp<<" )");

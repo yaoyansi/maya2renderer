@@ -293,7 +293,7 @@
           >5 liqRibTranslatorNew::ribPrologue__(perspShape)
             >6 Renderer::ribPrologue_begin(perspShape)
               >7 RiBegin_liq(E:/MyDocuments/maya/projects/default/rib/test_shader_pl_connection_perspShape.0001.rib)
-            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=20:16:08.95),E:/MyDocuments/maya/projects/default/test_shader_pl_connection,yaoyansi,time)
+            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:22:56.31),E:/MyDocuments/maya/projects/default/test_shader_pl_connection,yaoyansi,time)
             >6 Renderer::ribPrologue_options(perspShape)
               >7 Renderer::ribPrologue_writeSearthPath()
               >7 tHeroRibWriterMgr::ribPrologue_hider(0)

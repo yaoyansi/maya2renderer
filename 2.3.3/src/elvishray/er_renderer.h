@@ -308,10 +308,6 @@ namespace elvishray
 			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray
 			);
-		void shader_photon(
-			const liqShader &shader,
-			const std::vector<liqTokenPointer> &tokenPointerArray
-			);
 		void shader_lens(
 			const liqShader &shader,
 			const std::vector<liqTokenPointer> &tokenPointerArray

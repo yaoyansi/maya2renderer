@@ -190,10 +190,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\elvishrender_test.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\er_displace_test.cpp"
 				>
 			</File>
@@ -251,6 +247,14 @@
 			</File>
 			<File
 				RelativePath="D:\script.er"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="main"
+			>
+			<File
+				RelativePath=".\elvishrender_test.cpp"
 				>
 			</File>
 		</Filter>

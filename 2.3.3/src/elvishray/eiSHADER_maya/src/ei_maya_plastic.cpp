@@ -94,7 +94,6 @@ SURFACE(maya_lambert)
 			Ci() += localC;
 		}
 
-		Ci() += Kd() * irradiance();
 		Oi() = color(1.0f);
 	}
 
@@ -274,7 +273,6 @@ SURFACE(simple_hair)
 		}
 
 		Ci() *= Cs();
-		Ci() += Kd() * irradiance();
 		Oi() = color(1.0f);
 	}
 
@@ -419,7 +417,6 @@ SURFACE(maya_lambert_transparent)
 			Ci() += localC;
 		}
 
-		Ci() += Kd() * irradiance();
 		if ( transparency() > 0.0f )
 		{
 			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();

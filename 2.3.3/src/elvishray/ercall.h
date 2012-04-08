@@ -98,27 +98,12 @@ namespace elvishray
 
 	//	Caustics:
 	 void my_ei_caustic( int type );
-	 void my_ei_caustic_photons( int photons );
 	 void my_ei_caustic_accuracy( int samples, float radius );
-	 void my_ei_caustic_scale( float r, float g, float b );
-	 void my_ei_caustic_filter( int filter, float filter_const );
-	 void my_ei_photon_trace_depth( int reflect, int refract, int sum );
-	 void my_ei_photon_decay( float decay );
 
 	//	Global Illumination:
 	 void my_ei_globillum( int type );
-	 void my_ei_globillum_photons( int photons );
 	 void my_ei_globillum_accuracy( int samples, float radius );
-	 void my_ei_globillum_scale( float r, float g, float b );
 	 void my_ei_photonvol_accuracy( int samples, float radius );
-	 void my_ei_finalgather( int type );
-	 void my_ei_finalgather_precompute( int type );
-	 void my_ei_finalgather_accuracy( int rays, int samples, float density, float radius );
-	 void my_ei_finalgather_falloff( int type );
-	 void my_ei_finalgather_falloff( float start, float stop );
-	 void my_ei_finalgather_filter( float size );
-	 void my_ei_finalgather_trace_depth( int reflect, int refract, int diffuse, int sum );
-	 void my_ei_finalgather_scale( float r, float g, float b );
 
 	//	Frame Buffer Control:
 	 void my_ei_exposure( float gain, float gamma );
@@ -178,7 +163,6 @@ namespace elvishray
 	 void my_ei_add_shadow( const char *shader_name );
 	 void my_ei_add_volume( const char *shader_name );
 	 void my_ei_add_environment( const char *shader_name );
-	 void my_ei_add_photon( const char *shader_name );
 
 	 void my_ei_end_material();
 
@@ -193,7 +177,6 @@ namespace elvishray
 	 void my_ei_photon_emitter( const char *shader_name, int end_=ei_end, ... );
 	 void my_ei_direction( float dx, float dy, float dz );
 	 void my_ei_spread( float spread );
-	 void my_ei_energy( float r, float g, float b );
 	 void my_ei_decay( float exp );
 	 void my_ei_shadowmap_resolution( int x, int y );
 	 void my_ei_shadowmap_accuracy( int samples, float softness );

@@ -143,7 +143,6 @@ SURFACE(maya_phong)
 			Ci() += C;
 		}
 
-		Ci() += Kd * irradiance();
 		if ( ! less_than( &transparency(), LIQ_SCALAR_ALMOST_ZERO ) )
 		{//transparent
 			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
@@ -170,7 +169,6 @@ SURFACE(maya_phong)
 			Ci() += C;
 		}
 
-		Ci() += Kd * irradiance();
 		if ( ! less_than( &transparency(), LIQ_SCALAR_ALMOST_ZERO ) )
 		{//transparent
 			Ci() = Ci() * ( 1.0f - transparency() ) + trace_transparent() * transparency();
