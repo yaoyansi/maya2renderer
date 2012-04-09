@@ -60,4 +60,14 @@ namespace renderman
 		CM_TRACE_FUNC("getShadingGroupFilePath("<<shadingGroupNodeName<<")");
 		return getShaderDirectory()+sanitizeNodeName(shadingGroupNodeName+".rmsg");
 	}
+	MString getShaderFilePath(const MString &shaderNodeName)
+	{
+		CM_TRACE_FUNC("getShaderFilePath("<<shaderNodeName<<")");
+		return getShaderDirectory()+sanitizeNodeName(shaderNodeName+".sl_my");
+	}
+	MString getShaderFileSLOPath(const MString &shaderNodeName)
+	{
+		CM_TRACE_FUNC("getShaderFileSLOPath("<<shaderNodeName<<")");
+		return getShaderDirectory()+sanitizeNodeName(shaderNodeName+".slo");
+	}
 }

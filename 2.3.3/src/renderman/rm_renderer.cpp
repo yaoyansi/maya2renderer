@@ -1280,15 +1280,24 @@ namespace renderman
 		const MString& meshname
 		)
 	{
-		CM_TRACE_FUNC(boost::format("liqRibTranslator::writeShadingGroup(%s)")%meshname.asChar());
+		CM_TRACE_FUNC(boost::format("Renderer::oneObjectBlock_reference_attribute_block3_ShadingGroup(%s)")%meshname.asChar());
+		MStringArray shadingGroupNode;
+		{
+			MString cmd = "listConnections -type \"shadingEngine\" -destination on (\""+meshname+"\" + \".instObjGroups\")";
+			IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNode));
+		}
+
+		if(shadingGroupNode.length()==0){
+			RiArchiveRecord( RI_COMMENT, "has no shadingEngine" );
+			return;
+		}
+		if(shadingGroupNode[0].length()==0){
+			RiArchiveRecord( RI_COMMENT, "shadingEngine[0] is empty" );
+			return;
+		}
+
 		RiArchiveRecord( RI_COMMENT, "use Shading Group reference:" );
 		{
-			MStringArray shadingGroupNode;
-			{
-				MString cmd = "listConnections -type \"shadingEngine\" -destination on (\""+meshname+"\" + \".instObjGroups\")";
-				IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNode));
-			}
-
 			RiReadArchive( const_cast< RtToken >(getShadingGroupFilePath(shadingGroupNode[0]).asChar()), NULL, RI_NULL );
 		}
 	}

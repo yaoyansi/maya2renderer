@@ -32,7 +32,7 @@
 //--------------------------------------------------------
 RtVoid RiBegin_liq(RtToken name)
 {
-	CM_TRACE_FUNC("RiBegin_liq("<<name<<")");
+	CM_TRACE_FUNC("RiBegin_liq("<<name<<"(strlen="<<strlen(name)<<")");
 	std::string newname(name);
 
 	if( strlen(name)>=_POSIX_PATH_MAX )//file name is too long
