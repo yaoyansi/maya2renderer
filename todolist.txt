@@ -101,7 +101,7 @@ liq
 - 重构 : move m_outputDebugMsgToRib to liqGlobalVariable,
    - remove in liqribshavedata.cpp
    - (done)rm mesh数据导出应该放在rm::exportOneGeometry_Mesh()里，而不是liqRibMeshData
-- implement an assert window with mel.(for now, liqAssert only invokes warning(), but not pop a window)
+* implement an assert window with mel.(for now, liqAssert only invokes warning(), but not pop a window)
 - 全部使用fullPathName()(比如，liqRibDataPtr::getFullPathName()替代 liqRibDataPtr::getName() )
 - 一个transform node下直接连多个shape节点
 
@@ -113,7 +113,8 @@ rm
 - shadow pass
 - bump2d/bump3d for rm
 - blinn shader无法编译
-- rmsg文件路径有':',则无法输出
+* rmsg文件路径有':',则无法输出
+- 重构 :shaderOutputRSL namespace由 RSL改为renderman
 
 er
 ------------
@@ -176,12 +177,13 @@ er
 - myDeleteAttr();--fail
 - er 网络渲染
 - 粒子，流体等vfx的导出
-- 设置新project路径后，用er渲染会崩溃，原因是rib，generatedShader，rmanpix等目录未创建
+* 设置新project路径后，用er渲染会崩溃，原因是rib，generatedShader，rmanpix等目录未创建
 - 导出前，检查物体名字长度是否大于EI_MAX_NODE_NAME_LEN，param名称长度是否大于EI_MAX_PARAM_NAME_LEN,、
   向Elvic说明这个bug
   - EI_MAX_NODE_NAME_LEN=128时，渲染MoxMotionMeetsFBIK_NoAux.ma（短名），OK
   - EI_MAX_NODE_NAME_LEN=1024时，渲染MoxMotionMeetsFBIK_NoAux.ma（长名），崩溃
-    再渲染MoxMotionMeetsFBIK_NoAux_shortname.rib.er试试，如果还是崩溃，说明EI_MAX_NODE_NAME_LEN改为1024后产生了bug
+    再渲染MoxMotionMeetsFBIK_NoAux_shortname.rib.er,还是崩溃，说明EI_MAX_NODE_NAME_LEN改为1024后产生了bug
 - 哪里有cg制作规范
 - displacement shader 测试不正确
+- er里凡是与名字长度相关的，都应该加上eiAssert()
 

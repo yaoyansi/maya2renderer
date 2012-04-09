@@ -1289,9 +1289,7 @@ namespace renderman
 				IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNode));
 			}
 
-			MString shadingGroupFileName(getShaderDirectory()+shadingGroupNode[0]);
-
-			RiReadArchive( const_cast< RtToken >((shadingGroupFileName+".rmsg").asChar()), NULL, RI_NULL );
+			RiReadArchive( const_cast< RtToken >(getShadingGroupFilePath(shadingGroupNode[0]).asChar()), NULL, RI_NULL );
 		}
 	}
 	//

@@ -35,6 +35,10 @@ namespace renderman
 		RibDataExportHelper();
 		~RibDataExportHelper();
 	};
+	//-------------------------------------------------------
+	//
+	//-------------------------------------------------------
+	MString getShadingGroupFilePath(const MString &shadingGroupNodeName);
 }
 
 #endif
