@@ -115,6 +115,8 @@ rm
 - blinn shader无法编译
 * rmsg文件路径有':',则无法输出
 - 重构 :shaderOutputRSL namespace由 RSL改为renderman
+- Visitor::outputShaderMethod()只输出了surface shader，还需要输出volume/light/displacement shader
+
 
 er
 ------------

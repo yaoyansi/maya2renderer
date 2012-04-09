@@ -70,4 +70,9 @@ namespace renderman
 		CM_TRACE_FUNC("getShaderFileSLOPath("<<shaderNodeName<<")");
 		return getShaderDirectory()+sanitizeNodeName(shaderNodeName+".slo");
 	}
+	MString getShaderName(const MString &shaderName)
+	{
+		CM_TRACE_FUNC("getShaderName("<<shaderName<<")");
+		return sanitizeNodeName(shaderName);
+	}
 }

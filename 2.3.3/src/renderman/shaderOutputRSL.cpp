@@ -152,7 +152,8 @@ void OutputHelper::beginRSL (const MString& name)
 
 	// "Open" the header and body.
 	//
-	rslShaderHeader = ( "void " + name + " (\n" );
+	rslShaderHeader  = ( "//shader name: " + name + "\n" );
+	rslShaderHeader += ( "void " + renderman::getShaderName(name) + " (\n" );
 	rslShaderBody = "{\n";
 }
 //
@@ -203,7 +204,8 @@ void Visitor::outputShaderMethod(const char* shaderName,
 {
 	CM_TRACE_FUNC("Visitor::outputShaderMethod("<<shaderName<<","<<shaderMethodVariavles<<","<<shaderMethodBody<<")");
 
-	RSLfile << "surface " << shaderName << "()\n{\n";
+	RSLfile << "//surface shader name: " << shaderName << "\n";
+	RSLfile << "surface " << renderman::getShaderName(shaderName) << "()\n{\n";
 	RSLfile << shaderMethodVariavles;
 	RSLfile << "\n";
 	RSLfile << shaderMethodBody;

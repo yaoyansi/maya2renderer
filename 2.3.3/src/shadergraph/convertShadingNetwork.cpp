@@ -7,6 +7,8 @@
 #include "shaderOutputMgr.h"
 #include "../renderermgr.h"
 
+#include "../renderman/rm_helper.h"
+
 namespace liquidmaya{
 
 void connectMStringArray(MString& des, const MStringArray& src)
@@ -444,17 +446,21 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 				inputVars,
 				outputVars);
 
-			// Add the current node method to the shader body
-			shaderData[ SHADER_METHOD_BODY_I ] += " " + currentNode +"("+vars+");\n";
-			
-			// test the input and output of currentNode
-			{	
-				MString inputVarsStr; 
-				MString outputVarsStr;
-				connectMStringArray(inputVarsStr, inputVars);
-				connectMStringArray(outputVarsStr, outputVars);
-				shaderData[ SHADER_METHOD_BODY_I ] += "//input: " + inputVarsStr +"\n";
-				shaderData[ SHADER_METHOD_BODY_I ] += "//output:" + outputVarsStr +"\n\n";
+			// must be moved to RM module
+			{
+				// Add the current node method to the shader body
+				shaderData[ SHADER_METHOD_BODY_I ] += " //" + currentNode +"\n";
+				shaderData[ SHADER_METHOD_BODY_I ] += " " + renderman::getShaderName(currentNode) +"("+vars+");\n";
+				
+				// test the input and output of currentNode
+				{	
+					MString inputVarsStr; 
+					MString outputVarsStr;
+					connectMStringArray(inputVarsStr, inputVars);
+					connectMStringArray(outputVarsStr, outputVars);
+					shaderData[ SHADER_METHOD_BODY_I ] += "//input: " + inputVarsStr +"\n";
+					shaderData[ SHADER_METHOD_BODY_I ] += "//output:" + outputVarsStr +"\n\n";
+				}
 			}
 
 			// We are done with the current node

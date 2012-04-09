@@ -41,7 +41,7 @@ namespace renderman
 	MString getShadingGroupFilePath(const MString &shadingGroupNodeName);
 	MString getShaderFilePath(const MString &shaderNodeName);
 	MString getShaderFileSLOPath(const MString &shaderNodeName);
-
+	MString getShaderName(const MString &shaderName);
 }
 
 #endif
