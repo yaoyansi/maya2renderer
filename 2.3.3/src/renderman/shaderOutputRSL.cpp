@@ -20,6 +20,13 @@ namespace RSL
 		sList.getDependNode(0, mobj);
 		return mobj;
 	}
+	void connectMStringArray(MString& des, const MStringArray& src)
+	{
+		des.clear();
+		for(std::size_t i=0; i<src.length(); ++i){
+			des += src[ i ] + ",";
+		}
+	}
 //////////////////////////////////////////////////////////////////////////
 OutputHelper::OutputHelper(std::ofstream& RSLfile)
 :RSLfileRef(RSLfile)
@@ -210,6 +217,29 @@ void Visitor::outputShaderMethod(const char* shaderName,
 	RSLfile << "\n";
 	RSLfile << shaderMethodBody;
 	RSLfile << "}\n";
+}
+void  Visitor::addShaderMethodBody(
+						 MString& shaderMethodBody,
+						 const MString &currentNode,
+						 const MString &vars,
+						 const MStringArray& inputVars,
+						 const MStringArray& outputVars)
+{
+	CM_TRACE_FUNC("Visitor::addShaderMethodBody(&shaderMethodBody,"<<currentNode<<","<<vars<<","<<inputVars<<","<<outputVars<<")");
+
+	// Add the current node method to the shader body
+	shaderMethodBody += " //" + currentNode +"\n";
+	shaderMethodBody += " " + renderman::getShaderName(currentNode) +"("+vars+");\n";
+	
+	// test the input and output of currentNode
+	{	
+		MString inputVarsStr; 
+		MString outputVarsStr;
+		connectMStringArray(inputVarsStr, inputVars);
+		connectMStringArray(outputVarsStr, outputVars);
+		shaderMethodBody += "//input: " + inputVarsStr +"\n";
+		shaderMethodBody += "//output:" + outputVarsStr +"\n\n";
+	}
 }
 void Visitor::outputEnd()
 {

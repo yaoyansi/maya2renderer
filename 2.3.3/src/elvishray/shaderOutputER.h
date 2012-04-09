@@ -63,6 +63,12 @@ public:
 	virtual void outputBegin(const char* shaderNodeName);
 	virtual void outputUpstreamShader(const char* shaderNodeName);
 	virtual void outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
+	virtual void addShaderMethodBody(
+		MString& shaderMethodBody,
+		const MString &currentNode,
+		const MString &vars,
+		const MStringArray& inputVars,
+		const MStringArray& outputVars);
 	virtual void outputEnd();
 	virtual void postOutput();
 	virtual void outputShadingGroup(const char* shadingGroupNode);

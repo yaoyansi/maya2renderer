@@ -446,22 +446,12 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 				inputVars,
 				outputVars);
 
-			// must be moved to RM module
-			{
-				// Add the current node method to the shader body
-				shaderData[ SHADER_METHOD_BODY_I ] += " //" + currentNode +"\n";
-				shaderData[ SHADER_METHOD_BODY_I ] += " " + renderman::getShaderName(currentNode) +"("+vars+");\n";
-				
-				// test the input and output of currentNode
-				{	
-					MString inputVarsStr; 
-					MString outputVarsStr;
-					connectMStringArray(inputVarsStr, inputVars);
-					connectMStringArray(outputVarsStr, outputVars);
-					shaderData[ SHADER_METHOD_BODY_I ] += "//input: " + inputVarsStr +"\n";
-					shaderData[ SHADER_METHOD_BODY_I ] += "//output:" + outputVarsStr +"\n\n";
-				}
-			}
+			MString shaderMethodBody;
+			liquidmaya::ShaderOutputMgr::getSingletonPtr()->
+				addShaderMethodBody(shaderMethodBody, currentNode, vars, inputVars, outputVars);
+			// Add the current node method to the shader body
+			shaderData[ SHADER_METHOD_BODY_I ] += shaderMethodBody;
+
 
 			// We are done with the current node
 			numConnections[ index ] = -1;

@@ -1,6 +1,8 @@
 #ifndef _SHADER_OUTPUT_H_
 #define _SHADER_OUTPUT_H_
 
+#include "../common/prerequest_maya.h"
+
 namespace liquidmaya{
 
 // Visitor Pattern
@@ -17,6 +19,13 @@ public:
 		const char* shaderName,
 		const char* shaderMethodVariavles,
 		const char* shaderMethodBody
+		) = 0;
+	virtual void addShaderMethodBody(
+		MString& shaderMethodBody,
+		const MString &currentNode,
+		const MString &vars,
+		const MStringArray& inputVars,
+		const MStringArray& outputVars
 		) = 0;
 	virtual void outputEnd() = 0;
 	virtual void postOutput() = 0;

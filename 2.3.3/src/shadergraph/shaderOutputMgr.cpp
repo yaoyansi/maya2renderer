@@ -77,6 +77,26 @@ void ShaderOutputMgr::notify_outputShaderMethod(const char* shaderName,const cha
 		(*i)->outputShaderMethod(shaderName, shaderMethodVariavles, shaderMethodBody);
 	}
 }
+void ShaderOutputMgr::notify_addShaderMethodBody(
+	MString& shaderMethodBody,
+	const MString &currentNode,
+	const MString &vars,
+	const MStringArray& inputVars,
+	const MStringArray& outputVars
+	)
+{
+	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
+	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
+	for( ; i != e; ++i )
+	{
+		(*i)->addShaderMethodBody(
+			shaderMethodBody, 
+			currentNode,
+			vars,
+			inputVars,
+			outputVars);
+	}
+}
 void ShaderOutputMgr::notify_outputEnd()
 {
 	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
@@ -120,6 +140,21 @@ void ShaderOutputMgr::outputUpstreamShader(const char* shaderNodeName)
 void ShaderOutputMgr::outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody)
 {
 	notify_outputShaderMethod(shaderName, shaderMethodVariavles, shaderMethodBody);
+}
+void ShaderOutputMgr::addShaderMethodBody(
+						 MString& shaderMethodBody,
+						 const MString &currentNode,
+						 const MString &vars,
+						 const MStringArray& inputVars,
+						 const MStringArray& outputVars)
+{
+	notify_addShaderMethodBody(
+		shaderMethodBody, 
+		currentNode,
+		vars,
+		inputVars,
+		outputVars
+		);
 }
 void ShaderOutputMgr::outputEnd()
 {

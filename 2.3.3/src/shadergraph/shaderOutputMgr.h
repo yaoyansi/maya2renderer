@@ -2,6 +2,7 @@
 #define _SHADER_OUTPUT_MGR_H_
 
 #include "../common/prerequest_std.h"
+#include "../common/prerequest_maya.h"
 
 namespace liquidmaya{
 
@@ -18,6 +19,12 @@ namespace liquidmaya{
 		void outputBegin(const char* shaderNodeName);
 		void outputUpstreamShader(const char* shaderNodeName);
 		void outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
+		void addShaderMethodBody(
+			MString& shaderMethodBody,
+			const MString &currentNode,
+			const MString &vars,
+			const MStringArray& inputVars,
+			const MStringArray& outputVars);
 		void outputEnd();
 		void postOutput();
 
@@ -35,6 +42,13 @@ namespace liquidmaya{
 		void notify_outputBegin(const char* shaderNodeName);
 		void notify_outputUpstreamShader(const char* shaderNodeName);
 		void notify_outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
+		void notify_addShaderMethodBody(
+			MString& shaderMethodBody,
+			const MString &currentNode,
+			const MString &vars,
+			const MStringArray& inputVars,
+			const MStringArray& outputVars
+			);
 		void notify_outputEnd();
 		void notify_postOutput();
 		void notify_outputShadingGroup(const char* shadingGroupNode);
