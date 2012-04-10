@@ -290,9 +290,8 @@ void ConvertShadingNetwork::addNodeOutputVariable(
 		MString typeSize;
 		IfMErrorWarn(MGlobal::executeCommand( ("match(\"[0-9]*$\", \""+type_+"\")"), typeSize));
 
-		//MString shaderMethodVariavles;
 		liquidmaya::ShaderOutputMgr::getSingletonPtr()->
-			addShaderMethodVariavles(/*shaderMethodVariavles,*/ typeSize, varName);
+			addShaderMethodVariavles(typeSize, varName);
 
 		if( outputVars.length()<(outputIndex+1) ){
 			outputVars.setLength(outputIndex+1);
@@ -439,9 +438,8 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 				inputVars,
 				outputVars);
 
-			//MString shaderMethodBody;
 			liquidmaya::ShaderOutputMgr::getSingletonPtr()->
-				addShaderMethodBody(/*shaderMethodBody,*/ currentNode, vars, inputVars, outputVars);
+				addShaderMethodBody(currentNode, vars, inputVars, outputVars);
 
 
 
@@ -455,16 +453,12 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 	}
 }
 //
-void ConvertShadingNetwork::outputShaderMethod(/* const MStringArray& shaderData */)
+void ConvertShadingNetwork::outputShaderMethod()
 {
 	CM_TRACE_FUNC("ConvertShadingNetwork::outputShaderMethod()");
 
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
-		outputShaderMethod(
-		//shaderData[SHADER_NAME_I].asChar(),
-		//shaderData[SHADER_METHOD_VARIAVLES_I].asChar(),
-		//shaderData[SHADER_METHOD_BODY_I].asChar()
-	);
+		outputShaderMethod();
 
 }
 //
@@ -477,14 +471,8 @@ void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNo
 	MStringArray nodes;
 	MIntArray numConnections;
 
-	//MString str0, str1, str2;
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
-		initShaderData( /*str0, str1, str2,*/ startingNode );
-//	MStringArray shaderData;
-// 	shaderData.setLength(3);
-// 	shaderData[SHADER_METHOD_VARIAVLES_I] = str0;// shader method variables
-// 	shaderData[SHADER_METHOD_BODY_I]      = str1;// shader method body
-// 	shaderData[SHADER_NAME_I]             = str2;// shader name
+		initShaderData(startingNode );
 
 	getUpstreamConvertibleNodes(startingNode, nodes, numConnections);
 	//std::cout<<"numConnections[]="<<numConnections<<std::endl;
@@ -495,10 +483,10 @@ void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNo
 
 	// Traverse the graph outputing functions for nodes that have received all
 	// of their respective inputs
-	traverseGraphAndOutputNodeFunctions(nodes, numConnections/*, shaderData*/);
+	traverseGraphAndOutputNodeFunctions(nodes, numConnections);
 	
 	// Output the shader method
-	outputShaderMethod(/*shaderData*/);
+	outputShaderMethod();
 
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
 		outputEnd();

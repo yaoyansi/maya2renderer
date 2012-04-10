@@ -63,13 +63,11 @@ public:
 	virtual void outputUpstreamShader(const char* shaderNodeName);
 	virtual void outputShaderMethod();
 	virtual void addShaderMethodBody(
-//		MString& shaderMethodBody,
 		const MString &currentNode,
 		const MString &vars,
 		const MStringArray& inputVars,
 		const MStringArray& outputVars);
 	virtual void addShaderMethodVariavles(
-//		MString& shaderMethodVariavles,
 		const MString &typeSize,
 		const MString &varName);
 	virtual void outputEnd();

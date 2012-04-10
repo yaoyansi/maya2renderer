@@ -84,12 +84,12 @@ public:
 	// all of their respective inputs.
 	//--------------------------------------------------------------------
 	void traverseGraphAndOutputNodeFunctions( const MStringArray& nodes, 
-		MIntArray& numConnections/*, MStringArray& shaderData*/);
+		MIntArray& numConnections);
 		
 	//--------------------------------------------------------------------
 	// Outputs the shader method.
 	//--------------------------------------------------------------------
-	void outputShaderMethod(/* const MStringArray& shaderData */);
+	void outputShaderMethod();
 
 	//--------------------------------------------------------------------
 	// Convert a network of shading nodes to RSL.
@@ -100,10 +100,6 @@ public:
 
 
 protected:
-	//static const int SHADER_METHOD_VARIAVLES_I = 0;
-	//static const int SHADER_METHOD_BODY_I = 1;
-	//static const int SHADER_NAME_I = 2;
-
 	void exportShaderInShadingGroup(
 		const MString& node, //geometry node(can be removed in future)
 		const MString& sgNode, //shading group node

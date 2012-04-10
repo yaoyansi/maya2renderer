@@ -228,7 +228,6 @@ void Visitor::outputShaderMethod()
 	RSLfile << "}\n";
 }
 void  Visitor::addShaderMethodBody(
-//						 MString& shaderMethodBody,
 						 const MString &currentNode,
 						 const MString &vars,
 						 const MStringArray& inputVars,
@@ -250,9 +249,7 @@ void  Visitor::addShaderMethodBody(
 		shaderData[ SHADER_METHOD_BODY_I ] += "//output:" + outputVarsStr +"\n\n";
 	}
 }
-void Visitor::addShaderMethodVariavles(
-//									   MString& shaderMethodVariavles,
-									   const MString &typeSize,
+void Visitor::addShaderMethodVariavles(const MString &typeSize,
 									   const MString &varName)
 {
 	CM_TRACE_FUNC("Visitor::addShaderMethodVariavles(&shaderMethodVariavles,"<<typeSize<<","<<varName<<")");

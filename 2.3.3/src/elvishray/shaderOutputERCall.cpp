@@ -277,7 +277,6 @@ void Visitor::outputShaderMethod()
 	CM_TRACE_FUNC("Visitor::outputShaderMethod()");
 }
 void  Visitor::addShaderMethodBody(
-//								   MString& shaderMethodBody,
 								   const MString &currentNode,
 								   const MString &vars,
 								   const MStringArray& inputVars,
@@ -287,7 +286,6 @@ void  Visitor::addShaderMethodBody(
 
 }
 void Visitor::addShaderMethodVariavles(
-//									   MString& shaderMethodVariavles,
 									   const MString &typeSize,
 									   const MString &varName)
 {

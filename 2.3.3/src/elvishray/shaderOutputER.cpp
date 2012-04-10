@@ -266,7 +266,6 @@ void Visitor::outputShaderMethod()
 // 	file << "}\n";
 }
 void  Visitor::addShaderMethodBody(
-//								   MString& shaderMethodBody,
 								   const MString &currentNode,
 								   const MString &vars,
 								   const MStringArray& inputVars,
@@ -276,7 +275,6 @@ void  Visitor::addShaderMethodBody(
 
 }
 void Visitor::addShaderMethodVariavles(
-//									  MString& shaderMethodVariavles,
 									  const MString &typeSize,
 									  const MString &varName)
 {
