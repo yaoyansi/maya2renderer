@@ -1,3 +1,4 @@
+//shader name: blinn1
 void blinn1 (
 )
 {
@@ -42,9 +43,11 @@ void blinn1 (
  Ci = Cs * Oi * color outColor;
 }
 
+//surface shader name: blinn1
 surface blinn1()
 {
 
+ //blinn1
  blinn1();
 //input: 
 //output:

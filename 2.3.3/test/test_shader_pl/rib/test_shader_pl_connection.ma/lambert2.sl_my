@@ -1,3 +1,4 @@
+//shader name: place2dTexture2
 void place2dTexture2 (
  output float outUV[];
 )
@@ -10,6 +11,7 @@ void place2dTexture2 (
  outUV[ 1 ] = mod( t * repeatUV[ 1 ], 1 );
 }
 
+//shader name: checker1
 void checker1 (
  float uvCoord[];
  output vector outColor;
@@ -34,6 +36,7 @@ void checker1 (
  }
 }
 
+//shader name: lambert2
 void lambert2 (
  vector inColor;
 )
@@ -56,19 +59,23 @@ void lambert2 (
  Ci = Cs * Oi * color outColor;
 }
 
+//surface shader name: lambert2
 surface lambert2()
 {
  float place2dTexture2_outUV[2];
  vector checker1_outColor;
 
+ //place2dTexture2
  place2dTexture2(place2dTexture2_outUV);
 //input: 
 //output:place2dTexture2_outUV,
 
+ //checker1
  checker1(place2dTexture2_outUV, checker1_outColor);
 //input: place2dTexture2_outUV,
 //output:checker1_outColor,
 
+ //lambert2
  lambert2(checker1_outColor);
 //input: checker1_outColor,
 //output:

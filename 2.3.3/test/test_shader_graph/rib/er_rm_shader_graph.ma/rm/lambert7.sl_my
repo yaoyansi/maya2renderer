@@ -1,3 +1,4 @@
+//shader name: blinn6
 void blinn6 (
  output vector outColor;
 )
@@ -42,6 +43,7 @@ void blinn6 (
  Ci = Cs * Oi * color outColor;
 }
 
+//shader name: lambert8
 void lambert8 (
  output vector outColor;
 )
@@ -63,6 +65,7 @@ void lambert8 (
  Ci = Cs * Oi * color outColor;
 }
 
+//shader name: lambert7
 void lambert7 (
  vector transparency;
  vector ambientColor;
@@ -86,19 +89,23 @@ void lambert7 (
  Ci = Cs * Oi * color outColor;
 }
 
+//surface shader name: lambert7
 surface lambert7()
 {
  vector blinn6_outColor;
  vector lambert8_outColor;
 
+ //blinn6
  blinn6(blinn6_outColor);
 //input: 
 //output:blinn6_outColor,
 
+ //lambert8
  lambert8(lambert8_outColor);
 //input: 
 //output:lambert8_outColor,
 
+ //lambert7
  lambert7(blinn6_outColor, lambert8_outColor);
 //input: blinn6_outColor,lambert8_outColor,
 //output:

@@ -13,12 +13,6 @@
       >3 liqRibTranslatorNew::processOneFrame(0, liqglo__)
         >4 liqShaderFactory::clearShaders()
         >4 liqRibTranslatorNew::buildJobs__()
-          >5 liqShader::liqShader(lambert2)
-            >6 liqShaderFactory::getUniqueShaderHandler()
-            >6 liqTokenPointer:set(,0,0,0)
-            >6 liqGetSloInfo::setShaderNode(lambert2)
-          >5 liqShader::buildJobs()
-            >6 liqShader::scanExpressions(lambert2)
           >5 liqRibTranslatorNew::buildShadowJobs__()
             >6 tJobScriptMgr::buildShadowJob(thisJob___, 0)
             >6 tJobScriptMgr::buildShadowCameraJob(thisJob___, 0)
@@ -197,7 +191,7 @@
           >5 liqRibTranslatorNew::ribPrologue__(cameraShape1)
             >6 Renderer::ribPrologue_begin(cameraShape1)
               >7 Renderer::dummyPhongShader()
-            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:22:56.31),E:/MyDocuments/maya/projects/default/three_boxes,yaoyansi,time)
+            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:21:17.03),E:/MyDocuments/maya/projects/default/three_boxes,yaoyansi,time)
             >6 Renderer::ribPrologue_options(cameraShape1)
           >5 liqRibTranslatorNew::framePrologue__(1,cameraShape1)
             >6 Renderer::framePrologue(1,cameraShape1)
@@ -213,6 +207,8 @@
                   >9 ConvertShadingNetwork::canShaderExported(lambert1)
                   >9 ConvertShadingNetwork::exportShaderBegin(lambert1)
                   >9 ConvertShadingNetwork::convertShadingNetworkToRSL(lambert1,pCubeShape1)
+                    >10 Visitor::initShaderData(lambert1)
+                    >10 Visitor::initShaderData(lambert1)
                     >10 ConvertShadingNetwork::getUpstreamConvertibleNodes(lambert1, nodes, numConnections)
                       >11 ConvertShadingNetwork::nodeIsConvertible(lambert1)
                         >12 ShaderMgr::hasShaderType(lambert)
@@ -239,7 +235,7 @@
                     >10 Visitor::preOutput(lambert1)
                     >10 Visitor::outputBegin(lambert1)
                     >10 Visitor::outputBegin(lambert1)
-                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)
+                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections)
                       >11 Visitor::outputUpstreamShader(lambert1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(lambert1,lambert)
                           >13 Visitor::visitLambert(lambert1)
@@ -302,7 +298,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(lambert)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(lambert1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(lambert1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(lambert1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert1.color)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert1.color)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert1.transparency)
@@ -321,17 +317,11 @@
                             >14 ShaderMgr::hasShaderType(shadingEngine)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert1.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert1.outTransparency)
-                    >10 ConvertShadingNetwork::outputShaderMethod(shaderData)
-                      >11 Visitor::outputShaderMethod(lambert1,, lambert1();
-//input: 
-//output:
-
-)
-                      >11 Visitor::outputShaderMethod(lambert1,, lambert1();
-//input: 
-//output:
-
-)
+                      >11 Visitor::addShaderMethodBody(lambert1,,[],[])
+                      >11 Visitor::addShaderMethodBody(lambert1,,[],[])
+                    >10 ConvertShadingNetwork::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
                     >10 Visitor::outputEnd()
                     >10 Visitor::outputEnd()
                     >10 Visitor::postOutput()
@@ -352,6 +342,8 @@
                   >9 ConvertShadingNetwork::canShaderExported(lambert3)
                   >9 ConvertShadingNetwork::exportShaderBegin(lambert3)
                   >9 ConvertShadingNetwork::convertShadingNetworkToRSL(lambert3,pCubeShape2)
+                    >10 Visitor::initShaderData(lambert3)
+                    >10 Visitor::initShaderData(lambert3)
                     >10 ConvertShadingNetwork::getUpstreamConvertibleNodes(lambert3, nodes, numConnections)
                       >11 ConvertShadingNetwork::nodeIsConvertible(lambert3)
                         >12 ShaderMgr::hasShaderType(lambert)
@@ -376,7 +368,7 @@
                     >10 Visitor::preOutput(lambert3)
                     >10 Visitor::outputBegin(lambert3)
                     >10 Visitor::outputBegin(lambert3)
-                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)
+                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections)
                       >11 Visitor::outputUpstreamShader(lambert3)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(lambert3,lambert)
                           >13 Visitor::visitLambert(lambert3)
@@ -435,7 +427,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(lambert)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(lambert3, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(lambert3, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(lambert3, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert3.color)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert3.color)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert3.transparency)
@@ -452,17 +444,11 @@
                             >14 ShaderMgr::hasShaderType(shadingEngine)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert3.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert3.outTransparency)
-                    >10 ConvertShadingNetwork::outputShaderMethod(shaderData)
-                      >11 Visitor::outputShaderMethod(lambert3,, lambert3();
-//input: 
-//output:
-
-)
-                      >11 Visitor::outputShaderMethod(lambert3,, lambert3();
-//input: 
-//output:
-
-)
+                      >11 Visitor::addShaderMethodBody(lambert3,,[],[])
+                      >11 Visitor::addShaderMethodBody(lambert3,,[],[])
+                    >10 ConvertShadingNetwork::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
                     >10 Visitor::outputEnd()
                     >10 Visitor::outputEnd()
                     >10 Visitor::postOutput()
@@ -483,6 +469,8 @@
                   >9 ConvertShadingNetwork::canShaderExported(lambert4)
                   >9 ConvertShadingNetwork::exportShaderBegin(lambert4)
                   >9 ConvertShadingNetwork::convertShadingNetworkToRSL(lambert4,pCubeShape3)
+                    >10 Visitor::initShaderData(lambert4)
+                    >10 Visitor::initShaderData(lambert4)
                     >10 ConvertShadingNetwork::getUpstreamConvertibleNodes(lambert4, nodes, numConnections)
                       >11 ConvertShadingNetwork::nodeIsConvertible(lambert4)
                         >12 ShaderMgr::hasShaderType(lambert)
@@ -507,7 +495,7 @@
                     >10 Visitor::preOutput(lambert4)
                     >10 Visitor::outputBegin(lambert4)
                     >10 Visitor::outputBegin(lambert4)
-                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)
+                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections)
                       >11 Visitor::outputUpstreamShader(lambert4)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(lambert4,lambert)
                           >13 Visitor::visitLambert(lambert4)
@@ -566,7 +554,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(lambert)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(lambert4, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(lambert4, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(lambert4, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert4.color)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert4.color)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert4.transparency)
@@ -583,17 +571,11 @@
                             >14 ShaderMgr::hasShaderType(shadingEngine)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert4.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert4.outTransparency)
-                    >10 ConvertShadingNetwork::outputShaderMethod(shaderData)
-                      >11 Visitor::outputShaderMethod(lambert4,, lambert4();
-//input: 
-//output:
-
-)
-                      >11 Visitor::outputShaderMethod(lambert4,, lambert4();
-//input: 
-//output:
-
-)
+                      >11 Visitor::addShaderMethodBody(lambert4,,[],[])
+                      >11 Visitor::addShaderMethodBody(lambert4,,[],[])
+                    >10 ConvertShadingNetwork::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
                     >10 Visitor::outputEnd()
                     >10 Visitor::outputEnd()
                     >10 Visitor::postOutput()
@@ -676,8 +658,8 @@
                 >8 liqRibTranslatorNew::checkDisplacementShader(|pCube1|pCubeShape1,|pCube1|pCubeShape1,,,)
                 >8 liqRibTranslatorNew::checkVolumeShader(|pCube1|pCubeShape1,|pCube1|pCubeShape1,,,)
                 >8 Renderer::oneObjectBlock_reference_attribute_block1(|pCube1|pCubeShape1,cameraShape1)
-                >8 liqRibTranslatorNew::writeShader_(1,|pCube1|pCubeShape1,v=0,s=1,c=0,,|pCube1|pCubeShape1,cameraShape1)
-                  >9 Renderer::oneObjectBlock_reference_attribute_block2_writeShader_RegularShader(|pCube1|pCubeShape1,cameraShape1)
+                >8 liqRibTranslatorNew::writeShader_(1,|pCube1|pCubeShape1,v=0,s=0,c=0,,|pCube1|pCubeShape1,cameraShape1)
+                  >9 Renderer::oneObjectBlock_reference_attribute_block2_writeShader_HasNoSurfaceShaderORIngoreSurface(|pCube1|pCubeShape1,|pCube1|pCubeShape1,0)
                 >8 Renderer::oneObjectBlock_reference_attribute_block3_ShadingGroup(|pCube1|pCubeShape1)
                 >8 Renderer::exportOneObject_reference(|pCube1|pCubeShape1,cameraShape1)
                 >8 Renderer::oneObjectBlock_reference_attribute_end(|pCube1|pCubeShape1,cameraShape1)

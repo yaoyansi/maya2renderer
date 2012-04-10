@@ -1,3 +1,4 @@
+//shader name: blinn3
 void blinn3 (
  output vector outColor;
 )
@@ -42,6 +43,7 @@ void blinn3 (
  Ci = Cs * Oi * color outColor;
 }
 
+//shader name: blinn4
 void blinn4 (
  output vector outColor;
 )
@@ -86,6 +88,7 @@ void blinn4 (
  Ci = Cs * Oi * color outColor;
 }
 
+//shader name: blinn5
 void blinn5 (
  output vector outColor;
 )
@@ -130,6 +133,7 @@ void blinn5 (
  Ci = Cs * Oi * color outColor;
 }
 
+//shader name: blinn2
 void blinn2 (
  vector transparency;
  vector ambColor;
@@ -177,24 +181,29 @@ void blinn2 (
  Ci = Cs * Oi * color outColor;
 }
 
+//surface shader name: blinn2
 surface blinn2()
 {
  vector blinn3_outColor;
  vector blinn4_outColor;
  vector blinn5_outColor;
 
+ //blinn3
  blinn3(blinn3_outColor);
 //input: 
 //output:blinn3_outColor,
 
+ //blinn4
  blinn4(blinn4_outColor);
 //input: 
 //output:blinn4_outColor,
 
+ //blinn5
  blinn5(blinn5_outColor);
 //input: 
 //output:blinn5_outColor,
 
+ //blinn2
  blinn2(blinn3_outColor, blinn4_outColor, blinn5_outColor);
 //input: blinn3_outColor,blinn4_outColor,blinn5_outColor,
 //output:

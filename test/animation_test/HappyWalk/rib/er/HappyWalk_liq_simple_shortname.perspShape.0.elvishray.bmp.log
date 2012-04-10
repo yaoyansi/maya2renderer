@@ -2296,7 +2296,7 @@
           >5 liqRibTranslatorNew::ribPrologue__(perspShape)
             >6 Renderer::ribPrologue_begin(perspShape)
               >7 Renderer::dummyPhongShader()
-            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=20:16:08.95),E:/MyDocuments/maya/projects/default/HappyWalk_liq_simple_shortname,yaoyansi,time)
+            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:21:17.03),E:/MyDocuments/maya/projects/default/HappyWalk_liq_simple_shortname,yaoyansi,time)
             >6 Renderer::ribPrologue_options(perspShape)
           >5 liqRibTranslatorNew::framePrologue__(57,perspShape)
             >6 Renderer::framePrologue(57,perspShape)
@@ -2312,6 +2312,8 @@
                   >9 ConvertShadingNetwork::canShaderExported(Man:GroundAtt)
                   >9 ConvertShadingNetwork::exportShaderBegin(Man:GroundAtt)
                   >9 ConvertShadingNetwork::convertShadingNetworkToRSL(Man:GroundAtt,Man:groundShape)
+                    >10 Visitor::initShaderData(Man:GroundAtt)
+                    >10 Visitor::initShaderData(Man:GroundAtt)
                     >10 ConvertShadingNetwork::getUpstreamConvertibleNodes(Man:GroundAtt, nodes, numConnections)
                       >11 ConvertShadingNetwork::nodeIsConvertible(Man:GroundAtt)
                         >12 ShaderMgr::hasShaderType(lambert)
@@ -2358,7 +2360,7 @@
                     >10 Visitor::preOutput(Man:GroundAtt)
                     >10 Visitor::outputBegin(Man:GroundAtt)
                     >10 Visitor::outputBegin(Man:GroundAtt)
-                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)
+                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections)
                       >11 Visitor::outputUpstreamShader(Man:mib_amb_occlusion1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(Man:mib_amb_occlusion1,mib_amb_occlusion)
                           >13 Visitor::visit_mib_amb_occlusion(Man:mib_amb_occlusion1)
@@ -2407,7 +2409,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(mib_amb_occlusion)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(Man:mib_amb_occlusion1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(Man:mib_amb_occlusion1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(Man:mib_amb_occlusion1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:mib_amb_occlusion1.samples)
                           >13 ConvertShadingNetwork::ensurePlugExists(Man:mib_amb_occlusion1.samples)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:mib_amb_occlusion1.bright)
@@ -2424,7 +2426,11 @@
                           >13 ConvertShadingNetwork::ensurePlugExists(Man:mib_amb_occlusion1.outValue)
                           >13 ConvertShadingNetwork::nodeIsConvertible(Man:Body)
                             >14 ShaderMgr::hasShaderType(lambert)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(Man:mib_amb_occlusion1,outValue,Man:mib_amb_occlusion1.outValue, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(Man:mib_amb_occlusion1,outValue,Man:mib_amb_occlusion1.outValue, outputVars)
+                          >13 Visitor::addShaderMethodVariavles(3,Man:mib_amb_occlusion1_outValue)
+                          >13 Visitor::addShaderMethodVariavles(3,Man:mib_amb_occlusion1_outValue)
+                      >11 Visitor::addShaderMethodBody(Man:mib_amb_occlusion1,Man:mib_amb_occlusion1_outValue,[],[Man:mib_amb_occlusion1_outValue])
+                      >11 Visitor::addShaderMethodBody(Man:mib_amb_occlusion1,Man:mib_amb_occlusion1_outValue,[],[Man:mib_amb_occlusion1_outValue])
                       >11 Visitor::outputUpstreamShader(Man:GroundAtt)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(Man:GroundAtt,lambert)
                           >13 Visitor::visitLambert(Man:GroundAtt)
@@ -2487,7 +2493,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(lambert)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(Man:GroundAtt, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(Man:GroundAtt, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(Man:GroundAtt, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:GroundAtt.color)
                           >13 ConvertShadingNetwork::ensurePlugExists(Man:GroundAtt.color)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:GroundAtt.transparency)
@@ -2510,27 +2516,11 @@
                             >14 ShaderMgr::hasShaderType(shadingEngine)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:GroundAtt.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(Man:GroundAtt.outTransparency)
-                    >10 ConvertShadingNetwork::outputShaderMethod(shaderData)
-                      >11 Visitor::outputShaderMethod(Man:GroundAtt, vector Man:mib_amb_occlusion1_outValue;
-, Man:mib_amb_occlusion1(Man:mib_amb_occlusion1_outValue);
-//input: 
-//output:Man:mib_amb_occlusion1_outValue,
-
- Man:GroundAtt(Man:mib_amb_occlusion1_outValue);
-//input: Man:mib_amb_occlusion1_outValue,
-//output:
-
-)
-                      >11 Visitor::outputShaderMethod(Man:GroundAtt, vector Man:mib_amb_occlusion1_outValue;
-, Man:mib_amb_occlusion1(Man:mib_amb_occlusion1_outValue);
-//input: 
-//output:Man:mib_amb_occlusion1_outValue,
-
- Man:GroundAtt(Man:mib_amb_occlusion1_outValue);
-//input: Man:mib_amb_occlusion1_outValue,
-//output:
-
-)
+                      >11 Visitor::addShaderMethodBody(Man:GroundAtt,Man:mib_amb_occlusion1_outValue,[Man:mib_amb_occlusion1_outValue],[])
+                      >11 Visitor::addShaderMethodBody(Man:GroundAtt,Man:mib_amb_occlusion1_outValue,[Man:mib_amb_occlusion1_outValue],[])
+                    >10 ConvertShadingNetwork::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
                     >10 Visitor::outputEnd()
                     >10 Visitor::outputEnd()
                     >10 Visitor::postOutput()
@@ -2540,7 +2530,6 @@
                 >8 ConvertShadingNetwork::exportShaderInShadingGroup(Man:groundShape,Man:lambert4SG,volumeShader)
                 >8 ConvertShadingNetwork::exportShaderInShadingGroup(Man:groundShape,Man:lambert4SG,liqShadowShader)
                 >8 ConvertShadingNetwork::exportShaderInShadingGroup(Man:groundShape,Man:lambert4SG,liqEnvironmentShader)
-                >8 ConvertShadingNetwork::exportShaderInShadingGroup(Man:groundShape,Man:lambert4SG,liqPhotonShader)
                 >8 ConvertShadingNetwork::exportShadingGroupBegin(Man:lambert4SG)
                 >8 ConvertShadingNetwork::outputShadingGroup(Man:lambert4SG)
                   >9 Visitor::outputShadingGroup(Man:lambert4SG)
@@ -2552,6 +2541,8 @@
                   >9 ConvertShadingNetwork::canShaderExported(Man:Body)
                   >9 ConvertShadingNetwork::exportShaderBegin(Man:Body)
                   >9 ConvertShadingNetwork::convertShadingNetworkToRSL(Man:Body,Man:rightUpLeg|Man:pCube1|Man:pCubeShape1)
+                    >10 Visitor::initShaderData(Man:Body)
+                    >10 Visitor::initShaderData(Man:Body)
                     >10 ConvertShadingNetwork::getUpstreamConvertibleNodes(Man:Body, nodes, numConnections)
                       >11 ConvertShadingNetwork::nodeIsConvertible(Man:Body)
                         >12 ShaderMgr::hasShaderType(lambert)
@@ -2598,7 +2589,7 @@
                     >10 Visitor::preOutput(Man:Body)
                     >10 Visitor::outputBegin(Man:Body)
                     >10 Visitor::outputBegin(Man:Body)
-                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)
+                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections)
                       >11 Visitor::outputUpstreamShader(Man:mib_amb_occlusion1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(Man:mib_amb_occlusion1,mib_amb_occlusion)
                           >13 Visitor::visit_mib_amb_occlusion(Man:mib_amb_occlusion1)
@@ -2647,7 +2638,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(mib_amb_occlusion)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(Man:mib_amb_occlusion1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(Man:mib_amb_occlusion1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(Man:mib_amb_occlusion1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:mib_amb_occlusion1.samples)
                           >13 ConvertShadingNetwork::ensurePlugExists(Man:mib_amb_occlusion1.samples)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:mib_amb_occlusion1.bright)
@@ -2664,7 +2655,11 @@
                           >13 ConvertShadingNetwork::ensurePlugExists(Man:mib_amb_occlusion1.outValue)
                           >13 ConvertShadingNetwork::nodeIsConvertible(Man:Body)
                             >14 ShaderMgr::hasShaderType(lambert)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(Man:mib_amb_occlusion1,outValue,Man:mib_amb_occlusion1.outValue, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(Man:mib_amb_occlusion1,outValue,Man:mib_amb_occlusion1.outValue, outputVars)
+                          >13 Visitor::addShaderMethodVariavles(3,Man:mib_amb_occlusion1_outValue)
+                          >13 Visitor::addShaderMethodVariavles(3,Man:mib_amb_occlusion1_outValue)
+                      >11 Visitor::addShaderMethodBody(Man:mib_amb_occlusion1,Man:mib_amb_occlusion1_outValue,[],[Man:mib_amb_occlusion1_outValue])
+                      >11 Visitor::addShaderMethodBody(Man:mib_amb_occlusion1,Man:mib_amb_occlusion1_outValue,[],[Man:mib_amb_occlusion1_outValue])
                       >11 Visitor::outputUpstreamShader(Man:Body)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(Man:Body,lambert)
                           >13 Visitor::visitLambert(Man:Body)
@@ -2727,7 +2722,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(lambert)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(Man:Body, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(Man:Body, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(Man:Body, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:Body.color)
                           >13 ConvertShadingNetwork::ensurePlugExists(Man:Body.color)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:Body.transparency)
@@ -2750,27 +2745,11 @@
                             >14 ShaderMgr::hasShaderType(shadingEngine)
                         >12 ConvertShadingNetwork::convertibleConnection(Man:Body.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(Man:Body.outTransparency)
-                    >10 ConvertShadingNetwork::outputShaderMethod(shaderData)
-                      >11 Visitor::outputShaderMethod(Man:Body, vector Man:mib_amb_occlusion1_outValue;
-, Man:mib_amb_occlusion1(Man:mib_amb_occlusion1_outValue);
-//input: 
-//output:Man:mib_amb_occlusion1_outValue,
-
- Man:Body(Man:mib_amb_occlusion1_outValue);
-//input: Man:mib_amb_occlusion1_outValue,
-//output:
-
-)
-                      >11 Visitor::outputShaderMethod(Man:Body, vector Man:mib_amb_occlusion1_outValue;
-, Man:mib_amb_occlusion1(Man:mib_amb_occlusion1_outValue);
-//input: 
-//output:Man:mib_amb_occlusion1_outValue,
-
- Man:Body(Man:mib_amb_occlusion1_outValue);
-//input: Man:mib_amb_occlusion1_outValue,
-//output:
-
-)
+                      >11 Visitor::addShaderMethodBody(Man:Body,Man:mib_amb_occlusion1_outValue,[Man:mib_amb_occlusion1_outValue],[])
+                      >11 Visitor::addShaderMethodBody(Man:Body,Man:mib_amb_occlusion1_outValue,[Man:mib_amb_occlusion1_outValue],[])
+                    >10 ConvertShadingNetwork::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
                     >10 Visitor::outputEnd()
                     >10 Visitor::outputEnd()
                     >10 Visitor::postOutput()
@@ -2780,7 +2759,6 @@
                 >8 ConvertShadingNetwork::exportShaderInShadingGroup(Man:rightUpLeg|Man:pCube1|Man:pCubeShape1,Man:lambert3SG,volumeShader)
                 >8 ConvertShadingNetwork::exportShaderInShadingGroup(Man:rightUpLeg|Man:pCube1|Man:pCubeShape1,Man:lambert3SG,liqShadowShader)
                 >8 ConvertShadingNetwork::exportShaderInShadingGroup(Man:rightUpLeg|Man:pCube1|Man:pCubeShape1,Man:lambert3SG,liqEnvironmentShader)
-                >8 ConvertShadingNetwork::exportShaderInShadingGroup(Man:rightUpLeg|Man:pCube1|Man:pCubeShape1,Man:lambert3SG,liqPhotonShader)
                 >8 ConvertShadingNetwork::exportShadingGroupBegin(Man:lambert3SG)
                 >8 ConvertShadingNetwork::outputShadingGroup(Man:lambert3SG)
                   >9 Visitor::outputShadingGroup(Man:lambert3SG)

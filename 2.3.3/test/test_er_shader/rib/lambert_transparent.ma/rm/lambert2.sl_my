@@ -1,3 +1,4 @@
+//shader name: lambert2
 void lambert2 (
 )
 {
@@ -19,9 +20,11 @@ void lambert2 (
  Ci = Cs * Oi * color outColor;
 }
 
+//surface shader name: lambert2
 surface lambert2()
 {
 
+ //lambert2
  lambert2();
 //input: 
 //output:

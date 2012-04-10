@@ -173,7 +173,7 @@
           >5 liqRibTranslatorNew::ribPrologue__(perspShape)
             >6 Renderer::ribPrologue_begin(perspShape)
               >7 Renderer::dummyPhongShader()
-            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:22:56.31),E:/MyDocuments/maya/projects/default/deform,yaoyansi,time)
+            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:21:17.03),E:/MyDocuments/maya/projects/default/deform,yaoyansi,time)
             >6 Renderer::ribPrologue_options(perspShape)
           >5 liqRibTranslatorNew::framePrologue__(6,perspShape)
             >6 Renderer::framePrologue(6,perspShape)
@@ -189,6 +189,8 @@
                   >9 ConvertShadingNetwork::canShaderExported(lambert1)
                   >9 ConvertShadingNetwork::exportShaderBegin(lambert1)
                   >9 ConvertShadingNetwork::convertShadingNetworkToRSL(lambert1,pPlaneShape1)
+                    >10 Visitor::initShaderData(lambert1)
+                    >10 Visitor::initShaderData(lambert1)
                     >10 ConvertShadingNetwork::getUpstreamConvertibleNodes(lambert1, nodes, numConnections)
                       >11 ConvertShadingNetwork::nodeIsConvertible(lambert1)
                         >12 ShaderMgr::hasShaderType(lambert)
@@ -215,7 +217,7 @@
                     >10 Visitor::preOutput(lambert1)
                     >10 Visitor::outputBegin(lambert1)
                     >10 Visitor::outputBegin(lambert1)
-                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)
+                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections)
                       >11 Visitor::outputUpstreamShader(lambert1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(lambert1,lambert)
                           >13 Visitor::visitLambert(lambert1)
@@ -278,7 +280,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(lambert)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(lambert1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(lambert1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(lambert1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert1.color)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert1.color)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert1.transparency)
@@ -297,17 +299,11 @@
                             >14 ShaderMgr::hasShaderType(shadingEngine)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert1.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert1.outTransparency)
-                    >10 ConvertShadingNetwork::outputShaderMethod(shaderData)
-                      >11 Visitor::outputShaderMethod(lambert1,, lambert1();
-//input: 
-//output:
-
-)
-                      >11 Visitor::outputShaderMethod(lambert1,, lambert1();
-//input: 
-//output:
-
-)
+                      >11 Visitor::addShaderMethodBody(lambert1,,[],[])
+                      >11 Visitor::addShaderMethodBody(lambert1,,[],[])
+                    >10 ConvertShadingNetwork::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
                     >10 Visitor::outputEnd()
                     >10 Visitor::outputEnd()
                     >10 Visitor::postOutput()

@@ -259,7 +259,7 @@
           >5 liqRibTranslatorNew::ribPrologue__(perspShape)
             >6 Renderer::ribPrologue_begin(perspShape)
               >7 Renderer::dummyPhongShader()
-            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:22:56.31),E:/MyDocuments/maya/projects/default/test_shader_pl,yaoyansi,time)
+            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:21:17.03),E:/MyDocuments/maya/projects/default/test_shader_pl,yaoyansi,time)
             >6 Renderer::ribPrologue_options(perspShape)
           >5 liqRibTranslatorNew::framePrologue__(1,perspShape)
             >6 Renderer::framePrologue(1,perspShape)
@@ -356,6 +356,8 @@
                   >9 ConvertShadingNetwork::canShaderExported(lambert2)
                   >9 ConvertShadingNetwork::exportShaderBegin(lambert2)
                   >9 ConvertShadingNetwork::convertShadingNetworkToRSL(lambert2,pPlaneShape16)
+                    >10 Visitor::initShaderData(lambert2)
+                    >10 Visitor::initShaderData(lambert2)
                     >10 ConvertShadingNetwork::getUpstreamConvertibleNodes(lambert2, nodes, numConnections)
                       >11 ConvertShadingNetwork::nodeIsConvertible(lambert2)
                         >12 ShaderMgr::hasShaderType(lambert)
@@ -490,7 +492,7 @@
                     >10 Visitor::preOutput(lambert2)
                     >10 Visitor::outputBegin(lambert2)
                     >10 Visitor::outputBegin(lambert2)
-                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)
+                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections)
                       >11 Visitor::outputUpstreamShader(place2dTexture2)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(place2dTexture2,place2dTexture)
                           >13 Visitor::visitPlace2dTexture(place2dTexture2)
@@ -615,7 +617,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(place2dTexture)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(place2dTexture2, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(place2dTexture2, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(place2dTexture2, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture2.uvCoord)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture2.uvCoord)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture2.coverageU)
@@ -658,7 +660,11 @@
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture2.outUV)
                           >13 ConvertShadingNetwork::nodeIsConvertible(checker1)
                             >14 ShaderMgr::hasShaderType(checker)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture2,outUV,place2dTexture2.outUV, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture2,outUV,place2dTexture2.outUV, outputVars)
+                          >13 Visitor::addShaderMethodVariavles(2,place2dTexture2_outUV)
+                          >13 Visitor::addShaderMethodVariavles(2,place2dTexture2_outUV)
+                      >11 Visitor::addShaderMethodBody(place2dTexture2,place2dTexture2_outUV,[],[place2dTexture2_outUV])
+                      >11 Visitor::addShaderMethodBody(place2dTexture2,place2dTexture2_outUV,[],[place2dTexture2_outUV])
                       >11 Visitor::outputUpstreamShader(checker1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(checker1,checker)
                           >13 Visitor::visitChecker(checker1)
@@ -769,7 +775,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(checker)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(checker1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(checker1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(checker1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(checker1.alphaGain)
                           >13 ConvertShadingNetwork::ensurePlugExists(checker1.alphaGain)
                         >12 ConvertShadingNetwork::convertibleConnection(checker1.alphaIsLuminance)
@@ -824,13 +830,17 @@
                           >13 ConvertShadingNetwork::ensurePlugExists(checker1.outColor)
                           >13 ConvertShadingNetwork::nodeIsConvertible(lambert2)
                             >14 ShaderMgr::hasShaderType(lambert)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(checker1,outColor,checker1.outColor, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(checker1,outColor,checker1.outColor, outputVars)
+                          >13 Visitor::addShaderMethodVariavles(3,checker1_outColor)
+                          >13 Visitor::addShaderMethodVariavles(3,checker1_outColor)
                         >12 ConvertShadingNetwork::convertibleConnection(checker1.outColorR)
                           >13 ConvertShadingNetwork::ensurePlugExists(checker1.outColorR)
                         >12 ConvertShadingNetwork::convertibleConnection(checker1.outColorG)
                           >13 ConvertShadingNetwork::ensurePlugExists(checker1.outColorG)
                         >12 ConvertShadingNetwork::convertibleConnection(checker1.outColorB)
                           >13 ConvertShadingNetwork::ensurePlugExists(checker1.outColorB)
+                      >11 Visitor::addShaderMethodBody(checker1,place2dTexture2_outUV, checker1_outColor,[place2dTexture2_outUV],[checker1_outColor])
+                      >11 Visitor::addShaderMethodBody(checker1,place2dTexture2_outUV, checker1_outColor,[place2dTexture2_outUV],[checker1_outColor])
                       >11 Visitor::outputUpstreamShader(lambert2)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(lambert2,lambert)
                           >13 Visitor::visitLambert(lambert2)
@@ -897,7 +907,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(lambert)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(lambert2, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(lambert2, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(lambert2, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert2.color)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert2.color)
                           >13 ConvertShadingNetwork::nodeIsConvertible(checker1)
@@ -922,37 +932,11 @@
                             >14 ShaderMgr::hasShaderType(shadingEngine)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert2.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert2.outTransparency)
-                    >10 ConvertShadingNetwork::outputShaderMethod(shaderData)
-                      >11 Visitor::outputShaderMethod(lambert2, float place2dTexture2_outUV[2];
- vector checker1_outColor;
-, place2dTexture2(place2dTexture2_outUV);
-//input: 
-//output:place2dTexture2_outUV,
-
- checker1(place2dTexture2_outUV, checker1_outColor);
-//input: place2dTexture2_outUV,
-//output:checker1_outColor,
-
- lambert2(checker1_outColor);
-//input: checker1_outColor,
-//output:
-
-)
-                      >11 Visitor::outputShaderMethod(lambert2, float place2dTexture2_outUV[2];
- vector checker1_outColor;
-, place2dTexture2(place2dTexture2_outUV);
-//input: 
-//output:place2dTexture2_outUV,
-
- checker1(place2dTexture2_outUV, checker1_outColor);
-//input: place2dTexture2_outUV,
-//output:checker1_outColor,
-
- lambert2(checker1_outColor);
-//input: checker1_outColor,
-//output:
-
-)
+                      >11 Visitor::addShaderMethodBody(lambert2,checker1_outColor,[checker1_outColor],[])
+                      >11 Visitor::addShaderMethodBody(lambert2,checker1_outColor,[checker1_outColor],[])
+                    >10 ConvertShadingNetwork::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
                     >10 Visitor::outputEnd()
                     >10 Visitor::outputEnd()
                     >10 Visitor::postOutput()

@@ -1,3 +1,4 @@
+//shader name: lambert11
 void lambert11 (
  output vector outColor;
 )
@@ -19,6 +20,7 @@ void lambert11 (
  Ci = Cs * Oi * color outColor;
 }
 
+//shader name: lambert10
 void lambert10 (
  vector inColor;
  output vector outColor;
@@ -41,6 +43,7 @@ void lambert10 (
  Ci = Cs * Oi * color outColor;
 }
 
+//shader name: lambert13
 void lambert13 (
  output vector outColor;
 )
@@ -62,6 +65,7 @@ void lambert13 (
  Ci = Cs * Oi * color outColor;
 }
 
+//shader name: lambert12
 void lambert12 (
  vector transparency;
  output vector outColor;
@@ -84,6 +88,7 @@ void lambert12 (
  Ci = Cs * Oi * color outColor;
 }
 
+//shader name: lambert9
 void lambert9 (
  vector transparency;
  vector ambientColor;
@@ -107,6 +112,7 @@ void lambert9 (
  Ci = Cs * Oi * color outColor;
 }
 
+//surface shader name: lambert9
 surface lambert9()
 {
  vector lambert11_outColor;
@@ -114,22 +120,27 @@ surface lambert9()
  vector lambert13_outColor;
  vector lambert12_outColor;
 
+ //lambert11
  lambert11(lambert11_outColor);
 //input: 
 //output:lambert11_outColor,
 
+ //lambert10
  lambert10(lambert11_outColor, lambert10_outColor);
 //input: lambert11_outColor,
 //output:lambert10_outColor,
 
+ //lambert13
  lambert13(lambert13_outColor);
 //input: 
 //output:lambert13_outColor,
 
+ //lambert12
  lambert12(lambert13_outColor, lambert12_outColor);
 //input: lambert13_outColor,
 //output:lambert12_outColor,
 
+ //lambert9
  lambert9(lambert10_outColor, lambert12_outColor);
 //input: lambert10_outColor,lambert12_outColor,
 //output:

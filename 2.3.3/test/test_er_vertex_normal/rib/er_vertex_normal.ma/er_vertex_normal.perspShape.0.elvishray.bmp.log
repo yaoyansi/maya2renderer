@@ -233,7 +233,7 @@
           >5 liqRibTranslatorNew::ribPrologue__(perspShape)
             >6 Renderer::ribPrologue_begin(perspShape)
               >7 Renderer::dummyPhongShader()
-            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:22:56.31),E:/MyDocuments/maya/projects/default/er_vertex_normal,yaoyansi,time)
+            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:21:17.03),E:/MyDocuments/maya/projects/default/er_vertex_normal,yaoyansi,time)
             >6 Renderer::ribPrologue_options(perspShape)
           >5 liqRibTranslatorNew::framePrologue__(1,perspShape)
             >6 Renderer::framePrologue(1,perspShape)
@@ -373,6 +373,8 @@
                   >9 ConvertShadingNetwork::canShaderExported(lambert1)
                   >9 ConvertShadingNetwork::exportShaderBegin(lambert1)
                   >9 ConvertShadingNetwork::convertShadingNetworkToRSL(lambert1,pSphereShape1)
+                    >10 Visitor::initShaderData(lambert1)
+                    >10 Visitor::initShaderData(lambert1)
                     >10 ConvertShadingNetwork::getUpstreamConvertibleNodes(lambert1, nodes, numConnections)
                       >11 ConvertShadingNetwork::nodeIsConvertible(lambert1)
                         >12 ShaderMgr::hasShaderType(lambert)
@@ -503,7 +505,7 @@
                     >10 Visitor::preOutput(lambert1)
                     >10 Visitor::outputBegin(lambert1)
                     >10 Visitor::outputBegin(lambert1)
-                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)
+                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections)
                       >11 Visitor::outputUpstreamShader(place2dTexture1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(place2dTexture1,place2dTexture)
                           >13 Visitor::visitPlace2dTexture(place2dTexture1)
@@ -656,7 +658,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(place2dTexture)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(place2dTexture1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(place2dTexture1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(place2dTexture1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.uvCoord)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.uvCoord)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.coverageU)
@@ -667,12 +669,12 @@
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.mirrorU)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
                             >14 ShaderMgr::hasShaderType(file)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,mirrorU,place2dTexture1.mirrorU, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,mirrorU,place2dTexture1.mirrorU, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.mirrorV)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.mirrorV)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
                             >14 ShaderMgr::hasShaderType(file)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,mirrorV,place2dTexture1.mirrorV, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,mirrorV,place2dTexture1.mirrorV, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.noiseU)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.noiseU)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.noiseV)
@@ -689,22 +691,24 @@
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.repeatUV)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
                             >14 ShaderMgr::hasShaderType(file)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,repeatUV,place2dTexture1.repeatUV, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,repeatUV,place2dTexture1.repeatUV, outputVars)
+                          >13 Visitor::addShaderMethodVariavles(2,place2dTexture1_repeatUV)
+                          >13 Visitor::addShaderMethodVariavles(2,place2dTexture1_repeatUV)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.rotateFrame)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.rotateFrame)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
                             >14 ShaderMgr::hasShaderType(file)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,rotateFrame,place2dTexture1.rotateFrame, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,rotateFrame,place2dTexture1.rotateFrame, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.rotateUV)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.rotateUV)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
                             >14 ShaderMgr::hasShaderType(file)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,rotateUV,place2dTexture1.rotateUV, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,rotateUV,place2dTexture1.rotateUV, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.stagger)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.stagger)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
                             >14 ShaderMgr::hasShaderType(file)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,stagger,place2dTexture1.stagger, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,stagger,place2dTexture1.stagger, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.translateFrameU)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.translateFrameU)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.translateFrameV)
@@ -713,17 +717,21 @@
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.wrapU)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
                             >14 ShaderMgr::hasShaderType(file)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,wrapU,place2dTexture1.wrapU, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,wrapU,place2dTexture1.wrapU, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.wrapV)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.wrapV)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
                             >14 ShaderMgr::hasShaderType(file)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,wrapV,place2dTexture1.wrapV, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,wrapV,place2dTexture1.wrapV, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(place2dTexture1.outUV)
                           >13 ConvertShadingNetwork::ensurePlugExists(place2dTexture1.outUV)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
                             >14 ShaderMgr::hasShaderType(file)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,outUV,place2dTexture1.outUV, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(place2dTexture1,outUV,place2dTexture1.outUV, outputVars)
+                          >13 Visitor::addShaderMethodVariavles(2,place2dTexture1_outUV)
+                          >13 Visitor::addShaderMethodVariavles(2,place2dTexture1_outUV)
+                      >11 Visitor::addShaderMethodBody(place2dTexture1,place2dTexture1_repeatUV, place2dTexture1_outUV,[],[place2dTexture1_repeatUV, place2dTexture1_outUV])
+                      >11 Visitor::addShaderMethodBody(place2dTexture1,place2dTexture1_repeatUV, place2dTexture1_outUV,[],[place2dTexture1_repeatUV, place2dTexture1_outUV])
                       >11 Visitor::outputUpstreamShader(file1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(file1,file)
                           >13 Visitor::visitFile(file1)
@@ -840,7 +848,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(file)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(file1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(file1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(file1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(file1.alphaGain)
                           >13 ConvertShadingNetwork::ensurePlugExists(file1.alphaGain)
                         >12 ConvertShadingNetwork::convertibleConnection(file1.alphaIsLuminance)
@@ -879,9 +887,13 @@
                           >13 ConvertShadingNetwork::ensurePlugExists(file1.outColor)
                           >13 ConvertShadingNetwork::nodeIsConvertible(lambert1)
                             >14 ShaderMgr::hasShaderType(lambert)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(file1,outColor,file1.outColor, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(file1,outColor,file1.outColor, outputVars)
+                          >13 Visitor::addShaderMethodVariavles(3,file1_outColor)
+                          >13 Visitor::addShaderMethodVariavles(3,file1_outColor)
                         >12 ConvertShadingNetwork::convertibleConnection(file1.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(file1.outTransparency)
+                      >11 Visitor::addShaderMethodBody(file1,place2dTexture1_outUV, file1_outColor,[place2dTexture1_outUV],[file1_outColor])
+                      >11 Visitor::addShaderMethodBody(file1,place2dTexture1_outUV, file1_outColor,[place2dTexture1_outUV],[file1_outColor])
                       >11 Visitor::outputUpstreamShader(lambert1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(lambert1,lambert)
                           >13 Visitor::visitLambert(lambert1)
@@ -948,7 +960,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(lambert)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(lambert1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(lambert1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(lambert1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert1.color)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert1.color)
                           >13 ConvertShadingNetwork::nodeIsConvertible(file1)
@@ -973,39 +985,11 @@
                             >14 ShaderMgr::hasShaderType(shadingEngine)
                         >12 ConvertShadingNetwork::convertibleConnection(lambert1.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(lambert1.outTransparency)
-                    >10 ConvertShadingNetwork::outputShaderMethod(shaderData)
-                      >11 Visitor::outputShaderMethod(lambert1, float place2dTexture1_repeatUV[2];
- float place2dTexture1_outUV[2];
- vector file1_outColor;
-, place2dTexture1(place2dTexture1_repeatUV, place2dTexture1_outUV);
-//input: 
-//output:place2dTexture1_repeatUV,place2dTexture1_outUV,
-
- file1(place2dTexture1_outUV, file1_outColor);
-//input: place2dTexture1_outUV,
-//output:file1_outColor,
-
- lambert1(file1_outColor);
-//input: file1_outColor,
-//output:
-
-)
-                      >11 Visitor::outputShaderMethod(lambert1, float place2dTexture1_repeatUV[2];
- float place2dTexture1_outUV[2];
- vector file1_outColor;
-, place2dTexture1(place2dTexture1_repeatUV, place2dTexture1_outUV);
-//input: 
-//output:place2dTexture1_repeatUV,place2dTexture1_outUV,
-
- file1(place2dTexture1_outUV, file1_outColor);
-//input: place2dTexture1_outUV,
-//output:file1_outColor,
-
- lambert1(file1_outColor);
-//input: file1_outColor,
-//output:
-
-)
+                      >11 Visitor::addShaderMethodBody(lambert1,file1_outColor,[file1_outColor],[])
+                      >11 Visitor::addShaderMethodBody(lambert1,file1_outColor,[file1_outColor],[])
+                    >10 ConvertShadingNetwork::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
                     >10 Visitor::outputEnd()
                     >10 Visitor::outputEnd()
                     >10 Visitor::postOutput()

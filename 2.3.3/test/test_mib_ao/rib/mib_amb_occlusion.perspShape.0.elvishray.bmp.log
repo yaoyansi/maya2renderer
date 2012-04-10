@@ -116,7 +116,7 @@
           >5 liqRibTranslatorNew::ribPrologue__(perspShape)
             >6 Renderer::ribPrologue_begin(perspShape)
               >7 Renderer::dummyPhongShader()
-            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:22:56.31),E:/MyDocuments/maya/projects/default/mib_amb_occlusion,yaoyansi,time)
+            >6 Renderer::ribPrologue_comment(2.3.5 (buildtime=23:21:17.03),E:/MyDocuments/maya/projects/default/mib_amb_occlusion,yaoyansi,time)
             >6 Renderer::ribPrologue_options(perspShape)
           >5 liqRibTranslatorNew::framePrologue__(10,perspShape)
             >6 Renderer::framePrologue(10,perspShape)
@@ -132,6 +132,8 @@
                   >9 ConvertShadingNetwork::canShaderExported(phong1)
                   >9 ConvertShadingNetwork::exportShaderBegin(phong1)
                   >9 ConvertShadingNetwork::convertShadingNetworkToRSL(phong1,pCubeShape1)
+                    >10 Visitor::initShaderData(phong1)
+                    >10 Visitor::initShaderData(phong1)
                     >10 ConvertShadingNetwork::getUpstreamConvertibleNodes(phong1, nodes, numConnections)
                       >11 ConvertShadingNetwork::nodeIsConvertible(phong1)
                         >12 ShaderMgr::hasShaderType(phong)
@@ -200,7 +202,7 @@
                     >10 Visitor::preOutput(phong1)
                     >10 Visitor::outputBegin(phong1)
                     >10 Visitor::outputBegin(phong1)
-                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections, shaderData)
+                    >10 ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions( nodes, numConnections)
                       >11 Visitor::outputUpstreamShader(mib_amb_occlusion1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(mib_amb_occlusion1,mib_amb_occlusion)
                           >13 Visitor::visit_mib_amb_occlusion(mib_amb_occlusion1)
@@ -249,7 +251,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(mib_amb_occlusion)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(mib_amb_occlusion1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(mib_amb_occlusion1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(mib_amb_occlusion1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(mib_amb_occlusion1.samples)
                           >13 ConvertShadingNetwork::ensurePlugExists(mib_amb_occlusion1.samples)
                         >12 ConvertShadingNetwork::convertibleConnection(mib_amb_occlusion1.bright)
@@ -266,7 +268,11 @@
                           >13 ConvertShadingNetwork::ensurePlugExists(mib_amb_occlusion1.outValue)
                           >13 ConvertShadingNetwork::nodeIsConvertible(lambert1)
                             >14 ShaderMgr::hasShaderType(lambert)
-                        >12 ConvertShadingNetwork::addNodeOutputVariable(mib_amb_occlusion1,outValue,mib_amb_occlusion1.outValue, outputVars, shaderData)
+                        >12 ConvertShadingNetwork::addNodeOutputVariable(mib_amb_occlusion1,outValue,mib_amb_occlusion1.outValue, outputVars)
+                          >13 Visitor::addShaderMethodVariavles(3,mib_amb_occlusion1_outValue)
+                          >13 Visitor::addShaderMethodVariavles(3,mib_amb_occlusion1_outValue)
+                      >11 Visitor::addShaderMethodBody(mib_amb_occlusion1,mib_amb_occlusion1_outValue,[],[mib_amb_occlusion1_outValue])
+                      >11 Visitor::addShaderMethodBody(mib_amb_occlusion1,mib_amb_occlusion1_outValue,[],[mib_amb_occlusion1_outValue])
                       >11 Visitor::outputUpstreamShader(phong1)
                         >12 ShaderOutputVisitor::_outputUpstreamShader(phong1,phong)
                           >13 Visitor::visitPhong(phong1)
@@ -395,7 +401,7 @@
                             >14 OutputHelper::endRSL()
                       >11 ShaderMgr::getValidConnectionRef(phong)
                       >11 ConvertShadingNetwork::decrementDownstreamConnections(phong1, nodes, numConnections, validConnections)
-                      >11 ConvertShadingNetwork::getNodeVariables(phong1, validConnections, shaderData, inputVars, outputVars)
+                      >11 ConvertShadingNetwork::getNodeVariables(phong1, validConnections, inputVars, outputVars)
                         >12 ConvertShadingNetwork::convertibleConnection(phong1.color)
                           >13 ConvertShadingNetwork::ensurePlugExists(phong1.color)
                         >12 ConvertShadingNetwork::convertibleConnection(phong1.transparency)
@@ -440,27 +446,11 @@
                             >14 ShaderMgr::hasShaderType(shadingEngine)
                         >12 ConvertShadingNetwork::convertibleConnection(phong1.outTransparency)
                           >13 ConvertShadingNetwork::ensurePlugExists(phong1.outTransparency)
-                    >10 ConvertShadingNetwork::outputShaderMethod(shaderData)
-                      >11 Visitor::outputShaderMethod(phong1, vector mib_amb_occlusion1_outValue;
-, mib_amb_occlusion1(mib_amb_occlusion1_outValue);
-//input: 
-//output:mib_amb_occlusion1_outValue,
-
- phong1(mib_amb_occlusion1_outValue);
-//input: mib_amb_occlusion1_outValue,
-//output:
-
-)
-                      >11 Visitor::outputShaderMethod(phong1, vector mib_amb_occlusion1_outValue;
-, mib_amb_occlusion1(mib_amb_occlusion1_outValue);
-//input: 
-//output:mib_amb_occlusion1_outValue,
-
- phong1(mib_amb_occlusion1_outValue);
-//input: mib_amb_occlusion1_outValue,
-//output:
-
-)
+                      >11 Visitor::addShaderMethodBody(phong1,mib_amb_occlusion1_outValue,[mib_amb_occlusion1_outValue],[])
+                      >11 Visitor::addShaderMethodBody(phong1,mib_amb_occlusion1_outValue,[mib_amb_occlusion1_outValue],[])
+                    >10 ConvertShadingNetwork::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
+                      >11 Visitor::outputShaderMethod()
                     >10 Visitor::outputEnd()
                     >10 Visitor::outputEnd()
                     >10 Visitor::postOutput()
