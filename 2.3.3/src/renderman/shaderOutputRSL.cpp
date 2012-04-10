@@ -205,7 +205,7 @@ void Visitor::preOutput(const char* shaderNodeName)
 void Visitor::outputBegin(const char* shaderNodeName)
 {
 	CM_TRACE_FUNC("Visitor::outputBegin("<<shaderNodeName<<"), open shader file");
-	RSLfile.open( renderman::getShaderFilePath(shaderNodeName).asChar() );
+	RSLfile.open( renderman::getShaderFilePath_SRC(shaderNodeName).asChar() );
 }
 void Visitor::outputUpstreamShader(const char* shaderNodeName)
 {
@@ -273,8 +273,8 @@ void Visitor::postOutput()
 
 	//compile the shader
 	MString shaderdir(getShaderDirectory());
-	MString outSLO(renderman::getShaderFileSLOPath(shaderNodeName.c_str()));
-	MString srcSL (renderman::getShaderFilePath(shaderNodeName.c_str()));
+	MString outSLO(renderman::getShaderFilePath_SLO(shaderNodeName.c_str()));
+	MString srcSL (renderman::getShaderFilePath_SRC(shaderNodeName.c_str()));
 
 	//"shader.exe -o \"outSLO\" \"srcSL\""
 	IfMErrorWarn(MGlobal::executeCommand("system(\"shader -o \\\""+outSLO+"\\\" \\\""+srcSL+"\\\"\")", true));
@@ -315,7 +315,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 					liqShaderFactory::instance().getShader( getMObjectByName(surfaceShaders[0]) );
 				currentShader.write();
 			}else{
-				RiSurface( const_cast<char *>(renderman::getShaderFilePath(surfaceShaders[0]).asChar()), RI_NULL );
+				RiSurface( const_cast<char *>(renderman::getShaderFilePath_NoExt(surfaceShaders[0]).asChar()), RI_NULL );
 			}
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no surface shader.");
@@ -330,7 +330,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 				currentShader.write();
 			}else{
 				RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the volume shader, RiAtmosphere(), RiInterior(), or RiExterior().");
-				RiAtmosphere( const_cast<char *>(renderman::getShaderFilePath(volumeShaders[0]).asChar()), RI_NULL );
+				RiAtmosphere( const_cast<char *>(renderman::getShaderFilePath_NoExt(volumeShaders[0]).asChar()), RI_NULL );
 			}
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no volume shader.");
@@ -345,7 +345,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 				currentShader.write();
 			}else{
 				RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the displacement shader, RiDeformation(), or RiDisplacement().");
-				RiDisplacement( const_cast<char *>(renderman::getShaderFilePath(displacementShaders[0]).asChar()), RI_NULL );
+				RiDisplacement( const_cast<char *>(renderman::getShaderFilePath_NoExt(displacementShaders[0]).asChar()), RI_NULL );
 			}
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no displacement shader.");
