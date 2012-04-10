@@ -34,7 +34,7 @@ rm
 - (done)bug: rm phong ,if the color is connect to a file texture, nothing can be rendered. (Because Ci is ZERO)
 - (done)rm phong shader 的导出
 - (done)rm 的批渲染
-
+- (done)rmsg文件路径有':',则无法输出
 
 er
 ------------
@@ -93,7 +93,8 @@ liq
      {  size(`ls -geometry -dag -sl`) 值为0，无法赋给物体
   2.er解析
   3.rm如何支持multiple material per mesh
-- 重构convertShaderGraph
+- 重构convertShaderGraph。convertShadingNetwork.cpp 里的shaderData放到Visitor里，这样不同的Visitor可以输出各自的shader文本
+（如果该渲染器定义了自己的shader language的话；对于象er这样使用DSO的渲染器，则不需要输出shader文本）
 - 重构 void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNode, const MString& node)
   把这个函数的node参数去掉。
 - rm/er batch render 重构(::execute(),   )
@@ -113,7 +114,6 @@ rm
 - shadow pass
 - bump2d/bump3d for rm
 - blinn shader无法编译
-* rmsg文件路径有':',则无法输出
 - 重构 :shaderOutputRSL namespace由 RSL改为renderman
 - Visitor::outputShaderMethod()只输出了surface shader，还需要输出volume/light/displacement shader
 
