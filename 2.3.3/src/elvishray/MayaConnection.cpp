@@ -127,15 +127,17 @@ void MayaConnection::UpdateTile( eiFrameBufferCache *colorFrameBuffer,
 	RV_PIXEL* pixels = new RV_PIXEL[(tile_width)*(tile_height)];
 
 	unsigned int index = 0;
-	for( int j = 0; j < ei_framebuffer_cache_get_height(colorFrameBuffer); ++j )
+	for (int j = 0; j < ei_framebuffer_cache_get_height(colorFrameBuffer); ++j)
 	{
-		eiVector	*color_scanline = (eiVector *) ei_framebuffer_cache_get_scanline(colorFrameBuffer, j);
-
-		for( int i = 0; i < ei_framebuffer_cache_get_width(colorFrameBuffer); ++i )
+		for (int i = 0; i < ei_framebuffer_cache_get_width(colorFrameBuffer); ++i)
 		{
 			ChannelType r,g,b,a;
-			color128to64(color_scanline[ i], r,g,b,a);
-			
+			eiVector		color;
+
+			ei_framebuffer_cache_get_final(colorFrameBuffer, i, j, &color);
+
+			color128to64(color, r,g,b,a);
+
 			setPixel(pixels, tile_width, tile_height,
 				i, tile_height-j-1,
 				r,g,b,a);
