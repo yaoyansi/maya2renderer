@@ -186,6 +186,16 @@ Visitor::~Visitor()
 
 }
 //
+void Visitor::initShaderData(const MString& startingNode)
+{
+	CM_TRACE_FUNC("Visitor::initShaderData("<<startingNode<<")");
+
+	shaderData.setLength(3);
+	shaderData[SHADER_METHOD_VARIAVLES_I] = "";// shader method variables
+	shaderData[SHADER_METHOD_BODY_I]      = "";// shader method body
+	shaderData[SHADER_NAME_I]             = startingNode;// shader name
+
+}
 void Visitor::preOutput(const char* shaderNodeName)
 {
 	CM_TRACE_FUNC("Visitor::preOutput("<<shaderNodeName<<")");
@@ -206,30 +216,29 @@ void Visitor::outputUpstreamShader(const char* shaderNodeName)
 
 	_outputUpstreamShader(shaderNodeName, nodetype.asChar());
 }
-void Visitor::outputShaderMethod(const char* shaderName,
-						const char* shaderMethodVariavles,const char* shaderMethodBody)
+void Visitor::outputShaderMethod()
 {
-	CM_TRACE_FUNC("Visitor::outputShaderMethod("<<shaderName<<","<<shaderMethodVariavles<<","<<shaderMethodBody<<")");
+	CM_TRACE_FUNC("Visitor::outputShaderMethod()");
 
-	RSLfile << "//surface shader name: " << shaderName << "\n";
-	RSLfile << "surface " << renderman::getShaderName(shaderName) << "()\n{\n";
-	RSLfile << shaderMethodVariavles;
+	RSLfile << "//surface shader name: " << shaderData[SHADER_NAME_I] << "\n";
+	RSLfile << "surface " << renderman::getShaderName(shaderData[SHADER_NAME_I]) << "()\n{\n";
+	RSLfile << shaderData[SHADER_METHOD_VARIAVLES_I];
 	RSLfile << "\n";
-	RSLfile << shaderMethodBody;
+	RSLfile << shaderData[SHADER_METHOD_BODY_I];
 	RSLfile << "}\n";
 }
 void  Visitor::addShaderMethodBody(
-						 MString& shaderMethodBody,
+//						 MString& shaderMethodBody,
 						 const MString &currentNode,
 						 const MString &vars,
 						 const MStringArray& inputVars,
 						 const MStringArray& outputVars)
 {
-	CM_TRACE_FUNC("Visitor::addShaderMethodBody(&shaderMethodBody,"<<currentNode<<","<<vars<<","<<inputVars<<","<<outputVars<<")");
+	CM_TRACE_FUNC("Visitor::addShaderMethodBody("<<currentNode<<","<<vars<<","<<inputVars<<","<<outputVars<<")");
 
 	// Add the current node method to the shader body
-	shaderMethodBody += " //" + currentNode +"\n";
-	shaderMethodBody += " " + renderman::getShaderName(currentNode) +"("+vars+");\n";
+	shaderData[ SHADER_METHOD_BODY_I ] += " //" + currentNode +"\n";
+	shaderData[ SHADER_METHOD_BODY_I ] += " " + renderman::getShaderName(currentNode) +"("+vars+");\n";
 	
 	// test the input and output of currentNode
 	{	
@@ -237,8 +246,23 @@ void  Visitor::addShaderMethodBody(
 		MString outputVarsStr;
 		connectMStringArray(inputVarsStr, inputVars);
 		connectMStringArray(outputVarsStr, outputVars);
-		shaderMethodBody += "//input: " + inputVarsStr +"\n";
-		shaderMethodBody += "//output:" + outputVarsStr +"\n\n";
+		shaderData[ SHADER_METHOD_BODY_I ] += "//input: " + inputVarsStr +"\n";
+		shaderData[ SHADER_METHOD_BODY_I ] += "//output:" + outputVarsStr +"\n\n";
+	}
+}
+void Visitor::addShaderMethodVariavles(
+//									   MString& shaderMethodVariavles,
+									   const MString &typeSize,
+									   const MString &varName)
+{
+	CM_TRACE_FUNC("Visitor::addShaderMethodVariavles(&shaderMethodVariavles,"<<typeSize<<","<<varName<<")");
+	if(typeSize=="")
+	{
+		shaderData[SHADER_METHOD_VARIAVLES_I] += " float "+varName+";\n";
+	}else if(typeSize=="3"){
+		shaderData[SHADER_METHOD_VARIAVLES_I] += " vector "+varName+";\n";
+	}else{
+		shaderData[SHADER_METHOD_VARIAVLES_I] += " float "+varName+"["+typeSize+"];\n";
 	}
 }
 void Visitor::outputEnd()

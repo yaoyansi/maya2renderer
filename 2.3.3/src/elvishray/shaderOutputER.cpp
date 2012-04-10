@@ -232,6 +232,11 @@ Visitor::~Visitor()
 
 }
 //
+void Visitor::initShaderData(const MString& startingNode)
+{
+	CM_TRACE_FUNC("Visitor::initShaderData("<<startingNode<<")");
+
+}
 void Visitor::preOutput(const char* shaderNodeName)
 {
 	CM_TRACE_FUNC("Visitor::preOutput("<<shaderNodeName<<")");
@@ -250,10 +255,9 @@ void Visitor::outputUpstreamShader(const char* shaderNodeName)
 
 	_outputUpstreamShader(shaderNodeName, nodetype.asChar());
 }
-void Visitor::outputShaderMethod(const char* shaderName,
-						const char* shaderMethodVariavles,const char* shaderMethodBody)
+void Visitor::outputShaderMethod()
 {
-	CM_TRACE_FUNC("Visitor::outputShaderMethod("<<shaderName<<","<<shaderMethodVariavles<<","<<shaderMethodBody<<")");
+	CM_TRACE_FUNC("Visitor::outputShaderMethod()");
 
 // 	file << "void " << shaderName << "()\n{\n";
 // 	file << shaderMethodVariavles;
@@ -261,13 +265,22 @@ void Visitor::outputShaderMethod(const char* shaderName,
 // 	file << shaderMethodBody;
 // 	file << "}\n";
 }
-void  Visitor::addShaderMethodBody(MString& shaderMethodBody,
+void  Visitor::addShaderMethodBody(
+//								   MString& shaderMethodBody,
 								   const MString &currentNode,
 								   const MString &vars,
 								   const MStringArray& inputVars,
 								   const MStringArray& outputVars)
 {
-	CM_TRACE_FUNC("Visitor::addShaderMethodBody(&shaderMethodBody,"<<currentNode<<","<<vars<<","<<inputVars<<","<<outputVars<<")");
+	CM_TRACE_FUNC("Visitor::addShaderMethodBody("<<currentNode<<","<<vars<<","<<inputVars<<","<<outputVars<<")");
+
+}
+void Visitor::addShaderMethodVariavles(
+//									  MString& shaderMethodVariavles,
+									  const MString &typeSize,
+									  const MString &varName)
+{
+	CM_TRACE_FUNC("Visitor::addShaderMethodVariavles("<<typeSize<<","<<varName<<")");
 
 }
 void Visitor::outputEnd()

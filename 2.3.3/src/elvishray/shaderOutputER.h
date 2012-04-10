@@ -59,16 +59,21 @@ public:
 	Visitor();
 	~Visitor();
 
+	virtual void initShaderData(const MString& startingNode);
 	virtual void preOutput(const char* shaderNodeName);
 	virtual void outputBegin(const char* shaderNodeName);
 	virtual void outputUpstreamShader(const char* shaderNodeName);
-	virtual void outputShaderMethod(const char* shaderName,const char* shaderMethodVariavles,const char* shaderMethodBody);
+	virtual void outputShaderMethod();
 	virtual void addShaderMethodBody(
-		MString& shaderMethodBody,
+//		MString& shaderMethodBody,
 		const MString &currentNode,
 		const MString &vars,
 		const MStringArray& inputVars,
 		const MStringArray& outputVars);
+	virtual void addShaderMethodVariavles(
+//		MString& shaderMethodVariavles,
+		const MString &typeSize,
+		const MString &varName);
 	virtual void outputEnd();
 	virtual void postOutput();
 	virtual void outputShadingGroup(const char* shadingGroupNode);

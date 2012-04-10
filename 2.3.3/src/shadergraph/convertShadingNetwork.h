@@ -59,8 +59,7 @@ public:
 	//--------------------------------------------------------------------
 	void addNodeOutputVariable(
 		const MString& node, const MString& validConnection, 
-		const MString& plug, MStringArray& outputVars,
-		MStringArray& shaderData);
+		const MString& plug, MStringArray& outputVars);
 	
 	//--------------------------------------------------------------------
 	// Given a convertible node and a set of valid connections for that
@@ -68,7 +67,7 @@ public:
 	// output variables for the this node.
 	//--------------------------------------------------------------------
 	MString getNodeVariables(
-		const MString& node, const MStringArray& validConnection, MStringArray& shaderData,
+		const MString& node, const MStringArray& validConnection,
 		MStringArray& inputVars, MStringArray& outputVars);
 
 	//--------------------------------------------------------------------
@@ -85,12 +84,12 @@ public:
 	// all of their respective inputs.
 	//--------------------------------------------------------------------
 	void traverseGraphAndOutputNodeFunctions( const MStringArray& nodes, 
-		MIntArray& numConnections, MStringArray& shaderData);
+		MIntArray& numConnections/*, MStringArray& shaderData*/);
 		
 	//--------------------------------------------------------------------
 	// Outputs the shader method.
 	//--------------------------------------------------------------------
-	void outputShaderMethod( const MStringArray& shaderData );
+	void outputShaderMethod(/* const MStringArray& shaderData */);
 
 	//--------------------------------------------------------------------
 	// Convert a network of shading nodes to RSL.
@@ -101,9 +100,9 @@ public:
 
 
 protected:
-	static const int SHADER_METHOD_VARIAVLES_I = 0;
-	static const int SHADER_METHOD_BODY_I = 1;
-	static const int SHADER_NAME_I = 2;
+	//static const int SHADER_METHOD_VARIAVLES_I = 0;
+	//static const int SHADER_METHOD_BODY_I = 1;
+	//static const int SHADER_NAME_I = 2;
 
 	void exportShaderInShadingGroup(
 		const MString& node, //geometry node(can be removed in future)
