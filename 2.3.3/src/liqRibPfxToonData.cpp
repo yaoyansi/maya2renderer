@@ -342,7 +342,7 @@ void liqRibPfxToonData::_write(const structJob &currentJob)
  */
 bool liqRibPfxToonData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibPfxToonData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibPfxToonData::compare("<<otherObj.getFullPathName()<<")");
 
   LIQDEBUGPRINTF( "-> comparing pfxToon curves\n");
   if ( otherObj.type() != MRT_PfxToon ) 

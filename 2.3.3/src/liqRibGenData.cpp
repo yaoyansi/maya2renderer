@@ -265,7 +265,7 @@ bool liqRibGenData::compare( const liqRibData & otherObj ) const
 //      if its animated
 //
 {
-	CM_TRACE_FUNC("liqRibGenData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibGenData::compare("<<otherObj.getFullPathName()<<")");
 
   LIQDEBUGPRINTF( "-> comparing RIBGen\n" );
   return ( otherObj.type() != MRT_RibGen )? false : true;

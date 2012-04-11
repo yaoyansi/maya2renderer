@@ -13,7 +13,7 @@ namespace renderman
 		const structJob &currentJob,
 		const bool bReference)
 	{
-		CM_TRACE_FUNC("Renderer::write("<<pData->getName()<<","<<ribFileName<<","<<currentJob.name<<",ref="<<bReference<<")");
+		CM_TRACE_FUNC("Renderer::write("<<pData->getFullPathName()<<","<<ribFileName<<","<<currentJob.name<<",ref="<<bReference<<")");
 
 		assert(liqglo.m_ribFileOpen&&"rm_writeMeshData.cpp");
 
@@ -37,7 +37,7 @@ namespace renderman
 	//
 	static void _write(liqRibMeshData* pData, const structJob &currentJob)
 	{
-		CM_TRACE_FUNC("_write("<<pData->getName()<<","<<currentJob.name<<")");
+		CM_TRACE_FUNC("_write("<<pData->getFullPathName()<<","<<currentJob.name<<")");
 
 		if( pData->isEmpty() )
 		{
@@ -52,7 +52,7 @@ namespace renderman
 			{ // What happens if we're inside a motion block????? This whole approach of Liquid is flawed...
 				LIQDEBUGPRINTF( "-> mesh is area light\n" );
 				//	RiAttributeBegin();
-				RtString ribname = const_cast< char* >( pData->getName().asChar() );
+				RtString ribname = const_cast< char* >( pData->getFullPathName() );
 				RiAttribute( "identifier", "name", &ribname, RI_NULL );
 				RtMatrix tmp;
 				memcpy( tmp, pData->getTransformationMatrixPtr(), sizeof( RtMatrix ) );

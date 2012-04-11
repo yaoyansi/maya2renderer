@@ -292,11 +292,11 @@ void liqRibData::addAdditionalSurfaceParameters( MObject node )
 // 	_write(ribFileName, currentJob, bReference);
 // }
 
-const char* liqRibData::getName() const
-{
-	MFnDagNode fnDepNode(objDagPath);
-	return fnDepNode.name().asChar();
-}
+// const char* liqRibData::getName() const
+// {
+// 	MFnDagNode fnDepNode(objDagPath);
+// 	return fnDepNode.name().asChar();
+// }
 const char* liqRibData::getFullPathName() const
 {
 	MFnDagNode fnDepNode(objDagPath);

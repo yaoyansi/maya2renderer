@@ -142,7 +142,7 @@ namespace elvishray
 	}
 	MStatus Renderer::liqRibLightData_write(const liqRibLightData *lightdata, const structJob &currentJob)
 	{
-		CM_TRACE_FUNC("Renderer::liqRibLightData_write("<<lightdata->getName()<<","<<currentJob.name<<")");
+		CM_TRACE_FUNC("Renderer::liqRibLightData_write("<<lightdata->getFullPathName()<<","<<currentJob.name<<")");
 		return MS::kSuccess;
 	}
 
@@ -215,7 +215,7 @@ namespace elvishray
 					_s( "//child("<<i<<"):"<<childrenMsg[i] );
 				}
 			}
-			_s("//ribNode->object("<<sample_first<<")->getDataPtr()->getName()="<<ribNode__->object(sample_first)->getDataPtr()->getName());
+			_s("//ribNode->object("<<sample_first<<")->getDataPtr()->getFullPathName()="<<ribNode__->object(sample_first)->getDataPtr()->getFullPathName());
 		
 		}
 
@@ -233,7 +233,7 @@ namespace elvishray
 			MStringArray shadingGroupNodes;
 			{
 				MString cmd;
-				cmd = "listConnections -type \"shadingEngine\" -destination on (\""+MString(mesh->getName())+"\" + \".instObjGroups\")";
+				cmd = "listConnections -type \"shadingEngine\" -destination on (\""+MString(mesh->getFullPathName())+"\" + \".instObjGroups\")";
 				IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNodes));
 			}
 			_S( ei_add_material( shadingGroupNodes[0].asChar() ) );
@@ -242,7 +242,7 @@ namespace elvishray
 		}
 		
 		//element
-		_s("//shape name="<<mesh->getName());
+		_s("//shape name="<<mesh->getFullPathName());
 		_s("//shape full path name="<<mesh->getFullPathName());
 #ifdef TRANSFORM_SHAPE_PAIR
 		const std::string objectName(ribNode__->name.asChar());//shape
@@ -274,7 +274,7 @@ namespace elvishray
 		_S( ei_motion( bMotion ) );
 
 		//light group(light-link group)
-		_s("//ei_XXXX(\"lightgroup\", ei_token(\""<<getLightGroupName(mesh->getName())<<"\"));");
+		_s("//ei_XXXX(\"lightgroup\", ei_token(\""<<getLightGroupName(mesh->getFullPathName())<<"\"));");
 
 
 		_S( ei_end_instance() );

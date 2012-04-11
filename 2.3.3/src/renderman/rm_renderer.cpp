@@ -296,7 +296,7 @@ namespace renderman
 	MStatus Renderer::liqRibLightData_write(
 		const liqRibLightData *lightdata, const structJob &currentJob)
 	{
-		CM_TRACE_FUNC("Renderer::liqRibLightData_write("<<lightdata->getName()<<","<<currentJob.name<<")");
+		CM_TRACE_FUNC("Renderer::liqRibLightData_write("<<lightdata->getFullPathName()<<","<<currentJob.name<<")");
 		return MS::kSuccess;
 	}
 

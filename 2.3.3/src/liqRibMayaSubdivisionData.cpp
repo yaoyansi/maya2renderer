@@ -239,7 +239,7 @@ void liqRibMayaSubdivisionData::_write(const structJob &currentJob)
  */
 bool liqRibMayaSubdivisionData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibMayaSubdivisionData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibMayaSubdivisionData::compare("<<otherObj.getFullPathName()<<")");
 
   unsigned i;
   unsigned numFaceVertices = 0;

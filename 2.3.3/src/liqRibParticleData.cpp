@@ -1585,7 +1585,7 @@ bool liqRibParticleData::writeNextGrain(const structJob &currentJob)
  */
 bool liqRibParticleData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibParticleData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibParticleData::compare("<<otherObj.getFullPathName()<<")");
 
   LIQDEBUGPRINTF( "-> comparing particles\n");
 

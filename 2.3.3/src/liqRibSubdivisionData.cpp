@@ -261,7 +261,7 @@ void liqRibSubdivisionData::_write(const structJob &currentJob)
  */
 bool liqRibSubdivisionData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibSubdivisionData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibSubdivisionData::compare("<<otherObj.getFullPathName()<<")");
 
   unsigned i;
   unsigned numFaceVertices = 0;

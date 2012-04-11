@@ -208,7 +208,7 @@ void liqRibNuCurveData::_write(const structJob &currentJob)
  */
 bool liqRibNuCurveData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibNuCurveData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibNuCurveData::compare("<<otherObj.getFullPathName()<<")");
 
   LIQDEBUGPRINTF( "-> comparing nurbs curve\n");
   if ( otherObj.type() != MRT_NuCurve ) return false;

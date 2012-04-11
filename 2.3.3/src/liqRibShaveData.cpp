@@ -517,7 +517,7 @@ bool liqRibShaveData::writeNextGrain()
  */
 bool liqRibShaveData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibShaveData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibShaveData::compare("<<otherObj.getFullPathName()<<")");
 
   LIQDEBUGPRINTF( "-> comparing shave surface\n" );
   if ( otherObj.type() != MRT_Shave ) 

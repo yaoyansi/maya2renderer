@@ -542,7 +542,7 @@ bool liqRibPfxData::writeNextGrain()
  */
 bool liqRibPfxData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibPfxData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibPfxData::compare("<<otherObj.getFullPathName()<<")");
 
 	LIQDEBUGPRINTF( "-> comparing painteffects curves\n");
 

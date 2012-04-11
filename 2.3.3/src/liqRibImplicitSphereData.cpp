@@ -118,7 +118,7 @@ void liqRibImplicitSphereData::_write(const structJob &currentJob)
  */
 bool liqRibImplicitSphereData::compare( const liqRibData& otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibImplicitSphereData::_write("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibImplicitSphereData::_write("<<otherObj.getFullPathName()<<")");
 
   LIQDEBUGPRINTF( "-> comparing locator\n" );
   if( otherObj.type() == MRT_ImplicitSphere ) 

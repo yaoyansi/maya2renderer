@@ -268,7 +268,7 @@ void liqRibCurvesData::_write(const structJob &currentJob)
 
 bool liqRibCurvesData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibClipPlaneData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibClipPlaneData::compare("<<otherObj.getFullPathName()<<")");
 
 	LIQDEBUGPRINTF( "-> comparing nurbs curve\n");
 	if ( otherObj.type() != MRT_Curves )

@@ -527,7 +527,7 @@ bool liqRibSurfaceData::writeNextGrain()
  */
 bool liqRibSurfaceData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibSurfaceData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibSurfaceData::compare("<<otherObj.getFullPathName()<<")");
 
   LIQDEBUGPRINTF( "-> comparing nurbs surface\n" );
   if ( otherObj.type() != MRT_Nurbs ) return false;

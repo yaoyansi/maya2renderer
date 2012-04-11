@@ -89,7 +89,7 @@ void liqRibCoordData::_write(const structJob &currentJob)
  */
 bool liqRibCoordData::compare( const liqRibData & otherObj ) const
 {
-	CM_TRACE_FUNC("liqRibCoordData::compare("<<otherObj.getName()<<")");
+	CM_TRACE_FUNC("liqRibCoordData::compare("<<otherObj.getFullPathName()<<")");
 
   LIQDEBUGPRINTF("-> comparing coord\n");
   return ( otherObj.type() != MRT_Coord )? false : true;
