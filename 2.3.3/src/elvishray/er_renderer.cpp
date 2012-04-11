@@ -274,7 +274,7 @@ namespace elvishray
 		_S( ei_motion( bMotion ) );
 
 		//light group(light-link group)
-		_s("//ei_XXXX(\"lightgroup\", ei_token(\""<<getLightGroupName(mesh->getFullPathName())<<"\"));");
+		_s("//ei_XXXX(\"lightgroup\", ei_token(\""<<getLightGroupName(objectName.c_str())<<"\"));");
 
 
 		_S( ei_end_instance() );

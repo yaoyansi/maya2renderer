@@ -47,6 +47,7 @@
 
 #include <liquid.h>
 #include <liqGlobalHelpers.h>
+#include "common/mayacheck.h"
 
 using namespace std;
 
@@ -299,6 +300,10 @@ void liqRibData::addAdditionalSurfaceParameters( MObject node )
 // }
 const char* liqRibData::getFullPathName() const
 {
-	MFnDagNode fnDepNode(objDagPath);
+	CM_TRACE_FUNC("liqRibData::getFullPathName()");
+
+	MStatus status;
+	MFnDagNode fnDepNode(objDagPath, &status);
+	IfMErrorWarn(status);
 	return fnDepNode.fullPathName().asChar();
 }
