@@ -103,7 +103,7 @@ liq
    - remove in liqribshavedata.cpp
    - (done)rm mesh数据导出应该放在rm::exportOneGeometry_Mesh()里，而不是liqRibMeshData
 * implement an assert window with mel.(for now, liqAssert only invokes warning(), but not pop a window)
-- 全部使用fullPathName()(比如，liqRibDataPtr::getFullPathName()替代 liqRibDataPtr::getName() )
+- 全部使用fullPathName()(比如，liqRibDataPtr::getFullPathName()替代 liqRibData::getName(), liqShader::getName(),liqRibLightData::getName(),liqRibMeshData::getName(),liqGetSloInfo.getName() )
 - 一个transform node下直接连多个shape节点
 
 rm
