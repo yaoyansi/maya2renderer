@@ -229,11 +229,16 @@ namespace elvishray
 		//_S( ei_visible( on ) );
 		// 		ei_shadow( on );
 		// 		ei_trace( on );
+#ifdef TRANSFORM_SHAPE_PAIR
+		const std::string objectName(ribNode__->name.asChar());//shape
+#else// SHAPE SHAPE_object PAIR
+		const std::string objectName(getObjectName(ribNode__->name.asChar()));//shape+"_object"
+#endif
 		{//material
 			MStringArray shadingGroupNodes;
 			{
 				MString cmd;
-				cmd = "listConnections -type \"shadingEngine\" -destination on (\""+MString(mesh->getFullPathName())+"\" + \".instObjGroups\")";
+				cmd = "listConnections -type \"shadingEngine\" -destination on (\""+MString(objectName.c_str())+"\" + \".instObjGroups\")";
 				IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNodes));
 			}
 			_S( ei_add_material( shadingGroupNodes[0].asChar() ) );
@@ -244,11 +249,6 @@ namespace elvishray
 		//element
 		_s("//shape name="<<mesh->getFullPathName());
 		_s("//shape full path name="<<mesh->getFullPathName());
-#ifdef TRANSFORM_SHAPE_PAIR
-		const std::string objectName(ribNode__->name.asChar());//shape
-#else// SHAPE SHAPE_object PAIR
-		const std::string objectName(getObjectName(ribNode__->name.asChar()));//shape+"_object"
-#endif
 		_S( ei_element( objectName.c_str() ) );
 
 		MMatrix matrix;
