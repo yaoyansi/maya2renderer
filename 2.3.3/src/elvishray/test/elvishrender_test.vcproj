@@ -60,7 +60,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="eiAPI.lib eiCORE.lib eiIMG.lib eiSHADER.lib"
-				AdditionalLibraryDirectories="../../../../dependence/elvishray/bin"
+				AdditionalLibraryDirectories="../../../../dependence/elvishray/bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -132,7 +132,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="eiAPI.lib eiCORE.lib eiIMG.lib eiSHADER.lib"
-				AdditionalLibraryDirectories="../../../../dependence/elvishray/bin"
+				AdditionalLibraryDirectories="../../../../dependence/elvishray/bin/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
