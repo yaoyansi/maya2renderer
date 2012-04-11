@@ -129,7 +129,6 @@ namespace elvishray
 		//vertex position
 		_s("//### vertex positions, fnMesh.numVertices()="<<fnMesh.numVertices() );
 		_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
-			_s("//tag="<<tag);
 		_S( ei_pos_list( tag ) );
 
 		//_exportVertexFromDagNode(fnMesh);
@@ -142,7 +141,6 @@ namespace elvishray
 			{
 				_s("//### vertex deform positions, " );
 				_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
-					_s("//tag="<<tag);
 				_S( ei_motion_pos_list( tag ) );
 
 				_exportVertexFromNodePlug(ribNode__, sample_last);
@@ -168,7 +166,6 @@ namespace elvishray
 			_d( tag = eiNULL_TAG );
 			_S( ei_declare("N", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
 			_d( tag = ei_tab(EI_DATA_TYPE_VECTOR, 1024) )
-			_s("//tag="<<tag);
 			_S( ei_variable("N", &tag) );
 			MVector nml;
 			for(size_t i = 0; i<fnMesh.numVertices(); ++i)
@@ -194,7 +191,6 @@ namespace elvishray
 			_d( tag = eiNULL_TAG );
 			_S( ei_declare("u", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
 			_d( tag = ei_tab(EI_DATA_TYPE_SCALAR, 1024) )
-				_s("//tag="<<tag);
 			_S( ei_variable("u", &tag) );
 			for(size_t i = 0; i<fnMesh.numUVs(currentUVsetName); ++i)
 			{
@@ -205,7 +201,6 @@ namespace elvishray
 			_d( tag = eiNULL_TAG );
 			_S( ei_declare("v", eiVARYING, EI_DATA_TYPE_TAG, &tag) );
 			_d( tag = ei_tab(EI_DATA_TYPE_SCALAR, 1024) )
-				_s("//tag="<<tag);
 			_S( ei_variable("v", &tag) );
 			for(size_t i = 0; i<fnMesh.numUVs(currentUVsetName); ++i)
 			{
@@ -216,7 +211,6 @@ namespace elvishray
 
 		_s("//### triangles, size="<< triangleCounts);
 		_d( tag = ei_tab(EI_DATA_TYPE_INDEX, 1024) )
-			_s("//tag="<<tag);
 		_S( ei_triangle_list( tag ) );
 		for(size_t i=0; i<triangleVertices.length(); i=i+3)
 		{
