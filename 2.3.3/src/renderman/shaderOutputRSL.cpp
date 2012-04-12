@@ -276,8 +276,17 @@ void Visitor::postOutput()
 	MString outSLO(renderman::getShaderFilePath_SLO(shaderNodeName.c_str()));
 	MString srcSL (renderman::getShaderFilePath_SRC(shaderNodeName.c_str()));
 
+	MString result;
 	//"shader.exe -o \"outSLO\" \"srcSL\""
-	IfMErrorWarn(MGlobal::executeCommand("system(\"shader -o \\\""+outSLO+"\\\" \\\""+srcSL+"\\\"\")", true));
+	IfMErrorWarn(MGlobal::executeCommand("system(\"shader -o \\\""+outSLO+"\\\" \\\""+srcSL+"\\\"\")", result, true));
+
+	//show the error if there is.
+	std::string strRes(result.toLowerCase().asChar());
+	if(strRes.find("error") != std::string::npos)
+	{
+		liqAssert(strRes.c_str());
+	}
+
 
 }
 void Visitor::outputShadingGroup(const char* shadingGroupNode)

@@ -2112,6 +2112,12 @@ MStatus liqRibTranslator::doIt( const MArgList& args )
 //
 MStatus liqRibTranslator::_doIt( const MArgList& args , const MString& originalLayer )
 {
+	//
+	liqAssert("test liqAssert");
+	liqAssert("tile", "msg", "yes");
+	liqAssert("tile", "msg", "yes","no");
+	//
+
 	CM_TRACE_FUNC(boost::format("liqRibTranslator::_doIt(args,%s)")%originalLayer.asChar());
 	MStatus status;
 	MString lastRibName;
