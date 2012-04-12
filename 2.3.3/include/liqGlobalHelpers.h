@@ -155,4 +155,9 @@ void getlistConnections(const MString& shadingGroupNode,
 bool doesPlugExist(const MString& node, const MString& plug);
 //
 MString getLightGroupName(const MString& meshShapeNodes);
+//
+bool liqAssert(const MString & msg);
+bool liqAssert(const MString &title, const MString & msg, const MString &bYes);
+bool liqAssert(const MString &title, const MString & msg, const MString &bYes, const MString &bNo);
+
 #endif

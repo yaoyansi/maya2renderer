@@ -173,6 +173,55 @@ global proc string xxu_getTransform( string $shape )
 	liqPopIdent();	
    return $transform;
 }
+// assert window 0
+global proc int liqAssert0(string $msg )
+{
+	string $ret= `confirmDialog -message ($msg+"\n\nNOTE:\nPress <ESC> is the same as press \"Confirm\"")`;
+	if($ret=="Confirm"){
+		return 1;
+	}else if($ret=="dismiss"){
+		return 0;
+	}else{
+		error ("liqAssert("+$msg+") return unkown value:"+$ret);
+	}
+}
+// assert window 1
+global proc int liqAssert1(string $title, string $msg, string $bYes )
+{
+	string $ret= `confirmDialog 
+				-title $title 
+				-message ($msg+"\n\nNOTE:\nPress <ESC> is the same as press \""+$bYes+"\"")
+				-button $bYes 
+				//-defaultButton $bYes
+				//-cancelButton  "liqAssert_dismiss" 
+				-dismissString "liqAssert_dismiss"`;
+	if($ret==$bYes){
+		return 1;
+	}else if($ret=="liqAssert_dismiss"){
+		return 0;
+	}else{
+		error ("liqAssert("+$msg+") return unkown value:"+$ret);
+	}
+}
+// assert window 2
+global proc int liqAssert2(string $title, string $msg, string $bYes, string $bNo )
+{
+	string $ret= `confirmDialog 
+				-title $title 
+				-message $msg
+				-button $bYes 
+				-button $bNo 
+				-defaultButton $bYes
+				-cancelButton $bNo 
+				-dismissString $bNo`;
+	if($ret==$bYes){
+		return 1;
+	}else if($ret==$bNo){
+		return 0;
+	}else{
+		error ("liqAssert("+$msg+") return unkown value:"+$ret);
+	}
+}
 
 // myDeleteAttr() always lead a crash on my machine :(
 global proc myDeleteAttr(string $node, string $attr, int $loop)

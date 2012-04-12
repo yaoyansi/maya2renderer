@@ -1123,11 +1123,12 @@ void liquidMessage( const std::string& msg, liquidVerbosityType type )
           break;
         case messageWarning:
           MGlobal::displayWarning( infoOutput );
+		  liqAssert("Warning",infoOutput, "Yes");
           break;
         case messageError:
 			//MString err("error(\""+infoOutput+"\");");MGlobal::executeCommand(err,true,false);
 			MGlobal::displayError( infoOutput );
-			printf("[liquid Error] %s\n", infoOutput);
+			liqAssert("Error",infoOutput, "Yes");
 			break;
       }
     } 
@@ -1148,7 +1149,7 @@ void liquidMessage( const std::string& msg, liquidVerbosityType type )
         default:
           prefix = "Info: ";  
       }
-      printf("%s\n", (prefix+infoOutput).c_str());
+	  liqAssert(prefix.c_str(),(prefix+infoOutput).c_str(), "Yes");
     }
   }
 }
@@ -1495,4 +1496,23 @@ bool doesPlugExist(const MString& node, const MString& plug)
 MString getLightGroupName(const MString& meshShapeNodes)
 {
 	return meshShapeNodes+"_lightgroup";
+}
+//
+bool liqAssert(const MString & msg)
+{
+	int ret;
+	IfMErrorWarn(MGlobal::executeCommand( "liqAssert0("+msg+");", ret));
+	return (ret==1);
+}
+bool liqAssert(const MString &title, const MString & msg, const MString &bYes)
+{
+	int ret;
+	IfMErrorWarn(MGlobal::executeCommand( "liqAssert1("+title+","+msg+","+bYes+");", ret));
+	return (ret==1);
+}
+bool liqAssert(const MString &title, const MString & msg, const MString &bYes, const MString &bNo)
+{
+	int ret;
+	IfMErrorWarn(MGlobal::executeCommand( "liqAssert2("+title+","+msg+","+bYes+","+bNo+");", ret));
+	return (ret==1);
 }
