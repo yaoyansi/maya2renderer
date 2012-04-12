@@ -102,10 +102,12 @@ liq
 - 重构 : move m_outputDebugMsgToRib to liqGlobalVariable,
    - remove in liqribshavedata.cpp
    - (done)rm mesh数据导出应该放在rm::exportOneGeometry_Mesh()里，而不是liqRibMeshData
-* implement an assert window with mel.(for now, liqAssert only invokes warning(), but not pop a window)
+* implement an assert window with mel（confirmDialog ）.(for now, liqAssert only invokes warning(), but not pop a window)
 - 全部使用fullPathName()(比如，liqRibDataPtr::getFullPathName()替代 liqRibData::getName(),
 liqShader::getName(),liqRibLightData::getName(),liqRibMeshData::getName(),liqGetSloInfo.getName() )
 - 一个transform node下直接连多个shape节点
+- 支持Maya2011，Maya2012
+
 
 rm
 ------------
@@ -117,7 +119,7 @@ rm
 - blinn shader无法编译
 - 重构 :shaderOutputRSL namespace由 RSL改为renderman
 - Visitor::outputShaderMethod()只输出了surface shader，还需要输出volume/light/displacement shader
-
+- mib_ambient_occ, 测试Trex场景
 
 er
 ------------
@@ -137,7 +139,6 @@ er
 - er渲染时，shadowpass的数据输出到哪里？
 - lambert shader,现在用的是maya_lambert_transparent
 - framelog， allLog
-- bug: XP下maketexture出的tex文件，在win7下渲染不出来。见er_rm_shader_graph_phong.ma,(check112.bmp.tex,这个tex可能是rm生成的)
 - bug:phong如果只有透明值，而没有透明贴图时，最终颜色几乎显示不出来（几乎成半透明的白色）
 - bump2d node
 - Bump channel in Phong shader(for er)
