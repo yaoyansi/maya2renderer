@@ -305,5 +305,11 @@ const char* liqRibData::getFullPathName() const
 	MStatus status;
 	MFnDagNode fnDepNode(objDagPath, &status);
 	IfMErrorWarn(status);
+
+	assert( fnDepNode.fullPathName().length() != 0 );
+	if( fnDepNode.fullPathName().length() == 0 ){
+		liquidMessage2(messageError,"liqRibData::getFullPathName() return empty string.");
+	}
+
 	return fnDepNode.fullPathName().asChar();
 }
