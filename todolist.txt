@@ -107,6 +107,7 @@ liq
 liqShader::getName(),liqRibLightData::getName(),liqRibMeshData::getName(),liqGetSloInfo.getName() )
 - 一个transform node下直接连多个shape节点
 - 支持Maya2011，Maya2012
+- messagebox on *nux is not implemented.
 
 
 rm
