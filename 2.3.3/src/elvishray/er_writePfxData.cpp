@@ -44,7 +44,7 @@ namespace elvishray
  		liqRibNodePtr ribNode__ = liqRibTranslator::getInstancePtr()->htable->find(
  			pData->objDagPath.fullPathName(), 
  			pData->objDagPath,
- 			MRT_Unknown
+ 			pData->type()
  			);
  		assert( ribNode__!=0 );
  		assert( ribNode__->path().fullPathName() == pData->objDagPath.fullPathName() );
