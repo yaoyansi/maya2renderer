@@ -25,7 +25,7 @@ namespace elvishray
 
 // 			renderman::Helper o;
 // 			o.RiBeginRef(pData->getRibFileFullPath().asChar());
- 			_write(pData, currentJob);
+			_write(pData, currentJob);
 // 			o.RiEndRef();
 
 		}else{

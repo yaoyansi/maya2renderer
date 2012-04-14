@@ -42,16 +42,17 @@ namespace renderman
 		//
 		if( pData->isEmpty() ) 
 		{
-			unsigned numTokens( pData->tokenPointerArray.size() );
-			boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-			boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-			assignTokenArraysV( pData->tokenPointerArray, tokenArray.get(), pointerArray.get() );
-
-			RiCurvesV( "cubic", pData->ncurves, pData->nverts.get(), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
-		} 
-		else{
 			RiIdentity(); // In case we're in a motion block!
 			liquidMessage2(messageWarning, "pfxHair is empty %s",  pData->getFullPathName());
+			return;
 		}
+
+		//
+		unsigned numTokens( pData->tokenPointerArray.size() );
+		boost::scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+		boost::scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+		assignTokenArraysV( pData->tokenPointerArray, tokenArray.get(), pointerArray.get() );
+		RiCurvesV( "cubic", pData->ncurves, pData->nverts.get(), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
+
 	}
 }//namespace renderman

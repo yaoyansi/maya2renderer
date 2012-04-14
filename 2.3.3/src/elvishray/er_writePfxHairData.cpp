@@ -6,11 +6,11 @@
 #include "log_helper.h"
 //#include <liqRibNode.h>
 #include <liqRibTranslator.h>
+#include <liqGlobalHelpers.h>
+#include <eiCORE/ei_data_table.h>
 
 namespace elvishray
 {
-	static void _write(liqRibPfxHairData* pData, const structJob &currentJob);
-
 	void Renderer::write(
 		/*const*/ liqRibPfxHairData* pData,
 		const MString &fileName, 
@@ -25,7 +25,7 @@ namespace elvishray
 
 // 			renderman::Helper o;
 // 			o.RiBeginRef(pData->getRibFileFullPath().asChar());
- 			_write(pData, currentJob);
+ 			_write_pfxhair(pData, currentJob);
 // 			o.RiEndRef();
 
 		}else{
@@ -35,10 +35,17 @@ namespace elvishray
 		}
 	}
 	//
-	static void _write(liqRibPfxHairData* pData, const structJob &currentJob__)
+	void Renderer::_write_pfxhair(liqRibPfxHairData* pData, const structJob &currentJob__)
 	{
 		CM_TRACE_FUNC("_write("<<pData->getFullPathName()<<","<<currentJob__.name<<")");
+		//
+		if( pData->isEmpty() ) 
+		{
+			liquidMessage2(messageWarning, "pfxHair is empty: %s",  pData->getFullPathName());
+			return;
+		}
 
+		//
  		liqRibNodePtr ribNode__ = liqRibTranslator::getInstancePtr()->htable->find(
  			pData->objDagPath.fullPathName(), 
  			pData->objDagPath,
@@ -63,15 +70,17 @@ namespace elvishray
 
 		_s("\n// Renderer::exportOneGeometry_Mesh("<<ribNode__->name.asChar()<<","<<sample_first<<","<<sample_last<<")");
 
-		const liqRibDataPtr mesh = ribNode__->object(sample_first)->getDataPtr();
+		const liqRibDataPtr data = ribNode__->object(sample_first)->getDataPtr();
 
 //
 
 
 //		//
-//		MStatus status;
-//		MFnMesh fnMesh(mesh->objDagPath, &status);
-//		IfMErrorWarn(status);
+		MStatus status;
+
+		int degree;
+		MFnDagNode fnDN(data->objDagPath);
+		IfMErrorWarn( liquidGetPlugValue(fnDN, "degree", degree, status) );
 //
 //		MIntArray triangleCounts,triangleVertices;
 //		IfMErrorWarn(fnMesh.getTriangles(triangleCounts, triangleVertices));
@@ -79,16 +88,18 @@ namespace elvishray
 //		MString currentUVsetName;
 //		IfMErrorWarn(fnMesh.getCurrentUVSetName(currentUVsetName));
 //
-//		// geometry data (shape)
-//		_s("\n//############################### mesh #");
-//		_s("//shape full path name="<<mesh->getFullPathName());
-//#ifdef TRANSFORM_SHAPE_PAIR
-//		const std::string objectName(ribNode__->name.asChar());//shape
-//#else// SHAPE SHAPE_object PAIR
-//		const std::string objectName(getObjectName(ribNode__->name.asChar()));//shape+"_object"
-//#endif
-//		_S( ei_object( objectName.c_str(), "poly" ) );
-//		_s("{");
+		// geometry data (shape)
+		_s("\n//############################### mesh #");
+		_s("//shape full path name="<<data->getFullPathName());
+#ifdef TRANSFORM_SHAPE_PAIR
+		const std::string objectName(ribNode__->name.asChar());//shape
+#else// SHAPE SHAPE_object PAIR
+		const std::string objectName(getObjectName(ribNode__->name.asChar()));//shape+"_object"
+#endif
+		_S( ei_object( objectName.c_str(), "hair" ) );
+		_s("{");
+			_d( ei_degree(degree) );
+			this->generate_pfxhair(ribNode__, pData, degree);
 //		_d( eiTag tag );
 //
 //		//vertex position
@@ -184,7 +195,109 @@ namespace elvishray
 //			_S( ei_tab_add_index(triangleVertices[i+2])); 
 //		}
 //		_S( ei_end_tab() );
-//		_s("}//"<<objectName);
-//		_S( ei_end_object() );
+		_s("}//"<<objectName);
+		_S( ei_end_object() );
+	}
+	//
+	static eiIndex getSegment(const eiIndex degree) 
+	{
+		eiIndex ret = 0;
+		switch(degree)
+		{
+		case 1: case 2: case 3: 
+			ret = degree; break;
+		default:
+			liquidMessage2(messageError, "invalid pfxhair degree:%d", degree);
+		}
+		return ret;
+	}
+	void Renderer::generate_pfxhair(liqRibNodePtr &ribNode__, liqRibPfxHairData* phair, const int degree)
+	{
+		CM_TRACE_FUNC("generate_pfxhair("<<ribNode__->getTransformNodeFullPath()<<")");
+
+		MStatus status;
+		MFnPfxGeometry pfxhair(phair->objDagPath, &status);
+		IfMErrorWarn(status);
+
+
+
+		MRenderLineArray profileArray;
+		MRenderLineArray creaseArray;
+		MRenderLineArray intersectionArray;
+		MRenderLineArray copy;
+
+		bool doLines          = true;
+		bool doTwist          = true;
+		bool doWidth          = true;
+		bool doFlatness       = false;
+		bool doParameter      = false;
+		bool doColor          = true;
+		bool doIncandescence  = false;
+		bool doTransparency   = true;
+		bool doWorldSpace     = false;
+
+		IfMErrorWarn( pfxhair.getLineData( profileArray, creaseArray, intersectionArray, doLines, doTwist, doWidth, doFlatness, doParameter, doColor, doIncandescence, doTransparency, doWorldSpace) );
+
+
+
+		_d( eiDatabase *db = ei_context_database(CONTEXT) );
+		eiIndex num_segments = getSegment(degree);
+
+		_d( eiTag vtx_list );
+		_d( vtx_list = ei_tab(EI_DATA_TYPE_VECTOR4, 100000) );
+		_d( ei_end_tab() );
+		_d( eiTag hair_list );
+		_d( hair_list = ei_tab(EI_DATA_TYPE_INDEX, 100000) );
+		_d( ei_end_tab() );
+
+		for (eiInt j = 0; j < phair->ncurves; ++j)
+		{
+			_d( eiInt index ); 
+			_d( index = ei_data_table_size(db, vtx_list) );
+			_d( ei_data_table_push_back(db, hair_list, &index) );//start vertex index of this hair in vtx_list
+
+			MRenderLine theLine( profileArray.renderLine( j, &status ) );
+			IfMErrorWarn(status);
+
+			const MVectorArray& vertex( theLine.getLine() );
+
+			_d( eiIndex nverts = vertex.length() + 2 );
+            _d( ei_data_table_push_back(db, hair_list, &nverts) );//how many segments this hair contains 
+			
+			//first vertex
+			unsigned int vertIndex = 0;
+			{
+				eiVector4	vtx;
+				vtx.x = vertex[ vertIndex ].x;
+				vtx.y = vertex[ vertIndex ].y;
+				vtx.z = vertex[ vertIndex ].z;
+				vtx.w = 0.01f;
+				_d( ei_data_table_push_back(db, vtx_list, &vtx) );
+			}
+			for ( ; vertIndex < vertex.length(); vertIndex++ )
+			{
+				{
+					eiVector4	vtx;
+					vtx.x = vertex[ vertIndex ].x;
+					vtx.y = vertex[ vertIndex ].y;
+					vtx.z = vertex[ vertIndex ].z;
+					vtx.w = 0.01f;
+					_d( ei_data_table_push_back(db, vtx_list, &vtx) );
+				}
+			}
+			//tail vertex
+			{
+				eiVector4	vtx;
+				vtx.x = vertex[ vertIndex-1 ].x;
+				vtx.y = vertex[ vertIndex-1 ].y;
+				vtx.z = vertex[ vertIndex-1 ].z;
+				vtx.w = 0.01f;
+				_d( ei_data_table_push_back(db, vtx_list, &vtx) );
+			}
+		}
+
+		_d( ei_vertex_list(vtx_list) );
+		_d( ei_hair_list(hair_list) );
+
 	}
 }//namespace elvishray

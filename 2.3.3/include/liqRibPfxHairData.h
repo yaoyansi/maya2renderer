@@ -54,7 +54,7 @@ public: // Methods
     virtual bool       compare( const liqRibData& other ) const;
     virtual ObjectType type() const;
 
-	bool isEmpty() const {return (ncurves>0);}
+	bool isEmpty() const {return (ncurves<=0);}
 #ifdef Refactoring 
 public:
 #else
