@@ -436,7 +436,7 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
 		elementPointerPair.setDetailType( rConstant );
 		elementPointerPair.setTokenFloat( 0, setOn );
 		pfxTokenPointerArrays[ setOn ].push_back( elementPointerPair );
-	}
+	}//if( totalVarying ) 
 	else
 	{
 		hasFeature[ setOn ] = false;
