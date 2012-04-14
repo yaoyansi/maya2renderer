@@ -15,6 +15,7 @@ class liqShader;
 class liqRibMeshData;
 class liqRibLocatorData;
 class liqRibPfxHairData;
+class liqRibPfxData;
 
 namespace liquid
 {
@@ -214,17 +215,22 @@ public:
 	virtual void getValidShaderPlugsInShadingGroup(std::vector<std::string>& plugs)const = 0 ;
 	//mesh
 	virtual void write(
-		/*const*/ liqRibMeshData* meshdata,
+		/*const*/ liqRibMeshData* data,
 		const MString &fileName, 
 		const structJob &currentJob,
 		const bool bReference) = 0;
 	virtual void write(
-		/*const*/ liqRibLocatorData* meshdata,
+		/*const*/ liqRibLocatorData* data,
 		const MString &fileName, 
 		const structJob &currentJob,
 		const bool bReference) = 0;
 	virtual void write(
-		/*const*/ liqRibPfxHairData* meshdata,
+		/*const*/ liqRibPfxHairData* data,
+		const MString &fileName, 
+		const structJob &currentJob,
+		const bool bReference) = 0;
+	virtual void write(
+		/*const*/ liqRibPfxData* data,
 		const MString &fileName, 
 		const structJob &currentJob,
 		const bool bReference) = 0;

@@ -37,7 +37,7 @@ namespace elvishray
 	//
 	void Renderer::_write_pfxhair(liqRibPfxHairData* pData, const structJob &currentJob__)
 	{
-		CM_TRACE_FUNC("_write("<<pData->getFullPathName()<<","<<currentJob__.name<<")");
+		CM_TRACE_FUNC("_write_pfxhair("<<pData->getFullPathName()<<","<<currentJob__.name<<")");
 		//
 		if( pData->isEmpty() ) 
 		{

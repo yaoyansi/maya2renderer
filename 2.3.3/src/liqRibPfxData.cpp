@@ -60,6 +60,7 @@
 #include <liqRibNode.h>
 #include <liqGlobalVariable.h>
 #include "renderman/rm_helper.h"
+#include "renderermgr.h"
 
 using namespace boost;
 
@@ -75,7 +76,7 @@ liqRibPfxData::liqRibPfxData( MObject pfxGeo, ObjectType type )
     nverts(),
     CVs()
 {
-	CM_TRACE_FUNC("liqRibPfxData::liqRibPfxData("<<MFnDagNode(pfxGeo).fullPathName()<<","<<type<<")");
+	CM_TRACE_FUNC("liqRibPfxData::e("<<MFnDagNode(pfxGeo).fullPathName()<<","<<type<<")");
 
 	LIQDEBUGPRINTF( "-> creating painteffects curves\n" );
 	MStatus status( MS::kSuccess );
@@ -451,48 +452,51 @@ void liqRibPfxData::write(const MString &ribFileName, const structJob &currentJo
 {
 	CM_TRACE_FUNC("liqRibPfxData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
 
-	assert(liqglo.m_ribFileOpen&&"liqRibPfxData.cpp");
+	liquid::RendererMgr::getInstancePtr()->
+		getRenderer()->write(this, ribFileName, currentJob, bReference);
 
-	if( !bReference ){//write data at first time
-		assert(m_ribFileFullPath.length()==0);
-		m_ribFileFullPath = ribFileName;
-
-		renderman::Helper o;
-		o.RiBeginRef(m_ribFileFullPath.asChar());
-		_write(currentJob);
-		o.RiEndRef();
-
-	}else{
-		//write the reference
-		assert(m_ribFileFullPath == ribFileName);
-		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
-	}
+// 	assert(liqglo.m_ribFileOpen&&"liqRibPfxData.cpp");
+// 
+// 	if( !bReference ){//write data at first time
+// 		assert(m_ribFileFullPath.length()==0);
+// 		m_ribFileFullPath = ribFileName;
+// 
+// 		renderman::Helper o;
+// 		o.RiBeginRef(m_ribFileFullPath.asChar());
+// 		_write(currentJob);
+// 		o.RiEndRef();
+// 
+// 	}else{
+// 		//write the reference
+// 		assert(m_ribFileFullPath == ribFileName);
+// 		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+// 	}
 }
 /**
  *  Write the RIB for this paint effect.
  */
-void liqRibPfxData::_write(const structJob &currentJob)
-{
-	CM_TRACE_FUNC("liqRibPfxData::write(job="<<currentJob.name<<")");
-
-	LIQDEBUGPRINTF( "-> writing painteffects curves\n" );
-
-	unsigned setOn( 0 );
-	if( pfxtype == MRT_PfxLeaf )
-		setOn = 1;
-	if( pfxtype == MRT_PfxPetal )
-		setOn = 2;
-
-	if( hasFeature[ setOn ] )
-	{
-		unsigned numTokens( pfxTokenPointerArrays[ setOn ].size() );
-		scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-		scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-		assignTokenArraysV( pfxTokenPointerArrays[ setOn ], tokenArray.get(), pointerArray.get() );
-
-		RiCurvesV( "cubic", nverts[ setOn ].size(), const_cast< RtInt* >( &nverts[ setOn ][ 0 ] ), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
-	}
-}
+ //void liqRibPfxData::_write(const structJob &currentJob)
+ //{
+ //	CM_TRACE_FUNC("liqRibPfxData::write(job="<<currentJob.name<<")");
+ //
+ //	LIQDEBUGPRINTF( "-> writing painteffects curves\n" );
+ //
+ //	unsigned setOn( 0 );
+ //	if( pfxtype == MRT_PfxLeaf )
+ //		setOn = 1;
+ //	if( pfxtype == MRT_PfxPetal )
+ //		setOn = 2;
+ //
+ //	if( hasFeature[ setOn ] )
+ //	{
+ //		unsigned numTokens( pfxTokenPointerArrays[ setOn ].size() );
+ //		scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+ //		scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+ //		assignTokenArraysV( pfxTokenPointerArrays[ setOn ], tokenArray.get(), pointerArray.get() );
+ //
+ //		RiCurvesV( "cubic", nverts[ setOn ].size(), const_cast< RtInt* >( &nverts[ setOn ][ 0 ] ), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
+ //	}
+ //}
 
 
 unsigned liqRibPfxData::granularity() const

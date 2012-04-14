@@ -61,7 +61,7 @@ public:
 #else
 private: // Data
 #endif
-  void            _write(const structJob &currentJob);
+//  void            _write(const structJob &currentJob);
   unsigned                grain;
   bool                    hasFeature[ 3 ];
   ObjectType			  pfxtype;
