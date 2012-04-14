@@ -53,6 +53,7 @@
 #include <liqGlobalHelpers.h>
 #include <liqGlobalVariable.h>
 #include "renderman/rm_helper.h"
+#include "renderermgr.h"
 
 using namespace boost;
 
@@ -299,41 +300,44 @@ void liqRibPfxHairData::write(const MString &ribFileName, const structJob &curre
 {
 	CM_TRACE_FUNC("liqRibPfxHairData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
 
-	assert(liqglo.m_ribFileOpen&&"liqRibPfxHairData.cpp");
+	liquid::RendererMgr::getInstancePtr()->
+		getRenderer()->write(this, ribFileName, currentJob, bReference);
 
-	if( !bReference ){//write data at first time
-		assert(m_ribFileFullPath.length()==0);
-		m_ribFileFullPath = ribFileName;
+	//assert(liqglo.m_ribFileOpen&&"liqRibPfxHairData.cpp");
 
-		renderman::Helper o;
-		o.RiBeginRef(m_ribFileFullPath.asChar());
-		_write(currentJob);
-		o.RiEndRef();
+	//if( !bReference ){//write data at first time
+	//	assert(m_ribFileFullPath.length()==0);
+	//	m_ribFileFullPath = ribFileName;
 
-	}else{
-		//write the reference
-		assert(m_ribFileFullPath == ribFileName);
-		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
-	}
+	//	renderman::Helper o;
+	//	o.RiBeginRef(m_ribFileFullPath.asChar());
+	//	_write(currentJob);
+	//	o.RiEndRef();
+
+	//}else{
+	//	//write the reference
+	//	assert(m_ribFileFullPath == ribFileName);
+	//	RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+	//}
 }
 /** Write the RIB for this surface
  */
-void liqRibPfxHairData::_write(const structJob &currentJob)
-{
-	CM_TRACE_FUNC("liqRibPfxHairData::_write(job="<<currentJob.name<<")");
-
-  if( ncurves > 0 ) 
-  {
-    unsigned numTokens( tokenPointerArray.size() );
-    scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-    scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-    assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
-
-    RiCurvesV( "cubic", ncurves, nverts.get(), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
-  } 
-  else 
-    RiIdentity(); // In case we're in a motion block!
-}
+//void liqRibPfxHairData::_write(const structJob &currentJob)
+//{
+//	CM_TRACE_FUNC("liqRibPfxHairData::_write(job="<<currentJob.name<<")");
+//
+//  if( ncurves > 0 ) 
+//  {
+//    unsigned numTokens( tokenPointerArray.size() );
+//    scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
+//    scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
+//    assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
+//
+//    RiCurvesV( "cubic", ncurves, nverts.get(), "nonperiodic", numTokens, tokenArray.get(), pointerArray.get() );
+//  } 
+//  else 
+//    RiIdentity(); // In case we're in a motion block!
+//}
 
 /** Compare this curve to the other for the purpose of determining
  * if it is animated.

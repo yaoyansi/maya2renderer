@@ -213,6 +213,11 @@ namespace elvishray
 			const MString &fileName, 
 			const structJob &currentJob,
 			const bool bReference);
+		virtual void write(
+			/*const*/ liqRibPfxHairData* meshdata,
+			const MString &fileName, 
+			const structJob &currentJob,
+			const bool bReference);
 		//
 		virtual bool isHeroPassReady(const structJob &currentJob);
 		virtual void HeroPassBegin(const structJob &currentJob);

@@ -54,12 +54,13 @@ public: // Methods
     virtual bool       compare( const liqRibData& other ) const;
     virtual ObjectType type() const;
 
+	bool isEmpty() const {return (ncurves>0);}
 #ifdef Refactoring 
 public:
 #else
 private: // Data
 #endif
-    void       _write(const structJob &currentJob);
+ //   void       _write(const structJob &currentJob);
     RtInt ncurves;
 	boost::shared_array< RtInt >   nverts;
     boost::shared_array< RtFloat > CVs;

@@ -4034,6 +4034,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\renderman\rm_writePfxHairData.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\renderman\shaderOutputRSL.cpp"
 					>
 				</File>
@@ -4127,6 +4131,10 @@
 				</File>
 				<File
 					RelativePath="..\elvishray\er_writeMeshData.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\elvishray\er_writePfxHairData.cpp"
 					>
 				</File>
 				<File
