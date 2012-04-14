@@ -89,18 +89,6 @@ namespace elvishray
 		_s("}//"<<objectName);
 		_S( ei_end_object() );
 	}
-	static eiIndex getSegment(const eiIndex degree) 
-	{
-		eiIndex ret = 0;
-		switch(degree)
-		{
-		case 1: case 2: case 3: 
-			ret = degree; break;
-		default:
-			liquidMessage2(messageError, "invalid pfxhair degree:%d", degree);
-		}
-		return ret;
-	}
 	//
 	void Renderer::generate_pfx(liqRibNodePtr &ribNode__, liqRibPfxData* pData, const int degree)
 	{
@@ -158,7 +146,6 @@ namespace elvishray
 		if( totalVarying )
 		{
 			_d( eiDatabase *db = ei_context_database(CONTEXT) );
-			eiIndex num_segments = getSegment(degree);
 
 			_d( eiTag vtx_list );
 			_d( vtx_list = ei_tab(EI_DATA_TYPE_VECTOR4, 100000) );
@@ -190,9 +177,9 @@ namespace elvishray
 
 				const MVectorArray& pfxVerts( pfxLine.getLine() );
 				const MDoubleArray& pfxWidth( pfxLine.getWidth() );
-				_d( eiIndex nverts );
-				nverts = pfxVerts.length() + 2; _s("nverts="<< nverts);
-				_d( ei_data_table_push_back(db, hair_list, &nverts) );//how many segments this hair contains 
+				_d( eiIndex num_segments );
+				num_segments = (pfxVerts.length() +2)/degree; _s("num_segments="<< num_segments);
+				_d( ei_data_table_push_back(db, hair_list, &num_segments) );//how many segments this hair contains 
 				
 				_d( eiVector4 vtx );
 				//for each vertex on this hair
@@ -202,13 +189,13 @@ namespace elvishray
 					if( pOn )
 					{
 						// some vertex in between start and end (pOn > 0)
-						if( ( 1 == setOn ) && ( pOn ==  pfxVerts.length() - 1 ) )
-						{
-							// leaves need to be capped
-							MVector compensate( pfxVerts[ pOn ] - pfxVerts[ pOn - 1 ] );
-							compensate.normalize();
-							const_cast< MVectorArray& >( pfxVerts )[ pOn ] += *( widthPtr - 1 ) * compensate;
-						}
+ 						if( ( 1 == setOn ) && ( pOn ==  pfxVerts.length() - 1 ) )
+ 						{
+ 							// leaves need to be capped
+ 							MVector compensate( pfxVerts[ pOn ] - pfxVerts[ pOn - 1 ] );
+ 							compensate.normalize();
+ 							const_cast< MVectorArray& >( pfxVerts )[ pOn ] += *( widthPtr - 1 ) * compensate;
+ 						}
 						my_set_eiVector4("vtx", vtx, 
 							pfxVerts[ pOn ].x, 
 							pfxVerts[ pOn ].y, 
@@ -217,27 +204,27 @@ namespace elvishray
 						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
 					}else{
 						// start vertices (pOn == 0)
-						if( 1 == setOn )
-						{
-							// leaves need to be capped
-							MVector compensate( pfxVerts[ 1 ] - pfxVerts[ 0 ] );
-							compensate.normalize();
-							const_cast< MVectorArray& >( pfxVerts )[ 0 ] += -*( widthPtr - 1 ) * compensate;
-						}
-						const MVector tmpVertex( pfxVerts[ 0 ] - ( pfxVerts[ 1 ] - pfxVerts[ 0 ] ) );
-						my_set_eiVector4("vtx", vtx, 
-							tmpVertex.x, 
-							tmpVertex.y, 
-							tmpVertex.z, 
-							pfxWidth[ pOn ] * 0.75);
-						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
+ 						if( 1 == setOn )
+ 						{
+ 							// leaves need to be capped
+ 							MVector compensate( pfxVerts[ 1 ] - pfxVerts[ 0 ] );
+ 							compensate.normalize();
+ 							const_cast< MVectorArray& >( pfxVerts )[ 0 ] += -*( widthPtr - 1 ) * compensate;
+ 						}
+ 						const MVector tmpVertex( pfxVerts[ 0 ] - ( pfxVerts[ 1 ] - pfxVerts[ 0 ] ) );
+ 						my_set_eiVector4("vtx", vtx, 
+ 							tmpVertex.x, 
+ 							tmpVertex.y, 
+ 							tmpVertex.z, 
+ 							pfxWidth[ pOn ] * 0.75);
+ 						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
 
-// 						my_set_eiVector4("vtx", vtx, 
-// 							pfxVerts[ 0 ].x, 
-// 							pfxVerts[ 0 ].y, 
-// 							pfxVerts[ 0 ].z, 
-// 							pfxWidth[ pOn ] * 0.75);
-// 						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
+						my_set_eiVector4("vtx", vtx, 
+							pfxVerts[ 0 ].x, 
+							pfxVerts[ 0 ].y, 
+							pfxVerts[ 0 ].z, 
+							pfxWidth[ 0 ] * 0.75);
+						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
 					}
 				}//for( ; pOn < pfxVerts.length(); pOn++ ) 
 				// end vertex
