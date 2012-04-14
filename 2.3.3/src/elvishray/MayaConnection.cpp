@@ -67,7 +67,7 @@ bool MayaConnection::Progress( const eiScalar percent )
 
 	bool isInterrupted = liqRibTranslator::getInstancePtr()->isInterruptRequested();
 	if (isInterrupted){
-		liquidMessage2(messageWarning, "Liquid is interrputed at %f%%.\n", percent);
+		liquidMessage2(messageInfo, "Liquid is interrputed at %f%%.\n", percent);
 	}
 	return !isInterrupted;
 }
