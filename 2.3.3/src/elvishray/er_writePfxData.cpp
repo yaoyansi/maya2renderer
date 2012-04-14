@@ -84,7 +84,7 @@ namespace elvishray
 #endif
 		_S( ei_object( objectName.c_str(), "hair" ) );
 		_s("{");
-			_d( ei_degree(degree) );
+			_S( ei_degree(degree) );
 			this->generate_pfx(ribNode__, pData, degree);
 		_s("}//"<<objectName);
 		_S( ei_end_object() );
@@ -190,9 +190,11 @@ namespace elvishray
 
 				const MVectorArray& pfxVerts( pfxLine.getLine() );
 				const MDoubleArray& pfxWidth( pfxLine.getWidth() );
-				_d( eiIndex nverts = pfxVerts.length() );
+				_d( eiIndex nverts );
+				nverts = pfxVerts.length() + 2; _s("nverts="<< nverts);
 				_d( ei_data_table_push_back(db, hair_list, &nverts) );//how many segments this hair contains 
 				
+				_d( eiVector4 vtx );
 				//for each vertex on this hair
 				unsigned pOn( 0 );
 				for( ; pOn < pfxVerts.length(); pOn++ )
@@ -207,11 +209,11 @@ namespace elvishray
 							compensate.normalize();
 							const_cast< MVectorArray& >( pfxVerts )[ pOn ] += *( widthPtr - 1 ) * compensate;
 						}
-						eiVector4	vtx;
-						vtx.x = pfxVerts[ pOn ].x;
-						vtx.y = pfxVerts[ pOn ].y;
-						vtx.z = pfxVerts[ pOn ].z;
-						vtx.w = pfxWidth[ pOn ] * 0.75;
+						my_set_eiVector4("vtx", vtx, 
+							pfxVerts[ pOn ].x, 
+							pfxVerts[ pOn ].y, 
+							pfxVerts[ pOn ].z, 
+							pfxWidth[ pOn ] * 0.75);
 						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
 					}else{
 						// start vertices (pOn == 0)
@@ -223,18 +225,19 @@ namespace elvishray
 							const_cast< MVectorArray& >( pfxVerts )[ 0 ] += -*( widthPtr - 1 ) * compensate;
 						}
 						const MVector tmpVertex( pfxVerts[ 0 ] - ( pfxVerts[ 1 ] - pfxVerts[ 0 ] ) );
-						eiVector4	vtx;
-						vtx.x = tmpVertex.x;
-						vtx.y = tmpVertex.y;
-						vtx.z = tmpVertex.z;
-						vtx.w = pfxWidth[ pOn ] * 0.75;
+						my_set_eiVector4("vtx", vtx, 
+							tmpVertex.x, 
+							tmpVertex.y, 
+							tmpVertex.z, 
+							pfxWidth[ pOn ] * 0.75);
 						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
 
-						vtx.x = pfxVerts[ 0 ].x;
-						vtx.y = pfxVerts[ 0 ].y;
-						vtx.z = pfxVerts[ 0 ].z;
-						vtx.w = pfxWidth[ pOn ] * 0.75;
-						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
+// 						my_set_eiVector4("vtx", vtx, 
+// 							pfxVerts[ 0 ].x, 
+// 							pfxVerts[ 0 ].y, 
+// 							pfxVerts[ 0 ].z, 
+// 							pfxWidth[ pOn ] * 0.75);
+// 						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
 					}
 				}//for( ; pOn < pfxVerts.length(); pOn++ ) 
 				// end vertex
@@ -242,11 +245,11 @@ namespace elvishray
 
 				const MVector tmpVertex( pfxVerts[ pOn - 1 ] + ( pfxVerts[ pOn - 1 ] - pfxVerts[ pOn - 2 ] ) );
 				const eiScalar width   ( pfxWidth[ pOn - 1 ] + ( pfxWidth[ pOn - 1 ] - pfxWidth[ pOn - 2 ] ) ); ;
-				eiVector4	vtx;
-				vtx.x = tmpVertex.x;
-				vtx.y = tmpVertex.y;
-				vtx.z = tmpVertex.z;
-				vtx.w = width * 0.75;
+				my_set_eiVector4("vtx", vtx, 
+					tmpVertex.x, 
+					tmpVertex.y, 
+					tmpVertex.z, 
+					width * 0.75);
 				_d( ei_data_table_push_back(db, vtx_list, &vtx) );
 			}//for lineon
 

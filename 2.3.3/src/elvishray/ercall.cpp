@@ -943,4 +943,18 @@ namespace elvishray
 		_s("ei_variable(\""<<name<<"\", &tag)");
 		_e( ei_variable(name, tag) );
 	}
+	void my_ei_degree(const eiInt degree)
+	{
+		_s("ei_degree("<<degree<<")");
+		_e( ei_degree(degree) );
+	}
+	//
+	void my_set_eiVector4(const char* vname, eiVector4 &v, const eiScalar x, const eiScalar y, const eiScalar z, const eiScalar w )
+	{
+		_s( vname<<".x="<<x<<"; "<<vname<<".y="<<y<<"; "<<vname<<".z="<<z<<";"<<vname<<".w="<<w<<";" );
+		v.x = x;
+		v.y = y;
+		v.z = z;
+		v.w = w;
+	}
 }

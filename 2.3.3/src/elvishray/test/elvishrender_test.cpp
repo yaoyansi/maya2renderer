@@ -15,9 +15,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ---------------------------------------------------------------------------------------------*/
+#include <cassert>
 #include <iostream>
 #include "eiAPI/ei.h"
-
+#include <eiCORE/ei_data_table.h>
 using namespace std;
 
 /*---------------------------------------------------------------------------------------------
@@ -50,7 +51,7 @@ void test_liquid2er()
 //#include"cornellbox.esa"
 //#include "./liq_er_displace_good.er"
 //#include "E:/MyDocuments/maya/projects/default/rib/box.rib.er"
-#include "E:/MyDocuments/maya/projects/default/rib/Trex_polySurfaceShape259_RenderCamShape.0217.rib.er"
+#include "E:/MyDocuments/maya/projects/default/rib/test_onehair.er"
 //#include"ei_scene_unittest.esa"//<----- use your own elvishender api script file here.
 	
 	//ei_face_color_unittest(NULL, "suffix");

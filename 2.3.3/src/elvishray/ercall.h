@@ -311,6 +311,11 @@ void my_ei_end_shader();
 
 void my_ei_declare(const char *name, const eiInt storage_class, const eiInt type, const void *default_value);
 void my_ei_variable(const char *name, const void *value);
+void my_ei_degree(const eiInt degree);
+
+
+//extion for liq
+void my_set_eiVector4(const char* vname, eiVector4 &v, const eiScalar x, const eiScalar y, const eiScalar z, const eiScalar w );
 
 }
 #endif
