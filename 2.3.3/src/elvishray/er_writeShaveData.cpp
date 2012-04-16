@@ -9,6 +9,8 @@
 #include <liqGlobalHelpers.h>
 #include <eiCORE/ei_data_table.h>
 #include <liqRibShaveData.h>
+#include<maya/shaveAPI.h>
+#include<maya/shaveItHair.h>
 
 namespace elvishray
 {
@@ -83,10 +85,11 @@ namespace elvishray
 #else// SHAPE SHAPE_object PAIR
 		const std::string objectName(getObjectName(ribNode__->name.asChar()));//shape+"_object"
 #endif
+		const eiIndex degree = 3;
 		_S( ei_object( objectName.c_str(), "hair" ) );
 		_s("{");
-			_S( ei_degree(2) );
-			this->generate_shavehair(ribNode__, pData, 2);
+			_S( ei_degree(degree) );
+			this->generate_shavehair(ribNode__, pData, degree);
 		_s("}//"<<objectName);
 		_S( ei_end_object() );
 	}
@@ -96,165 +99,55 @@ namespace elvishray
 		CM_TRACE_FUNC("generate_pfxhair("<<ribNode__->getTransformNodeFullPath()<<")");
 
 		MStatus status;
-		MFnPfxGeometry pfx(pData->objDagPath, &status);
-		IfMErrorWarn(status);
 
-		bool uniformWidth[3] = { false, false, false };
+		shaveAPI::HairInfo hairInfo;
+		IfMErrorMsgWarn(shaveAPI::exportAllHair(&hairInfo, true),"shaveAPI::exportAllHair(&hairInfo, true)");
 
-		MRenderLineArray lines[ 3 ];//main/leaf/flower lines
+		_d( eiDatabase *db = ei_context_database(CONTEXT) );
 
-		bool doLines          = true;
-		bool doTwist          = true;
-		bool doWidth          = true;
-		bool doFlatness       = false;
-		bool doParameter      = false;
-		bool doColor          = true;
-		bool doIncandescence  = false;
-		bool doTransparency   = true;
-		bool doWorldSpace     = false;
+		_d( eiTag vtx_list );
+		_d( vtx_list = ei_tab(EI_DATA_TYPE_VECTOR4, 100000) );
+		_d( ei_end_tab() );
+		_d( eiTag hair_list );
+		_d( hair_list = ei_tab(EI_DATA_TYPE_INDEX, 100000) );
+		_d( ei_end_tab() );
 
-		IfMErrorWarn(pfx.getLineData( lines[ 0 ], lines[ 1 ], lines[ 2 ],
-										true,  // lines
-										true,  // twist
-										true,  // width
-										true,  // flatness
-										false, // parameter
-										true,  // color
-										true,  // incandescence
-										true,  // transparency
-										false  // worldSpace
-									)
-		);
-		// default: MRT_PfxTube
-		unsigned setOn( 0 );
-		if( pData->type() == MRT_PfxLeaf )
-			setOn = 1;
-		if( pData->type() == MRT_PfxPetal )
-			setOn = 2;
-
-		unsigned totalVertex( 0 );
-		unsigned totalVarying( 0 );
-		unsigned numLines( lines[ setOn ].length() );
-
-		for( unsigned lineOn( 0 ); lineOn < numLines; lineOn++ )
+	
+		//for each hair
+		for(int strand = 0; strand < hairInfo.numHairs; strand++ )
 		{
-			MRenderLine pfxLine( lines[ setOn ].renderLine( lineOn, &status ) );
-			MVectorArray pfxVerts( pfxLine.getLine() );
-			totalVarying += pfxVerts.length();
-		}
-		totalVertex = totalVarying + ( 2 * numLines );
+			_s("//strand="<<strand);
+			eiScalar rootRadii = hairInfo.rootRadii[strand];
 
-		if( totalVarying )
-		{
-			_d( eiDatabase *db = ei_context_database(CONTEXT) );
+			_d( eiInt index ); 
+			_d( index = ei_data_table_size(db, vtx_list) );
+			_d( ei_data_table_push_back(db, hair_list, &index) );//start vertex index of this hair in vtx_list
 
-			_d( eiTag vtx_list );
-			_d( vtx_list = ei_tab(EI_DATA_TYPE_VECTOR4, 100000) );
-			_d( ei_end_tab() );
-			_d( eiTag hair_list );
-			_d( hair_list = ei_tab(EI_DATA_TYPE_INDEX, 100000) );
-			_d( ei_end_tab() );
-		
-			// read other attributes from the lines
-			boost::shared_array< RtFloat > uniformCurveWidth(  new RtFloat[ numLines ] );
-			boost::shared_array< RtFloat > curveWidth(         new RtFloat[ totalVarying ] );
-			RtFloat* uniformWidthPtr( uniformCurveWidth.get() );
-			RtFloat* widthPtr( curveWidth.get() );
-
-			bool hasUniformWidth( false );
-			bool hasWidth( false );
-
-
-			//for each hair
-			for( unsigned lineOn( 0 ); lineOn < lines[ setOn ].length(); lineOn++ )
+			eiIndex num_vertex = hairInfo.hairEndIndices[strand] 
+			                   - hairInfo.hairStartIndices[strand];
+			_s("//num_vertex="<<num_vertex);
+			_d( eiIndex num_segments );
+			num_segments = (num_vertex-1)/degree; _s("num_segments="<< num_segments<<";");
+			_d( ei_data_table_push_back(db, hair_list, &num_segments) );//how many segments this hair contains 
+			
+			_d( eiVector4 vtx );
+			//for each vertex on this hair
+			for(eiIndex i = hairInfo.hairStartIndices[strand];
+				        i < hairInfo.hairEndIndices[strand]; i++)
 			{
-				_d( eiInt index ); 
-				_d( index = ei_data_table_size(db, vtx_list) );
-				_d( ei_data_table_push_back(db, hair_list, &index) );//start vertex index of this hair in vtx_list
+				_s("//vertex="<<i);
+				int vert = hairInfo.hairVertices[i];
+					my_set_eiVector4("vtx", vtx, 
+						hairInfo.vertices[vert].x,
+						hairInfo.vertices[vert].y, 
+						hairInfo.vertices[vert].z, 
+						rootRadii*(hairInfo.hairEndIndices[strand]-1-i)/num_vertex);
+					_d( ei_data_table_push_back(db, vtx_list, &vtx) );
 
-
-				MRenderLine pfxLine( lines[ setOn ].renderLine( lineOn, &status ) );
-				IfMErrorWarn(status);
-
-				const MVectorArray& pfxVerts( pfxLine.getLine() );
-				const MDoubleArray& pfxWidth( pfxLine.getWidth() );
-				_d( eiIndex num_segments );
-				num_segments = (pfxVerts.length() +2)/degree; _s("num_segments="<< num_segments);
-				_d( ei_data_table_push_back(db, hair_list, &num_segments) );//how many segments this hair contains 
-				
-				_d( eiVector4 vtx );
-				//for each vertex on this hair
-				unsigned pOn( 0 );
-				for( ; pOn < pfxVerts.length(); pOn++ )
-				{
-					if( pOn )
-					{
-						// some vertex in between start and end (pOn > 0)
- 						if( ( 1 == setOn ) && ( pOn ==  pfxVerts.length() - 1 ) )
- 						{
- 							// leaves need to be capped
- 							MVector compensate( pfxVerts[ pOn ] - pfxVerts[ pOn - 1 ] );
- 							compensate.normalize();
- 							const_cast< MVectorArray& >( pfxVerts )[ pOn ] += *( widthPtr - 1 ) * compensate;
- 						}
-						my_set_eiVector4("vtx", vtx, 
-							pfxVerts[ pOn ].x, 
-							pfxVerts[ pOn ].y, 
-							pfxVerts[ pOn ].z, 
-							pfxWidth[ pOn ] * 0.75);
-						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
-					}else{
-						// start vertices (pOn == 0)
- 						if( 1 == setOn )
- 						{
- 							// leaves need to be capped
- 							MVector compensate( pfxVerts[ 1 ] - pfxVerts[ 0 ] );
- 							compensate.normalize();
- 							const_cast< MVectorArray& >( pfxVerts )[ 0 ] += -*( widthPtr - 1 ) * compensate;
- 						}
- 						const MVector tmpVertex( pfxVerts[ 0 ] - ( pfxVerts[ 1 ] - pfxVerts[ 0 ] ) );
- 						my_set_eiVector4("vtx", vtx, 
- 							tmpVertex.x, 
- 							tmpVertex.y, 
- 							tmpVertex.z, 
- 							pfxWidth[ pOn ] * 0.75);
- 						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
-
-						my_set_eiVector4("vtx", vtx, 
-							pfxVerts[ 0 ].x, 
-							pfxVerts[ 0 ].y, 
-							pfxVerts[ 0 ].z, 
-							pfxWidth[ 0 ] * 0.75);
-						_d( ei_data_table_push_back(db, vtx_list, &vtx) );
-					}
-				}//for( ; pOn < pfxVerts.length(); pOn++ ) 
-				// end vertex
-				// last vertex has already been pushed
-
-				const MVector tmpVertex( pfxVerts[ pOn - 1 ] + ( pfxVerts[ pOn - 1 ] - pfxVerts[ pOn - 2 ] ) );
-				const eiScalar width   ( pfxWidth[ pOn - 1 ] + ( pfxWidth[ pOn - 1 ] - pfxWidth[ pOn - 2 ] ) ); ;
-				my_set_eiVector4("vtx", vtx, 
-					tmpVertex.x, 
-					tmpVertex.y, 
-					tmpVertex.z, 
-					width * 0.75);
-				_d( ei_data_table_push_back(db, vtx_list, &vtx) );
-			}//for lineon
-
-			_d( ei_vertex_list(vtx_list) );
-			_d( ei_hair_list(hair_list) );
-
-		}//if( totalVarying ) 
-
-
-
-
-
-
-		// free memory for lines arrays, are not freed by pfx destructor - Alf
-		lines[0].deleteArray();
-		lines[1].deleteArray();
-		lines[2].deleteArray();
+			}//for( ; pOn < pfxVerts.length(); pOn++ ) 
+		}//for lineon
+		_d( ei_vertex_list(vtx_list) );
+		_d( ei_hair_list(hair_list) );
 	}
 
 }//namespace elvishray
