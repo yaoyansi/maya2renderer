@@ -58,7 +58,7 @@
 #include <liqGlobalVariable.h>
 #include <liqRibTranslator.h>
 #include "renderman/rm_helper.h"
-
+#include "renderermgr.h"
 
 using namespace boost;
 
@@ -406,25 +406,27 @@ liqRibShaveData::liqRibShaveData( MObject surface )
 void liqRibShaveData::write(const MString &ribFileName, const structJob &currentJob, const bool bReference)
 {
 	CM_TRACE_FUNC("liqRibShaveData::write("<<ribFileName<<",job="<<currentJob.name<<","<<bReference<<")");
+	
+	liquid::RendererMgr::getInstancePtr()->
+		getRenderer()->write(this, ribFileName, currentJob, bReference);
+	//assert(liqglo.m_ribFileOpen&&"liqRibShaveData");
 
-	assert(liqglo.m_ribFileOpen&&"liqRibShaveData");
+	//if( !bReference ){//write data at first time
+	//	assert(m_ribFileFullPath.length()==0);
+	//	m_ribFileFullPath = ribFileName;
 
-	if( !bReference ){//write data at first time
-		assert(m_ribFileFullPath.length()==0);
-		m_ribFileFullPath = ribFileName;
+	//	//1)make a reference
+	//	RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
 
-		//1)make a reference
-		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
-
-		//2)call shave command to write the rib file(not support motion blur)
-		MGlobal::executeCommand(
-			"shaveWriteRib -hairNode \""+objDagPath.partialPathName()+"\" \""+m_ribFileFullPath+"\";"
-		);
-	}else{
-		//write the reference
-		assert(m_ribFileFullPath == ribFileName);
-		RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
-	}
+	//	//2)call shave command to write the rib file(not support motion blur)
+	//	MGlobal::executeCommand(
+	//		"shaveWriteRib -hairNode \""+objDagPath.partialPathName()+"\" \""+m_ribFileFullPath+"\";"
+	//	);
+	//}else{
+	//	//write the reference
+	//	assert(m_ribFileFullPath == ribFileName);
+	//	RiReadArchive( const_cast< RtToken >( m_ribFileFullPath.asChar() ), NULL, RI_NULL );
+	//}
 }
 /** Write the RIB for this surface.
  */

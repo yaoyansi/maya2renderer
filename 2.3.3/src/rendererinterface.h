@@ -16,6 +16,7 @@ class liqRibMeshData;
 class liqRibLocatorData;
 class liqRibPfxHairData;
 class liqRibPfxData;
+class liqRibShaveData;
 
 namespace liquid
 {
@@ -231,6 +232,11 @@ public:
 		const bool bReference) = 0;
 	virtual void write(
 		/*const*/ liqRibPfxData* data,
+		const MString &fileName, 
+		const structJob &currentJob,
+		const bool bReference) = 0;
+	virtual void write(
+		/*const*/ liqRibShaveData* data,
 		const MString &fileName, 
 		const structJob &currentJob,
 		const bool bReference) = 0;

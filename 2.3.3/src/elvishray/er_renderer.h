@@ -223,6 +223,11 @@ namespace elvishray
 			const MString &fileName, 
 			const structJob &currentJob,
 			const bool bReference);
+		virtual void write(
+			/*const*/ liqRibShaveData* data,
+			const MString &fileName, 
+			const structJob &currentJob,
+			const bool bReference);
 		//
 		virtual bool isHeroPassReady(const structJob &currentJob);
 		virtual void HeroPassBegin(const structJob &currentJob);
@@ -331,6 +336,8 @@ namespace elvishray
 		void generate_pfxhair(liqRibNodePtr &ribNode__, liqRibPfxHairData* phair, const int degree);
 		void _write_pfx(liqRibPfxData* pData, const structJob &currentJob__);
 		void generate_pfx(liqRibNodePtr &ribNode__, liqRibPfxData* phair, const int degree);
+		void _write_shavehair(liqRibShaveData* pData, const structJob &currentJob__);
+		void generate_shavehair(liqRibNodePtr &ribNode__, liqRibShaveData* pData, const int degree);
 
 		liqGlobalNodeHelper *m_gnode;
 
