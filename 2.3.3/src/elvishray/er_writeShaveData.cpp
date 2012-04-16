@@ -45,7 +45,7 @@ namespace elvishray
  		liqRibNodePtr ribNode__ = liqRibTranslator::getInstancePtr()->htable->find(
  			pData->objDagPath.fullPathName(), 
  			pData->objDagPath,
- 			pData->type()
+ 			MRT_Unknown
  			);
  		assert( ribNode__!=0 );
  		assert( ribNode__->path().fullPathName() == pData->objDagPath.fullPathName() );
@@ -71,9 +71,9 @@ namespace elvishray
 //
 		MStatus status;
 
-		int degree;
-		MFnDagNode fnDN(data->objDagPath);
-		IfMErrorWarn( liquidGetPlugValue(fnDN, "degree", degree, status) );
+
+		MFnDagNode fnDN(data->objDagPath, &status);
+		IfErrorWarn(status);
 
 		// geometry data (shape)
 		_s("\n//############################### shave hair #");
@@ -85,8 +85,8 @@ namespace elvishray
 #endif
 		_S( ei_object( objectName.c_str(), "hair" ) );
 		_s("{");
-			_S( ei_degree(degree) );
-			this->generate_shavehair(ribNode__, pData, degree);
+			_S( ei_degree(2) );
+			this->generate_shavehair(ribNode__, pData, 2);
 		_s("}//"<<objectName);
 		_S( ei_end_object() );
 	}

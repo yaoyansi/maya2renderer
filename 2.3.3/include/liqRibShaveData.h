@@ -52,34 +52,14 @@ public: // Methods
 	  const structJob &currentJob, 
 	  const bool bReference
 	  );
-  virtual unsigned      granularity() const;
-  virtual bool          writeNextGrain();
+//  virtual unsigned      granularity() const;
+//  virtual bool          writeNextGrain();
   virtual bool          compare( const liqRibData & other ) const;
   virtual ObjectType    type() const;
   MStatus				test();
 
 private: // Data
   //void          _write(const structJob &currentJob);
-  unsigned              grain;
-  bool                  hasTrims;
-
-  RtInt                 nu, nv;
-  RtInt                 uorder, vorder;
-  boost::shared_array< RtFloat > uknot;
-  boost::shared_array< RtFloat > vknot;
-  RtFloat               umin, umax,
-                        vmin, vmax;
-  boost::shared_array< RtFloat > CVs;
-
-  // Trim information
-
-  RtInt                 nloops;
-  //shared_array< RtInt > ncurves, order, n;
-  //shared_array< RtFloat > knot, minKnot, maxKnot, u, v, w;
-
-  std::vector< RtInt >       ncurves, order, numCVs;
-  std::vector< RtFloat >     knot, minKnot, maxKnot, u, v, w;
-
 
 private:
 	liqRibShaveData(const liqRibShaveData&);

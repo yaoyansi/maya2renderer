@@ -59,6 +59,7 @@
 #include <liqRibTranslator.h>
 #include "renderman/rm_helper.h"
 #include "renderermgr.h"
+#include "./common/mayacheck.h"
 
 using namespace boost;
 
@@ -70,336 +71,19 @@ void displayHairInfo(shaveAPI::HairInfo* hairInfo, bool instances);
 
 /** Ccreate a RIB compatible representation of a Maya nurbs surface.
  */
-liqRibShaveData::liqRibShaveData( MObject surface )
-:   hasTrims( false ),
-    grain( 0 ),
-    uknot(),
-    vknot(),
-    CVs(),
-    ncurves(),
-    order(),
-    numCVs(),
-    knot(),
-    minKnot(),
-    maxKnot(),
-    u(),
-    v(),
-    w()
-
+liqRibShaveData::liqRibShaveData( MObject obj )
 {
-	CM_TRACE_FUNC("liqRibShaveData::liqRibShaveData("<<MFnDagNode(surface).fullPathName()<<")");
+	CM_TRACE_FUNC("liqRibShaveData::liqRibShaveData("<<MFnDagNode(obj).fullPathName()<<")");
 
-  LIQDEBUGPRINTF( "-> creating shave surface\n" );
-//  if ( debugMode ) {
-    MFnDependencyNode myDep( surface );
-    MString name = myDep.name();
-    liquidMessage2( messageInfo, "-> surface path %s\n", name.asChar() );
-//  }
+	LIQDEBUGPRINTF( "-> creating shave hair\n" );
+	MStatus status;
+	MFnDagNode fnDagPath(obj, &status);
+	IfErrorWarn(status);
+	IfErrorWarn(fnDagPath.getPath(objDagPath));
+
+	liquidMessage2( messageInfo, "-> shavehair path %s\n", this->getFullPathName() );
 
 	test();
-
-  // Hmmmmm Was global but never changed ...
-  bool normalizeNurbsUV( true );
-
-  MStatus status( MS::kSuccess );
-  MFnNurbsSurface nurbs( surface, &status );
-  if ( MS::kSuccess == status ) 
-  {
-    // Extract the order and number of CVs in the surface
-
-    MDoubleArray uKnots, vKnots;
-
-    if ( liqglo.liquidRenderer.requires_SWAPPED_UVS ) 
-    {
-      LIQDEBUGPRINTF( "-> swapping uvs\n" );
-
-      uorder = nurbs.degreeV() + 1; // uv order is switched
-      vorder = nurbs.degreeU() + 1; // uv order is switched
-      nu = nurbs.numCVsInV();       // uv order is switched
-      nv = nurbs.numCVsInU();       // uv order is switched
-
-      // Read the knot information
-
-      nurbs.getKnotsInU( vKnots ); // uv order is switched
-      nurbs.getKnotsInV( uKnots ); // uv order is switched
-      
-      double uMin_d, uMax_d, vMin_d, vMax_d;
-      nurbs.getKnotDomain(uMin_d, uMax_d, vMin_d, vMax_d);
-      umin = ( RtFloat )vMin_d; // uv order is switched
-      umax = ( RtFloat )vMax_d; // uv order is switched
-      vmin = ( RtFloat )uMin_d; // uv order is switched
-      vmax = ( RtFloat )uMax_d; // uv order is switched
-    } 
-    else 
-    {
-      LIQDEBUGPRINTF( "-> not swapping uvs\n" );
-
-      uorder = nurbs.degreeU() + 1;
-      vorder = nurbs.degreeV() + 1;
-      nu = nurbs.numCVsInU();
-      nv = nurbs.numCVsInV();
-
-      // Read the knot information
-
-      nurbs.getKnotsInU( uKnots );
-      nurbs.getKnotsInV( vKnots );
-
-      double uMin_d, uMax_d, vMin_d, vMax_d;
-      nurbs.getKnotDomain( uMin_d, uMax_d, vMin_d, vMax_d );
-      umin = ( RtFloat )uMin_d;
-      umax = ( RtFloat )uMax_d;
-      vmin = ( RtFloat )vMin_d;
-      vmax = ( RtFloat )vMax_d;
-      
-          	
-    	// Reverse v knots values for matching Maya texture coordinates
-      for ( unsigned k = 0; k < vKnots.length(); k++ )
-    	{	
-    		 vKnots[ k ] = vmax - vKnots[ k ] + vmin;
-    		 //LIQDEBUGPRINTF( "vKnots[%d]  = %f\n", k, vKnots[ k ] );
-    	}
-    	
-    }
-
-    float uKnotMult = 1;
-    float vKnotMult = 1;
-
-    // this was added to simulate MTOR's parameterization handling
-    // it, by default, normalizes the U and V coordinates.
-
-    bool noNormalizeNurbs = false;
-    
-    liquidGetPlugValue( nurbs, "noNormalizeNurbs", noNormalizeNurbs, status );
-    
-    normalizeNurbsUV = !noNormalizeNurbs;
-    
-    if ( normalizeNurbsUV ) 
-    {
-      uKnotMult = 1 / ( umax - umin );
-      vKnotMult = 1 / ( vmax - vmin );
-    }
-
-    // Allocate CV and knot storage
-    CVs   = shared_array< RtFloat >( new RtFloat[ nu * nv * 4 ] );
-    uknot = shared_array< RtFloat >( new RtFloat[ uKnots.length() + 2 ] );
-    vknot = shared_array< RtFloat >( new RtFloat[ vKnots.length() + 2 ] );
-
-    unsigned k;
-    if ( normalizeNurbsUV ) 
-    {
-      for ( k = 0; k < uKnots.length(); k++ ) 
-        uknot[ k + 1 ] = ( ( RtFloat )uKnots[ k ] - umin ) * uKnotMult;
-    } 
-    else 
-      for ( k = 0; k < uKnots.length(); k++ ) 
-        uknot[ k + 1 ] = ( RtFloat )uKnots[ k ];
-
-    // Maya doesn't store the first and last knots, so we double them up
-    // manually
-    //
-    uknot[ 0 ]   = uknot[ 1 ];
-    uknot[ k+1 ] = uknot[ k ];
-
-    
-    if ( liqglo.liquidRenderer.requires_SWAPPED_UVS )
-    {
-			if ( normalizeNurbsUV ) 
-			{
-				for ( k = 0; k < vKnots.length(); k++ ) 
-					vknot[ k + 1 ] = ( ( RtFloat )vKnots[ k ] - vmin ) * vKnotMult;
-			} 
-			else 
-				for ( k = 0; k < vKnots.length(); k++ ) 
-					vknot[ k + 1 ] = ( RtFloat )vKnots[ k ];
-		}
-		else
-		{
-			if ( normalizeNurbsUV ) 
-			{
-				for ( k = 0; k < vKnots.length(); k++ ) 
-					vknot[ k + 1 ] = ( ( RtFloat )vKnots[ vKnots.length() - 1 - k ] - vmin ) * vKnotMult;
-			} 
-			else 
-				for ( k = 0; k < vKnots.length(); k++ ) 
-					vknot[ k + 1 ] = ( RtFloat )vKnots[ vKnots.length() - 1 - k ];	
-		}
-    // Maya doesn't store the first and last knots, so we double them up
-    // manually
-    //
-    vknot[ 0 ] = vknot[ 1 ];
-    vknot[ k + 1 ] = vknot[ k ];
-    
-    
-
-    // Read CV information
-    //
-    MItSurfaceCV cvs( surface, liqglo.liquidRenderer.requires_SWAPPED_UVS == false );
-    
-    
-    if ( liqglo.liquidRenderer.requires_SWAPPED_UVS )
-    {
-			RtFloat* cvPtr( CVs.get() );
-    	while( !cvs.isDone() ) 
-			{
-				while( !cvs.isRowDone() ) 
-				{
-					MPoint pt( cvs.position( MSpace::kObject ) );
-					*cvPtr++ = ( RtFloat )pt.x;
-					*cvPtr++ = ( RtFloat )pt.y; 
-					*cvPtr++ = ( RtFloat )pt.z;
-					*cvPtr++ = ( RtFloat )pt.w;
-					cvs.next();
-				}
-				cvs.nextRow();
-			}
-		}
-		else
-    {
-    	// Reverse v knots order for matching Maya texture coordinates	
-    	
-    	    	
-    	// store rows in reversed order
-    	RtFloat* cvPtr( CVs.get() );
-    	cvPtr += nu * ( nv - 1 ) * 4; // set pointer to last row in array
-    	
-    	while( !cvs.isDone() ) 
-			{
-				while( !cvs.isRowDone() ) 
-				{
-					MPoint pt( cvs.position( MSpace::kObject ) );
-					*cvPtr++ = ( RtFloat )pt.x;
-					*cvPtr++ = ( RtFloat )pt.y; 
-					*cvPtr++ = ( RtFloat )pt.z;
-					*cvPtr++ = ( RtFloat )pt.w;
-					cvs.next();
-				}
-				cvs.nextRow();
-				cvPtr -= (nu * 4 * 2); // skip two rows
-			}
-    	
-    }
-
-    // Store trim information
-    //
-    if ( nurbs.isTrimmedSurface() ) 
-    {
-      hasTrims = true;
-      LIQDEBUGPRINTF( "-> storing trim information\n" );
-
-      unsigned numRegions, numBoundaries, numEdges, numCurves;
-
-      // Get the number of loops
-      //
-      numRegions = nurbs.numRegions();
-      nloops = 0;
-      for ( unsigned r( 0 ); r < numRegions; r++ ) 
-      {
-        numBoundaries = nurbs.numBoundaries( r );
-        nloops += numBoundaries;
-      }
-
-      // Get the number of trim curves in each loop and gather curve
-      // information
-      //
-      for ( unsigned r( 0 ); r < (unsigned) nloops; r++ ) 
-      {
-        numBoundaries = nurbs.numBoundaries( r );
-        for ( unsigned b( 0 ); b < numBoundaries; b++ ) 
-        {
-          numCurves = 0;
-          numEdges = nurbs.numEdges( r, b );
-          for ( unsigned e( 0 ); e < numEdges; e++ ) 
-          {
-            MObjectArray curves( nurbs.edge( r, b, e, true ) );
-            numCurves += curves.length();
-
-            // Gather extra stats for each curve
-            //
-            for ( unsigned c( 0 ); c < curves.length(); c++ ) 
-            {
-              // Read the # of CVs in and the order of each curve
-              //
-              MFnNurbsCurve curveFn(curves[ c ]);
-              order.push_back( curveFn.degree() + 1 );
-              numCVs.push_back( curveFn.numCVs() );
-
-              // Read the CVs for each curve
-              //
-              MPoint pnt;
-              for ( unsigned i( 0 ); i < curveFn.numCVs(); ++i ) 
-              {
-                curveFn.getCV( i, pnt );
-                //cvArray.push_back( pnt );
-                if ( liqglo.liquidRenderer.requires_SWAPPED_UVS ) 
-                {
-                	if ( normalizeNurbsUV )
-                 {	
-										u.push_back( ( pnt.y - umin ) * uKnotMult );
-										v.push_back( ( pnt.x - vmin ) * vKnotMult );
-									} 
-									else
-									{
-										u.push_back( pnt.y );
-										v.push_back( pnt.x );	
-									}	
-                } 
-                else 
-                {
-									if ( normalizeNurbsUV )
-                 {		
-                 	 u.push_back( ( pnt.x - umin ) * uKnotMult );
-                 	 v.push_back( ( vmax - pnt.y - vmin + vmin) * vKnotMult );
-                 }
-                 else
-                 {
-                 		u.push_back( pnt.x );
-                 		v.push_back( vmax - pnt.y + vmin ); 
-                 }
-                }
-                w.push_back( pnt.w );
-              }
-
-              // Read the knot array for each curve
-              //
-              MDoubleArray knotsTmpArray;
-              curveFn.getKnots( knotsTmpArray );
-              knot.push_back( knotsTmpArray[ 0 ] );
-              for ( unsigned i( 0 ); i < knotsTmpArray.length(); ++i ) 
-                knot.push_back( (float)knotsTmpArray[ i ] );
-              
-              knot.push_back( knotsTmpArray[ knotsTmpArray.length() - 1 ] );
-
-              // Read the knot domain for each curve
-              //
-              double start, end;
-              curveFn.getKnotDomain( start, end );
-              minKnot.push_back( start );
-              maxKnot.push_back( end );
-            }
-          }
-          ncurves.push_back( numCurves );
-        }
-      }
-    }
-    
-    if ( normalizeNurbsUV )
-    {
-			 umin = 0; 
-			 umax = 1;
-			 vmin = 0; 
-			 vmax = 1;
-    }
-
-    // now place our tokens and parameters into our tokenlist
-
-    liqTokenPointer tokenPointerPair;
-    tokenPointerPair.set( "Pw", rHpoint, nu * nv );
-    tokenPointerPair.setDetailType( rVertex );
-    tokenPointerPair.setTokenFloats( CVs );
-    tokenPointerArray.push_back( tokenPointerPair );
-
-    addAdditionalSurfaceParameters( surface );
-  }
 }
 
 
@@ -456,63 +140,30 @@ void liqRibShaveData::write(const MString &ribFileName, const structJob &current
 //   LIQDEBUGPRINTF( "-> done writing shave surface\n" );
 // }
 
-unsigned liqRibShaveData::granularity() const 
-{
-	CM_TRACE_FUNC("liqRibShaveData::granularity()");
+// unsigned liqRibShaveData::granularity() const 
+// {
+// 	CM_TRACE_FUNC("liqRibShaveData::granularity()");
+// 
+// //   if ( hasTrims && !tokenPointerArray.empty() ) 
+// //   {
+// //     return 2;
+// //   } else if ( !tokenPointerArray.empty() ) {
+// //     return 1;
+// //   } else {
+// //     return 0;
+// //   }
+// 	assert(0&&"liqRibShaveData::granularity() is not implemented.");
+// 	return 0;
+// }
 
-  if ( hasTrims && !tokenPointerArray.empty() ) 
-  {
-    return 2;
-  } else if ( !tokenPointerArray.empty() ) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-bool liqRibShaveData::writeNextGrain()
-{
-	CM_TRACE_FUNC("liqRibShaveData::writeNextGrain()");
-
-  if ( hasTrims && ( 0 == grain ) ) 
-  {
-    RiTrimCurve( nloops,
-                 const_cast< RtInt* >( &ncurves[ 0 ] ),
-                 const_cast< RtInt* >( &order[ 0 ] ),
-                 const_cast< RtFloat* >( &knot[ 0 ] ),
-                 const_cast< RtFloat* >( &minKnot[ 0 ] ),
-                 const_cast< RtFloat* >( &maxKnot[ 0 ] ),
-                 const_cast< RtInt* >( &numCVs[ 0 ] ),
-                 const_cast< RtFloat* >( &u[ 0 ] ),
-                 const_cast< RtFloat* >( &v[ 0 ] ),
-                 const_cast< RtFloat* >( &w[ 0 ] ) );
-    ++grain;
-    return true;
-  } else if ( !tokenPointerArray.empty() ) {
-    unsigned numTokens( tokenPointerArray.size() );
-    scoped_array< RtToken > tokenArray( new RtToken[ numTokens ] );
-    scoped_array< RtPointer > pointerArray( new RtPointer[ numTokens ] );
-    assignTokenArraysV( tokenPointerArray, tokenArray.get(), pointerArray.get() );
-
-    RiNuPatchV( nu,
-                uorder,
-                uknot.get(),
-                umin,
-                umax,
-                nv,
-                vorder,
-                vknot.get(),
-                vmin,
-                vmax,
-                numTokens,
-                tokenArray.get(),
-                pointerArray.get() );
-
-    grain = 0;
-  }
-
-  return false;
-}
+// bool liqRibShaveData::writeNextGrain()
+// {
+// 	CM_TRACE_FUNC("liqRibShaveData::writeNextGrain()");
+// 
+// 	assert(0&&"liqRibShaveData::writeNextGrain() is not implemented.");
+// 
+//   return false;
+// }
 
 /** Compare this surface to the other for the purpose of determining
  *  if it is animated.
@@ -521,46 +172,16 @@ bool liqRibShaveData::compare( const liqRibData & otherObj ) const
 {
 	CM_TRACE_FUNC("liqRibShaveData::compare("<<otherObj.getFullPathName()<<")");
 
-  LIQDEBUGPRINTF( "-> comparing shave surface\n" );
-  if ( otherObj.type() != MRT_Shave ) 
+  LIQDEBUGPRINTF( "-> comparing shave hair\n" );
+  if ( otherObj.type() != this->type() ) 
 	  return false;
 
   const liqRibShaveData & other = (liqRibShaveData&)otherObj;
+  if(other.objDagPath.fullPathName() != this->objDagPath.fullPathName())
+	  return false;
 
-  if ( ( nu != other.nu ) ||
-       ( nv != other.nv ) ||
-       ( uorder != other.uorder ) ||
-       ( vorder != other.vorder ) ||
-       !equiv( umin, other.umin ) ||
-       !equiv( umax, other.umax ) ||
-       !equiv( vmin, other.vmin ) ||
-       !equiv( vmax, other.vmax ) )
-  {
-    return false;
-  }
+  assert(0&&"liqRibShaveData::compare() is not implemented.");
 
-  // Check Knots
-  unsigned i;
-  unsigned last( nu + uorder );
-  for ( i = 0; i < last; ++i ) 
-  {
-    if ( !equiv( uknot[ i ], other.uknot[ i ] ) )
-      return false;
-  }
-  last = nv + vorder;
-  for ( i = 0; i < last; ++i ) 
-  {
-    if ( !equiv( vknot[ i ], other.vknot[ i ] ) )
-      return false;
-  }
-
-  // Check CVs
-  last = nu * nv * 4;
-  for ( i = 0; i < last; ++i ) 
-  {
-    if ( !equiv( CVs[ i ], other.CVs[ i ] ) )
-      return false;
-  }
 
   // TODO: Check trims as well
   return true;
