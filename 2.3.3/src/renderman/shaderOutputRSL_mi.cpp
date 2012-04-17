@@ -29,7 +29,7 @@ void Visitor::visit_mib_amb_occlusion(const char* node)
 		"extern normal N;\n"
 		"extern vector I;\n"
 		"if(i_max_distance < 0.0001){//If it is zero, the entire scene is sampled\n"
-		"      i_max_distance = 1.0e38;\n"
+		"      i_max_distance = 1.0e37;\n"
 		"}\n"
 		"\n"
 		"normal Nn = faceforward(normalize(N), I);\n"
