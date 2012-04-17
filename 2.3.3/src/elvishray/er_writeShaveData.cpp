@@ -101,7 +101,11 @@ namespace elvishray
 		MStatus status;
 
 		shaveAPI::HairInfo hairInfo;
-		IfMErrorMsgWarn(shaveAPI::exportAllHair(&hairInfo, true),"shaveAPI::exportAllHair(&hairInfo, true)");
+		status = shaveAPI::exportAllHair(&hairInfo);
+		if(MFAIL(status)){
+			liquidMessage2(messageError,"shaveAPI::exportAllHair(&hairInfo)=%s", status.errorString().asChar());
+			return;
+		}
 
 		_d( eiDatabase *db = ei_context_database(CONTEXT) );
 

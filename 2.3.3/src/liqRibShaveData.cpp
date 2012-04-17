@@ -83,7 +83,7 @@ liqRibShaveData::liqRibShaveData( MObject obj )
 
 	liquidMessage2( messageInfo, "-> shavehair path %s\n", this->getFullPathName() );
 
-	test();
+	//test();
 }
 
 
