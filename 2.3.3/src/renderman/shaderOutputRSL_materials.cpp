@@ -61,7 +61,7 @@ void Visitor::visitBlinn(const char* node)
 	o.addToRSL( "                  ( eccSq - 1 ) + 1 ), 2 );");
 	o.addToRSL( " float G = min( min( 1, 2 * NH * NV / VH ), ");
 	o.addToRSL( "                2 * NH * NL / VH );");
-	o.addToRSL( " Cspecular += ( vector Cl * ( D * G / NV ) );");
+	o.addToRSL( " Cspecular += vector Cl * ( D * G / NV ) * mix( 1, specRollOff, pow(1-VH, 3) );");
 	o.addToRSL( "}");
 
 	MStringArray con;
@@ -73,7 +73,6 @@ void Visitor::visitBlinn(const char* node)
 		o.addToRSL( "Cspecular += ( reflectivity * refColor );");
 	}
 	o.addToRSL( "Cspecular *= specColor;");
-	o.addToRSL( "Cspecular *= mix( 1, specRollOff, );");
 	o.addToRSL( "outColor = Cdiffuse + Cspecular;");
 	o.addToRSL( "Ci = Cs * Oi * color outColor;");
 

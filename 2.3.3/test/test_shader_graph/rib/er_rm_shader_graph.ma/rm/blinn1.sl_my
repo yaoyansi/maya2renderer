@@ -35,10 +35,9 @@ void blinn1 (
                    ( eccSq - 1 ) + 1 ), 2 );
   float G = min( min( 1, 2 * NH * NV / VH ), 
                  2 * NH * NL / VH );
-  Cspecular += ( vector Cl * ( D * G / NV ) );
+  Cspecular += vector Cl * ( D * G / NV ) * mix( 1, specRollOff, pow(1-VH, 3) );
  }
  Cspecular *= specColor;
- Cspecular *= mix( 1, specRollOff, );
  outColor = Cdiffuse + Cspecular;
  Ci = Cs * Oi * color outColor;
 }
