@@ -146,7 +146,8 @@ RenderMan (R) is a registered trademark of Pixar
 
 
 - rm ao测试（test/test_ao2/occlude2.ma），注意打开RenderSettings->Liquid->Rays->RayTracing->Enable
-
+  rm里如果要提高ao的质量，除了调ao shader的参数外，还要调maxerror的值，
+  比如将RenderSettings->Liquid->Rays->GlobalIllumination设置为0
 
 - er渲染不出mesh，脚本里有mesh数据，但mesh的material名称为空，例如：
     ei_instance("pCubeShape3");
