@@ -1,0 +1,80 @@
+//shader name: mib_amb_occlusion1
+void mib_amb_occlusion1 (
+ output vector o_outValue;
+)
+{
+ float i_samples = float 64;
+ color i_bright = color (0.83472,0.83472,0.83472);
+ color i_dark = color (0,0,0);
+ float i_spread = float 0.8;
+ float i_max_distance = float 0.5;
+ float i_reflective = float 0;
+ extern point P;
+extern normal N;
+extern vector I;
+if(i_max_distance < 0.0001){//If it is zero, the entire scene is sampled
+      i_max_distance = 1.0e37;
+}
+
+normal Nn = faceforward(normalize(N), I);
+
+if(i_reflective != 0)				
+	Nn = normal reflect( I, Nn );	
+
+float occ= 1 - occlusion(P, Nn, i_samples,				
+                        "adaptive", 1,					
+                        "maxdist", i_max_distance,		
+                        "coneangle", i_spread * PI / 2);	
+
+o_outValue = vector mix( i_dark, i_bright, occ );				
+
+}
+
+//shader name: phong2
+void phong2 (
+ vector ambColor;
+)
+{
+ vector inColor = vector (1,1,1);
+ vector transparency = vector (0,0,0);
+//phong2.ambientColor <-- mib_amb_occlusion1.outValue
+ vector incandescence = vector (0,0,0);
+ float diffusion = float 1;
+ float cosinePower = float 20;
+ vector specColor = vector (0.5,0.5,0.5);
+ vector outColor = vector (0,0,0);
+ vector outTransparency = vector (0,0,0);
+ extern normal N;
+ normal Nn = normalize( N );
+ outTransparency = transparency;
+ Oi = Os * color ( 1 - outTransparency );
+ vector Cdiffuse;
+ Cdiffuse = incandescence +
+            ( inColor * ( diffusion * 
+                          vector diffuse( Nn ) +
+                          ambColor ) );
+ vector Cspecular;
+ Cspecular = vector phong( Nn,
+                           normalize( -I ),
+                           cosinePower );
+ Cspecular *= specColor;
+ outColor = Cdiffuse + Cspecular;
+ Ci = Cs * Oi * color outColor;
+}
+
+//surface shader name: phong2
+surface phong2()
+{
+ vector mib_amb_occlusion1_outValue;
+
+ //mib_amb_occlusion1
+ mib_amb_occlusion1(mib_amb_occlusion1_outValue);
+//input: 
+//output:mib_amb_occlusion1_outValue,
+
+ //phong2
+ phong2(mib_amb_occlusion1_outValue);
+//input: mib_amb_occlusion1_outValue,
+//output:
+
+}

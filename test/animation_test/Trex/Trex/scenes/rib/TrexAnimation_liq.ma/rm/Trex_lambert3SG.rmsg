@@ -1,0 +1,6 @@
+##RenderMan RIB-Structure 1.0
+version 3.03
+#shading group: Trex:lambert3SG
+Surface "E:/MyDocuments/maya/projects/default/generatedShader/phong3" 
+#no volume shader.
+#no displacement shader.
