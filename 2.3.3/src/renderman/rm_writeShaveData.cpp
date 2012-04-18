@@ -3,6 +3,7 @@
 #include <liqGlobalVariable.h>
 #include "rm_helper.h"
 #include "../common/prerequest_maya.h"
+#include "../common/mayacheck.h"
 
 namespace renderman
 {
@@ -27,9 +28,10 @@ namespace renderman
 			RiReadArchive( const_cast< RtToken >( pData->getRibFileFullPath().asChar() ), NULL, RI_NULL );
 
 			//2)call shave command to write the rib file(not support motion blur)
-			MGlobal::executeCommand(
-				"shaveWriteRib -hairNode \""+pData->objDagPath.partialPathName()+"\" \""+pData->getRibFileFullPath()+"\";"
-			);
+			MString cmd("shaveWriteRib -hairNode \""+pData->objDagPath.partialPathName()+"\" \""+pData->getRibFileFullPath()+"\";");
+			if( MFAIL(MGlobal::executeCommand(cmd, true) )){
+				liquidMessage2(messageError,"write shave rib file fail:%s", cmd.asChar());
+			}
 	 	}else{
 	 		//write the reference
 	 		assert(pData->getRibFileFullPath() == ribFileName);

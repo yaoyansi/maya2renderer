@@ -63,11 +63,13 @@ def test_all_scene():
     testFile=LIQUID_ROOT+"/2.3.3/test/test_rm_light/rm_directlight.ma"
     MyTestOne.test_one_scene(testFile, "renderman")
 
-    #testFile=LIQUID_ROOT+"/2.3.3/test/hair/test_shaveHair(shave_v61).ma"
-    #MyTestOne.test_one_scene(testFile, "renderman")
+    testFile=LIQUID_ROOT+"/2.3.3/test/hair/test_shaveHair(shave_v61)_er.ma"
+    MyTestOne.test_one_scene(testFile, "elvishray")
+    testFile=LIQUID_ROOT+"/2.3.3/test/hair/test_shaveHair(shave_v61)_rm.ma"
+    MyTestOne.test_one_scene(testFile, "renderman")
 
-    #testFile=LIQUID_ROOT+"/2.3.3/test/test_pfxhair/test_pfxHair.ma"
-    #MyTestOne.test_one_scene(testFile, "renderman")
+    testFile=LIQUID_ROOT+"/2.3.3/test/test_pfxhair/test_pfxHair_onehair.ma"
+    MyTestOne.test_one_scene(testFile, "")
 
     #animation
     testFile=LIQUID_ROOT+"/2.3.3/test/test_animation/checker_anim.ma"

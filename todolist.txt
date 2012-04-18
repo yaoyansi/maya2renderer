@@ -121,7 +121,10 @@ rm
 - bump2d/bump3d for rm
 - 重构 :shaderOutputRSL namespace由 RSL改为renderman
 - Visitor::outputShaderMethod()只输出了surface shader，还需要输出volume/light/displacement shader
-
+- rmsg文件内容写入main rib里
+- 回归测试（）更新test data：
+  liq| rm| refactoring|: wrap getVariableName() on variable和
+  liq| refactoring|: write mesh/locator/pfxhair data into the main rib file.(liqglo.m_writeDataIntoMainRibFile)
 
 er
 ------------

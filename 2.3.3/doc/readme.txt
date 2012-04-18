@@ -242,6 +242,8 @@ RenderMan (R) is a registered trademark of Pixar
 	  - 连接cameraShape1.nearClipPlane到liquidSurface2.fplane
 	  - 连接cameraShape1.fStop到liquidSurface2.fstop
 
+- 添加shadow/Environment shader时，先选中shape节点，然后再点击Liquid->ObjectAttribute->CreateCustomShader
+
   ---------------------------------------------------------------------
                               NOTES
   ---------------------------------------------------------------------
