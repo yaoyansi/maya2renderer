@@ -36,6 +36,8 @@ rm
 - (done)rm 的批渲染
 - (done)rmsg文件路径有':',则无法输出
 - (done)blinn shader无法编译
+- (done)mib_ambient_occ, 测试Trex场景
+
 er
 ------------
 - (done)更新er 1185，编译release版
@@ -119,7 +121,7 @@ rm
 - bump2d/bump3d for rm
 - 重构 :shaderOutputRSL namespace由 RSL改为renderman
 - Visitor::outputShaderMethod()只输出了surface shader，还需要输出volume/light/displacement shader
-- mib_ambient_occ, 测试Trex场景
+
 
 er
 ------------

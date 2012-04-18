@@ -17,22 +17,32 @@ namespace renderman
 
 		assert(liqglo.m_ribFileOpen&&"rm_writeMeshData.cpp");
 
-	 	if( !bReference ){//write data at first time
-			if( !currentJob.isShadow ){
-				assert(pData->getRibFileFullPath().length()==0&&"rm_writeMeshData.cpp");
+		if(liqglo.m_writeDataIntoMainRibFile)
+		{
+			if( bReference ){
+				_write(pData, currentJob);
+			}else{
+				//do nothing
 			}
-			pData->setRibFileFullPath(ribFileName);
+		}else{
+	 		if( !bReference ){//write data at first time
+				if( !currentJob.isShadow ){
+					assert(pData->getRibFileFullPath().length()==0&&"rm_writeMeshData.cpp");
+				}
+				pData->setRibFileFullPath(ribFileName);
 
-	 		renderman::Helper o;
-	 		o.RiBeginRef(pData->getRibFileFullPath().asChar());
-	 		_write(pData, currentJob);
-	 		o.RiEndRef();
-	 
-	 	}else{
-	 		//write the reference
-	 		assert(pData->getRibFileFullPath() == ribFileName);
-	 		RiReadArchive( const_cast< RtToken >( pData->getRibFileFullPath().asChar() ), NULL, RI_NULL );
-	 	}
+	 			renderman::Helper o;
+	 			o.RiBeginRef(pData->getRibFileFullPath().asChar());
+	 			_write(pData, currentJob);
+	 			o.RiEndRef();
+		 
+	 		}else{
+	 			//write the reference
+	 			assert(pData->getRibFileFullPath() == ribFileName);
+	 			RiReadArchive( const_cast< RtToken >( pData->getRibFileFullPath().asChar() ), NULL, RI_NULL );
+	 		}
+		}
+
 	}
 	//
 	static void _write(liqRibMeshData* pData, const structJob &currentJob)

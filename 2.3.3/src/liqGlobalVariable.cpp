@@ -355,6 +355,7 @@ void initOtherParameters()
 	liqglo.m_logFunctionCall = false;
 
 	liqglo.m_ribFileOpen     = false;
+	liqglo.m_writeDataIntoMainRibFile = true;
 
 }
 void getOtherParameters(const MFnDependencyNode& rGlobalNode)
