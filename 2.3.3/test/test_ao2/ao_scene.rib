@@ -1,0 +1,43 @@
+Option "trace" "int maxdepth" [4]
+Display "occlude_test" "it" "rgb"
+Format 427 240 1
+Projection "perspective" "fov" 20
+ShadingRate 1
+ 
+Translate  0 -0.3 5
+Rotate -20 1 0 0
+Rotate  30 0 1 0
+Scale 1 1 -1
+ 
+WorldBegin
+    Attribute "visibility" "trace" [1]
+    Attribute "visibility" "transmission" "opaque"
+    Attribute "cull" "hidden" 0
+    Attribute "cull" "backfacing" 0
+    # uncomment the next line when using 3delight
+    # Declare "samples" "float" 
+    TransformBegin
+        Attribute "identifier" "name" ["ball"]
+        Surface "occlude2" "samples" 32
+        Translate 0 0.25 0.35
+        Sphere 0.25 -0.25 0.25 360 
+    TransformEnd
+    TransformBegin
+        Attribute "identifier" "name" ["box1"]
+        Translate 0 0.5 0
+        Surface "occlude2" "samples" 32
+        PointsPolygons [4 4 4 4]
+            [0 1 2 3   0 4 5 1   2 1 5 6   0 3 7 4]
+         "P" [-0.5 0.5 -0.5   0.5 0.5 -0.5   
+               0.5 0.5 0.5   -0.5 0.5 0.5
+              -0.5 -0.5 -0.5   0.5 -0.5 -0.5   
+               0.5 -0.5 0.5   -0.5 -0.5 0.5]
+    TransformEnd
+    TransformBegin
+        Attribute "identifier" "name" ["floor"]
+        Scale 40 1 40
+        Surface "occlude2" "samples" 32
+        Polygon "P" [-0.5 0 -0.5   0.5 0 -0.5  
+                      0.5 0 0.5  -0.5 0 0.5]
+    TransformEnd
+WorldEnd
