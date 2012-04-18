@@ -80,4 +80,9 @@ namespace renderman
 		CM_TRACE_FUNC("getShaderName("<<shaderName<<")");
 		return sanitizeNodeName(shaderName);
 	}
+	MString getVariableName(const MString &varName)
+	{
+		CM_TRACE_FUNC("getVariableName("<<varName<<")");
+		return sanitizeNodeName(varName);
+	}
 }

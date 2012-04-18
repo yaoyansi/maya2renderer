@@ -229,15 +229,30 @@ void Visitor::outputShaderMethod()
 }
 void  Visitor::addShaderMethodBody(
 						 const MString &currentNode,
-						 const MString &vars,
+						 const MString &vars_,
 						 const MStringArray& inputVars,
 						 const MStringArray& outputVars)
 {
-	CM_TRACE_FUNC("Visitor::addShaderMethodBody("<<currentNode<<","<<vars<<","<<inputVars<<","<<outputVars<<")");
+	CM_TRACE_FUNC("Visitor::addShaderMethodBody("<<currentNode<<","<<vars_<<","<<inputVars<<","<<outputVars<<")");
+
+	MString varString;
+	{
+		MStringArray vars;
+		for(std::size_t i=0; i<inputVars.length(); ++i){
+			vars.append( renderman::getVariableName(inputVars[i]) );
+		}
+		for(std::size_t i=0; i<outputVars.length(); ++i){
+			vars.append( renderman::getVariableName(outputVars[i]) );
+		}
+
+		for(std::size_t index=0; index<vars.length(); ++index){
+			varString += (index == vars.length() - 1)?(vars[index]):(vars[index]+", ");
+		}
+	}
 
 	// Add the current node method to the shader body
 	shaderData[ SHADER_METHOD_BODY_I ] += " //" + currentNode +"\n";
-	shaderData[ SHADER_METHOD_BODY_I ] += " " + renderman::getShaderName(currentNode) +"("+vars+");\n";
+	shaderData[ SHADER_METHOD_BODY_I ] += " " + renderman::getShaderName(currentNode) +"("+varString+");\n";
 	
 	// test the input and output of currentNode
 	{	
@@ -255,11 +270,11 @@ void Visitor::addShaderMethodVariavles(const MString &typeSize,
 	CM_TRACE_FUNC("Visitor::addShaderMethodVariavles(&shaderMethodVariavles,"<<typeSize<<","<<varName<<")");
 	if(typeSize=="")
 	{
-		shaderData[SHADER_METHOD_VARIAVLES_I] += " float "+varName+";\n";
+		shaderData[SHADER_METHOD_VARIAVLES_I] += " float "+renderman::getVariableName(varName)+";\n";
 	}else if(typeSize=="3"){
-		shaderData[SHADER_METHOD_VARIAVLES_I] += " vector "+varName+";\n";
+		shaderData[SHADER_METHOD_VARIAVLES_I] += " vector "+renderman::getVariableName(varName)+";\n";
 	}else{
-		shaderData[SHADER_METHOD_VARIAVLES_I] += " float "+varName+"["+typeSize+"];\n";
+		shaderData[SHADER_METHOD_VARIAVLES_I] += " float "+renderman::getVariableName(varName)+"["+typeSize+"];\n";
 	}
 }
 void Visitor::outputEnd()
