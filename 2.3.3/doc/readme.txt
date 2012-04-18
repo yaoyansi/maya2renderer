@@ -145,6 +145,9 @@ RenderMan (R) is a registered trademark of Pixar
   - 测试用例 $(LiquidRoot)\2.3.3\test\test_rm_texture\*.*
 
 
+- rm ao测试（test/test_ao2/occlude2.ma），注意打开RenderSettings->Liquid->Rays->RayTracing->Enable
+
+
 - er渲染不出mesh，脚本里有mesh数据，但mesh的material名称为空，例如：
     ei_instance("pCubeShape3");
        ei_add_material("");
