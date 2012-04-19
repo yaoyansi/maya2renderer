@@ -21,13 +21,10 @@ namespace liquidmaya{
 		void outputUpstreamShader(const char* shaderNodeName);
 		void outputShaderMethod();
 		void addShaderMethodBody(
-//			MString& shaderMethodBody,
 			const MString &currentNode,
-			const MString &vars,
 			const MStringArray& inputVars,
 			const MStringArray& outputVars);
 		void addShaderMethodVariavles(
-//			MString& shaderMethodVariavles,
 			const MString &typeSize,
 			const MString &varName);
 		void outputEnd();
@@ -49,14 +46,11 @@ namespace liquidmaya{
 		void notify_outputUpstreamShader(const char* shaderNodeName);
 		void notify_outputShaderMethod();
 		void notify_addShaderMethodBody(
-//			MString& shaderMethodBody,
 			const MString &currentNode,
-			const MString &vars,
 			const MStringArray& inputVars,
 			const MStringArray& outputVars
 			);
 		void notify_addShaderMethodVariavles(
-//			MString& shaderMethodVariavles,
 			const MString &typeSize,
 			const MString &varName);
 		void notify_outputEnd();

@@ -265,13 +265,11 @@ void Visitor::outputShaderMethod()
 // 	file << shaderMethodBody;
 // 	file << "}\n";
 }
-void  Visitor::addShaderMethodBody(
-								   const MString &currentNode,
-								   const MString &vars,
+void  Visitor::addShaderMethodBody(const MString &currentNode,
 								   const MStringArray& inputVars,
 								   const MStringArray& outputVars)
 {
-	CM_TRACE_FUNC("Visitor::addShaderMethodBody("<<currentNode<<","<<vars<<","<<inputVars<<","<<outputVars<<")");
+	CM_TRACE_FUNC("Visitor::addShaderMethodBody("<<currentNode<<","<<inputVars<<","<<outputVars<<")");
 
 }
 void Visitor::addShaderMethodVariavles(

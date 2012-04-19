@@ -87,9 +87,7 @@ void ShaderOutputMgr::notify_outputShaderMethod()
 	}
 }
 void ShaderOutputMgr::notify_addShaderMethodBody(
-//	MString& shaderMethodBody,
 	const MString &currentNode,
-	const MString &vars,
 	const MStringArray& inputVars,
 	const MStringArray& outputVars
 	)
@@ -99,9 +97,7 @@ void ShaderOutputMgr::notify_addShaderMethodBody(
 	for( ; i != e; ++i )
 	{
 		(*i)->addShaderMethodBody(
-//			shaderMethodBody, 
 			currentNode,
-			vars,
 			inputVars,
 			outputVars);
 	}
@@ -170,27 +166,21 @@ void ShaderOutputMgr::outputShaderMethod()
 	notify_outputShaderMethod();
 }
 void ShaderOutputMgr::addShaderMethodBody(
-//						 MString& shaderMethodBody,
 						 const MString &currentNode,
-						 const MString &vars,
 						 const MStringArray& inputVars,
 						 const MStringArray& outputVars)
 {
 	notify_addShaderMethodBody(
-//		shaderMethodBody, 
 		currentNode,
-		vars,
 		inputVars,
 		outputVars
 		);
 }
 void ShaderOutputMgr::addShaderMethodVariavles(
-//							  MString& shaderMethodVariavles,
 							  const MString &typeSize,
 							  const MString &varName)
 {
 	notify_addShaderMethodVariavles(
-//		shaderMethodVariavles,
 		typeSize,
 		varName
 	);

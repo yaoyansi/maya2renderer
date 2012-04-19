@@ -439,7 +439,7 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 				outputVars);
 
 			liquidmaya::ShaderOutputMgr::getSingletonPtr()->
-				addShaderMethodBody(currentNode, vars, inputVars, outputVars);
+				addShaderMethodBody(currentNode, inputVars, outputVars);
 
 
 
