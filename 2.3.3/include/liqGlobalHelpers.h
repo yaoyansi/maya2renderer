@@ -131,7 +131,7 @@ MString getBaseShadowName(const structJob &job__);
 
 void getDagPathByName(MDagPath& dagPath, char const* name);
 void getDependNodeByName(MObject& depNode, char const* name);
-void getShaderType(MString& type,  MString const& name);
+void getNodeType(MString& type,  MString const& name);
 MString getWorkspaceDirectory();
 MString getShaderDirectory();
 bool is2DFileTexture(const MString& name);

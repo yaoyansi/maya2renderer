@@ -12,7 +12,7 @@ public:
 	ShaderOutputVisitor();
 	virtual ~ShaderOutputVisitor();
 
-	virtual void initShaderData(const MString& startingNode) = 0;
+	virtual void initShaderData(const MString& startingNode, const MString &mayaplug) = 0;
 	virtual void preOutput(const char* shaderNodeName) = 0;
 	virtual void outputBegin(const char* shaderNodeName) = 0;
 	virtual void outputUpstreamShader(const char* shaderNodeName) = 0;

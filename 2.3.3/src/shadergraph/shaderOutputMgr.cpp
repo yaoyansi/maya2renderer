@@ -41,13 +41,13 @@ void ShaderOutputMgr::deleteReceivers()
 }
 //
 //
-void ShaderOutputMgr::notify_initShaderData(const MString& startingNode)
+void ShaderOutputMgr::notify_initShaderData(const MString& startingNode, const MString &mayaplug)
 {
 	std::vector<ShaderOutputVisitor*>::iterator i = receivers.begin();
 	std::vector<ShaderOutputVisitor*>::iterator e = receivers.end();
 	for( ; i != e; ++i )
 	{
-		(*i)->initShaderData(startingNode);
+		(*i)->initShaderData(startingNode, mayaplug);
 	}
 }
 void ShaderOutputMgr::notify_preOutput(const char* shaderNodeName)
@@ -145,9 +145,9 @@ void ShaderOutputMgr::notify_outputShadingGroup(const char* shadingGroupNode)
 	}
 }
 //
-void ShaderOutputMgr::initShaderData(const MString& startingNode)
+void ShaderOutputMgr::initShaderData(const MString& startingNode, const MString &mayaplug)
 {
-	notify_initShaderData(startingNode);
+	notify_initShaderData(startingNode, mayaplug);
 }
 void ShaderOutputMgr::preOutput(const char* shaderNodeName)
 {

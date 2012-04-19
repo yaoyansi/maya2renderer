@@ -111,6 +111,9 @@ liqShader::getName(),liqRibLightData::getName(),liqRibMeshData::getName(),liqGet
 - 支持Maya2011，Maya2012
 - messagebox on *nux is not implemented.
 -shave渲染64跟hair就崩溃了（test_shaveHair(shave_v61)2.ma）
+- test shadergraph:
+   - liquidSurface <- phong.color
+   - phong.color <- liquidSurface
 
 rm
 ------------

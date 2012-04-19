@@ -186,9 +186,11 @@ Visitor::~Visitor()
 
 }
 //
-void Visitor::initShaderData(const MString& startingNode)
+void Visitor::initShaderData(const MString& startingNode, const MString &mayaplug)
 {
-	CM_TRACE_FUNC("Visitor::initShaderData("<<startingNode<<")");
+	CM_TRACE_FUNC("Visitor::initShaderData("<<startingNode<<","<<mayaplug<<")");
+
+	shaderType = getRSLShaderType(mayaplug);
 
 	shaderData.setLength(3);
 	shaderData[SHADER_METHOD_VARIAVLES_I] = "";// shader method variables
@@ -221,7 +223,7 @@ void Visitor::outputShaderMethod()
 	CM_TRACE_FUNC("Visitor::outputShaderMethod()");
 
 	RSLfile << "//surface shader name: " << shaderData[SHADER_NAME_I] << "\n";
-	RSLfile << "surface " << renderman::getShaderName(shaderData[SHADER_NAME_I]) << "()\n{\n";
+	RSLfile << shaderType<<" " << renderman::getShaderName(shaderData[SHADER_NAME_I]) << "()\n{\n";
 	RSLfile << shaderData[SHADER_METHOD_VARIAVLES_I];
 	RSLfile << "\n";
 	RSLfile << shaderData[SHADER_METHOD_BODY_I];
@@ -332,7 +334,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 		//surface shader
 		if( surfaceShaders[0].length() != 0 ){
 			MString nodetype;
-			getShaderType(nodetype, surfaceShaders[0]);
+			getNodeType(nodetype, surfaceShaders[0]);
 			if( nodetype == "liquidSurface" ){
 				liqShader& currentShader = 
 					liqShaderFactory::instance().getShader( getMObjectByName(surfaceShaders[0]) );
@@ -346,7 +348,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 		//volume shader
 		if( volumeShaders[0].length() != 0 ){
 			MString nodetype;
-			getShaderType(nodetype, volumeShaders[0]);
+			getNodeType(nodetype, volumeShaders[0]);
 			if( nodetype == "liquidVolume" ){
 				liqShader& currentShader = 
 					liqShaderFactory::instance().getShader( getMObjectByName(volumeShaders[0]) );
@@ -361,7 +363,7 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 		//displacement shader
 		if( displacementShaders[0].length() != 0 ){
 			MString nodetype;
-			getShaderType(nodetype, displacementShaders[0]);
+			getNodeType(nodetype, displacementShaders[0]);
 			if( nodetype == "liquidDisplacement" ){
 				liqShader& currentShader = 
 					liqShaderFactory::instance().getShader( getMObjectByName(displacementShaders[0]) );
@@ -376,6 +378,21 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 		RiEnd();
 	}
 	RiContext(c);//pop context
+}
+MString Visitor::getRSLShaderType(const MString &mayaplug)
+{
+	MString shaderType;
+
+	if(mayaplug=="surfaceShader"){
+		shaderType = "surface";
+	}else if(mayaplug=="displacementShader"){
+		shaderType = "displacement";
+	}else if(mayaplug=="volumeShader"){
+		shaderType = "volume";
+	}else{
+		liquidMessage2(messageError,"unkown shader type for plug %s", mayaplug.asChar());
+	}
+	return shaderType;
 }
 //
 }//namespace RSL

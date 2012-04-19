@@ -15,7 +15,7 @@ namespace liquidmaya{
 
 		~ShaderOutputMgr();
 
-		void initShaderData(const MString& startingNode);
+		void initShaderData(const MString& startingNode, const MString &mayaplug);
 		void preOutput(const char* shaderNodeName);
 		void outputBegin(const char* shaderNodeName);
 		void outputUpstreamShader(const char* shaderNodeName);
@@ -40,7 +40,7 @@ namespace liquidmaya{
 
 		static ShaderOutputMgr* m_instance;
 		
-		void notify_initShaderData(const MString& startingNode);
+		void notify_initShaderData(const MString& startingNode, const MString &mayaplug);
 		void notify_preOutput(const char* shaderNodeName);
 		void notify_outputBegin(const char* shaderNodeName);
 		void notify_outputUpstreamShader(const char* shaderNodeName);

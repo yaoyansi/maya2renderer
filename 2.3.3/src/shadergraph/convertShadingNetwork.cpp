@@ -444,9 +444,9 @@ void ConvertShadingNetwork::outputShaderMethod()
 
 }
 //
-void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNode, const MString& node)
+void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNode, const MString& node, const MString &mayaplug)
 {
-	CM_TRACE_FUNC("ConvertShadingNetwork::convertShadingNetworkToRSL("<<startingNode<<","<<node<<")");
+	CM_TRACE_FUNC("ConvertShadingNetwork::convertShadingNetworkToRSL("<<startingNode<<","<<node<<","<<mayaplug<<")");
 
 	MString cmd;
 
@@ -454,7 +454,7 @@ void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNo
 	MIntArray numConnections;
 
 	liquidmaya::ShaderOutputMgr::getSingletonPtr()->
-		initShaderData(startingNode );
+		initShaderData(startingNode, mayaplug);
 
 	getUpstreamConvertibleNodes(startingNode, nodes, numConnections);
 	//std::cout<<"numConnections[]="<<numConnections<<std::endl;
@@ -578,7 +578,7 @@ void ConvertShadingNetwork::exportShaderInShadingGroup(
 					liqShader &currentShader = liqShaderFactory::instance().getShader( shaderObj );
 					currentShader.write();
 				}else{
-					convertShadingNetworkToRSL(startingNode, node);
+					convertShadingNetworkToRSL(startingNode, node, plug);
 				}
 
 				//3.end

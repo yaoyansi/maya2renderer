@@ -94,7 +94,7 @@ public:
 	//--------------------------------------------------------------------
 	// Convert a network of shading nodes to RSL.
 	//--------------------------------------------------------------------
-	void convertShadingNetworkToRSL(const MString& startingNode, const MString& node);
+	void convertShadingNetworkToRSL(const MString& startingNode, const MString& node, const MString &mayaplug);
 
 	void outputShadingGroup(const MString& shadingGroupNode);
 

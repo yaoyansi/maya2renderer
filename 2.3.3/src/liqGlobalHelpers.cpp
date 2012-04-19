@@ -1335,7 +1335,7 @@ void getDependNodeByName(MObject& depNode, char const* name)
 	IfMErrorMsgWarn(MGlobal::getSelectionListByName( name, selList ), "getDependNodeByName(,\""+MString(name)+"\")");
 	IfMErrorWarn(selList.getDependNode( 0, depNode ));
 }
-void getShaderType(MString& type, MString const& name)
+void getNodeType(MString& type, MString const& name)
 {
 	IfMErrorWarn( MGlobal::executeCommand( ("nodeType \""+name+"\""), type) );
 }
@@ -1362,7 +1362,7 @@ MString getShaderDirectory()
 bool is2DFileTexture(const MString& name)
 {
 	MString type;
-	getShaderType(type, name);
+	getNodeType(type, name);
 
 	bool ret =	type=="file"
 			  ||type=="psdFileTex"
@@ -1372,7 +1372,7 @@ bool is2DFileTexture(const MString& name)
 bool is2DTexture(const MString& name)
 {
 	MString type;
-	getShaderType(type, name);
+	getNodeType(type, name);
 
 	bool ret =	type=="bulge"
 		||type=="checker"
@@ -1392,7 +1392,7 @@ bool is2DTexture(const MString& name)
 bool is3DTexture(const MString& name)
 {
 	MString type;
-	getShaderType(type, name);
+	getNodeType(type, name);
 
 	bool ret =	type=="brownian"
 		||type=="cloud"

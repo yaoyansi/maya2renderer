@@ -59,7 +59,7 @@ public:
 	Visitor();
 	~Visitor();
 
-	virtual void initShaderData(const MString& startingNode);
+	virtual void initShaderData(const MString& startingNode, const MString &mayaplug);
 	virtual void preOutput(const char* shaderNodeName);
 	virtual void outputBegin(const char* shaderNodeName);
 	virtual void outputUpstreamShader(const char* shaderNodeName);
@@ -300,6 +300,9 @@ protected:
 	static const int SHADER_METHOD_BODY_I      = 1;
 	static const int SHADER_NAME_I             = 2;
 	MStringArray shaderData;
+	MString shaderType;
+
+	MString getRSLShaderType(const MString &mayaplug);
 };
 
 }//namespace RSL
