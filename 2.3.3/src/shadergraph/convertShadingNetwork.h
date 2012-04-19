@@ -66,7 +66,7 @@ public:
 	// node, this function returns a string consisting of the input and
 	// output variables for the this node.
 	//--------------------------------------------------------------------
-	MString getNodeVariables(
+	void getNodeVariables(
 		const MString& node, const MStringArray& validConnection,
 		MStringArray& inputVars, MStringArray& outputVars);
 

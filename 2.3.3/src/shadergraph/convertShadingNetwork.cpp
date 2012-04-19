@@ -301,14 +301,12 @@ void ConvertShadingNetwork::addNodeOutputVariable(
 
 }
 //
-MString ConvertShadingNetwork::getNodeVariables(
+void ConvertShadingNetwork::getNodeVariables(
 	const MString& node, const MStringArray& validConnections, 
 	MStringArray& inputVars, MStringArray& outputVars)
 {
 	CM_TRACE_FUNC("ConvertShadingNetwork::getNodeVariables("<<node<<", validConnections, inputVars, outputVars)");
 
-	MStringArray vars;
-	MString varString;
 	int connectionType = 0;
 
 	for( std::size_t i = 0; i<validConnections.length(); ++i )
@@ -334,22 +332,6 @@ MString ConvertShadingNetwork::getNodeVariables(
 				outputVars );
 		}
 	}
-
-	// Creates the variable string from the variable list
-	//$vars = stringArrayCatenate( $inputVars, $outputVars );
-	vars.clear();
-	for(std::size_t i=0; i<inputVars.length(); ++i){
-		vars.append(inputVars[i]);
-	}
-	for(std::size_t i=0; i<outputVars.length(); ++i){
-		vars.append(outputVars[i]);
-	}
-
-	for(std::size_t index=0; index<vars.length(); ++index){
-		varString += (index == vars.length() - 1)?(vars[index]):(vars[index]+", ");
-	}
-
-	return varString;
 }
 //
 void ConvertShadingNetwork::decrementDownstreamConnections(
@@ -433,7 +415,7 @@ void ConvertShadingNetwork::traverseGraphAndOutputNodeFunctions(
 
 			MStringArray inputVars; 
 			MStringArray outputVars;
-			MString vars = getNodeVariables( currentNode,
+			getNodeVariables( currentNode,
 				validConnections,
 				inputVars,
 				outputVars);
