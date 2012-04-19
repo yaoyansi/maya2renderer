@@ -2461,12 +2461,12 @@ global proc liquidCreateCustomShaderAttributes()
 			  addAttr -ln "liqEnvironmentShadergreen" -at "float" -dv 1 -k true -parent "liqEnvironmentShader" $sg;
 			  addAttr -ln "liqEnvironmentShaderblue"  -at "float" -dv 1 -k true -parent "liqEnvironmentShader" $sg;
 			}
-			if ( !`attributeQuery -node $sg -ex "liqPhotonShader"` ) {
-			  addAttr -ln "liqPhotonShader" -usedAsColor -at "float3" -k true $sg;
-			  addAttr -ln "liqPhotonShaderred"   -at "float" -dv 1 -k true -parent "liqPhotonShader" $sg;
-			  addAttr -ln "liqPhotonShadergreen" -at "float" -dv 1 -k true -parent "liqPhotonShader" $sg;
-			  addAttr -ln "liqPhotonShaderblue"  -at "float" -dv 1 -k true -parent "liqPhotonShader" $sg;
-			}
+			//if ( !`attributeQuery -node $sg -ex "liqPhotonShader"` ) {
+			//  addAttr -ln "liqPhotonShader" -usedAsColor -at "float3" -k true $sg;
+			//  addAttr -ln "liqPhotonShaderred"   -at "float" -dv 1 -k true -parent "liqPhotonShader" $sg;
+			//  addAttr -ln "liqPhotonShadergreen" -at "float" -dv 1 -k true -parent "liqPhotonShader" $sg;
+			//  addAttr -ln "liqPhotonShaderblue"  -at "float" -dv 1 -k true -parent "liqPhotonShader" $sg;
+			//}
 		}
   }
 

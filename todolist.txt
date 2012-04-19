@@ -126,6 +126,7 @@ rm
   liq| rm| refactoring|: wrap getVariableName() on variable和
   liq| refactoring|: write mesh/locator/pfxhair data into the main rib file.(liqglo.m_writeDataIntoMainRibFile)
 - volume/light shader
+- rmsg文件内容写入main rib文件里
 
 er
 ------------
