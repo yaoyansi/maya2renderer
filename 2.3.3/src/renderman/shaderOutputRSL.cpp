@@ -328,8 +328,8 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 
 	//RiOption( tokenCast("RI2RIB_Output"), "Type", (RtPointer)tokenCast("Ascii"),RI_NULL );
 	RtContextHandle c = RiGetContext();//push context;
+	RiBegin_liq( const_cast<RtToken>(renderman::getShadingGroupFilePath(shadingGroupNode).asChar()) );
 	{
-		RiBegin_liq( const_cast<RtToken>(renderman::getShadingGroupFilePath(shadingGroupNode).asChar()) );
 		RiArchiveRecord(RI_COMMENT, "shading group: %s", shadingGroupNode);
 		//surface shader
 		if( surfaceShaders[0].length() != 0 ){
@@ -375,8 +375,8 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 		}else{
 			RiArchiveRecord(RI_COMMENT, "no displacement shader.");
 		}
-		RiEnd();
 	}
+	RiEnd();
 	RiContext(c);//pop context
 }
 MString Visitor::getRSLShaderType(const MString &mayaplug)
