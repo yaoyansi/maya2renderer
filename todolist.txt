@@ -26,6 +26,8 @@ liq
 - (done)导出shdergraph时，一个shadernode会被导出多次。
 - （done）渲染前检查相机是否设置
 - (done)MString liqRibNode::getTransformNodeFullPath(), MStringArray liqRibNode::getChildrenNameOfTransformNode()
+- (done)重构convertShaderGraph。convertShadingNetwork.cpp 里的shaderData放到Visitor里，这样不同的Visitor可以输出各自的shader文本
+（如果该渲染器定义了自己的shader language的话；对于象er这样使用DSO的渲染器，则不需要输出shader文本）
 
 rm
 ------------
@@ -37,6 +39,7 @@ rm
 - (done)rmsg文件路径有':',则无法输出
 - (done)blinn shader无法编译
 - (done)mib_ambient_occ, 测试Trex场景
+- (done)rmsg文件内容写入main rib里
 
 er
 ------------
@@ -95,8 +98,6 @@ liq
      {  size(`ls -geometry -dag -sl`) 值为0，无法赋给物体
   2.er解析
   3.rm如何支持multiple material per mesh
-- 重构convertShaderGraph。convertShadingNetwork.cpp 里的shaderData放到Visitor里，这样不同的Visitor可以输出各自的shader文本
-（如果该渲染器定义了自己的shader language的话；对于象er这样使用DSO的渲染器，则不需要输出shader文本）
 - 重构 void ConvertShadingNetwork::convertShadingNetworkToRSL(const MString& startingNode, const MString& node)
   把这个函数的node参数去掉。
 - rm/er batch render 重构(::execute(),   )
@@ -124,12 +125,10 @@ rm
 - bump2d/bump3d for rm
 - 重构 :shaderOutputRSL namespace由 RSL改为renderman
 - Visitor::outputShaderMethod()只输出了surface shader，还需要输出volume/light/displacement shader
-- rmsg文件内容写入main rib里
 - 回归测试（）更新test data：
   liq| rm| refactoring|: wrap getVariableName() on variable和
   liq| refactoring|: write mesh/locator/pfxhair data into the main rib file.(liqglo.m_writeDataIntoMainRibFile)
 - volume/light shader
-- rmsg文件内容写入main rib文件里
 - test_displacement blinn1.sl_my无法编译
 
 er
