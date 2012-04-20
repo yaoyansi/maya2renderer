@@ -1297,7 +1297,7 @@ namespace renderman
 			return;
 		}
 
-		RSL::Visitor::outputShadingGroup(getShadingGroupFilePath(shadingGroupNode[0]).asChar(), true);
+		RSL::Visitor::outputShadingGroup(shadingGroupNode[0].asChar(), true);
 	}
 	//
 	bool Renderer::canExport()
