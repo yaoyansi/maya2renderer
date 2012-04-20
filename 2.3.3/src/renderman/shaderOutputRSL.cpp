@@ -309,27 +309,22 @@ void Visitor::outputShadingGroup(const char* shadingGroupNode)
 {
 	CM_TRACE_FUNC("Visitor::outputShadingGroup("<<shadingGroupNode<<")");
 
-	MString cmd;
-
-	MStringArray surfaceShaders;
-	MStringArray volumeShaders;
-	MStringArray displacementShaders;
-	{
-		getlistConnections(shadingGroupNode, "surfaceShader", surfaceShaders);
-
-		getlistConnections(shadingGroupNode, "volumeShader", volumeShaders);
-
-		getlistConnections(shadingGroupNode, "displacementShader", displacementShaders);
-	}
-
-	// Work out where to put it & make sure the directory exists
-
 //	MString shaderdir(getShaderDirectory());
 
 	//RiOption( tokenCast("RI2RIB_Output"), "Type", (RtPointer)tokenCast("Ascii"),RI_NULL );
 	RtContextHandle c = RiGetContext();//push context;
 	RiBegin_liq( const_cast<RtToken>(renderman::getShadingGroupFilePath(shadingGroupNode).asChar()) );
 	{
+		//
+		MStringArray surfaceShaders;
+		MStringArray volumeShaders;
+		MStringArray displacementShaders;
+		{
+			getlistConnections(shadingGroupNode, "surfaceShader", surfaceShaders);
+			getlistConnections(shadingGroupNode, "volumeShader", volumeShaders);
+			getlistConnections(shadingGroupNode, "displacementShader", displacementShaders);
+		}
+		//
 		RiArchiveRecord(RI_COMMENT, "shading group: %s", shadingGroupNode);
 		//surface shader
 		if( surfaceShaders[0].length() != 0 ){
