@@ -43,7 +43,7 @@ void blinn1 (
 }
 
 //surface shader name: blinn1
-surface blinn1()
+displacement blinn1()
 {
 
  //blinn1

@@ -130,6 +130,7 @@ rm
   liq| refactoring|: write mesh/locator/pfxhair data into the main rib file.(liqglo.m_writeDataIntoMainRibFile)
 - volume/light shader
 - rmsg文件内容写入main rib文件里
+- test_displacement blinn1.sl_my无法编译
 
 er
 ------------

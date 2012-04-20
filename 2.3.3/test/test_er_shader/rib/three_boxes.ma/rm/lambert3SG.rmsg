@@ -1,6 +1,0 @@
-##RenderMan RIB-Structure 1.0
-version 3.03
-#shading group: lambert3SG
-Surface "E:/MyDocuments/maya/projects/default/generatedShader/lambert3" 
-#no volume shader.
-#no displacement shader.

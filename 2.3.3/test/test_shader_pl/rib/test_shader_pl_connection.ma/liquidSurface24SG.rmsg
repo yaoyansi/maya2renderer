@@ -1,6 +1,0 @@
-##RenderMan RIB-Structure 1.0
-version 3.03
-#shading group: liquidSurface24SG
-Surface "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/test/test_shader_pl/maya_lambert_transparent" "uniform float liq_frequency" [ 8.500000 ] "uniform string texname" [ ".tex" ] "uniform string texname0" [ "E:/check12.bmp.tex" ] "uniform string texname2" [ "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/test/test_rm_texture/textures/check12.bmp.tex" ] "uniform color liq_c0" [ 1.000000 0.000000 0.000000 ] "uniform point liq_p0" [ 1.000000 0.000000 0.000000 ] "uniform vector liq_v0" [ 1.000000 0.000000 0.000000 ] "uniform normal liq_n0" [ 1.000000 0.000000 0.000000 ] "uniform matrix liq_m0" [ 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -6.129767 0.000000 -8.852959 1.000000 ] "uniform matrix liq_m1" [ 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -6.129767 0.000000 -8.852959 1.000000 ] 
-#no volume shader.
-#no displacement shader.
