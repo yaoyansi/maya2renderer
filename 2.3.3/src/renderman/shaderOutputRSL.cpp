@@ -2,6 +2,7 @@
 #include <liqlog.h>
 #include <liqShader.h>
 #include <liqShaderFactory.h>
+#include <liqGlobalVariable.h>
 #include "../common/mayacheck.h"
 #include "../shadergraph/convertShadingNetwork.h"
 #include "../shadergraph/shadermgr.h"
@@ -308,70 +309,92 @@ void Visitor::postOutput()
 void Visitor::outputShadingGroup(const char* shadingGroupNode)
 {
 	CM_TRACE_FUNC("Visitor::outputShadingGroup("<<shadingGroupNode<<")");
-
-//	MString shaderdir(getShaderDirectory());
-
-	//RiOption( tokenCast("RI2RIB_Output"), "Type", (RtPointer)tokenCast("Ascii"),RI_NULL );
-	renderman::Helper o;
-	o.RiBeginRef(renderman::getShadingGroupFilePath(shadingGroupNode).asChar());
+	
+	outputShadingGroup(shadingGroupNode, false);
+}
+void Visitor::outputShadingGroup(const char* shadingGroupNode, const bool bReference)
+{
+	CM_TRACE_FUNC("Visitor::outputShadingGroup("<<shadingGroupNode<<","<<bReference<<")");
+	
+	if(liqglo.m_writeDataIntoMainRibFile)
 	{
-		//
-		MStringArray surfaceShaders;
-		MStringArray volumeShaders;
-		MStringArray displacementShaders;
-		{
-			getlistConnections(shadingGroupNode, "surfaceShader", surfaceShaders);
-			getlistConnections(shadingGroupNode, "volumeShader", volumeShaders);
-			getlistConnections(shadingGroupNode, "displacementShader", displacementShaders);
-		}
-		//
-		RiArchiveRecord(RI_COMMENT, "shading group: %s", shadingGroupNode);
-		//surface shader
-		if( surfaceShaders[0].length() != 0 ){
-			MString nodetype;
-			getNodeType(nodetype, surfaceShaders[0]);
-			if( nodetype == "liquidSurface" ){
-				liqShader& currentShader = 
-					liqShaderFactory::instance().getShader( getMObjectByName(surfaceShaders[0]) );
-				currentShader.write();
-			}else{
-				RiSurface( const_cast<char *>(renderman::getShaderFilePath_NoExt(surfaceShaders[0]).asChar()), RI_NULL );
-			}
+		if( bReference ){
+			//here is the right place where shading group data should be written into the main rib file.
+			_outputShadingGroup(shadingGroupNode);
 		}else{
-			RiArchiveRecord(RI_COMMENT, "no surface shader.");
+			//do nothing
 		}
-		//volume shader
-		if( volumeShaders[0].length() != 0 ){
-			MString nodetype;
-			getNodeType(nodetype, volumeShaders[0]);
-			if( nodetype == "liquidVolume" ){
-				liqShader& currentShader = 
-					liqShaderFactory::instance().getShader( getMObjectByName(volumeShaders[0]) );
-				currentShader.write();
-			}else{
-				RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the volume shader, RiAtmosphere(), RiInterior(), or RiExterior().");
-				RiAtmosphere( const_cast<char *>(renderman::getShaderFilePath_NoExt(volumeShaders[0]).asChar()), RI_NULL );
-			}
+	}else{
+		if( !bReference ){
+			renderman::Helper o;
+			o.RiBeginRef(renderman::getShadingGroupFilePath(shadingGroupNode).asChar());
+			_outputShadingGroup(shadingGroupNode);
+			o.RiEndRef();
 		}else{
-			RiArchiveRecord(RI_COMMENT, "no volume shader.");
-		}
-		//displacement shader
-		if( displacementShaders[0].length() != 0 ){
-			MString nodetype;
-			getNodeType(nodetype, displacementShaders[0]);
-			if( nodetype == "liquidDisplacement" ){
-				liqShader& currentShader = 
-					liqShaderFactory::instance().getShader( getMObjectByName(displacementShaders[0]) );
-				currentShader.write();
-			}else{
-				RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the displacement shader, RiDeformation(), or RiDisplacement().");
-				RiDisplacement( const_cast<char *>(renderman::getShaderFilePath_NoExt(displacementShaders[0]).asChar()), RI_NULL );
-			}
-		}else{
-			RiArchiveRecord(RI_COMMENT, "no displacement shader.");
+			RiArchiveRecord( RI_COMMENT, "use Shading Group reference:" );
+			RiReadArchive( const_cast< RtToken >( renderman::getShadingGroupFilePath(shadingGroupNode).asChar() ), NULL, RI_NULL );
 		}
 	}
-	o.RiEndRef();
+}
+
+void _outputShadingGroup(const char* shadingGroupNode)
+{
+	CM_TRACE_FUNC("_outputShadingGroup("<<shadingGroupNode<<")");
+	//
+	MStringArray surfaceShaders;
+	MStringArray volumeShaders;
+	MStringArray displacementShaders;
+	{
+		getlistConnections(shadingGroupNode, "surfaceShader", surfaceShaders);
+		getlistConnections(shadingGroupNode, "volumeShader", volumeShaders);
+		getlistConnections(shadingGroupNode, "displacementShader", displacementShaders);
+	}
+	//
+	RiArchiveRecord(RI_COMMENT, "shading group: %s", shadingGroupNode);
+	//surface shader
+	if( surfaceShaders[0].length() != 0 ){
+		MString nodetype;
+		getNodeType(nodetype, surfaceShaders[0]);
+		if( nodetype == "liquidSurface" ){
+			liqShader& currentShader = 
+				liqShaderFactory::instance().getShader( getMObjectByName(surfaceShaders[0]) );
+			currentShader.write();
+		}else{
+			RiSurface( const_cast<char *>(renderman::getShaderFilePath_NoExt(surfaceShaders[0]).asChar()), RI_NULL );
+		}
+	}else{
+		RiArchiveRecord(RI_COMMENT, "no surface shader.");
+	}
+	//volume shader
+	if( volumeShaders[0].length() != 0 ){
+		MString nodetype;
+		getNodeType(nodetype, volumeShaders[0]);
+		if( nodetype == "liquidVolume" ){
+			liqShader& currentShader = 
+				liqShaderFactory::instance().getShader( getMObjectByName(volumeShaders[0]) );
+			currentShader.write();
+		}else{
+			RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the volume shader, RiAtmosphere(), RiInterior(), or RiExterior().");
+			RiAtmosphere( const_cast<char *>(renderman::getShaderFilePath_NoExt(volumeShaders[0]).asChar()), RI_NULL );
+		}
+	}else{
+		RiArchiveRecord(RI_COMMENT, "no volume shader.");
+	}
+	//displacement shader
+	if( displacementShaders[0].length() != 0 ){
+		MString nodetype;
+		getNodeType(nodetype, displacementShaders[0]);
+		if( nodetype == "liquidDisplacement" ){
+			liqShader& currentShader = 
+				liqShaderFactory::instance().getShader( getMObjectByName(displacementShaders[0]) );
+			currentShader.write();
+		}else{
+			RiArchiveRecord(RI_COMMENT, "I'm not sure which one should be used for the displacement shader, RiDeformation(), or RiDisplacement().");
+			RiDisplacement( const_cast<char *>(renderman::getShaderFilePath_NoExt(displacementShaders[0]).asChar()), RI_NULL );
+		}
+	}else{
+		RiArchiveRecord(RI_COMMENT, "no displacement shader.");
+	}
 }
 MString Visitor::getRSLShaderType(const MString &mayaplug)
 {

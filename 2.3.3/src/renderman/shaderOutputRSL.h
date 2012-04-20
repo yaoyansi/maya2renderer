@@ -74,6 +74,9 @@ public:
 	virtual void outputEnd();
 	virtual void postOutput();
 	virtual void outputShadingGroup(const char* shadingGroupNode);
+	
+	//let Renderer uses Visitor::outputShadingGroup(,) to write shading group data.
+	static void outputShadingGroup(const char* shadingGroupNode, const bool bReference);
 	//
 	/// surface ///
 	// @node	maya shader node name
@@ -304,6 +307,7 @@ protected:
 
 	MString getRSLShaderType(const MString &mayaplug);
 };
-
+//
+void _outputShadingGroup(const char* shadingGroupNode);
 }//namespace RSL
 #endif//_SHADER_OUTPUT_RSL_H_

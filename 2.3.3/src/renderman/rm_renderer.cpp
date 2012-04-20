@@ -33,6 +33,7 @@
 
 #include "../renderermgr.h"
 #include "rm_helper.h"
+#include "shaderOutputRSL.h"
 
 #if defined(_WIN32)/* && !defined(DEFINED_LIQUIDVERSION)*/
 // unix build gets this from the Makefile
@@ -1296,10 +1297,7 @@ namespace renderman
 			return;
 		}
 
-		RiArchiveRecord( RI_COMMENT, "use Shading Group reference:" );
-		{
-			RiReadArchive( const_cast< RtToken >(getShadingGroupFilePath(shadingGroupNode[0]).asChar()), NULL, RI_NULL );
-		}
+		RSL::Visitor::outputShadingGroup(getShadingGroupFilePath(shadingGroupNode[0]).asChar(), true);
 	}
 	//
 	bool Renderer::canExport()
