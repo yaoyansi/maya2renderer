@@ -88,6 +88,7 @@ protected:
 	void getMin(unsigned int &min_x, unsigned int &min_y,
 		unsigned int left, unsigned int right,
 		unsigned int bottom, unsigned int top);
+	eiScalar m_percent;//[0,1]
 };
 
 #endif //_MAYA_CONNECTION_

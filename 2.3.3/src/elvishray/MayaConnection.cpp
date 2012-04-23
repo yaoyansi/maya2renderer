@@ -85,6 +85,7 @@ void MayaConnection::Print( const eiInt severity, const char *message )
 bool MayaConnection::Progress( const eiScalar percent )
 {
 	//_logFunctionCall("MayaConnection::Progress(" << percent << " %)");
+	m_percent = percent/100.0f;
 
 	bool isInterrupted = liqRibTranslator::getInstancePtr()->isInterruptRequested();
 	if (isInterrupted){
@@ -101,9 +102,73 @@ void MayaConnection::ClearTile( const eiInt left, const eiInt right,
 	if( !isInteractiveRenderingMode() )
 		return;
 
+	//
+	MStatus status;
+	const std::size_t TARGET_LEN = 4;
+	const RV_PIXEL BACKGROUND={         (1.0f-m_percent)*255.0f,   0.0f,   0.0f, 125.0f};
+	const RV_PIXEL MARK={fmodf(((float)host)/3.14f,1.0f)*255.0f, 255.0f, 255.0f, 255.0f};
+
+	unsigned int tile_width  = right - left;
+	unsigned int tile_height = bottom - top;
+	assert( tile_width>=1 && tile_height>=1 );
+
+	unsigned int min_x, min_y, max_x, max_y;
+	getMin(min_x, min_y, left, right, bottom, top);
+	max_x = min_x + tile_width;
+	max_y = min_y + tile_height;
+	if(max_x>width || max_y>height){
+		return;
+	}
+
+	RV_PIXEL* pixels = new RV_PIXEL[(tile_width)*(tile_height)];
+
+	//clear title
+	for(std::size_t j = 0; j<tile_height; ++j)
+	{
+		for(std::size_t i = 0; i<tile_width; ++i)
+		{
+			pixels[i+j*tile_width].r = BACKGROUND.r;
+			pixels[i+j*tile_width].g = BACKGROUND.g;
+			pixels[i+j*tile_width].b = BACKGROUND.b;
+			pixels[i+j*tile_width].a = BACKGROUND.a;
+		}
+	}
+
+	//set mark
+	for( int j = 0; j < TARGET_LEN; ++j ) {
+		setPixel(pixels, tile_width, tile_height, j, 0,             MARK);
+		setPixel(pixels, tile_width, tile_height, j, tile_height-1, MARK);
+	}
+	for( int j = tile_width-TARGET_LEN-1; j < tile_width; ++j ) {
+		setPixel(pixels, tile_width, tile_height, j, 0,             MARK);
+		setPixel(pixels, tile_width, tile_height, j, tile_height-1, MARK);
+	}
+	for( int j = 0; j < TARGET_LEN; ++j ) {
+		setPixel(pixels, tile_width, tile_height, 0,            j, MARK);
+		setPixel(pixels, tile_width, tile_height, tile_width-1, j, MARK);
+	}
+	for( int j = tile_height-TARGET_LEN-1; j < tile_height; ++j ) {
+		setPixel(pixels, tile_width, tile_height, 0,            j, MARK);
+		setPixel(pixels, tile_width, tile_height, tile_width-1, j, MARK);
+	}
+
+	// Send the data to the render view.
+	if ( (status = MRenderView::updatePixels(min_x, max_x-1, min_y, max_y-1, pixels)) != MS::kSuccess)
+	{
+		IfErrorWarn(status);
+		//_LogError( "MayaConnection: error occured in updatePixels." );
+		delete [] pixels;
+		return ;
+	}
+	delete [] pixels;
+	// Force the Render View to refresh the display of the affected region.
+	if ( (status = MRenderView::refresh(min_x, max_x-1, min_y, max_y-1)) != MS::kSuccess)
+	{
+		IfErrorWarn(status);
+		//_LogError( "MayaConnection: error occured in refresh." );
+		return ;
+	}
 }
-
-
 // Note:
 // the tile of elvishray range from [left right) to [top bottom)
 void MayaConnection::UpdateTile( eiFrameBufferCache *colorFrameBuffer, 
@@ -197,6 +262,7 @@ MStatus MayaConnection::startRender( unsigned int w, unsigned int h,
 	//_logFunctionCall("MayaConnection::startRender()");
 	width  = w;
 	height = h;
+	m_percent = 0.0f;
 	return MRenderView::startRender( width, height, doNotClearBackground, immediateFeedback);
 }
 //
