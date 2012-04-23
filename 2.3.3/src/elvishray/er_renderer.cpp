@@ -357,7 +357,7 @@ namespace elvishray
 			MayaConnection::delInstance();
 		}else{
 			// start render
-			if (MayaConnection::getInstance()->startRender( currentJob.width, currentJob.height, false) != MS::kSuccess)
+			if (MayaConnection::getInstance()->startRender( currentJob.width, currentJob.height, false, true) != MS::kSuccess)
 			{
 				_s( "//MayaConnection: error occured in startRender." );
 				MayaConnection::delInstance();				
