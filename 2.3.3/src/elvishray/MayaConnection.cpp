@@ -120,46 +120,28 @@ void MayaConnection::ClearTile( const eiInt left, const eiInt right,
 		return;
 	}
 
-	RV_PIXEL* pixels = new RV_PIXEL[(tile_width)*(tile_height)];
-
-	//clear title
-	for(std::size_t j = 0; j<tile_height; ++j)
+	RV_PIXEL* pixels = new RV_PIXEL[TARGET_LEN];
+	for(std::size_t i = 0; i<TARGET_LEN; ++i)
 	{
-		for(std::size_t i = 0; i<tile_width; ++i)
-		{
-			pixels[i+j*tile_width].r = BACKGROUND.r;
-			pixels[i+j*tile_width].g = BACKGROUND.g;
-			pixels[i+j*tile_width].b = BACKGROUND.b;
-			pixels[i+j*tile_width].a = BACKGROUND.a;
-		}
+		pixels[i].r = MARK.r;
+		pixels[i].g = MARK.g;
+		pixels[i].b = MARK.b;
+		pixels[i].a = MARK.a;
 	}
 
 	//set mark
-	for( int j = 0; j < TARGET_LEN; ++j ) {
-		setPixel(pixels, tile_width, tile_height, j, 0,             MARK);
-		setPixel(pixels, tile_width, tile_height, j, tile_height-1, MARK);
-	}
-	for( int j = tile_width-TARGET_LEN-1; j < tile_width; ++j ) {
-		setPixel(pixels, tile_width, tile_height, j, 0,             MARK);
-		setPixel(pixels, tile_width, tile_height, j, tile_height-1, MARK);
-	}
-	for( int j = 0; j < TARGET_LEN; ++j ) {
-		setPixel(pixels, tile_width, tile_height, 0,            j, MARK);
-		setPixel(pixels, tile_width, tile_height, tile_width-1, j, MARK);
-	}
-	for( int j = tile_height-TARGET_LEN-1; j < tile_height; ++j ) {
-		setPixel(pixels, tile_width, tile_height, 0,            j, MARK);
-		setPixel(pixels, tile_width, tile_height, tile_width-1, j, MARK);
-	}
+	IfErrorWarn(MRenderView::updatePixels(min_x, min_x, min_y, min_y+TARGET_LEN-1, pixels));
+	IfErrorWarn(MRenderView::updatePixels(min_x, min_x+TARGET_LEN-1, min_y, min_y, pixels));
 
-	// Send the data to the render view.
-	if ( (status = MRenderView::updatePixels(min_x, max_x-1, min_y, max_y-1, pixels)) != MS::kSuccess)
-	{
-		IfErrorWarn(status);
-		//_LogError( "MayaConnection: error occured in updatePixels." );
-		delete [] pixels;
-		return ;
-	}
+	IfErrorWarn(MRenderView::updatePixels(max_x-1, max_x-1, min_y, min_y+TARGET_LEN-1, pixels));
+	IfErrorWarn(MRenderView::updatePixels(max_x-TARGET_LEN, max_x-1, min_y, min_y, pixels));
+
+	IfErrorWarn(MRenderView::updatePixels(min_x, min_x, max_y-TARGET_LEN, max_y-1, pixels));
+	IfErrorWarn(MRenderView::updatePixels(min_x, min_x+TARGET_LEN-1, max_y-1, max_y-1, pixels));
+
+	IfErrorWarn(MRenderView::updatePixels(max_x-TARGET_LEN, max_x-1, max_y-1, max_y-1, pixels));
+	IfErrorWarn(MRenderView::updatePixels(max_x-1, max_x-1, max_y-TARGET_LEN, max_y-1, pixels));
+
 	delete [] pixels;
 	// Force the Render View to refresh the display of the affected region.
 	if ( (status = MRenderView::refresh(min_x, max_x-1, min_y, max_y-1)) != MS::kSuccess)
@@ -177,7 +159,7 @@ void MayaConnection::UpdateTile( eiFrameBufferCache *colorFrameBuffer,
 								const eiInt left, const eiInt right, 
 								const eiInt top, const eiInt bottom )
 {
-	//_logFunctionCall("MayaConnection::UpdateTile("<<left<<","<<right<<","<<top<<","<<bottom<<")");
+	//_logFunctionCall("MayaConnection::UpdateTile(...)");
 	MStatus status;
 
 	if( !isInteractiveRenderingMode() )
@@ -244,6 +226,8 @@ void MayaConnection::DrawPixel( const eiInt x, const eiInt y, const eiVector *_c
 
 	if( !isInteractiveRenderingMode() )
 		return;
+
+	liquidMessage2(messageWarning, "MayaConnection::DrawPixel(...) is not implemented yet.");
 }
 //
 void MayaConnection::UpdateSubWindow( const eiInt left, const eiInt right, 
@@ -253,6 +237,8 @@ void MayaConnection::UpdateSubWindow( const eiInt left, const eiInt right,
 
 	if( !isInteractiveRenderingMode() )
 		return;
+
+	liquidMessage2(messageWarning, "MayaConnection::UpdateSubWindow(...) is not implemented yet.");
 }
 
 MStatus MayaConnection::startRender( unsigned int w, unsigned int h,
