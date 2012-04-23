@@ -143,13 +143,19 @@ void MayaConnection::ClearTile( const eiInt left, const eiInt right,
 	IfErrorWarn(MRenderView::updatePixels(max_x-1, max_x-1, max_y-TARGET_LEN, max_y-1, pixels));
 
 	delete [] pixels;
+
 	// Force the Render View to refresh the display of the affected region.
-	if ( (status = MRenderView::refresh(min_x, max_x-1, min_y, max_y-1)) != MS::kSuccess)
-	{
-		IfErrorWarn(status);
-		//_LogError( "MayaConnection: error occured in refresh." );
-		return ;
-	}
+	IfErrorWarn(MRenderView::refresh(min_x, min_x, min_y, min_y+TARGET_LEN-1));
+	IfErrorWarn(MRenderView::refresh(min_x, min_x+TARGET_LEN-1, min_y, min_y));
+
+	IfErrorWarn(MRenderView::refresh(max_x-1, max_x-1, min_y, min_y+TARGET_LEN-1));
+	IfErrorWarn(MRenderView::refresh(max_x-TARGET_LEN, max_x-1, min_y, min_y));
+
+	IfErrorWarn(MRenderView::refresh(min_x, min_x, max_y-TARGET_LEN, max_y-1));
+	IfErrorWarn(MRenderView::refresh(min_x, min_x+TARGET_LEN-1, max_y-1, max_y-1));
+
+	IfErrorWarn(MRenderView::refresh(max_x-TARGET_LEN, max_x-1, max_y-1, max_y-1));
+	IfErrorWarn(MRenderView::refresh(max_x-1, max_x-1, max_y-TARGET_LEN, max_y-1));
 }
 // Note:
 // the tile of elvishray range from [left right) to [top bottom)
