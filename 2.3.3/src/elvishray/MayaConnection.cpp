@@ -43,7 +43,28 @@ void color128to64( eiVector & color, ChannelType &r, ChannelType &g, ChannelType
 	b = ( 255.0f * color.b );
 	a = 255.0f;
 }
-
+//
+void setPixel(RV_PIXEL*pixels, 
+			  const unsigned int tile_width, const unsigned int tile_height, 
+			  const int ix, const int iy, 
+			  const ChannelType r, const ChannelType g, const ChannelType b, const ChannelType a)
+{
+	unsigned int offset = iy*tile_width + ix;
+	RV_PIXEL *target = pixels + offset;
+	target->r = r;
+	target->g = g;
+	target->b = b;
+	target->a = a;
+}
+void setPixel(RV_PIXEL*pixels, 
+			  const unsigned int tile_width, 
+			  const unsigned int tile_height, 
+			  const int ix, const int iy, 
+			  const RV_PIXEL &color )
+{
+	setPixel(pixels, tile_width, tile_height, ix, iy, color.r, color.g, color.b, color.a );
+}
+//
 void MayaConnection::Print( const eiInt severity, const char *message )
 {
 	//_logFunctionCall("MayaConnection::Print()");
@@ -81,27 +102,7 @@ void MayaConnection::ClearTile( const eiInt left, const eiInt right,
 		return;
 
 }
-//
-void setPixel(RV_PIXEL*pixels, 
-			const unsigned int tile_width, const unsigned int tile_height, 
-			const int ix, const int iy, 
-			const ChannelType r, const ChannelType g, const ChannelType b, const ChannelType a)
-{
-	unsigned int offset = iy*tile_width + ix;
-	RV_PIXEL *target = pixels + offset;
-	target->r = r;
-	target->g = g;
-	target->b = b;
-	target->a = a;
-}
-void setPixel(RV_PIXEL*pixels, 
-			  const unsigned int tile_width, 
-			  const unsigned int tile_height, 
-			  const int ix, const int iy, 
-			  const RV_PIXEL &color )
-{
-	setPixel(pixels, tile_width, tile_height, ix, iy, color.r, color.g, color.b, color.a );
-}
+
 
 // Note:
 // the tile of elvishray range from [left right) to [top bottom)
@@ -149,38 +150,7 @@ void MayaConnection::UpdateTile( eiFrameBufferCache *colorFrameBuffer,
 // 	_LogDebug("index = "<< index);
 
 	unsigned int min_x, min_y, max_x, max_y;
-#if ELIMINATE_OFFSET
-	//motivation:
-	// image A : the scene rendered by elvishray;
-	// image B : the scene renderer by Maya software;
-	// A has a translate offset (0,1) relative to B under Maya window coordinate.
-	// to eliminate this offset, we set:
-	// ( see ermaya\test\discontinuesPixel2_er.jpg and discontinuesPixel2_maya.jpg)
-	// int _min_x = left;
-	// int _min_y = height - (bottom - 1)-1;
-	// to translate image A by (0, -1),
-	
-	// but, the first column will not be updated correctly, because their _min_x and _min_y are -1.
-	// So, we clamp min_x and min_y greater than 0:
-	// min_x = _min_x>=0 ? _min_x : 0;
-	// min_y = _min_y>=0 ? _min_y : 0;
-	
-	// But we fail again, because the pixels on the edge of column 0 and column 1 are not continuous any more.
-	// (see test\discontinuesPixel.jpg for details)
-	int _min_x = left-1;
-	int _min_y = height - (bottom - 1)-1;
-
-	min_x = _min_x>=0 ? _min_x : 0;
-	min_y = _min_y>=0 ? _min_y : 0;
-#else
-	//Note:
-	// image A : the scene rendered by elvishray;
-	// image B : the scene renderer by Maya software;
-	// A has a translate offset (0,1) relative to B under Maya window coordinate.
-	// see ermaya\test\discontinuesPixel2_er.jpg and discontinuesPixel2_maya.jpg
-	min_x = left;
-	min_y = height - (bottom - 1);
-#endif
+	getMin(min_x, min_y, left, right, bottom, top);
 
 	max_x = min_x + tile_width;
 	max_y = min_y + tile_height;
@@ -272,6 +242,43 @@ void MayaConnection::delInstance()
 bool MayaConnection::isInteractiveRenderingMode()
 {
 	return MRenderView::doesRenderEditorExist();
+}
+void MayaConnection::getMin(unsigned int &min_x, unsigned int &min_y,
+			unsigned int left, unsigned int right,
+			unsigned int bottom, unsigned int top)
+{
+#if ELIMINATE_OFFSET
+	//motivation:
+	// image A : the scene rendered by elvishray;
+	// image B : the scene renderer by Maya software;
+	// A has a translate offset (0,1) relative to B under Maya window coordinate.
+	// to eliminate this offset, we set:
+	// ( see ermaya\test\discontinuesPixel2_er.jpg and discontinuesPixel2_maya.jpg)
+	// int _min_x = left;
+	// int _min_y = height - (bottom - 1)-1;
+	// to translate image A by (0, -1),
+
+	// but, the first column will not be updated correctly, because their _min_x and _min_y are -1.
+	// So, we clamp min_x and min_y greater than 0:
+	// min_x = _min_x>=0 ? _min_x : 0;
+	// min_y = _min_y>=0 ? _min_y : 0;
+
+	// But we fail again, because the pixels on the edge of column 0 and column 1 are not continuous any more.
+	// (see test\discontinuesPixel.jpg for details)
+	int _min_x = left-1;
+	int _min_y = height - (bottom - 1)-1;
+
+	min_x = _min_x>=0 ? _min_x : 0;
+	min_y = _min_y>=0 ? _min_y : 0;
+#else
+	//Note:
+	// image A : the scene rendered by elvishray;
+	// image B : the scene renderer by Maya software;
+	// A has a translate offset (0,1) relative to B under Maya window coordinate.
+	// see ermaya\test\discontinuesPixel2_er.jpg and discontinuesPixel2_maya.jpg
+	min_x = left;
+	min_y = height - (bottom - 1);
+#endif
 }
 //////////////////////////////////////////////////////////////////////////
 //	Max connection implementation

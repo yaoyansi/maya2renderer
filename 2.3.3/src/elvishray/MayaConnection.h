@@ -85,6 +85,9 @@ public:
 
 protected:
 	void setConnection();
+	void getMin(unsigned int &min_x, unsigned int &min_y,
+		unsigned int left, unsigned int right,
+		unsigned int bottom, unsigned int top);
 };
 
 #endif //_MAYA_CONNECTION_
