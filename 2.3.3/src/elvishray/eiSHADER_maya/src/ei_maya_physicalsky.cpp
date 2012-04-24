@@ -257,7 +257,7 @@ ENVIRONMENT(maya_physicalsky)
 
 		// the shading space of physical sky should be in world space
 		vector Iw = normalize(I() * to_world());
-		vector ray_dir = vector(Iw.x, Iw.z, -Iw.y);
+		vector ray_dir = Iw;
 		// the 0.03 here is a temporary fix for Max material editor 
 		// when refraction is enabled, and IOR is 1.0, because in that 
 		// case, the ray direction will be coplanar with X-Y plane 
