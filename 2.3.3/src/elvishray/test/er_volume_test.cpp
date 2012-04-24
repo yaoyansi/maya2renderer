@@ -17,7 +17,7 @@ void ei_volume_unittest()
 	ei_samples(0, 2);
 	ei_contrast(0.05f, 0.05f, 0.05f, 0.05f);
 	ei_filter(EI_FILTER_GAUSSIAN, 3.0f);
-	ei_trace_depth(6, 6, 6);
+	ei_trace_depth(6, 6, 6, 6, 6, 6);
 	ei_face(EI_FACE_BOTH);
 	ei_end_options();
 

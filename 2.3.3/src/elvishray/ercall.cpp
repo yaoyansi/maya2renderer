@@ -212,8 +212,8 @@ namespace elvishray
 	//	Trace Depth:
 	void my_ei_trace_depth( int reflect, int refract, int sum )
 	{
-		_s("ei_trace_depth("<<reflect<<","<<refract<<","<<sum<<")");
-		_e( ei_trace_depth(reflect,refract,sum));
+		_s("ei_trace_depth(4,4,4,"<<reflect<<","<<refract<<","<<sum<<")");
+		_e( ei_trace_depth(4,4,4,reflect,refract,sum));
 	}
 
 	//	Shadow:

@@ -200,4 +200,4 @@ er
 - displacement shader 测试不正确
 - er里凡是与名字长度相关的，都应该加上eiAssert()
 - test case 里更新contrast为0.01|0.01|0.01|0.01，samples为0|16
-
+- 更新ei_trace_depth接口，ercall里的，mel globalnode里的

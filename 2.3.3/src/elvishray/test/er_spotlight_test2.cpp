@@ -44,7 +44,7 @@ void spotlight_test2()
 	ei_filter(4,3);
 	//transform motion=0, deform motion=0
 	ei_motion(0);
-	ei_trace_depth(4,4,4);
+	ei_trace_depth(4, 4, 4,4,4,4);
 	ei_displace(1);
 	ei_max_displace(1);
 	ei_face(3);
