@@ -273,9 +273,13 @@ namespace elvishray
 		_s("//ribNode->doDef="<<ribNode__->doDef<<", ribNode->doMotion="<<ribNode__->doMotion);
 		_S( ei_motion( bMotion ) );
 
-		//light group(light-link group)
-		_s("//ei_XXXX(\"lightgroup\", ei_token(\""<<getLightGroupName(objectName.c_str())<<"\"));");
-
+		_s("{//light group(light-link group)");
+		const char* lg = getLightGroupName(instanceName.c_str()).asChar();
+		_d( const char *tag = NULL );
+		_S( ei_declare("lightgroup", eiCONSTANT, EI_DATA_TYPE_TOKEN, &tag) );
+		tag = ei_token(lg);_s( "tag = ei_token(\""<<lg<<"\");" );
+		_S( ei_variable("lightgroup", &tag ) );
+		_s("}");
 
 		_S( ei_end_instance() );
 		_s("//");

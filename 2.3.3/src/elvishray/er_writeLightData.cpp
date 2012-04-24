@@ -12,14 +12,25 @@ namespace elvishray
 	{
 		CM_TRACE_FUNC("addLightGroupForLight("<<lightTransformNode<<")");
 
-		MStringArray meshShapeNodes;
-		IfMErrorWarn(MGlobal::executeCommand( "lightlink -q -set 0 -shapes 1 -transforms 0 -light "+lightTransformNode, meshShapeNodes));
-
+		MStringArray meshNodes;
+#ifdef TRANSFORM_SHAPE_PAIR
+		IfMErrorWarn(MGlobal::executeCommand( "lightlink -q -set 0 -shapes 0 -transforms 1 -light "+lightTransformNode, meshNodes));//transform nodes
+#else// SHAPE SHAPE_object PAIR
+		IfMErrorWarn(MGlobal::executeCommand( "lightlink -q -set 0 -shapes 1 -transforms 0 -light "+lightTransformNode, meshNodes));//shape nodes
+#endif
 		_s("{");
-			_d( eiTag tag = 0 );
-			for(std::size_t i=0; i<meshShapeNodes.length();++i)
+			_d( eiInt tag = 0 );
+			for(std::size_t i=0; i<meshNodes.length();++i)
 			{
-				const MString lightGroupName( getLightGroupName(meshShapeNodes[i]) );
+				MString fullPathName;
+				IfMErrorWarn(MGlobal::executeCommand( "longNameOf(\""+meshNodes[i]+"\")", fullPathName));
+				if(fullPathName.length()==0){
+					liquidMessage2(messageError,"longNameOf(\"%s\") is empty.", meshNodes[i].asChar());
+				}
+
+				std::string instanceName(fullPathName.asChar());
+
+				const MString lightGroupName( getLightGroupName(instanceName.c_str()) );
 				_S( ei_declare(lightGroupName.asChar(), eiCONSTANT, EI_DATA_TYPE_INT, &tag) );
 			}
 		_s("}");
@@ -27,6 +38,7 @@ namespace elvishray
 	//
 	bool Renderer::writeLight_pre(const liqRibNodePtr& ribNode, const structJob &currentJob)
 	{
+
 		CM_TRACE_FUNC("Renderer::writeLight_pre("<<ribNode->name<<","<<currentJob.name<<")");
 
 		RtString RibNodeName = getLiquidRibName( ribNode->name.asChar() );
