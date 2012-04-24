@@ -74,7 +74,7 @@ er
 - （done）bug: user-defined shader 会输出多次
 - (done)重构：导出er时，没有rib数据导出
 - (done)ei_instance 使用trasform node name，而不是shape ndoe name
-
+- (done)由于使用progressive rendering， tile更新不明显。应该把正在更新的tile用红框标出来。
 
 
 ===================================  TODO LIST  =============================================
@@ -201,4 +201,4 @@ er
 - displacement shader 测试不正确
 - er里凡是与名字长度相关的，都应该加上eiAssert()
 - test case 里更新contrast为0.01|0.01|0.01|0.01，samples为0|16
-- 由于使用progressive rendering， tile更新不明显。应该把正在更新的tile用红框标出来。
+

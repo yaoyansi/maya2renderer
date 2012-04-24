@@ -640,6 +640,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ei_maya_physicalsky.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\ei_maya_place2dTexture.cpp"
 				>
 			</File>

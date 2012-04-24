@@ -1,7 +1,7 @@
 #shaderType
 environment
 #shaderName
-physicalsky
+maya_physicalsky
 #Name|Details|Type|IsOutput|Defaults|ArraySizes
 sun_dir|uniform|vector|0|<<0.577, 0.577, 0.577>>|-1
 sun_disk_size|uniform|float|0|2.0|-1
