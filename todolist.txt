@@ -75,7 +75,7 @@ er
 - (done)重构：导出er时，没有rib数据导出
 - (done)ei_instance 使用trasform node name，而不是shape ndoe name
 - (done)由于使用progressive rendering， tile更新不明显。应该把正在更新的tile用红框标出来。
-
+- (done)physicalsky需要修改为maya可用的
 
 ===================================  TODO LIST  =============================================
 liq
@@ -134,7 +134,6 @@ rm
 er
 ------------
 - er global node ui,数据更新有问题
-- physicalsky需要修改为maya可用的
 - 更新er代码，回归测试
   shader里默认坐标系改为什么？更新shader
   添加er light group的支持
