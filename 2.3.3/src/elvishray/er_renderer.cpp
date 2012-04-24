@@ -238,7 +238,7 @@ namespace elvishray
 			MStringArray shadingGroupNodes;
 			{
 				MString cmd;
-				cmd = "listConnections -type \"shadingEngine\" -destination on (\""+MString(objectName.c_str())+"\" + \".instObjGroups\")";
+				cmd = "listConnections -type \"shadingEngine\" -destination on (\""+MString(ribNode__->name.asChar())+"\" + \".instObjGroups\")";
 				IfMErrorWarn(MGlobal::executeCommand( cmd, shadingGroupNodes));
 			}
 			_S( ei_add_material( shadingGroupNodes[0].asChar() ) );
