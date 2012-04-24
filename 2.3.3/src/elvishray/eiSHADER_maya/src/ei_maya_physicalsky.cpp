@@ -26,8 +26,8 @@
 // Borrowed the idea from mia_physicalsky, but need to be improved.
 //
 static scalar get_sun_intensity(
-	vector &ray_dir,
-	vector &sun_dir,
+	const vector &ray_dir,
+	const vector &sun_dir,
 	scalar   haze,
 	scalar   sun_disk_size,
 	scalar   sun_disk_intensity,
@@ -57,8 +57,8 @@ static scalar get_sun_intensity(
  * According "A Practical Analytic Model for Daylight".
  */
 static scalar get_sky_luminance(
-	vector &ray_dir,
-	vector &sun_dir,
+	const vector &ray_dir,
+	const vector &sun_dir,
 	scalar   t)
 {
 	scalar cos_gamma = dot(ray_dir, sun_dir);
@@ -85,8 +85,8 @@ static scalar get_sky_luminance(
 }
 
 static color get_haze_driven_sky_color(
-	vector &ray_dir,
-	vector &sun_dir,
+	const vector &ray_dir,
+	const vector &sun_dir,
 	scalar   t)
 {
 	scalar cos_gamma = dot(ray_dir, sun_dir);
@@ -153,9 +153,9 @@ static color get_haze_driven_sky_color(
  * According "Spatial distribution of daylight CIE standard general sky".
  */
 static color get_cie_standard_sky_color(
-	vector &ray_dir,
-	vector &sun_dir,
-	color  &zenith_color,
+	const vector &ray_dir,
+	const vector &sun_dir,
+	const color  &zenith_color,
 	scalar   a,
 	scalar   b,
 	scalar   c,
@@ -198,6 +198,7 @@ ENVIRONMENT(maya_physicalsky)
 	PARAM(scalar, sun_glow_intensity);
 	PARAM(scalar, sun_glow_falloff);
 	PARAM(color, ground_color);
+	PARAM(scalar, ground_blur);
 	PARAM(eiBool, visibility_to_camera);
 	PARAM(int, type);
 	PARAM(scalar, haze);
@@ -218,6 +219,7 @@ ENVIRONMENT(maya_physicalsky)
 		DECLARE_SCALAR(sun_glow_intensity, 1.0f);
 		DECLARE_SCALAR(sun_glow_falloff, 5.0f);
 		DECLARE_COLOR(ground_color, 0.2f, 0.2f, 0.2f);
+		DECLARE_SCALAR(ground_blur, 0.01f);
 		DECLARE_BOOL(visibility_to_camera, eiTRUE);
 		DECLARE_INT(type, 0);
 		DECLARE_SCALAR(haze, 5.0f);
@@ -238,6 +240,35 @@ ENVIRONMENT(maya_physicalsky)
 	{
 	}
 
+	color physicalsky_color(const vector & ray_dir)
+	{
+		color result;
+
+		haze() = MAX(haze() + 2.0f, 2.0f);
+		color sky_color = color(0.0f);
+		switch (type())
+		{
+		case 0:
+			{
+				sky_color = get_haze_driven_sky_color(ray_dir, sun_dir(), haze());
+				sky_color *= 0.0001f;
+				break;
+			}
+		case 1:
+			{
+				sky_color = get_cie_standard_sky_color(ray_dir, sun_dir(), zenith_color(), a(), b(), c(), d(), e());
+				break;
+			}
+		default:
+			{
+				return color(0.0f);
+			}
+		}
+		result = intensity() * sky_color * get_sun_intensity(ray_dir, sun_dir(), haze(), sun_disk_size(), sun_disk_intensity(), sun_glow_size(), sun_glow_intensity(), sun_glow_falloff());
+		
+		return result;
+	}
+
 	void main(void *arg)
 	{
 		if ((visibility_to_camera() == eiFALSE) &&
@@ -246,9 +277,13 @@ ENVIRONMENT(maya_physicalsky)
 			return;
 		}
 
-		if (get_state()->caustic_reflect_depth > get_state()->opt->trace_reflect_depth || 
-			get_state()->caustic_refract_depth > get_state()->opt->trace_refract_depth || 
-			(get_state()->caustic_reflect_depth + get_state()->caustic_refract_depth) > get_state()->opt->trace_sum_depth)
+		if (get_state()->transp_depth > get_state()->opt->transp_depth || 
+			get_state()->glossy_reflect_depth > get_state()->opt->glossy_reflect_depth || 
+			get_state()->diffuse_reflect_depth > get_state()->opt->diffuse_reflect_depth || 
+			get_state()->glossy_refract_depth > get_state()->opt->glossy_refract_depth || 
+			get_state()->diffuse_refract_depth > get_state()->opt->diffuse_refract_depth || 
+			(get_state()->glossy_reflect_depth + get_state()->glossy_refract_depth + 
+			get_state()->diffuse_reflect_depth + get_state()->diffuse_refract_depth) > get_state()->opt->sum_depth)
 		{
 			Ci() = color(0.0f);
 			Oi() = color(0.0f);
@@ -258,40 +293,28 @@ ENVIRONMENT(maya_physicalsky)
 		// the shading space of physical sky should be in world space
 		vector Iw = normalize(I() * to_world());
 		vector ray_dir = Iw;
-		// the 0.03 here is a temporary fix for Max material editor 
+		// we should always enable ground blur for Max material editor. 
 		// when refraction is enabled, and IOR is 1.0, because in that 
 		// case, the ray direction will be coplanar with X-Y plane 
 		// (Y is 0.0), and after some transformations between internal 
 		// space and local frame, the precision will lose and result 
 		// in either +epsilon or -epsilon for Y component.
-		if (ray_dir.y > 0.03f)
+		scalar blur = ground_blur();
+		if (ray_dir.y >= blur)
 		{
-			haze() = MAX(haze() + 2.0f, 2.0f);
-			color sky_color = color(0.0f);
-			switch (type())
-			{
-			case 0:
-				{
-					sky_color = get_haze_driven_sky_color(ray_dir, sun_dir(), haze());
-					sky_color *= 0.0001f;
-					break;
-				}
-			case 1:
-				{
-					sky_color = get_cie_standard_sky_color(ray_dir, sun_dir(), zenith_color(), a(), b(), c(), d(), e());
-					break;
-				}
-			default:
-				{
-					Oi() = color(0.0f);
-					return;
-				}
-			}
-			Ci() = intensity() * sky_color * get_sun_intensity(ray_dir, sun_dir(), haze(), sun_disk_size(), sun_disk_intensity(), sun_glow_size(), sun_glow_intensity(), sun_glow_falloff());
+			Ci() = physicalsky_color(ray_dir);
+		}
+		else if (ray_dir.y <= 0.0f)
+		{
+			Ci() = ground_color();
 		}
 		else
 		{
-			Ci() = ground_color();
+			color sky_c(physicalsky_color(ray_dir));
+			color ground_c(ground_color());
+
+			scalar factor = curve(ray_dir.y / blur);
+			Ci() = ground_c * (1.0f - factor) + sky_c * factor;
 		}
 
 		Oi() = color(0.0f);
