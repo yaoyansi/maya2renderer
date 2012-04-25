@@ -3947,6 +3947,10 @@
 			Name="xx"
 			>
 			<File
+				RelativePath="..\..\mel\liquidCheck.mel"
+				>
+			</File>
+			<File
 				RelativePath="..\..\mel\xxliquidmayaBatchRenderProcedure.mel"
 				>
 			</File>

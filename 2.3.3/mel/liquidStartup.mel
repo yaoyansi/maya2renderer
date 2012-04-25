@@ -105,6 +105,7 @@ global proc liquidLoadScripts()
     "liquidAttachParams.mel",
     "liquidAttrWindow.mel",
     "liquidAttributes.mel",
+	"liquidCommon.mel",
     "liquidCommon.mel",
     "liquidConvMTOR.mel",
     "liquidConvertMtor.mel",

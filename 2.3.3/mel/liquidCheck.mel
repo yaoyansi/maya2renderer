@@ -1,0 +1,51 @@
+source xxliquidutility.mel;
+
+proc int checkDirectory(string $subdir)
+{
+    liqPushIdent();
+	liqlog("checkDirectory("+$subdir+")");
+	
+	string $projectPath = `workspace -q -rootDirectory`;
+	string $fullSubDir = ($projectPath+$subdir);
+	if ( `filetest -d $fullSubDir` ){//already exist,
+		liqPopIdent();
+		return 1;
+	}
+
+	if(`sysFile -makeDir $fullSubDir`){//try to create subdir
+		liqPopIdent();
+		return 1;
+	}else{
+		liqError("sysFile -makeDir "+$fullSubDir);
+		liqPopIdent();
+		return 0;
+	}
+
+    liqPopIdent();
+	return 0;
+}
+global proc int liquidCheckProjectDirectories()
+{
+    liqPushIdent();
+	liqlog("liquidCheckProjectDirectories()");
+
+	if( 0==checkDirectory("rib") ){
+		liqPopIdent();
+		return 0;
+	}
+	if( 0==checkDirectory("generatedShader") ){
+		liqPopIdent();
+		return 0;
+	}
+	if( 0==checkDirectory("rmanpix") ){
+		liqPopIdent();
+		return 0;
+	}
+	if( 0==checkDirectory("rmantex") ){
+		liqPopIdent();
+		return 0;
+	}
+
+    liqPopIdent();
+	return 1;
+}

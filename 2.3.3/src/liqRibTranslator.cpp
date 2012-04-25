@@ -40,7 +40,7 @@
 
 // Maya headers
 #include "./common/prerequest_maya.h"
-
+#include "./common/mayacheck.h"
 // Liquid headers
 #include <liquid.h>
 #include <liqRibHT.h>
@@ -7284,13 +7284,21 @@ void liqRibTranslator::_writeObject(
 bool liqRibTranslator::canExport()
 {
 	//CM_TRACE_FUNC("liqRibTranslator::canExport()");
-
+	//
 	if( liqglo.m_displays[0].name.length()==0 )
 	{
 		assert(0&&"liqglo.m_displays[ 0 ].name is empty. Please set the output image and render the scene again.");
 		liquidMessage2(messageError,"liqglo.m_displays[ 0 ].name is empty. Please set the output image and render the scene again.");
 		return false;
 	}
+	//check liquid required project directories.
+	int checkDirecoties=0;
+	IfMErrorWarn(MGlobal::executeCommand( "liquidCheckProjectDirectories()", checkDirecoties));
+	if(0==checkDirecoties){
+		liquidMessage2(messageError,"liquidCheckProjectDirectories() fails, see script editor for more details.");
+		return false;
+	}
+	//
 	return liquid::RendererMgr::getInstancePtr()->getRenderer()->canExport();
 }
 
