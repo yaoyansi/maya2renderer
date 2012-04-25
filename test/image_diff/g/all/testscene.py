@@ -115,3 +115,6 @@ def test_all_scene():
 
     testFile=LIQUID_ROOT+"/2.3.3/test/test_lightlink/test_lightlink.ma"
     MyTestOne.test_one_scene(testFile, "")
+    
+    testFile=LIQUID_ROOT+"/test/animation_test/MoxMotionMeetsFBIK/MoxMotionMeetsFBIK/scenes/texture_anim2.ma"
+    MyTestOne.test_one_scene(testFile, "")
