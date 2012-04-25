@@ -28,6 +28,7 @@ liq
 - (done)MString liqRibNode::getTransformNodeFullPath(), MStringArray liqRibNode::getChildrenNameOfTransformNode()
 - (done)重构convertShaderGraph。convertShadingNetwork.cpp 里的shaderData放到Visitor里，这样不同的Visitor可以输出各自的shader文本
 （如果该渲染器定义了自己的shader language的话；对于象er这样使用DSO的渲染器，则不需要输出shader文本）
+- (done)设置新project路径后，用er渲染会崩溃，原因是rib，generatedShader，rmanpix等目录未创建
 
 rm
 ------------
@@ -190,7 +191,6 @@ er
 - myDeleteAttr();--fail
 - er 网络渲染
 - 粒子，流体等vfx的导出
-* 设置新project路径后，用er渲染会崩溃，原因是rib，generatedShader，rmanpix等目录未创建
 - 导出前，检查物体名字长度是否大于EI_MAX_NODE_NAME_LEN，param名称长度是否大于EI_MAX_PARAM_NAME_LEN,、
   向Elvic说明这个bug
   - EI_MAX_NODE_NAME_LEN=128时，渲染MoxMotionMeetsFBIK_NoAux.ma（短名），OK
