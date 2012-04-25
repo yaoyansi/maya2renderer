@@ -1,0 +1,265 @@
+/*
+   How do you get a list of textures in the current scene FOR REAL?
+   http://games.greggman.com/game/maya_mel_api_tips__hints__and_other_random_stuff/
+*/
+/*************************************************************************
+                             GetFrameFile
+ *************************************************************************/
+/**
+    @brief  Find a file by filename and frameNumber
+
+    given a filename with a number already in it, attemps to change
+    that number to the given frameNumber and check for that file's
+    existance.  If found returns the new filename
+
+    Only supports these formats
+
+       name#.ext
+       name.#.ext
+       name####.ext
+       name.####.ext
+
+    @param  $filename
+    @param  $frameNumber
+
+    @return found filename or "" nothing found
+
+    @see
+
+*/
+/* ----------------------------------------------------------------------- */
+
+proc string GetFrameFile (string $filename, int $frameNumber)
+{
+    string $result = "";
+
+    // get extension
+    string $ext = fileExtension($filename);
+
+    // exit if no extension
+    if (size($ext) > 0)
+    {
+        // remove the extension
+        $ext  = "." + $ext;
+        string $work = substring($filename,  1, size($filename) - size($ext));
+
+        // get trailing numbers
+        string $numbers = match("[^0-9][0-9]+$", $work);
+
+        if (size($numbers) > 0)
+        {
+            // remove the trailing numbers
+            $numbers = substring ($numbers, 2, size($numbers));
+            $work    = substring ($work, 1, size($work) - size($numbers));
+
+            // try name#.ext and name.#.ext first
+            string $test = $work + $frameNumber + $ext;
+            if (`file -q -ex $test`)
+            {
+                $result = $test;
+            }
+            else
+            {
+                // try name####.ext and name.####.ext
+                string $zeros = "000000000000000000000";
+                string $fnum  = $frameNumber;
+
+                int $totalDigits = size($numbers);
+                int $haveDigits  = size($fnum);
+                int $needDigits  = $totalDigits - $haveDigits;
+
+                $test = $work + startString($zeros, $needDigits) + $fnum + $ext;
+                if (`file -q -ex $test`)
+                {
+                    $result = $test;
+                }
+            }
+        }
+    }
+
+    return $result;
+}
+
+/*************************************************************************
+                        CheckForTextureFrames
+ *************************************************************************/
+/**
+    @brief  Check for texture files by frame number
+
+            Checks in the given direction for files that match
+            the given filename starting at the given frameNumber.
+
+            In other words, if you pass in
+
+            x:/folder/file.15.tga, 20, 1
+
+            it will check for
+
+            x:/folder/file.15.tga
+            x:/folder/file.16.tga
+            x:/folder/file.17.tga
+            x:/folder/file.18.tga
+            x:/folder/file.19.tga
+            x:/folder/file.20.tga
+            ...
+
+            it will continue until it gets an error but ignore the first 5
+            errors. It will not check negative file numbers.
+
+            the reason we skip errors is because it's the default for maya to
+            set the frame extension to the timeline frame number.  It's
+            also common for artists to start numbering from frame 1 so
+            if the timeline is set to frame 0 the file maya is looking for
+            will not exist.
+
+    @param  $filename
+    @param  $frameNumber
+    @param  $direction   1 or -1
+
+    @return string array of files found
+
+    @see
+
+*/
+/* ----------------------------------------------------------------------- */
+
+proc string[] CheckForTextureFrames (
+    string $filename,
+    int $frameNumber,
+    int $direction)
+{
+    string $textures[];
+    int $ignoreErrCount = 5;
+
+    while(1)
+    {
+        $ignoreErrCount--;
+
+        string $frameFile = GetFrameFile($filename, $frameNumber);
+        if (size($frameFile) > 0)
+        {
+            $textures[size($textures)] = $frameFile;
+        }
+        else
+        {
+            if ($ignoreErrCount <= 0)
+            {
+                break;
+            }
+        }
+
+        $frameNumber += $direction;
+        if ($frameNumber < 0)
+        {
+            break;
+        }
+    }
+
+    return $textures;
+}
+
+/*************************************************************************
+                     GetListOfAllPossibleTextures
+ *************************************************************************/
+/**
+    @brief  Get a list of all possible textures in a scene
+
+        most docs will tell you
+
+            string $files[] = `ls -type "file"`;
+
+        is all you need.  Unfortunately that's not the case.  If we have
+        animated textures those will not be include.  This function
+        attepts to find those.
+
+        Since anything could be driving the frameExtension on an
+        animated texture (curve, expression, etc..)
+        the only true way to find which textures are used is to
+        run the animation and check the result every frame
+        but there is no way to tell how many frames to run for.  Just
+        because timeline is set to 1-100 doesn't mean the animation
+        doesn't actually run 1-500 (or even 423-437)
+
+        so....
+
+        we just have to make a guess.  For every texture that has
+        it's useFrameExtension set I start with the current
+        frameNumber and check for existing textures -5 to +5
+        frames.  If I find an existing texture file I keep
+        checking in that direction.  Hopefully that will find
+        all the textures.  It could mean frames not actually used
+        well be included in the list.
+
+        worse, as far as I can tell, Maya doesn't provide a function
+        that turns a filename + frame number into one of their
+        supported formats.  At least not from mel.  There's the
+        MRenderUtil::exactFileTextureName but I have not been
+        able to get it to work
+
+        worse yet, the maya docs say name#.ext is not supported
+        yet my artists are using that format and it's working.
+
+        for now I'm only going to support these formats
+
+          name#.ext
+          name.#.ext
+          name####.ext
+          name.####.ext
+
+        maya also supports
+
+          name.ext.#
+          name.ext.####
+
+        and
+
+          name.#
+          name.####
+
+        but both of those are left over from unix days when programmers
+        thought all users could remember what kind of file some file
+        was with no ext and no metadata.  Probably the same programmers
+        that thought users would like case sensitive file systems.
+        I don't personally know any such users :-p
+
+    @return
+
+*/
+/* ----------------------------------------------------------------------- */
+
+global proc string[] GetListOfAllPossibleTextures()
+{
+    string $textures[];
+
+    string $files[] = `ls -type "file"`;
+
+    for ($file in $files)
+    {
+        string $filename = getAttr($file + ".fileTextureName");
+
+        // now, is this marked as animated.
+
+        if (getAttr($file + ".useFrameExtension"))
+        {
+            int $currentFrame = getAttr($file + ".frameExtension") +
+                                        getAttr($file + ".frameOffset");
+
+            // check down
+            $textures = stringArrayCatenate(
+                            $textures,
+                            CheckForTextureFrames($filename, $currentFrame, -1));
+            // check up
+            $textures = stringArrayCatenate(
+                            $textures,
+                            CheckForTextureFrames($filename, $currentFrame,  1));
+        }
+        else
+        {
+            $textures[size($textures)] = $filename;
+        }
+    }
+
+    $textures = stringArrayRemoveDuplicates($textures);
+
+    return $textures;
+}
