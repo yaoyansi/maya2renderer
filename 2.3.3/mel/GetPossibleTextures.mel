@@ -29,7 +29,7 @@
 */
 /* ----------------------------------------------------------------------- */
 
-proc string GetFrameFile (string $filename, int $frameNumber)
+global proc string GetFrameFile (string $filename, int $frameNumber)
 {
     string $result = "";
 
@@ -226,15 +226,10 @@ proc string[] CheckForTextureFrames (
 
 */
 /* ----------------------------------------------------------------------- */
-
-global proc string[] GetListOfAllPossibleTextures()
+global proc string[] GetPossibleTextures(string $file)
 {
     string $textures[];
 
-    string $files[] = `ls -type "file"`;
-
-    for ($file in $files)
-    {
         string $filename = getAttr($file + ".fileTextureName");
 
         // now, is this marked as animated.
@@ -257,6 +252,21 @@ global proc string[] GetListOfAllPossibleTextures()
         {
             $textures[size($textures)] = $filename;
         }
+
+    return $textures;
+}
+
+global proc string[] GetListOfAllPossibleTextures()
+{
+    string $textures[];
+
+    string $files[] = `ls -type "file"`;
+
+    for ($file in $files)
+    {
+         $textures = stringArrayCatenate(
+                            $textures,
+                            GetPossibleTextures($file));
     }
 
     $textures = stringArrayRemoveDuplicates($textures);
