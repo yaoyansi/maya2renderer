@@ -132,6 +132,8 @@ rm
   liq| refactoring|: write mesh/locator/pfxhair data into the main rib file.(liqglo.m_writeDataIntoMainRibFile)
 - volume/light shader
 - test_displacement blinn1.sl_my无法编译
+- lambwert shader里transparent如果有链接，则渲染不出来，是黑的。
+- texture_anim2.ma用rm渲染的纹理位置不正确，v轴似乎缩小了。
 
 er
 ------------
@@ -203,4 +205,5 @@ er
 - test case 里更新contrast为0.01|0.01|0.01|0.01，samples为0|16
 - 更新ei_trace_depth接口，ercall里的，mel globalnode里的
 - bug:HappyWalk 角色右胳膊和右腿没有被照亮
-- check node(test\test_rm_texture\check12_bmp.ma)
+- checker node(test\test_rm_texture\check12_bmp.ma)效果不正确
+- er渲染MoxMotionMeetsFBIK\scenes\texture_anim1.ma崩溃
