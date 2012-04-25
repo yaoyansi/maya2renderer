@@ -54,9 +54,8 @@ void Visitor::visitFile(const char* node)
 	OutputHelper o;
 
 	//generate texture and construct texture node
+	MString fileImageName(getFileNodeImageName(node));
 	{
-		MString fileImageName;
-		IfMErrorWarn(MGlobal::executeCommand("getAttr \""+MString(node)+".fileTextureName\"", fileImageName));
 		//test "fileImageName" exist or not.
 		if( access(fileImageName.asChar(), 0) != 0){
 			liquidMessage2(messageError,"%s not exist!", fileImageName.asChar());
@@ -106,7 +105,7 @@ void Visitor::visitFile(const char* node)
 	o.addRSLVariable("color",  "colorOffset",	"colorOffset",	node);
 	o.addRSLVariable("color",  "defaultColor",	"defaultColor",	node);
 	o.addRSLVariable("vector",  "uvCoord",	"uvCoord",	node);
-	o.addRSLVariable("texture", "fileTextureName",	"fileTextureName",	node);
+	ei_shader_param_texture("fileTextureName", fileImageName.asChar());
 	o.addRSLVariable("index", "filterType",	"filterType",	node);
 	o.addRSLVariable("float",  "filter",	"filter",	node);
 	o.addRSLVariable("float",  "filterOffset",	"filterOffset",	node);

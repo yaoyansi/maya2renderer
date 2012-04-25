@@ -139,7 +139,8 @@ global proc liquidLoadScripts()
     "liquidCreateGlobalsTab.mel",
     "liquidRenderView.mel",
     "liquidLightLinker.mel",
-	"liqGlobalsNodeRenderer.mel"
+	"liqGlobalsNodeRenderer.mel",
+	"GetPossibleTextures.mel"
   };
 
   string $liquidHome = liquidGetHome();

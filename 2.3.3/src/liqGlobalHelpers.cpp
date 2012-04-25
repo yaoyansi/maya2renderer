@@ -1553,3 +1553,26 @@ bool liqAssert(const MString &title, const MString & msg, const MString &bYes, c
 #endif
 	return true;
 }
+//
+MString getFileNodeImageName(const MString &node)
+{
+	MStatus status;
+
+	int useFrameExtension;
+	IfMErrorWarn(MGlobal::executeCommand("getAttr \""+node+".useFrameExtension\"", useFrameExtension));
+
+	MString fileImageName;
+	IfMErrorWarn(MGlobal::executeCommand("getAttr \""+MString(node)+".fileTextureName\"", fileImageName));
+
+	if(0==useFrameExtension)
+		return fileImageName;
+	
+	int frameExtension;
+	IfMErrorWarn(MGlobal::executeCommand("getAttr \""+MString(node)+".frameExtension\"", frameExtension));
+	MString currentFrameExt;
+	currentFrameExt.set(frameExtension);
+
+	IfMErrorWarn(MGlobal::executeCommand("GetFrameFile(\""+fileImageName+"\","+currentFrameExt+")", fileImageName));
+
+	return fileImageName;
+}

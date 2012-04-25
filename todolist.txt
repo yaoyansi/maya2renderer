@@ -116,6 +116,7 @@ liqShader::getName(),liqRibLightData::getName(),liqRibMeshData::getName(),liqGet
 - test shadergraph:
    - liquidSurface <- phong.color
    - phong.color <- liquidSurface
+- add test case test\test_rm_texture\check12_bmp.ma
 
 rm
 ------------
@@ -202,3 +203,4 @@ er
 - test case 里更新contrast为0.01|0.01|0.01|0.01，samples为0|16
 - 更新ei_trace_depth接口，ercall里的，mel globalnode里的
 - bug:HappyWalk 角色右胳膊和右腿没有被照亮
+- check node(test\test_rm_texture\check12_bmp.ma)

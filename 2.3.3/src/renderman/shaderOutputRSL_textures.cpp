@@ -3,6 +3,7 @@
 #include "../shadergraph/shadermgr.h"
 #include "ri_interface.h"
 #include <trace/trace.hpp>
+#include <liqGlobalHelpers.h>
 
 namespace RSL
 {
@@ -118,8 +119,7 @@ void Visitor::visitFile(const char* node)
 	o.addRSLVariable( "float2", "uvCoord", "uvCoord",node);
 	o.addRSLVariable( "vector", "outColor", "outColor", node);
 
-	MString mayaTexName;
-	IfMErrorWarn(MGlobal::executeCommand("getAttr (\""+MString(node)+".fileTextureName\")", mayaTexName));
+	MString mayaTexName(getFileNodeImageName(node));
 	MString texName = mayaTexName + ".tex";
 	//system("txmake mayaTexName texName");
 	IfMErrorWarn(MGlobal::executeCommand("system(\"txmake "+mayaTexName+" "+texName+"\")", true));
