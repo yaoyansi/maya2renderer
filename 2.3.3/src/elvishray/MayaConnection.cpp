@@ -104,7 +104,7 @@ void MayaConnection::ClearTile( const eiInt left, const eiInt right,
 
 	//
 	MStatus status;
-	const std::size_t TARGET_LEN = 4;
+
 	const RV_PIXEL BACKGROUND={         (1.0f-m_percent)*255.0f,   0.0f,   0.0f, 125.0f};
 	const RV_PIXEL MARK={fmodf(((float)host)/3.14f,1.0f)*255.0f, 255.0f, 255.0f, 255.0f};
 
@@ -120,7 +120,8 @@ void MayaConnection::ClearTile( const eiInt left, const eiInt right,
 		return;
 	}
 
-	RV_PIXEL* pixels = new RV_PIXEL[TARGET_LEN];
+#define TARGET_LEN 4
+	RV_PIXEL pixels[TARGET_LEN];
 	for(std::size_t i = 0; i<TARGET_LEN; ++i)
 	{
 		pixels[i].r = MARK.r;
@@ -142,8 +143,6 @@ void MayaConnection::ClearTile( const eiInt left, const eiInt right,
 	IfErrorWarn(MRenderView::updatePixels(max_x-TARGET_LEN, max_x-1, max_y-1, max_y-1, pixels));
 	IfErrorWarn(MRenderView::updatePixels(max_x-1, max_x-1, max_y-TARGET_LEN, max_y-1, pixels));
 
-	delete [] pixels;
-
 	// Force the Render View to refresh the display of the affected region.
 	IfErrorWarn(MRenderView::refresh(min_x, min_x, min_y, min_y+TARGET_LEN-1));
 	IfErrorWarn(MRenderView::refresh(min_x, min_x+TARGET_LEN-1, min_y, min_y));
@@ -156,6 +155,7 @@ void MayaConnection::ClearTile( const eiInt left, const eiInt right,
 
 	IfErrorWarn(MRenderView::refresh(max_x-TARGET_LEN, max_x-1, max_y-1, max_y-1));
 	IfErrorWarn(MRenderView::refresh(max_x-1, max_x-1, max_y-TARGET_LEN, max_y-1));
+#undef TARGET_LEN
 }
 // Note:
 // the tile of elvishray range from [left right) to [top bottom)
