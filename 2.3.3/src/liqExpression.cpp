@@ -108,7 +108,9 @@ MString	liqExpression::CalcValue( )
         options += " ";
       }
 
-      dest = liqglo.liqglo_textureDir + value;
+	  //dest = liqglo.liqglo_textureDir + value;//liquidMaya generates texture to liqglo.liqglo_textureDir
+      dest =source+".tex";//we generate texture to the same directory as source.
+
       destExists = fileExists( dest );
       destIsNewer = fileIsNewer( dest, source );
       break;

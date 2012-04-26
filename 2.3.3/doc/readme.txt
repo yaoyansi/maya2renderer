@@ -143,7 +143,10 @@ RenderMan (R) is a registered trademark of Pixar
   - 不可行的texture路径格式
       E:\MyDocuments\maya\projects\default\rmantex/check10.tex(反斜杠‘\’)
   - 测试用例 $(LiquidRoot)\2.3.3\test\test_rm_texture\*.*
-
+  - 对于liquidSurfaceShader里的texture
+    liquidMaya generates texture(*.tex) to liqglo.liqglo_textureDir
+    But now, we generate texture(*.tex) to the same directory as source.
+    see liqExpression::CalcValue(){...case exp_MakeTexture:...}
 
 - rm ao测试（test/test_ao2/occlude2.ma），注意打开RenderSettings->Liquid->Rays->RayTracing->Enable
   rm里如果要提高ao的质量，除了调ao shader的参数外，还要调maxerror的值，

@@ -1,9 +1,9 @@
 //Maya ASCII 2009 scene
 //Name: check12_bmp.ma
-//Last modified: Wed, Apr 25, 2012 11:48:02 PM
+//Last modified: Thu, Apr 26, 2012 09:46:44 PM
 //Codeset: 936
 requires maya "2009";
-requires "liquid_2009x32d" "2.3.5 (buildtime=23:19:23.59)";
+requires "liquid_2009x32d" "2.3.5 (buildtime=21:44:02.28)";
 requires "stereoCamera" "10.0";
 currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
@@ -142,9 +142,9 @@ createNode mesh -n "pPlaneShape19" -p "pPlane10";
 	setAttr ".covm[0]"  0 1 1;
 	setAttr ".cdvm[0]"  0 1 1;
 createNode lightLinker -n "lightLinker1";
-	setAttr -s 9 ".lnk";
+	setAttr -s 10 ".lnk";
 	setAttr -s 2 ".ign";
-	setAttr -s 9 ".slnk";
+	setAttr -s 10 ".slnk";
 createNode displayLayerManager -n "layerManager";
 createNode displayLayer -n "defaultLayer";
 createNode renderLayerManager -n "renderLayerManager";
@@ -191,80 +191,7 @@ createNode liquidGlobals -n "liquidGlobals";
 	setAttr ".Points" yes;
 	setAttr ".Raytracing" yes;
 	setAttr ".AdvancedVisibility" yes;
-	setAttr ".rnd" -type "string" "elvishray";
-createNode liquidSurface -n "liquidSurface11";
-	addAttr -ci true -sn "liqAssignedObjects" -ln "liqAssignedObjects" -at "message";
-	addAttr -ci true -h true -sn "texname" -ln "texname" -dt "string";
-	addAttr -ci true -h true -sn "maptype" -ln "maptype" -at "double";
-	addAttr -ci true -h true -k true -sn "maporigin" -ln "maporigin" -at "double3" -nc 
-		3;
-	addAttr -ci true -h true -k true -sn "maporigina" -ln "maporigina" -at "double" 
-		-p "maporigin";
-	addAttr -ci true -h true -k true -sn "maporiginb" -ln "maporiginb" -at "double" 
-		-p "maporigin";
-	addAttr -ci true -h true -k true -sn "maporiginc" -ln "maporiginc" -at "double" 
-		-p "maporigin";
-	addAttr -ci true -h true -k true -sn "xaxis" -ln "xaxis" -at "double3" -nc 3;
-	addAttr -ci true -h true -k true -sn "xaxisa" -ln "xaxisa" -at "double" -p "xaxis";
-	addAttr -ci true -h true -k true -sn "xaxisb" -ln "xaxisb" -at "double" -p "xaxis";
-	addAttr -ci true -h true -k true -sn "xaxisc" -ln "xaxisc" -at "double" -p "xaxis";
-	addAttr -ci true -h true -k true -sn "yaxis" -ln "yaxis" -at "double3" -nc 3;
-	addAttr -ci true -h true -k true -sn "yaxisa" -ln "yaxisa" -at "double" -p "yaxis";
-	addAttr -ci true -h true -k true -sn "yaxisb" -ln "yaxisb" -at "double" -p "yaxis";
-	addAttr -ci true -h true -k true -sn "yaxisc" -ln "yaxisc" -at "double" -p "yaxis";
-	addAttr -ci true -h true -k true -sn "zaxis" -ln "zaxis" -at "double3" -nc 3;
-	addAttr -ci true -h true -k true -sn "zaxisa" -ln "zaxisa" -at "double" -p "zaxis";
-	addAttr -ci true -h true -k true -sn "zaxisb" -ln "zaxisb" -at "double" -p "zaxis";
-	addAttr -ci true -h true -k true -sn "zaxisc" -ln "zaxisc" -at "double" -p "zaxis";
-	addAttr -ci true -h true -sn "s1" -ln "s1" -at "double";
-	addAttr -ci true -h true -sn "t1" -ln "t1" -at "double";
-	addAttr -ci true -h true -sn "s2" -ln "s2" -at "double";
-	addAttr -ci true -h true -sn "t2" -ln "t2" -at "double";
-	addAttr -ci true -h true -sn "s3" -ln "s3" -at "double";
-	addAttr -ci true -h true -sn "t3" -ln "t3" -at "double";
-	addAttr -ci true -h true -sn "s4" -ln "s4" -at "double";
-	addAttr -ci true -h true -sn "t4" -ln "t4" -at "double";
-	addAttr -ci true -h true -sn "Ka" -ln "Ka" -at "double";
-	addAttr -ci true -h true -sn "Kd" -ln "Kd" -at "double";
-	addAttr -ci true -h true -sn "Ks" -ln "Ks" -at "double";
-	addAttr -ci true -h true -sn "roughness" -ln "roughness" -at "double";
-	addAttr -ci true -uac -h true -k true -sn "specularcolor" -ln "specularcolor" -at "float3" 
-		-nc 3;
-	addAttr -ci true -h true -k true -sn "specularcolora" -ln "specularcolora" -at "float" 
-		-p "specularcolor";
-	addAttr -ci true -h true -k true -sn "specularcolorb" -ln "specularcolorb" -at "float" 
-		-p "specularcolor";
-	addAttr -ci true -h true -k true -sn "specularcolorc" -ln "specularcolorc" -at "float" 
-		-p "specularcolor";
-	setAttr ".rms" -type "string" "texmap";
-	setAttr ".rml" -type "string" "D:/Program Files/Pixar/RenderManProServer-13.5.2/lib/shaders/texmap.slo";
-	setAttr ".rpr" -type "stringArray" 19 "texname" "maptype" "maporigin" "xaxis" "yaxis" "zaxis" "s1" "t1" "s2" "t2" "s3" "t3" "s4" "t4" "Ka" "Kd" "Ks" "roughness" "specularcolor"  ;
-	setAttr ".rdt" -type "stringArray" 19 "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform"  ;
-	setAttr ".rty" -type "stringArray" 19 "string" "float" "point" "point" "point" "point" "float" "float" "float" "float" "float" "float" "float" "float" "float" "float" "float" "float" "color"  ;
-	setAttr ".rdf" -type "stringArray" 19 "" "3.0" "0.0000000.0000000.000000" "1.0000000.0000000.000000" "0.0000001.0000000.000000" "0.0000000.0000001.000000" "0.0" "0.0" "1.0" "0.0" "0.0" "1.0" "1.0" "1.0" "1.0" "1.0" "0.0" "0.25" "1.0000001.0000001.000000"  ;
-	setAttr ".ras" -type "Int32Array" 19 -1 -1 -1 -1 -1 -1
-		 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
-		 -1 ;
-	setAttr ".rlc" -type "stringArray" 19 "liquidAE_LifString( \"texname\", -1, \"string\", \"texname\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"maptype\", -1, \"float\", \"maptype\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifVector( \"maporigin\", -1, \"point\", \"maporigin\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifVector( \"xaxis\", -1, \"point\", \"xaxis\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifVector( \"yaxis\", -1, \"point\", \"yaxis\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifVector( \"zaxis\", -1, \"point\", \"zaxis\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"s1\", -1, \"float\", \"s1\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"t1\", -1, \"float\", \"t1\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"s2\", -1, \"float\", \"s2\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"t2\", -1, \"float\", \"t2\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"s3\", -1, \"float\", \"s3\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"t3\", -1, \"float\", \"t3\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"s4\", -1, \"float\", \"s4\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"t4\", -1, \"float\", \"t4\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"Ka\", -1, \"float\", \"Ka\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"Kd\", -1, \"float\", \"Kd\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"Ks\", -1, \"float\", \"Ks\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"roughness\", -1, \"float\", \"roughness\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifColor( \"specularcolor\", -1, \"color\", \"specularcolor\", {\"0\", \"0\"}, \"\", 14 );"  ;
-	setAttr ".rmt" -type "stringArray" 1 "surface"  ;
-	setAttr ".rio" -type "Int32Array" 19 0 0 0 0 0 0
-		 0 0 0 0 0 0 0 0 0 0 0 0
-		 0 ;
-	setAttr ".pcp" -type "string" "";
-	setAttr ".pcb" -type "string" "";
-	setAttr ".texname" -type "string" "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/test/test_rm_texture/textures/check11.bmp";
-	setAttr ".maptype" 3;
-	setAttr -k on ".xaxis" -type "double3" 1 0 0 ;
-	setAttr -k on ".yaxis" -type "double3" 0 1 0 ;
-	setAttr -k on ".zaxis" -type "double3" 0 0 1 ;
-	setAttr ".s2" 1;
-	setAttr ".t3" 1;
-	setAttr ".s4" 1;
-	setAttr ".t4" 1;
-	setAttr ".Ka" 1;
-	setAttr ".Kd" 1;
-	setAttr ".roughness" 0.25;
-	setAttr -k on ".specularcolor" -type "float3" 1 1 1 ;
+	setAttr ".rnd" -type "string" "renderman";
 createNode shadingEngine -n "liquidSurface11SG";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
@@ -444,6 +371,82 @@ createNode liqGlobalsNodeRenderer -n "liqGlobalsNodeRenderer_renderman";
 	setAttr ".testString1" -type "string" "string_test_value1renderman";
 	setAttr ".testColor0" -type "float3" 1 1 0 ;
 	setAttr ".testColor1" -type "float3" 1.9 9 2 ;
+createNode liquidSurface -n "liquidSurface16";
+	addAttr -ci true -h true -sn "texname" -ln "texname" -dt "string";
+	addAttr -ci true -h true -sn "maptype" -ln "maptype" -at "double";
+	addAttr -ci true -h true -k true -sn "maporigin" -ln "maporigin" -at "double3" -nc 
+		3;
+	addAttr -ci true -h true -k true -sn "maporigina" -ln "maporigina" -at "double" 
+		-p "maporigin";
+	addAttr -ci true -h true -k true -sn "maporiginb" -ln "maporiginb" -at "double" 
+		-p "maporigin";
+	addAttr -ci true -h true -k true -sn "maporiginc" -ln "maporiginc" -at "double" 
+		-p "maporigin";
+	addAttr -ci true -h true -k true -sn "xaxis" -ln "xaxis" -at "double3" -nc 3;
+	addAttr -ci true -h true -k true -sn "xaxisa" -ln "xaxisa" -at "double" -p "xaxis";
+	addAttr -ci true -h true -k true -sn "xaxisb" -ln "xaxisb" -at "double" -p "xaxis";
+	addAttr -ci true -h true -k true -sn "xaxisc" -ln "xaxisc" -at "double" -p "xaxis";
+	addAttr -ci true -h true -k true -sn "yaxis" -ln "yaxis" -at "double3" -nc 3;
+	addAttr -ci true -h true -k true -sn "yaxisa" -ln "yaxisa" -at "double" -p "yaxis";
+	addAttr -ci true -h true -k true -sn "yaxisb" -ln "yaxisb" -at "double" -p "yaxis";
+	addAttr -ci true -h true -k true -sn "yaxisc" -ln "yaxisc" -at "double" -p "yaxis";
+	addAttr -ci true -h true -k true -sn "zaxis" -ln "zaxis" -at "double3" -nc 3;
+	addAttr -ci true -h true -k true -sn "zaxisa" -ln "zaxisa" -at "double" -p "zaxis";
+	addAttr -ci true -h true -k true -sn "zaxisb" -ln "zaxisb" -at "double" -p "zaxis";
+	addAttr -ci true -h true -k true -sn "zaxisc" -ln "zaxisc" -at "double" -p "zaxis";
+	addAttr -ci true -h true -sn "s1" -ln "s1" -at "double";
+	addAttr -ci true -h true -sn "t1" -ln "t1" -at "double";
+	addAttr -ci true -h true -sn "s2" -ln "s2" -at "double";
+	addAttr -ci true -h true -sn "t2" -ln "t2" -at "double";
+	addAttr -ci true -h true -sn "s3" -ln "s3" -at "double";
+	addAttr -ci true -h true -sn "t3" -ln "t3" -at "double";
+	addAttr -ci true -h true -sn "s4" -ln "s4" -at "double";
+	addAttr -ci true -h true -sn "t4" -ln "t4" -at "double";
+	addAttr -ci true -h true -sn "Ka" -ln "Ka" -at "double";
+	addAttr -ci true -h true -sn "Kd" -ln "Kd" -at "double";
+	addAttr -ci true -h true -sn "Ks" -ln "Ks" -at "double";
+	addAttr -ci true -h true -sn "roughness" -ln "roughness" -at "double";
+	addAttr -ci true -uac -h true -k true -sn "specularcolor" -ln "specularcolor" -at "float3" 
+		-nc 3;
+	addAttr -ci true -h true -k true -sn "specularcolora" -ln "specularcolora" -at "float" 
+		-p "specularcolor";
+	addAttr -ci true -h true -k true -sn "specularcolorb" -ln "specularcolorb" -at "float" 
+		-p "specularcolor";
+	addAttr -ci true -h true -k true -sn "specularcolorc" -ln "specularcolorc" -at "float" 
+		-p "specularcolor";
+	addAttr -ci true -sn "liqAssignedObjects" -ln "liqAssignedObjects" -at "message";
+	setAttr ".rms" -type "string" "texmap";
+	setAttr ".rst" -type "string" "surface";
+	setAttr ".rml" -type "string" "D:/Program Files/Pixar/RenderManProServer-13.5.2/lib/shaders/texmap.slo";
+	setAttr ".rpr" -type "stringArray" 19 "texname" "maptype" "maporigin" "xaxis" "yaxis" "zaxis" "s1" "t1" "s2" "t2" "s3" "t3" "s4" "t4" "Ka" "Kd" "Ks" "roughness" "specularcolor"  ;
+	setAttr ".rdt" -type "stringArray" 19 "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform" "uniform"  ;
+	setAttr ".rty" -type "stringArray" 19 "string" "float" "point" "point" "point" "point" "float" "float" "float" "float" "float" "float" "float" "float" "float" "float" "float" "float" "color"  ;
+	setAttr ".rdf" -type "stringArray" 19 "" "3.0" "0.0000000.0000000.000000" "1.0000000.0000000.000000" "0.0000001.0000000.000000" "0.0000000.0000001.000000" "0.0" "0.0" "1.0" "0.0" "0.0" "1.0" "1.0" "1.0" "1.0" "1.0" "0.0" "0.25" "1.0000001.0000001.000000"  ;
+	setAttr ".ras" -type "Int32Array" 19 -1 -1 -1 -1 -1 -1
+		 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+		 -1 ;
+	setAttr ".rlc" -type "stringArray" 19 "liquidAE_LifString( \"texname\", -1, \"string\", \"texname\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"maptype\", -1, \"float\", \"maptype\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifVector( \"maporigin\", -1, \"point\", \"maporigin\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifVector( \"xaxis\", -1, \"point\", \"xaxis\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifVector( \"yaxis\", -1, \"point\", \"yaxis\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifVector( \"zaxis\", -1, \"point\", \"zaxis\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"s1\", -1, \"float\", \"s1\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"t1\", -1, \"float\", \"t1\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"s2\", -1, \"float\", \"s2\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"t2\", -1, \"float\", \"t2\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"s3\", -1, \"float\", \"s3\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"t3\", -1, \"float\", \"t3\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"s4\", -1, \"float\", \"s4\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"t4\", -1, \"float\", \"t4\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"Ka\", -1, \"float\", \"Ka\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"Kd\", -1, \"float\", \"Kd\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"Ks\", -1, \"float\", \"Ks\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifFloat( \"roughness\", -1, \"float\", \"roughness\", {\"0\", \"0\"}, \"\", 14 );" "liquidAE_LifColor( \"specularcolor\", -1, \"color\", \"specularcolor\", {\"0\", \"0\"}, \"\", 14 );"  ;
+	setAttr ".rmt" -type "stringArray" 1 "surface"  ;
+	setAttr ".rio" -type "Int32Array" 19 0 0 0 0 0 0
+		 0 0 0 0 0 0 0 0 0 0 0 0
+		 0 ;
+	setAttr ".texname" -type "string" "E:/dev/Autodesk/maya/myplugin/project/liquid_/2.3.3/test/test_rm_texture/textures/check11.bmp";
+	setAttr ".maptype" 3;
+	setAttr -k on ".xaxis" -type "double3" 1 0 0 ;
+	setAttr -k on ".yaxis" -type "double3" 0 1 0 ;
+	setAttr -k on ".zaxis" -type "double3" 0 0 1 ;
+	setAttr ".s2" 1;
+	setAttr ".t3" 1;
+	setAttr ".s4" 1;
+	setAttr ".t4" 1;
+	setAttr ".Ka" 1;
+	setAttr ".Kd" 1;
+	setAttr ".roughness" 0.25;
+	setAttr -k on ".specularcolor" -type "float3" 1 1 1 ;
+createNode shadingEngine -n "liquidSurface16SG";
+	setAttr ".ihi" 0;
+	setAttr ".ro" yes;
+createNode materialInfo -n "materialInfo8";
 select -ne :time1;
 	setAttr -k on ".cch";
 	setAttr -cb on ".ihi";
@@ -455,7 +458,7 @@ select -ne :renderPartition;
 	setAttr -cb on ".ihi";
 	setAttr -k on ".nds";
 	setAttr -cb on ".bnm";
-	setAttr -s 9 ".st";
+	setAttr -s 10 ".st";
 	setAttr -cb on ".an";
 	setAttr -cb on ".pt";
 select -ne :renderGlobalsList1;
@@ -680,6 +683,8 @@ connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[7].llnk";
 connectAttr "liquidSurface15SG.msg" "lightLinker1.lnk[7].olnk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[8].llnk";
 connectAttr "lambert2SG.msg" "lightLinker1.lnk[8].olnk";
+connectAttr ":defaultLightSet.msg" "lightLinker1.lnk[9].llnk";
+connectAttr "liquidSurface16SG.msg" "lightLinker1.lnk[9].olnk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[0].sllk";
 connectAttr ":initialShadingGroup.msg" "lightLinker1.slnk[0].solk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[1].sllk";
@@ -698,6 +703,8 @@ connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[7].sllk";
 connectAttr "liquidSurface15SG.msg" "lightLinker1.slnk[7].solk";
 connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[8].sllk";
 connectAttr "lambert2SG.msg" "lightLinker1.slnk[8].solk";
+connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[9].sllk";
+connectAttr "liquidSurface16SG.msg" "lightLinker1.slnk[9].solk";
 connectAttr "pointLightShape1.msg" "lightLinker1.ign[0].lign";
 connectAttr "pPlaneShape16.msg" "lightLinker1.ign[0].oign";
 connectAttr "pointLightShape2.msg" "lightLinker1.ign[1].lign";
@@ -705,11 +712,7 @@ connectAttr "pPlaneShape17.msg" "lightLinker1.ign[1].oign";
 connectAttr "layerManager.dli[0]" "defaultLayer.id";
 connectAttr "renderLayerManager.rlmi[0]" "defaultRenderLayer.rlid";
 connectAttr "liquidSurface1SG.msg" "materialInfo1.sg";
-connectAttr "liquidSurface11.oc" "liquidSurface11SG.ss";
-connectAttr "pPlaneShape11.iog" "liquidSurface11SG.dsm" -na;
 connectAttr "liquidSurface11SG.msg" "materialInfo2.sg";
-connectAttr "liquidSurface11.msg" "materialInfo2.m";
-connectAttr "liquidSurface11.msg" "materialInfo2.t" -na;
 connectAttr "liquidSurface12SG.msg" "materialInfo3.sg";
 connectAttr "liquidSurface13SG.msg" "materialInfo4.sg";
 connectAttr "liquidSurface14SG.msg" "materialInfo5.sg";
@@ -744,6 +747,11 @@ connectAttr "polyPlane9.out" "polyTriangulate1.ip";
 connectAttr "polyPlane2.out" "polyTriangulate2.ip";
 connectAttr "polyTriangulate1.out" "polyTriangulate3.ip";
 connectAttr "polyPlane10.out" "polyTriangulate4.ip";
+connectAttr "liquidSurface16.oc" "liquidSurface16SG.ss";
+connectAttr "pPlaneShape11.iog" "liquidSurface16SG.dsm" -na;
+connectAttr "liquidSurface16SG.msg" "materialInfo8.sg";
+connectAttr "liquidSurface16.msg" "materialInfo8.m";
+connectAttr "liquidSurface16.msg" "materialInfo8.t" -na;
 connectAttr "liquidSurface1SG.pa" ":renderPartition.st" -na;
 connectAttr "liquidSurface11SG.pa" ":renderPartition.st" -na;
 connectAttr "liquidSurface12SG.pa" ":renderPartition.st" -na;
@@ -751,8 +759,9 @@ connectAttr "liquidSurface13SG.pa" ":renderPartition.st" -na;
 connectAttr "liquidSurface14SG.pa" ":renderPartition.st" -na;
 connectAttr "liquidSurface15SG.pa" ":renderPartition.st" -na;
 connectAttr "lambert2SG.pa" ":renderPartition.st" -na;
-connectAttr "liquidSurface11.msg" ":defaultShaderList1.s" -na;
+connectAttr "liquidSurface16SG.pa" ":renderPartition.st" -na;
 connectAttr "lambert2.msg" ":defaultShaderList1.s" -na;
+connectAttr "liquidSurface16.msg" ":defaultShaderList1.s" -na;
 connectAttr "place2dTexture1.msg" ":defaultRenderUtilityList1.u" -na;
 connectAttr "place2dTexture2.msg" ":defaultRenderUtilityList1.u" -na;
 connectAttr "lightLinker1.msg" ":lightList1.ln" -na;
