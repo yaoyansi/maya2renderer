@@ -306,8 +306,10 @@ void Visitor::postOutput()
 	MString srcSL (renderman::getShaderFilePath_SRC(shaderNodeName.c_str()));
 
 	MString result;
-	//"shader.exe -o \"outSLO\" -I\"%LIQUID_ROOT%\2.3.3\lib\shaders\_3delight\" \"srcSL\""
-	IfMErrorWarn(MGlobal::executeCommand("system(\"shader -o \\\""+outSLO+"\\\" -I\\\"%LIQUID_ROOT%\\2.3.3\\lib\\shaders\\_3delight\\\" \\\""+srcSL+"\\\"\")", result, true));
+	//NOTE:
+	//     the include directory can't contain '.', so I move _3delight to %LIQUID_ROOT%\dependence
+	//"shader.exe -o \"outSLO\" -I\"%LIQUID_ROOT%\dependence\_3delight" \"srcSL\""
+	IfMErrorWarn(MGlobal::executeCommand("system(\"shader -o \\\""+outSLO+"\\\" -I\\\"%LIQUID_ROOT%\\dependence\\_3delight\" \\\""+srcSL+"\\\"\")", result, true));
 
 	//show the error if there is.
 	std::string strRes(result.toLowerCase().asChar());

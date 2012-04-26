@@ -1,0 +1,3 @@
+//NOTE:
+//     the include directory can't contain '.', so I move _3delight to %LIQUID_ROOT%\dependence
+//"shader.exe -o \"outSLO\" -I\"%LIQUID_ROOT%\dependence\_3delight" \"srcSL\""
