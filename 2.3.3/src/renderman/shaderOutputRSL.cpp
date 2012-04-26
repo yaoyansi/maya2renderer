@@ -309,7 +309,7 @@ void Visitor::postOutput()
 	//NOTE:
 	//     the include directory can't contain '.', so I move _3delight to %LIQUID_ROOT%\dependence
 	//"shader.exe -o \"outSLO\" -I\"%LIQUID_ROOT%\dependence\_3delight" \"srcSL\""
-	IfMErrorWarn(MGlobal::executeCommand("system(\"shader -o \\\""+outSLO+"\\\" -I\\\"%LIQUID_ROOT%\\dependence\\_3delight\" \\\""+srcSL+"\\\"\")", result, true));
+	IfMErrorWarn(MGlobal::executeCommand("system(\"shader -o \\\""+outSLO+"\\\" -I\\\"%LIQUID_ROOT%/dependence/_3delight\\\" \\\""+srcSL+"\\\"\")", result, true));
 
 	//show the error if there is.
 	std::string strRes(result.toLowerCase().asChar());

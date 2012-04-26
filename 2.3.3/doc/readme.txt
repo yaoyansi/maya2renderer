@@ -131,6 +131,7 @@ RenderMan (R) is a registered trademark of Pixar
 
 - compile $(LiquidRoot)\2.3.3\lib\shaders\*.sl
   - You must set RMS_ROOT to you RendermanStudio install directory(e.g.D:\Program Files\Pixar\RenderMan-Studio-1.0.1-Maya2008) in system enviroment variables.
+  - and if you use -I option, e.g.shader -I"%RMS_ROOT%\lib\shaders\src", make sure the full path doesn't contain '.' at all.
   - run $(LiquidRoot)\2.3.3\lib\shaders\compile.cmd
 
 
@@ -246,6 +247,11 @@ RenderMan (R) is a registered trademark of Pixar
 	  - 连接cameraShape1.fStop到liquidSurface2.fstop
 
 - 添加shadow/Environment shader时，先选中shape节点，然后再点击Liquid->ObjectAttribute->CreateCustomShader
+
+- 3delight shaders
+  - because I use -I option to compile RM shader, e.g. shader -I"%RMS_ROOT%\lib\shaders\src", the full path can't contain '.' at all.
+    I move /2.3.3/lib/shaders/_3delight/*.* to /dependence/_3delight/*.*
+
 
   ---------------------------------------------------------------------
                               NOTES
