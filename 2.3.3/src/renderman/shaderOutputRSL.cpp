@@ -294,8 +294,8 @@ void Visitor::postOutput()
 	MString srcSL (renderman::getShaderFilePath_SRC(shaderNodeName.c_str()));
 
 	MString result;
-	//"shader.exe -o \"outSLO\" \"srcSL\""
-	IfMErrorWarn(MGlobal::executeCommand("system(\"shader -o \\\""+outSLO+"\\\" \\\""+srcSL+"\\\"\")", result, true));
+	//"shader.exe -o \"outSLO\" -I\"%LIQUID_ROOT%\2.3.3\lib\shaders\_3delight\" \"srcSL\""
+	IfMErrorWarn(MGlobal::executeCommand("system(\"shader -o \\\""+outSLO+"\\\" -I\\\"%LIQUID_ROOT%\\2.3.3\\lib\\shaders\\_3delight\\\" \\\""+srcSL+"\\\"\")", result, true));
 
 	//show the error if there is.
 	std::string strRes(result.toLowerCase().asChar());
