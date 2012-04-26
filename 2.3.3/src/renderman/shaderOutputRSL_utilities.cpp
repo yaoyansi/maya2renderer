@@ -109,6 +109,8 @@ void Visitor::visitPlace2dTexture(const char* node)
 
 	OutputHelper o(RSLfile);
 
+	o.addInclude("place2dTexture.h");
+
 	o.beginRSL(node);
 
 	o.addRSLVariable("float2", "repeatUV", "repeatUV", node);//repeatUV is out variable, so it will not be set.

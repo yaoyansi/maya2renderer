@@ -114,6 +114,8 @@ void Visitor::visitFile(const char* node)
 
 	OutputHelper o(RSLfile);
 
+	o.addInclude("file.h");
+
 	o.beginRSL( node );
 
 	o.addRSLVariable( "float2", "uvCoord", "uvCoord",node);

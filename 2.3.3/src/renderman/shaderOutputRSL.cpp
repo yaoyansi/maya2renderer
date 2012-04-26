@@ -174,7 +174,19 @@ void OutputHelper::endRSL ()
 	rslShaderHeader += ")\n";
 	rslShaderBody += "}\n";
 
+	//include files
+	std::set<std::string>::iterator i = includedFiles.begin();
+	std::set<std::string>::iterator e = includedFiles.end();
+	for(; i!=e; ++i){
+		RSLfileRef << "#include <"<< *i<<">\n";
+	}
+	//
 	RSLfileRef << rslShaderHeader + rslShaderBody + "\n" ;
+}
+void OutputHelper::addInclude(const MString& file)
+{
+	CM_TRACE_FUNC("OutputHelper::addInclude("<<file<<")");
+	includedFiles.insert(file.asChar());
 }
 //////////////////////////////////////////////////////////////////////////
 Visitor::Visitor()

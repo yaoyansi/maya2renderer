@@ -1,6 +1,7 @@
 #ifndef _SHADER_OUTPUT_RSL_H_
 #define _SHADER_OUTPUT_RSL_H_
 
+#include "../common/prerequest_std.h"
 #include "../common/prerequest_maya.h"
 #include "../shadergraph/shaderOutput.h"
 
@@ -42,11 +43,14 @@ public:
 	//--------------------------------------------------------------------
 	void endRSL ();
 
+	void addInclude(const MString& file);
+
 protected:
 	MString rslShaderHeader;
 	MString rslShaderBody;
 
 	std::ofstream& RSLfileRef;
+	std::set<std::string> includedFiles;
 
 private:
 	OutputHelper(const OutputHelper&);
