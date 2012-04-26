@@ -7293,7 +7293,7 @@ bool liqRibTranslator::canExport()
 	}
 	//check liquid required project directories.
 	int checkDirecoties=0;
-	IfMErrorWarn(MGlobal::executeCommand( "liquidCheckProjectDirectories()", checkDirecoties));
+	IfMErrorWarn(MGlobal::executeCommand( "source liquidCheck.mel; liquidCheckProjectDirectories()", checkDirecoties));
 	if(0==checkDirecoties){
 		liquidMessage2(messageError,"liquidCheckProjectDirectories() fails, see script editor for more details.");
 		return false;
