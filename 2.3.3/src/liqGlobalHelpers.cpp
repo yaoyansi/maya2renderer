@@ -1572,7 +1572,7 @@ MString getFileNodeImageName(const MString &node)
 	MString currentFrameExt;
 	currentFrameExt.set(frameExtension);
 
-	IfMErrorWarn(MGlobal::executeCommand("GetFrameFile(\""+fileImageName+"\","+currentFrameExt+")", fileImageName));
+	IfMErrorWarn(MGlobal::executeCommand("source GetPossibleTextures.mel; GetFrameFile(\""+fileImageName+"\","+currentFrameExt+")", fileImageName));
 
 	return fileImageName;
 }

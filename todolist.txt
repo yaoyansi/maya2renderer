@@ -117,6 +117,7 @@ liqShader::getName(),liqRibLightData::getName(),liqRibMeshData::getName(),liqGet
    - liquidSurface <- phong.color
    - phong.color <- liquidSurface
 - add test case test\test_rm_texture\check12_bmp.ma
+- 重构：source GetPossibleTextures.mel不要放在getFileNodeImageName()里
 
 rm
 ------------

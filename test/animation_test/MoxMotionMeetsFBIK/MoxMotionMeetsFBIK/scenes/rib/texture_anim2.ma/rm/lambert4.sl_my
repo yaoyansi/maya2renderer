@@ -1,0 +1,71 @@
+//shader name: place2dTexture1
+void place2dTexture1 (
+ output float repeatUV[];
+ output float outUV[];
+)
+{
+ repeatUV[ 0 ] = 1;
+ repeatUV[ 1 ] = 1;
+ extern float s, t;
+ outUV[ 0 ] = mod( s * repeatUV[ 0 ], 1 );
+ outUV[ 1 ] = mod( t * repeatUV[ 1 ], 1 );
+}
+
+//shader name: file1
+void file1 (
+ float uvCoord[];
+ output vector outColor;
+)
+{
+//file1.uvCoord <-- place2dTexture1.outUV
+ string texName = "E:/dev/Autodesk/maya/myplugin/project/liquid_/test/animation_test/MoxMotionMeetsFBIK/MoxMotionMeetsFBIK/sourceimages/FBIK.0003.bmp.tex";
+ float ss = uvCoord[ 0 ], tt = uvCoord[ 1 ];
+ outColor = vector color texture( texName, ss, tt );
+}
+
+//shader name: lambert4
+void lambert4 (
+ vector inColor;
+)
+{
+//lambert4.color <-- file1.outColor
+ vector transparency = vector (0,0,0);
+ vector ambientColor = vector (0,0,0);
+ vector incandescence = vector (0,0,0);
+ float diffusion = float 1;
+ vector outColor = vector (0,0,0);
+ vector outTransparency = vector (0,0,0);
+ extern normal N;
+ normal Nn = normalize( N );
+ outTransparency = transparency;
+ Oi = Os * color ( 1 - outTransparency );
+ outColor = incandescence +
+            ( inColor * ( diffusion * 
+                          vector diffuse( Nn ) +
+                          ambientColor ) );
+ Ci = Cs * Oi * color outColor;
+}
+
+//surface shader name: lambert4
+surface lambert4()
+{
+ float place2dTexture1_repeatUV[2];
+ float place2dTexture1_outUV[2];
+ vector file1_outColor;
+
+ //place2dTexture1
+ place2dTexture1(place2dTexture1_repeatUV, place2dTexture1_outUV);
+//input: 
+//output:place2dTexture1_repeatUV,place2dTexture1_outUV,
+
+ //file1
+ file1(place2dTexture1_outUV, file1_outColor);
+//input: place2dTexture1_outUV,
+//output:file1_outColor,
+
+ //lambert4
+ lambert4(file1_outColor);
+//input: file1_outColor,
+//output:
+
+}
