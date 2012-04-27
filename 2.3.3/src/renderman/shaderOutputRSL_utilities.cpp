@@ -97,6 +97,11 @@ void Visitor::visitPlace2dTexture(const char* node)
 	CM_TRACE_FUNC("Visitor::visitPlace2dTexture("<<node<<")");
 
 	MString repeatU, repeatV;
+	MString mirrorU, mirrorV;
+	MString rotateFrame;
+	MString rotateUV;
+	MString stagger;
+	MString wrapU, wrapV;
 	{
 		MObject m_node;
 		MStatus status;
@@ -105,6 +110,13 @@ void Visitor::visitPlace2dTexture(const char* node)
 		getDependNodeByName(m_node, node);
 		liquidGetPlugValue(m_node, "repeatU", fvalue, status);  repeatU.set(fvalue);
 		liquidGetPlugValue(m_node, "repeatV", fvalue, status);  repeatV.set(fvalue);
+		liquidGetPlugValue(m_node, "mirrorU", fvalue, status);  mirrorU.set(fvalue);
+		liquidGetPlugValue(m_node, "mirrorV", fvalue, status);  mirrorV.set(fvalue);
+		liquidGetPlugValue(m_node, "rotateFrame", fvalue, status);  rotateFrame.set(fvalue);
+		liquidGetPlugValue(m_node, "rotateUV", fvalue, status);		rotateUV.set(fvalue);
+		liquidGetPlugValue(m_node, "stagger", fvalue, status);		stagger.set(fvalue);
+		liquidGetPlugValue(m_node, "wrapU", fvalue, status);		wrapU.set(fvalue);
+		liquidGetPlugValue(m_node, "wrapV", fvalue, status);		wrapV.set(fvalue);
 	}
 
 	OutputHelper o(RSLfile);
@@ -112,17 +124,68 @@ void Visitor::visitPlace2dTexture(const char* node)
 	o.addInclude("place2dTexture.h");
 
 	o.beginRSL(node);
-
-	o.addRSLVariable(       "", "float2", "repeatUV",	"repeatUV", node);//repeatUV is out variable, so it will not be set.
+	// Inputs
+	o.addToRSL("extern float s, t; float uvCoord[2];");
+	o.addToRSL("uvCoord[0]=s; uvCoord[1]=t;");//float i_uvCoord[2];
+	o.addRSLVariable("uniform", "float", "coverageU",	"coverageU",	node);
+	o.addRSLVariable("uniform", "float", "coverageV",	"coverageV",	node);
+	o.addRSLVariable("uniform", "float", "mirrorU",		"mirrorU",		node);
+	o.addRSLVariable("uniform", "float", "mirrorV",		"mirrorV",		node);
+	o.addRSLVariable("uniform", "float", "noiseU",		"noiseU",		node);
+	o.addRSLVariable("uniform", "float", "noiseV",		"noiseV",		node);
+	o.addRSLVariable(		"", "float", "offsetU",		"offsetU",		node);
+	o.addRSLVariable(		"", "float", "offsetV",		"offsetV",		node);
+	o.addRSLVariable("uniform", "float", "repeatU",		"repeatU",		node);
+	o.addRSLVariable("uniform", "float", "repeatV",		"repeatV",		node);
+	o.addRSLVariable("uniform", "float", "rotateFrame",	"rotateFrame",	node);
+	o.addRSLVariable("uniform", "float", "rotateUV",	"rotateUV",		node);
+	o.addRSLVariable("uniform", "float", "stagger",		"stagger",		node);
+	o.addRSLVariable("uniform", "float", "translateFrameU",	"translateFrameU",		node);
+	o.addRSLVariable("uniform", "float", "translateFrameV",	"translateFrameV",		node);
+	o.addRSLVariable("uniform", "float", "wrapU",		"wrapU",		node);
+	o.addRSLVariable("uniform", "float", "wrapV",		"wrapV",		node);
+	// Outputs
 	o.addRSLVariable(       "", "float2", "outUV",		"outUV",	node);
 
-	//repeatUV is out variable, it will not be set in o.addRSLVariable(), so I set it manully.
-	o.addToRSL("repeatUV[ 0 ] = "+repeatU+";");
-	o.addToRSL("repeatUV[ 1 ] = "+repeatV+";");
-	o.addToRSL("extern float s, t;");
-	o.addToRSL("outUV[ 0 ] = mod( s * repeatUV[ 0 ], 1 );");
-	o.addToRSL("outUV[ 1 ] = mod( t * repeatUV[ 1 ], 1 );");
-
+	o.addToRSL("{");
+	o.addToRSL("uniform float i_mirrorU="+mirrorU+";");
+	o.addToRSL("uniform float i_mirrorV="+mirrorV+";");
+	o.addToRSL("uniform float i_rotateFrame="+rotateFrame+";");
+	o.addToRSL("uniform float i_rotateUV="+rotateUV+";");
+	o.addToRSL("uniform float i_stagger="+stagger+";");
+	o.addToRSL("uniform float i_wrapU="+wrapU+";");
+	o.addToRSL("uniform float i_wrapV="+wrapV+";");
+	o.addToRSL("  maya_place2dTexture("
+					//Inputs
+					"uvCoord,			\n\t"
+					"coverageU,         \n\t"
+					"coverageV,			\n\t"
+					"i_mirrorU,			\n\t"
+					"i_mirrorV,			\n\t"
+					"noiseU,			\n\t"
+					"noiseV,			\n\t"
+					"offsetU,			\n\t"
+					"offsetV,			\n\t"
+					"repeatU,			\n\t"
+					"repeatV,			\n\t"
+					"i_rotateFrame,		\n\t"
+					"i_rotateUV,			\n\t"
+					"i_stagger,			\n\t"
+					"translateFrameU,	\n\t"
+					"translateFrameV,	\n\t"
+					"i_wrapU,				\n\t"
+					"i_wrapV,				\n\t"
+					//Outputs
+					"outUV   \n"
+			"   );");
+	o.addToRSL("}");
+	o.addToRSL("mirrorU="+mirrorU+";");
+	o.addToRSL("mirrorV="+mirrorV+";");
+	o.addToRSL("rotateFrame="+rotateFrame+";");
+	o.addToRSL("rotateUV="+rotateUV+";");
+	o.addToRSL("stagger="+stagger+";");
+	o.addToRSL("wrapU="+wrapU+";");
+	o.addToRSL("wrapV="+wrapV+";");
 	o.endRSL();
 }
 // @node	maya shader node name
