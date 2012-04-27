@@ -118,27 +118,56 @@ void Visitor::visitFile(const char* node)
 
 	o.beginRSL( node );
 
-	o.addRSLVariable( "float2", "uvCoord", "uvCoord",node);
-	o.addRSLVariable( "vector", "outColor", "outColor", node);
-
 	MString mayaTexName(getFileNodeImageName(node));
 	MString texName = mayaTexName + ".tex";
 	//system("txmake mayaTexName texName");
 	IfMErrorWarn(MGlobal::executeCommand("system(\"txmake "+mayaTexName+" "+texName+"\")", true));
 
-	o.addToRSL( "string texName = \"" + texName + "\";" );
-	o.addToRSL( "float ss = uvCoord[ 0 ], tt = uvCoord[ 1 ];");
-	o.addToRSL( "outColor = vector color texture( texName, ss, tt );");
+	//input
+	o.addRSLVariable("float",  "alphaGain",	"alphaGain",	node);
+	o.addRSLVariable("float",  "alphaIsLuminance",	"alphaIsLuminance",	node);
+	o.addRSLVariable("float",  "alphaOffset",	"alphaOffset",	node);
+	o.addRSLVariable("color",  "colorGain",	"colorGain",	node);
+	o.addRSLVariable("color",  "colorOffset",	"colorOffset",	node);
+	o.addRSLVariable("color",  "defaultColor",	"defaultColor",	node);
+	o.addRSLVariable( "float2", "uvCoord", "uvCoord",node);
+	//texName
+	o.addRSLVariable("float", "filterType",	"filterType",	node);
+	o.addRSLVariable("float",  "filter",	"filter",	node);
+	o.addRSLVariable("float",  "filterOffset",	"filterOffset",	node);
+	o.addRSLVariable("float",  "invert",	"invert",	node);
+	o.addRSLVariable("float",  "fileHasAlpha",	"fileHasAlpha",	node);
+	//o.addRSLVariable("index", "num_channels",	"num_channels",	node);
+	//output
+	o.addRSLVariable("float", "outAlpha",	"outAlpha",	node);
+	o.addRSLVariable("color", "outColor",	"outColor",	node);
+	o.addRSLVariable("color", "outTransparency",	"outTransparency",	node);
 
-	int connected = liquidmaya::ShaderMgr::getSingletonPtr()->
-		convertibleConnection((MString(node)+".outTransparency").asChar());
-
-	if( connected )
-	{
-		o.addRSLVariable( "vector", "outTrans", "outTransparency", node);
-		o.addToRSL( "float alpha = float texture( texName[3], ss, tt );");
-		o.addToRSL( "outTrans = vector ( 1 -  alpha );");
-	}
+	o.addToRSL("uniform float  _alphaIsLuminance=alphaIsLuminance;");
+	o.addToRSL("uniform string _fileName=\""+texName+"\";");
+	o.addToRSL("uniform float  _filterType=filterType;");
+	o.addToRSL("uniform float  _filter=filter;");
+	o.addToRSL("uniform float  _invert=invert;");
+	//o.addToRSL("float i_uvCoord[2];");
+	o.addToRSL("maya_file("
+		//Inputs
+		"alphaGain, "
+		"_alphaIsLuminance,"
+		"alphaOffset,"
+		"colorGain,"
+		"colorOffset,"
+		"defaultColor,"
+		"_fileName,"
+		"_filterType,"
+		"_filter,"
+		"filterOffset,"
+		"_invert,"
+		"uvCoord,"
+		//Outputs
+		"outAlpha,"
+		"outColor,"
+		"outTransparency"
+		");");
 
 	o.endRSL();
 }
