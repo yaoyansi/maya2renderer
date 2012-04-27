@@ -70,7 +70,7 @@ void OutputHelper::addRSLVariable(const MString& inputQualifier, MString rslType
 		MString rslTypeSizeStr;
 		rslTypeSizeStr.set(rslTypeSize);
 		// Write out the description of the variable.
-		rslShaderBody += (inputQualifier + " " + rslType + " " + rslName);
+		rslShaderBody += (" "+inputQualifier + " " + rslType + " " + rslName);
 		rslShaderBody += ( rslTypeSize != 1 )?
 							 ( "[" + rslTypeSizeStr + "] = " )
 							:( " = " + rslType + " " );

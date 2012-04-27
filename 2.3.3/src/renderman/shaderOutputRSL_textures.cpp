@@ -140,35 +140,37 @@ void Visitor::visitFile(const char* node)
 	//o.addRSLVariable("index", "num_channels",	"num_channels",	node);
 	//output
 	o.addRSLVariable(       "", "float", "outAlpha",		"outAlpha",		node);
-	o.addRSLVariable(       "", "color", "outColor",		"outColor",		node);
-	o.addRSLVariable(       "", "color", "outTransparency",	"outTransparency",	node);
+	o.addRSLVariable(       "", "vector", "outColor",		"outColor",		node);
+	o.addRSLVariable(       "", "vector", "outTransparency",	"outTransparency",	node);
 
-	o.addToRSL("uniform float  _alphaIsLuminance=alphaIsLuminance;");
-	o.addToRSL("uniform string _fileName=\""+texName+"\";");
-	o.addToRSL("uniform float  _filterType=filterType;");
-	o.addToRSL("uniform float  _filter=filter;");
-	o.addToRSL("uniform float  _invert=invert;");
-	//o.addToRSL("float i_uvCoord[2];");
-	o.addToRSL("maya_file("
-		//Inputs
-		"alphaGain, "
-		"_alphaIsLuminance,"
-		"alphaOffset,"
-		"colorGain,"
-		"colorOffset,"
-		"defaultColor,"
-		"_fileName,"
-		"_filterType,"
-		"_filter,"
-		"filterOffset,"
-		"_invert,"
-		"uvCoord,"
-		//Outputs
-		"outAlpha,"
-		"outColor,"
-		"outTransparency"
-		");");
 
+	o.addToRSL("{");
+	o.addToRSL("  color _outColor;");
+	o.addToRSL("  color _outTransparency;");
+	o.addToRSL("  maya_file("
+						//Inputs
+						"alphaGain,         \n\t"
+						"alphaIsLuminance,  \n\t"
+						"alphaOffset,       \n\t"
+						"colorGain,         \n\t"
+						"colorOffset,       \n\t"
+						"defaultColor,      \n\t"
+						"\""+texName+"\",   \n\t"
+						"filterType,        \n\t"
+						"filter,            \n\t"
+						"filterOffset,      \n\t"
+						"invert,            \n\t"
+						"uvCoord,           \n\t"
+						//Outputs
+						"outAlpha,          \n\t"
+						"_outColor,         \n\t"
+						"_outTransparency   \n"
+			   "   );");
+
+	o.addToRSL("  outColor        = vector _outColor;");
+	o.addToRSL("  outTransparency = vector _outTransparency;");
+
+	o.addToRSL("}");
 	o.endRSL();
 }
 // @node	maya shader node name

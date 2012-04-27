@@ -1,9 +1,10 @@
+#include <place2dTexture.h>
 //shader name: place2dTexture2
 void place2dTexture2 (
  output float outUV[];
 )
 {
- float repeatUV[2] = { 4, 4 };
+  float repeatUV[2] = { 4, 4 };
  repeatUV[ 0 ] = 4;
  repeatUV[ 1 ] = 4;
  extern float s, t;
@@ -17,13 +18,13 @@ void checker1 (
  output vector outColor;
 )
 {
- float color1R = float 1;
- float color1G = float 1;
- float color1B = float 1;
+  float color1R = float 1;
+  float color1G = float 1;
+  float color1B = float 1;
  vector color1 = vector ( color1R, color1G, color1B );
- float color2R = float 0;
- float color2G = float 0;
- float color2B = float 0;
+  float color2R = float 0;
+  float color2G = float 0;
+  float color2B = float 0;
  vector color2 = vector ( color2R, color2G, color2B );
 //checker1.uvCoord <-- place2dTexture2.outUV
  float ss = uvCoord[0];
@@ -42,12 +43,12 @@ void lambert2 (
 )
 {
 //lambert2.color <-- checker1.outColor
- vector transparency = vector (0,0,0);
- vector ambientColor = vector (0,0,0);
- vector incandescence = vector (0,0,0);
- float diffusion = float 0.8;
- vector outColor = vector (0,0,0);
- vector outTransparency = vector (0,0,0);
+  vector transparency = vector (0,0,0);
+  vector ambientColor = vector (0,0,0);
+  vector incandescence = vector (0,0,0);
+  float diffusion = float 0.8;
+  vector outColor = vector (0,0,0);
+  vector outTransparency = vector (0,0,0);
  extern normal N;
  normal Nn = normalize( N );
  outTransparency = transparency;
