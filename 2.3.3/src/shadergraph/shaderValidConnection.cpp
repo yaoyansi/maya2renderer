@@ -275,12 +275,15 @@ void ShaderValidConnection::setValidConnection()
 	validConnection.append("uvCoord");
 	validConnection.append("coverageU");
 	validConnection.append("coverageV");
+	validConnection.append("coverage");
 	validConnection.append("mirrorU");
 	validConnection.append("mirrorV");
 	validConnection.append("noiseU");
 	validConnection.append("noiseV");
+	validConnection.append("noiseUV");
 	validConnection.append("offsetU");
 	validConnection.append("offsetV");
+	validConnection.append("offset");
 	validConnection.append("repeatU");
 	validConnection.append("repeatV");
 	validConnection.append("repeatUV");
@@ -289,6 +292,7 @@ void ShaderValidConnection::setValidConnection()
 	validConnection.append("stagger");
 	validConnection.append("translateFrameU");
 	validConnection.append("translateFrameV");
+	validConnection.append("translateFrame");
 	validConnection.append("wrapU");
 	validConnection.append("wrapV");
 	validConnection.append("outUV");

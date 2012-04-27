@@ -280,6 +280,17 @@ void ConvertShadingNetwork::addNodeOutputVariable(
 	MString type_;
 	IfMErrorWarn(MGlobal::executeCommand( ("getAttr -type \""+plug+"\""), type_ ));
 
+	{
+		std::string strType(type_.asChar());
+
+		boost::replace_all(strType, "bool",			"float");
+		boost::replace_all(strType, "doubleAngle",	"float");
+		//TODO: other types which can be considered as float
+		//...
+
+		type_ = strType.c_str();
+	}
+
 	const MString varName(node+"_"+validConnection);
 	const int outputIndex = outputVars.length();
 
