@@ -25,75 +25,50 @@ void Visitor::visitChecker(const char* node)
 
 	OutputHelper o(RSLfile);
 
+	o.addInclude("checker.h");
+
 	o.beginRSL(node);
+	//input
+	o.addRSLVariable(       "", "float",  "alphaGain",		"alphaGain",	node);
+	o.addRSLVariable("uniform", "float",  "alphaIsLuminance","alphaIsLuminance",node);
+	o.addRSLVariable(       "", "float",  "alphaOffset",	"alphaOffset",	node);
+	o.addRSLVariable(       "", "color",  "color1",			"color1",		node);
+	o.addRSLVariable(       "", "color",  "color2",			"color2",		node);
+	o.addRSLVariable(       "", "color",  "colorGain",		"colorGain",	node);
+	o.addRSLVariable(       "", "color",  "colorOffset",	"colorOffset",	node);
+	o.addRSLVariable("uniform", "float",  "contrast",		"contrast",		node);
+	o.addRSLVariable(       "", "color",  "defaultColor",	"defaultColor",	node);
+	o.addRSLVariable(       "", "float",  "filter",			"filter",		node);
+	o.addRSLVariable(       "", "float",  "filterOffset",	"filterOffset",	node);
+	o.addRSLVariable("uniform", "float",  "invert",			"invert",		node);
+	o.addRSLVariable(       "", "float2", "uvCoord",		"uvCoord",		node);
+	//Output
+	o.addRSLVariable(       "", "float",  "outAlpha",		"outAlpha",		node);
+	o.addRSLVariable(       "", "vector",  "outColor",		"outColor",		node);
 
-	int connected;
-	//color1
-	connected = liquidmaya::ShaderMgr::getSingletonPtr()->
-		convertibleConnection((MString(node)+".color1").asChar());
-	if( connected )
-	{
-		o.addRSLVariable(       "", "vector", "color1", "color1", node);
-	}else{
-		o.addRSLVariable(       "", "float", "color1R", "color1R", node);
-		o.addRSLVariable(       "", "float", "color1G", "color1G", node);
-		o.addRSLVariable(       "", "float", "color1B", "color1B", node);
-		o.addToRSL( "vector color1 = vector ( color1R, color1G, color1B );" );
-	}
-	//color2
-	connected = liquidmaya::ShaderMgr::getSingletonPtr()->
-		convertibleConnection((MString(node)+".color2").asChar());
-	if( connected )
-	{
-		o.addRSLVariable(       "", "vector", "color2", "color2", node);
-	}else{
-		o.addRSLVariable(       "", "float", "color2R", "color2R", node);
-		o.addRSLVariable(       "", "float", "color2G", "color2G", node);
-		o.addRSLVariable(       "", "float", "color2B", "color2B", node);
-		o.addToRSL( "vector color2 = vector ( color2R, color2G, color2B );" );
-	}
-	//uvCoord
-	connected = liquidmaya::ShaderMgr::getSingletonPtr()->
-		convertibleConnection((MString(node)+".uvCoord").asChar());
-	if( connected )
-	{
-		o.addRSLVariable(       "", "float2", "uvCoord", "uvCoord", node);
-		o.addToRSL( "float ss = uvCoord[0];");
-		o.addToRSL( "float tt = uvCoord[1];");
-	}else{
-		o.addRSLVariable(       "", "float", "ss", "uCoord", node);
-		o.addRSLVariable(       "", "float", "tt", "vCoord", node);
-	}
-	//outColor
-	int outColorConnected = liquidmaya::ShaderMgr::getSingletonPtr()->
-		convertibleConnection((MString(node)+".outColor").asChar());
-	if( outColorConnected )
-	{
-		o.addRSLVariable(       "", "vector", "outColor", "outColor", node);
-
-		o.addToRSL( "if( floor( ss * 2 ) == floor( tt * 2 ) )");
-		o.addToRSL( "{");
-		o.addToRSL( " outColor = color1;");
-		o.addToRSL( "}else{");
-		o.addToRSL( " outColor = color2;");
-		o.addToRSL( "}");
-	}else{
-		o.addRSLVariable(       "", "float", "outColorR", "outColorR", node);
-		o.addRSLVariable(       "", "float", "outColorG", "outColorG", node);
-		o.addRSLVariable(       "", "float", "outColorB", "outColorB", node);
-		o.addToRSL( "vector outColor = vector ( outColorR, outColorG, outColorB );" );
-
-		o.addToRSL( "if( floor( ss * 2 ) == floor( tt * 2 ) )");
-		o.addToRSL( "{");	
-		o.addToRSL( " outColorR = color1R;");
-		o.addToRSL( " outColorG = color1G;");
-		o.addToRSL( " outColorB = color1B;");
-		o.addToRSL( "}else{");
-		o.addToRSL( " outColorR = color2R;");
-		o.addToRSL( " outColorG = color2G;");
-		o.addToRSL( " outColorB = color2B;");
-		o.addToRSL( "}");
-	}
+	o.addToRSL("{");
+	o.addToRSL("  color _outColor;");
+	o.addToRSL("  maya_checker("
+					//Inputs
+					"alphaGain,         \n\t"
+					"alphaIsLuminance,  \n\t"
+					"alphaOffset,       \n\t"
+					"color1,            \n\t"
+					"color2,            \n\t"
+					"colorGain,         \n\t"
+					"colorOffset,       \n\t"
+					"contrast,          \n\t"
+					"defaultColor,      \n\t"
+					"filter,            \n\t"
+					"filterOffset,      \n\t"
+					"invert,            \n\t"
+					"uvCoord,           \n\t"
+					//Outputs
+					"outAlpha,          \n\t"
+					"_outColor          \n"
+			"   );");
+	o.addToRSL("  outColor        = vector _outColor;");
+	o.addToRSL("}");
 
 	o.endRSL();
 }
