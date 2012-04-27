@@ -40,7 +40,7 @@ OutputHelper::~OutputHelper()
 
 }
 //
-void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
+void OutputHelper::addRSLVariable(const MString& inputQualifier, MString rslType, const MString& rslName,
 					const MString& mayaName, const MString& mayaNode)
 {
 	MString cmd;
@@ -70,7 +70,7 @@ void OutputHelper::addRSLVariable(MString rslType, const MString& rslName,
 		MString rslTypeSizeStr;
 		rslTypeSizeStr.set(rslTypeSize);
 		// Write out the description of the variable.
-		rslShaderBody += (" " + rslType + " " + rslName);
+		rslShaderBody += (inputQualifier + " " + rslType + " " + rslName);
 		rslShaderBody += ( rslTypeSize != 1 )?
 							 ( "[" + rslTypeSizeStr + "] = " )
 							:( " = " + rslType + " " );
@@ -187,6 +187,13 @@ void OutputHelper::addInclude(const MString& file)
 {
 	CM_TRACE_FUNC("OutputHelper::addInclude("<<file<<")");
 	includedFiles.insert(file.asChar());
+}
+bool OutputHelper::isOutput(const MString& plugName)
+{
+	CM_TRACE_FUNC("OutputHelper::isOutput("<<plugName<<")");
+	
+	return 	(2 == liquidmaya::ShaderMgr::getSingletonPtr()
+		->convertibleConnection(plugName.asChar()));
 }
 //////////////////////////////////////////////////////////////////////////
 Visitor::Visitor()

@@ -16,13 +16,13 @@ void Visitor::visit_mib_amb_occlusion(const char* node)
 	OutputHelper o(RSLfile);
 	o.beginRSL(node);
 
-	o.addRSLVariable("float",	"i_samples",	"samples",		node);
-	o.addRSLVariable("color",	"i_bright",		"bright",		node);
-	o.addRSLVariable("color",	"i_dark",		"dark",			node);
-	o.addRSLVariable("float",	"i_spread",		"spread",		node);
-	o.addRSLVariable("float",	"i_max_distance","max_distance",node);
-	o.addRSLVariable("float",	"i_reflective",	"reflective",	node);
-	o.addRSLVariable("vector",	"o_outValue",	"outValue",		node);
+	o.addRSLVariable(       "", "float",	"i_samples",	"samples",		node);
+	o.addRSLVariable(       "", "color",	"i_bright",		"bright",		node);
+	o.addRSLVariable(       "", "color",	"i_dark",		"dark",			node);
+	o.addRSLVariable(       "", "float",	"i_spread",		"spread",		node);
+	o.addRSLVariable(       "", "float",	"i_max_distance","max_distance",node);
+	o.addRSLVariable(       "", "float",	"i_reflective",	"reflective",	node);
+	o.addRSLVariable(       "", "vector",	"o_outValue",	"outValue",		node);
 
 	o.addToRSL( 
 		"extern point P;\n"

@@ -113,8 +113,8 @@ void Visitor::visitPlace2dTexture(const char* node)
 
 	o.beginRSL(node);
 
-	o.addRSLVariable("float2", "repeatUV", "repeatUV", node);//repeatUV is out variable, so it will not be set.
-	o.addRSLVariable("float2", "outUV", "outUV", node);
+	o.addRSLVariable(       "", "float2", "repeatUV",	"repeatUV", node);//repeatUV is out variable, so it will not be set.
+	o.addRSLVariable(       "", "float2", "outUV",		"outUV",	node);
 
 	//repeatUV is out variable, it will not be set in o.addRSLVariable(), so I set it manully.
 	o.addToRSL("repeatUV[ 0 ] = "+repeatU+";");

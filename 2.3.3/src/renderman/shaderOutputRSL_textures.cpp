@@ -33,11 +33,11 @@ void Visitor::visitChecker(const char* node)
 		convertibleConnection((MString(node)+".color1").asChar());
 	if( connected )
 	{
-		o.addRSLVariable( "vector", "color1", "color1", node);
+		o.addRSLVariable(       "", "vector", "color1", "color1", node);
 	}else{
-		o.addRSLVariable( "float", "color1R", "color1R", node);
-		o.addRSLVariable( "float", "color1G", "color1G", node);
-		o.addRSLVariable( "float", "color1B", "color1B", node);
+		o.addRSLVariable(       "", "float", "color1R", "color1R", node);
+		o.addRSLVariable(       "", "float", "color1G", "color1G", node);
+		o.addRSLVariable(       "", "float", "color1B", "color1B", node);
 		o.addToRSL( "vector color1 = vector ( color1R, color1G, color1B );" );
 	}
 	//color2
@@ -45,11 +45,11 @@ void Visitor::visitChecker(const char* node)
 		convertibleConnection((MString(node)+".color2").asChar());
 	if( connected )
 	{
-		o.addRSLVariable( "vector", "color2", "color2", node);
+		o.addRSLVariable(       "", "vector", "color2", "color2", node);
 	}else{
-		o.addRSLVariable( "float", "color2R", "color2R", node);
-		o.addRSLVariable( "float", "color2G", "color2G", node);
-		o.addRSLVariable( "float", "color2B", "color2B", node);
+		o.addRSLVariable(       "", "float", "color2R", "color2R", node);
+		o.addRSLVariable(       "", "float", "color2G", "color2G", node);
+		o.addRSLVariable(       "", "float", "color2B", "color2B", node);
 		o.addToRSL( "vector color2 = vector ( color2R, color2G, color2B );" );
 	}
 	//uvCoord
@@ -57,19 +57,19 @@ void Visitor::visitChecker(const char* node)
 		convertibleConnection((MString(node)+".uvCoord").asChar());
 	if( connected )
 	{
-		o.addRSLVariable( "float2", "uvCoord", "uvCoord", node);
+		o.addRSLVariable(       "", "float2", "uvCoord", "uvCoord", node);
 		o.addToRSL( "float ss = uvCoord[0];");
 		o.addToRSL( "float tt = uvCoord[1];");
 	}else{
-		o.addRSLVariable( "float", "ss", "uCoord", node);
-		o.addRSLVariable( "float", "tt", "vCoord", node);
+		o.addRSLVariable(       "", "float", "ss", "uCoord", node);
+		o.addRSLVariable(       "", "float", "tt", "vCoord", node);
 	}
 	//outColor
 	int outColorConnected = liquidmaya::ShaderMgr::getSingletonPtr()->
 		convertibleConnection((MString(node)+".outColor").asChar());
 	if( outColorConnected )
 	{
-		o.addRSLVariable( "vector", "outColor", "outColor", node);
+		o.addRSLVariable(       "", "vector", "outColor", "outColor", node);
 
 		o.addToRSL( "if( floor( ss * 2 ) == floor( tt * 2 ) )");
 		o.addToRSL( "{");
@@ -78,9 +78,9 @@ void Visitor::visitChecker(const char* node)
 		o.addToRSL( " outColor = color2;");
 		o.addToRSL( "}");
 	}else{
-		o.addRSLVariable( "float", "outColorR", "outColorR", node);
-		o.addRSLVariable( "float", "outColorG", "outColorG", node);
-		o.addRSLVariable( "float", "outColorB", "outColorB", node);
+		o.addRSLVariable(       "", "float", "outColorR", "outColorR", node);
+		o.addRSLVariable(       "", "float", "outColorG", "outColorG", node);
+		o.addRSLVariable(       "", "float", "outColorB", "outColorB", node);
 		o.addToRSL( "vector outColor = vector ( outColorR, outColorG, outColorB );" );
 
 		o.addToRSL( "if( floor( ss * 2 ) == floor( tt * 2 ) )");
@@ -124,24 +124,24 @@ void Visitor::visitFile(const char* node)
 	IfMErrorWarn(MGlobal::executeCommand("system(\"txmake "+mayaTexName+" "+texName+"\")", true));
 
 	//input
-	o.addRSLVariable("float",  "alphaGain",	"alphaGain",	node);
-	o.addRSLVariable("float",  "alphaIsLuminance",	"alphaIsLuminance",	node);
-	o.addRSLVariable("float",  "alphaOffset",	"alphaOffset",	node);
-	o.addRSLVariable("color",  "colorGain",	"colorGain",	node);
-	o.addRSLVariable("color",  "colorOffset",	"colorOffset",	node);
-	o.addRSLVariable("color",  "defaultColor",	"defaultColor",	node);
-	o.addRSLVariable( "float2", "uvCoord", "uvCoord",node);
+	o.addRSLVariable(       "", "float",  "alphaGain",		"alphaGain",	node);
+	o.addRSLVariable("uniform", "float",  "alphaIsLuminance",	"alphaIsLuminance",	node);
+	o.addRSLVariable(       "", "float",  "alphaOffset",	"alphaOffset",	node);
+	o.addRSLVariable(       "", "color",  "colorGain",		"colorGain",	node);
+	o.addRSLVariable(       "", "color",  "colorOffset",	"colorOffset",	node);
+	o.addRSLVariable(       "", "color",  "defaultColor",	"defaultColor",	node);
+	o.addRSLVariable(       "", "float2", "uvCoord",		"uvCoord",node);
 	//texName
-	o.addRSLVariable("float", "filterType",	"filterType",	node);
-	o.addRSLVariable("float",  "filter",	"filter",	node);
-	o.addRSLVariable("float",  "filterOffset",	"filterOffset",	node);
-	o.addRSLVariable("float",  "invert",	"invert",	node);
-	o.addRSLVariable("float",  "fileHasAlpha",	"fileHasAlpha",	node);
+	o.addRSLVariable("uniform", "float", "filterType",		"filterType",	node);
+	o.addRSLVariable("uniform", "float", "filter",			"filter",		node);
+	o.addRSLVariable(       "", "float", "filterOffset",	"filterOffset",	node);
+	o.addRSLVariable("uniform", "float", "invert",			"invert",		node);
+	o.addRSLVariable("uniform", "float", "fileHasAlpha",	"fileHasAlpha",	node);
 	//o.addRSLVariable("index", "num_channels",	"num_channels",	node);
 	//output
-	o.addRSLVariable("float", "outAlpha",	"outAlpha",	node);
-	o.addRSLVariable("color", "outColor",	"outColor",	node);
-	o.addRSLVariable("color", "outTransparency",	"outTransparency",	node);
+	o.addRSLVariable(       "", "float", "outAlpha",		"outAlpha",		node);
+	o.addRSLVariable(       "", "color", "outColor",		"outColor",		node);
+	o.addRSLVariable(       "", "color", "outTransparency",	"outTransparency",	node);
 
 	o.addToRSL("uniform float  _alphaIsLuminance=alphaIsLuminance;");
 	o.addToRSL("uniform string _fileName=\""+texName+"\";");

@@ -25,7 +25,7 @@ public:
 	// convert, then the variable is added to the block's body, and the
 	// current Maya value is pulled in.
 	//--------------------------------------------------------------------
-	void addRSLVariable(MString rslType, const MString& rslName,
+	void addRSLVariable(const MString& inputQualifier, MString rslType, const MString& rslName,
 		const MString& mayaName, const MString& mayaNode);
 	
 	//--------------------------------------------------------------------
@@ -44,6 +44,8 @@ public:
 	void endRSL ();
 
 	void addInclude(const MString& file);
+
+	bool isOutput(const MString& plugName);
 
 protected:
 	MString rslShaderHeader;
