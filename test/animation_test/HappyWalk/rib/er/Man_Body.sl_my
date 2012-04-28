@@ -3,12 +3,12 @@ void Man_mib_amb_occlusion1 (
  output vector o_outValue;
 )
 {
- float i_samples = float 32;
- color i_bright = color (0.60176,0.60176,0.60176);
- color i_dark = color (0,0,0);
- float i_spread = float 0.5;
- float i_max_distance = float 0;
- float i_reflective = float 0;
+  float i_samples = float 32;
+  color i_bright = color (0.60176,0.60176,0.60176);
+  color i_dark = color (0,0,0);
+  float i_spread = float 0.5;
+  float i_max_distance = float 0;
+  float i_reflective = float 0;
  extern point P;
 extern normal N;
 extern vector I;
@@ -35,13 +35,13 @@ void Man_Body (
  vector ambientColor;
 )
 {
- vector inColor = vector (1,0.954197,0.837);
- vector transparency = vector (0,0,0);
+  vector inColor = vector (1,0.954197,0.837);
+  vector transparency = vector (0,0,0);
 //Man:Body.ambientColor <-- Man:mib_amb_occlusion1.outValue
- vector incandescence = vector (0,0,0);
- float diffusion = float 0.8;
- vector outColor = vector (0,0,0);
- vector outTransparency = vector (0,0,0);
+  vector incandescence = vector (0,0,0);
+  float diffusion = float 0.8;
+  vector outColor = vector (0,0,0);
+  vector outTransparency = vector (0,0,0);
  extern normal N;
  normal Nn = normalize( N );
  outTransparency = transparency;

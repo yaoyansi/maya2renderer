@@ -1,7 +1,0 @@
-##RenderMan RIB-Structure 1.0
-version 3.03
-#shading group: initialShadingGroup
-Surface "E:/MyDocuments/maya/projects/default/generatedShader/lambert1" 
-#no volume shader.
-#I'm not sure which one should be used for the displacement shader, RiDeformation(), or RiDisplacement().
-Displacement "E:/MyDocuments/maya/projects/default/generatedShader/blinn1" 

@@ -1,26 +1,124 @@
+#include <place2dTexture.h>
 //shader name: place2dTexture1
 void place2dTexture1 (
+ output float coverage[];
+ output float mirrorU;
+ output float mirrorV;
+ output float noiseUV[];
+ output float offset[];
  output float repeatUV[];
+ output float rotateFrame;
+ output float rotateUV;
+ output float stagger;
+ output float translateFrame[];
+ output float wrapU;
+ output float wrapV;
  output float outUV[];
 )
 {
- repeatUV[ 0 ] = 1;
- repeatUV[ 1 ] = 1;
  extern float s, t;
- outUV[ 0 ] = mod( s * repeatUV[ 0 ], 1 );
- outUV[ 1 ] = mod( t * repeatUV[ 1 ], 1 );
+ float uvCoord[2];
+ uvCoord[0] = s;
+ uvCoord[1] = 1 - t;
+ {
+ uniform float i_coverageU=1;
+ uniform float i_coverageV=1;
+ uniform float i_mirrorU=0;
+ uniform float i_mirrorV=0;
+ uniform float i_noiseU=0;
+ uniform float i_noiseV=0;
+ uniform float i_repeatU=1;
+ uniform float i_repeatV=1;
+ uniform float i_rotateFrame=0;
+ uniform float i_rotateUV=0;
+ uniform float i_stagger=0;
+ uniform float i_translateFrameU=0;
+ uniform float i_translateFrameV=0;
+ uniform float i_wrapU=1;
+ uniform float i_wrapV=1;
+   maya_place2dTexture(uvCoord,			
+	i_coverageU,       
+	i_coverageV,		
+	i_mirrorU,			
+	i_mirrorV,			
+	i_noiseU,			
+	i_noiseV,			
+	0,			
+	0,			
+	i_repeatU,			
+	i_repeatV,			
+	i_rotateFrame,		
+	i_rotateUV,		
+	i_stagger,			
+	i_translateFrameU,	
+	i_translateFrameV,	
+	i_wrapU,			
+	i_wrapV,			
+	outUV   
+   );
+ }
+ coverage[0]=1;
+ coverage[1]=1;
+ mirrorU=0;
+ mirrorV=0;
+ noiseUV[0]=0;
+ noiseUV[1]=0;
+ offset[0]=0;
+ offset[1]=0;
+ repeatUV[0]=1;
+ repeatUV[1]=1;
+ rotateFrame=0;
+ rotateUV=0;
+ stagger=0;
+ translateFrame[0]=0;
+ translateFrame[1]=0;
+ wrapU=1;
+ wrapV=1;
 }
 
+#include <file.h>
 //shader name: file1
 void file1 (
  float uvCoord[];
  output vector outColor;
 )
 {
+  float alphaGain = float 1;
+ uniform float alphaIsLuminance = float 0;
+  float alphaOffset = float 0;
+  color colorGain = color (1,1,1);
+  color colorOffset = color (0,0,0);
+  color defaultColor = color (0.5,0.5,0.5);
 //file1.uvCoord <-- place2dTexture1.outUV
- string texName = "E:/dev/Autodesk/maya/myplugin/project/liquid_/test/animation_test/MoxMotionMeetsFBIK/MoxMotionMeetsFBIK/sourceimages/FBIK.0003.bmp.tex";
- float ss = uvCoord[ 0 ], tt = uvCoord[ 1 ];
- outColor = vector color texture( texName, ss, tt );
+ uniform float filterType = float 3;
+ uniform float filter = float 1;
+  float filterOffset = float 0;
+ uniform float invert = float 0;
+ uniform float fileHasAlpha = float 0;
+  float outAlpha = float 1;
+  vector outTransparency = vector (0,0,0);
+ {
+   color _outColor;
+   color _outTransparency;
+   maya_file(alphaGain,         
+	alphaIsLuminance,  
+	alphaOffset,       
+	colorGain,         
+	colorOffset,       
+	defaultColor,      
+	"E:/dev/Autodesk/maya/myplugin/project/liquid_/test/animation_test/MoxMotionMeetsFBIK/MoxMotionMeetsFBIK/sourceimages/FBIK.0003.bmp.tex",   
+	filterType,        
+	filter,            
+	filterOffset,      
+	invert,            
+	uvCoord,           
+	outAlpha,          
+	_outColor,         
+	_outTransparency   
+   );
+   outColor        = vector _outColor;
+   outTransparency = vector _outTransparency;
+ }
 }
 
 //shader name: lambert4
@@ -29,12 +127,12 @@ void lambert4 (
 )
 {
 //lambert4.color <-- file1.outColor
- vector transparency = vector (0,0,0);
- vector ambientColor = vector (0,0,0);
- vector incandescence = vector (0,0,0);
- float diffusion = float 1;
- vector outColor = vector (0,0,0);
- vector outTransparency = vector (0,0,0);
+  vector transparency = vector (0,0,0);
+  vector ambientColor = vector (0,0,0);
+  vector incandescence = vector (0,0,0);
+  float diffusion = float 1;
+  vector outColor = vector (0,0,0);
+  vector outTransparency = vector (0,0,0);
  extern normal N;
  normal Nn = normalize( N );
  outTransparency = transparency;
@@ -49,14 +147,25 @@ void lambert4 (
 //surface shader name: lambert4
 surface lambert4()
 {
+ float place2dTexture1_coverage[2];
+ float place2dTexture1_mirrorU;
+ float place2dTexture1_mirrorV;
+ float place2dTexture1_noiseUV[2];
+ float place2dTexture1_offset[2];
  float place2dTexture1_repeatUV[2];
+ float place2dTexture1_rotateFrame;
+ float place2dTexture1_rotateUV;
+ float place2dTexture1_stagger;
+ float place2dTexture1_translateFrame[2];
+ float place2dTexture1_wrapU;
+ float place2dTexture1_wrapV;
  float place2dTexture1_outUV[2];
  vector file1_outColor;
 
  //place2dTexture1
- place2dTexture1(place2dTexture1_repeatUV, place2dTexture1_outUV);
+ place2dTexture1(place2dTexture1_coverage, place2dTexture1_mirrorU, place2dTexture1_mirrorV, place2dTexture1_noiseUV, place2dTexture1_offset, place2dTexture1_repeatUV, place2dTexture1_rotateFrame, place2dTexture1_rotateUV, place2dTexture1_stagger, place2dTexture1_translateFrame, place2dTexture1_wrapU, place2dTexture1_wrapV, place2dTexture1_outUV);
 //input: 
-//output:place2dTexture1_repeatUV,place2dTexture1_outUV,
+//output:place2dTexture1_coverage,place2dTexture1_mirrorU,place2dTexture1_mirrorV,place2dTexture1_noiseUV,place2dTexture1_offset,place2dTexture1_repeatUV,place2dTexture1_rotateFrame,place2dTexture1_rotateUV,place2dTexture1_stagger,place2dTexture1_translateFrame,place2dTexture1_wrapU,place2dTexture1_wrapV,place2dTexture1_outUV,
 
  //file1
  file1(place2dTexture1_outUV, file1_outColor);
