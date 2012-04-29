@@ -95,25 +95,64 @@ void Visitor::visitLambert(const char* node)
 
 	OutputHelper o(RSLfile);
 
+	o.addInclude("lambert.h");
+
 	o.beginRSL(node);
+	// Inputs:
+	o.addRSLVariable(       "", "vector", "ambientColor",		"ambientColor",		node);
+	o.addRSLVariable(       "", "vector", "i_color",			"color",			node);
+	o.addRSLVariable(       "", "float",  "diffuse",			"diffuse",			node);
+	o.addRSLVariable(       "", "vector", "incandescence",		"incandescence",	node);
+	o.addRSLVariable(       "", "float",  "matteOpacityMode",	"matteOpacityMode",	node);
+	o.addRSLVariable(       "", "float",  "matteOpacity",		"matteOpacity",		node);
+	/* Refraction. */
+	o.addRSLVariable("uniform", "float", "refractions",			"refractions",		node);
+	o.addRSLVariable(       "", "float", "refractiveIndex",		"refractiveIndex",	node);
+	o.addRSLVariable("uniform", "float", "refractionLimit",		"refractionLimit",	node);
+	o.addRSLVariable(       "", "float", "lightAbsorbance",		"lightAbsorbance",	node);
+	o.addRSLVariable(       "", "float", "shadowAttenuation",	"shadowAttenuation",node);
 
-	o.addRSLVariable(       "", "vector", "inColor",		"color",		node);
-	o.addRSLVariable(       "", "vector", "transparency", "transparency", node);
-	o.addRSLVariable(       "", "vector", "ambientColor",	"ambientColor", node);
-	o.addRSLVariable(       "", "vector", "incandescence","incandescence",node);
-	o.addRSLVariable(       "", "float",  "diffusion",	"diffuse",		node);
-	o.addRSLVariable(       "", "vector", "outColor",		"outColor",		node);
-	o.addRSLVariable(       "", "vector", "outTransparency","outTransparency",node);
+	o.addRSLVariable(       "", "vector","normalCamera",		"normalCamera",		node);
+	o.addRSLVariable(       "", "vector","transparency",		"transparency",		node);
+	o.addRSLVariable(       "", "float", "translucence",		"translucence",		node);
+	o.addRSLVariable(       "", "float", "translucenceDepth",	"translucenceDepth",node);
+	o.addRSLVariable(       "", "float", "translucenceFocus",	"translucenceFocus",node);
+	// Outputs:
+	o.addRSLVariable(       "", "vector", "outColor",		"outColor",				node);
+	o.addRSLVariable(       "", "vector", "outTransparency","outTransparency",		node);
 
-	o.addToRSL( "extern normal N;");
-	o.addToRSL( "normal Nn = normalize( N );");
-	o.addToRSL( "outTransparency = transparency;");
-	o.addToRSL( "Oi = Os * color ( 1 - outTransparency );");
-	o.addToRSL( "outColor = incandescence +");
-	o.addToRSL( "           ( inColor * ( diffusion * ");
-	o.addToRSL( "                         vector diffuse( Nn ) +");
-	o.addToRSL( "                         ambientColor ) );");
-	o.addToRSL( "Ci = Cs * Oi * color outColor;");
+	o.addToRSL("{");
+	o.addToRSL("  color _outColor;");
+	o.addToRSL("  color _outTransparency;");
+	o.addToRSL("  maya_lambert("
+						//Inputs
+						"color ambientColor,		\n\t"
+						"color i_color,				\n\t"
+						"diffuse,					\n\t"
+						"color incandescence,		\n\t"
+						"matteOpacityMode,			\n\t"
+						"matteOpacity,				\n\t"
+						/* Refraction. */
+						"refractions,				\n\t"
+						"refractiveIndex,			\n\t"
+						"refractionLimit,			\n\t"
+						"lightAbsorbance,			\n\t"
+						"shadowAttenuation,			\n\t"
+						
+						"normal normalCamera,		\n\t"
+						"color transparency,		\n\t"
+						"translucence,				\n\t"
+						"translucenceDepth,			\n\t"
+						"translucenceFocus,			\n\t"
+						//Outputs
+						"_outColor,					\n\t"
+						"_outTransparency			\n"
+			"   );");
+	o.addToRSL("   Ci             = _outColor;");
+	o.addToRSL("   Oi             = _outTransparency;");
+	o.addToRSL("  outColor        = vector Ci;");
+	o.addToRSL("  outTransparency = vector Oi;");
+	o.addToRSL("}");
 
 	o.endRSL();
 }

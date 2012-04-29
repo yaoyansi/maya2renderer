@@ -120,6 +120,7 @@ liqShader::getName(),liqRibLightData::getName(),liqRibMeshData::getName(),liqGet
 - 重构：source GetPossibleTextures.mel不要放在getFileNodeImageName()里
 - motion blur贴纹理
 - 更新3delight maya shader
+- 参考DL_translateMayaToSl.mel，看看有没有什么借鉴价值。
 
 rm
 ------------
@@ -211,3 +212,4 @@ er
 - bug:HappyWalk 角色右胳膊和右腿没有被照亮
 - checker node(test\test_rm_texture\check12_bmp.ma)效果不正确
 - er渲染MoxMotionMeetsFBIK\scenes\texture_anim1.ma崩溃
+- 参考RenderMan-Studio-1.0.1-Maya2008\devkit\examples\ribgen\mtorHairProcedural.h,修改pfxhair的bug
