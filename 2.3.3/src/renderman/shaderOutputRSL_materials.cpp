@@ -143,43 +143,90 @@ void Visitor::visitPhong(const char* node)
 	CM_TRACE_FUNC("Visitor::visitPhong("<<node<<")");
 
 	OutputHelper o(RSLfile);
-	o.beginRSL(node);
 
-	o.addRSLVariable(       "", "vector", "inColor",			"color",		node);
-	o.addRSLVariable(       "", "vector", "transparency",		"transparency", node);
-	o.addRSLVariable(       "", "vector", "ambColor",			"ambientColor", node);
-	o.addRSLVariable(       "", "vector", "incandescence",	"incandescence",node);
-	o.addRSLVariable(       "", "float",  "diffusion",		"diffuse",		node);
-	o.addRSLVariable(       "", "float",  "cosinePower",		"cosinePower",	node);
-	o.addRSLVariable(       "", "vector", "specColor",		"specularColor",node);
-	o.addRSLVariable(       "", "vector", "outColor",			"outColor",		node);
+	o.addInclude("phong.h");
+
+	o.beginRSL(node);
+	// Inputs:
+	o.addRSLVariable(       "", "vector", "ambientColor",		"ambientColor",		node);
+	o.addRSLVariable(       "", "vector", "i_color",			"color",			node);
+	o.addRSLVariable(       "", "float",  "cosinePower",		"cosinePower",		node);
+	o.addRSLVariable(       "", "float",  "diffuse",			"diffuse",			node);
+	o.addRSLVariable(       "", "vector", "incandescence",		"incandescence",	node);
+	o.addRSLVariable(       "", "float",  "matteOpacity",		"matteOpacity",		node);
+	o.addRSLVariable(       "", "float",  "matteOpacityMode",	"matteOpacityMode",	node);
+	o.addRSLVariable(       "", "vector", "normalCamera",		"normalCamera",		node);
+	o.addRSLVariable(       "", "vector", "specularColor",		"specularColor",	node);
+	o.addRSLVariable(       "", "float",  "reflectivity",		"reflectivity",		node);
+	o.addRSLVariable(       "", "vector", "reflectedColor",		"reflectedColor",	node);
+	/* Refraction. */
+	o.addRSLVariable("uniform", "float", "refractions",			"refractions",		node);
+	o.addRSLVariable(       "", "float", "refractiveIndex",		"refractiveIndex",	node);
+	o.addRSLVariable("uniform", "float", "refractionLimit",		"refractionLimit",	node);
+	o.addRSLVariable(       "", "float", "lightAbsorbance",		"lightAbsorbance",	node);
+	o.addRSLVariable(       "", "float", "shadowAttenuation",	"shadowAttenuation",node);
+	/* Reflection. */
+	o.addRSLVariable("uniform", "float", "reflectionLimit",		"reflectionLimit",	node);
+
+	o.addRSLVariable(       "", "float", "translucence",		"translucence",		node);
+	o.addRSLVariable(       "", "float", "translucenceDepth",	"translucenceDepth",node);
+	o.addRSLVariable(       "", "float", "translucenceFocus",	"translucenceFocus",node);
+	o.addRSLVariable(       "", "vector","transparency",		"transparency",		node);
+	// Outputs
+	o.addRSLVariable(       "", "vector", "outColor",			"outColor",			node);
 	o.addRSLVariable(       "", "vector", "outTransparency",	"outTransparency", node);
 
-	o.addToRSL("extern normal N;");
-	o.addToRSL("normal Nn = normalize( N );");
-	o.addToRSL("outTransparency = transparency;");
-	o.addToRSL("Oi = Os * color ( 1 - outTransparency );");
-	o.addToRSL("vector Cdiffuse;");
-	o.addToRSL("Cdiffuse = incandescence +");
-	o.addToRSL("           ( inColor * ( diffusion * ");
-	o.addToRSL("                         vector diffuse( Nn ) +");
-	o.addToRSL("                         ambColor ) );");
-	o.addToRSL("vector Cspecular;");
-	o.addToRSL("Cspecular = vector phong( Nn,");
-	o.addToRSL("                          normalize( -I ),");
-	o.addToRSL("                          cosinePower );");
+	o.addToRSL("{");
 
-	MStringArray con;
-	IfMErrorWarn(MGlobal::executeCommand( ("listConnections(\""+MString(node)+"\" + \".reflectedColor\")"), con));
-	if( con.length() != 0 )
-	{
-		o.addRSLVariable(       "", "float", "reflectivity", "reflectivity", node);
-		o.addRSLVariable(       "", "vector", "refColor", "reflectedColor", node);
-		o.addToRSL("Cspecular += ( reflectivity * refColor );");
-	}
-	o.addToRSL("Cspecular *= specColor;");
-	o.addToRSL("outColor = Cdiffuse + Cspecular;");
-	o.addToRSL("Ci = Cs * Oi * color outColor;");
+	o.addToRSL("  color _outColor;");
+	o.addToRSL("  color _outTransparency;");
+
+	o.addToRSL("uniform float i_reflectionMaxDistance   =4;");
+	o.addToRSL("uniform float i_reflectionSamples       =4;");
+	o.addToRSL("uniform float i_reflectionBlur          =4;");
+	o.addToRSL("uniform float i_reflectionNoiseAmplitude=4;");
+	o.addToRSL("uniform float i_reflectionNoiseFrequency=4;");
+
+	o.addToRSL("  maya_phong("
+						//Inputs
+						"color ambientColor,		\n\t"
+						"color i_color,				\n\t"
+						"cosinePower,				\n\t"
+						"diffuse,					\n\t"
+						"color incandescence,		\n\t"
+						"matteOpacity,				\n\t"
+						"matteOpacityMode,			\n\t"
+						"normal normalCamera,		\n\t"
+						"color specularColor,		\n\t"
+						"reflectivity,				\n\t"
+						"color reflectedColor,		\n\t"
+						/* Refraction. */
+						"refractions,				\n\t"
+						"refractiveIndex,			\n\t"
+						"refractionLimit,			\n\t"
+						"lightAbsorbance,			\n\t"
+						"shadowAttenuation,			\n\t"
+						/* Reflection. */
+						"reflectionLimit,			\n\t"
+
+						"translucence,				\n\t"
+						"translucenceDepth,			\n\t"
+						"translucenceFocus,			\n\t"
+						"color transparency,		\n\t"
+
+						"i_reflectionMaxDistance,	\n\t"
+						"i_reflectionSamples,		\n\t"
+						"i_reflectionBlur,			\n\t"
+						"i_reflectionNoiseAmplitude,\n\t"
+						"i_reflectionNoiseFrequency,\n\t"
+
+						//Outputs
+						"_outColor,					\n\t"
+						"_outTransparency			\n"
+				"   );");
+	o.addToRSL("  outColor        = vector _outColor;");
+	o.addToRSL("  outTransparency = vector _outTransparency;");
+	o.addToRSL("}");
 
 	o.endRSL();
 }
