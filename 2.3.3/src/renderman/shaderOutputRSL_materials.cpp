@@ -172,14 +172,6 @@ void Visitor::visitPhong(const char* node)
 	o.addRSLVariable(       "", "float", "translucenceDepth",	"translucenceDepth",node);
 	o.addRSLVariable(       "", "float", "translucenceFocus",	"translucenceFocus",node);
 	o.addRSLVariable(       "", "vector","transparency",		"transparency",		node);
-	// Outputs
-	o.addRSLVariable(       "", "vector", "outColor",			"outColor",			node);
-	o.addRSLVariable(       "", "vector", "outTransparency",	"outTransparency", node);
-
-	o.addToRSL("{");
-
-	o.addToRSL("  color _outColor;");
-	o.addToRSL("  color _outTransparency;");
 
 	o.addToRSL("uniform float i_reflectionMaxDistance   =4;");
 	o.addToRSL("uniform float i_reflectionSamples       =4;");
@@ -187,6 +179,13 @@ void Visitor::visitPhong(const char* node)
 	o.addToRSL("uniform float i_reflectionNoiseAmplitude=4;");
 	o.addToRSL("uniform float i_reflectionNoiseFrequency=4;");
 
+	// Outputs
+	o.addRSLVariable(       "", "vector", "outColor",			"outColor",			node);
+	o.addRSLVariable(       "", "vector", "outTransparency",	"outTransparency", node);
+
+	o.addToRSL("{");
+	o.addToRSL("  color _outColor;");
+	o.addToRSL("  color _outTransparency;");
 	o.addToRSL("  maya_phong("
 						//Inputs
 						"color ambientColor,		\n\t"
@@ -224,9 +223,12 @@ void Visitor::visitPhong(const char* node)
 						"_outColor,					\n\t"
 						"_outTransparency			\n"
 				"   );");
-	o.addToRSL("  outColor        = vector _outColor;");
-	o.addToRSL("  outTransparency = vector _outTransparency;");
+	o.addToRSL("   Ci             = _outColor;");
+	o.addToRSL("   Oi             = _outTransparency;");
+	o.addToRSL("  outColor        = vector Ci;");
+	o.addToRSL("  outTransparency = vector Oi;");
 	o.addToRSL("}");
+
 
 	o.endRSL();
 }
