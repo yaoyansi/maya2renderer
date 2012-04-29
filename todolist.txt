@@ -119,6 +119,7 @@ liqShader::getName(),liqRibLightData::getName(),liqRibMeshData::getName(),liqGet
 - add test case test\test_rm_texture\check12_bmp.ma
 - 重构：source GetPossibleTextures.mel不要放在getFileNodeImageName()里
 - motion blur贴纹理
+- 更新3delight maya shader
 
 rm
 ------------
@@ -136,6 +137,7 @@ rm
 - test_displacement blinn1.sl_my无法编译
 - lambwert shader里transparent如果有链接，则渲染不出来，是黑的。
 - bug:texture_anim2.ma用rm渲染的纹理位置不正确，v轴似乎缩小了。用其他格式的图片（.bmp）试试
+- export shader graph as shader object
 
 er
 ------------
