@@ -312,6 +312,7 @@ protected:
 	MString shaderType;
 
 	MString getRSLShaderType(const MString &mayaplug);
+	void defineAOVVariables();
 };
 //
 void _outputShadingGroup(const char* shadingGroupNode);

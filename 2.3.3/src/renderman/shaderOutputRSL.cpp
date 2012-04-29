@@ -228,6 +228,13 @@ void Visitor::outputBegin(const char* shaderNodeName)
 {
 	CM_TRACE_FUNC("Visitor::outputBegin("<<shaderNodeName<<"), open shader file");
 	RSLfile.open( renderman::getShaderFilePath_SRC(shaderNodeName).asChar() );
+
+	RSLfile << "//surface shader name: " << shaderNodeName << "\n";
+	RSLfile << shaderType<<" " << renderman::getShaderName(shaderNodeName) << "()\n{\n";
+
+	defineAOVVariables();
+
+	RSLfile << "\n\n\n// define the shaders --------------------------------------------------------------------------\n";
 }
 void Visitor::outputUpstreamShader(const char* shaderNodeName)
 {
@@ -241,9 +248,8 @@ void Visitor::outputUpstreamShader(const char* shaderNodeName)
 void Visitor::outputShaderMethod()
 {
 	CM_TRACE_FUNC("Visitor::outputShaderMethod()");
-
-	RSLfile << "//surface shader name: " << shaderData[SHADER_NAME_I] << "\n";
-	RSLfile << shaderType<<" " << renderman::getShaderName(shaderData[SHADER_NAME_I]) << "()\n{\n";
+	
+	RSLfile << "\n\n\n// call the shaders ----------------------------------------------------------------------------\n";
 	RSLfile << shaderData[SHADER_METHOD_VARIAVLES_I];
 	RSLfile << "\n";
 	RSLfile << shaderData[SHADER_METHOD_BODY_I];
@@ -431,6 +437,13 @@ MString Visitor::getRSLShaderType(const MString &mayaplug)
 		liquidMessage2(messageError,"unkown shader type for plug %s", mayaplug.asChar());
 	}
 	return shaderType;
+}
+void Visitor::defineAOVVariables()
+{
+	CM_TRACE_FUNC("Visitor::defineAOVVariables("<<shaderNodeName<<")");
+
+	RSLfile << "\n\n\n// define some extern variables which are used in 3delight shaders -----------------------------\n";
+	RSLfile << " color __transparency = color (1,1,1);";
 }
 //
 }//namespace RSL
