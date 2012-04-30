@@ -1,0 +1,38 @@
+
+Maya2Renderer Features:
+- based on liquidMaya(r770). 
+  Note for liquidMaya developers and users: 
+  Because I don't kow how to use the following features of liquidMaya(r770), these features are reserved but not tested in Maya2Renderer:
+      - Fluid Panel
+      - Rendering with Scripts 
+- fix many bugs
+- tested on winXP(x86)/Win7(x86) and Maya2009(x86) only
+- use Aqsis ribout module to output rib file.
+- refactor the translation process of rib file to construct a framework to support other renderers.
+- refactor the translation process of maya shader graph to construct a framework to support other renderers.
+- global settings for each supported renderer
+- export shave hair for each supported renderer
+- batchRender for each supported renderer
+- add call log for mel functions.
+
+
+additional features for each supported renderer
+prman
+- use 3delight shader file for shader nodes(not complete yet, because of some bugs.)
+- the following shader graph nodes are supported now:
+  lambert, blinn, phong, placeTexture2d, file(image sequence supported), checker,mib_ambient_occ
+- render the main rib file 
+
+
+elvishray
+- the following shader graph nodes are supported now:
+  lambert, phong, placeTexture2d, file(image sequence supported),mib_ambient_occ
+- define pl file to feed the parameters of liqSurfaceShader, liqDisplacementShader, liqVolumeShader to Maya UI.
+- translation motion blur, deform motion blur
+- vertex normal
+- volume shader
+- point light,spot light, directional light
+- output elvishray rendering script into one file.
+- pfxHair(not complete yet)
+- uv set
+

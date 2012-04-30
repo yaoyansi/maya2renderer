@@ -1,5 +1,12 @@
+ ---------------------------------------------------------------------
+                          CONTENTS
+ ---------------------------------------------------------------------
+- DONE List
+- TODO List
+
+
 ==================================  DONE LIST  ==============================================
-liq
+liquid
 ------------
 - (done)motion blur
 - (done)整理david的问题到doc里
@@ -30,7 +37,7 @@ liq
 （如果该渲染器定义了自己的shader language的话；对于象er这样使用DSO的渲染器，则不需要输出shader文本）
 - (done)设置新project路径后，用er渲染会崩溃，原因是rib，generatedShader，rmanpix等目录未创建
 
-rm
+prman
 ------------
 - (done)bug E:\dev\Autodesk\maya\myplugin\project\liquid_\2.3.3\test\test_rm_texture\check10_tex.ma和check11_bmp.ma在rm渲染时错误
 - (done)bug: rm的spotlight不正确，参见/2.3.3/test/test_er_light/er_spotlight.ma
@@ -42,7 +49,7 @@ rm
 - (done)mib_ambient_occ, 测试Trex场景
 - (done)rmsg文件内容写入main rib里
 
-er
+elvishray
 ------------
 - (done)更新er 1185，编译release版
 - (done)vertex normal 导出的时机，什么时候需要导出？参考rm mesh的导出；给Elvic提bug，关于vertex list可以和pos list不等长
@@ -79,7 +86,7 @@ er
 - (done)physicalsky需要修改为maya可用的
 
 ===================================  TODO LIST  =============================================
-liq
+liquid
 ------------
 - 重构：Renderer::renderAll_local()里对于shadow pass不要调用doRenderView();
 - 重构：shadowPass 过程里包含basePass的过程，需要testcase验证
@@ -121,8 +128,10 @@ liqShader::getName(),liqRibLightData::getName(),liqRibMeshData::getName(),liqGet
 - motion blur贴纹理
 - 更新3delight maya shader
 - 参考DL_translateMayaToSl.mel，看看有没有什么借鉴价值。
+- 给openmaya的作者发邮件，询问项目情况
+- 整理maya2renderer的资料，发布到各个渲染器论坛
 
-rm
+prman
 ------------
 - bug：test_deepshadow_2.ma，阴影里没有物体的透明度。
 - RiBegin()/RiEnd()时用变量标记，在Ri×时检查该标记
@@ -140,7 +149,7 @@ rm
 - bug:texture_anim2.ma用rm渲染的纹理位置不正确，v轴似乎缩小了。用其他格式的图片（.bmp）试试
 - export shader graph as shader object
 
-er
+elvishray
 ------------
 - er global node ui,数据更新有问题
 - 更新er代码，回归测试

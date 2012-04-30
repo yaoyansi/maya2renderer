@@ -2,6 +2,7 @@
                           CONTENTS
  ---------------------------------------------------------------------
 - License
+- Features
 - Build/Install/Test
 - Others
 - NOTES
@@ -34,6 +35,10 @@ All Rights Reserved
 
 RenderMan (R) is a registered trademark of Pixar
 
+ ---------------------------------------------------------------------
+                          Features
+ ---------------------------------------------------------------------
+ see ./features.txt
 
  ---------------------------------------------------------------------
                           Build/Install/Test
