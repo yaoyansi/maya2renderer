@@ -12,7 +12,7 @@ namespace RSL
 void Visitor::visit_mib_amb_occlusion(const char* node)
 {
 	CM_TRACE_FUNC("Visitor::visit_mib_amb_occlusion("<<node<<")");
-
+#if 0
 	OutputHelper o(RSLfile);
 	o.beginRSL(node);
 
@@ -46,6 +46,44 @@ void Visitor::visit_mib_amb_occlusion(const char* node)
 	);
 
 	o.endRSL();
+#else
+	OutputHelper o(RSLfile);
+
+	o.addInclude("mib_amb_occlusion.h");
+	o.beginRSL(node);
+
+	o.addRSLVariable(       "", "float",	"i_samples",	"samples",		node);
+	o.addRSLVariable(       "", "color",	"i_bright",		"bright",		node);
+	o.addRSLVariable(       "", "color",	"i_dark",		"dark",			node);
+	o.addRSLVariable(       "", "float",	"i_spread",		"spread",		node);
+	o.addRSLVariable(       "", "float",	"i_max_distance","max_distance",node);
+	o.addRSLVariable(       "", "float",	"i_reflective",	"reflective",	node);
+	o.addRSLVariable(       "", "vector",	"o_outValue",	"outValue",		node);
+
+	o.addToRSL("{");
+	o.addToRSL("  color _o_outValue;");
+
+	o.addToRSL(
+		"if(i_max_distance < 0.0001){//If it is zero, the entire scene is sampled\n"
+		"      i_max_distance = 1.0e37;\n"
+		"}\n"
+		);
+	o.addToRSL("  maya_mib_amb_occlusion("
+					//Inputs
+					"i_samples,		\n\t"
+					"i_bright,		\n\t"
+					"i_dark,		\n\t"
+					"i_spread,		\n\t"
+					"i_max_distance,\n\t"
+					"i_reflective,	\n\t"
+					//Outputs
+					"_o_outValue		\n"
+			"   );");
+	o.addToRSL("  o_outValue        = vector _o_outValue;");
+	o.addToRSL("}");
+	o.endRSL();
+
+#endif
 }
 
 }//namespace RSL
