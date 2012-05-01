@@ -12,7 +12,7 @@ namespace RSL
 void Visitor::visit_mib_amb_occlusion(const char* node)
 {
 	CM_TRACE_FUNC("Visitor::visit_mib_amb_occlusion("<<node<<")");
-#if 0
+#ifdef USE_LIQUID_RM_SHADE
 	OutputHelper o(RSLfile);
 	o.beginRSL(node);
 
